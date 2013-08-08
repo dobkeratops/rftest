@@ -1,0 +1,269 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#36363a;"><maintext><ln> &nbsp;&nbsp;1</ln><a id="1">&emsp;</a><c0>mod&nbsp;__std_macros&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;&nbsp;2</ln><a id="2">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>macro_escape</c0><c4>];</c4><c0>
+</c0><br/><ln> &nbsp;&nbsp;3</ln><a id="3">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>doc</c0><c25>(</c25><c0>hidden</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln> &nbsp;&nbsp;4</ln><a id="4">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;&nbsp;5</ln><a id="5">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;ignore&nbsp;</c0><c25>((</c25><c0>$</c0><c25>(</c25><c0>$x:tt</c0><c25>)</c25><c0>*</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(()))</c25><c0>
+</c0><br/><ln> &nbsp;&nbsp;6</ln><a id="6">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;&nbsp;7</ln><a id="7">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;error&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;&nbsp;8</ln><a id="8">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$arg:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;&nbsp;9</ln><a id="9">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__log</c0><c25>(</c25><c0>1u32</c0><c4>,</c4><c0>&nbsp;fmt!</c0><c25>(</c25><c0>&nbsp;"%?"</c0><c4>,</c4><c0>&nbsp;$arg&nbsp;</c0><c25>))</c25><c0>
+</c0><br/><ln> &nbsp;10</ln><a id="10">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;11</ln><a id="11">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>&nbsp;$arg:expr&nbsp;</c0><c25>)</c25><c4>,</c4><c0>+</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;12</ln><a id="12">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__log</c0><c25>(</c25><c0>1u32</c0><c4>,</c4><c0>&nbsp;fmt!</c0><c25>(</c25><c0>&nbsp;$</c0><c25>(</c25><c0>$arg</c0><c25>)</c25><c4>,</c4><c0>+&nbsp;</c0><c25>))</c25><c0>
+</c0><br/><ln> &nbsp;13</ln><a id="13">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;14</ln><a id="14">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;15</ln><a id="15">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;16</ln><a id="16">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;warn&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;17</ln><a id="17">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$arg:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;18</ln><a id="18">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__log</c0><c25>(</c25><c0>2u32</c0><c4>,</c4><c0>&nbsp;fmt!</c0><c25>(</c25><c0>&nbsp;"%?"</c0><c4>,</c4><c0>&nbsp;$arg&nbsp;</c0><c25>))</c25><c0>
+</c0><br/><ln> &nbsp;19</ln><a id="19">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;20</ln><a id="20">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>&nbsp;$arg:expr&nbsp;</c0><c25>)</c25><c4>,</c4><c0>+</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;21</ln><a id="21">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__log</c0><c25>(</c25><c0>2u32</c0><c4>,</c4><c0>&nbsp;fmt!</c0><c25>(</c25><c0>&nbsp;$</c0><c25>(</c25><c0>$arg</c0><c25>)</c25><c4>,</c4><c0>+&nbsp;</c0><c25>))</c25><c0>
+</c0><br/><ln> &nbsp;22</ln><a id="22">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;23</ln><a id="23">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;24</ln><a id="24">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;25</ln><a id="25">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;info&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;26</ln><a id="26">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$arg:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;27</ln><a id="27">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__log</c0><c25>(</c25><c0>3u32</c0><c4>,</c4><c0>&nbsp;fmt!</c0><c25>(</c25><c0>&nbsp;"%?"</c0><c4>,</c4><c0>&nbsp;$arg&nbsp;</c0><c25>))</c25><c0>
+</c0><br/><ln> &nbsp;28</ln><a id="28">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;29</ln><a id="29">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>&nbsp;$arg:expr&nbsp;</c0><c25>)</c25><c4>,</c4><c0>+</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;30</ln><a id="30">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__log</c0><c25>(</c25><c0>3u32</c0><c4>,</c4><c0>&nbsp;fmt!</c0><c25>(</c25><c0>&nbsp;$</c0><c25>(</c25><c0>$arg</c0><c25>)</c25><c4>,</c4><c0>+&nbsp;</c0><c25>))</c25><c0>
+</c0><br/><ln> &nbsp;31</ln><a id="31">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;32</ln><a id="32">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;33</ln><a id="33">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;34</ln><a id="34">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;conditionally&nbsp;define&nbsp;debug!,&nbsp;but&nbsp;keep&nbsp;it&nbsp;type&nbsp;checking&nbsp;even
+</c24><br/><ln> &nbsp;35</ln><a id="35">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;in&nbsp;non-debug&nbsp;builds.
+</c24><br/><ln> &nbsp;36</ln><a id="36">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;__debug&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;37</ln><a id="37">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$arg:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;38</ln><a id="38">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__log</c0><c25>(</c25><c0>4u32</c0><c4>,</c4><c0>&nbsp;fmt!</c0><c25>(</c25><c0>&nbsp;"%?"</c0><c4>,</c4><c0>&nbsp;$arg&nbsp;</c0><c25>))</c25><c0>
+</c0><br/><ln> &nbsp;39</ln><a id="39">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;40</ln><a id="40">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>&nbsp;$arg:expr&nbsp;</c0><c25>)</c25><c4>,</c4><c0>+</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;41</ln><a id="41">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__log</c0><c25>(</c25><c0>4u32</c0><c4>,</c4><c0>&nbsp;fmt!</c0><c25>(</c25><c0>&nbsp;$</c0><c25>(</c25><c0>$arg</c0><c25>)</c25><c4>,</c4><c0>+&nbsp;</c0><c25>))</c25><c0>
+</c0><br/><ln> &nbsp;42</ln><a id="42">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;43</ln><a id="43">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;44</ln><a id="44">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;45</ln><a id="45">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>debug</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln> &nbsp;46</ln><a id="46">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>macro_escape</c0><c4>]</c4><c0>
+</c0><br/><ln> &nbsp;47</ln><a id="47">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;mod&nbsp;debug_macro&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;48</ln><a id="48">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;debug&nbsp;</c0><c25>((</c25><c0>$</c0><c25>(</c25><c0>$arg:expr</c0><c25>)</c25><c4>,</c4><c0>*</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;49</ln><a id="49">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__debug!</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>$arg</c0><c25>)</c25><c4>,</c4><c0>*</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;50</ln><a id="50">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;51</ln><a id="51">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;52</ln><a id="52">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;53</ln><a id="53">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>debug</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln> &nbsp;54</ln><a id="54">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>macro_escape</c0><c4>]</c4><c0>
+</c0><br/><ln> &nbsp;55</ln><a id="55">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c14>mod&nbsp;debug_macro&nbsp;</c14><c4>{</c4><c14>
+</c14><br/><ln> &nbsp;56</ln><a id="56">&emsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;debug&nbsp;</c14><c25>((</c25><c14>$</c14><c25>(</c25><c14>$arg:expr</c14><c25>)</c25><c4>,</c4><c14>*</c14><c25>)</c25><c14>&nbsp;=&gt;&nbsp;</c14><c4>{</c4><c14>
+</c14><br/><ln> &nbsp;57</ln><a id="57">&emsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;false&nbsp;</c14><c4>{</c4><c14>&nbsp;__debug!</c14><c25>(</c25><c14>$</c14><c25>(</c25><c14>$arg</c14><c25>)</c25><c4>,</c4><c14>*</c14><c25>)</c25><c14>&nbsp;</c14><c4>}</c4><c14>
+</c14><br/><ln> &nbsp;58</ln><a id="58">&emsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c14><c4>}</c4><c25>)</c25><c14>
+</c14><br/><ln> &nbsp;59</ln><a id="59">&emsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;60</ln><a id="60">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;61</ln><a id="61">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;fail</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;62</ln><a id="62">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>()</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;63</ln><a id="63">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c25>(</c25><c0>"explicit&nbsp;failure"</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;64</ln><a id="64">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;65</ln><a id="65">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$msg:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;66</ln><a id="66">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::sys::FailWithCause::fail_with</c0><c25>(</c25><c0>$msg</c0><c4>,</c4><c0>&nbsp;file!</c0><c25>()</c25><c4>,</c4><c0>&nbsp;line!</c0><c25>())</c25><c0>
+</c0><br/><ln> &nbsp;67</ln><a id="67">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;68</ln><a id="68">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>&nbsp;$arg:expr&nbsp;</c0><c25>)</c25><c4>,</c4><c0>+</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;69</ln><a id="69">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::sys::FailWithCause::fail_with</c0><c25>(</c25><c0>fmt!</c0><c25>(</c25><c0>&nbsp;$</c0><c25>(</c25><c0>$arg</c0><c25>)</c25><c4>,</c4><c0>+&nbsp;</c0><c25>)</c25><c4>,</c4><c0>&nbsp;file!</c0><c25>()</c25><c4>,</c4><c0>&nbsp;line!</c0><c25>())</c25><c0>
+</c0><br/><ln> &nbsp;70</ln><a id="70">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;71</ln><a id="71">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;72</ln><a id="72">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;73</ln><a id="73">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;assert</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;74</ln><a id="74">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$cond:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;75</ln><a id="75">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;!$cond&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;76</ln><a id="76">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::sys::FailWithCause::fail_with</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;77</ln><a id="77">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"assertion&nbsp;failed:&nbsp;"&nbsp;+&nbsp;stringify!</c0><c25>(</c25><c0>$cond</c0><c25>)</c25><c4>,</c4><c0>&nbsp;file!</c0><c25>()</c25><c4>,</c4><c0>&nbsp;line!</c0><c25>())</c25><c0>
+</c0><br/><ln> &nbsp;78</ln><a id="78">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;79</ln><a id="79">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>};</c4><c0>
+</c0><br/><ln> &nbsp;80</ln><a id="80">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$cond:expr</c0><c4>,</c4><c0>&nbsp;$msg:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;81</ln><a id="81">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;!$cond&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;82</ln><a id="82">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::sys::FailWithCause::fail_with</c0><c25>(</c25><c0>$msg</c0><c4>,</c4><c0>&nbsp;file!</c0><c25>()</c25><c4>,</c4><c0>&nbsp;line!</c0><c25>())</c25><c0>
+</c0><br/><ln> &nbsp;83</ln><a id="83">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;84</ln><a id="84">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>};</c4><c0>
+</c0><br/><ln> &nbsp;85</ln><a id="85">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$cond:expr</c0><c4>,</c4><c0>&nbsp;$</c0><c25>(</c25><c0>&nbsp;$arg:expr&nbsp;</c0><c25>)</c25><c4>,</c4><c0>+</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;86</ln><a id="86">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;!$cond&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;87</ln><a id="87">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::sys::FailWithCause::fail_with</c0><c25>(</c25><c0>fmt!</c0><c25>(</c25><c0>&nbsp;$</c0><c25>(</c25><c0>$arg</c0><c25>)</c25><c4>,</c4><c0>+&nbsp;</c0><c25>)</c25><c4>,</c4><c0>&nbsp;file!</c0><c25>()</c25><c4>,</c4><c0>&nbsp;line!</c0><c25>())</c25><c0>
+</c0><br/><ln> &nbsp;88</ln><a id="88">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;89</ln><a id="89">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;90</ln><a id="90">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;91</ln><a id="91">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;92</ln><a id="92">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;assert_eq&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;93</ln><a id="93">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$given:expr&nbsp;</c0><c4>,</c4><c0>&nbsp;$expected:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;94</ln><a id="94">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;95</ln><a id="95">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;given_val&nbsp;=&nbsp;$given</c0><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;96</ln><a id="96">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;expected_val&nbsp;=&nbsp;$expected</c0><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;97</ln><a id="97">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;check&nbsp;both&nbsp;directions&nbsp;of&nbsp;equality....
+</c24><br/><ln> &nbsp;98</ln><a id="98">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;!</c0><c25>((</c25><c0>given_val&nbsp;==&nbsp;expected_val</c0><c25>)</c25><c0>&nbsp;&amp;&amp;&nbsp;</c0><c25>(</c25><c0>expected_val&nbsp;==&nbsp;given_val</c0><c25>))</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;99</ln><a id="99">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c25>(</c25><c0>"assertion&nbsp;failed:&nbsp;`</c0><c25>(</c25><c0>left&nbsp;==&nbsp;right</c0><c25>)</c25><c0>&nbsp;&amp;&amp;&nbsp;</c0><c25>(</c25><c0>right&nbsp;==&nbsp;left</c0><c25>)</c25><c0>`&nbsp;</c0><c25>(</c25><c0>left:&nbsp;`%?`</c0><c4>,</c4><c0>&nbsp;right:&nbsp;`%?`</c0><c25>)</c25><c0>"</c0><c4>,</c4><c0>&nbsp;given_val</c0><c4>,</c4><c0>&nbsp;expected_val</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> 100</ln><a id="100">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> 101</ln><a id="101">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> 102</ln><a id="102">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> 103</ln><a id="103">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> 104</ln><a id="104">&emsp;</a><c0>
+</c0><br/><ln> 105</ln><a id="105">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;assert_approx_eq&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 106</ln><a id="106">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$given:expr&nbsp;</c0><c4>,</c4><c0>&nbsp;$expected:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 107</ln><a id="107">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> 108</ln><a id="108">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;std::cmp::ApproxEq</c0><c4>;</c4><c0>
+</c0><br/><ln> 109</ln><a id="109">&emsp;</a><c0>
+</c0><br/><ln> 110</ln><a id="110">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;given_val&nbsp;=&nbsp;$given</c0><c4>;</c4><c0>
+</c0><br/><ln> 111</ln><a id="111">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;expected_val&nbsp;=&nbsp;$expected</c0><c4>;</c4><c0>
+</c0><br/><ln> 112</ln><a id="112">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;check&nbsp;both&nbsp;directions&nbsp;of&nbsp;equality....
+</c24><br/><ln> 113</ln><a id="113">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;!</c0><c25>(</c25><c0>
+</c0><br/><ln> 114</ln><a id="114">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given_val.approx_eq</c0><c25>(</c25><c0>&amp;expected_val</c0><c25>)</c25><c0>&nbsp;&amp;&amp;
+</c0><br/><ln> 115</ln><a id="115">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;expected_val.approx_eq</c0><c25>(</c25><c0>&amp;given_val</c0><c25>)</c25><c0>
+</c0><br/><ln> 116</ln><a id="116">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> 117</ln><a id="117">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c25>(</c25><c0>"left:&nbsp;%?&nbsp;does&nbsp;not&nbsp;approximately&nbsp;equal&nbsp;right:&nbsp;%?"</c0><c4>,</c4><c0>
+</c0><br/><ln> 118</ln><a id="118">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given_val</c0><c4>,</c4><c0>&nbsp;expected_val</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> 119</ln><a id="119">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> 120</ln><a id="120">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> 121</ln><a id="121">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> 122</ln><a id="122">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$given:expr&nbsp;</c0><c4>,</c4><c0>&nbsp;$expected:expr&nbsp;</c0><c4>,</c4><c0>&nbsp;$epsilon:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 123</ln><a id="123">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> 124</ln><a id="124">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;std::cmp::ApproxEq</c0><c4>;</c4><c0>
+</c0><br/><ln> 125</ln><a id="125">&emsp;</a><c0>
+</c0><br/><ln> 126</ln><a id="126">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;given_val&nbsp;=&nbsp;$given</c0><c4>;</c4><c0>
+</c0><br/><ln> 127</ln><a id="127">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;expected_val&nbsp;=&nbsp;$expected</c0><c4>;</c4><c0>
+</c0><br/><ln> 128</ln><a id="128">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;epsilon_val&nbsp;=&nbsp;$epsilon</c0><c4>;</c4><c0>
+</c0><br/><ln> 129</ln><a id="129">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;check&nbsp;both&nbsp;directions&nbsp;of&nbsp;equality....
+</c24><br/><ln> 130</ln><a id="130">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;!</c0><c25>(</c25><c0>
+</c0><br/><ln> 131</ln><a id="131">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given_val.approx_eq_eps</c0><c25>(</c25><c0>&amp;expected_val</c0><c4>,</c4><c0>&nbsp;&amp;epsilon_val</c0><c25>)</c25><c0>&nbsp;&amp;&amp;
+</c0><br/><ln> 132</ln><a id="132">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;expected_val.approx_eq_eps</c0><c25>(</c25><c0>&amp;given_val</c0><c4>,</c4><c0>&nbsp;&amp;epsilon_val</c0><c25>)</c25><c0>
+</c0><br/><ln> 133</ln><a id="133">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> 134</ln><a id="134">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c25>(</c25><c0>"left:&nbsp;%?&nbsp;does&nbsp;not&nbsp;approximately&nbsp;equal&nbsp;right:&nbsp;%?&nbsp;with&nbsp;epsilon:&nbsp;%?"</c0><c4>,</c4><c0>
+</c0><br/><ln> 135</ln><a id="135">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given_val</c0><c4>,</c4><c0>&nbsp;expected_val</c0><c4>,</c4><c0>&nbsp;epsilon_val</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> 136</ln><a id="136">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> 137</ln><a id="137">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> 138</ln><a id="138">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> 139</ln><a id="139">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> 140</ln><a id="140">&emsp;</a><c0>
+</c0><br/><ln> 141</ln><a id="141">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;condition&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 142</ln><a id="142">&emsp;</a><c0>
+</c0><br/><ln> 143</ln><a id="143">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>{</c4><c0>&nbsp;pub&nbsp;$c:ident:&nbsp;$input:ty&nbsp;-&gt;&nbsp;$out:ty</c0><c4>;</c4><c0>&nbsp;</c0><c4>}</c4><c0>&nbsp;=&gt;&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> 144</ln><a id="144">&emsp;</a><c0>
+</c0><br/><ln> 145</ln><a id="145">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;mod&nbsp;$c&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> 146</ln><a id="146">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>non_uppercase_statics</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln> 147</ln><a id="147">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key:&nbsp;::std::local_data::Key&lt;
+</c0><br/><ln> 148</ln><a id="148">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@::std::condition::Handler&lt;$input</c0><c4>,</c4><c0>&nbsp;$out&gt;&gt;&nbsp;=
+</c0><br/><ln> 149</ln><a id="149">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;::std::local_data::Key</c0><c4>;</c4><c0>
+</c0><br/><ln> 150</ln><a id="150">&emsp;</a><c0>
+</c0><br/><ln> 151</ln><a id="151">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;static&nbsp;cond&nbsp;:
+</c0><br/><ln> 152</ln><a id="152">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::condition::Condition&lt;$input</c0><c4>,</c4><c0>$out&gt;&nbsp;=
+</c0><br/><ln> 153</ln><a id="153">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::condition::Condition&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> 154</ln><a id="154">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:&nbsp;stringify!</c0><c25>(</c25><c0>$c</c0><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln> 155</ln><a id="155">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:&nbsp;key
+</c0><br/><ln> 156</ln><a id="156">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>};</c4><c0>
+</c0><br/><ln> 157</ln><a id="157">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> 158</ln><a id="158">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>};</c4><c0>
+</c0><br/><ln> 159</ln><a id="159">&emsp;</a><c0>
+</c0><br/><ln> 160</ln><a id="160">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>{</c4><c0>&nbsp;$c:ident:&nbsp;$input:ty&nbsp;-&gt;&nbsp;$out:ty</c0><c4>;</c4><c0>&nbsp;</c0><c4>}</c4><c0>&nbsp;=&gt;&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> 161</ln><a id="161">&emsp;</a><c0>
+</c0><br/><ln> 162</ln><a id="162">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;FIXME&nbsp;(#6009):&nbsp;remove&nbsp;mod's&nbsp;`pub`&nbsp;below&nbsp;once&nbsp;variant&nbsp;above&nbsp;lands.
+</c24><br/><ln> 163</ln><a id="163">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;mod&nbsp;$c&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> 164</ln><a id="164">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>non_uppercase_statics</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln> 165</ln><a id="165">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key:&nbsp;::std::local_data::Key&lt;
+</c0><br/><ln> 166</ln><a id="166">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@::std::condition::Handler&lt;$input</c0><c4>,</c4><c0>&nbsp;$out&gt;&gt;&nbsp;=
+</c0><br/><ln> 167</ln><a id="167">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;::std::local_data::Key</c0><c4>;</c4><c0>
+</c0><br/><ln> 168</ln><a id="168">&emsp;</a><c0>
+</c0><br/><ln> 169</ln><a id="169">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;static&nbsp;cond&nbsp;:
+</c0><br/><ln> 170</ln><a id="170">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::condition::Condition&lt;$input</c0><c4>,</c4><c0>$out&gt;&nbsp;=
+</c0><br/><ln> 171</ln><a id="171">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::condition::Condition&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> 172</ln><a id="172">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:&nbsp;stringify!</c0><c25>(</c25><c0>$c</c0><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln> 173</ln><a id="173">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:&nbsp;key
+</c0><br/><ln> 174</ln><a id="174">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>};</c4><c0>
+</c0><br/><ln> 175</ln><a id="175">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> 176</ln><a id="176">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> 177</ln><a id="177">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> 178</ln><a id="178">&emsp;</a><c0>
+</c0><br/><ln> 179</ln><a id="179">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//
+</c24><br/><ln> 180</ln><a id="180">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;A&nbsp;scheme-style&nbsp;conditional&nbsp;that&nbsp;helps&nbsp;to&nbsp;improve&nbsp;code&nbsp;clarity&nbsp;in&nbsp;some&nbsp;instances&nbsp;when
+</c24><br/><ln> 181</ln><a id="181">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;the&nbsp;`if`,&nbsp;`else&nbsp;if`,&nbsp;and&nbsp;`else`&nbsp;keywords&nbsp;obscure&nbsp;predicates&nbsp;undesirably.
+</c24><br/><ln> 182</ln><a id="182">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//
+</c24><br/><ln> 183</ln><a id="183">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;#&nbsp;Example
+</c24><br/><ln> 184</ln><a id="184">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//
+</c24><br/><ln> 185</ln><a id="185">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;~~~
+</c24><br/><ln> 186</ln><a id="186">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;let&nbsp;clamped&nbsp;=
+</c24><br/><ln> 187</ln><a id="187">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;x&nbsp;&gt;&nbsp;mx&nbsp;{&nbsp;mx&nbsp;}
+</c24><br/><ln> 188</ln><a id="188">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;if&nbsp;x&nbsp;&lt;&nbsp;mn&nbsp;{&nbsp;mn&nbsp;}
+</c24><br/><ln> 189</ln><a id="189">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;{&nbsp;x&nbsp;};
+</c24><br/><ln> 190</ln><a id="190">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;~~~
+</c24><br/><ln> 191</ln><a id="191">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//
+</c24><br/><ln> 192</ln><a id="192">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;Using&nbsp;`cond!`,&nbsp;the&nbsp;above&nbsp;could&nbsp;be&nbsp;written&nbsp;as:
+</c24><br/><ln> 193</ln><a id="193">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//
+</c24><br/><ln> 194</ln><a id="194">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;~~~
+</c24><br/><ln> 195</ln><a id="195">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;let&nbsp;clamped&nbsp;=&nbsp;cond!(
+</c24><br/><ln> 196</ln><a id="196">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(x&nbsp;&gt;&nbsp;mx)&nbsp;{&nbsp;mx&nbsp;}
+</c24><br/><ln> 197</ln><a id="197">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(x&nbsp;&lt;&nbsp;mn)&nbsp;{&nbsp;mn&nbsp;}
+</c24><br/><ln> 198</ln><a id="198">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;x&nbsp;&nbsp;}
+</c24><br/><ln> 199</ln><a id="199">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;);
+</c24><br/><ln> 200</ln><a id="200">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;~~~
+</c24><br/><ln> 201</ln><a id="201">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//
+</c24><br/><ln> 202</ln><a id="202">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;The&nbsp;optional&nbsp;default&nbsp;case&nbsp;is&nbsp;denoted&nbsp;by&nbsp;`_`.
+</c24><br/><ln> 203</ln><a id="203">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//
+</c24><br/><ln> 204</ln><a id="204">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;cond&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 205</ln><a id="205">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>&nbsp;$</c0><c25>((</c25><c0>$pred:expr</c0><c25>)</c25><c0>&nbsp;$body:block</c0><c25>)</c25><c0>+&nbsp;_&nbsp;$default:block&nbsp;</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 206</ln><a id="206">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$</c0><c25>(</c25><c0>if&nbsp;$pred&nbsp;$body&nbsp;else</c0><c25>)</c25><c0>+
+</c0><br/><ln> 207</ln><a id="207">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$default
+</c0><br/><ln> 208</ln><a id="208">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> 209</ln><a id="209">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;for&nbsp;if&nbsp;the&nbsp;default&nbsp;case&nbsp;was&nbsp;ommitted
+</c24><br/><ln> 210</ln><a id="210">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>&nbsp;$</c0><c25>((</c25><c0>$pred:expr</c0><c25>)</c25><c0>&nbsp;$body:block</c0><c25>)</c25><c0>+&nbsp;</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 211</ln><a id="211">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$</c0><c25>(</c25><c0>if&nbsp;$pred&nbsp;$body</c0><c25>)</c25><c0>else+
+</c0><br/><ln> 212</ln><a id="212">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> 213</ln><a id="213">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> 214</ln><a id="214">&emsp;</a><c0>
+</c0><br/><ln> 215</ln><a id="215">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;printf&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 216</ln><a id="216">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$arg:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 217</ln><a id="217">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print</c0><c25>(</c25><c0>fmt!</c0><c25>(</c25><c0>"%?"</c0><c4>,</c4><c0>&nbsp;$arg</c0><c25>))</c25><c0>
+</c0><br/><ln> 218</ln><a id="218">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> 219</ln><a id="219">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>&nbsp;$arg:expr&nbsp;</c0><c25>)</c25><c4>,</c4><c0>+</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 220</ln><a id="220">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print</c0><c25>(</c25><c0>fmt!</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>$arg</c0><c25>)</c25><c4>,</c4><c0>+</c0><c25>))</c25><c0>
+</c0><br/><ln> 221</ln><a id="221">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> 222</ln><a id="222">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> 223</ln><a id="223">&emsp;</a><c0>
+</c0><br/><ln> 224</ln><a id="224">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;macro_rules!&nbsp;printfln&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 225</ln><a id="225">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$arg:expr</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 226</ln><a id="226">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println</c0><c25>(</c25><c0>fmt!</c0><c25>(</c25><c0>"%?"</c0><c4>,</c4><c0>&nbsp;$arg</c0><c25>))</c25><c0>
+</c0><br/><ln> 227</ln><a id="227">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> 228</ln><a id="228">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>&nbsp;$arg:expr&nbsp;</c0><c25>)</c25><c4>,</c4><c0>+</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;</c0><c25>(</c25><c0>
+</c0><br/><ln> 229</ln><a id="229">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println</c0><c25>(</c25><c0>fmt!</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>$arg</c0><c25>)</c25><c4>,</c4><c0>+</c0><c25>))</c25><c0>
+</c0><br/><ln> 230</ln><a id="230">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> 231</ln><a id="231">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> 232</ln><a id="232">&emsp;</a><c4>}</c4><br/><div/></maintext></body>
