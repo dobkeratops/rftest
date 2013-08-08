@@ -1,0 +1,261 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#343a3c;"><maintext><ln> &nbsp;&nbsp;1</ln><a id="1">&emsp;</a><c0>#</c0><c4>[</c4><c0>macro_escape</c0><c4>];</c4><c0>
+</c0><br/><ln> &nbsp;&nbsp;2</ln><a id="2">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;&nbsp;3</ln><a id="3">&emsp;</a><c0>pub&nbsp;use&nbsp;std::io::*</c0><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;&nbsp;4</ln><a id="4">&emsp;</a><c0>pub&nbsp;use&nbsp;std::str::*</c0><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;&nbsp;5</ln><a id="5">&emsp;</a><c0>pub&nbsp;use&nbsp;std::libc::*</c0><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;&nbsp;6</ln><a id="6">&emsp;</a><c0>pub&nbsp;use&nbsp;std::ptr::*</c0><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;&nbsp;7</ln><a id="7">&emsp;</a><c0>pub&nbsp;use&nbsp;std::sys::*</c0><c4>;</c4><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;for&nbsp;size_of
+</c24><br/><ln> &nbsp;&nbsp;8</ln><a id="8">&emsp;</a><c0>pub&nbsp;use&nbsp;std::vec::*</c0><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;&nbsp;9</ln><a id="9">&emsp;</a><c0>pub&nbsp;use&nbsp;std::num::*</c0><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;10</ln><a id="10">&emsp;</a><a href="ioutil.html#8_21_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;Size_t=u64;</c28><c28>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;todo&nbsp;-&nbsp;we're&nbsp;not&nbsp;sure&nbsp;this&nbsp;should&nbsp;be&nbsp;u64&nbsp;
+</c28><br/><ln> &nbsp;11</ln><a id="11">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;as&nbsp;the&nbsp;libc&nbsp;stuff&nbsp;seems&nbsp;to&nbsp;want.
+</c24><br/><ln> &nbsp;12</ln><a id="12">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;should&nbsp;it&nbsp;be&nbsp;uint?
+</c24><br/><ln> &nbsp;13</ln><a id="13">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;14</ln><a id="14">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;15</ln><a id="15">&emsp;</a><c0>macro_rules!&nbsp;logi</c0><c4>{</c4><c0>&nbsp;
+</c0><br/><ln> &nbsp;16</ln><a id="16">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>$a:expr</c0><c25>)</c25><c4>,</c4><c0>*</c0><c25>)</c25><c0>=&gt;</c0><c25>(</c25><c0>println</c0><c25>(</c25><c0>file!</c0><c25>()</c25><c0>+":"+line!</c0><c25>()</c25><c0>.to_str</c0><c25>()</c25><c0>+":&nbsp;"&nbsp;$</c0><c25>(</c25><c0>+$a.to_str</c0><c25>())</c25><c0>*&nbsp;</c0><c25>))</c25><c0>
+</c0><br/><ln> &nbsp;17</ln><a id="17">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;18</ln><a id="18">&emsp;</a><c24>//macro_rules!&nbsp;dump{&nbsp;($a:expr)=&gt;(logi!(fmt!("%s=%?",stringify!($a),$a).indent(2,160));)}
+</c24><br/><ln> &nbsp;19</ln><a id="19">&emsp;</a><c26>fn&nbsp;newline_if_over</c26><c1>(</c1><a href="ioutil.html#18_19_refs"><c20>a</c20><c1>:</c1><c3>~str</c3><c4>,</c4><a href="ioutil.html#18_26_refs"><c20>l</c20><c1>:</c1><c3>uint</c3><c25>)</c25><c1>-&gt;</c1><c3>~str</c3><c4>{</c4><c7>if&nbsp;</c7><a href="ioutil.html#20"><c8>a</c8></a><c10>.</c10><c10>l</c10><c10>e</c10><c10>n</c10><c25>(</c25><c25>)</c25><c10>&gt;</c10><a href="ioutil.html#20"><c8>l</c8></a><c7>&nbsp;</c7><c4>{</c4><a href="ioutil.html#20"><c8>a</c8></a><c2>+</c2><c16>~</c16><c12>"\n"</c12><c4>}</c4><c7>else</c7><c4>{</c4><a href="ioutil.html#20"><c8>a</c8></a><c4>}}</c4><c0>
+</c0><br/><ln> &nbsp;20</ln><a id="20">&emsp;</a><c0>macro_rules!&nbsp;dump</c0><c4>{</c4><c0>&nbsp;</c0><c25>(</c25><c0>$</c0><c25>(</c25><c0>$a:expr</c0><c25>)</c25><c4>,</c4><c0>*</c0><c25>)</c25><c0>=&gt;
+</c0><br/><ln> &nbsp;21</ln><a id="21">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>{</c4><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;txt=~""</c0><c4>;</c4><c0>&nbsp;
+</c0><br/><ln> &nbsp;22</ln><a id="22">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$</c0><c25>(</c25><c0>&nbsp;txt=txt.append</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;23</ln><a id="23">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fmt!</c0><c25>(</c25><c0>"%s=%?"</c0><c4>,</c4><c0>stringify!</c0><c25>(</c25><c0>$a</c0><c25>)</c25><c4>,</c4><c0>$a</c0><c25>)</c25><c0>+~"</c0><c4>,</c4><c0>"</c0><c25>)</c25><c0>&nbsp;
+</c0><br/><ln> &nbsp;24</ln><a id="24">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>*</c0><c4>;</c4><c0>&nbsp;
+</c0><br/><ln> &nbsp;25</ln><a id="25">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logi!</c0><c25>(</c25><c0>txt</c0><c25>)</c25><c4>;</c4><c0>&nbsp;
+</c0><br/><ln> &nbsp;26</ln><a id="26">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;27</ln><a id="27">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c0>
+</c0><br/><ln> &nbsp;28</ln><a id="28">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;29</ln><a id="29">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;30</ln><a id="30">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;31</ln><a id="31">&emsp;</a><c0>macro_rules!&nbsp;trace</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;32</ln><a id="32">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>()</c25><c0>=&gt;</c0><c25>(</c25><c0>
+</c0><br/><ln> &nbsp;33</ln><a id="33">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println</c0><c25>(</c25><c0>file!</c0><c25>()</c25><c0>.to_str</c0><c25>()</c25><c0>+":"+line!</c0><c25>()</c25><c0>.to_str</c0><c25>()</c25><c0>+":&nbsp;"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;34</ln><a id="34">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;35</ln><a id="35">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;36</ln><a id="36">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;37</ln><a id="37">&emsp;</a><c18>pub&nbsp;</c18><c1>trait&nbsp;&nbsp;&nbsp;&nbsp;Dbprint&nbsp;</c1><c18>{</c18><c26>fn&nbsp;dbprint</c26><c22>(&amp;self</c22><c25>)</c25><c4>;}</c4><c0>
+</c0><br/><ln> &nbsp;38</ln><a id="38">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;39</ln><a id="39">&emsp;</a><a href="ioutil.html#37_1_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;EndianSwap&nbsp;</c1><c18>{
+</c18><br/><ln> &nbsp;40</ln><a id="40">&emsp;</a><a href="ioutil.html#37_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;endian_swap</c26><c22>(&amp;self</c22><c25>)</c25><c22>-&gt;</c22><a href="ioutil.html#39"><c3>Self</c3></a><a href="ioutil.html#37_1_refs"><c4>;</c4><c18>
+</c18><br/><ln> &nbsp;41</ln><a id="41">&emsp;</a><a href="ioutil.html#37_1_refs"><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;42</ln><a id="42">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;43</ln><a id="43">&emsp;</a><c24>//&nbsp;dbprint&nbsp;postfix&nbsp;form&nbsp;means&nbsp;we&nbsp;can&nbsp;print&nbsp;tuples?
+</c24><br/><ln> &nbsp;44</ln><a id="44">&emsp;</a><c29>impl</c29><c5>&lt;T:ToStr&gt;</c5><c29>&nbsp;Dbprint&nbsp;for&nbsp;T&nbsp;</c29><c17>{
+</c17><br/><ln> &nbsp;45</ln><a id="45">&emsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;dbprint</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln> &nbsp;46</ln><a id="46">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>println</c8><c25>(</c25><c0>s</c0><c0>e</c0><c0>l</c0><c0>f</c0><c0>.</c0><c10>t</c10><c10>o</c10><c10>_</c10><c10>s</c10><c10>t</c10><c10>r</c10><c25>(</c25><c25>)</c25><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> &nbsp;47</ln><a id="47">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln> &nbsp;48</ln><a id="48">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;49</ln><a id="49">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;50</ln><a id="50">&emsp;</a><c1>pub&nbsp;</c1><c26>fn&nbsp;promptInput</c26><c1>(</c1><a href="ioutil.html#49_19_refs"><c20>prompt</c20><c1>:</c1><c3>&amp;str</c3><c25>)</c25><c1>-&gt;</c1><c3>~str</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> &nbsp;51</ln><a id="51">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>s</c8><c8>t</c8><c8>d</c8><c8>o</c8><c8>u</c8><c8>t</c8><c25>(</c25><c25>)</c25><c9>.</c9><c10>w</c10><c10>r</c10><c10>i</c10><c10>t</c10><c10>e</c10><c25>(</c25><a href="ioutil.html#51"><c8>prompt</c8></a><c10>.</c10><c10>a</c10><c10>s</c10><c10>_</c10><c10>b</c10><c10>y</c10><c10>t</c10><c10>e</c10><c10>s</c10><c25>(</c25><c25>)</c25><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c8>s</c8><c8>t</c8><c8>d</c8><c8>i</c8><c8>n</c8><c25>(</c25><c25>)</c25><c9>.</c9><c10>r</c10><c10>e</c10><c10>a</c10><c10>d</c10><c10>_</c10><c10>l</c10><c10>i</c10><c10>n</c10><c10>e</c10><c25>(</c25><c25>)</c25><c10>
+</c10><br/><ln> &nbsp;52</ln><a id="52">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;53</ln><a id="53">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;54</ln><a id="54">&emsp;</a><a href="ioutil.html#52_1_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;as_void_ptr</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="ioutil.html#53_22_refs"><c20>a</c20><a href="ioutil.html#52_1_refs"><c1>:</c1><c3>&amp;T</c3><c25>)</c25><c1>-&gt;</c1><c3>*c_void</c3><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><c8>to_unsafe_ptr</c8><c25>(</c25><a href="ioutil.html#55"><c8>a</c8></a><a href="ioutil.html#52_1_refs"><c25>)</c25><c9>&nbsp;as</c9><c7>&nbsp;</c7><c3>*c_void</c3><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;55</ln><a id="55">&emsp;</a><a href="ioutil.html#53_68_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;as_mut_void_ptr</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="ioutil.html#54_26_refs"><c20>a</c20><a href="ioutil.html#53_68_refs"><c1>:</c1><c3>&amp;T</c3><c25>)</c25><c1>-&gt;</c1><c3>*mut&nbsp;c_void</c3><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><c8>to_unsafe_ptr</c8><c25>(</c25><a href="ioutil.html#56"><c8>a</c8></a><a href="ioutil.html#53_68_refs"><c25>)</c25><c9>&nbsp;as</c9><c7>&nbsp;</c7><c3>*mut&nbsp;c_void</c3><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;56</ln><a id="56">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;57</ln><a id="57">&emsp;</a><c24>//&nbsp;this&nbsp;doest&nbsp;work?
+</c24><br/><ln> &nbsp;58</ln><a id="58">&emsp;</a><c18>pub&nbsp;</c18><c1>trait&nbsp;VoidPtr&nbsp;</c1><c18>{
+</c18><br/><ln> &nbsp;59</ln><a id="59">&emsp;</a><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;as_void_ptr</c26><c22>(&amp;self</c22><c25>)</c25><c22>-&gt;</c22><c3>*c_void</c3><c4>;</c4><c18>
+</c18><br/><ln> &nbsp;60</ln><a id="60">&emsp;</a><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;as_mut_void_ptr</c26><c22>(&amp;self</c22><c25>)</c25><c22>-&gt;</c22><c3>*mut&nbsp;c_void</c3><c4>;</c4><c18>
+</c18><br/><ln> &nbsp;61</ln><a id="61">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;62</ln><a id="62">&emsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;VoidPtr&nbsp;for&nbsp;T&nbsp;</c29><c17>{
+</c17><br/><ln> &nbsp;63</ln><a id="63">&emsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;as_void_ptr</c26><c22>(&amp;self</c22><c25>)</c25><c22>-&gt;</c22><c3>*c_void</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c8>to_unsafe_ptr</c8><c25>(</c25><c2>&amp;</c2><c0>self</c0><c25>)</c25><c9>&nbsp;as</c9><c7>&nbsp;</c7><c3>*c_void</c3><c4>}</c4><c17>
+</c17><br/><ln> &nbsp;64</ln><a id="64">&emsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;as_mut_void_ptr</c26><c22>(&amp;self</c22><c25>)</c25><c22>-&gt;</c22><c3>*mut&nbsp;c_void</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c8>to_unsafe_ptr</c8><c25>(</c25><c0>self</c0><c25>)</c25><c9>&nbsp;as</c9><c7>&nbsp;</c7><c3>*mut&nbsp;c_void</c3><c4>}</c4><c17>
+</c17><br/><ln> &nbsp;65</ln><a id="65">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;66</ln><a id="66">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;67</ln><a id="67">&emsp;</a><a href="ioutil.html#65_1_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;printStr</c26><c5>&lt;T:ToStr&gt;</c5><c1>(</c1><a href="ioutil.html#66_25_refs"><c20>a</c20><a href="ioutil.html#65_1_refs"><c1>:</c1><c3>&amp;T</c3><c25>)</c25><c4>{</c4><c8>println</c8><c25>(</c25><a href="ioutil.html#68"><c8>a</c8></a><c10>.</c10><c10>t</c10><c10>o</c10><c10>_</c10><c10>s</c10><c10>t</c10><c10>r</c10><c25>(</c25><c25>)</c25><c25>)</c25><a href="ioutil.html#65_1_refs"><c4>;}</c4><c0>
+</c0><br/><ln> &nbsp;68</ln><a id="68">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;69</ln><a id="69">&emsp;</a><a href="ioutil.html#67_1_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;c_str</c26><c1>(</c1><a href="ioutil.html#68_13_refs"><c20>rustStr</c20><a href="ioutil.html#67_1_refs"><c1>:</c1><c3>&amp;str</c3><c25>)</c25><c1>-&gt;</c1><c3>*c_char</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> &nbsp;70</ln><a id="70">&emsp;</a><a href="ioutil.html#67_1_refs"><c24>//&nbsp;&nbsp;&nbsp;&nbsp;as_c_str(rustStr,|x|x)
+</c24><br/><ln> &nbsp;71</ln><a id="71">&emsp;</a><a href="ioutil.html#67_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#70"><c8>rustStr</c8></a><c10>.</c10><c10>a</c10><c10>s</c10><c10>_</c10><c10>c</c10><c10>_</c10><c10>s</c10><c10>t</c10><c10>r</c10><c25>(</c25><c0>|</c0><a href="ioutil.html#70_19_refs"><c20>x</c20><c3>|</c3><c3>x</c3><c25>)</c25><c10>
+</c10><br/><ln> &nbsp;72</ln><a id="72">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;73</ln><a id="73">&emsp;</a><a href="ioutil.html#71_2_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;fileOpen</c26><c1>(</c1><a href="ioutil.html#72_23_refs"><c20>filename</c20><a href="ioutil.html#71_2_refs"><c1>:</c1><c3>&amp;str</c3><c4>,</c4><a href="ioutil.html#72_37_refs"><c20>mode</c20><a href="ioutil.html#71_2_refs"><c1>:</c1><c3>&amp;str</c3><c25>)</c25><c1>-&gt;&nbsp;</c1><c3>*FILE</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> &nbsp;74</ln><a id="74">&emsp;</a><a href="ioutil.html#71_2_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fopen</c8><c25>(</c25><a href="ioutil.html#69"><c8>c_str</c8></a><a href="ioutil.html#71_2_refs"><c25>(</c25><a href="ioutil.html#74"><c8>filename</c8></a><a href="ioutil.html#71_2_refs"><c25>)</c25><c4>,</c4><a href="ioutil.html#69"><c8>c_str</c8></a><a href="ioutil.html#71_2_refs"><c25>(</c25><a href="ioutil.html#74"><c8>mode</c8></a><a href="ioutil.html#71_2_refs"><c25>))</c25><c9>
+</c9><br/><ln> &nbsp;75</ln><a id="75">&emsp;</a><a href="ioutil.html#71_2_refs"><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;76</ln><a id="76">&emsp;</a><c0>/*
+</c0><br/><ln> &nbsp;77</ln><a id="77">&emsp;</a><c0>pub&nbsp;</c0><c26>fn&nbsp;fileLoadArray</c26><c5>&lt;T&gt;</c5><c0>(filename:&amp;str</c0><c25>)</c25><c0>-&gt;~</c0><c4>[</c4><c0>T</c0><c4>]</c4><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;78</ln><a id="78">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln> &nbsp;79</ln><a id="79">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;fp=fopen</c0><c25>(</c25><c0>c_str_from</c0><c25>(</c25><c0>filename</c0><c25>)</c25><c4>,</c4><c0>as_c_str</c0><c25>(</c25><c0>"rb"</c0><c4>,</c4><c0>|x|x</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln> &nbsp;80</ln><a id="80">&emsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;81</ln><a id="81">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;82</ln><a id="82">&emsp;</a><c0>*/
+</c0><br/><ln> &nbsp;83</ln><a id="83">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;84</ln><a id="84">&emsp;</a><a href="ioutil.html#82_1_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;fileWrite</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="ioutil.html#83_27_refs"><c20>fp</c20><a href="ioutil.html#82_1_refs"><c1>:</c1><c3>*FILE</c3><c4>,</c4><c1>&nbsp;</c1><a href="ioutil.html#83_37_refs"><c20>array</c20><a href="ioutil.html#82_1_refs"><c1>:</c1><c3>&amp;</c3><c4>[</c4><c3>T</c3><c4>]</c4><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> &nbsp;85</ln><a id="85">&emsp;</a><a href="ioutil.html#82_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#67"><c8>printStr</c8></a><a href="ioutil.html#82_1_refs"><c25>(</c25><c2>&amp;</c2><a href="ioutil.html#132"><c8>sizeofArray</c8></a><a href="ioutil.html#82_1_refs"><c25>(</c25><a href="ioutil.html#85"><c8>array</c8></a><a href="ioutil.html#82_1_refs"><c25>))</c25><c4>;</c4><c21>
+</c21><br/><ln> &nbsp;86</ln><a id="86">&emsp;</a><a href="ioutil.html#82_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fwrite</c8><c25>(</c25><a href="ioutil.html#54"><c8>as_void_ptr</c8></a><a href="ioutil.html#82_1_refs"><c25>(</c25><c2>&amp;</c2><a href="ioutil.html#85"><c8>array</c8></a><a href="ioutil.html#82_1_refs"><c4>[</c4><c12>0</c12><c4>]</c4><c25>)</c25><c4>,</c4><a href="ioutil.html#132"><c8>sizeofArray</c8></a><a href="ioutil.html#82_1_refs"><c25>(</c25><a href="ioutil.html#85"><c8>array</c8></a><a href="ioutil.html#82_1_refs"><c25>)</c25><c4>,</c4><c12>1</c12><c4>,</c4><a href="ioutil.html#85"><c8>fp</c8></a><a href="ioutil.html#82_1_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> &nbsp;87</ln><a id="87">&emsp;</a><a href="ioutil.html#82_1_refs"><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;88</ln><a id="88">&emsp;</a><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;fileWriteStruct</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="ioutil.html#87_33_refs"><c20>fp</c20><c1>:</c1><c3>*FILE</c3><c4>,</c4><c1>&nbsp;</c1><a href="ioutil.html#87_43_refs"><c20>s</c20><c1>:</c1><c3>&amp;T</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> &nbsp;89</ln><a id="89">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fwrite</c8><c25>(</c25><a href="ioutil.html#54"><c8>as_void_ptr</c8></a><c25>(</c25><a href="ioutil.html#89"><c8>s</c8></a><c25>)</c25><c4>,</c4><c8>size_of::&lt;</c8><c3>T</c3><c8>&gt;</c8><c25>()</c25><c9>&nbsp;as</c9><c7>&nbsp;</c7><a href="ioutil.html#10"><c3>Size_t</c3></a><c4>,</c4><c12>1</c12><c4>,</c4><a href="ioutil.html#89"><c8>fp</c8></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> &nbsp;90</ln><a id="90">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;91</ln><a id="91">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;92</ln><a id="92">&emsp;</a><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;fileRead</c26><c5>&lt;T:Zero+Clone&gt;</c5><c1>(</c1><a href="ioutil.html#91_37_refs"><c20>fp</c20><c1>:</c1><c3>*FILE</c3><c4>,</c4><a href="ioutil.html#91_46_refs"><c20>numElems</c20><c1>:</c1><a href="ioutil.html#10"><c3>Size_t</c3></a><c25>)</c25><c1>-&gt;</c1><c3>~</c3><c4>[</c4><c3>T</c3><c4>]</c4><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> &nbsp;93</ln><a id="93">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="ioutil.html#92_5_refs"><c20>buffer</c20><c16>=</c16><c8>from_elem</c8><c25>(</c25><a href="ioutil.html#93"><c8>numElems</c8></a><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c4>,</c4><c9>&nbsp;</c9><c8>Zero::zero</c8><c25>())</c25><c4>;</c4><c21>
+</c21><br/><ln> &nbsp;94</ln><a id="94">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fread</c8><c25>(</c25><a href="ioutil.html#55"><c8>as_mut_void_ptr</c8></a><c25>(</c25><c2>&amp;</c2><a href="ioutil.html#94"><c8>buffer</c8></a><c4>[</c4><c12>0</c12><c4>]</c4><c25>)</c25><c4>,</c4><a href="ioutil.html#93"><c8>numElems</c8></a><c4>,</c4><c8>size_of::&lt;</c8><c3>T</c3><c8>&gt;</c8><c25>()</c25><c9>&nbsp;as</c9><c7>&nbsp;</c7><a href="ioutil.html#10"><c3>Size_t</c3></a><c4>,</c4><a href="ioutil.html#93"><c8>fp</c8></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> &nbsp;95</ln><a id="95">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#94"><c8>buffer</c8></a><c21>
+</c21><br/><ln> &nbsp;96</ln><a id="96">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> &nbsp;97</ln><a id="97">&emsp;</a><c0>
+</c0><br/><ln> &nbsp;98</ln><a id="98">&emsp;</a><a href="ioutil.html#96_1_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;fileReadBytes</c26><c1>(</c1><a href="ioutil.html#97_28_refs"><c20>fp</c20><a href="ioutil.html#96_1_refs"><c1>:</c1><c3>*FILE</c3><c4>,</c4><a href="ioutil.html#97_37_refs"><c20>numBytes</c20><a href="ioutil.html#96_1_refs"><c1>:</c1><a href="ioutil.html#10"><c3>Size_t</c3></a><a href="ioutil.html#96_1_refs"><c25>)</c25><c1>-&gt;</c1><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> &nbsp;99</ln><a id="99">&emsp;</a><a href="ioutil.html#96_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;todo&nbsp;-&nbsp;simply&nbsp;express&nbsp;as&nbsp;the&nbsp;above..
+</c24><br/><ln> 100</ln><a id="100">&emsp;</a><a href="ioutil.html#96_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="ioutil.html#99_5_refs"><c20>buffer</c20><a href="ioutil.html#96_1_refs"><c16>=</c16><c8>from_elem</c8><c25>(</c25><a href="ioutil.html#99"><c8>numBytes</c8></a><a href="ioutil.html#96_1_refs"><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c4>,</c4><c12>0</c12><c7>&nbsp;as&nbsp;</c7><c3>u8</c3><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 101</ln><a id="101">&emsp;</a><a href="ioutil.html#96_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fread</c8><c25>(</c25><a href="ioutil.html#55"><c8>as_mut_void_ptr</c8></a><a href="ioutil.html#96_1_refs"><c25>(</c25><c2>&amp;</c2><a href="ioutil.html#101"><c8>buffer</c8></a><a href="ioutil.html#96_1_refs"><c4>[</c4><c12>0</c12><c4>]</c4><c25>)</c25><c4>,</c4><a href="ioutil.html#99"><c8>numBytes</c8></a><a href="ioutil.html#96_1_refs"><c4>,</c4><c12>1</c12><c4>,</c4><a href="ioutil.html#99"><c8>fp</c8></a><a href="ioutil.html#96_1_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 102</ln><a id="102">&emsp;</a><a href="ioutil.html#96_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#101"><c8>buffer</c8></a><a href="ioutil.html#96_1_refs"><c21>
+</c21><br/><ln> 103</ln><a id="103">&emsp;</a><a href="ioutil.html#96_1_refs"><c4>}</c4><c0>
+</c0><br/><ln> 104</ln><a id="104">&emsp;</a><c0>
+</c0><br/><ln> 105</ln><a id="105">&emsp;</a><a href="ioutil.html#103_1_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;fileSize</c26><c1>(</c1><a href="ioutil.html#104_23_refs"><c20>fp</c20><a href="ioutil.html#103_1_refs"><c1>:</c1><c3>*FILE</c3><c25>)</c25><c1>-&gt;</c1><a href="ioutil.html#10"><c3>Size_t</c3></a><a href="ioutil.html#103_1_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> 106</ln><a id="106">&emsp;</a><a href="ioutil.html#103_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fseek</c8><c25>(</c25><a href="ioutil.html#106"><c8>fp</c8></a><a href="ioutil.html#103_1_refs"><c4>,</c4><c12>0</c12><c4>,</c4><c8>SEEK_END</c8><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 107</ln><a id="107">&emsp;</a><a href="ioutil.html#103_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="ioutil.html#106_5_refs"><c20>pos</c20><a href="ioutil.html#103_1_refs"><c16>=</c16><c8>ftell</c8><c25>(</c25><a href="ioutil.html#106"><c8>fp</c8></a><a href="ioutil.html#103_1_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 108</ln><a id="108">&emsp;</a><a href="ioutil.html#103_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fseek</c8><c25>(</c25><a href="ioutil.html#106"><c8>fp</c8></a><a href="ioutil.html#103_1_refs"><c4>,</c4><c12>0</c12><c4>,</c4><c8>SEEK_SET</c8><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 109</ln><a id="109">&emsp;</a><a href="ioutil.html#103_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#108"><c8>pos</c8></a><a href="ioutil.html#103_1_refs"><c7>&nbsp;as&nbsp;</c7><a href="ioutil.html#10"><c3>Size_t</c3></a><a href="ioutil.html#103_1_refs"><c21>
+</c21><br/><ln> 110</ln><a id="110">&emsp;</a><a href="ioutil.html#103_1_refs"><c4>}</c4><c0>
+</c0><br/><ln> 111</ln><a id="111">&emsp;</a><c0>
+</c0><br/><ln> 112</ln><a id="112">&emsp;</a><c1>pub&nbsp;</c1><c26>fn&nbsp;fileLoad</c26><c1>(</c1><a href="ioutil.html#111_16_refs"><c20>filename</c20><c1>:</c1><c3>&amp;str</c3><c25>)</c25><c1>-&gt;</c1><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> 113</ln><a id="113">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln> 114</ln><a id="114">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;TODO&nbsp;-&nbsp;should&nbsp;do&nbsp;with&nbsp;patter&nbsp;match&nbsp;null,&nbsp;fp?
+</c24><br/><ln> 115</ln><a id="115">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="ioutil.html#114_6_refs"><c20>fp</c20><c16>=&nbsp;</c16><a href="ioutil.html#73"><c8>fileOpen</c8></a><c25>(</c25><a href="ioutil.html#113"><c8>filename</c8></a><c4>,</c4><c12>"rb"</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 116</ln><a id="116">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="ioutil.html#116"><c8>fp</c8></a><c2>==</c2><c12>0</c12><c7>&nbsp;as&nbsp;</c7><c3>*FILE</c3><c7>&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln> 117</ln><a id="117">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#67"><c8>printStr</c8></a><c25>(</c25><c2>&amp;</c2><c25>(</c25><c12>"could&nbsp;not&nbsp;read&nbsp;"</c12><c2>+</c2><a href="ioutil.html#113"><c8>filename</c8></a><c25>))</c25><c4>;</c4><c21>&nbsp;</c21><c16>~</c16><c4>[]</c4><c21>
+</c21><br/><ln> 118</ln><a id="118">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln> 119</ln><a id="119">&emsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;
+</c7><br/><ln> 120</ln><a id="120">&emsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>{</c4><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="ioutil.html#119_8_refs"><c20>buffer</c20><c16>=</c16><a href="ioutil.html#98"><c8>fileReadBytes</c8></a><c25>(</c25><a href="ioutil.html#116"><c8>fp</c8></a><c4>,</c4><a href="ioutil.html#105"><c8>fileSize</c8></a><c25>(</c25><a href="ioutil.html#116"><c8>fp</c8></a><c25>))</c25><c4>;</c4><c21>
+</c21><br/><ln> 121</ln><a id="121">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fclose</c8><c25>(</c25><a href="ioutil.html#116"><c8>fp</c8></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 122</ln><a id="122">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#121"><c8>buffer</c8></a><c21>
+</c21><br/><ln> 123</ln><a id="123">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln> 124</ln><a id="124">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln> 125</ln><a id="125">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> 126</ln><a id="126">&emsp;</a><c0>
+</c0><br/><ln> 127</ln><a id="127">&emsp;</a><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;fileWriteRange</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="ioutil.html#126_32_refs"><c20>fp</c20><c1>:</c1><c3>*FILE</c3><c4>,</c4><c1>&nbsp;</c1><a href="ioutil.html#126_42_refs"><c20>array</c20><c1>:</c1><c3>&amp;</c3><c4>[</c4><c3>T</c3><c4>],</c4><a href="ioutil.html#126_53_refs"><c20>start</c20><c1>:</c1><c3>uint</c3><c4>,</c4><a href="ioutil.html#126_64_refs"><c20>end</c20><c1>:</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> 128</ln><a id="128">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#67"><c8>printStr</c8></a><c25>(</c25><c2>&amp;</c2><a href="ioutil.html#132"><c8>sizeofArray</c8></a><c25>(</c25><a href="ioutil.html#128"><c8>array</c8></a><c25>))</c25><c4>;</c4><c21>
+</c21><br/><ln> 129</ln><a id="129">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fwrite</c8><c25>(</c25><a href="ioutil.html#54"><c8>as_void_ptr</c8></a><c25>(</c25><c2>&amp;</c2><a href="ioutil.html#128"><c8>array</c8></a><c4>[</c4><a href="ioutil.html#128"><c8>start</c8></a><c4>]</c4><c25>)</c25><c4>,</c4><a href="ioutil.html#133"><c8>sizeofArrayElem</c8></a><c25>(</c25><a href="ioutil.html#128"><c8>array</c8></a><c25>)</c25><c9>*</c9><c25>(</c25><a href="ioutil.html#128"><c8>end</c8></a><c2>-</c2><a href="ioutil.html#128"><c8>start</c8></a><c25>)</c25><c0>.</c0><c10>t</c10><c10>o</c10><c10>_</c10><c10>u</c10><c10>6</c10><c10>4</c10><c25>(</c25><c25>)</c25><c4>,</c4><c12>1</c12><c4>,</c4><a href="ioutil.html#128"><c8>fp</c8></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 130</ln><a id="130">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> 131</ln><a id="131">&emsp;</a><c0>
+</c0><br/><ln> 132</ln><a id="132">&emsp;</a><a href="ioutil.html#130_1_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;sizeofArray</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="ioutil.html#131_22_refs"><c20>a</c20><a href="ioutil.html#130_1_refs"><c1>:</c1><c3>&amp;</c3><c4>[</c4><c3>T</c3><c4>]</c4><c25>)</c25><c1>-&gt;</c1><a href="ioutil.html#10"><c3>Size_t</c3></a><a href="ioutil.html#130_1_refs"><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><c25>(</c25><c8>s</c8><c8>i</c8><c8>z</c8><c8>e</c8><c8>_</c8><c8>o</c8><c8>f</c8><c8>:</c8><c8>:</c8><c8>&lt;</c8><c3>T</c3><c8>&gt;</c8><c25>(</c25><c25>)</c25><c9>&nbsp;</c9><c9>*</c9><c2>&nbsp;</c2><a href="ioutil.html#133"><c8>a</c8></a><a href="rustfind.html#770"><c10>.len</c10><c25>())</c25></a><c0>.</c0><c10>t</c10><c10>o</c10><c10>_</c10><c10>u</c10><c10>6</c10><c10>4</c10><c25>(</c25><c25>)</c25><c10>&nbsp;</c10><c4>}</c4><c0>
+</c0><br/><ln> 133</ln><a id="133">&emsp;</a><a href="ioutil.html#131_78_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;sizeofArrayElem</c26><c5>&lt;T&gt;</c5><c1>(</c1><c20>_</c20><c1>:</c1><c3>&amp;</c3><c4>[</c4><c3>T</c3><c4>]</c4><c25>)</c25><c1>-&gt;</c1><a href="ioutil.html#10"><c3>Size_t</c3></a><a href="ioutil.html#131_78_refs"><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><c8>s</c8><c8>i</c8><c8>z</c8><c8>e</c8><c8>_</c8><c8>o</c8><c8>f</c8><c8>:</c8><c8>:</c8><c8>&lt;</c8><c3>T</c3><c8>&gt;</c8><c25>(</c25><c25>)</c25><c9>.</c9><c10>t</c10><c10>o</c10><c10>_</c10><c10>u</c10><c10>6</c10><c10>4</c10><c25>(</c25><c25>)</c25><c10>&nbsp;</c10><c4>}</c4><c0>
+</c0><br/><ln> 134</ln><a id="134">&emsp;</a><c0>
+</c0><br/><ln> 135</ln><a id="135">&emsp;</a><c1>pub&nbsp;</c1><c26>fn&nbsp;fileSaveArray</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="ioutil.html#134_24_refs"><c20>buffer</c20><c1>:</c1><c3>&amp;</c3><c4>[</c4><c3>T</c3><c4>],</c4><a href="ioutil.html#134_36_refs"><c20>filename</c20><c1>:</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> 136</ln><a id="136">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln> 137</ln><a id="137">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="ioutil.html#136_6_refs"><c20>fp</c20><c16>=</c16><a href="ioutil.html#73"><c8>fileOpen</c8></a><c25>(</c25><a href="ioutil.html#136"><c8>filename</c8></a><c4>,</c4><c12>"wb"</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 138</ln><a id="138">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="ioutil.html#138"><c8>fp</c8></a><c2>!=</c2><c25>(</c25><c12>0</c12><c7>&nbsp;as&nbsp;</c7><c3>*FILE</c3><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21><br/><ln> 139</ln><a id="139">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#84"><c8>fileWrite</c8></a><c25>(</c25><a href="ioutil.html#138"><c8>fp</c8></a><c4>,</c4><a href="ioutil.html#136"><c8>buffer</c8></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 140</ln><a id="140">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//fwrite(to_void_ptr(&amp;buffer[0]),sizeofArray(buffer),1,fp);
+</c24><br/><ln> 141</ln><a id="141">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fclose</c8><c25>(</c25><a href="ioutil.html#138"><c8>fp</c8></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 142</ln><a id="142">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>&nbsp;else&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln> 143</ln><a id="143">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#67"><c8>printStr</c8></a><c25>(</c25><c2>&amp;</c2><c25>(</c25><c12>"could&nbsp;not&nbsp;write&nbsp;"</c12><c2>+</c2><a href="ioutil.html#136"><c8>filename</c8></a><c25>))</c25><c4>;</c4><c21>
+</c21><br/><ln> 144</ln><a id="144">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln> 145</ln><a id="145">&emsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln> 146</ln><a id="146">&emsp;</a><c4>}</c4><c0>
+</c0><br/><ln> 147</ln><a id="147">&emsp;</a><c0>
+</c0><br/><ln> 148</ln><a id="148">&emsp;</a><a href="ioutil.html#146_1_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;fileSaveStr</c26><c1>(</c1><a href="ioutil.html#147_19_refs"><c20>text</c20><a href="ioutil.html#146_1_refs"><c1>:</c1><c3>&amp;str</c3><c4>,</c4><a href="ioutil.html#147_29_refs"><c20>filename</c20><a href="ioutil.html#146_1_refs"><c1>:</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln> 149</ln><a id="149">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln> 150</ln><a id="150">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="ioutil.html#149_6_refs"><c20>fp</c20><a href="ioutil.html#146_1_refs"><c16>=</c16><a href="ioutil.html#73"><c8>fileOpen</c8></a><a href="ioutil.html#146_1_refs"><c25>(</c25><a href="ioutil.html#149"><c8>filename</c8></a><a href="ioutil.html#146_1_refs"><c4>,</c4><c12>"wb"</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 151</ln><a id="151">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="ioutil.html#151"><c8>fp</c8></a><a href="ioutil.html#146_1_refs"><c2>!=</c2><c25>(</c25><c12>0</c12><c7>&nbsp;as&nbsp;</c7><c3>*FILE</c3><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21><br/><ln> 152</ln><a id="152">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fwrite</c8><c25>(</c25><a href="ioutil.html#69"><c8>c_str</c8></a><a href="ioutil.html#146_1_refs"><c25>(</c25><a href="ioutil.html#149"><c8>text</c8></a><a href="ioutil.html#146_1_refs"><c25>)</c25><c9>&nbsp;as</c9><c7>&nbsp;</c7><c3>*c_void</c3><c4>,</c4><a href="ioutil.html#149"><c8>text</c8></a><c10>.</c10><c10>l</c10><c10>e</c10><c10>n</c10><c25>(</c25><c25>)</c25><c10>&nbsp;</c10><c10>a</c10><c10>s</c10><a href="ioutil.html#146_1_refs"><c7>&nbsp;</c7><c3>u64</c3><c4>,</c4><c12>1</c12><c4>,</c4><a href="ioutil.html#151"><c8>fp</c8></a><a href="ioutil.html#146_1_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 153</ln><a id="153">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>
+</c21><br/><ln> 154</ln><a id="154">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//fwrite(to_void_ptr(&amp;buffer[0]),sizeofArray(buffer),1,fp);
+</c24><br/><ln> 155</ln><a id="155">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>fclose</c8><c25>(</c25><a href="ioutil.html#151"><c8>fp</c8></a><a href="ioutil.html#146_1_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln> 156</ln><a id="156">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>&nbsp;else&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln> 157</ln><a id="157">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ioutil.html#67"><c8>printStr</c8></a><a href="ioutil.html#146_1_refs"><c25>(</c25><c2>&amp;</c2><c25>(</c25><c12>"could&nbsp;not&nbsp;write&nbsp;"</c12><c2>+</c2><a href="ioutil.html#149"><c8>filename</c8></a><a href="ioutil.html#146_1_refs"><c25>))</c25><c4>;</c4><c21>
+</c21><br/><ln> 158</ln><a id="158">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln> 159</ln><a id="159">&emsp;</a><a href="ioutil.html#146_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln> 160</ln><a id="160">&emsp;</a><a href="ioutil.html#146_1_refs"><c4>}</c4><c0>
+</c0><br/><ln> 161</ln><a id="161">&emsp;</a><c0>
+</c0><br/><ln> 162</ln><a id="162">&emsp;</a><c0>
+</c0><br/><ln> 163</ln><a id="163">&emsp;</a><c0>
+</c0><br/><ln> 164</ln><a id="164">&emsp;</a><c0>
+</c0><br/><div/><br/><a id="52_1_refs"><c24>ioutil.rs:53:1-54:67<br/></c24><a href="ioutil.html#53"><pr>
+<br/>pub fn as_void_ptr<T>(a:&T)->*c_void { to_unsafe_ptr(a) as *c_void}
+<br/></pr></a></a><a href="ioutil.html#86"><c24>86: </c24>	fwrite(as_void_ptr(&array[0]),sizeofArray(array),1,fp);
+<br/></a><a href="ioutil.html#129"><c24>129: </c24>	fwrite(as_void_ptr(&array[start]),sizeofArrayElem(array)*(end-start).to_u64(),1,fp);
+<br/></a><a href="ioutil.html#89"><c24>89: </c24>	fwrite(as_void_ptr(s),size_of::<T>() as Size_t,1,fp);
+<br/></a><br/><br/><a id="103_1_refs"><c24>ioutil.rs:104:1-110:1<br/></c24><a href="ioutil.html#104"><pr>
+<br/>pub unsafe fn fileSize(fp:*FILE)->Size_t {
+<br/></pr></a></a><a href="ioutil.html#120"><c24>120: </c24>		{	let buffer=fileReadBytes(fp,fileSize(fp));
+<br/></a><br/><br/><a id="37_1_refs"><c24>ioutil.rs:38:1-41:1<br/></c24><a href="ioutil.html#38"><pr>
+<br/>pub trait EndianSwap {
+<br/></pr></a></a><a href="ioutil.html#40"><c24>40: </c24>	fn endian_swap(&self)->Self;
+<br/></a><br/><br/><a id="65_1_refs"><c24>ioutil.rs:66:1-67:52<br/></c24><a href="ioutil.html#66"><pr>
+<br/>pub fn printStr<T:ToStr>(a:&T){println(a.to_str());}
+<br/></pr></a></a><a href="ioutil.html#157"><c24>157: </c24>			printStr(&("could not write "+filename));
+<br/></a><a href="ioutil.html#85"><c24>85: </c24>	printStr(&sizeofArray(array));
+<br/></a><a href="ioutil.html#117"><c24>117: </c24>			printStr(&("could not read "+filename)); ~[]
+<br/></a><a href="ioutil.html#143"><c24>143: </c24>			printStr(&("could not write "+filename));
+<br/></a><a href="ioutil.html#128"><c24>128: </c24>	printStr(&sizeofArray(array));
+<br/></a><br/><br/><a id="71_2_refs"><c24>ioutil.rs:72:2-75:1<br/></c24><a href="ioutil.html#72"><pr>}
+<br/>pub unsafe fn fileOpen(filename:&str,mode:&str)-> *FILE {
+<br/></pr></a></a><a href="ioutil.html#115"><c24>115: </c24>		let fp= fileOpen(filename,"rb");
+<br/></a><a href="ioutil.html#150"><c24>150: </c24>		let fp=fileOpen(filename,"wb");
+<br/></a><a href="ioutil.html#137"><c24>137: </c24>		let fp=fileOpen(filename,"wb");
+<br/></a><br/><br/><a id="130_1_refs"><c24>ioutil.rs:131:1-132:77<br/></c24><a href="ioutil.html#131"><pr>
+<br/>pub fn sizeofArray<T>(a:&[T])->Size_t { (size_of::<T>() * a.len()).to_u64() }
+<br/></pr></a></a><a href="ioutil.html#85"><c24>85: </c24>	printStr(&sizeofArray(array));
+<br/></a><a href="ioutil.html#128"><c24>128: </c24>	printStr(&sizeofArray(array));
+<br/></a><a href="ioutil.html#86"><c24>86: </c24>	fwrite(as_void_ptr(&array[0]),sizeofArray(array),1,fp);
+<br/></a><br/><br/><a id="53_68_refs"><c24>ioutil.rs:54:68-55:79<br/></c24><a href="ioutil.html#54"><pr>pub fn as_void_ptr<T>(a:&T)->*c_void { to_unsafe_ptr(a) as *c_void}
+<br/>pub fn as_mut_void_ptr<T>(a:&T)->*mut c_void { to_unsafe_ptr(a) as *mut c_void}
+<br/></pr></a></a><a href="ioutil.html#101"><c24>101: </c24>	fread(as_mut_void_ptr(&buffer[0]),numBytes,1,fp);
+<br/></a><a href="ioutil.html#94"><c24>94: </c24>	fread(as_mut_void_ptr(&buffer[0]),numElems,size_of::<T>() as Size_t,fp);
+<br/></a><br/><br/><a id="131_78_refs"><c24>ioutil.rs:132:78-133:69<br/></c24><a href="ioutil.html#132"><pr>pub fn sizeofArray<T>(a:&[T])->Size_t { (size_of::<T>() * a.len()).to_u64() }
+<br/>pub fn sizeofArrayElem<T>(_:&[T])->Size_t { size_of::<T>().to_u64() }
+<br/></pr></a></a><a href="ioutil.html#129"><c24>129: </c24>	fwrite(as_void_ptr(&array[start]),sizeofArrayElem(array)*(end-start).to_u64(),1,fp);
+<br/></a><br/><br/><a id="82_1_refs"><c24>ioutil.rs:83:1-87:1<br/></c24><a href="ioutil.html#83"><pr>
+<br/>pub unsafe fn fileWrite<T>(fp:*FILE, array:&[T]) {
+<br/></pr></a></a><a href="ioutil.html#139"><c24>139: </c24>			fileWrite(fp,buffer);
+<br/></a><br/><br/><a id="146_1_refs"><c24>ioutil.rs:147:1-160:1<br/></c24><a href="ioutil.html#147"><pr>
+<br/>pub fn fileSaveStr(text:&str,filename:&str) {
+<br/></pr></a></a><a href="rust2html.html"><c24>rust2html.rs:<br/></c24><a href="rust2html.html#59"><c24>59: </c24>		fileSaveStr(doc_str,change_file_name_ext(fm.name,"html"));
+<br/></a><br/><br/><a id="8_21_refs"><c24>ioutil.rs:9:21-10:20<br/></c24><a href="ioutil.html#9"><pr>pub use std::num::*;
+<br/>pub type Size_t=u64;	// todo - we're not sure this should be u64 
+<br/></pr></a></a><a href="ioutil.html#109"><c24>109: </c24>	pos as Size_t
+<br/></a><a href="ioutil.html#133"><c24>133: </c24>pub fn sizeofArrayElem<T>(_:&[T])->Size_t { size_of::<T>().to_u64() }
+<br/></a><a href="ioutil.html#94"><c24>94: </c24>	fread(as_mut_void_ptr(&buffer[0]),numElems,size_of::<T>() as Size_t,fp);
+<br/></a><a href="ioutil.html#98"><c24>98: </c24>pub unsafe fn fileReadBytes(fp:*FILE,numBytes:Size_t)->~[u8] {
+<br/></a><a href="ioutil.html#132"><c24>132: </c24>pub fn sizeofArray<T>(a:&[T])->Size_t { (size_of::<T>() * a.len()).to_u64() }
+<br/></a><a href="ioutil.html#89"><c24>89: </c24>	fwrite(as_void_ptr(s),size_of::<T>() as Size_t,1,fp);
+<br/></a><a href="ioutil.html#92"><c24>92: </c24>pub unsafe fn fileRead<T:Zero+Clone>(fp:*FILE,numElems:Size_t)->~[T] {
+<br/></a><a href="ioutil.html#105"><c24>105: </c24>pub unsafe fn fileSize(fp:*FILE)->Size_t {
+<br/></a><br/><br/><a id="96_1_refs"><c24>ioutil.rs:97:1-103:1<br/></c24><a href="ioutil.html#97"><pr>
+<br/>pub unsafe fn fileReadBytes(fp:*FILE,numBytes:Size_t)->~[u8] {
+<br/></pr></a></a><a href="ioutil.html#120"><c24>120: </c24>		{	let buffer=fileReadBytes(fp,fileSize(fp));
+<br/></a><br/><br/><a id="67_1_refs"><c24>ioutil.rs:68:1-72:1<br/></c24><a href="ioutil.html#68"><pr>
+<br/>pub fn c_str(rustStr:&str)->*c_char {
+<br/></pr></a></a><a href="ioutil.html#74"><c24>74: </c24>	fopen(c_str(filename),c_str(mode))
+<br/></a><a href="ioutil.html#74"><c24>74: </c24>	fopen(c_str(filename),c_str(mode))
+<br/></a><a href="ioutil.html#152"><c24>152: </c24>			fwrite(c_str(text) as *c_void,text.len() as u64,1,fp);
+<br/></a><br/></a></maintext>
