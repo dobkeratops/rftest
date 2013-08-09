@@ -1,0 +1,561 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
+</style><body style="background-color:#343a3c;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c21>use</c21><c0>&nbsp;ast</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c21>use</c21><c0>&nbsp;codemap::</c0><c4>{</c4><c0>BytePos</c0><c4>,</c4><c0>&nbsp;CharPos</c0><c4>,</c4><c0>&nbsp;CodeMap</c0><c4>,</c4><c0>&nbsp;Pos</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c21>use</c21><c0>&nbsp;diagnostic</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c21>use</c21><c0>&nbsp;parse::lexer::</c0><c4>{</c4><c0>is_whitespace</c0><c4>,</c4><c0>&nbsp;with_str_from</c0><c4>,</c4><c0>&nbsp;reader</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c21>use</c21><c0>&nbsp;parse::lexer::</c0><c4>{</c4><c0>StringReader</c0><c4>,</c4><c0>&nbsp;bump</c0><c4>,</c4><c0>&nbsp;is_eof</c0><c4>,</c4><c0>&nbsp;nextch</c0><c4>,</c4><c0>&nbsp;TokenAndSpan</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c21>use</c21><c0>&nbsp;parse::lexer::</c0><c4>{</c4><c0>is_line_non_doc_comment</c0><c4>,</c4><c0>&nbsp;is_block_non_doc_comment</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c21>use</c21><c0>&nbsp;parse::lexer</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c21>use</c21><c0>&nbsp;parse::token</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c21>use</c21><c0>&nbsp;parse::token::</c0><c4>{</c4><c0>get_ident_interner</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c21>use</c21><c0>&nbsp;std::io</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c21>use</c21><c0>&nbsp;std::str</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c21>use</c21><c0>&nbsp;std::uint</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c33>#</c33><c4>[</c4><c33>deriving</c33><c25>(</c25><a href="../parse/comments.rs.html#30"><c33>Clone</c33></a><c4>,</c4><c33>&nbsp;</c33><a href="#24_18_refs"><c33>Eq</c33></a><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c21>pub</c21><c11>&nbsp;</c11><c29>enum&nbsp;</c29><a href="#24_23_refs"><c29>cmnt_style</c29></a><c29>&nbsp;</c29><c4>{</c4><a href="#24_23_refs"><c11>
+</c11></a><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#26_4_refs"><c0>isolated</c0></a><c4>,</c4><c11>&nbsp;</c11><c24>//&nbsp;No&nbsp;code&nbsp;on&nbsp;either&nbsp;side&nbsp;of&nbsp;each&nbsp;line&nbsp;of&nbsp;the&nbsp;comment
+</c24><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#27_4_refs"><c0>trailing</c0></a><c4>,</c4><c11>&nbsp;</c11><c24>//&nbsp;Code&nbsp;exists&nbsp;to&nbsp;the&nbsp;left&nbsp;of&nbsp;the&nbsp;comment
+</c24><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#28_4_refs"><c0>mixed</c0></a><c4>,</c4><c11>&nbsp;</c11><c24>//&nbsp;Code&nbsp;before&nbsp;/*&nbsp;foo&nbsp;*/&nbsp;and&nbsp;after&nbsp;the&nbsp;comment
+</c24><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#29_4_refs"><c0>blank_line</c0></a><c4>,</c4><c11>&nbsp;</c11><c24>//&nbsp;Just&nbsp;a&nbsp;manual&nbsp;blank&nbsp;line&nbsp;"\n\n",&nbsp;for&nbsp;layout
+</c24><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c33>#</c33><c4>[</c4><c33>deriving</c33><c25>(</c25><a href="#32_11_refs"><c33>Clone</c33></a><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#32_19_refs"><c27>cmnt</c27></a><c27>&nbsp;</c27><c4>{</c4><a href="#32_19_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#34_4_refs"><c6>style</c6></a><c6>:&nbsp;</c6><a href="../parse/comments.rs.html#26"><c3>cmnt_style</c3></a><c4>,</c4><a href="#32_19_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#35_4_refs"><c6>lines</c6></a><c6>:&nbsp;</c6><c3>~</c3><c4>[</c4><c3>~</c3><a href="#35_4_refs"><c3>str</c3></a><c4>],</c4><a href="#32_19_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#36_4_refs"><c6>pos</c6></a><c6>:&nbsp;</c6><a href="../codemap.rs.html#34"><c3>BytePos</c3></a><a href="#32_19_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#38_1_refs"><c26>is_doc_comment</c26></a><c25>(</c25><a href="#39_22_refs"><c20>s</c20></a><c1>:&nbsp;</c1><c3>&amp;</c3><a href="#38_1_refs"><c3>str</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="#38_1_refs"><c3>bool</c3></a><c1>&nbsp;</c1><c4>{</c4><a href="#38_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><a href="../parse/comments.rs.html#41"><c8>s</c8></a><c10>.</c10><a href="../oldvisit.rs.html#569"><c10>starts_with</c10></a><c25>(</c25><a href="../oldvisit.rs.html#569"><c12>"</c12></a><c32>///")&nbsp;&amp;&amp;&nbsp;!is_line_non_doc_comment(s))&nbsp;||
+</c32><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><a href="../parse/comments.rs.html#41"><c8>s</c8></a><c10>.</c10><a href="../oldvisit.rs.html#569"><c10>starts_with</c10></a><c25>(</c25><a href="../oldvisit.rs.html#569"><c12>"</c12></a><c24>//!")&nbsp;||
+</c24><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><a href="../parse/comments.rs.html#41"><c8>s</c8></a><c10>.</c10><a href="../oldvisit.rs.html#569"><c10>starts_with</c10></a><c25>(</c25><a href="../oldvisit.rs.html#569"><c12>"</c12></a><c12>/**</c12><a href="../oldvisit.rs.html#569"><c12>"</c12></a><c25>)</c25><c10>&nbsp;&amp;&amp;</c10><c0>&nbsp;</c0><c2>!</c2><a href="../parse/lexer.rs.html#309"><c8>is_block_non_doc_comment</c8></a><c25>(</c25><a href="../parse/comments.rs.html#41"><c8>s</c8></a><c25>))</c25><c0>&nbsp;||</c0><a href="#38_1_refs"><c0>
+</c0></a><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><a href="../parse/comments.rs.html#41"><c8>s</c8></a><c10>.</c10><a href="../oldvisit.rs.html#569"><c10>starts_with</c10></a><c25>(</c25><a href="#38_1_refs"><c12>"</c12></a><c24>/*!")
+</c24><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c24>pub&nbsp;fn&nbsp;doc_comment_style(comment:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;ast::AttrStyle&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;assert!(is_doc_comment(comment));
+</c24><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;comment.starts_with("//!")&nbsp;||&nbsp;comment.starts_with("/*!")&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ast::AttrInner
+</c24><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ast::AttrOuter
+</c24><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c24>pub&nbsp;fn&nbsp;strip_doc_comment_decoration(comment:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;~str&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a href="#54_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;remove&nbsp;whitespace-only&nbsp;lines&nbsp;from&nbsp;the&nbsp;start/end&nbsp;of&nbsp;lines
+</c24><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;vertical_trim(lines:&nbsp;~[~str])&nbsp;-&gt;&nbsp;~[~str]&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;i&nbsp;=&nbsp;0u;
+</c24><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;j&nbsp;=&nbsp;lines.len();
+</c24><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;i&nbsp;&lt;&nbsp;j&nbsp;&amp;&amp;&nbsp;lines[i].trim().is_empty()&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i&nbsp;+=&nbsp;1u;
+</c24><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;j&nbsp;&gt;&nbsp;i&nbsp;&amp;&amp;&nbsp;lines[j&nbsp;-&nbsp;1u].trim().is_empty()&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j&nbsp;-=&nbsp;1u;
+</c24><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;lines.slice(i,&nbsp;j).to_owned();
+</c24><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a href="#54_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;remove&nbsp;a&nbsp;"[&nbsp;\t]*\*"&nbsp;block&nbsp;from&nbsp;each&nbsp;line,&nbsp;if&nbsp;possible
+</c24><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;horizontal_trim(lines:&nbsp;~[~str])&nbsp;-&gt;&nbsp;~[~str]&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;i&nbsp;=&nbsp;uint::max_value;
+</c24><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;can_trim&nbsp;=&nbsp;true;
+</c24><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;first&nbsp;=&nbsp;true;
+</c24><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;line&nbsp;in&nbsp;lines.iter()&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(j,&nbsp;c)&nbsp;in&nbsp;line.iter().enumerate()&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;j&nbsp;&gt;&nbsp;i&nbsp;||&nbsp;!"*&nbsp;\t".contains_char(c)&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;can_trim&nbsp;=&nbsp;false;
+</c24><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+</c24><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;c&nbsp;==&nbsp;'*'&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;first&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i&nbsp;=&nbsp;j;
+</c24><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;first&nbsp;=&nbsp;false;
+</c24><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;if&nbsp;i&nbsp;!=&nbsp;j&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;can_trim&nbsp;=&nbsp;false;
+</c24><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+</c24><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;i&nbsp;&gt;&nbsp;line.len()&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;can_trim&nbsp;=&nbsp;false;
+</c24><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;!can_trim&nbsp;{
+</c24><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+</c24><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a href="#54_1_refs"><c13>
+</c13></a><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;can_trim&nbsp;{
+</c24><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;lines.map&nbsp;|line|&nbsp;{
+</c24><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line.slice(i&nbsp;+&nbsp;1,&nbsp;line.len()).to_owned()
+</c24><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
+</c24><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lines
+</c24><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a href="#54_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;comment.starts_with("//")&nbsp;{
+</c24><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;FIXME&nbsp;#5475:
+</c24><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;return&nbsp;comment.slice(3u,&nbsp;comment.len()).to_owned();
+</c24><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;r&nbsp;=&nbsp;comment.slice(3u,&nbsp;comment.len());&nbsp;return&nbsp;r.to_owned();
+</c24><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a href="#54_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;comment.starts_with("/*")&nbsp;{
+</c24><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;lines&nbsp;=&nbsp;comment.slice(3u,&nbsp;comment.len()&nbsp;-&nbsp;2u)
+</c24><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.any_line_iter()
+</c24><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.transform(|s|&nbsp;s.to_owned())
+</c24><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.collect::&lt;~[~str]&gt;();
+</c24><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><a href="#54_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;lines&nbsp;=&nbsp;vertical_trim(lines);
+</c24><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;lines&nbsp;=&nbsp;horizontal_trim(lines);
+</c24><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><a href="#54_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;lines.connect("\n");
+</c24><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><a href="#54_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;fail!("not&nbsp;a&nbsp;doc-comment:&nbsp;%s",&nbsp;comment);
+</c24><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c24>fn&nbsp;read_to_eol(rdr:&nbsp;@mut&nbsp;StringReader)&nbsp;-&gt;&nbsp;~str&nbsp;{
+</c24><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;val&nbsp;=&nbsp;~"";
+</c24><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;rdr.curr&nbsp;!=&nbsp;'\n'&nbsp;&amp;&amp;&nbsp;!is_eof(rdr)&nbsp;{
+</c24><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;val.push_char(rdr.curr);
+</c24><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bump(rdr);
+</c24><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;rdr.curr&nbsp;==&nbsp;'\n'&nbsp;{&nbsp;bump(rdr);&nbsp;}
+</c24><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;val;
+</c24><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c24>fn&nbsp;read_one_line_comment(rdr:&nbsp;@mut&nbsp;StringReader)&nbsp;-&gt;&nbsp;~str&nbsp;{
+</c24><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;val&nbsp;=&nbsp;read_to_eol(rdr);
+</c24><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;assert!((val[0]&nbsp;==&nbsp;'/'&nbsp;as&nbsp;u8&nbsp;&amp;&amp;&nbsp;val[1]&nbsp;==&nbsp;'/'&nbsp;as&nbsp;u8)&nbsp;||
+</c24><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(val[0]&nbsp;==&nbsp;'#'&nbsp;as&nbsp;u8&nbsp;&amp;&amp;&nbsp;val[1]&nbsp;==&nbsp;'!'&nbsp;as&nbsp;u8));
+</c24><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;val;
+</c24><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><c24>fn&nbsp;consume_non_eol_whitespace(rdr:&nbsp;@mut&nbsp;StringReader)&nbsp;{
+</c24><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;is_whitespace(rdr.curr)&nbsp;&amp;&amp;&nbsp;rdr.curr&nbsp;!=&nbsp;'\n'&nbsp;&amp;&amp;&nbsp;!is_eof(rdr)&nbsp;{
+</c24><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bump(rdr);
+</c24><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><c24>fn&nbsp;push_blank_line_comment(rdr:&nbsp;@mut&nbsp;StringReader,&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+</c24><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;debug!("&gt;&gt;&gt;&nbsp;blank-line&nbsp;comment");
+</c24><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;v:&nbsp;~[~str]&nbsp;=&nbsp;~[];
+</c24><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;comments.push(cmnt&nbsp;{style:&nbsp;blank_line,&nbsp;lines:&nbsp;v,&nbsp;pos:&nbsp;rdr.last_pos});
+</c24><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><c24>fn&nbsp;consume_whitespace_counting_blank_lines(rdr:&nbsp;@mut&nbsp;StringReader,
+</c24><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+</c24><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;is_whitespace(rdr.curr)&nbsp;&amp;&amp;&nbsp;!is_eof(rdr)&nbsp;{
+</c24><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;rdr.col&nbsp;==&nbsp;CharPos(0u)&nbsp;&amp;&amp;&nbsp;rdr.curr&nbsp;==&nbsp;'\n'&nbsp;{
+</c24><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;push_blank_line_comment(rdr,&nbsp;&amp;mut&nbsp;*comments);
+</c24><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bump(rdr);
+</c24><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><c24>fn&nbsp;read_shebang_comment(rdr:&nbsp;@mut&nbsp;StringReader,&nbsp;code_to_the_left:&nbsp;bool,
+</c24><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+</c24><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;debug!("&gt;&gt;&gt;&nbsp;shebang&nbsp;comment");
+</c24><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;rdr.last_pos;
+</c24><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;debug!("&lt;&lt;&lt;&nbsp;shebang&nbsp;comment");
+</c24><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;comments.push(cmnt&nbsp;{
+</c24><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;style:&nbsp;if&nbsp;code_to_the_left&nbsp;{&nbsp;trailing&nbsp;}&nbsp;else&nbsp;{&nbsp;isolated&nbsp;},
+</c24><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lines:&nbsp;~[read_one_line_comment(rdr)],
+</c24><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos:&nbsp;p
+</c24><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;});
+</c24><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><c24>fn&nbsp;read_line_comments(rdr:&nbsp;@mut&nbsp;StringReader,&nbsp;code_to_the_left:&nbsp;bool,
+</c24><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+</c24><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;debug!("&gt;&gt;&gt;&nbsp;line&nbsp;comments");
+</c24><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;rdr.last_pos;
+</c24><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;lines:&nbsp;~[~str]&nbsp;=&nbsp;~[];
+</c24><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;rdr.curr&nbsp;==&nbsp;'/'&nbsp;&amp;&amp;&nbsp;nextch(rdr)&nbsp;==&nbsp;'/'&nbsp;{
+</c24><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;line&nbsp;=&nbsp;read_one_line_comment(rdr);
+</c24><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug!("%s",&nbsp;line);
+</c24><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;is_doc_comment(line)&nbsp;{&nbsp;//&nbsp;doc-comments&nbsp;are&nbsp;not&nbsp;put&nbsp;in&nbsp;comments
+</c24><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+</c24><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lines.push(line);
+</c24><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;consume_non_eol_whitespace(rdr);
+</c24><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;debug!("&lt;&lt;&lt;&nbsp;line&nbsp;comments");
+</c24><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;!lines.is_empty()&nbsp;{
+</c24><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments.push(cmnt&nbsp;{
+</c24><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;style:&nbsp;if&nbsp;code_to_the_left&nbsp;{&nbsp;trailing&nbsp;}&nbsp;else&nbsp;{&nbsp;isolated&nbsp;},
+</c24><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lines:&nbsp;lines,
+</c24><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos:&nbsp;p
+</c24><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});
+</c24><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><c24>//&nbsp;Returns&nbsp;None&nbsp;if&nbsp;the&nbsp;first&nbsp;col&nbsp;chars&nbsp;of&nbsp;s&nbsp;contain&nbsp;a&nbsp;non-whitespace&nbsp;char.
+</c24><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><c24>//&nbsp;Otherwise&nbsp;returns&nbsp;Some(k)&nbsp;where&nbsp;k&nbsp;is&nbsp;first&nbsp;char&nbsp;offset&nbsp;after&nbsp;that&nbsp;leading
+</c24><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><c24>//&nbsp;whitespace.&nbsp;&nbsp;Note&nbsp;k&nbsp;may&nbsp;be&nbsp;outside&nbsp;bounds&nbsp;of&nbsp;s.
+</c24><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><c24>fn&nbsp;all_whitespace(s:&nbsp;&amp;str,&nbsp;col:&nbsp;CharPos)&nbsp;-&gt;&nbsp;Option&lt;uint&gt;&nbsp;{
+</c24><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;len&nbsp;=&nbsp;s.len();
+</c24><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;col&nbsp;=&nbsp;col.to_uint();
+</c24><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;cursor:&nbsp;uint&nbsp;=&nbsp;0;
+</c24><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;col&nbsp;&gt;&nbsp;0&nbsp;&amp;&amp;&nbsp;cursor&nbsp;&lt;&nbsp;len&nbsp;{
+</c24><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;r:&nbsp;str::CharRange&nbsp;=&nbsp;s.char_range_at(cursor);
+</c24><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;!r.ch.is_whitespace()&nbsp;{
+</c24><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;None;
+</c24><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor&nbsp;=&nbsp;r.next;
+</c24><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;col&nbsp;-=&nbsp;1;
+</c24><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;Some(cursor);
+</c24><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><c24>fn&nbsp;trim_whitespace_prefix_and_push_line(lines:&nbsp;&amp;mut&nbsp;~[~str],
+</c24><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s:&nbsp;~str,&nbsp;col:&nbsp;CharPos)&nbsp;{
+</c24><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;len&nbsp;=&nbsp;s.len();
+</c24><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;s1&nbsp;=&nbsp;match&nbsp;all_whitespace(s,&nbsp;col)&nbsp;{
+</c24><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(col)&nbsp;=&gt;&nbsp;{
+</c24><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;col&nbsp;&lt;&nbsp;len&nbsp;{
+</c24><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.slice(col,&nbsp;len).to_owned()
+</c24><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{&nbsp;&nbsp;~""&nbsp;}
+</c24><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;=&gt;&nbsp;s,
+</c24><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;};
+</c24><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;debug!("pushing&nbsp;line:&nbsp;%s",&nbsp;s1);
+</c24><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;lines.push(s1);
+</c24><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><c24>}
+</c24><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><c24>fn&nbsp;read_block_comment(rdr:&nbsp;@mut&nbsp;StringReader,
+</c24><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;code_to_the_left:&nbsp;bool,
+</c24><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+</c24><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;debug!("&gt;&gt;&gt;&nbsp;block&nbsp;comment");
+</c24><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;rdr.last_pos;
+</c24><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;lines:&nbsp;~[~str]&nbsp;=&nbsp;~[];
+</c24><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;col:&nbsp;CharPos&nbsp;=&nbsp;rdr.col;
+</c24><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;bump(rdr);
+</c24><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;bump(rdr);
+</c24><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;curr_line&nbsp;=&nbsp;~"/*";
+</c24><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;doc-comments&nbsp;are&nbsp;not&nbsp;really&nbsp;comments,&nbsp;they&nbsp;are&nbsp;attributes
+</c24><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;rdr.curr&nbsp;==&nbsp;'*'&nbsp;||&nbsp;rdr.curr&nbsp;==&nbsp;'!'&nbsp;{
+</c24><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;!(rdr.curr&nbsp;==&nbsp;'*'&nbsp;&amp;&amp;&nbsp;nextch(rdr)&nbsp;==&nbsp;'/')&nbsp;&amp;&amp;&nbsp;!is_eof(rdr)&nbsp;{
+</c24><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curr_line.push_char(rdr.curr);
+</c24><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bump(rdr);
+</c24><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c24><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;!is_eof(rdr)&nbsp;{
+</c24><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curr_line.push_str("*/");
+</c24><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/lexer.rs.html#178"><c8>bump</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/lexer.rs.html#178"><c8>bump</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><c2>!</c2><a href="../parse/lexer.rs.html#309"><c8>is_block_non_doc_comment</c8></a><c25>(</c25><a href="../parse/comments.rs.html#250"><c8>curr_line</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>{</c4><c22>&nbsp;</c22><a href="#237_1_refs"><c13>return</c13></a><c4>;</c4><c22>&nbsp;</c22><c4>}</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#237_1_refs"><c13>assert</c13></a><c13>!</c13><c25>(</c25><c2>!</c2><a href="../parse/comments.rs.html#250"><c8>curr_line</c8></a><c10>.</c10><a href="../oldvisit.rs.html#484"><c10>contains_char</c10></a><c25>(</c25><c12>'</c12><a href="../oldvisit.rs.html#484"><c12>\n</c12></a><c12>'</c12><c25>))</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#245"><c8>lines</c8></a><c13>.</c13><a href="#237_1_refs"><c13>push</c13></a><c25>(</c25><a href="../parse/comments.rs.html#250"><c8>curr_line</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#265_16_refs"><c20>level</c20></a><c16>:&nbsp;</c16><a href="#237_1_refs"><c3>int</c3></a><c16>&nbsp;</c16><a href="#237_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="#237_1_refs"><c12>1</c12></a><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>while</c21><c7>&nbsp;</c7><a href="../parse/comments.rs.html#267"><c8>level</c8></a><c2>&nbsp;&gt;&nbsp;</c2><a href="#237_1_refs"><c12>0</c12></a><c7>&nbsp;</c7><c4>{</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#237_1_refs"><c13>debug</c13></a><c13>!</c13><c25>(</c25><a href="../parse/comments.rs.html#269"><c8>"===</c8></a><c8>&nbsp;</c8><a href="../parse/comments.rs.html#269"><c8>block</c8></a><c8>&nbsp;</c8><a href="../parse/comments.rs.html#269"><c8>comment</c8></a><c8>&nbsp;</c8><a href="../parse/comments.rs.html#269"><c8>level</c8></a><c8>&nbsp;%</c8><a href="../parse/comments.rs.html#269"><c8>d"</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="#237_1_refs"><c8>level</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../parse/lexer.rs.html#202"><c8>is_eof</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>{</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c7>&nbsp;</c7><a href="../parse/lexer.rs.html#27"><c7>as</c7></a><c7>&nbsp;</c7><c3>@</c3><a href="../parse/lexer.rs.html#27"><c3>reader</c3></a><c25>)</c25><c0>.</c0><a href="../parse/lexer.rs.html#27"><c10>fatal</c10></a><c25>(</c25><c16>~</c16><a href="../parse/lexer.rs.html#27"><c12>"unterminated</c12></a><c12>&nbsp;</c12><a href="../parse/lexer.rs.html#27"><c12>block</c12></a><c12>&nbsp;</c12><a href="../parse/lexer.rs.html#27"><c12>comment"</c12></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;</c2><a href="#237_1_refs"><c2>==</c2></a><c2>&nbsp;</c2><c12>'</c12><a href="#237_1_refs"><c12>\n</c12></a><c12>'</c12><c7>&nbsp;</c7><c4>{</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#224"><c8>trim_whitespace_prefix_and_push_line</c8></a><c25>(</c25><c2>&amp;</c2><a href="#237_1_refs"><c2>mut</c2></a><c2>&nbsp;</c2><a href="../parse/comments.rs.html#245"><c8>lines</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="../parse/comments.rs.html#250"><c8>curr_line</c8></a><c4>,</c4><a href="#237_1_refs"><c13>
+</c13></a><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><a href="../parse/comments.rs.html#246"><c8>col</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#250"><c8>curr_line</c8></a><c2>&nbsp;</c2><a href="#237_1_refs"><c2>=</c2></a><c2>&nbsp;</c2><c16>~</c16><a href="#237_1_refs"><c12>""</c12></a><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/lexer.rs.html#178"><c8>bump</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#250"><c8>curr_line</c8></a><c13>.</c13><a href="#237_1_refs"><c13>push_char</c13></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;</c2><a href="#237_1_refs"><c2>==</c2></a><c2>&nbsp;</c2><c12>'/'</c12><c0>&nbsp;&amp;&amp;&nbsp;</c0><a href="../parse/lexer.rs.html#205"><c8>nextch</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><a href="#237_1_refs"><c9>==</c9></a><c2>&nbsp;</c2><c12>'*'</c12><c7>&nbsp;</c7><c4>{</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/lexer.rs.html#178"><c8>bump</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/lexer.rs.html#178"><c8>bump</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#250"><c8>curr_line</c8></a><c13>.</c13><a href="#237_1_refs"><c13>push_char</c13></a><c25>(</c25><c12>'*'</c12><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#267"><c8>level</c8></a><c0>&nbsp;+</c0><a href="#237_1_refs"><c0>=</c0></a><c0>&nbsp;</c0><a href="#237_1_refs"><c12>1</c12></a><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;</c2><a href="#237_1_refs"><c2>==</c2></a><c2>&nbsp;</c2><c12>'*'</c12><c0>&nbsp;&amp;&amp;&nbsp;</c0><a href="../parse/lexer.rs.html#205"><c8>nextch</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><a href="#237_1_refs"><c9>==</c9></a><c2>&nbsp;</c2><c12>'/'</c12><c7>&nbsp;</c7><c4>{</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/lexer.rs.html#178"><c8>bump</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/lexer.rs.html#178"><c8>bump</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#250"><c8>curr_line</c8></a><c13>.</c13><a href="#237_1_refs"><c13>push_char</c13></a><c25>(</c25><c12>'/'</c12><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#267"><c8>level</c8></a><c0>&nbsp;-</c0><a href="#237_1_refs"><c0>=</c0></a><c0>&nbsp;</c0><a href="#237_1_refs"><c12>1</c12></a><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><c22>&nbsp;</c22><a href="../parse/lexer.rs.html#178"><c8>bump</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c4>;</c4><c22>&nbsp;</c22><c4>}</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../parse/comments.rs.html#250"><c8>curr_line</c8></a><c10>.</c10><a href="../oldvisit.rs.html#412"><c10>len</c10></a><c25>()</c25><c10>&nbsp;!</c10><a href="../oldvisit.rs.html#412"><c10>=</c10></a><c2>&nbsp;</c2><a href="#237_1_refs"><c12>0</c12></a><c7>&nbsp;</c7><c4>{</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#224"><c8>trim_whitespace_prefix_and_push_line</c8></a><c25>(</c25><c2>&amp;</c2><a href="#237_1_refs"><c2>mut</c2></a><c2>&nbsp;</c2><a href="../parse/comments.rs.html#245"><c8>lines</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="../parse/comments.rs.html#250"><c8>curr_line</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="../parse/comments.rs.html#246"><c8>col</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#298_12_refs"><c20>style</c20></a><c16>&nbsp;</c16><a href="#237_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="#237_1_refs"><c7>if</c7></a><c7>&nbsp;</c7><a href="../parse/comments.rs.html#241"><c8>code_to_the_left</c8></a><c7>&nbsp;</c7><c4>{</c4><c22>&nbsp;</c22><a href="../parse/comments.rs.html#29"><c8>trailing</c8></a><c22>&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><a href="#237_1_refs"><c7>else</c7></a><c7>&nbsp;</c7><c4>{</c4><c22>&nbsp;</c22><a href="../parse/comments.rs.html#28"><c8>isolated</c8></a><c22>&nbsp;</c22><c4>};</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#147"><c8>consume_non_eol_whitespace</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c13>&nbsp;</c13><c2>!</c2><a href="../parse/lexer.rs.html#202"><c8>is_eof</c8></a><c25>(</c25><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;&amp;&amp;</c9><c0>&nbsp;</c0><a href="../parse/comments.rs.html#240"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;!</c2><a href="#237_1_refs"><c2>=</c2></a><c2>&nbsp;</c2><c12>'</c12><a href="#237_1_refs"><c12>\n</c12></a><c12>'</c12><c0>&nbsp;&amp;&amp;&nbsp;</c0><a href="../parse/comments.rs.html#245"><c8>lines</c8></a><c10>.</c10><a href="../ast_util.rs.html#904"><c10>len</c10></a><c25>()</c25><c10>&nbsp;</c10><a href="../ast_util.rs.html#904"><c10>==</c10></a><c2>&nbsp;</c2><a href="#237_1_refs"><c12>1u</c12></a><c13>&nbsp;</c13><c4>{</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#300"><c8>style</c8></a><c13>&nbsp;</c13><a href="#237_1_refs"><c13>=</c13></a><c13>&nbsp;</c13><a href="../parse/comments.rs.html#30"><c8>mixed</c8></a><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#237_1_refs"><c13>debug</c13></a><c13>!</c13><c25>(</c25><a href="#237_1_refs"><c8>"</c8></a><c8>&lt;&lt;&lt;&nbsp;</c8><a href="#237_1_refs"><c8>block</c8></a><c8>&nbsp;</c8><a href="#237_1_refs"><c8>comment"</c8></a><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#242"><c8>comments</c8></a><c13>.</c13><a href="#237_1_refs"><c13>push</c13></a><c25>(</c25><a href="../parse/comments.rs.html#34"><c23>cmnt</c23></a><c13>&nbsp;</c13><c4>{</c4><a href="#237_1_refs"><c13>style</c13></a><c13>:&nbsp;</c13><a href="../parse/comments.rs.html#300"><c8>style</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="#237_1_refs"><c13>lines</c13></a><c13>:&nbsp;</c13><a href="../parse/comments.rs.html#245"><c8>lines</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="#237_1_refs"><c13>pos</c13></a><c13>:&nbsp;</c13><a href="../parse/comments.rs.html#244"><c8>p</c8></a><c4>}</c4><c25>)</c25><c4>;</c4><a href="#237_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a><c26>fn&nbsp;</c26><a href="#306_1_refs"><c26>peeking_at_comment</c26></a><c25>(</c25><a href="#307_22_refs"><c20>rdr</c20></a><c1>:&nbsp;</c1><c3>@</c3><a href="#306_1_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="../parse/lexer.rs.html#42"><c3>StringReader</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="#306_1_refs"><c3>bool</c3></a><c1>&nbsp;</c1><c4>{</c4><a href="#306_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c13>&nbsp;</c13><c25>((</c25><a href="../parse/comments.rs.html#309"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;</c2><a href="#306_1_refs"><c2>==</c2></a><c2>&nbsp;</c2><c12>'/'</c12><c0>&nbsp;&amp;&amp;&nbsp;</c0><a href="../parse/lexer.rs.html#205"><c8>nextch</c8></a><c25>(</c25><a href="../parse/comments.rs.html#309"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><a href="#306_1_refs"><c9>==</c9></a><c2>&nbsp;</c2><c12>'/'</c12><c25>)</c25><c0>&nbsp;||</c0><a href="#306_1_refs"><c0>
+</c0></a><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><a href="../parse/comments.rs.html#309"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;</c2><a href="#306_1_refs"><c2>==</c2></a><c2>&nbsp;</c2><c12>'/'</c12><c0>&nbsp;&amp;&amp;&nbsp;</c0><a href="../parse/lexer.rs.html#205"><c8>nextch</c8></a><c25>(</c25><a href="../parse/comments.rs.html#309"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><a href="#306_1_refs"><c9>==</c9></a><c2>&nbsp;</c2><c12>'*'</c12><c25>))</c25><c0>&nbsp;||</c0><a href="#306_1_refs"><c0>
+</c0></a><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c25>(</c25><a href="../parse/comments.rs.html#309"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;</c2><a href="#306_1_refs"><c2>==</c2></a><c2>&nbsp;</c2><c12>'#'</c12><c0>&nbsp;&amp;&amp;&nbsp;</c0><a href="../parse/lexer.rs.html#205"><c8>nextch</c8></a><c25>(</c25><a href="../parse/comments.rs.html#309"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><a href="#306_1_refs"><c9>==</c9></a><c2>&nbsp;</c2><c12>'!'</c12><c25>)</c25><c4>;</c4><a href="#306_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a><c26>fn&nbsp;</c26><a href="#312_1_refs"><c26>consume_comment</c26></a><c25>(</c25><a href="#313_19_refs"><c20>rdr</c20></a><c1>:&nbsp;</c1><c3>@</c3><a href="#312_1_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="../parse/lexer.rs.html#42"><c3>StringReader</c3></a><c4>,</c4><a href="#312_1_refs"><c1>
+</c1></a><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><a href="#314_19_refs"><c20>code_to_the_left</c20></a><c1>:&nbsp;</c1><a href="#312_1_refs"><c3>bool</c3></a><c4>,</c4><a href="#312_1_refs"><c1>
+</c1></a><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><a href="#315_19_refs"><c20>comments</c20></a><c1>:&nbsp;</c1><c3>&amp;</c3><a href="#312_1_refs"><c3>mut</c3></a><c3>&nbsp;~</c3><c4>[</c4><a href="../parse/comments.rs.html#34"><c3>cmnt</c3></a><c4>]</c4><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><a href="#312_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#312_1_refs"><c13>debug</c13></a><c13>!</c13><c25>(</c25><a href="#312_1_refs"><c8>"</c8></a><c8>&gt;&gt;&gt;&nbsp;</c8><a href="#312_1_refs"><c8>consume</c8></a><c8>&nbsp;</c8><a href="#312_1_refs"><c8>comment"</c8></a><c25>)</c25><c4>;</c4><a href="#312_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c13>&nbsp;</c13><a href="../parse/comments.rs.html#315"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;</c2><a href="#312_1_refs"><c2>==</c2></a><c2>&nbsp;</c2><c12>'/'</c12><c0>&nbsp;&amp;&amp;&nbsp;</c0><a href="../parse/lexer.rs.html#205"><c8>nextch</c8></a><c25>(</c25><a href="../parse/comments.rs.html#315"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><a href="#312_1_refs"><c9>==</c9></a><c2>&nbsp;</c2><c12>'/'</c12><c13>&nbsp;</c13><c4>{</c4><a href="#312_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#182"><c8>read_line_comments</c8></a><c25>(</c25><a href="../parse/comments.rs.html#315"><c8>rdr</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="../parse/comments.rs.html#316"><c8>code_to_the_left</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="../parse/comments.rs.html#317"><c8>comments</c8></a><c25>)</c25><c4>;</c4><a href="#312_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c13>&nbsp;</c13><c21>else</c21><c13>&nbsp;</c13><c21>if</c21><c7>&nbsp;</c7><a href="../parse/comments.rs.html#315"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;</c2><a href="#312_1_refs"><c2>==</c2></a><c2>&nbsp;</c2><c12>'/'</c12><c0>&nbsp;&amp;&amp;&nbsp;</c0><a href="../parse/lexer.rs.html#205"><c8>nextch</c8></a><c25>(</c25><a href="../parse/comments.rs.html#315"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><a href="#312_1_refs"><c9>==</c9></a><c2>&nbsp;</c2><c12>'*'</c12><c7>&nbsp;</c7><c4>{</c4><a href="#312_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#239"><c8>read_block_comment</c8></a><c25>(</c25><a href="../parse/comments.rs.html#315"><c8>rdr</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../parse/comments.rs.html#316"><c8>code_to_the_left</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../parse/comments.rs.html#317"><c8>comments</c8></a><c25>)</c25><c4>;</c4><a href="#312_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c21>if</c21><c7>&nbsp;</c7><a href="../parse/comments.rs.html#315"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;</c2><a href="#312_1_refs"><c2>==</c2></a><c2>&nbsp;</c2><c12>'#'</c12><c0>&nbsp;&amp;&amp;&nbsp;</c0><a href="../parse/lexer.rs.html#205"><c8>nextch</c8></a><c25>(</c25><a href="../parse/comments.rs.html#315"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><a href="#312_1_refs"><c9>==</c9></a><c2>&nbsp;</c2><c12>'!'</c12><c7>&nbsp;</c7><c4>{</c4><a href="#312_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#170"><c8>read_shebang_comment</c8></a><c25>(</c25><a href="../parse/comments.rs.html#315"><c8>rdr</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../parse/comments.rs.html#316"><c8>code_to_the_left</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../parse/comments.rs.html#317"><c8>comments</c8></a><c25>)</c25><c4>;</c4><a href="#312_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><c22>&nbsp;</c22><a href="#312_1_refs"><c13>fail</c13></a><c13>!</c13><c25>()</c25><c4>;</c4><c22>&nbsp;</c22><c4>}</c4><a href="#312_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#312_1_refs"><c13>debug</c13></a><c13>!</c13><c25>(</c25><a href="#312_1_refs"><c2>"</c2></a><c2>&lt;&lt;&lt;&nbsp;</c2><a href="#312_1_refs"><c2>consume</c2></a><c2>&nbsp;</c2><a href="#312_1_refs"><c2>comment"</c2></a><c25>)</c25><c4>;</c4><a href="#312_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a><c33>#</c33><c4>[</c4><c33>deriving</c33><c25>(</c25><a href="../parse/comments.rs.html#329"><c33>Clone</c33></a><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;329</ln><a id="329">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#327_19_refs"><c27>lit</c27></a><c27>&nbsp;</c27><c4>{</c4><a href="#327_19_refs"><c23>
+</c23></a><br/><ln>&nbsp;330</ln><a id="330">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#329_4_refs"><c6>lit</c6></a><c6>:&nbsp;</c6><c3>~</c3><a href="#327_19_refs"><c3>str</c3></a><c4>,</c4><a href="#327_19_refs"><c23>
+</c23></a><br/><ln>&nbsp;331</ln><a id="331">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#330_4_refs"><c6>pos</c6></a><c6>:&nbsp;</c6><a href="../codemap.rs.html#34"><c3>BytePos</c3></a><a href="#327_19_refs"><c23>
+</c23></a><br/><ln>&nbsp;332</ln><a id="332">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;333</ln><a id="333">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;334</ln><a id="334">&nbsp;</a><c24>//&nbsp;it&nbsp;appears&nbsp;this&nbsp;function&nbsp;is&nbsp;called&nbsp;only&nbsp;from&nbsp;pprust...&nbsp;that's
+</c24><br/><ln>&nbsp;335</ln><a id="335">&nbsp;</a><c24>//&nbsp;probably&nbsp;not&nbsp;a&nbsp;good&nbsp;thing.
+</c24><br/><ln>&nbsp;336</ln><a id="336">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#334_30_refs"><c26>gather_comments_and_literals</c26></a><c25>(</c25><a href="#335_36_refs"><c20>span_diagnostic</c20></a><c1>:</c1><a href="#334_30_refs"><c1>
+</c1></a><br/><ln>&nbsp;337</ln><a id="337">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><c3>@</c3><a href="../diagnostic.rs.html#46"><c3>diagnostic</c3></a><c3>::</c3><a href="../diagnostic.rs.html#46"><c3>span_handler</c3></a><c4>,</c4><a href="#334_30_refs"><c1>
+</c1></a><br/><ln>&nbsp;338</ln><a id="338">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><a href="#337_36_refs"><c20>path</c20></a><c1>:&nbsp;</c1><c3>@</c3><a href="#334_30_refs"><c3>str</c3></a><c4>,</c4><a href="#334_30_refs"><c1>
+</c1></a><br/><ln>&nbsp;339</ln><a id="339">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><a href="#338_36_refs"><c20>srdr</c20></a><c1>:&nbsp;</c1><c3>@</c3><a href="#334_30_refs"><c3>io</c3></a><c3>::</c3><a href="#334_30_refs"><c3>Reader</c3></a><c25>)</c25><a href="#334_30_refs"><c1>
+</c1></a><br/><ln>&nbsp;340</ln><a id="340">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c25>(</c25><c3>~</c3><c4>[</c4><a href="../parse/comments.rs.html#34"><c3>cmnt</c3></a><c4>],</c4><c3>&nbsp;~</c3><c4>[</c4><a href="../parse/comments.rs.html#329"><c3>lit</c3></a><c4>]</c4><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;341</ln><a id="341">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#340_8_refs"><c20>src</c20></a><c16>&nbsp;</c16><a href="#334_30_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../oldvisit.rs.html#639"><c8>str</c8></a><c8>::</c8><a href="../oldvisit.rs.html#639"><c8>from_bytes</c8></a><c25>(</c25><a href="../parse/comments.rs.html#340"><c8>srdr</c8></a><c10>.</c10><a href="../parse/token.rs.html#255"><c10>read_whole_stream</c10></a><c25>())</c25><c9>.</c9><a href="../oldvisit.rs.html#639"><c10>to_managed</c10></a><c25>()</c25><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;342</ln><a id="342">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#341_8_refs"><c20>cm</c20></a><c16>&nbsp;</c16><a href="#334_30_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../codemap.rs.html#269"><c8>CodeMap</c8></a><c8>::</c8><a href="../codemap.rs.html#269"><c8>new</c8></a><c25>()</c25><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;343</ln><a id="343">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#342_8_refs"><c20>filemap</c20></a><c16>&nbsp;</c16><a href="#334_30_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../parse/comments.rs.html#343"><c8>cm</c8></a><c10>.</c10><a href="../codemap.rs.html#276"><c10>new_filemap</c10></a><c25>(</c25><a href="../parse/comments.rs.html#339"><c8>path</c8></a><c4>,</c4><c10>&nbsp;</c10><a href="../parse/comments.rs.html#342"><c8>src</c8></a><c25>)</c25><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;344</ln><a id="344">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#343_8_refs"><c20>rdr</c20></a><c16>&nbsp;</c16><a href="#334_30_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../parse/lexer.rs.html#68"><c8>lexer</c8></a><c8>::</c8><a href="../parse/lexer.rs.html#68"><c8>new_low_level_string_reader</c8></a><c25>(</c25><a href="../parse/comments.rs.html#337"><c8>span_diagnostic</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../parse/comments.rs.html#344"><c8>filemap</c8></a><c25>)</c25><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;345</ln><a id="345">&nbsp;</a><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;346</ln><a id="346">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#345_12_refs"><c20>comments</c20></a><c16>:&nbsp;</c16><c3>~</c3><c4>[</c4><a href="../parse/comments.rs.html#34"><c3>cmnt</c3></a><c4>]</c4><c16>&nbsp;</c16><a href="#334_30_refs"><c16>=</c16></a><c16>&nbsp;~</c16><c4>[];</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;347</ln><a id="347">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#346_12_refs"><c20>literals</c20></a><c16>:&nbsp;</c16><c3>~</c3><c4>[</c4><a href="../parse/comments.rs.html#329"><c3>lit</c3></a><c4>]</c4><c16>&nbsp;</c16><a href="#334_30_refs"><c16>=</c16></a><c16>&nbsp;~</c16><c4>[];</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;348</ln><a id="348">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#347_12_refs"><c20>first_read</c20></a><c16>:&nbsp;</c16><a href="#334_30_refs"><c3>bool</c3></a><c16>&nbsp;</c16><a href="#334_30_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="#334_30_refs"><c12>true</c12></a><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;349</ln><a id="349">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>while</c21><c7>&nbsp;</c7><c2>!</c2><a href="../parse/lexer.rs.html#202"><c8>is_eof</c8></a><c25>(</c25><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>{</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;350</ln><a id="350">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>loop</c21><c13>&nbsp;</c13><c4>{</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;351</ln><a id="351">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#350_20_refs"><c20>code_to_the_left</c20></a><c16>&nbsp;</c16><a href="#334_30_refs"><c16>=</c16></a><c16>&nbsp;</c16><c2>!</c2><a href="../parse/comments.rs.html#349"><c8>first_read</c8></a><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;352</ln><a id="352">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#147"><c8>consume_non_eol_whitespace</c8></a><c25>(</c25><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c25>)</c25><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;353</ln><a id="353">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c13>&nbsp;</c13><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#53"><c6>curr</c6></a><c2>&nbsp;</c2><a href="#334_30_refs"><c2>==</c2></a><c2>&nbsp;</c2><c12>'</c12><a href="#334_30_refs"><c12>\n</c12></a><c12>'</c12><c13>&nbsp;</c13><c4>{</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;354</ln><a id="354">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#352"><c8>code_to_the_left</c8></a><c2>&nbsp;</c2><a href="#334_30_refs"><c2>=</c2></a><c2>&nbsp;</c2><a href="#334_30_refs"><c12>false</c12></a><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;355</ln><a id="355">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#159"><c8>consume_whitespace_counting_blank_lines</c8></a><c25>(</c25><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c4>,</c4><c13>&nbsp;</c13><c2>&amp;</c2><a href="#334_30_refs"><c2>mut</c2></a><c2>&nbsp;</c2><a href="../parse/comments.rs.html#347"><c8>comments</c8></a><c25>)</c25><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;356</ln><a id="356">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;357</ln><a id="357">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>while</c21><c13>&nbsp;</c13><a href="../parse/comments.rs.html#308"><c8>peeking_at_comment</c8></a><c25>(</c25><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>{</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;358</ln><a id="358">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#314"><c8>consume_comment</c8></a><c25>(</c25><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="../parse/comments.rs.html#352"><c8>code_to_the_left</c8></a><c4>,</c4><c13>&nbsp;</c13><c2>&amp;</c2><a href="#334_30_refs"><c2>mut</c2></a><c2>&nbsp;</c2><a href="../parse/comments.rs.html#347"><c8>comments</c8></a><c25>)</c25><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;359</ln><a id="359">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#159"><c8>consume_whitespace_counting_blank_lines</c8></a><c25>(</c25><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c4>,</c4><c9>&nbsp;</c9><c2>&amp;</c2><a href="#334_30_refs"><c2>mut</c2></a><c2>&nbsp;</c2><a href="../parse/comments.rs.html#347"><c8>comments</c8></a><c25>)</c25><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;360</ln><a id="360">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;361</ln><a id="361">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>break</c21><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;362</ln><a id="362">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;363</ln><a id="363">&nbsp;</a><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;364</ln><a id="364">&nbsp;</a><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;365</ln><a id="365">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#364_12_refs"><c20>bstart</c20></a><c16>&nbsp;</c16><a href="#334_30_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c6>.</c6><a href="../parse/lexer.rs.html#49"><c6>last_pos</c6></a><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;366</ln><a id="366">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c13>.</c13><a href="../parse/lexer.rs.html#109"><c13>next_token</c13></a><c25>()</c25><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;367</ln><a id="367">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//discard,&nbsp;and&nbsp;look&nbsp;ahead;&nbsp;we're&nbsp;working&nbsp;with&nbsp;internal&nbsp;state
+</c24><br/><ln>&nbsp;368</ln><a id="368">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="../parse/lexer.rs.html#37"><c20>TokenAndSpan</c20></a><c20>&nbsp;</c20><c4>{</c4><a href="../parse/lexer.rs.html#37"><c20>tok</c20></a><c20>:&nbsp;</c20><a href="#367_31_refs"><c20>tok</c20></a><c4>,</c4><c20>&nbsp;</c20><a href="../parse/lexer.rs.html#37"><c20>sp</c20></a><c20>:&nbsp;</c20><a href="#367_40_refs"><c20>sp</c20></a><c4>}</c4><c16>&nbsp;</c16><a href="#334_30_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c10>.</c10><a href="../parse/lexer.rs.html#121"><c10>peek</c10></a><c25>()</c25><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;369</ln><a id="369">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c13>&nbsp;</c13><a href="../parse/token.rs.html#274"><c8>token</c8></a><c8>::</c8><a href="../parse/token.rs.html#274"><c8>is_lit</c8></a><c25>(</c25><c2>&amp;</c2><a href="../parse/comments.rs.html#369"><c8>tok</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>{</c4><a href="#368_8_refs"><c22>
+</c22></a><br/><ln>&nbsp;370</ln><a id="370">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c9>&nbsp;</c9><a href="../parse/lexer.rs.html#170"><c8>with_str_from</c8></a><c25>(</c25><a href="../parse/comments.rs.html#345"><c8>rdr</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../parse/comments.rs.html#366"><c8>bstart</c8></a><c25>)</c25><c0>&nbsp;|</c0><a href="#369_43_refs"><c20>s</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><a href="#368_8_refs"><c22>
+</c22></a><br/><ln>&nbsp;371</ln><a id="371">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#368_8_refs"><c13>debug</c13></a><c13>!</c13><c25>(</c25><a href="#368_8_refs"><c3>"tok</c3></a><c3>&nbsp;</c3><a href="#368_8_refs"><c3>lit</c3></a><c3>:&nbsp;%</c3><a href="#368_8_refs"><c3>s"</c3></a><c4>,</c4><c13>&nbsp;</c13><a href="../parse/comments.rs.html#371"><c9>s</c9></a><c25>)</c25><c4>;</c4><a href="#368_8_refs"><c22>
+</c22></a><br/><ln>&nbsp;372</ln><a id="372">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#348"><c8>literals</c8></a><c10>.</c10><a href="../ast_map.rs.html#243"><c10>push</c10></a><c25>(</c25><a href="../parse/comments.rs.html#329"><c23>lit</c23></a><c10>&nbsp;</c10><c4>{</c4><a href="../ast_map.rs.html#243"><c10>lit</c10></a><c10>:&nbsp;</c10><a href="../parse/comments.rs.html#371"><c8>s</c8></a><c10>.</c10><a href="../oldvisit.rs.html#634"><c10>to_owned</c10></a><c25>()</c25><c4>,</c4><c10>&nbsp;</c10><a href="../ast_map.rs.html#243"><c10>pos</c10></a><c10>:&nbsp;</c10><a href="../parse/comments.rs.html#369"><c8>sp</c8></a><c6>.</c6><a href="../codemap.rs.html#101"><c6>lo</c6></a><c4>}</c4><c25>)</c25><c4>;</c4><a href="#368_8_refs"><c22>
+</c22></a><br/><ln>&nbsp;373</ln><a id="373">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#368_8_refs"><c22>
+</c22></a><br/><ln>&nbsp;374</ln><a id="374">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c13>&nbsp;</c13><c21>else</c21><c13>&nbsp;</c13><c4>{</c4><a href="#368_8_refs"><c22>
+</c22></a><br/><ln>&nbsp;375</ln><a id="375">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#368_8_refs"><c13>debug</c13></a><c13>!</c13><c25>(</c25><a href="../parse/comments.rs.html#376"><c16>"tok</c16></a><c16>:&nbsp;%</c16><a href="../parse/comments.rs.html#376"><c16>s"</c16></a><c4>,</c4><c13>&nbsp;</c13><a href="../parse/token.rs.html#128"><c8>token</c8></a><c8>::</c8><a href="../parse/token.rs.html#128"><c8>to_str</c8></a><c25>(</c25><a href="../parse/token.rs.html#486"><c8>get_ident_interner</c8></a><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><c2>&amp;</c2><a href="../parse/comments.rs.html#369"><c8>tok</c8></a><c25>))</c25><c4>;</c4><a href="#368_8_refs"><c22>
+</c22></a><br/><ln>&nbsp;376</ln><a id="376">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;377</ln><a id="377">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../parse/comments.rs.html#349"><c8>first_read</c8></a><c13>&nbsp;</c13><a href="#334_30_refs"><c13>=</c13></a><c13>&nbsp;</c13><a href="#334_30_refs"><c12>false</c12></a><c4>;</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;378</ln><a id="378">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;379</ln><a id="379">&nbsp;</a><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;380</ln><a id="380">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><a href="../parse/comments.rs.html#347"><c8>comments</c8></a><c4>,&nbsp;</c4><a href="../parse/comments.rs.html#348"><c8>literals</c8></a><c25>)</c25><a href="#334_30_refs"><c22>
+</c22></a><br/><ln>&nbsp;381</ln><a id="381">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;382</ln><a id="382">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;383</ln><a id="383">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;384</ln><a id="384">&nbsp;</a><c21>mod</c21><c0>&nbsp;test&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;385</ln><a id="385">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;386</ln><a id="386">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;387</ln><a id="387">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>&nbsp;</c0><c26>fn&nbsp;test_block_doc_comment_1</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;388</ln><a id="388">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;comment&nbsp;=&nbsp;"</c0><c24>/**\n&nbsp;*&nbsp;Test&nbsp;\n&nbsp;**&nbsp;&nbsp;Test\n&nbsp;*&nbsp;&nbsp;&nbsp;Test\n*/</c24><c0>"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;389</ln><a id="389">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;correct_stripped&nbsp;=&nbsp;"&nbsp;Test&nbsp;\n*&nbsp;&nbsp;Test\n&nbsp;&nbsp;&nbsp;Test"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;390</ln><a id="390">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;stripped&nbsp;=&nbsp;strip_doc_comment_decoration</c0><c25>(</c25><c0>comment</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;391</ln><a id="391">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>stripped.slice</c0><c25>(</c25><c0>0</c0><c4>,</c4><c0>&nbsp;stripped.len</c0><c25>())</c25><c4>,</c4><c0>&nbsp;correct_stripped</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;392</ln><a id="392">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;393</ln><a id="393">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;394</ln><a id="394">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>&nbsp;</c0><c26>fn&nbsp;test_block_doc_comment_2</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;395</ln><a id="395">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;comment&nbsp;=&nbsp;"</c0><c24>/**\n&nbsp;*&nbsp;Test\n&nbsp;*&nbsp;&nbsp;Test\n*/</c24><c0>"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;396</ln><a id="396">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;correct_stripped&nbsp;=&nbsp;"&nbsp;Test\n&nbsp;&nbsp;Test"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;397</ln><a id="397">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;stripped&nbsp;=&nbsp;strip_doc_comment_decoration</c0><c25>(</c25><c0>comment</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;398</ln><a id="398">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>stripped.slice</c0><c25>(</c25><c0>0</c0><c4>,</c4><c0>&nbsp;stripped.len</c0><c25>())</c25><c4>,</c4><c0>&nbsp;correct_stripped</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;399</ln><a id="399">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;400</ln><a id="400">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;401</ln><a id="401">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>&nbsp;</c0><c26>fn&nbsp;test_block_doc_comment_3</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;402</ln><a id="402">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;comment&nbsp;=&nbsp;"</c0><c24>/**\n&nbsp;let&nbsp;a:&nbsp;*int;\n&nbsp;*a&nbsp;=&nbsp;5;\n*/</c24><c0>"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;403</ln><a id="403">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;correct_stripped&nbsp;=&nbsp;"&nbsp;let&nbsp;a:&nbsp;*int</c0><c4>;</c4><c0>\n&nbsp;*a&nbsp;=&nbsp;5</c0><c4>;</c4><c0>"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;404</ln><a id="404">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;stripped&nbsp;=&nbsp;strip_doc_comment_decoration</c0><c25>(</c25><c0>comment</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;405</ln><a id="405">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>stripped.slice</c0><c25>(</c25><c0>0</c0><c4>,</c4><c0>&nbsp;stripped.len</c0><c25>())</c25><c4>,</c4><c0>&nbsp;correct_stripped</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;406</ln><a id="406">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;407</ln><a id="407">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;408</ln><a id="408">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>&nbsp;</c0><c26>fn&nbsp;test_line_doc_comment</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;409</ln><a id="409">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;comment&nbsp;=&nbsp;"</c0><c32>///&nbsp;Test";
+</c32><br/><ln>&nbsp;410</ln><a id="410">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;correct_stripped&nbsp;=&nbsp;"&nbsp;Test"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;411</ln><a id="411">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;stripped&nbsp;=&nbsp;strip_doc_comment_decoration</c0><c25>(</c25><c0>comment</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;412</ln><a id="412">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>stripped.slice</c0><c25>(</c25><c0>0</c0><c4>,</c4><c0>&nbsp;stripped.len</c0><c25>())</c25><c4>,</c4><c0>&nbsp;correct_stripped</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;413</ln><a id="413">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;414</ln><a id="414">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="54_1_refs"><a href="#55"><c24>parse/comments.rs:55:1-55:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;fn&nbsp;strip_doc_comment_decoration(comment:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;~str&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../attr.rs.html"><c24>attr.rs:<br/></c24><a href="../attr.rs.html#119"><c24>119:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip_doc_comment_decoration(comment).to_managed());
+<br/></a><br/><br/><a id="222_1_refs"><a href="#223"><c24>parse/comments.rs:223:1-223:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;trim_whitespace_prefix_and_push_line(lines:&nbsp;&amp;mut&nbsp;~[~str],
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#295"><c24>295:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trim_whitespace_prefix_and_push_line(&amp;mut&nbsp;lines,&nbsp;curr_line,&nbsp;col);
+<br/></a><a href="../parse/comments.rs.html#273"><c24>273:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trim_whitespace_prefix_and_push_line(&amp;mut&nbsp;lines,&nbsp;curr_line,
+<br/></a><br/><br/><a id="168_1_refs"><a href="#169"><c24>parse/comments.rs:169:1-169:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;read_shebang_comment(rdr:&nbsp;@mut&nbsp;StringReader,&nbsp;code_to_the_left:&nbsp;bool,
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#323"><c24>323:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read_shebang_comment(rdr,&nbsp;code_to_the_left,&nbsp;comments);
+<br/></a><br/><br/><a id="45_1_refs"><a href="#46"><c24>parse/comments.rs:46:1-46:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;fn&nbsp;doc_comment_style(comment:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;ast::AttrStyle&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../attr.rs.html"><c24>attr.rs:<br/></c24><a href="../attr.rs.html#155"><c24>155:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;style&nbsp;=&nbsp;doc_comment_style(text);
+<br/></a><br/><br/><a id="128_1_refs"><a href="#129"><c24>parse/comments.rs:129:1-129:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;read_to_eol(rdr:&nbsp;@mut&nbsp;StringReader)&nbsp;-&gt;&nbsp;~str&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#141"><c24>141:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;val&nbsp;=&nbsp;read_to_eol(rdr);
+<br/></a><br/><br/><a id="151_1_refs"><a href="#152"><c24>parse/comments.rs:152:1-152:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;push_blank_line_comment(rdr:&nbsp;@mut&nbsp;StringReader,&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#163"><c24>163:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;push_blank_line_comment(rdr,&nbsp;&amp;mut&nbsp;*comments);
+<br/></a><br/><br/><a id="71_4_refs"><a href="#72"><c24>parse/comments.rs:72:4-72:4&nbsp;-fn-&nbsp;definition:<br/></c24><pr>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;horizontal_trim(lines:&nbsp;~[~str])&nbsp;-&gt;&nbsp;~[~str]&nbsp;{
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;i&nbsp;=&nbsp;uint::max_value;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#122"><c24>122:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;lines&nbsp;=&nbsp;horizontal_trim(lines);
+<br/></a><br/><br/><a id="327_19_refs"><a href="#328"><c24>parse/comments.rs:328:19-328:19&nbsp;-struct-&nbsp;definition:<br/></c24><pr>#[deriving(Clone)]
+<br/>pub&nbsp;struct&nbsp;lit&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#328"><c24>328:&nbsp;</c24>#[deriving(Clone)]
+<br/></a><a href="../parse/comments.rs.html#328"><c24>328:&nbsp;</c24>#[deriving(Clone)]
+<br/></a><a href="../parse/comments.rs.html#328"><c24>328:&nbsp;</c24>#[deriving(Clone)]
+<br/></a><a href="../parse/comments.rs.html#328"><c24>328:&nbsp;</c24>#[deriving(Clone)]
+<br/></a><a href="../parse/comments.rs.html#372"><c24>372:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;literals.push(lit&nbsp;{lit:&nbsp;s.to_owned(),&nbsp;pos:&nbsp;sp.lo});
+<br/></a><a href="../parse/comments.rs.html#340"><c24>340:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;(~[cmnt],&nbsp;~[lit])&nbsp;{
+<br/></a><a href="../parse/comments.rs.html#347"><c24>347:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;literals:&nbsp;~[lit]&nbsp;=&nbsp;~[];
+<br/></a><a href="../print/pprust.rs.html"><c24>print/pprust.rs:<br/></c24><a href="../print/pprust.rs.html#2069"><c24>2069:&nbsp;</c24>pub&nbsp;fn&nbsp;next_lit(s:&nbsp;@ps,&nbsp;pos:&nbsp;BytePos)&nbsp;-&gt;&nbsp;Option&lt;comments::lit&gt;&nbsp;{
+<br/></a><a href="../print/pprust.rs.html#88"><c24>88:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;literals:&nbsp;None::&lt;~[comments::lit]&gt;,
+<br/></a><a href="../print/pprust.rs.html#60"><c24>60:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;literals:&nbsp;Option&lt;~[comments::lit]&gt;,
+<br/></a><br/><br/><a id="58_4_refs"><a href="#59"><c24>parse/comments.rs:59:4-59:4&nbsp;-fn-&nbsp;definition:<br/></c24><pr>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;vertical_trim(lines:&nbsp;~[~str])&nbsp;-&gt;&nbsp;~[~str]&nbsp;{
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;i&nbsp;=&nbsp;0u;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#121"><c24>121:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;lines&nbsp;=&nbsp;vertical_trim(lines);
+<br/></a><br/><br/><a id="237_1_refs"><a href="#238"><c24>parse/comments.rs:238:1-238:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;read_block_comment(rdr:&nbsp;@mut&nbsp;StringReader,
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#321"><c24>321:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read_block_comment(rdr,&nbsp;code_to_the_left,&nbsp;comments);
+<br/></a><br/><br/><a id="38_1_refs"><a href="#39"><c24>parse/comments.rs:39:1-39:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;fn&nbsp;is_doc_comment(s:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#190"><c24>190:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;is_doc_comment(line)&nbsp;{&nbsp;//&nbsp;doc-comments&nbsp;are&nbsp;not&nbsp;put&nbsp;in&nbsp;comments
+<br/></a><a href="../parse/comments.rs.html#48"><c24>48:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;assert!(is_doc_comment(comment));
+<br/></a><br/><br/><a id="24_23_refs"><a href="#25"><c24>parse/comments.rs:25:23-25:23&nbsp;-enum-&nbsp;definition:<br/></c24><pr>#[deriving(Clone,&nbsp;Eq)]
+<br/>pub&nbsp;enum&nbsp;cmnt_style&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#25"><c24>25:&nbsp;</c24>#[deriving(Clone,&nbsp;Eq)]
+<br/></a><a href="../parse/comments.rs.html#25"><c24>25:&nbsp;</c24>#[deriving(Clone,&nbsp;Eq)]
+<br/></a><a href="../parse/comments.rs.html#25"><c24>25:&nbsp;</c24>#[deriving(Clone,&nbsp;Eq)]
+<br/></a><a href="../parse/comments.rs.html#35"><c24>35:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;style:&nbsp;cmnt_style,
+<br/></a><a href="../parse/comments.rs.html#25"><c24>25:&nbsp;</c24>#[deriving(Clone,&nbsp;Eq)]
+<br/></a><a href="../parse/comments.rs.html#25"><c24>25:&nbsp;</c24>#[deriving(Clone,&nbsp;Eq)]
+<br/></a><br/><br/><a id="32_19_refs"><a href="#33"><c24>parse/comments.rs:33:19-33:19&nbsp;-struct-&nbsp;definition:<br/></c24><pr>#[deriving(Clone)]
+<br/>pub&nbsp;struct&nbsp;cmnt&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#33"><c24>33:&nbsp;</c24>#[deriving(Clone)]
+<br/></a><a href="../parse/comments.rs.html#340"><c24>340:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;(~[cmnt],&nbsp;~[lit])&nbsp;{
+<br/></a><a href="../parse/comments.rs.html#241"><c24>241:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+<br/></a><a href="../parse/comments.rs.html#33"><c24>33:&nbsp;</c24>#[deriving(Clone)]
+<br/></a><a href="../parse/comments.rs.html#305"><c24>305:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;comments.push(cmnt&nbsp;{style:&nbsp;style,&nbsp;lines:&nbsp;lines,&nbsp;pos:&nbsp;p});
+<br/></a><a href="../parse/comments.rs.html#316"><c24>316:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+<br/></a><a href="../parse/comments.rs.html#183"><c24>183:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+<br/></a><a href="../parse/comments.rs.html#156"><c24>156:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;comments.push(cmnt&nbsp;{style:&nbsp;blank_line,&nbsp;lines:&nbsp;v,&nbsp;pos:&nbsp;rdr.last_pos});
+<br/></a><a href="../parse/comments.rs.html#198"><c24>198:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments.push(cmnt&nbsp;{
+<br/></a><a href="../parse/comments.rs.html#346"><c24>346:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;comments:&nbsp;~[cmnt]&nbsp;=&nbsp;~[];
+<br/></a><a href="../parse/comments.rs.html#160"><c24>160:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+<br/></a><a href="../parse/comments.rs.html#153"><c24>153:&nbsp;</c24>fn&nbsp;push_blank_line_comment(rdr:&nbsp;@mut&nbsp;StringReader,&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+<br/></a><a href="../parse/comments.rs.html#33"><c24>33:&nbsp;</c24>#[deriving(Clone)]
+<br/></a><a href="../parse/comments.rs.html#171"><c24>171:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;&amp;mut&nbsp;~[cmnt])&nbsp;{
+<br/></a><a href="../parse/comments.rs.html#33"><c24>33:&nbsp;</c24>#[deriving(Clone)]
+<br/></a><a href="../parse/comments.rs.html#175"><c24>175:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;comments.push(cmnt&nbsp;{
+<br/></a><a href="../print/pprust.rs.html"><c24>print/pprust.rs:<br/></c24><a href="../print/pprust.rs.html#2165"><c24>2165:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_&nbsp;=&gt;&nbsp;return&nbsp;None::&lt;comments::cmnt&gt;
+<br/></a><a href="../print/pprust.rs.html#2098"><c24>2098:&nbsp;</c24>pub&nbsp;fn&nbsp;print_comment(s:&nbsp;@ps,&nbsp;cmnt:&nbsp;&amp;comments::cmnt)&nbsp;{
+<br/></a><a href="../print/pprust.rs.html#87"><c24>87:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;None::&lt;~[comments::cmnt]&gt;,
+<br/></a><a href="../print/pprust.rs.html#2156"><c24>2156:&nbsp;</c24>pub&nbsp;fn&nbsp;next_comment(s:&nbsp;@ps)&nbsp;-&gt;&nbsp;Option&lt;comments::cmnt&gt;&nbsp;{
+<br/></a><a href="../print/pprust.rs.html#2162"><c24>2162:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;None::&lt;comments::cmnt&gt;;
+<br/></a><a href="../print/pprust.rs.html#59"><c24>59:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;comments:&nbsp;Option&lt;~[comments::cmnt]&gt;,
+<br/></a><br/><br/><a id="138_1_refs"><a href="#139"><c24>parse/comments.rs:139:1-139:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;read_one_line_comment(rdr:&nbsp;@mut&nbsp;StringReader)&nbsp;-&gt;&nbsp;~str&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#188"><c24>188:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;line&nbsp;=&nbsp;read_one_line_comment(rdr);
+<br/></a><a href="../parse/comments.rs.html#177"><c24>177:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lines:&nbsp;~[read_one_line_comment(rdr)],
+<br/></a><br/><br/><a id="306_1_refs"><a href="#307"><c24>parse/comments.rs:307:1-307:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;peeking_at_comment(rdr:&nbsp;@mut&nbsp;StringReader)&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#357"><c24>357:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;peeking_at_comment(rdr)&nbsp;{
+<br/></a><br/><br/><a id="207_51_refs"><a href="#208"><c24>parse/comments.rs:208:51-208:51&nbsp;-fn-&nbsp;definition:<br/></c24><pr>//&nbsp;whitespace.&nbsp;&nbsp;Note&nbsp;k&nbsp;may&nbsp;be&nbsp;outside&nbsp;bounds&nbsp;of&nbsp;s.
+<br/>fn&nbsp;all_whitespace(s:&nbsp;&amp;str,&nbsp;col:&nbsp;CharPos)&nbsp;-&gt;&nbsp;Option&lt;uint&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#227"><c24>227:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;s1&nbsp;=&nbsp;match&nbsp;all_whitespace(s,&nbsp;col)&nbsp;{
+<br/></a><br/><br/><a id="334_30_refs"><a href="#335"><c24>parse/comments.rs:335:30-335:30&nbsp;-fn-&nbsp;definition:<br/></c24><pr>//&nbsp;probably&nbsp;not&nbsp;a&nbsp;good&nbsp;thing.
+<br/>pub&nbsp;fn&nbsp;gather_comments_and_literals(span_diagnostic:
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../print/pprust.rs.html"><c24>print/pprust.rs:<br/></c24><a href="../print/pprust.rs.html#114"><c24>114:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;(cmnts,&nbsp;lits)&nbsp;=&nbsp;comments::gather_comments_and_literals(
+<br/></a><br/><br/><a id="71_45_refs"><a href="#72"><c24>parse/comments.rs:72:45-72:45&nbsp;-ty-&nbsp;definition:<br/></c24><pr>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;horizontal_trim(lines:&nbsp;~[~str])&nbsp;-&gt;&nbsp;~[~str]&nbsp;{
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;i&nbsp;=&nbsp;uint::max_value;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../diagnostic.rs.html"><c24>diagnostic.rs:<br/></c24><a href="../diagnostic.rs.html#194"><c24>194:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;stderr.get_type()&nbsp;==&nbsp;io::Screen&nbsp;{
+<br/></a><br/><br/><a id="157_1_refs"><a href="#158"><c24>parse/comments.rs:158:1-158:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;consume_whitespace_counting_blank_lines(rdr:&nbsp;@mut&nbsp;StringReader,
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#355"><c24>355:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;consume_whitespace_counting_blank_lines(rdr,&nbsp;&amp;mut&nbsp;comments);
+<br/></a><a href="../parse/comments.rs.html#359"><c24>359:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;consume_whitespace_counting_blank_lines(rdr,&nbsp;&amp;mut&nbsp;comments);
+<br/></a><br/><br/><a id="180_1_refs"><a href="#181"><c24>parse/comments.rs:181:1-181:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;read_line_comments(rdr:&nbsp;@mut&nbsp;StringReader,&nbsp;code_to_the_left:&nbsp;bool,
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#319"><c24>319:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read_line_comments(rdr,&nbsp;code_to_the_left,&nbsp;comments);
+<br/></a><br/><br/><a id="145_1_refs"><a href="#146"><c24>parse/comments.rs:146:1-146:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;consume_non_eol_whitespace(rdr:&nbsp;@mut&nbsp;StringReader)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#352"><c24>352:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;consume_non_eol_whitespace(rdr);
+<br/></a><a href="../parse/comments.rs.html#194"><c24>194:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;consume_non_eol_whitespace(rdr);
+<br/></a><a href="../parse/comments.rs.html#300"><c24>300:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;consume_non_eol_whitespace(rdr);
+<br/></a><br/><br/><a id="312_1_refs"><a href="#313"><c24>parse/comments.rs:313:1-313:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;consume_comment(rdr:&nbsp;@mut&nbsp;StringReader,
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../parse/comments.rs.html#358"><c24>358:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;consume_comment(rdr,&nbsp;code_to_the_left,&nbsp;&amp;mut&nbsp;comments);
+<br/></a><br/></a></a>

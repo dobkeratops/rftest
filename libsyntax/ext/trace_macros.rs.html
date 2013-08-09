@@ -1,0 +1,87 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
+</style><body style="background-color:#3a343a;"><maintext><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c21>use</c21><c0>&nbsp;ast</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c21>use</c21><c0>&nbsp;codemap::span</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c21>use</c21><c0>&nbsp;ext::base::ExtCtxt</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c21>use</c21><c0>&nbsp;ext::base</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c21>use</c21><c0>&nbsp;parse::lexer::</c0><c4>{</c4><c0>new_tt_reader</c0><c4>,</c4><c0>&nbsp;reader</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c21>use</c21><c0>&nbsp;parse::parser::Parser</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c21>use</c21><c0>&nbsp;parse::token::keywords</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#17_1_refs"><c26>expand_trace_macros</c26></a><c25>(</c25><a href="#18_27_refs"><c20>cx</c20></a><c1>:&nbsp;</c1><c3>@</c3><a href="../ext/base.rs.html#213"><c3>ExtCtxt</c3></a><c4>,</c4><a href="#17_1_refs"><c1>
+</c1></a><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><a href="#19_27_refs"><c20>sp</c20></a><c1>:&nbsp;</c1><a href="../codemap.rs.html#99"><c3>span</c3></a><c4>,</c4><a href="#17_1_refs"><c1>
+</c1></a><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><a href="#20_27_refs"><c20>tt</c20></a><c1>:&nbsp;</c1><c3>&amp;</c3><c4>[</c4><a href="../ast.rs.html#523"><c3>ast</c3></a><c3>::</c3><a href="../ast.rs.html#523"><c3>token_tree</c3></a><c4>]</c4><c25>)</c25><a href="#17_1_refs"><c1>
+</c1></a><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../ext/base.rs.html#64"><c3>base</c3></a><c3>::</c3><a href="../ext/base.rs.html#64"><c3>MacResult</c3></a><c1>&nbsp;</c1><c4>{</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#22_8_refs"><c20>sess</c20></a><c16>&nbsp;</c16><a href="#17_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../ext/trace_macros.rs.html#20"><c8>cx</c8></a><c10>.</c10><a href="../ext/base.rs.html#241"><c10>parse_sess</c10></a><c25>()</c25><c4>;</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#23_8_refs"><c20>cfg</c20></a><c16>&nbsp;</c16><a href="#17_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../ext/trace_macros.rs.html#20"><c8>cx</c8></a><c10>.</c10><a href="../ext/base.rs.html#242"><c10>cfg</c10></a><c25>()</c25><c4>;</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#24_8_refs"><c20>tt_rdr</c20></a><c16>&nbsp;</c16><a href="#17_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../ext/tt/transcribe.rs.html#48"><c8>new_tt_reader</c8></a><c25>(</c25><a href="../ext/trace_macros.rs.html#20"><c8>cx</c8></a><c10>.</c10><a href="../ext/base.rs.html#241"><c10>parse_sess</c10></a><c25>()</c25><c10>.</c10><a href="../parse/mod.rs.html#47"><c6>span_diagnostic</c6></a><c4>,</c4><a href="#17_1_refs"><c9>
+</c9></a><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><a href="#17_1_refs"><c8>None</c8></a><c4>,</c4><a href="#17_1_refs"><c9>
+</c9></a><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><a href="../ext/trace_macros.rs.html#22"><c8>tt</c8></a><c10>.</c10><a href="../ast_util.rs.html#919"><c10>to_owned</c10></a><c25>())</c25><c4>;</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#27_8_refs"><c20>rdr</c20></a><c16>&nbsp;</c16><a href="#17_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../ext/trace_macros.rs.html#26"><c8>tt_rdr</c8></a><c7>&nbsp;</c7><a href="#17_1_refs"><c7>as</c7></a><c7>&nbsp;</c7><c3>@</c3><a href="../parse/lexer.rs.html#27"><c3>reader</c3></a><c4>;</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#28_8_refs"><c20>rust_parser</c20></a><c16>&nbsp;</c16><a href="#17_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../parse/parser.rs.html#264"><c8>Parser</c8></a><c25>(</c25><a href="../ext/trace_macros.rs.html#24"><c8>sess</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../ext/trace_macros.rs.html#25"><c8>cfg</c8></a><c10>.</c10><c10>c</c10><c10>l</c10><c10>o</c10><c10>n</c10><c10>e</c10><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><a href="../ext/trace_macros.rs.html#29"><c8>rdr</c8></a><c10>.</c10><a href="../parse/lexer.rs.html#27"><c10>dup</c10></a><c25>())</c25><c4>;</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../ext/trace_macros.rs.html#30"><c8>rust_parser</c8></a><c10>.</c10><a href="../parse/parser.rs.html#416"><c10>is_keyword</c10></a><c25>(</c25><a href="../parse/token.rs.html#593"><c8>keywords</c8></a><c8>::</c8><a href="../parse/token.rs.html#593"><c8>True</c8></a><c25>)</c25><c10>&nbsp;</c10><c4>{</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../ext/trace_macros.rs.html#20"><c8>cx</c8></a><c13>.</c13><a href="../ext/base.rs.html#304"><c13>set_trace_macros</c13></a><c25>(</c25><a href="../ext/base.rs.html#304"><c12>true</c12></a><c25>)</c25><c4>;</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c21>if</c21><c7>&nbsp;</c7><a href="../ext/trace_macros.rs.html#30"><c8>rust_parser</c8></a><c10>.</c10><a href="../parse/parser.rs.html#416"><c10>is_keyword</c10></a><c25>(</c25><a href="../parse/token.rs.html#571"><c8>keywords</c8></a><c8>::</c8><a href="../parse/token.rs.html#571"><c8>False</c8></a><c25>)</c25><c10>&nbsp;</c10><c4>{</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../ext/trace_macros.rs.html#20"><c8>cx</c8></a><c13>.</c13><a href="../ext/base.rs.html#304"><c13>set_trace_macros</c13></a><c25>(</c25><a href="../ext/base.rs.html#304"><c12>false</c12></a><c25>)</c25><c4>;</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../ext/trace_macros.rs.html#20"><c8>cx</c8></a><c10>.</c10><a href="../ext/base.rs.html#274"><c10>span_fatal</c10></a><c25>(</c25><a href="../ext/trace_macros.rs.html#21"><c8>sp</c8></a><c4>,</c4><c10>&nbsp;</c10><a href="#17_1_refs"><c12>"trace_macros</c12></a><c12>!&nbsp;</c12><a href="#17_1_refs"><c12>only</c12></a><c12>&nbsp;</c12><a href="#17_1_refs"><c12>accepts</c12></a><c12>&nbsp;</c12><a href="#17_1_refs"><c12>`true`</c12></a><c12>&nbsp;</c12><a href="#17_1_refs"><c12>or</c12></a><c12>&nbsp;</c12><a href="#17_1_refs"><c12>`false`"</c12></a><c25>)</c25><a href="../ext/base.rs.html#274"><c10>
+</c10></a><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../ext/trace_macros.rs.html#30"><c8>rust_parser</c8></a><c13>.</c13><a href="#17_1_refs"><c13>bump</c13></a><c25>()</c25><c4>;</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#40_8_refs"><c20>rust_parser</c20></a><c16>&nbsp;</c16><a href="#17_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../parse/parser.rs.html#264"><c8>Parser</c8></a><c25>(</c25><a href="../ext/trace_macros.rs.html#24"><c8>sess</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../ext/trace_macros.rs.html#25"><c8>cfg</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../ext/trace_macros.rs.html#29"><c8>rdr</c8></a><c10>.</c10><a href="../parse/lexer.rs.html#27"><c10>dup</c10></a><c25>())</c25><c4>;</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#41_8_refs"><c20>result</c20></a><c16>&nbsp;</c16><a href="#17_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../ext/trace_macros.rs.html#42"><c8>rust_parser</c8></a><c10>.</c10><a href="../parse/parser.rs.html#2503"><c10>parse_expr</c10></a><c25>()</c25><c4>;</c4><a href="#17_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../ext/base.rs.html#66"><c8>base</c8></a><c8>::</c8><a href="../ext/base.rs.html#66"><c8>MRExpr</c8></a><c25>(</c25><a href="../ext/trace_macros.rs.html#43"><c8>result</c8></a><c25>)</c25><a href="#17_1_refs"><c9>
+</c9></a><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="17_1_refs"><a href="#18"><c24>ext/trace_macros.rs:18:1-18:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;fn&nbsp;expand_trace_macros(cx:&nbsp;@ExtCtxt,
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../ext/base.rs.html"><c24>ext/base.rs:<br/></c24><a href="../ext/base.rs.html#206"><c24>206:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;builtin_normal_tt(ext::trace_macros::expand_trace_macros));
+<br/></a><br/></a></maintext>
