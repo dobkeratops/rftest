@@ -3,16 +3,18 @@ a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
 pr{font-weight:bold}
-ln{color:#606060; }
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
 c24{color:#ffffff; font-style:italic; opacity:0.5}
 c25{color:#ffffff; opacity:0.92}
 c26{color:#ffffff; font-weight:bold; }
-c27{color:#ffffa0; font-weight:bold; }
-c28{color:#afffff; font-weight:bold; }
-c29{color:#afffaf; font-weight:bold; }
-c30{color:#cfcfff; font-weight:bold; }
-c31{color:#ffffff; font-style:italic; opacity:0.6}
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
 c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
 c2{color:#60f0c0}
 c3{color:#50e0ff; }
 c4{color:#f090f0}
@@ -32,9 +34,9 @@ c17{color:#90d0f0}
 c18{color:#f0a0d0}
 c19{color:#d0f0a0}
 c20{color:#0f0ff}
-c21{color:#dde009; font-weight:bold}
-c22{color:#e0f0d0; font-weight:bold}
-c23{color:#e0f0ff; font-weight:bold}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
 </style><body style="background-color:#3a343a;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
@@ -45,107 +47,107 @@ c23{color:#e0f0ff; font-weight:bold}
 </c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
 </c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
 </c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c0>/*!
-</c0><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c0>Task&nbsp;local&nbsp;data&nbsp;management
-</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c0>Allows&nbsp;storing&nbsp;arbitrary&nbsp;types&nbsp;inside&nbsp;task-local-storage&nbsp;</c0><c25>(</c25><c0>TLS</c0><c25>)</c25><c4>,</c4><c0>&nbsp;to&nbsp;be&nbsp;accessed
-</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c0>anywhere&nbsp;within&nbsp;a&nbsp;task</c0><c4>,</c4><c0>&nbsp;keyed&nbsp;by&nbsp;a&nbsp;global&nbsp;pointer&nbsp;parameterized&nbsp;over&nbsp;the&nbsp;</c0><c28>type&nbsp;of
-</c28><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c0>the&nbsp;TLS&nbsp;slot.&nbsp;&nbsp;Useful&nbsp;for&nbsp;dynamic&nbsp;variables</c0><c4>,</c4><c0>&nbsp;singletons</c0><c4>,</c4><c0>&nbsp;and&nbsp;interfacing&nbsp;with
-</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c0>foreign&nbsp;code&nbsp;with&nbsp;bad&nbsp;callback&nbsp;interfaces.
-</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>To&nbsp;use</c0><c4>,</c4><c0>&nbsp;declare&nbsp;a&nbsp;static&nbsp;variable&nbsp;of&nbsp;the&nbsp;</c0><c28>type&nbsp;you&nbsp;wish&nbsp;to&nbsp;store.&nbsp;The
-</c28><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>initialization&nbsp;should&nbsp;be&nbsp;`&amp;local_data::Key`.&nbsp;This&nbsp;is&nbsp;then&nbsp;the&nbsp;key&nbsp;to&nbsp;what&nbsp;you
-</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c0>wish&nbsp;to&nbsp;store.
-</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c0>~~~</c0><c4>{</c4><c0>.rust</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c0>use&nbsp;std::local_data</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c0>static&nbsp;key_int:&nbsp;local_data::Key&lt;int&gt;&nbsp;=&nbsp;&amp;local_data::Key</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c0>static&nbsp;key_vector:&nbsp;local_data::Key&lt;~</c0><c4>[</c4><c0>int</c0><c4>]</c4><c0>&gt;&nbsp;=&nbsp;&amp;local_data::Key</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c0>local_data::set</c0><c25>(</c25><c0>key_int</c0><c4>,</c4><c0>&nbsp;3</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c0>local_data::get</c0><c25>(</c25><c0>key_int</c0><c4>,</c4><c0>&nbsp;|opt|&nbsp;assert_eq!</c0><c25>(</c25><c0>opt</c0><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>&amp;3</c0><c25>)))</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c0>local_data::set</c0><c25>(</c25><c0>key_vector</c0><c4>,</c4><c0>&nbsp;~</c0><c4>[</c4><c0>4</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c0>local_data::get</c0><c25>(</c25><c0>key_int</c0><c4>,</c4><c0>&nbsp;|opt|&nbsp;assert_eq!</c0><c25>(</c25><c0>opt</c0><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>&amp;~</c0><c4>[</c4><c0>4</c0><c4>]</c4><c25>)))</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c0>~~~
-</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c0>Casting&nbsp;'Arcane&nbsp;Sight'&nbsp;reveals&nbsp;an&nbsp;overwhelming&nbsp;aura&nbsp;of&nbsp;Transmutation
-</c0><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c0>magic.
-</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c0>*/
-</c0><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c0>use&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>/*!
+</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c24>Task&nbsp;local&nbsp;data&nbsp;management
+</c24><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c24>Allows&nbsp;storing&nbsp;arbitrary&nbsp;types&nbsp;inside&nbsp;task-local-storage&nbsp;(TLS),&nbsp;to&nbsp;be&nbsp;accessed
+</c24><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c24>anywhere&nbsp;within&nbsp;a&nbsp;task,&nbsp;keyed&nbsp;by&nbsp;a&nbsp;global&nbsp;pointer&nbsp;parameterized&nbsp;over&nbsp;the&nbsp;type&nbsp;of
+</c24><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c24>the&nbsp;TLS&nbsp;slot.&nbsp;&nbsp;Useful&nbsp;for&nbsp;dynamic&nbsp;variables,&nbsp;singletons,&nbsp;and&nbsp;interfacing&nbsp;with
+</c24><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c24>foreign&nbsp;code&nbsp;with&nbsp;bad&nbsp;callback&nbsp;interfaces.
+</c24><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c24>To&nbsp;use,&nbsp;declare&nbsp;a&nbsp;static&nbsp;variable&nbsp;of&nbsp;the&nbsp;type&nbsp;you&nbsp;wish&nbsp;to&nbsp;store.&nbsp;The
+</c24><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c24>initialization&nbsp;should&nbsp;be&nbsp;`&amp;local_data::Key`.&nbsp;This&nbsp;is&nbsp;then&nbsp;the&nbsp;key&nbsp;to&nbsp;what&nbsp;you
+</c24><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c24>wish&nbsp;to&nbsp;store.
+</c24><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c24>~~~{.rust}
+</c24><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c24>use&nbsp;std::local_data;
+</c24><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c24>static&nbsp;key_int:&nbsp;local_data::Key&lt;int&gt;&nbsp;=&nbsp;&amp;local_data::Key;
+</c24><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c24>static&nbsp;key_vector:&nbsp;local_data::Key&lt;~[int]&gt;&nbsp;=&nbsp;&amp;local_data::Key;
+</c24><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c24>local_data::set(key_int,&nbsp;3);
+</c24><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c24>local_data::get(key_int,&nbsp;|opt|&nbsp;assert_eq!(opt,&nbsp;Some(&amp;3)));
+</c24><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c24>local_data::set(key_vector,&nbsp;~[4]);
+</c24><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c24>local_data::get(key_int,&nbsp;|opt|&nbsp;assert_eq!(opt,&nbsp;Some(&amp;~[4])));
+</c24><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c24>~~~
+</c24><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c24>Casting&nbsp;'Arcane&nbsp;Sight'&nbsp;reveals&nbsp;an&nbsp;overwhelming&nbsp;aura&nbsp;of&nbsp;Transmutation
+</c24><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c24>magic.
+</c24><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c24>*/
+</c24><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c0>use&nbsp;task::local_data_priv::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c21>use</c21><c0>&nbsp;task::local_data_priv::*</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>test</c0><c25>)</c25><c4>]</c4><c0>&nbsp;use&nbsp;task</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c0>/**
-</c0><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c0>&nbsp;*&nbsp;Indexes&nbsp;a&nbsp;task-local&nbsp;data&nbsp;slot.&nbsp;This&nbsp;pointer&nbsp;is&nbsp;used&nbsp;for&nbsp;comparison&nbsp;to
-</c0><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c0>&nbsp;*&nbsp;differentiate&nbsp;keys&nbsp;from&nbsp;one&nbsp;another.&nbsp;The&nbsp;actual&nbsp;</c0><c28>type&nbsp;`T`&nbsp;is&nbsp;not&nbsp;used&nbsp;anywhere
-</c28><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c0>&nbsp;*&nbsp;as&nbsp;a&nbsp;member&nbsp;of&nbsp;this&nbsp;</c0><c28>type,&nbsp;except&nbsp;that&nbsp;it&nbsp;is&nbsp;parameterized&nbsp;with&nbsp;it&nbsp;to&nbsp;define
-</c28><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c0>&nbsp;*&nbsp;the&nbsp;</c0><c28>type&nbsp;of&nbsp;each&nbsp;key's&nbsp;value.
-</c28><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c0>&nbsp;*
-</c0><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c0>&nbsp;*&nbsp;The&nbsp;value&nbsp;of&nbsp;each&nbsp;Key&nbsp;is&nbsp;of&nbsp;the&nbsp;singleton&nbsp;</c0><c30>enum&nbsp;KeyValue.&nbsp;These&nbsp;also&nbsp;have&nbsp;the
-</c30><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c0>&nbsp;*&nbsp;same&nbsp;name&nbsp;as&nbsp;`Key`&nbsp;and&nbsp;their&nbsp;purpose&nbsp;is&nbsp;to&nbsp;take&nbsp;up&nbsp;space&nbsp;in&nbsp;the&nbsp;programs&nbsp;data
-</c0><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c0>&nbsp;*&nbsp;sections&nbsp;to&nbsp;ensure&nbsp;that&nbsp;each&nbsp;value&nbsp;of&nbsp;the&nbsp;`Key`&nbsp;</c0><c28>type&nbsp;points&nbsp;to&nbsp;a&nbsp;unique
-</c28><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c0>&nbsp;*&nbsp;location.
-</c0><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c0>&nbsp;*/
-</c0><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a href="#57_4_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;Key</c28><c5>&lt;T&gt;</c5><c28>&nbsp;=&nbsp;&amp;'static&nbsp;</c28><a href="local_data.rs.html#61"><c28>KeyValue</c28><c5>&lt;</c5></a><a href="#57_4_refs"><c5>T</c5><a href="local_data.rs.html#61"><c5>&gt;</c5></a><a href="#57_4_refs"><c28>;</c28><c28>
-</c28><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a href="#59_1_refs"><c11>pub&nbsp;</c11><c30>enum&nbsp;KeyValue</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><c11>{&nbsp;</c11><a href="#60_23_refs"><c0>Key</c0><a href="#59_1_refs"><c11>&nbsp;</c11><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>&nbsp;use&nbsp;task</c33><c4>;</c4><c33>
+</c33><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c24>&nbsp;*&nbsp;Indexes&nbsp;a&nbsp;task-local&nbsp;data&nbsp;slot.&nbsp;This&nbsp;pointer&nbsp;is&nbsp;used&nbsp;for&nbsp;comparison&nbsp;to
+</c24><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c24>&nbsp;*&nbsp;differentiate&nbsp;keys&nbsp;from&nbsp;one&nbsp;another.&nbsp;The&nbsp;actual&nbsp;type&nbsp;`T`&nbsp;is&nbsp;not&nbsp;used&nbsp;anywhere
+</c24><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c24>&nbsp;*&nbsp;as&nbsp;a&nbsp;member&nbsp;of&nbsp;this&nbsp;type,&nbsp;except&nbsp;that&nbsp;it&nbsp;is&nbsp;parameterized&nbsp;with&nbsp;it&nbsp;to&nbsp;define
+</c24><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c24>&nbsp;*&nbsp;the&nbsp;type&nbsp;of&nbsp;each&nbsp;key's&nbsp;value.
+</c24><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c24>&nbsp;*&nbsp;The&nbsp;value&nbsp;of&nbsp;each&nbsp;Key&nbsp;is&nbsp;of&nbsp;the&nbsp;singleton&nbsp;enum&nbsp;KeyValue.&nbsp;These&nbsp;also&nbsp;have&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c24>&nbsp;*&nbsp;same&nbsp;name&nbsp;as&nbsp;`Key`&nbsp;and&nbsp;their&nbsp;purpose&nbsp;is&nbsp;to&nbsp;take&nbsp;up&nbsp;space&nbsp;in&nbsp;the&nbsp;programs&nbsp;data
+</c24><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c24>&nbsp;*&nbsp;sections&nbsp;to&nbsp;ensure&nbsp;that&nbsp;each&nbsp;value&nbsp;of&nbsp;the&nbsp;`Key`&nbsp;type&nbsp;points&nbsp;to&nbsp;a&nbsp;unique
+</c24><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c24>&nbsp;*&nbsp;location.
+</c24><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c21>pub</c21><c3>&nbsp;</c3><c31>type&nbsp;</c31><a href="#57_4_refs"><c31>Key</c31></a><c5>&lt;</c5><a href="#57_4_refs"><c5>T</c5></a><c5>&gt;</c5><c31>&nbsp;</c31><a href="#57_4_refs"><c31>=</c31></a><c31>&nbsp;&amp;'</c31><a href="#57_4_refs"><c31>static</c31></a><c31>&nbsp;</c31><a href="local_data.rs.html#61"><c31>KeyValue</c31></a><c5>&lt;</c5><a href="local_data.rs.html#61"><c5>T</c5></a><c5>&gt;</c5><c31>;
+</c31><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c21>pub</c21><c11>&nbsp;</c11><c29>enum&nbsp;</c29><a href="#59_1_refs"><c29>KeyValue</c29></a><c5>&lt;</c5><a href="#59_1_refs"><c5>T</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><c4>{</c4><c11>&nbsp;</c11><a href="#60_23_refs"><c0>Key</c0></a><c11>&nbsp;</c11><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c0>/**
-</c0><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c0>&nbsp;*&nbsp;Remove&nbsp;a&nbsp;task-local&nbsp;data&nbsp;value&nbsp;from&nbsp;the&nbsp;table</c0><c4>,</c4><c0>&nbsp;returning&nbsp;the
-</c0><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c0>&nbsp;*&nbsp;reference&nbsp;that&nbsp;was&nbsp;originally&nbsp;created&nbsp;to&nbsp;insert&nbsp;it.
-</c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c0>&nbsp;*/
-</c0><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a href="#65_4_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;pop</c26><c5>&lt;T:&nbsp;'static&gt;</c5><c1>(</c1><a href="#66_23_refs"><c20>key</c20><a href="#65_4_refs"><c1>:&nbsp;</c1><a href="local_data.rs.html#59"><c3>Key&lt;T&gt;</c3></a><a href="#65_4_refs"><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><a href="option.rs.html#55"><c3>Option&lt;</c3></a><a href="#65_4_refs"><c3>T</c3><a href="option.rs.html#55"><c3>&gt;</c3></a><a href="#65_4_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a href="#65_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><a href="task/local_data_priv.rs.html#165"><c8>local_pop</c8></a><a href="#65_4_refs"><c25>(</c25><a href="task/local_data_priv.rs.html#32"><c8>Handle::new</c8></a><a href="#65_4_refs"><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#68"><c8>key</c8></a><a href="#65_4_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a href="#65_4_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c24>&nbsp;*&nbsp;Remove&nbsp;a&nbsp;task-local&nbsp;data&nbsp;value&nbsp;from&nbsp;the&nbsp;table,&nbsp;returning&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c24>&nbsp;*&nbsp;reference&nbsp;that&nbsp;was&nbsp;originally&nbsp;created&nbsp;to&nbsp;insert&nbsp;it.
+</c24><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#65_4_refs"><c26>pop</c26></a><c5>&lt;</c5><a href="#65_4_refs"><c5>T</c5></a><c5>:&nbsp;'</c5><a href="#65_4_refs"><c5>static</c5></a><c5>&gt;</c5><c25>(</c25><a href="#66_23_refs"><c20>key</c20></a><c1>:&nbsp;</c1><a href="local_data.rs.html#59"><c3>Key</c3></a><c3>&lt;</c3><a href="#65_4_refs"><c3>T</c3></a><c3>&gt;</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="#65_4_refs"><c3>T</c3></a><c3>&gt;</c3><c1>&nbsp;</c1><c4>{</c4><a href="#65_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#65_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="task/local_data_priv.rs.html#165"><c8>local_pop</c8></a><c25>(</c25><a href="task/local_data_priv.rs.html#32"><c8>Handle</c8></a><c8>::</c8><a href="task/local_data_priv.rs.html#32"><c8>new</c8></a><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#68"><c8>key</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><a href="#65_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c0>/**
-</c0><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c0>&nbsp;*&nbsp;Retrieve&nbsp;a&nbsp;task-local&nbsp;data&nbsp;value.&nbsp;It&nbsp;will&nbsp;also&nbsp;be&nbsp;kept&nbsp;alive&nbsp;in&nbsp;the
-</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c0>&nbsp;*&nbsp;table&nbsp;until&nbsp;explicitly&nbsp;removed.
-</c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c0>&nbsp;*/
-</c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a href="#73_4_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;get</c26><c5>&lt;T:&nbsp;'static,&nbsp;U&gt;</c5><c1>(</c1><a href="#74_26_refs"><c20>key</c20><a href="#73_4_refs"><c1>:&nbsp;</c1><a href="local_data.rs.html#59"><c3>Key&lt;T&gt;</c3></a><a href="#73_4_refs"><c4>,</c4><c1>&nbsp;</c1><a href="#74_39_refs"><c20>f</c20><a href="#73_4_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(</c3><a href="option.rs.html#55"><c3>Option&lt;</c3></a><a href="#73_4_refs"><c3>&amp;T</c3><a href="option.rs.html#55"><c3>&gt;</c3></a><a href="#73_4_refs"><c25>)</c25><c3>&nbsp;-&gt;&nbsp;U</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>U</c3><c1>&nbsp;</c1><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a href="#73_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><a href="task/local_data_priv.rs.html#210"><c8>local_get</c8></a><a href="#73_4_refs"><c25>(</c25><a href="task/local_data_priv.rs.html#32"><c8>Handle::new</c8></a><a href="#73_4_refs"><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#76"><c8>key</c8></a><a href="#73_4_refs"><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#76"><c8>f</c8></a><a href="#73_4_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a href="#73_4_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c24>&nbsp;*&nbsp;Retrieve&nbsp;a&nbsp;task-local&nbsp;data&nbsp;value.&nbsp;It&nbsp;will&nbsp;also&nbsp;be&nbsp;kept&nbsp;alive&nbsp;in&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c24>&nbsp;*&nbsp;table&nbsp;until&nbsp;explicitly&nbsp;removed.
+</c24><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#73_4_refs"><c26>get</c26></a><c5>&lt;</c5><a href="#73_4_refs"><c5>T</c5></a><c5>:&nbsp;'</c5><a href="#73_4_refs"><c5>static</c5></a><c5>,&nbsp;</c5><a href="#73_4_refs"><c5>U</c5></a><c5>&gt;</c5><c25>(</c25><a href="#74_26_refs"><c20>key</c20></a><c1>:&nbsp;</c1><a href="local_data.rs.html#59"><c3>Key</c3></a><c3>&lt;</c3><a href="#73_4_refs"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><c1>&nbsp;</c1><a href="#74_39_refs"><c20>f</c20></a><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c25>(</c25><a href="option.rs.html#55"><c3>Option</c3></a><c3>&lt;&amp;</c3><a href="#73_4_refs"><c3>T</c3></a><c3>&gt;</c3><c25>)</c25><c3>&nbsp;</c3><c4>-&gt;</c4><c3>&nbsp;</c3><a href="#73_4_refs"><c3>U</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="#73_4_refs"><c3>U</c3></a><c1>&nbsp;</c1><c4>{</c4><a href="#73_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#73_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="task/local_data_priv.rs.html#210"><c8>local_get</c8></a><c25>(</c25><a href="task/local_data_priv.rs.html#32"><c8>Handle</c8></a><c8>::</c8><a href="task/local_data_priv.rs.html#32"><c8>new</c8></a><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#76"><c8>key</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#76"><c8>f</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><a href="#73_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c0>/**
-</c0><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c0>&nbsp;*&nbsp;Retrieve&nbsp;a&nbsp;mutable&nbsp;borrowed&nbsp;pointer&nbsp;to&nbsp;a&nbsp;task-local&nbsp;data&nbsp;value.
-</c0><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c0>&nbsp;*/
-</c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c1>pub&nbsp;</c1><c26>fn&nbsp;get_mut</c26><c5>&lt;T:&nbsp;'static,&nbsp;U&gt;</c5><c1>(</c1><a href="#81_30_refs"><c20>key</c20><c1>:&nbsp;</c1><a href="local_data.rs.html#59"><c3>Key&lt;T&gt;</c3></a><c4>,</c4><c1>&nbsp;</c1><a href="#81_43_refs"><c20>f</c20><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(</c3><a href="option.rs.html#55"><c3>Option&lt;&amp;mut&nbsp;T&gt;</c3></a><c25>)</c25><c3>&nbsp;-&gt;&nbsp;U</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>U</c3><c1>&nbsp;</c1><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><a href="task/local_data_priv.rs.html#216"><c8>local_get_mut</c8></a><c25>(</c25><a href="task/local_data_priv.rs.html#32"><c8>Handle::new</c8></a><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#83"><c8>key</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#83"><c8>f</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c24>&nbsp;*&nbsp;Retrieve&nbsp;a&nbsp;mutable&nbsp;borrowed&nbsp;pointer&nbsp;to&nbsp;a&nbsp;task-local&nbsp;data&nbsp;value.
+</c24><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;get_mut</c26><c5>&lt;T:&nbsp;'static,&nbsp;U&gt;</c5><c25>(</c25><a href="#81_30_refs"><c20>key</c20></a><c1>:&nbsp;</c1><a href="local_data.rs.html#59"><c3>Key</c3></a><c3>&lt;</c3><a href="local_data.rs.html#59"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><c1>&nbsp;</c1><a href="#81_43_refs"><c20>f</c20></a><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c25>(</c25><a href="option.rs.html#55"><c3>Option</c3></a><c3>&lt;&amp;</c3><a href="option.rs.html#55"><c3>mut</c3></a><c3>&nbsp;</c3><a href="option.rs.html#55"><c3>T</c3></a><c3>&gt;</c3><c25>)</c25><c3>&nbsp;</c3><c4>-&gt;</c4><c3>&nbsp;U</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>U</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="task/local_data_priv.rs.html#216"><c8>local_get_mut</c8></a><c25>(</c25><a href="task/local_data_priv.rs.html#32"><c8>Handle</c8></a><c8>::</c8><a href="task/local_data_priv.rs.html#32"><c8>new</c8></a><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#83"><c8>key</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#83"><c8>f</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c0>/**
-</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c0>&nbsp;*&nbsp;Store&nbsp;a&nbsp;value&nbsp;in&nbsp;task-local&nbsp;data.&nbsp;If&nbsp;this&nbsp;key&nbsp;already&nbsp;has&nbsp;a&nbsp;value</c0><c4>,</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c0>&nbsp;*&nbsp;that&nbsp;value&nbsp;is&nbsp;overwritten&nbsp;</c0><c25>(</c25><c0>and&nbsp;its&nbsp;destructor&nbsp;is&nbsp;run</c0><c25>)</c25><c0>.
-</c0><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c0>&nbsp;*/
-</c0><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a href="#88_4_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;set</c26><c5>&lt;T:&nbsp;'static&gt;</c5><c1>(</c1><a href="#89_23_refs"><c20>key</c20><a href="#88_4_refs"><c1>:&nbsp;</c1><a href="local_data.rs.html#59"><c3>Key&lt;</c3></a><a href="#88_4_refs"><c3>T</c3><a href="local_data.rs.html#59"><c3>&gt;</c3></a><a href="#88_4_refs"><c4>,</c4><c1>&nbsp;</c1><a href="#89_36_refs"><c20>data</c20><a href="#88_4_refs"><c1>:&nbsp;</c1><c3>T</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a href="#88_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><a href="task/local_data_priv.rs.html#305"><c8>local_set</c8></a><a href="#88_4_refs"><c25>(</c25><a href="task/local_data_priv.rs.html#32"><c8>Handle::new</c8></a><a href="#88_4_refs"><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#91"><c8>key</c8></a><a href="#88_4_refs"><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#91"><c8>data</c8></a><a href="#88_4_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a href="#88_4_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c24>&nbsp;*&nbsp;Store&nbsp;a&nbsp;value&nbsp;in&nbsp;task-local&nbsp;data.&nbsp;If&nbsp;this&nbsp;key&nbsp;already&nbsp;has&nbsp;a&nbsp;value,
+</c24><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c24>&nbsp;*&nbsp;that&nbsp;value&nbsp;is&nbsp;overwritten&nbsp;(and&nbsp;its&nbsp;destructor&nbsp;is&nbsp;run).
+</c24><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#88_4_refs"><c26>set</c26></a><c5>&lt;</c5><a href="#88_4_refs"><c5>T</c5></a><c5>:&nbsp;'</c5><a href="#88_4_refs"><c5>static</c5></a><c5>&gt;</c5><c25>(</c25><a href="#89_23_refs"><c20>key</c20></a><c1>:&nbsp;</c1><a href="local_data.rs.html#59"><c3>Key</c3></a><c3>&lt;</c3><a href="#88_4_refs"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><c1>&nbsp;</c1><a href="#89_36_refs"><c20>data</c20></a><c1>:&nbsp;</c1><a href="#88_4_refs"><c3>T</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><a href="#88_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#88_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="task/local_data_priv.rs.html#305"><c8>local_set</c8></a><c25>(</c25><a href="task/local_data_priv.rs.html#32"><c8>Handle</c8></a><c8>::</c8><a href="task/local_data_priv.rs.html#32"><c8>new</c8></a><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#91"><c8>key</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="local_data.rs.html#91"><c8>data</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><a href="#88_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c0>/**
-</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c0>&nbsp;*&nbsp;Modify&nbsp;a&nbsp;task-local&nbsp;data&nbsp;value.&nbsp;If&nbsp;the&nbsp;function&nbsp;returns&nbsp;'None'</c0><c4>,</c4><c0>&nbsp;the
-</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c0>&nbsp;*&nbsp;data&nbsp;is&nbsp;removed&nbsp;</c0><c25>(</c25><c0>and&nbsp;its&nbsp;reference&nbsp;dropped</c0><c25>)</c25><c0>.
-</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c0>&nbsp;*/
-</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c1>pub&nbsp;</c1><c26>fn&nbsp;modify</c26><c5>&lt;T:&nbsp;'static&gt;</c5><c1>(</c1><a href="#97_26_refs"><c20>key</c20><c1>:&nbsp;</c1><a href="local_data.rs.html#59"><c3>Key&lt;T&gt;</c3></a><c4>,</c4><c1>&nbsp;</c1><a href="#97_39_refs"><c20>f</c20><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(</c3><a href="option.rs.html#55"><c3>Option&lt;T&gt;</c3></a><c25>)</c25><c3>&nbsp;-&gt;&nbsp;</c3><a href="option.rs.html#55"><c3>Option&lt;T&gt;</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="local_data.rs.html#99"><c8>f</c8></a><c25>(</c25><a href="local_data.rs.html#67"><c8>pop</c8></a><c25>(</c25><a href="cast.rs.html#42"><c8>::cast::unsafe_copy</c8></a><c25>(</c25><c2>&amp;</c2><a href="local_data.rs.html#99"><c8>key</c8></a><c25>)))</c25><c9>&nbsp;</c9><c4>{</c4><c7>
-</c7><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="option.rs.html#58"><c20>Some</c20><c25>(</c25></a><a href="#100_17_refs"><c20>next</c20><a href="option.rs.html#58"><c25>)</c25></a><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="local_data.rs.html#90"><c8>set</c8></a><c25>(</c25><a href="local_data.rs.html#99"><c8>key</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="local_data.rs.html#102"><c8>next</c8></a><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
-</c7><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="option.rs.html#57"><c20>None</c20></a><c7>&nbsp;=&gt;&nbsp;</c7><c4>{}</c4><c7>
-</c7><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c24>&nbsp;*&nbsp;Modify&nbsp;a&nbsp;task-local&nbsp;data&nbsp;value.&nbsp;If&nbsp;the&nbsp;function&nbsp;returns&nbsp;'None',&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c24>&nbsp;*&nbsp;data&nbsp;is&nbsp;removed&nbsp;(and&nbsp;its&nbsp;reference&nbsp;dropped).
+</c24><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;modify</c26><c5>&lt;T:&nbsp;'static&gt;</c5><c25>(</c25><a href="#97_26_refs"><c20>key</c20></a><c1>:&nbsp;</c1><a href="local_data.rs.html#59"><c3>Key</c3></a><c3>&lt;</c3><a href="local_data.rs.html#59"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><c1>&nbsp;</c1><a href="#97_39_refs"><c20>f</c20></a><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c25>(</c25><a href="option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="option.rs.html#55"><c3>T</c3></a><c3>&gt;</c3><c25>)</c25><c3>&nbsp;</c3><c4>-&gt;</c4><c3>&nbsp;</c3><a href="option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="option.rs.html#55"><c3>T</c3></a><c3>&gt;</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><a href="local_data.rs.html#99"><c8>f</c8></a><c25>(</c25><a href="local_data.rs.html#67"><c8>pop</c8></a><c25>(</c25><c8>::</c8><a href="cast.rs.html#42"><c8>cast</c8></a><c8>::</c8><a href="cast.rs.html#42"><c8>unsafe_copy</c8></a><c25>(</c25><c2>&amp;</c2><a href="local_data.rs.html#99"><c8>key</c8></a><c25>)))</c25><c9>&nbsp;</c9><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="option.rs.html#58"><c20>Some</c20></a><c25>(</c25><a href="#100_17_refs"><c20>next</c20></a><c25>)</c25><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><c22>&nbsp;</c22><a href="local_data.rs.html#90"><c8>set</c8></a><c25>(</c25><a href="local_data.rs.html#99"><c8>key</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="local_data.rs.html#102"><c8>next</c8></a><c25>)</c25><c4>;</c4><c22>&nbsp;</c22><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="option.rs.html#57"><c20>None</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{}</c4><c7>
+</c7><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c26>fn&nbsp;test_tls_multitask</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c26>fn&nbsp;test_tls_multitask</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;my_key:&nbsp;Key&lt;@~str&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;@~"parent&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;task::spawn&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;task::spawn&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;TLS&nbsp;shouldn't&nbsp;carry&nbsp;over.
 </c24><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>get</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;|k|&nbsp;k.map</c0><c25>(</c25><c0>|&amp;k|&nbsp;*k</c0><c25>))</c25><c0>.is_none</c0><c25>())</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;@~"child&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>
@@ -159,16 +161,16 @@ c23{color:#e0f0ff; font-weight:bold}
 </c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>*</c0><c25>(</c25><c0>get</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;|k|&nbsp;k.map</c0><c25>(</c25><c0>|&amp;k|&nbsp;*k</c0><c25>))</c25><c0>.get</c0><c25>())</c25><c0>&nbsp;==&nbsp;~"parent&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c26>fn&nbsp;test_tls_overwrite</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c26>fn&nbsp;test_tls_overwrite</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;my_key:&nbsp;Key&lt;@~str&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;@~"first&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;@~"next&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>&nbsp;</c0><c24>//&nbsp;Shouldn't&nbsp;leak.
 </c24><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>*</c0><c25>(</c25><c0>get</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;|k|&nbsp;k.map</c0><c25>(</c25><c0>|&amp;k|&nbsp;*k</c0><c25>))</c25><c0>.get</c0><c25>())</c25><c0>&nbsp;==&nbsp;~"next&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><c26>fn&nbsp;test_tls_pop</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><c26>fn&nbsp;test_tls_pop</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;my_key:&nbsp;Key&lt;@~str&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;@~"weasel"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>*</c0><c25>(</c25><c0>pop</c0><c25>(</c25><c0>my_key</c0><c25>)</c25><c0>.get</c0><c25>())</c25><c0>&nbsp;==&nbsp;~"weasel"</c0><c25>)</c25><c4>;</c4><c0>
@@ -176,27 +178,27 @@ c23{color:#e0f0ff; font-weight:bold}
 </c24><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>pop</c0><c25>(</c25><c0>my_key</c0><c25>)</c25><c0>.is_none</c0><c25>())</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c26>fn&nbsp;test_tls_modify</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c26>fn&nbsp;test_tls_modify</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;my_key:&nbsp;Key&lt;@~str&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;modify</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;|data|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;data&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some</c0><c25>(</c25><c0>@ref&nbsp;val</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;fail!</c0><c25>(</c25><c0>"unwelcome&nbsp;value:&nbsp;%s"</c0><c4>,</c4><c0>&nbsp;*val</c0><c25>)</c25><c4>,</c4><c0>
-</c0><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;Some</c0><c25>(</c25><c0>@~"first&nbsp;data"</c0><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>match</c21><c0>&nbsp;data&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some</c0><c25>(</c25><c0>@ref&nbsp;val</c0><c25>)</c25><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;fail!</c0><c25>(</c25><c0>"unwelcome&nbsp;value:&nbsp;%s"</c0><c4>,</c4><c0>&nbsp;*val</c0><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>@~"first&nbsp;data"</c0><c25>)</c25><c0>
 </c0><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;modify</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;|data|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;data&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some</c0><c25>(</c25><c0>@~"first&nbsp;data"</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;Some</c0><c25>(</c25><c0>@~"next&nbsp;data"</c0><c25>)</c25><c4>,</c4><c0>
-</c0><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some</c0><c25>(</c25><c0>@ref&nbsp;val</c0><c25>)</c25><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;fail!</c0><c25>(</c25><c0>"wrong&nbsp;value:&nbsp;%s"</c0><c4>,</c4><c0>&nbsp;*val</c0><c25>)</c25><c4>,</c4><c0>
-</c0><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;fail!</c0><c25>(</c25><c0>"missing&nbsp;value"</c0><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>match</c21><c0>&nbsp;data&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some</c0><c25>(</c25><c0>@~"first&nbsp;data"</c0><c25>)</c25><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>@~"next&nbsp;data"</c0><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some</c0><c25>(</c25><c0>@ref&nbsp;val</c0><c25>)</c25><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;fail!</c0><c25>(</c25><c0>"wrong&nbsp;value:&nbsp;%s"</c0><c4>,</c4><c0>&nbsp;*val</c0><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;fail!</c0><c25>(</c25><c0>"missing&nbsp;value"</c0><c25>)</c25><c0>
 </c0><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>*</c0><c25>(</c25><c0>pop</c0><c25>(</c25><c0>my_key</c0><c25>)</c25><c0>.get</c0><c25>())</c25><c0>&nbsp;==&nbsp;~"next&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><c26>fn&nbsp;test_tls_crust_automorestack_memorial_bug</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><c26>fn&nbsp;test_tls_crust_automorestack_memorial_bug</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;This&nbsp;might&nbsp;result&nbsp;in&nbsp;a&nbsp;stack-canary&nbsp;clobber&nbsp;if&nbsp;the&nbsp;runtime&nbsp;fails&nbsp;to
 </c24><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;set&nbsp;sp_limit&nbsp;to&nbsp;0&nbsp;when&nbsp;calling&nbsp;the&nbsp;cleanup&nbsp;extern&nbsp;-&nbsp;it&nbsp;might
 </c24><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;automatically&nbsp;jump&nbsp;over&nbsp;to&nbsp;the&nbsp;rust&nbsp;stack,&nbsp;which&nbsp;causes&nbsp;next_c_sp
@@ -204,29 +206,29 @@ c23{color:#e0f0ff; font-weight:bold}
 </c24><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;subsequent&nbsp;upcall&nbsp;(esp.&nbsp;for&nbsp;logging,&nbsp;think&nbsp;vsnprintf)&nbsp;would&nbsp;run&nbsp;on
 </c24><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;a&nbsp;stack&nbsp;smaller&nbsp;than&nbsp;1&nbsp;MB.
 </c24><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;my_key:&nbsp;Key&lt;@~str&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;task::spawn&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;task::spawn&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>my_key</c0><c4>,</c4><c0>&nbsp;@~"hax"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><c26>fn&nbsp;test_tls_multiple_types</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><c26>fn&nbsp;test_tls_multiple_types</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;str_key:&nbsp;Key&lt;@~str&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;box_key:&nbsp;Key&lt;@@</c0><c25>()</c25><c0>&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;int_key:&nbsp;Key&lt;@int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;task::spawn&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;task::spawn&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>str_key</c0><c4>,</c4><c0>&nbsp;@~"string&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>box_key</c0><c4>,</c4><c0>&nbsp;@@</c0><c25>())</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>int_key</c0><c4>,</c4><c0>&nbsp;@42</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><c26>fn&nbsp;test_tls_overwrite_multiple_types</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><c26>fn&nbsp;test_tls_overwrite_multiple_types</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;str_key:&nbsp;Key&lt;@~str&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;box_key:&nbsp;Key&lt;@@</c0><c25>()</c25><c0>&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;int_key:&nbsp;Key&lt;@int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;task::spawn&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;task::spawn&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>str_key</c0><c4>,</c4><c0>&nbsp;@~"string&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>int_key</c0><c4>,</c4><c0>&nbsp;@42</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;This&nbsp;could&nbsp;cause&nbsp;a&nbsp;segfault&nbsp;if&nbsp;overwriting-destruction&nbsp;is&nbsp;done
@@ -236,16 +238,16 @@ c23{color:#e0f0ff; font-weight:bold}
 </c0><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c0>#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><c0>#</c0><c4>[</c4><c0>ignore</c0><c25>(</c25><c0>cfg</c0><c25>(</c25><c0>windows</c0><c25>))</c25><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><c26>fn&nbsp;test_tls_cleanup_on_failure</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c33>#</c33><c4>[</c4><c33>should_fail</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><c33>#</c33><c4>[</c4><c33>ignore</c33><c25>(</c25><c33>cfg</c33><c25>(</c25><c33>windows</c33><c25>))</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><c26>fn&nbsp;test_tls_cleanup_on_failure</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;str_key:&nbsp;Key&lt;@~str&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;box_key:&nbsp;Key&lt;@@</c0><c25>()</c25><c0>&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;int_key:&nbsp;Key&lt;@int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>str_key</c0><c4>,</c4><c0>&nbsp;@~"parent&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>box_key</c0><c4>,</c4><c0>&nbsp;@@</c0><c25>())</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;task::spawn&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;task::spawn&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;spawn_linked
 </c24><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>str_key</c0><c4>,</c4><c0>&nbsp;@~"string&nbsp;data"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>box_key</c0><c4>,</c4><c0>&nbsp;@@</c0><c25>())</c25><c4>;</c4><c0>
@@ -257,22 +259,22 @@ c23{color:#e0f0ff; font-weight:bold}
 </c0><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c25>()</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><c26>fn&nbsp;test_static_pointer</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><c26>fn&nbsp;test_static_pointer</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key:&nbsp;Key&lt;@&amp;'static&nbsp;int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;VALUE:&nbsp;int&nbsp;=&nbsp;0</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;v:&nbsp;@&amp;'static&nbsp;int&nbsp;=&nbsp;@&amp;VALUE</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;v:&nbsp;@&amp;'static&nbsp;int&nbsp;=&nbsp;@&amp;VALUE</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;v</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><c26>fn&nbsp;test_owned</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><c26>fn&nbsp;test_owned</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key:&nbsp;Key&lt;~int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;~1</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>**v.unwrap</c0><c25>()</c25><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>**v.unwrap</c0><c25>()</c25><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
@@ -280,27 +282,27 @@ c23{color:#e0f0ff; font-weight:bold}
 </c0><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>**v.unwrap</c0><c25>()</c25><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;~2</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>**v.unwrap</c0><c25>()</c25><c4>,</c4><c0>&nbsp;2</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><c26>fn&nbsp;test_get_mut</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><c26>fn&nbsp;test_get_mut</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key:&nbsp;Key&lt;int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;get_mut</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;get_mut</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*v.unwrap</c0><c25>()</c25><c0>&nbsp;=&nbsp;2</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*v.unwrap</c0><c25>()</c25><c4>,</c4><c0>&nbsp;2</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><c26>fn&nbsp;test_same_key_type</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><c26>fn&nbsp;test_same_key_type</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key1:&nbsp;Key&lt;int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key2:&nbsp;Key&lt;int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key3:&nbsp;Key&lt;int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
@@ -319,57 +321,65 @@ c23{color:#e0f0ff; font-weight:bold}
 </c0><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;get</c0><c25>(</c25><c0>key5</c0><c4>,</c4><c0>&nbsp;|x|&nbsp;assert_eq!</c0><c25>(</c25><c0>*x.unwrap</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>))</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><c0>#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><c26>fn&nbsp;test_nested_get_set1</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><c33>#</c33><c4>[</c4><c33>should_fail</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><c26>fn&nbsp;test_nested_get_set1</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key:&nbsp;Key&lt;int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;4</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;4</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><c0>#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><c26>fn&nbsp;test_nested_get_mut2</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><c33>#</c33><c4>[</c4><c33>should_fail</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><c26>fn&nbsp;test_nested_get_mut2</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key:&nbsp;Key&lt;int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;4</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;get</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get_mut</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;|_|&nbsp;</c0><c4>{}</c4><c25>)</c25><c0>
 </c0><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><c0>#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><c26>fn&nbsp;test_nested_get_mut3</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><c33>#</c33><c4>[</c4><c33>should_fail</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><c26>fn&nbsp;test_nested_get_mut3</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key:&nbsp;Key&lt;int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;4</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;get_mut</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;get_mut</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;|_|&nbsp;</c0><c4>{}</c4><c25>)</c25><c0>
 </c0><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><c0>#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><c26>fn&nbsp;test_nested_get_mut4</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><c33>#</c33><c4>[</c4><c33>should_fail</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><c26>fn&nbsp;test_nested_get_mut4</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key:&nbsp;Key&lt;int&gt;&nbsp;=&nbsp;&amp;Key</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;4</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;get_mut</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;get_mut</c0><c25>(</c25><c0>key</c0><c25>)</c25><c0>&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get_mut</c0><c25>(</c25><c0>key</c0><c4>,</c4><c0>&nbsp;|_|&nbsp;</c0><c4>{}</c4><c25>)</c25><c0>
 </c0><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="73_4_refs"><a href="#74"><c24>local_data.rs:74:4-74:4&nbsp;-fn-&nbsp;definition:<br/></c24><pr>&nbsp;*/
+</c0><br/><div/><br/><a id="59_1_refs"><a href="#60"><c24>local_data.rs:60:1-60:1&nbsp;-enum-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;enum&nbsp;KeyValue&lt;T&gt;&nbsp;{&nbsp;Key&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="local_data.rs.html#59"><c24>59:&nbsp;</c24>pub&nbsp;type&nbsp;Key&lt;T&gt;&nbsp;=&nbsp;&amp;'static&nbsp;KeyValue&lt;T&gt;;
+<br/></a><br/><br/><a id="65_4_refs"><a href="#66"><c24>local_data.rs:66:4-66:4&nbsp;-fn-&nbsp;definition:<br/></c24><pr>&nbsp;*/
+<br/>pub&nbsp;fn&nbsp;pop&lt;T:&nbsp;'static&gt;(key:&nbsp;Key&lt;T&gt;)&nbsp;-&gt;&nbsp;Option&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="local_data.rs.html#100"><c24>100:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;f(pop(::cast::unsafe_copy(&amp;key)))&nbsp;{
+<br/></a><a href="condition.rs.html"><c24>condition.rs:<br/></c24><a href="condition.rs.html#92"><c24>92:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;curr&nbsp;=&nbsp;local_data::pop(self.cond.key);
+<br/></a><a href="condition.rs.html#48"><c24>48:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;local_data::pop(self.key)&nbsp;{
+<br/></a><br/><br/><a id="73_4_refs"><a href="#74"><c24>local_data.rs:74:4-74:4&nbsp;-fn-&nbsp;definition:<br/></c24><pr>&nbsp;*/
 <br/>pub&nbsp;fn&nbsp;get&lt;T:&nbsp;'static,&nbsp;U&gt;(key:&nbsp;Key&lt;T&gt;,&nbsp;f:&nbsp;&amp;fn(Option&lt;&amp;T&gt;)&nbsp;-&gt;&nbsp;U)&nbsp;-&gt;&nbsp;U&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="os.rs.html"><c24>os.rs:<br/></c24><a href="os.rs.html#1220"><c24>1220:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;local_data::get(overridden_arg_key,&nbsp;|k|&nbsp;k.map(|&amp;k|&nbsp;*k))&nbsp;{
 <br/></a><a href="rand.rs.html"><c24>rand.rs:<br/></c24><a href="rand.rs.html#867"><c24>867:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;r&nbsp;=&nbsp;local_data::get(tls_rng_state,&nbsp;|k|&nbsp;k.map(|&amp;k|&nbsp;*k));
 <br/></a><a href="condition.rs.html"><c24>condition.rs:<br/></c24><a href="condition.rs.html#35"><c24>35:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;prev&nbsp;=&nbsp;local_data::get(self.key,&nbsp;|k|&nbsp;k.map(|&amp;x|&nbsp;*x));
 <br/></a><br/><br/><a id="57_4_refs"><a href="#58"><c24>local_data.rs:58:4-58:4&nbsp;-ty-&nbsp;definition:<br/></c24><pr>&nbsp;*/
 <br/>pub&nbsp;type&nbsp;Key&lt;T&gt;&nbsp;=&nbsp;&amp;'static&nbsp;KeyValue&lt;T&gt;;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="local_data.rs.html#82"><c24>82:&nbsp;</c24>pub&nbsp;fn&nbsp;get_mut&lt;T:&nbsp;'static,&nbsp;U&gt;(key:&nbsp;Key&lt;T&gt;,&nbsp;f:&nbsp;&amp;fn(Option&lt;&amp;mut&nbsp;T&gt;)&nbsp;-&gt;&nbsp;U)&nbsp;-&gt;&nbsp;U&nbsp;{
-<br/></a><a href="local_data.rs.html#98"><c24>98:&nbsp;</c24>pub&nbsp;fn&nbsp;modify&lt;T:&nbsp;'static&gt;(key:&nbsp;Key&lt;T&gt;,&nbsp;f:&nbsp;&amp;fn(Option&lt;T&gt;)&nbsp;-&gt;&nbsp;Option&lt;T&gt;)&nbsp;{
-<br/></a><a href="local_data.rs.html#90"><c24>90:&nbsp;</c24>pub&nbsp;fn&nbsp;set&lt;T:&nbsp;'static&gt;(key:&nbsp;Key&lt;T&gt;,&nbsp;data:&nbsp;T)&nbsp;{
-<br/></a><a href="local_data.rs.html#75"><c24>75:&nbsp;</c24>pub&nbsp;fn&nbsp;get&lt;T:&nbsp;'static,&nbsp;U&gt;(key:&nbsp;Key&lt;T&gt;,&nbsp;f:&nbsp;&amp;fn(Option&lt;&amp;T&gt;)&nbsp;-&gt;&nbsp;U)&nbsp;-&gt;&nbsp;U&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="local_data.rs.html#98"><c24>98:&nbsp;</c24>pub&nbsp;fn&nbsp;modify&lt;T:&nbsp;'static&gt;(key:&nbsp;Key&lt;T&gt;,&nbsp;f:&nbsp;&amp;fn(Option&lt;T&gt;)&nbsp;-&gt;&nbsp;Option&lt;T&gt;)&nbsp;{
 <br/></a><a href="local_data.rs.html#67"><c24>67:&nbsp;</c24>pub&nbsp;fn&nbsp;pop&lt;T:&nbsp;'static&gt;(key:&nbsp;Key&lt;T&gt;)&nbsp;-&gt;&nbsp;Option&lt;T&gt;&nbsp;{
+<br/></a><a href="local_data.rs.html#75"><c24>75:&nbsp;</c24>pub&nbsp;fn&nbsp;get&lt;T:&nbsp;'static,&nbsp;U&gt;(key:&nbsp;Key&lt;T&gt;,&nbsp;f:&nbsp;&amp;fn(Option&lt;&amp;T&gt;)&nbsp;-&gt;&nbsp;U)&nbsp;-&gt;&nbsp;U&nbsp;{
+<br/></a><a href="local_data.rs.html#90"><c24>90:&nbsp;</c24>pub&nbsp;fn&nbsp;set&lt;T:&nbsp;'static&gt;(key:&nbsp;Key&lt;T&gt;,&nbsp;data:&nbsp;T)&nbsp;{
+<br/></a><a href="local_data.rs.html#82"><c24>82:&nbsp;</c24>pub&nbsp;fn&nbsp;get_mut&lt;T:&nbsp;'static,&nbsp;U&gt;(key:&nbsp;Key&lt;T&gt;,&nbsp;f:&nbsp;&amp;fn(Option&lt;&amp;mut&nbsp;T&gt;)&nbsp;-&gt;&nbsp;U)&nbsp;-&gt;&nbsp;U&nbsp;{
 <br/></a><a href="os.rs.html"><c24>os.rs:<br/></c24><a href="os.rs.html#1212"><c24>1212:&nbsp;</c24>static&nbsp;overridden_arg_key:&nbsp;local_data::Key&lt;@OverriddenArgs&gt;&nbsp;=&nbsp;&amp;local_data::Key;
 <br/></a><a href="rand.rs.html"><c24>rand.rs:<br/></c24><a href="rand.rs.html#858"><c24>858:&nbsp;</c24>static&nbsp;tls_rng_state:&nbsp;local_data::Key&lt;@@mut&nbsp;IsaacRng&gt;&nbsp;=&nbsp;&amp;local_data::Key;
 <br/></a><a href="condition.rs.html"><c24>condition.rs:<br/></c24><a href="condition.rs.html#28"><c24>28:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;key:&nbsp;local_data::Key&lt;@Handler&lt;T,&nbsp;U&gt;&gt;
@@ -378,26 +388,18 @@ c23{color:#e0f0ff; font-weight:bold}
 <br/></a><a href="<std-macros>.html#165"><c24>165:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;key:&nbsp;::std::local_data::Key&lt;
 <br/></a><a href="task/local_data_priv.rs.html"><c24>task/local_data_priv.rs:<br/></c24><a href="task/local_data_priv.rs.html#233"><c24>233:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:&nbsp;local_data::Key&lt;T&gt;,
 <br/></a><a href="task/local_data_priv.rs.html#217"><c24>217:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:&nbsp;local_data::Key&lt;T&gt;,
-<br/></a><a href="task/local_data_priv.rs.html#160"><c24>160:&nbsp;</c24>unsafe&nbsp;fn&nbsp;key_to_key_value&lt;T:&nbsp;'static&gt;(key:&nbsp;local_data::Key&lt;T&gt;)&nbsp;-&gt;&nbsp;*libc::c_void&nbsp;{
-<br/></a><a href="task/local_data_priv.rs.html#211"><c24>211:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:&nbsp;local_data::Key&lt;T&gt;,
-<br/></a><a href="task/local_data_priv.rs.html#306"><c24>306:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:&nbsp;local_data::Key&lt;T&gt;,
 <br/></a><a href="task/local_data_priv.rs.html#166"><c24>166:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:&nbsp;local_data::Key&lt;T&gt;)&nbsp;-&gt;&nbsp;Option&lt;T&gt;&nbsp;{
+<br/></a><a href="task/local_data_priv.rs.html#160"><c24>160:&nbsp;</c24>unsafe&nbsp;fn&nbsp;key_to_key_value&lt;T:&nbsp;'static&gt;(key:&nbsp;local_data::Key&lt;T&gt;)&nbsp;-&gt;&nbsp;*libc::c_void&nbsp;{
+<br/></a><a href="task/local_data_priv.rs.html#306"><c24>306:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:&nbsp;local_data::Key&lt;T&gt;,
+<br/></a><a href="task/local_data_priv.rs.html#211"><c24>211:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:&nbsp;local_data::Key&lt;T&gt;,
 <br/></a><a href="task/spawn.rs.html"><c24>task/spawn.rs:<br/></c24><a href="task/spawn.rs.html#491"><c24>491:&nbsp;</c24>fn&nbsp;taskgroup_key()&nbsp;-&gt;&nbsp;local_data::Key&lt;@@mut&nbsp;Taskgroup&gt;&nbsp;{
-<br/></a><br/><br/><a id="59_1_refs"><a href="#60"><c24>local_data.rs:60:1-60:1&nbsp;-enum-&nbsp;definition:<br/></c24><pr>
-<br/>pub&nbsp;enum&nbsp;KeyValue&lt;T&gt;&nbsp;{&nbsp;Key&nbsp;}
-<br/></pr></a></a><c24>references:-<br/></c24><a href="local_data.rs.html#59"><c24>59:&nbsp;</c24>pub&nbsp;type&nbsp;Key&lt;T&gt;&nbsp;=&nbsp;&amp;'static&nbsp;KeyValue&lt;T&gt;;
-<br/></a><br/><br/><a id="65_4_refs"><a href="#66"><c24>local_data.rs:66:4-66:4&nbsp;-fn-&nbsp;definition:<br/></c24><pr>&nbsp;*/
-<br/>pub&nbsp;fn&nbsp;pop&lt;T:&nbsp;'static&gt;(key:&nbsp;Key&lt;T&gt;)&nbsp;-&gt;&nbsp;Option&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="local_data.rs.html#100"><c24>100:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;f(pop(::cast::unsafe_copy(&amp;key)))&nbsp;{
-<br/></a><a href="condition.rs.html"><c24>condition.rs:<br/></c24><a href="condition.rs.html#92"><c24>92:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;curr&nbsp;=&nbsp;local_data::pop(self.cond.key);
-<br/></a><a href="condition.rs.html#48"><c24>48:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;local_data::pop(self.key)&nbsp;{
 <br/></a><br/><br/><a id="88_4_refs"><a href="#89"><c24>local_data.rs:89:4-89:4&nbsp;-fn-&nbsp;definition:<br/></c24><pr>&nbsp;*/
 <br/>pub&nbsp;fn&nbsp;set&lt;T:&nbsp;'static&gt;(key:&nbsp;Key&lt;T&gt;,&nbsp;data:&nbsp;T)&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="local_data.rs.html#101"><c24>101:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(next)&nbsp;=&gt;&nbsp;{&nbsp;set(key,&nbsp;next);&nbsp;}
 <br/></a><a href="os.rs.html"><c24>os.rs:<br/></c24><a href="os.rs.html#1233"><c24>1233:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;local_data::set(overridden_arg_key,&nbsp;overridden_args);
 <br/></a><a href="rand.rs.html"><c24>rand.rs:<br/></c24><a href="rand.rs.html#871"><c24>871:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_data::set(tls_rng_state,&nbsp;rng);
 <br/></a><a href="condition.rs.html"><c24>condition.rs:<br/></c24><a href="condition.rs.html#57"><c24>57:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(hp)&nbsp;=&gt;&nbsp;local_data::set(self.key,&nbsp;hp)
-<br/></a><a href="condition.rs.html#79"><c24>79:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_data::set(self.cond.key,&nbsp;self.handler);
-<br/></a><a href="condition.rs.html#97"><c24>97:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(hp)&nbsp;=&gt;&nbsp;local_data::set(self.cond.key,&nbsp;hp)
 <br/></a><a href="condition.rs.html#62"><c24>62:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_data::set(self.key,&nbsp;handler);
+<br/></a><a href="condition.rs.html#97"><c24>97:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(hp)&nbsp;=&gt;&nbsp;local_data::set(self.cond.key,&nbsp;hp)
+<br/></a><a href="condition.rs.html#79"><c24>79:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_data::set(self.cond.key,&nbsp;self.handler);
 <br/></a><br/></a></a>

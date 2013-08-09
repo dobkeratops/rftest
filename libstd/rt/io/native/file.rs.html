@@ -3,16 +3,18 @@ a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
 pr{font-weight:bold}
-ln{color:#606060; }
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
 c24{color:#ffffff; font-style:italic; opacity:0.5}
 c25{color:#ffffff; opacity:0.92}
 c26{color:#ffffff; font-weight:bold; }
-c27{color:#ffffa0; font-weight:bold; }
-c28{color:#afffff; font-weight:bold; }
-c29{color:#afffaf; font-weight:bold; }
-c30{color:#cfcfff; font-weight:bold; }
-c31{color:#ffffff; font-style:italic; opacity:0.6}
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
 c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
 c2{color:#60f0c0}
 c3{color:#50e0ff; }
 c4{color:#f090f0}
@@ -32,9 +34,9 @@ c17{color:#90d0f0}
 c18{color:#f0a0d0}
 c19{color:#d0f0a0}
 c20{color:#0f0ff}
-c21{color:#dde009; font-weight:bold}
-c22{color:#e0f0d0; font-weight:bold}
-c23{color:#e0f0ff; font-weight:bold}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
 </style><body style="background-color:#343a3a;"><maintext><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
@@ -47,84 +49,84 @@ c23{color:#e0f0ff; font-weight:bold}
 </c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;Blocking&nbsp;posix-based&nbsp;file&nbsp;I/O
 </c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>use&nbsp;prelude::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>use&nbsp;super::super::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c0>use&nbsp;libc::</c0><c4>{</c4><c0>c_int</c0><c4>,</c4><c0>&nbsp;FILE</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c21>use</c21><c0>&nbsp;super::super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c21>use</c21><c0>&nbsp;libc::</c0><c4>{</c4><c0>c_int</c0><c4>,</c4><c0>&nbsp;FILE</c0><c4>};</c4><c0>
 </c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c0>#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>non_camel_case_types</c0><c25>)</c25><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a href="#16_31_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;fd_t&nbsp;=&nbsp;</c28><a href="../../../libc.rs.html#401"><c28>c_int</c28></a><a href="#16_31_refs"><c28>;</c28><c28>
-</c28><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>non_camel_case_types</c33><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c21>pub</c21><c3>&nbsp;</c3><c31>type&nbsp;</c31><a href="#16_31_refs"><c31>fd_t</c31></a><c31>&nbsp;</c31><a href="#16_31_refs"><c31>=</c31></a><c31>&nbsp;</c31><a href="../../../libc.rs.html#401"><c31>c_int</c31></a><c31>;
+</c31><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c24>//&nbsp;Make&nbsp;this&nbsp;a&nbsp;newtype&nbsp;so&nbsp;we&nbsp;can't&nbsp;do&nbsp;I/O&nbsp;on&nbsp;arbitrary&nbsp;integers
-</c24><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a href="#19_64_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;FileDesc</c27><c15>(</c15><a href="../../../rt/io/native/file.rs.html#18"><c3>fd_t</c3></a><a href="#19_64_refs"><c25>)</c25><c4>;</c4><c0>
+</c24><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#19_64_refs"><c27>FileDesc</c27></a><c25>(</c25><a href="../../../rt/io/native/file.rs.html#18"><c3>fd_t</c3></a><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../../rt/io/native/file.rs.html#21"><c29>FileDesc</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Create&nbsp;a&nbsp;`FileDesc`&nbsp;from&nbsp;an&nbsp;open&nbsp;C&nbsp;file&nbsp;descriptor.
-</c31><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///
-</c31><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;The&nbsp;`FileDesc`&nbsp;takes&nbsp;ownership&nbsp;of&nbsp;the&nbsp;file&nbsp;descriptor
-</c31><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;and&nbsp;will&nbsp;close&nbsp;it&nbsp;upon&nbsp;destruction.
-</c31><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><c20>_fd</c20><c22>:&nbsp;</c22><a href="../../../rt/io/native/file.rs.html#18"><c3>fd_t</c3></a><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../../rt/io/native/file.rs.html#21"><c3>FileDesc</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../rt/io/native/file.rs.html#21"><c30>FileDesc</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Create&nbsp;a&nbsp;`FileDesc`&nbsp;from&nbsp;an&nbsp;open&nbsp;C&nbsp;file&nbsp;descriptor.
+</c32><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///
+</c32><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;The&nbsp;`FileDesc`&nbsp;takes&nbsp;ownership&nbsp;of&nbsp;the&nbsp;file&nbsp;descriptor
+</c32><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;and&nbsp;will&nbsp;close&nbsp;it&nbsp;upon&nbsp;destruction.
+</c32><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>(</c25><c20>_fd</c20><c18>:&nbsp;</c18><a href="../../../rt/io/native/file.rs.html#18"><c3>fd_t</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../rt/io/native/file.rs.html#21"><c3>FileDesc</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../../rt/io/mod.rs.html#365"><c29>Reader&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../../rt/io/native/file.rs.html#21"><c29>FileDesc</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_buf</c20><c22>:&nbsp;</c22><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../../option.rs.html#55"><c3>Option&lt;uint&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../rt/io/mod.rs.html#365"><c30>Reader</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../rt/io/native/file.rs.html#21"><c30>FileDesc</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../option.rs.html#55"><c3>uint</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eof</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eof</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../../rt/io/mod.rs.html#405"><c29>Writer&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../../rt/io/native/file.rs.html#21"><c29>FileDesc</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_buf</c20><c22>:&nbsp;</c22><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../rt/io/mod.rs.html#405"><c30>Writer</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../rt/io/native/file.rs.html#21"><c30>FileDesc</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../../rt/io/mod.rs.html#430"><c29>Seek&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../../rt/io/native/file.rs.html#21"><c29>FileDesc</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>u64</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../rt/io/mod.rs.html#430"><c30>Seek</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../rt/io/native/file.rs.html#21"><c30>FileDesc</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>u64</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_pos</c20><c22>:&nbsp;</c22><c3>i64</c3><c4>,</c4><c22>&nbsp;</c22><c20>_style</c20><c22>:&nbsp;</c22><a href="../../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_pos</c20><c18>:&nbsp;</c18><c3>i64</c3><c4>,</c4><c18>&nbsp;</c18><c20>_style</c20><c18>:&nbsp;</c18><a href="../../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a href="#47_1_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;CFile</c27><c15>(</c15><c3>*</c3><a href="../../../libc.rs.html#198"><c3>FILE</c3></a><a href="#47_1_refs"><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#47_1_refs"><c27>CFile</c27></a><c25>(</c25><c3>*</c3><a href="../../../libc.rs.html#198"><c3>FILE</c3></a><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../../rt/io/native/file.rs.html#49"><c29>CFile</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Create&nbsp;a&nbsp;`CFile`&nbsp;from&nbsp;an&nbsp;open&nbsp;`FILE`&nbsp;pointer.
-</c31><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///
-</c31><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;The&nbsp;`CFile`&nbsp;takes&nbsp;ownership&nbsp;of&nbsp;the&nbsp;file&nbsp;descriptor
-</c31><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;and&nbsp;will&nbsp;close&nbsp;it&nbsp;upon&nbsp;destruction.
-</c31><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><c20>_file</c20><c22>:&nbsp;</c22><c3>*</c3><a href="../../../libc.rs.html#198"><c3>FILE</c3></a><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../../rt/io/native/file.rs.html#49"><c3>CFile</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../rt/io/native/file.rs.html#49"><c30>CFile</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Create&nbsp;a&nbsp;`CFile`&nbsp;from&nbsp;an&nbsp;open&nbsp;`FILE`&nbsp;pointer.
+</c32><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///
+</c32><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;The&nbsp;`CFile`&nbsp;takes&nbsp;ownership&nbsp;of&nbsp;the&nbsp;file&nbsp;descriptor
+</c32><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;and&nbsp;will&nbsp;close&nbsp;it&nbsp;upon&nbsp;destruction.
+</c32><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>(</c25><c20>_file</c20><c18>:&nbsp;</c18><c3>*</c3><a href="../../../libc.rs.html#198"><c3>FILE</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../rt/io/native/file.rs.html#49"><c3>CFile</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../../rt/io/mod.rs.html#365"><c29>Reader&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../../rt/io/native/file.rs.html#49"><c29>CFile</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_buf</c20><c22>:&nbsp;</c22><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../../option.rs.html#55"><c3>Option&lt;uint&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../rt/io/mod.rs.html#365"><c30>Reader</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../rt/io/native/file.rs.html#49"><c30>CFile</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../option.rs.html#55"><c3>uint</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eof</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eof</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../../rt/io/mod.rs.html#405"><c29>Writer&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../../rt/io/native/file.rs.html#49"><c29>CFile</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_buf</c20><c22>:&nbsp;</c22><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../rt/io/mod.rs.html#405"><c30>Writer</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../rt/io/native/file.rs.html#49"><c30>CFile</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;70</ln><a id="70">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../../rt/io/mod.rs.html#430"><c29>Seek&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../../rt/io/native/file.rs.html#49"><c29>CFile</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;72</ln><a id="72">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>u64</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;73</ln><a id="73">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_pos</c20><c22>:&nbsp;</c22><c3>i64</c3><c4>,</c4><c22>&nbsp;</c22><c20>_style</c20><c22>:&nbsp;</c22><a href="../../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../rt/io/mod.rs.html#430"><c30>Seek</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../rt/io/native/file.rs.html#49"><c30>CFile</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;72</ln><a id="72">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>u64</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;73</ln><a id="73">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_pos</c20><c18>:&nbsp;</c18><c3>i64</c3><c4>,</c4><c18>&nbsp;</c18><c20>_style</c20><c18>:&nbsp;</c18><a href="../../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;74</ln><a id="74">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><div/><br/><a id="47_1_refs"><a href="#48"><c24>rt/io/native/file.rs:48:1-48:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
 <br/>pub&nbsp;struct&nbsp;CFile(*FILE);
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../../rt/io/native/file.rs.html#65"><c24>65:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;CFile&nbsp;{
+<br/></a><a href="../../../rt/io/native/file.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_file:&nbsp;*FILE)&nbsp;-&gt;&nbsp;CFile&nbsp;{&nbsp;fail!()&nbsp;}
 <br/></a><a href="../../../rt/io/native/file.rs.html#71"><c24>71:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;CFile&nbsp;{
 <br/></a><a href="../../../rt/io/native/file.rs.html#59"><c24>59:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;CFile&nbsp;{
 <br/></a><a href="../../../rt/io/native/file.rs.html#51"><c24>51:&nbsp;</c24>impl&nbsp;CFile&nbsp;{
-<br/></a><a href="../../../rt/io/native/file.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_file:&nbsp;*FILE)&nbsp;-&gt;&nbsp;CFile&nbsp;{&nbsp;fail!()&nbsp;}
 <br/></a><br/><br/><a id="16_31_refs"><a href="#17"><c24>rt/io/native/file.rs:17:31-17:31&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]
 <br/>pub&nbsp;type&nbsp;fd_t&nbsp;=&nbsp;c_int;
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../../rt/io/native/file.rs.html#21"><c24>21:&nbsp;</c24>pub&nbsp;struct&nbsp;FileDesc(fd_t);
 <br/></a><a href="../../../rt/io/native/file.rs.html#28"><c24>28:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_fd:&nbsp;fd_t)&nbsp;-&gt;&nbsp;FileDesc&nbsp;{&nbsp;fail!()&nbsp;}
 <br/></a><br/><br/><a id="19_64_refs"><a href="#20"><c24>rt/io/native/file.rs:20:64-20:64&nbsp;-struct-&nbsp;definition:<br/></c24><pr>//&nbsp;Make&nbsp;this&nbsp;a&nbsp;newtype&nbsp;so&nbsp;we&nbsp;can't&nbsp;do&nbsp;I/O&nbsp;on&nbsp;arbitrary&nbsp;integers
 <br/>pub&nbsp;struct&nbsp;FileDesc(fd_t);
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../rt/io/native/file.rs.html#28"><c24>28:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_fd:&nbsp;fd_t)&nbsp;-&gt;&nbsp;FileDesc&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../rt/io/native/file.rs.html#23"><c24>23:&nbsp;</c24>impl&nbsp;FileDesc&nbsp;{
 <br/></a><a href="../../../rt/io/native/file.rs.html#37"><c24>37:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;FileDesc&nbsp;{
-<br/></a><a href="../../../rt/io/native/file.rs.html#23"><c24>23:&nbsp;</c24>impl&nbsp;FileDesc&nbsp;{
-<br/></a><a href="../../../rt/io/native/file.rs.html#43"><c24>43:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;FileDesc&nbsp;{
+<br/></a><a href="../../../rt/io/native/file.rs.html#28"><c24>28:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_fd:&nbsp;fd_t)&nbsp;-&gt;&nbsp;FileDesc&nbsp;{&nbsp;fail!()&nbsp;}
 <br/></a><a href="../../../rt/io/native/file.rs.html#31"><c24>31:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;FileDesc&nbsp;{
-<br/></a><br/></a></a>
+<br/></a><a href="../../../rt/io/native/file.rs.html#43"><c24>43:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;FileDesc&nbsp;{
+<br/></a><br/></maintext></body>

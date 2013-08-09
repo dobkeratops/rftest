@@ -3,16 +3,18 @@ a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
 pr{font-weight:bold}
-ln{color:#606060; }
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
 c24{color:#ffffff; font-style:italic; opacity:0.5}
 c25{color:#ffffff; opacity:0.92}
 c26{color:#ffffff; font-weight:bold; }
-c27{color:#ffffa0; font-weight:bold; }
-c28{color:#afffff; font-weight:bold; }
-c29{color:#afffaf; font-weight:bold; }
-c30{color:#cfcfff; font-weight:bold; }
-c31{color:#ffffff; font-style:italic; opacity:0.6}
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
 c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
 c2{color:#60f0c0}
 c3{color:#50e0ff; }
 c4{color:#f090f0}
@@ -32,9 +34,9 @@ c17{color:#90d0f0}
 c18{color:#f0a0d0}
 c19{color:#d0f0a0}
 c20{color:#0f0ff}
-c21{color:#dde009; font-weight:bold}
-c22{color:#e0f0d0; font-weight:bold}
-c23{color:#e0f0ff; font-weight:bold}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
 </style><body style="background-color:#3a3a34;"><maintext><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
@@ -47,15 +49,15 @@ c23{color:#e0f0ff; font-weight:bold}
 </c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;The&nbsp;trait&nbsp;for&nbsp;types&nbsp;that&nbsp;can&nbsp;be&nbsp;created&nbsp;from&nbsp;strings
 </c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>use&nbsp;option::Option</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c21>use</c21><c0>&nbsp;option::Option</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c31>///&nbsp;A&nbsp;trait&nbsp;to&nbsp;abstract&nbsp;the&nbsp;idea&nbsp;of&nbsp;creating&nbsp;a&nbsp;new&nbsp;instance&nbsp;of&nbsp;a&nbsp;type&nbsp;from&nbsp;a
-</c31><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c31>///&nbsp;string.
-</c31><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a href="#15_12_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;FromStr&nbsp;</c1><c18>{
-</c18><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a href="#15_12_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Parses&nbsp;a&nbsp;string&nbsp;`s`&nbsp;to&nbsp;return&nbsp;an&nbsp;optional&nbsp;value&nbsp;of&nbsp;this&nbsp;type.&nbsp;If&nbsp;the
-</c31><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a href="#15_12_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;string&nbsp;is&nbsp;ill-formatted,&nbsp;the&nbsp;None&nbsp;is&nbsp;returned.
-</c31><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a href="#15_12_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><a href="#19_4_refs"><c26>fn&nbsp;from_str</c26><c22>(s:&nbsp;</c22><c3>&amp;str</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;</c3></a><a href="from_str.rs.html#17"><c3>Self</c3></a><a href="option.rs.html#55"><c3>&gt;</c3></a><a href="#15_12_refs"><c4>;</c4><c18>
-</c18><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a href="#15_12_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c32>///&nbsp;A&nbsp;trait&nbsp;to&nbsp;abstract&nbsp;the&nbsp;idea&nbsp;of&nbsp;creating&nbsp;a&nbsp;new&nbsp;instance&nbsp;of&nbsp;a&nbsp;type&nbsp;from&nbsp;a
+</c32><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c32>///&nbsp;string.
+</c32><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#15_12_refs"><c28>FromStr</c28></a><c28>&nbsp;</c28><c4>{</c4><a href="#15_12_refs"><c28>
+</c28></a><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Parses&nbsp;a&nbsp;string&nbsp;`s`&nbsp;to&nbsp;return&nbsp;an&nbsp;optional&nbsp;value&nbsp;of&nbsp;this&nbsp;type.&nbsp;If&nbsp;the
+</c32><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;string&nbsp;is&nbsp;ill-formatted,&nbsp;the&nbsp;None&nbsp;is&nbsp;returned.
+</c32><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#19_4_refs"><c26>from_str</c26></a><c25>(</c25><a href="#19_4_refs"><c18>s</c18></a><c18>:&nbsp;</c18><c3>&amp;</c3><a href="#15_12_refs"><c3>str</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="from_str.rs.html#17"><c3>Self</c3></a><c3>&gt;</c3><c4>;</c4><a href="#15_12_refs"><c28>
+</c28></a><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><div/><br/><a id="15_12_refs"><a href="#16"><c24>from_str.rs:16:12-16:12&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;string.
 <br/>pub&nbsp;trait&nbsp;FromStr&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="from_str.rs.html#20"><c24>20:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;from_str(s:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;Option&lt;Self&gt;;

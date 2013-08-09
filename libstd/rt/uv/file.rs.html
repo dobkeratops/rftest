@@ -3,16 +3,18 @@ a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
 pr{font-weight:bold}
-ln{color:#606060; }
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
 c24{color:#ffffff; font-style:italic; opacity:0.5}
 c25{color:#ffffff; opacity:0.92}
 c26{color:#ffffff; font-weight:bold; }
-c27{color:#ffffa0; font-weight:bold; }
-c28{color:#afffff; font-weight:bold; }
-c29{color:#afffaf; font-weight:bold; }
-c30{color:#cfcfff; font-weight:bold; }
-c31{color:#ffffff; font-style:italic; opacity:0.6}
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
 c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
 c2{color:#60f0c0}
 c3{color:#50e0ff; }
 c4{color:#f090f0}
@@ -32,9 +34,9 @@ c17{color:#90d0f0}
 c18{color:#f0a0d0}
 c19{color:#d0f0a0}
 c20{color:#0f0ff}
-c21{color:#dde009; font-weight:bold}
-c22{color:#e0f0d0; font-weight:bold}
-c23{color:#e0f0ff; font-weight:bold}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
 </style><body style="background-color:#36363a;"><maintext><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
@@ -45,50 +47,50 @@ c23{color:#e0f0ff; font-weight:bold}
 </c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
 </c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
 </c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c0>use&nbsp;prelude::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>use&nbsp;ptr::null</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>use&nbsp;libc::c_void</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>use&nbsp;rt::uv::</c0><c4>{</c4><c0>Request</c0><c4>,</c4><c0>&nbsp;NativeHandle</c0><c4>,</c4><c0>&nbsp;Loop</c0><c4>,</c4><c0>&nbsp;FsCallback</c0><c4>};</c4><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c0>use&nbsp;rt::uv::uvll</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c0>use&nbsp;rt::uv::uvll::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c21>use</c21><c0>&nbsp;ptr::null</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c21>use</c21><c0>&nbsp;libc::c_void</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c21>use</c21><c0>&nbsp;rt::uv::</c0><c4>{</c4><c0>Request</c0><c4>,</c4><c0>&nbsp;NativeHandle</c0><c4>,</c4><c0>&nbsp;Loop</c0><c4>,</c4><c0>&nbsp;FsCallback</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c21>use</c21><c0>&nbsp;rt::uv::uvll</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c21>use</c21><c0>&nbsp;rt::uv::uvll::*</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a href="#16_1_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;FsRequest</c27><c15>(</c15><c3>*</c3><a href="../../rt/uv/uvll.rs.html#69"><c3>uvll::uv_fs_t</c3></a><a href="#16_1_refs"><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/uv/mod.rs.html#89"><c29>Request&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/uv/file.rs.html#18"><c29>FsRequest</c29></a><c29>;
-</c29><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/uv/file.rs.html#18"><c29>FsRequest</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;new</c26><c22>(</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/uv/file.rs.html#18"><c3>FsRequest</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#22_12_refs"><c20>fs_req</c20><c16>&nbsp;=&nbsp;</c16><c21>unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><a href="../../rt/uv/uvll.rs.html#137"><c8>malloc_req</c8></a><c25>(</c25><a href="../../rt/uv/uvll.rs.html#114"><c8>UV_FS</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>};</c4><c21>
-</c21><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>assert!</c13><c25>(</c25><a href="../../rt/uv/file.rs.html#24"><c8>fs_req</c8></a><a href="../../ptr.rs.html#287"><c10>.is_not_null</c10><c25>()</c25></a><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#24_12_refs"><c20>fs_req</c20><c16>&nbsp;=&nbsp;</c16><a href="../../rt/uv/file.rs.html#24"><c8>fs_req</c8></a><c7>&nbsp;as&nbsp;</c7><c3>*</c3><a href="../../rt/uv/uvll.rs.html#65"><c3>uvll::uv_write_t</c3></a><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>unsafe&nbsp;</c13><c4>{</c4><c13>&nbsp;</c13><a href="../../rt/uv/uvll.rs.html#442"><c8>uvll::set_data_for_req</c8></a><c25>(</c25><a href="../../rt/uv/file.rs.html#26"><c8>fs_req</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../../ptr.rs.html#67"><c8>null::&lt;</c8><c25>()</c25><c8>&gt;</c8></a><c25>())</c25><c4>;</c4><c13>&nbsp;</c13><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../rt/uv/mod.rs.html#94"><c8>NativeHandle::from_native_handle</c8></a><c25>(</c25><a href="../../rt/uv/file.rs.html#26"><c8>fs_req</c8></a><c25>)</c25><c9>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#16_1_refs"><c27>FsRequest</c27></a><c25>(</c25><c3>*</c3><a href="../../rt/uv/uvll.rs.html#69"><c3>uvll</c3></a><c3>::</c3><a href="../../rt/uv/uvll.rs.html#69"><c3>uv_fs_t</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/uv/mod.rs.html#89"><c30>Request</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../rt/uv/file.rs.html#18"><c30>FsRequest</c30></a><c30>;
+</c30><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/uv/file.rs.html#18"><c30>FsRequest</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;new</c26><c25>()</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../rt/uv/file.rs.html#18"><c3>FsRequest</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#22_12_refs"><c20>fs_req</c20></a><c16>&nbsp;=&nbsp;</c16><c22>unsafe&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../../rt/uv/uvll.rs.html#137"><c8>malloc_req</c8></a><c25>(</c25><a href="../../rt/uv/uvll.rs.html#114"><c8>UV_FS</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>};</c4><c22>
+</c22><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert!</c13><c25>(</c25><a href="../../rt/uv/file.rs.html#24"><c8>fs_req</c8></a><c10>.</c10><a href="../../ptr.rs.html#287"><c10>is_not_null</c10></a><c25>())</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#24_12_refs"><c20>fs_req</c20></a><c16>&nbsp;=&nbsp;</c16><a href="../../rt/uv/file.rs.html#24"><c8>fs_req</c8></a><c7>&nbsp;as&nbsp;</c7><c3>*</c3><a href="../../rt/uv/uvll.rs.html#65"><c3>uvll</c3></a><c3>::</c3><a href="../../rt/uv/uvll.rs.html#65"><c3>uv_write_t</c3></a><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>unsafe&nbsp;</c13><c4>{</c4><c13>&nbsp;</c13><a href="../../rt/uv/uvll.rs.html#442"><c8>uvll</c8></a><c8>::</c8><a href="../../rt/uv/uvll.rs.html#442"><c8>set_data_for_req</c8></a><c25>(</c25><a href="../../rt/uv/file.rs.html#26"><c8>fs_req</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="../../ptr.rs.html#67"><c8>null</c8></a><c8>::&lt;</c8><c25>()</c25><c8>&gt;</c8><c25>())</c25><c4>;</c4><c13>&nbsp;</c13><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../rt/uv/mod.rs.html#94"><c8>NativeHandle</c8></a><c8>::</c8><a href="../../rt/uv/mod.rs.html#94"><c8>from_native_handle</c8></a><c25>(</c25><a href="../../rt/uv/file.rs.html#26"><c8>fs_req</c8></a><c25>)</c25><c9>
 </c9><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;delete</c26><c22>(self</c22><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><a href="../../rt/uv/uvll.rs.html#145"><c8>free_req</c8></a><c25>(</c25><a href="../../rt/uv/file.rs.html#46"><c0>self.</c0><c10>native_handle</c10><c25>()</c25><c10>&nbsp;as</c10></a><c7>&nbsp;</c7><c3>*</c3><a href="../../libc.rs.html#197"><c3>c_void</c3></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;delete</c26><c25>(</c25><c18>self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../../rt/uv/uvll.rs.html#145"><c8>free_req</c8></a><c25>(</c25><a href="../../rt/uv/file.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../../rt/uv/file.rs.html#46"><c10>native_handle</c10></a><c25>()</c25><c10>&nbsp;</c10><a href="../../rt/uv/file.rs.html#46"><c10>as</c10></a><c7>&nbsp;</c7><c3>*</c3><a href="../../libc.rs.html#197"><c3>c_void</c3></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;open</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_loop_</c20><c22>:&nbsp;</c22><c3>&amp;</c3><a href="../../rt/uv/mod.rs.html#77"><c3>Loop</c3></a><c4>,</c4><c22>&nbsp;</c22><c20>_cb</c20><c22>:&nbsp;</c22><a href="../../rt/uv/mod.rs.html#128"><c3>FsCallback</c3></a><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;open</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_loop_</c20><c18>:&nbsp;</c18><c3>&amp;</c3><a href="../../rt/uv/mod.rs.html#77"><c3>Loop</c3></a><c4>,</c4><c18>&nbsp;</c18><c20>_cb</c20><c18>:&nbsp;</c18><a href="../../rt/uv/mod.rs.html#128"><c3>FsCallback</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;close</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_loop_</c20><c22>:&nbsp;</c22><c3>&amp;</c3><a href="../../rt/uv/mod.rs.html#77"><c3>Loop</c3></a><c4>,</c4><c22>&nbsp;</c22><c20>_cb</c20><c22>:&nbsp;</c22><a href="../../rt/uv/mod.rs.html#128"><c3>FsCallback</c3></a><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;close</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_loop_</c20><c18>:&nbsp;</c18><c3>&amp;</c3><a href="../../rt/uv/mod.rs.html#77"><c3>Loop</c3></a><c4>,</c4><c18>&nbsp;</c18><c20>_cb</c20><c18>:&nbsp;</c18><a href="../../rt/uv/mod.rs.html#128"><c3>FsCallback</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/uv/mod.rs.html#92"><c29>NativeHandle</c29><c5>&lt;*</c5></a><a href="../../rt/uv/uvll.rs.html#69"><c5>uvll::uv_fs_t</c5></a><a href="../../rt/uv/mod.rs.html#92"><c5>&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/uv/file.rs.html#18"><c29>FsRequest</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;from_native_handle</c26><c22>(</c22><a href="#41_26_refs"><c20>handle</c20><c22>:&nbsp;</c22><c3>*</c3><a href="../../rt/uv/uvll.rs.html#69"><c3>uvll::&nbsp;uv_fs_t</c3></a><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/uv/file.rs.html#18"><c3>FsRequest</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>FsRequest</c8><c25>(</c25><a href="../../rt/uv/file.rs.html#43"><c8>handle</c8></a><c25>)</c25><c9>
+</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/uv/mod.rs.html#92"><c30>NativeHandle</c30></a><c5>&lt;*</c5><a href="../../rt/uv/uvll.rs.html#69"><c5>uvll</c5></a><c5>::</c5><a href="../../rt/uv/uvll.rs.html#69"><c5>uv_fs_t</c5></a><c5>&gt;</c5><c30>&nbsp;for&nbsp;</c30><a href="../../rt/uv/file.rs.html#18"><c30>FsRequest</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;from_native_handle</c26><c25>(</c25><a href="#41_26_refs"><c20>handle</c20></a><c18>:&nbsp;</c18><c3>*</c3><a href="../../rt/uv/uvll.rs.html#69"><c3>uvll</c3></a><c3>::&nbsp;</c3><a href="../../rt/uv/uvll.rs.html#69"><c3>uv_fs_t</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../rt/uv/file.rs.html#18"><c3>FsRequest</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>FsRequest</c8><c25>(</c25><a href="../../rt/uv/file.rs.html#43"><c8>handle</c8></a><c25>)</c25><c9>
 </c9><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#44_4_refs"><c26>fn&nbsp;native_handle</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*</c3><a href="../../rt/uv/uvll.rs.html#69"><c3>uvll::uv_fs_t</c3></a><a href="#44_4_refs"><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a href="#44_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c0>self&nbsp;</c0><c4>{</c4><c7>&nbsp;</c7><c20>&amp;FsRequest</c20><c25>(</c25><a href="#45_32_refs"><c20>ptr</c20><a href="#44_4_refs"><c25>)</c25><c7>&nbsp;=&gt;&nbsp;</c7><c21>ptr</c21><c7>&nbsp;</c7><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a href="#44_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#44_4_refs"><c26>native_handle</c26></a><c25>(</c25><c18>&amp;</c18><a href="#44_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>*</c3><a href="../../rt/uv/uvll.rs.html#69"><c3>uvll</c3></a><c3>::</c3><a href="../../rt/uv/uvll.rs.html#69"><c3>uv_fs_t</c3></a><c18>&nbsp;</c18><c4>{</c4><a href="#44_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><a href="#44_4_refs"><c0>self</c0></a><c0>&nbsp;</c0><c4>{</c4><c7>&nbsp;</c7><c20>&amp;</c20><a href="#44_4_refs"><c20>FsRequest</c20></a><c25>(</c25><a href="#45_32_refs"><c20>ptr</c20></a><c25>)</c25><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../../rt/uv/file.rs.html#47"><c8>ptr</c8></a><c7>&nbsp;</c7><c4>}</c4><a href="#44_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><div/><br/><a id="16_1_refs"><a href="#17"><c24>rt/uv/file.rs:17:1-17:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
 <br/>pub&nbsp;struct&nbsp;FsRequest(*uvll::uv_fs_t);
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/uv/file.rs.html#41"><c24>41:&nbsp;</c24>impl&nbsp;NativeHandle&lt;*uvll::uv_fs_t&gt;&nbsp;for&nbsp;FsRequest&nbsp;{
-<br/></a><a href="../../rt/uv/file.rs.html#22"><c24>22:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;FsRequest&nbsp;{
-<br/></a><a href="../../rt/uv/file.rs.html#42"><c24>42:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;from_native_handle(handle:&nbsp;*uvll::&nbsp;uv_fs_t)&nbsp;-&gt;&nbsp;FsRequest&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/uv/file.rs.html#22"><c24>22:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;FsRequest&nbsp;{
 <br/></a><a href="../../rt/uv/file.rs.html#21"><c24>21:&nbsp;</c24>impl&nbsp;FsRequest&nbsp;{
+<br/></a><a href="../../rt/uv/file.rs.html#42"><c24>42:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;from_native_handle(handle:&nbsp;*uvll::&nbsp;uv_fs_t)&nbsp;-&gt;&nbsp;FsRequest&nbsp;{
 <br/></a><a href="../../rt/uv/file.rs.html#19"><c24>19:&nbsp;</c24>impl&nbsp;Request&nbsp;for&nbsp;FsRequest;
+<br/></a><a href="../../rt/uv/file.rs.html#41"><c24>41:&nbsp;</c24>impl&nbsp;NativeHandle&lt;*uvll::uv_fs_t&gt;&nbsp;for&nbsp;FsRequest&nbsp;{
 <br/></a><a href="../../rt/uv/mod.rs.html"><c24>rt/uv/mod.rs:<br/></c24><a href="../../rt/uv/mod.rs.html#128"><c24>128:&nbsp;</c24>pub&nbsp;type&nbsp;FsCallback&nbsp;=&nbsp;~fn(FsRequest,&nbsp;Option&lt;UvError&gt;);
-<br/></a><br/></a></a>
+<br/></a><br/></a></maintext>

@@ -3,16 +3,18 @@ a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
 pr{font-weight:bold}
-ln{color:#606060; }
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
 c24{color:#ffffff; font-style:italic; opacity:0.5}
 c25{color:#ffffff; opacity:0.92}
 c26{color:#ffffff; font-weight:bold; }
-c27{color:#ffffa0; font-weight:bold; }
-c28{color:#afffff; font-weight:bold; }
-c29{color:#afffaf; font-weight:bold; }
-c30{color:#cfcfff; font-weight:bold; }
-c31{color:#ffffff; font-style:italic; opacity:0.6}
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
 c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
 c2{color:#60f0c0}
 c3{color:#50e0ff; }
 c4{color:#f090f0}
@@ -32,9 +34,9 @@ c17{color:#90d0f0}
 c18{color:#f0a0d0}
 c19{color:#d0f0a0}
 c20{color:#0f0ff}
-c21{color:#dde009; font-weight:bold}
-c22{color:#e0f0d0; font-weight:bold}
-c23{color:#e0f0ff; font-weight:bold}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
 </style><body style="background-color:#343c38;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
@@ -52,181 +54,181 @@ c23{color:#e0f0ff; font-weight:bold}
 </c24><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c24>//!&nbsp;*&nbsp;Should&nbsp;probably&nbsp;have&nbsp;something&nbsp;like&nbsp;this&nbsp;for&nbsp;strings.
 </c24><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c24>//!&nbsp;*&nbsp;Should&nbsp;they&nbsp;implement&nbsp;Closable?&nbsp;Would&nbsp;take&nbsp;extra&nbsp;state.
 </c24><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c0>use&nbsp;cmp::min</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c0>use&nbsp;prelude::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>use&nbsp;super::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>use&nbsp;vec</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c21>use</c21><c0>&nbsp;cmp::min</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c21>use</c21><c0>&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c21>use</c21><c0>&nbsp;vec</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c31>///&nbsp;Writes&nbsp;to&nbsp;an&nbsp;owned,&nbsp;growable&nbsp;byte&nbsp;vector
-</c31><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a href="#22_45_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;MemWriter&nbsp;</c27><c15>{
-</c15><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a href="#22_45_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><a href="#24_4_refs"><c6>buf:&nbsp;</c6><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><a href="#22_45_refs"><c15>
-</c15><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a href="#22_45_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c32>///&nbsp;Writes&nbsp;to&nbsp;an&nbsp;owned,&nbsp;growable&nbsp;byte&nbsp;vector
+</c32><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#22_45_refs"><c27>MemWriter</c27></a><c27>&nbsp;</c27><c4>{</c4><a href="#22_45_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#24_4_refs"><c6>buf</c6></a><c6>:&nbsp;</c6><c3>~</c3><c4>[</c4><a href="#22_45_refs"><c3>u8</c3></a><c4>]</c4><a href="#22_45_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/io/mem.rs.html#24"><c29>MemWriter</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/mem.rs.html#24"><c3>MemWriter</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="../../rt/io/mem.rs.html#24"><c15>MemWriter</c15></a><c21>&nbsp;</c21><c4>{</c4><c21>&nbsp;buf:&nbsp;</c21><c16>~</c16><c4>[]</c4><c21>&nbsp;</c21><c4>}</c4><c21>&nbsp;</c21><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/io/mem.rs.html#24"><c30>MemWriter</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>()</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../rt/io/mem.rs.html#24"><c3>MemWriter</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="../../rt/io/mem.rs.html#24"><c23>MemWriter</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;buf:&nbsp;</c22><c16>~</c16><c4>[]</c4><c22>&nbsp;</c22><c4>}</c4><c22>&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/io/mod.rs.html#405"><c29>Writer&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/mem.rs.html#24"><c29>MemWriter</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#32_24_refs"><c20>buf</c20><c22>:&nbsp;</c22><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../rt/io/mem.rs.html#26"><c0>self.</c0><c6>buf</c6></a><a href="../../vec.rs.html#1561"><c10>.push_all</c10><c25>(</c25></a><a href="../../rt/io/mem.rs.html#34"><c8>buf</c8></a><a href="../../vec.rs.html#1561"><c25>)</c25><c10>
-</c10></a><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a href="../../vec.rs.html#1561"><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4></a><c17>
+</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/io/mod.rs.html#405"><c30>Writer</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../rt/io/mem.rs.html#24"><c30>MemWriter</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#32_24_refs"><c20>buf</c20></a><c18>:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../rt/io/mem.rs.html#26"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#26"><c6>buf</c6></a><c10>.</c10><a href="../../vec.rs.html#1561"><c10>push_all</c10></a><c25>(</c25><a href="../../rt/io/mem.rs.html#34"><c8>buf</c8></a><c25>)</c25><a href="../../vec.rs.html#1561"><c10>
+</c10></a><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;/*&nbsp;no-op&nbsp;*/&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c24>/*&nbsp;no-op&nbsp;*/</c24><c22>&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/io/mod.rs.html#430"><c29>Seek&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/mem.rs.html#24"><c29>MemWriter</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>u64</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="../../vec.rs.html#713"><c0>self.</c0></a><a href="../../rt/io/mem.rs.html#26"><c6>buf</c6></a><a href="../../vec.rs.html#713"><c10>.len</c10><c25>()</c25><c10>&nbsp;as</c10></a><c7>&nbsp;</c7><c3>u64</c3><c21>&nbsp;</c21><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/io/mod.rs.html#430"><c30>Seek</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../rt/io/mem.rs.html#24"><c30>MemWriter</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>u64</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="../../rt/io/mem.rs.html#26"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#26"><c6>buf</c6></a><c10>.</c10><a href="../../vec.rs.html#713"><c10>len</c10></a><c25>()</c25><c10>&nbsp;</c10><a href="../../vec.rs.html#713"><c10>as</c10></a><c7>&nbsp;</c7><c3>u64</c3><c22>&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_pos</c20><c22>:&nbsp;</c22><c3>i64</c3><c4>,</c4><c22>&nbsp;</c22><c20>_style</c20><c22>:&nbsp;</c22><a href="../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_pos</c20><c18>:&nbsp;</c18><c3>i64</c3><c4>,</c4><c18>&nbsp;</c18><c20>_style</c20><c18>:&nbsp;</c18><a href="../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/io/mod.rs.html#465"><c29>Decorator</c29><c5>&lt;~[u8]&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/mem.rs.html#24"><c29>MemWriter</c29></a><c29>&nbsp;</c29><c17>{
+</c0><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/io/mod.rs.html#465"><c30>Decorator</c30></a><c5>&lt;~[</c5><a href="../../rt/io/mod.rs.html#465"><c5>u8</c5></a><c5>]&gt;</c5><c30>&nbsp;for&nbsp;</c30><a href="../../rt/io/mem.rs.html#24"><c30>MemWriter</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner</c26><c22>(self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c0>self&nbsp;</c0><c4>{</c4><c7>
-</c7><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#24"><c20>MemWriter&nbsp;</c20><c4>{</c4><c20>&nbsp;buf:&nbsp;</c20></a><a href="#49_29_refs"><c20>buf</c20><a href="../../rt/io/mem.rs.html#24"><c20>&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/mem.rs.html#51"><c21>buf</c21></a><c7>
-</c7><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner</c26><c25>(</c25><c18>self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#24"><c20>MemWriter</c20></a><c20>&nbsp;</c20><c4>{</c4><c20>&nbsp;</c20><a href="../../rt/io/mem.rs.html#24"><c20>buf</c20></a><c20>:&nbsp;</c20><a href="#49_29_refs"><c20>buf</c20></a><c20>&nbsp;</c20><c4>}</c4><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../../rt/io/mem.rs.html#51"><c22>buf</c22></a><c7>
+</c7><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_ref</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>&amp;'a&nbsp;~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
-</c7><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#24"><c20>MemWriter&nbsp;</c20><c4>{</c4><c20>&nbsp;buf:&nbsp;</c20></a><a href="#55_29_refs"><c20>ref&nbsp;buf</c20><a href="../../rt/io/mem.rs.html#24"><c20>&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/mem.rs.html#57"><c8>buf</c8></a><c7>
-</c7><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_ref</c26><c5>&lt;'a&gt;</c5><c25>(</c25><c18>&amp;'a&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>&amp;'a&nbsp;~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#24"><c20>MemWriter</c20></a><c20>&nbsp;</c20><c4>{</c4><c20>&nbsp;</c20><a href="../../rt/io/mem.rs.html#24"><c20>buf</c20></a><c20>:&nbsp;</c20><a href="#55_29_refs"><c20>ref</c20></a><c20>&nbsp;</c20><a href="#55_29_refs"><c20>buf</c20></a><c20>&nbsp;</c20><c4>}</c4><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../../rt/io/mem.rs.html#57"><c8>buf</c8></a><c7>
+</c7><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_mut_ref</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>&amp;'a&nbsp;mut&nbsp;~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
-</c7><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#24"><c20>MemWriter&nbsp;</c20><c4>{</c4><c20>&nbsp;buf:&nbsp;</c20></a><a href="#61_29_refs"><c20>ref&nbsp;mut&nbsp;buf</c20><a href="../../rt/io/mem.rs.html#24"><c20>&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/mem.rs.html#63"><c8>buf</c8></a><c7>
-</c7><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_mut_ref</c26><c5>&lt;'a&gt;</c5><c25>(</c25><c18>&amp;'a&nbsp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>&amp;'a&nbsp;mut&nbsp;~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#24"><c20>MemWriter</c20></a><c20>&nbsp;</c20><c4>{</c4><c20>&nbsp;</c20><a href="../../rt/io/mem.rs.html#24"><c20>buf</c20></a><c20>:&nbsp;</c20><a href="#61_29_refs"><c20>ref</c20></a><c20>&nbsp;</c20><a href="#61_29_refs"><c20>mut</c20></a><c20>&nbsp;</c20><a href="#61_29_refs"><c20>buf</c20></a><c20>&nbsp;</c20><c4>}</c4><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../../rt/io/mem.rs.html#63"><c22>buf</c22></a><c7>
+</c7><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c31>///&nbsp;Reads&nbsp;from&nbsp;an&nbsp;owned&nbsp;byte&nbsp;vector
-</c31><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a href="#66_36_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;MemReader&nbsp;</c27><c15>{
-</c15><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a href="#66_36_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><a href="#68_4_refs"><c6>buf:&nbsp;</c6><a href="#66_36_refs"><c3>~</c3><c4>[</c4><c3>u8</c3><c4>],</c4><c15>
-</c15><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a href="#66_36_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><a href="#69_4_refs"><c6>pos:&nbsp;</c6><a href="#66_36_refs"><c3>uint</c3><c15>
-</c15><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a href="#66_36_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c32>///&nbsp;Reads&nbsp;from&nbsp;an&nbsp;owned&nbsp;byte&nbsp;vector
+</c32><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#66_36_refs"><c27>MemReader</c27></a><c27>&nbsp;</c27><c4>{</c4><a href="#66_36_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#68_4_refs"><c6>buf</c6></a><c6>:&nbsp;</c6><c3>~</c3><c4>[</c4><a href="#68_4_refs"><c3>u8</c3></a><c4>],</c4><a href="#66_36_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#69_4_refs"><c6>pos</c6></a><c6>:&nbsp;</c6><a href="#66_36_refs"><c3>uint</c3><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/io/mem.rs.html#68"><c29>MemReader</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><a href="#73_15_refs"><c20>buf</c20><c22>:&nbsp;</c22><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/mem.rs.html#68"><c3>MemReader</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../rt/io/mem.rs.html#68"><c15>MemReader</c15></a><c21>&nbsp;</c21><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buf:&nbsp;</c21><a href="../../rt/io/mem.rs.html#75"><c8>buf</c8></a><c4>,</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos:&nbsp;</c21><c12>0</c12><c21>
-</c21><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/io/mem.rs.html#68"><c30>MemReader</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>(</c25><a href="#73_15_refs"><c20>buf</c20></a><c18>:&nbsp;</c18><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../rt/io/mem.rs.html#68"><c3>MemReader</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../rt/io/mem.rs.html#68"><c23>MemReader</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buf:&nbsp;</c22><a href="../../rt/io/mem.rs.html#75"><c8>buf</c8></a><c4>,</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos:&nbsp;</c22><c12>0</c12><c22>
+</c22><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/io/mod.rs.html#365"><c29>Reader&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/mem.rs.html#68"><c29>MemReader</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#82_23_refs"><c20>buf</c20><c22>:&nbsp;</c22><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../option.rs.html#55"><c3>Option&lt;uint&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><c7>if&nbsp;</c7><a href="../../rt/io/mem.rs.html#100"><c0>self.</c0><c10>eof</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><c21>&nbsp;</c21><c13>return&nbsp;</c13><a href="../../option.rs.html#57"><c8>None</c8></a><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c21>&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c21>
-</c21><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#85_12_refs"><c20>write_len</c20><c16>&nbsp;=&nbsp;</c16><a href="../../cmp.rs.html#192"><c8>min</c8></a><c25>(</c25><a href="../../rt/io/mem.rs.html#84"><c8>buf</c8></a><a href="../../vec.rs.html#699"><c10>.len</c10><c25>()</c25><c4>,</c4></a><c9>&nbsp;</c9><a href="../../vec.rs.html#713"><c0>self.</c0></a><a href="../../rt/io/mem.rs.html#70"><c6>buf</c6></a><a href="../../vec.rs.html#713"><c10>.len</c10><c25>()</c25><c10>&nbsp;-</c10></a><c2>&nbsp;</c2><a href="../../rt/io/mem.rs.html#71"><c0>self.</c0><c6>pos</c6></a><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>{</c4><c13>
-</c13><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;</c13><a href="#87_16_refs"><c20>input</c20><c16>&nbsp;=&nbsp;</c16><a href="../../rt/io/mem.rs.html#70"><c0>self.</c0><c6>buf</c6></a><a href="../../vec.rs.html#780"><c10>.slice</c10><c25>(</c25></a><a href="../../rt/io/mem.rs.html#71"><c0>self.</c0><c6>pos</c6></a><a href="../../vec.rs.html#780"><c4>,</c4><c10>&nbsp;</c10></a><a href="../../rt/io/mem.rs.html#71"><c0>self.</c0><c6>pos</c6></a><a href="../../vec.rs.html#780"><c2>&nbsp;+&nbsp;</c2></a><a href="../../rt/io/mem.rs.html#87"><c8>write_len</c8></a><a href="../../vec.rs.html#780"><c25>)</c25><c4>;</c4></a><c13>
-</c13><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;</c13><a href="#88_16_refs"><c20>output</c20><c16>&nbsp;=&nbsp;</c16><a href="../../rt/io/mem.rs.html#84"><c8>buf</c8></a><a href="../../vec.rs.html#1747"><c10>.mut_slice</c10><c25>(</c25><c12>0</c12><c4>,</c4><c10>&nbsp;</c10></a><a href="../../rt/io/mem.rs.html#87"><c8>write_len</c8></a><a href="../../vec.rs.html#1747"><c25>)</c25><c4>;</c4></a><c13>
-</c13><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c13><c25>(</c25><a href="../../rt/io/mem.rs.html#89"><c8>input</c8></a><a href="../../vec.rs.html#699"><c10>.len</c10><c25>()</c25><c4>,</c4></a><c13>&nbsp;</c13><a href="../../rt/io/mem.rs.html#90"><c8>output</c8></a><a href="../../vec.rs.html#699"><c10>.len</c10><c25>()</c25></a><c25>)</c25><c4>;</c4><c13>
-</c13><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><a href="../../vec.rs.html#2097"><c8>vec::bytes::copy_memory</c8></a><c25>(</c25><a href="../../rt/io/mem.rs.html#90"><c8>output</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../../rt/io/mem.rs.html#89"><c8>input</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../../rt/io/mem.rs.html#87"><c8>write_len</c8></a><c25>)</c25><c4>;</c4><c13>
-</c13><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../rt/io/mem.rs.html#71"><c0>self.</c0><c6>pos</c6></a><c0>&nbsp;+=&nbsp;</c0><a href="../../rt/io/mem.rs.html#87"><c8>write_len</c8></a><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>assert!</c13><c25>(</c25><a href="../../rt/io/mem.rs.html#71"><c0>self.</c0><c6>pos</c6></a><c2>&nbsp;&lt;=&nbsp;</c2><a href="../../rt/io/mem.rs.html#70"><c0>self.</c0><c6>buf</c6></a><a href="../../vec.rs.html#713"><c10>.len</c10><c25>()</c25></a><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c21>
-</c21><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c0>return&nbsp;</c0><a href="../../option.rs.html#58"><c8>Some</c8></a><c25>(</c25><a href="../../rt/io/mem.rs.html#87"><c8>write_len</c8></a><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/io/mod.rs.html#365"><c30>Reader</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../rt/io/mem.rs.html#68"><c30>MemReader</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#82_23_refs"><c20>buf</c20></a><c18>:&nbsp;</c18><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../option.rs.html#55"><c3>uint</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../../rt/io/mem.rs.html#100"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#100"><c10>eof</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><c22>&nbsp;</c22><c13>return&nbsp;</c13><a href="../../option.rs.html#57"><c8>None</c8></a><c4>;</c4><c22>&nbsp;</c22><c4>}</c4><c22>&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#85_12_refs"><c20>write_len</c20></a><c16>&nbsp;=&nbsp;</c16><a href="../../cmp.rs.html#192"><c8>min</c8></a><c25>(</c25><a href="../../rt/io/mem.rs.html#84"><c8>buf</c8></a><c10>.</c10><a href="../../vec.rs.html#699"><c10>len</c10></a><c25>()</c25><c4>,</c4><c9>&nbsp;</c9><a href="../../vec.rs.html#713"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#70"><c6>buf</c6></a><c10>.</c10><a href="../../vec.rs.html#713"><c10>len</c10></a><c25>()</c25><c10>&nbsp;-</c10><c2>&nbsp;</c2><a href="../../rt/io/mem.rs.html#71"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#71"><c6>pos</c6></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#87_16_refs"><c20>input</c20></a><c16>&nbsp;=&nbsp;</c16><a href="../../rt/io/mem.rs.html#70"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#70"><c6>buf</c6></a><c10>.</c10><a href="../../vec.rs.html#780"><c10>slice</c10></a><c25>(</c25><a href="../../rt/io/mem.rs.html#71"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#71"><c6>pos</c6></a><c4>,</c4><c10>&nbsp;</c10><a href="../../rt/io/mem.rs.html#71"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#71"><c6>pos</c6></a><c2>&nbsp;+&nbsp;</c2><a href="../../rt/io/mem.rs.html#87"><c8>write_len</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#88_16_refs"><c20>output</c20></a><c16>&nbsp;=&nbsp;</c16><a href="../../rt/io/mem.rs.html#84"><c8>buf</c8></a><c10>.</c10><a href="../../vec.rs.html#1747"><c10>mut_slice</c10></a><c25>(</c25><a href="../../vec.rs.html#1747"><c12>0</c12></a><c4>,</c4><c10>&nbsp;</c10><a href="../../rt/io/mem.rs.html#87"><c8>write_len</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert_eq!</c13><c25>(</c25><a href="../../rt/io/mem.rs.html#89"><c8>input</c8></a><c10>.</c10><a href="../../vec.rs.html#699"><c10>len</c10></a><c25>()</c25><c4>,</c4><c13>&nbsp;</c13><a href="../../rt/io/mem.rs.html#90"><c8>output</c8></a><c10>.</c10><a href="../../vec.rs.html#699"><c10>len</c10></a><c25>())</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../vec.rs.html#2097"><c8>vec</c8></a><c8>::</c8><a href="../../vec.rs.html#2097"><c8>bytes</c8></a><c8>::</c8><a href="../../vec.rs.html#2097"><c8>copy_memory</c8></a><c25>(</c25><a href="../../rt/io/mem.rs.html#90"><c8>output</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../../rt/io/mem.rs.html#89"><c8>input</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../../rt/io/mem.rs.html#87"><c8>write_len</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../rt/io/mem.rs.html#71"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#71"><c6>pos</c6></a><c0>&nbsp;+=&nbsp;</c0><a href="../../rt/io/mem.rs.html#87"><c8>write_len</c8></a><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert!</c13><c25>(</c25><a href="../../rt/io/mem.rs.html#71"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#71"><c6>pos</c6></a><c2>&nbsp;&lt;=&nbsp;</c2><a href="../../rt/io/mem.rs.html#70"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#70"><c6>buf</c6></a><c10>.</c10><a href="../../vec.rs.html#713"><c10>len</c10></a><c25>())</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c0>&nbsp;</c0><a href="../../option.rs.html#58"><c8>Some</c8></a><c25>(</c25><a href="../../rt/io/mem.rs.html#87"><c8>write_len</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#98_4_refs"><c26>fn&nbsp;eof</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="../../rt/io/mem.rs.html#71"><c0>self.</c0><c6>pos</c6></a><a href="#98_4_refs"><c2>&nbsp;==&nbsp;</c2><a href="../../rt/io/mem.rs.html#70"><c0>self.</c0><c6>buf</c6></a><a href="../../vec.rs.html#713"><c10>.len</c10><c25>()</c25><c10>&nbsp;</c10><c4>}</c4></a><c17>
+</c17><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#98_4_refs"><c26>eof</c26></a><c25>(</c25><c18>&amp;</c18><a href="#98_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#98_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#98_4_refs"><c3>bool</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="#98_4_refs"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#71"><c6>pos</c6></a><c2>&nbsp;</c2><a href="#98_4_refs"><c2>==</c2></a><c2>&nbsp;</c2><a href="../../rt/io/mem.rs.html#70"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#70"><c6>buf</c6></a><c10>.</c10><a href="../../vec.rs.html#713"><c10>len</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/io/mod.rs.html#430"><c29>Seek&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/mem.rs.html#68"><c29>MemReader</c29></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>u64</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="../../rt/io/mem.rs.html#71"><c0>self.</c0><c6>pos</c6></a><c7>&nbsp;as&nbsp;</c7><c3>u64</c3><c21>&nbsp;</c21><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/io/mod.rs.html#430"><c30>Seek</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../rt/io/mem.rs.html#68"><c30>MemReader</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>u64</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="../../rt/io/mem.rs.html#71"><c0>self</c0></a><c0>.</c0><a href="../../rt/io/mem.rs.html#71"><c6>pos</c6></a><c7>&nbsp;as&nbsp;</c7><c3>u64</c3><c22>&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_pos</c20><c22>:&nbsp;</c22><c3>i64</c3><c4>,</c4><c22>&nbsp;</c22><c20>_style</c20><c22>:&nbsp;</c22><a href="../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_pos</c20><c18>:&nbsp;</c18><c3>i64</c3><c4>,</c4><c18>&nbsp;</c18><c20>_style</c20><c18>:&nbsp;</c18><a href="../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/io/mod.rs.html#465"><c29>Decorator</c29><c5>&lt;~[u8]&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/mem.rs.html#68"><c29>MemReader</c29></a><c29>&nbsp;</c29><c17>{
+</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../rt/io/mod.rs.html#465"><c30>Decorator</c30></a><c5>&lt;~[</c5><a href="../../rt/io/mod.rs.html#465"><c5>u8</c5></a><c5>]&gt;</c5><c30>&nbsp;for&nbsp;</c30><a href="../../rt/io/mem.rs.html#68"><c30>MemReader</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
 </c17><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner</c26><c22>(self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c0>self&nbsp;</c0><c4>{</c4><c7>
-</c7><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#68"><c20>MemReader&nbsp;</c20><c4>{</c4><c20>&nbsp;buf:&nbsp;</c20></a><a href="#111_29_refs"><c20>buf</c20><a href="../../rt/io/mem.rs.html#68"><c4>,</c4><c20>&nbsp;_&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/mem.rs.html#113"><c8>buf</c8></a><c7>
-</c7><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner</c26><c25>(</c25><c18>self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#68"><c20>MemReader</c20></a><c20>&nbsp;</c20><c4>{</c4><c20>&nbsp;</c20><a href="../../rt/io/mem.rs.html#68"><c20>buf</c20></a><c20>:&nbsp;</c20><a href="#111_29_refs"><c20>buf</c20></a><c4>,</c4><c20>&nbsp;</c20><a href="../../rt/io/mem.rs.html#68"><c20>_</c20></a><c20>&nbsp;</c20><c4>}</c4><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../../rt/io/mem.rs.html#113"><c8>buf</c8></a><c7>
+</c7><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_ref</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>&amp;'a&nbsp;~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
-</c7><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#68"><c20>MemReader&nbsp;</c20><c4>{</c4><c20>&nbsp;buf:&nbsp;</c20></a><a href="#117_29_refs"><c20>ref&nbsp;buf</c20><a href="../../rt/io/mem.rs.html#68"><c4>,</c4><c20>&nbsp;_&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/mem.rs.html#119"><c8>buf</c8></a><c7>
-</c7><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_ref</c26><c5>&lt;'a&gt;</c5><c25>(</c25><c18>&amp;'a&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>&amp;'a&nbsp;~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#68"><c20>MemReader</c20></a><c20>&nbsp;</c20><c4>{</c4><c20>&nbsp;</c20><a href="../../rt/io/mem.rs.html#68"><c20>buf</c20></a><c20>:&nbsp;</c20><a href="#117_29_refs"><c20>ref</c20></a><c20>&nbsp;</c20><a href="#117_29_refs"><c20>buf</c20></a><c4>,</c4><c20>&nbsp;</c20><a href="../../rt/io/mem.rs.html#68"><c20>_</c20></a><c20>&nbsp;</c20><c4>}</c4><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../../rt/io/mem.rs.html#119"><c8>buf</c8></a><c7>
+</c7><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_mut_ref</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>&amp;'a&nbsp;mut&nbsp;~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
-</c7><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#68"><c20>MemReader&nbsp;</c20><c4>{</c4><c20>&nbsp;buf:&nbsp;</c20></a><a href="#123_29_refs"><c20>ref&nbsp;mut&nbsp;buf</c20><a href="../../rt/io/mem.rs.html#68"><c4>,</c4><c20>&nbsp;_&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/mem.rs.html#125"><c21>buf</c21></a><c7>
-</c7><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_mut_ref</c26><c5>&lt;'a&gt;</c5><c25>(</c25><c18>&amp;'a&nbsp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>&amp;'a&nbsp;mut&nbsp;~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/mem.rs.html#68"><c20>MemReader</c20></a><c20>&nbsp;</c20><c4>{</c4><c20>&nbsp;</c20><a href="../../rt/io/mem.rs.html#68"><c20>buf</c20></a><c20>:&nbsp;</c20><a href="#123_29_refs"><c20>ref</c20></a><c20>&nbsp;</c20><a href="#123_29_refs"><c20>mut</c20></a><c20>&nbsp;</c20><a href="#123_29_refs"><c20>buf</c20></a><c4>,</c4><c20>&nbsp;</c20><a href="../../rt/io/mem.rs.html#68"><c20>_</c20></a><c20>&nbsp;</c20><c4>}</c4><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../../rt/io/mem.rs.html#125"><c8>buf</c8></a><c7>
+</c7><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c31>///&nbsp;Writes&nbsp;to&nbsp;a&nbsp;fixed-size&nbsp;byte&nbsp;slice
-</c31><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><a href="#129_38_refs"><c27>struct&nbsp;BufWriter</c27><c5>&lt;'self&gt;</c5><c27>&nbsp;</c27><c15>{
-</c15><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><a href="#129_38_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><c6>buf:&nbsp;</c6><c3>&amp;'self&nbsp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>],</c4><c15>
-</c15><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a href="#129_38_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><c6>pos:&nbsp;</c6><c3>uint</c3><c15>
-</c15><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><a href="#129_38_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c32>///&nbsp;Writes&nbsp;to&nbsp;a&nbsp;fixed-size&nbsp;byte&nbsp;slice
+</c32><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><c27>struct&nbsp;</c27><a href="#129_38_refs"><c27>BufWriter</c27></a><c5>&lt;'</c5><a href="#129_38_refs"><c5>self</c5></a><c5>&gt;</c5><c27>&nbsp;</c27><c4>{</c4><a href="#129_38_refs"><c23>
+</c23></a><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#129_38_refs"><c6>buf</c6></a><c6>:&nbsp;</c6><c3>&amp;'</c3><a href="#129_38_refs"><c3>self</c3></a><c3>&nbsp;</c3><a href="#129_38_refs"><c3>mut</c3></a><c3>&nbsp;</c3><c4>[</c4><a href="#129_38_refs"><c3>u8</c3></a><c4>],</c4><a href="#129_38_refs"><c23>
+</c23></a><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#129_38_refs"><c6>pos</c6></a><c6>:&nbsp;</c6><a href="#129_38_refs"><c3>uint</c3><c23>
+</c23></a><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c29>impl</c29><c5>&lt;'self&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mem.rs.html#131"><c29>BufWriter</c29><c5>&lt;'self&gt;</c5></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c5>&lt;'a&gt;</c5><c22>(</c22><a href="#136_19_refs"><c20>buf</c20><c22>:&nbsp;</c22><c3>&amp;'a&nbsp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/mem.rs.html#131"><c3>BufWriter&lt;'a&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../rt/io/mem.rs.html#131"><c15>BufWriter</c15></a><c21>&nbsp;</c21><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buf:&nbsp;</c21><a href="../../rt/io/mem.rs.html#138"><c8>buf</c8></a><c4>,</c4><c21>
-</c21><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos:&nbsp;</c21><c12>0</c12><c21>
-</c21><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c30>impl</c30><c5>&lt;'self&gt;</c5><c30>&nbsp;</c30><a href="../../rt/io/mem.rs.html#131"><c30>BufWriter</c30></a><c5>&lt;'</c5><a href="../../rt/io/mem.rs.html#131"><c5>self</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c5>&lt;'a&gt;</c5><c25>(</c25><a href="#136_19_refs"><c20>buf</c20></a><c18>:&nbsp;</c18><c3>&amp;'a&nbsp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../rt/io/mem.rs.html#131"><c3>BufWriter</c3></a><c3>&lt;'</c3><a href="../../rt/io/mem.rs.html#131"><c3>a</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../rt/io/mem.rs.html#131"><c23>BufWriter</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buf:&nbsp;</c22><a href="../../rt/io/mem.rs.html#138"><c8>buf</c8></a><c4>,</c4><c22>
+</c22><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos:&nbsp;</c22><c12>0</c12><c22>
+</c22><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><c29>impl</c29><c5>&lt;'self&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mod.rs.html#405"><c29>Writer&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/mem.rs.html#131"><c29>BufWriter</c29><c5>&lt;'self&gt;</c5></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_buf</c20><c22>:&nbsp;</c22><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><c30>impl</c30><c5>&lt;'self&gt;</c5><c30>&nbsp;</c30><a href="../../rt/io/mod.rs.html#405"><c30>Writer</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../rt/io/mem.rs.html#131"><c30>BufWriter</c30></a><c5>&lt;'</c5><a href="../../rt/io/mem.rs.html#131"><c5>self</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c29>impl</c29><c5>&lt;'self&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mod.rs.html#430"><c29>Seek&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/mem.rs.html#131"><c29>BufWriter</c29><c5>&lt;'self&gt;</c5></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>u64</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c30>impl</c30><c5>&lt;'self&gt;</c5><c30>&nbsp;</c30><a href="../../rt/io/mod.rs.html#430"><c30>Seek</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../rt/io/mem.rs.html#131"><c30>BufWriter</c30></a><c5>&lt;'</c5><a href="../../rt/io/mem.rs.html#131"><c5>self</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>u64</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_pos</c20><c22>:&nbsp;</c22><c3>i64</c3><c4>,</c4><c22>&nbsp;</c22><c20>_style</c20><c22>:&nbsp;</c22><a href="../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_pos</c20><c18>:&nbsp;</c18><c3>i64</c3><c4>,</c4><c18>&nbsp;</c18><c20>_style</c20><c18>:&nbsp;</c18><a href="../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><c31>///&nbsp;Reads&nbsp;from&nbsp;a&nbsp;fixed-size&nbsp;byte&nbsp;slice
-</c31><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><a href="#157_39_refs"><c27>struct&nbsp;BufReader</c27><c5>&lt;'self&gt;</c5><c27>&nbsp;</c27><c15>{
-</c15><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><a href="#157_39_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><c6>buf:&nbsp;</c6><c3>&amp;'self&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>],</c4><c15>
-</c15><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><a href="#157_39_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><c6>pos:&nbsp;</c6><c3>uint</c3><c15>
-</c15><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><a href="#157_39_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><c32>///&nbsp;Reads&nbsp;from&nbsp;a&nbsp;fixed-size&nbsp;byte&nbsp;slice
+</c32><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><c27>struct&nbsp;</c27><a href="#157_39_refs"><c27>BufReader</c27></a><c5>&lt;'</c5><a href="#157_39_refs"><c5>self</c5></a><c5>&gt;</c5><c27>&nbsp;</c27><c4>{</c4><a href="#157_39_refs"><c23>
+</c23></a><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#157_39_refs"><c6>buf</c6></a><c6>:&nbsp;</c6><c3>&amp;'</c3><a href="#157_39_refs"><c3>self</c3></a><c3>&nbsp;</c3><c4>[</c4><a href="#157_39_refs"><c3>u8</c3></a><c4>],</c4><a href="#157_39_refs"><c23>
+</c23></a><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#157_39_refs"><c6>pos</c6></a><c6>:&nbsp;</c6><a href="#157_39_refs"><c3>uint</c3><c23>
+</c23></a><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><c29>impl</c29><c5>&lt;'self&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mem.rs.html#159"><c29>BufReader</c29><c5>&lt;'self&gt;</c5></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c5>&lt;'a&gt;</c5><c22>(</c22><a href="#164_19_refs"><c20>buf</c20><c22>:&nbsp;</c22><c3>&amp;'a&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/mem.rs.html#159"><c3>BufReader&lt;'a&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../rt/io/mem.rs.html#159"><c15>BufReader</c15></a><c21>&nbsp;</c21><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buf:&nbsp;</c21><a href="../../rt/io/mem.rs.html#166"><c8>buf</c8></a><c4>,</c4><c21>
-</c21><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos:&nbsp;</c21><c12>0</c12><c21>
-</c21><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><c30>impl</c30><c5>&lt;'self&gt;</c5><c30>&nbsp;</c30><a href="../../rt/io/mem.rs.html#159"><c30>BufReader</c30></a><c5>&lt;'</c5><a href="../../rt/io/mem.rs.html#159"><c5>self</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c5>&lt;'a&gt;</c5><c25>(</c25><a href="#164_19_refs"><c20>buf</c20></a><c18>:&nbsp;</c18><c3>&amp;'a&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../rt/io/mem.rs.html#159"><c3>BufReader</c3></a><c3>&lt;'</c3><a href="../../rt/io/mem.rs.html#159"><c3>a</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../rt/io/mem.rs.html#159"><c23>BufReader</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buf:&nbsp;</c22><a href="../../rt/io/mem.rs.html#166"><c8>buf</c8></a><c4>,</c4><c22>
+</c22><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos:&nbsp;</c22><c12>0</c12><c22>
+</c22><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><c29>impl</c29><c5>&lt;'self&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mod.rs.html#365"><c29>Reader&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/mem.rs.html#159"><c29>BufReader</c29><c5>&lt;'self&gt;</c5></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_buf</c20><c22>:&nbsp;</c22><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../option.rs.html#55"><c3>Option&lt;uint&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><c30>impl</c30><c5>&lt;'self&gt;</c5><c30>&nbsp;</c30><a href="../../rt/io/mod.rs.html#365"><c30>Reader</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../rt/io/mem.rs.html#159"><c30>BufReader</c30></a><c5>&lt;'</c5><a href="../../rt/io/mem.rs.html#159"><c5>self</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../option.rs.html#55"><c3>uint</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eof</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eof</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><c29>impl</c29><c5>&lt;'self&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mod.rs.html#430"><c29>Seek&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/mem.rs.html#159"><c29>BufReader</c29><c5>&lt;'self&gt;</c5></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>u64</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><c30>impl</c30><c5>&lt;'self&gt;</c5><c30>&nbsp;</c30><a href="../../rt/io/mod.rs.html#430"><c30>Seek</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../rt/io/mem.rs.html#159"><c30>BufReader</c30></a><c5>&lt;'</c5><a href="../../rt/io/mem.rs.html#159"><c5>self</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>u64</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_pos</c20><c22>:&nbsp;</c22><c3>i64</c3><c4>,</c4><c22>&nbsp;</c22><c20>_style</c20><c22>:&nbsp;</c22><a href="../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_pos</c20><c18>:&nbsp;</c18><c3>i64</c3><c4>,</c4><c18>&nbsp;</c18><c20>_style</c20><c18>:&nbsp;</c18><a href="../../rt/io/mod.rs.html#419"><c3>SeekStyle</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>test</c0><c25>)</c25><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><c0>mod&nbsp;test&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;prelude::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><c21>mod</c21><c0>&nbsp;test&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_mem_writer</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;writer&nbsp;=&nbsp;MemWriter::new</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_mem_writer</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;writer&nbsp;=&nbsp;MemWriter::new</c0><c25>()</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>writer.tell</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;writer.write</c0><c25>(</c25><c4>[</c4><c0>0</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>writer.tell</c0><c25>()</c25><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
@@ -237,16 +239,16 @@ c23{color:#e0f0ff; font-weight:bold}
 </c0><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_mem_reader</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;reader&nbsp;=&nbsp;MemReader::new</c0><c25>(</c25><c0>~</c0><c4>[</c4><c0>0</c0><c4>,</c4><c0>&nbsp;1</c0><c4>,</c4><c0>&nbsp;2</c0><c4>,</c4><c0>&nbsp;3</c0><c4>,</c4><c0>&nbsp;4</c0><c4>,</c4><c0>&nbsp;5</c0><c4>,</c4><c0>&nbsp;6</c0><c4>,</c4><c0>&nbsp;7</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;buf&nbsp;=&nbsp;</c0><c4>[];</c4><c0>
+</c0><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_mem_reader</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;reader&nbsp;=&nbsp;MemReader::new</c0><c25>(</c25><c0>~</c0><c4>[</c4><c0>0</c0><c4>,</c4><c0>&nbsp;1</c0><c4>,</c4><c0>&nbsp;2</c0><c4>,</c4><c0>&nbsp;3</c0><c4>,</c4><c0>&nbsp;4</c0><c4>,</c4><c0>&nbsp;5</c0><c4>,</c4><c0>&nbsp;6</c0><c4>,</c4><c0>&nbsp;7</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;buf&nbsp;=&nbsp;</c0><c4>[];</c4><c0>
 </c0><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>reader.read</c0><c25>(</c25><c0>buf</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>0</c0><c25>))</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>reader.tell</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;buf&nbsp;=&nbsp;</c0><c4>[</c4><c0>0</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;buf&nbsp;=&nbsp;</c0><c4>[</c4><c0>0</c0><c4>];</c4><c0>
 </c0><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>reader.read</c0><c25>(</c25><c0>buf</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>1</c0><c25>))</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>reader.tell</c0><c25>()</c25><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>buf</c0><c4>,</c4><c0>&nbsp;</c0><c4>[</c4><c0>0</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;buf&nbsp;=&nbsp;</c0><c4>[</c4><c0>0</c0><c4>,</c4><c0>&nbsp;..4</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;buf&nbsp;=&nbsp;</c0><c4>[</c4><c0>0</c0><c4>,</c4><c0>&nbsp;..4</c0><c4>];</c4><c0>
 </c0><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>reader.read</c0><c25>(</c25><c0>buf</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>4</c0><c25>))</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>reader.tell</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>buf</c0><c4>,</c4><c0>&nbsp;</c0><c4>[</c4><c0>1</c0><c4>,</c4><c0>&nbsp;2</c0><c4>,</c4><c0>&nbsp;3</c0><c4>,</c4><c0>&nbsp;4</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
@@ -259,38 +261,38 @@ c23{color:#e0f0ff; font-weight:bold}
 </c0><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><div/><br/><a id="66_36_refs"><a href="#67"><c24>rt/io/mem.rs:67:36-67:36&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;Reads&nbsp;from&nbsp;an&nbsp;owned&nbsp;byte&nbsp;vector
 <br/>pub&nbsp;struct&nbsp;MemReader&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/mem.rs.html#102"><c24>102:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;MemReader&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#75"><c24>75:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemReader&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#82"><c24>82:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;MemReader&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#118"><c24>118:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemReader&nbsp;{&nbsp;buf:&nbsp;ref&nbsp;buf,&nbsp;_&nbsp;}&nbsp;=&gt;&nbsp;buf
-<br/></a><a href="../../rt/io/mem.rs.html#74"><c24>74:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(buf:&nbsp;~[u8])&nbsp;-&gt;&nbsp;MemReader&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#112"><c24>112:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemReader&nbsp;{&nbsp;buf:&nbsp;buf,&nbsp;_&nbsp;}&nbsp;=&gt;&nbsp;buf
-<br/></a><a href="../../rt/io/mem.rs.html#73"><c24>73:&nbsp;</c24>impl&nbsp;MemReader&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/mem.rs.html#74"><c24>74:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(buf:&nbsp;~[u8])&nbsp;-&gt;&nbsp;MemReader&nbsp;{
 <br/></a><a href="../../rt/io/mem.rs.html#108"><c24>108:&nbsp;</c24>impl&nbsp;Decorator&lt;~[u8]&gt;&nbsp;for&nbsp;MemReader&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#102"><c24>102:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;MemReader&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#118"><c24>118:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemReader&nbsp;{&nbsp;buf:&nbsp;ref&nbsp;buf,&nbsp;_&nbsp;}&nbsp;=&gt;&nbsp;buf
+<br/></a><a href="../../rt/io/mem.rs.html#73"><c24>73:&nbsp;</c24>impl&nbsp;MemReader&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#82"><c24>82:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;MemReader&nbsp;{
 <br/></a><a href="../../rt/io/mem.rs.html#124"><c24>124:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemReader&nbsp;{&nbsp;buf:&nbsp;ref&nbsp;mut&nbsp;buf,&nbsp;_&nbsp;}&nbsp;=&gt;&nbsp;buf
-<br/></a><br/><br/><a id="129_38_refs"><a href="#130"><c24>rt/io/mem.rs:130:38-130:38&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;Writes&nbsp;to&nbsp;a&nbsp;fixed-size&nbsp;byte&nbsp;slice
-<br/>struct&nbsp;BufWriter&lt;'self&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/mem.rs.html#145"><c24>145:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Writer&nbsp;for&nbsp;BufWriter&lt;'self&gt;&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#137"><c24>137:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new&lt;'a&gt;(buf:&nbsp;&amp;'a&nbsp;mut&nbsp;[u8])&nbsp;-&gt;&nbsp;BufWriter&lt;'a&gt;&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#136"><c24>136:&nbsp;</c24>impl&lt;'self&gt;&nbsp;BufWriter&lt;'self&gt;&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#138"><c24>138:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BufWriter&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#151"><c24>151:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Seek&nbsp;for&nbsp;BufWriter&lt;'self&gt;&nbsp;{
-<br/></a><br/><br/><a id="157_39_refs"><a href="#158"><c24>rt/io/mem.rs:158:39-158:39&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;Reads&nbsp;from&nbsp;a&nbsp;fixed-size&nbsp;byte&nbsp;slice
-<br/>struct&nbsp;BufReader&lt;'self&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/mem.rs.html#173"><c24>173:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Reader&nbsp;for&nbsp;BufReader&lt;'self&gt;&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#166"><c24>166:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BufReader&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#165"><c24>165:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new&lt;'a&gt;(buf:&nbsp;&amp;'a&nbsp;[u8])&nbsp;-&gt;&nbsp;BufReader&lt;'a&gt;&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#179"><c24>179:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Seek&nbsp;for&nbsp;BufReader&lt;'self&gt;&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#164"><c24>164:&nbsp;</c24>impl&lt;'self&gt;&nbsp;BufReader&lt;'self&gt;&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#112"><c24>112:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemReader&nbsp;{&nbsp;buf:&nbsp;buf,&nbsp;_&nbsp;}&nbsp;=&gt;&nbsp;buf
+<br/></a><a href="../../rt/io/mem.rs.html#75"><c24>75:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemReader&nbsp;{
 <br/></a><br/><br/><a id="22_45_refs"><a href="#23"><c24>rt/io/mem.rs:23:45-23:45&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;Writes&nbsp;to&nbsp;an&nbsp;owned,&nbsp;growable&nbsp;byte&nbsp;vector
 <br/>pub&nbsp;struct&nbsp;MemWriter&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/mem.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;MemWriter&nbsp;{&nbsp;MemWriter&nbsp;{&nbsp;buf:&nbsp;~[]&nbsp;}&nbsp;}
-<br/></a><a href="../../rt/io/mem.rs.html#46"><c24>46:&nbsp;</c24>impl&nbsp;Decorator&lt;~[u8]&gt;&nbsp;for&nbsp;MemWriter&nbsp;{
 <br/></a><a href="../../rt/io/mem.rs.html#40"><c24>40:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;MemWriter&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;MemWriter&nbsp;{&nbsp;MemWriter&nbsp;{&nbsp;buf:&nbsp;~[]&nbsp;}&nbsp;}
 <br/></a><a href="../../rt/io/mem.rs.html#62"><c24>62:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemWriter&nbsp;{&nbsp;buf:&nbsp;ref&nbsp;mut&nbsp;buf&nbsp;}&nbsp;=&gt;&nbsp;buf
 <br/></a><a href="../../rt/io/mem.rs.html#32"><c24>32:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;MemWriter&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#28"><c24>28:&nbsp;</c24>impl&nbsp;MemWriter&nbsp;{
-<br/></a><a href="../../rt/io/mem.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemWriter&nbsp;{&nbsp;buf:&nbsp;buf&nbsp;}&nbsp;=&gt;&nbsp;buf
 <br/></a><a href="../../rt/io/mem.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemWriter&nbsp;{&nbsp;buf:&nbsp;ref&nbsp;buf&nbsp;}&nbsp;=&gt;&nbsp;buf
-<br/></a><br/></a></a>
+<br/></a><a href="../../rt/io/mem.rs.html#46"><c24>46:&nbsp;</c24>impl&nbsp;Decorator&lt;~[u8]&gt;&nbsp;for&nbsp;MemWriter&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;MemWriter&nbsp;{&nbsp;MemWriter&nbsp;{&nbsp;buf:&nbsp;~[]&nbsp;}&nbsp;}
+<br/></a><a href="../../rt/io/mem.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemWriter&nbsp;{&nbsp;buf:&nbsp;buf&nbsp;}&nbsp;=&gt;&nbsp;buf
+<br/></a><a href="../../rt/io/mem.rs.html#28"><c24>28:&nbsp;</c24>impl&nbsp;MemWriter&nbsp;{
+<br/></a><br/><br/><a id="157_39_refs"><a href="#158"><c24>rt/io/mem.rs:158:39-158:39&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;Reads&nbsp;from&nbsp;a&nbsp;fixed-size&nbsp;byte&nbsp;slice
+<br/>struct&nbsp;BufReader&lt;'self&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/mem.rs.html#166"><c24>166:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BufReader&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#179"><c24>179:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Seek&nbsp;for&nbsp;BufReader&lt;'self&gt;&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#165"><c24>165:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new&lt;'a&gt;(buf:&nbsp;&amp;'a&nbsp;[u8])&nbsp;-&gt;&nbsp;BufReader&lt;'a&gt;&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#173"><c24>173:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Reader&nbsp;for&nbsp;BufReader&lt;'self&gt;&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#164"><c24>164:&nbsp;</c24>impl&lt;'self&gt;&nbsp;BufReader&lt;'self&gt;&nbsp;{
+<br/></a><br/><br/><a id="129_38_refs"><a href="#130"><c24>rt/io/mem.rs:130:38-130:38&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;Writes&nbsp;to&nbsp;a&nbsp;fixed-size&nbsp;byte&nbsp;slice
+<br/>struct&nbsp;BufWriter&lt;'self&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/mem.rs.html#138"><c24>138:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BufWriter&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#145"><c24>145:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Writer&nbsp;for&nbsp;BufWriter&lt;'self&gt;&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#151"><c24>151:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Seek&nbsp;for&nbsp;BufWriter&lt;'self&gt;&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#137"><c24>137:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new&lt;'a&gt;(buf:&nbsp;&amp;'a&nbsp;mut&nbsp;[u8])&nbsp;-&gt;&nbsp;BufWriter&lt;'a&gt;&nbsp;{
+<br/></a><a href="../../rt/io/mem.rs.html#136"><c24>136:&nbsp;</c24>impl&lt;'self&gt;&nbsp;BufWriter&lt;'self&gt;&nbsp;{
+<br/></a><br/></maintext></body>

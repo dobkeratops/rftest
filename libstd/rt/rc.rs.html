@@ -3,16 +3,18 @@ a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
 pr{font-weight:bold}
-ln{color:#606060; }
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
 c24{color:#ffffff; font-style:italic; opacity:0.5}
 c25{color:#ffffff; opacity:0.92}
 c26{color:#ffffff; font-weight:bold; }
-c27{color:#ffffa0; font-weight:bold; }
-c28{color:#afffff; font-weight:bold; }
-c29{color:#afffaf; font-weight:bold; }
-c30{color:#cfcfff; font-weight:bold; }
-c31{color:#ffffff; font-style:italic; opacity:0.6}
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
 c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
 c2{color:#60f0c0}
 c3{color:#50e0ff; }
 c4{color:#f090f0}
@@ -32,9 +34,9 @@ c17{color:#90d0f0}
 c18{color:#f0a0d0}
 c19{color:#d0f0a0}
 c20{color:#0f0ff}
-c21{color:#dde009; font-weight:bold}
-c22{color:#e0f0d0; font-weight:bold}
-c23{color:#e0f0ff; font-weight:bold}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
 </style><body style="background-color:#383838;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
@@ -55,111 +57,111 @@ c23{color:#e0f0ff; font-weight:bold}
 </c24><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c24>//!
 </c24><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c24>//!&nbsp;This&nbsp;doesn't&nbsp;prevent&nbsp;borrowing&nbsp;multiple&nbsp;aliasable&nbsp;mutable&nbsp;pointers
 </c24><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>use&nbsp;ops::Drop</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c0>use&nbsp;clone::Clone</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c0>use&nbsp;libc::c_void</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c0>use&nbsp;cast</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c21>use</c21><c0>&nbsp;ops::Drop</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c21>use</c21><c0>&nbsp;clone::Clone</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c21>use</c21><c0>&nbsp;libc::c_void</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c21>use</c21><c0>&nbsp;cast</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a href="#24_1_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;RC</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c15>{
-</c15><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a href="#24_1_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><a href="#26_4_refs"><c6>p:&nbsp;</c6><c3>*</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#24_1_refs"><c15>&nbsp;</c15><c24>//&nbsp;~(uint,&nbsp;T)
-</c24><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a href="#24_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#24_1_refs"><c27>RC</c27></a><c5>&lt;</c5><a href="#24_1_refs"><c5>T</c5></a><c5>&gt;</c5><c27>&nbsp;</c27><c4>{</c4><a href="#24_1_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#26_4_refs"><c6>p</c6></a><c6>:&nbsp;</c6><c3>*</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><c23>&nbsp;</c23><c24>//&nbsp;~(uint,&nbsp;T)
+</c24><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29><a href="../rt/rc.rs.html#26"><c29>RC</c29><c5>&lt;T&gt;</c5></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#30_4_refs"><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><a href="#30_15_refs"><c20>val</c20><a href="#30_4_refs"><c22>:&nbsp;</c22><c3>T</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../rt/rc.rs.html#26"><c3>RC&lt;T&gt;</c3></a><a href="#30_4_refs"><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a href="#30_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a href="#30_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#32_16_refs"><c20>v</c20><a href="#30_4_refs"><c16>&nbsp;=&nbsp;</c16><c2>~</c2><c25>(</c25><c12>1</c12><c4>,&nbsp;</c4><a href="../rt/rc.rs.html#32"><c8>val</c8></a><a href="#30_4_refs"><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a href="#30_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#33_16_refs"><c20>p</c20><a href="#30_4_refs"><c16>:&nbsp;</c16><c3>*</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#30_4_refs"><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast::transmute</c8></a><a href="#30_4_refs"><c25>(</c25><a href="../rt/rc.rs.html#34"><c8>v</c8></a><a href="#30_4_refs"><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a href="#30_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/rc.rs.html#26"><c15>RC</c15></a><a href="#30_4_refs"><c21>&nbsp;</c21><c4>{</c4><c21>&nbsp;p:&nbsp;</c21><a href="../rt/rc.rs.html#35"><c8>p</c8></a><a href="#30_4_refs"><c21>&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a href="#30_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a href="#30_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../rt/rc.rs.html#26"><c30>RC</c30></a><c5>&lt;</c5><a href="../rt/rc.rs.html#26"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;</c26><a href="#30_4_refs"><c26>new</c26></a><c25>(</c25><a href="#30_15_refs"><c20>val</c20></a><c18>:&nbsp;</c18><a href="#30_4_refs"><c3>T</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../rt/rc.rs.html#26"><c3>RC</c3></a><c3>&lt;</c3><a href="../rt/rc.rs.html#26"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><a href="#30_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#30_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><a href="#30_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#32_16_refs"><c20>v</c20></a><c16>&nbsp;</c16><a href="#30_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><c2>~</c2><c25>(</c25><a href="#30_4_refs"><c12>1</c12></a><c4>,&nbsp;</c4><a href="../rt/rc.rs.html#32"><c8>val</c8></a><c25>)</c25><c4>;</c4><a href="#30_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#33_16_refs"><c20>p</c20></a><c16>:&nbsp;</c16><c3>*</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><c16>&nbsp;</c16><a href="#30_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast</c8></a><c8>::</c8><a href="../cast.rs.html#72"><c8>transmute</c8></a><c25>(</c25><a href="../rt/rc.rs.html#34"><c8>v</c8></a><c25>)</c25><c4>;</c4><a href="#30_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../rt/rc.rs.html#26"><c23>RC</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="#30_4_refs"><c22>p</c22></a><c22>:&nbsp;</c22><a href="../rt/rc.rs.html#35"><c8>p</c8></a><c22>&nbsp;</c22><c4>}</c4><a href="#30_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#30_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#38_4_refs"><c26>fn&nbsp;get_mut_state</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*mut&nbsp;</c3><c25>(</c25><c3>uint</c3><c4>,</c4><c3>&nbsp;T</c3><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a href="#38_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a href="#38_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#40_16_refs"><c20>p</c20><a href="#38_4_refs"><c16>:&nbsp;</c16><c3>&amp;mut&nbsp;~</c3><c25>(</c25><c3>uint</c3><c4>,</c4><c3>&nbsp;T</c3><c25>)</c25><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast::transmute</c8></a><a href="#38_4_refs"><c25>(</c25><c2>&amp;mut&nbsp;</c2><c0>self.</c0><a href="../rt/rc.rs.html#28"><c6>p</c6></a><a href="#38_4_refs"><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a href="#38_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#41_16_refs"><c20>p</c20><a href="#38_4_refs"><c16>:&nbsp;</c16><c3>*mut&nbsp;</c3><c25>(</c25><c3>uint</c3><c4>,</c4><c3>&nbsp;T</c3><c25>)</c25><c16>&nbsp;=&nbsp;</c16><c2>&amp;mut&nbsp;**</c2><a href="../rt/rc.rs.html#42"><c8>p</c8></a><a href="#38_4_refs"><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a href="#38_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>return&nbsp;</c13><a href="../rt/rc.rs.html#43"><c8>p</c8></a><a href="#38_4_refs"><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a href="#38_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a href="#38_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#38_4_refs"><c26>get_mut_state</c26></a><c25>(</c25><c18>&amp;</c18><a href="#38_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#38_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>*</c3><a href="#38_4_refs"><c3>mut</c3></a><c3>&nbsp;</c3><c25>(</c25><a href="#38_4_refs"><c3>uint</c3></a><c4>,</c4><c3>&nbsp;</c3><a href="#38_4_refs"><c3>T</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><a href="#38_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#38_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><a href="#38_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#40_16_refs"><c20>p</c20></a><c16>:&nbsp;</c16><c3>&amp;</c3><a href="#38_4_refs"><c3>mut</c3></a><c3>&nbsp;~</c3><c25>(</c25><a href="#38_4_refs"><c3>uint</c3></a><c4>,</c4><c3>&nbsp;</c3><a href="#38_4_refs"><c3>T</c3></a><c25>)</c25><c16>&nbsp;</c16><a href="#38_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast</c8></a><c8>::</c8><a href="../cast.rs.html#72"><c8>transmute</c8></a><c25>(</c25><c2>&amp;</c2><a href="#38_4_refs"><c2>mut</c2></a><c2>&nbsp;</c2><a href="../rt/rc.rs.html#28"><c0>self</c0></a><c0>.</c0><a href="../rt/rc.rs.html#28"><c6>p</c6></a><c25>)</c25><c4>;</c4><a href="#38_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#41_16_refs"><c20>p</c20></a><c16>:&nbsp;</c16><c3>*</c3><a href="#38_4_refs"><c3>mut</c3></a><c3>&nbsp;</c3><c25>(</c25><a href="#38_4_refs"><c3>uint</c3></a><c4>,</c4><c3>&nbsp;</c3><a href="#38_4_refs"><c3>T</c3></a><c25>)</c25><c16>&nbsp;</c16><a href="#38_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><c2>&amp;</c2><a href="#38_4_refs"><c2>mut</c2></a><c2>&nbsp;**</c2><a href="../rt/rc.rs.html#42"><c8>p</c8></a><c4>;</c4><a href="#38_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c13>&nbsp;</c13><a href="../rt/rc.rs.html#43"><c8>p</c8></a><c4>;</c4><a href="#38_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#38_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#46_4_refs"><c26>fn&nbsp;get_state</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*</c3><c25>(</c25><c3>uint</c3><c4>,</c4><c3>&nbsp;T</c3><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a href="#46_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a href="#46_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#48_16_refs"><c20>p</c20><a href="#46_4_refs"><c16>:&nbsp;</c16><c3>&amp;~</c3><c25>(</c25><c3>uint</c3><c4>,</c4><c3>&nbsp;T</c3><c25>)</c25><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast::transmute</c8></a><a href="#46_4_refs"><c25>(</c25><c2>&amp;</c2><a href="../rt/rc.rs.html#28"><c0>self.</c0><c6>p</c6></a><a href="#46_4_refs"><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a href="#46_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#49_16_refs"><c20>p</c20><a href="#46_4_refs"><c16>:&nbsp;</c16><c3>*</c3><c25>(</c25><c3>uint</c3><c4>,</c4><c3>&nbsp;T</c3><c25>)</c25><c16>&nbsp;=&nbsp;</c16><c2>&amp;**</c2><a href="../rt/rc.rs.html#50"><c8>p</c8></a><a href="#46_4_refs"><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a href="#46_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c0>return&nbsp;</c0><a href="../rt/rc.rs.html#51"><c8>p</c8></a><a href="#46_4_refs"><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a href="#46_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a href="#46_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#46_4_refs"><c26>get_state</c26></a><c25>(</c25><c18>&amp;</c18><a href="#46_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>*</c3><c25>(</c25><a href="#46_4_refs"><c3>uint</c3></a><c4>,</c4><c3>&nbsp;</c3><a href="#46_4_refs"><c3>T</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><a href="#46_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#46_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><a href="#46_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#48_16_refs"><c20>p</c20></a><c16>:&nbsp;</c16><c3>&amp;~</c3><c25>(</c25><a href="#46_4_refs"><c3>uint</c3></a><c4>,</c4><c3>&nbsp;</c3><a href="#46_4_refs"><c3>T</c3></a><c25>)</c25><c16>&nbsp;</c16><a href="#46_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast</c8></a><c8>::</c8><a href="../cast.rs.html#72"><c8>transmute</c8></a><c25>(</c25><c2>&amp;</c2><a href="../rt/rc.rs.html#28"><c0>self</c0></a><c0>.</c0><a href="../rt/rc.rs.html#28"><c6>p</c6></a><c25>)</c25><c4>;</c4><a href="#46_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#49_16_refs"><c20>p</c20></a><c16>:&nbsp;</c16><c3>*</c3><c25>(</c25><a href="#46_4_refs"><c3>uint</c3></a><c4>,</c4><c3>&nbsp;</c3><a href="#46_4_refs"><c3>T</c3></a><c25>)</c25><c16>&nbsp;</c16><a href="#46_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><c2>&amp;**</c2><a href="../rt/rc.rs.html#50"><c8>p</c8></a><c4>;</c4><a href="#46_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c0>&nbsp;</c0><a href="../rt/rc.rs.html#51"><c8>p</c8></a><c4>;</c4><a href="#46_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#46_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#54_4_refs"><c22>pub&nbsp;</c22><c26>fn&nbsp;unsafe_borrow_mut</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*mut&nbsp;T</c3><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a href="#54_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a href="#54_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><c0>self.</c0><a href="../rt/rc.rs.html#40"><c10>get_mut_state</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><a href="#54_4_refs"><c7>
-</c7><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a href="#54_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><c20>_</c20><c4>,</c4><c20>&nbsp;</c20><a href="#57_20_refs"><c20>ref&nbsp;mut&nbsp;p</c20><a href="#54_4_refs"><c25>)</c25><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a href="#54_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#58_24_refs"><c20>p</c20><a href="#54_4_refs"><c16>:&nbsp;</c16><c3>*mut&nbsp;T</c3><c16>&nbsp;=&nbsp;</c16><a href="../rt/rc.rs.html#59"><c8>p</c8></a><a href="#54_4_refs"><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a href="#54_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>return&nbsp;</c13><a href="../rt/rc.rs.html#60"><c8>p</c8></a><a href="#54_4_refs"><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a href="#54_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>
-</c7><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a href="#54_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a href="#54_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a href="#54_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;</c26><a href="#54_4_refs"><c26>unsafe_borrow_mut</c26></a><c25>(</c25><c18>&amp;</c18><a href="#54_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#54_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>*</c3><a href="#54_4_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="#54_4_refs"><c3>T</c3></a><c18>&nbsp;</c18><c4>{</c4><a href="#54_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#54_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><a href="#54_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><c2>*</c2><a href="../rt/rc.rs.html#40"><c0>self</c0></a><c0>.</c0><a href="../rt/rc.rs.html#40"><c10>get_mut_state</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><a href="#54_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><a href="#54_4_refs"><c20>_</c20></a><c4>,</c4><c20>&nbsp;</c20><a href="#57_20_refs"><c20>ref</c20></a><c20>&nbsp;</c20><a href="#57_20_refs"><c20>mut</c20></a><c20>&nbsp;</c20><a href="#57_20_refs"><c20>p</c20></a><c25>)</c25><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><a href="#54_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#58_24_refs"><c20>p</c20></a><c16>:&nbsp;</c16><c3>*</c3><a href="#54_4_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="#54_4_refs"><c3>T</c3></a><c16>&nbsp;</c16><a href="#54_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../rt/rc.rs.html#59"><c8>p</c8></a><c4>;</c4><a href="#54_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c0>&nbsp;</c0><a href="../rt/rc.rs.html#60"><c8>p</c8></a><c4>;</c4><a href="#54_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#54_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><a href="#54_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#54_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#65_4_refs"><c22>pub&nbsp;</c22><c26>fn&nbsp;refcount</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>uint</c3><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a href="#65_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a href="#65_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><a href="../rt/rc.rs.html#48"><c0>self.</c0><c10>get_state</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><a href="#65_4_refs"><c7>
-</c7><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a href="#65_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><a href="#68_17_refs"><c20>count</c20><a href="#65_4_refs"><c4>,</c4><c20>&nbsp;_</c20><c25>)</c25><c7>&nbsp;=&gt;&nbsp;</c7><a href="../rt/rc.rs.html#70"><c8>count</c8></a><a href="#65_4_refs"><c7>
-</c7><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a href="#65_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a href="#65_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a href="#65_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;</c26><a href="#65_4_refs"><c26>refcount</c26></a><c25>(</c25><c18>&amp;</c18><a href="#65_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#65_4_refs"><c3>uint</c3></a><c18>&nbsp;</c18><c4>{</c4><a href="#65_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#65_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><a href="#65_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><c2>*</c2><a href="#65_4_refs"><c0>self</c0></a><c0>.</c0><a href="../rt/rc.rs.html#48"><c10>get_state</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><a href="#65_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><a href="#68_17_refs"><c20>count</c20></a><c4>,</c4><c20>&nbsp;</c20><a href="#65_4_refs"><c20>_</c20></a><c25>)</c25><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../rt/rc.rs.html#70"><c8>count</c8></a><a href="#65_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><a href="#65_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#65_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c0>#</c0><c4>[</c4><c0>unsafe_destructor</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29><a href="../ops.rs.html#16"><c29>Drop&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../rt/rc.rs.html#26"><c29>RC</c29><c5>&lt;T&gt;</c5></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;drop</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>assert!</c13><c25>(</c25><a href="../rt/rc.rs.html#67"><c0>self.</c0><c10>refcount</c10><c25>()</c25><c10>&nbsp;&gt;</c10></a><c2>&nbsp;</c2><c12>0</c12><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c21>
-</c21><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;FIXME(#4330)&nbsp;Need&nbsp;self&nbsp;by&nbsp;value&nbsp;to&nbsp;get&nbsp;mutability.
-</c24><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#81_16_refs"><c20>this</c20><c16>:&nbsp;</c16><c3>&amp;mut&nbsp;</c3><a href="../rt/rc.rs.html#26"><c3>RC&lt;T&gt;</c3></a><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#78"><c8>cast::transmute_mut</c8></a><c25>(</c25><c0>self</c0><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c21>
-</c21><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>match&nbsp;</c13><c2>*</c2><a href="../rt/rc.rs.html#83"><c8>this</c8></a><a href="../rt/rc.rs.html#40"><c10>.get_mut_state</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><c13>
-</c13><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c25>(</c25><a href="#84_17_refs"><c20>ref&nbsp;mut&nbsp;count</c20><c4>,</c4><c20>&nbsp;_</c20><c25>)</c25><c13>&nbsp;=&gt;&nbsp;</c13><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c2>*</c2><a href="../rt/rc.rs.html#86"><c8>count</c8></a><c2>&nbsp;=&nbsp;*</c2><a href="../rt/rc.rs.html#86"><c8>count</c8></a><c2>&nbsp;-&nbsp;</c2><c12>1</c12><c21>
-</c21><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c13>
-</c13><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c21>
-</c21><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="../rt/rc.rs.html#83"><c8>this</c8></a><a href="../rt/rc.rs.html#67"><c10>.refcount</c10><c25>()</c25><c10>&nbsp;==</c10></a><c2>&nbsp;</c2><c12>0</c12><c7>&nbsp;</c7><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><c20>_</c20><c16>:&nbsp;</c16><c3>~</c3><c25>(</c25><c3>uint</c3><c4>,</c4><c3>&nbsp;T</c3><c25>)</c25><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast::transmute</c8></a><c25>(</c25><a href="../rt/rc.rs.html#83"><c8>this</c8></a><a href="../rt/rc.rs.html#28"><c6>.p</c6></a><c25>)</c25><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c33>#</c33><c4>[</c4><c33>unsafe_destructor</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../ops.rs.html#16"><c30>Drop</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../rt/rc.rs.html#26"><c30>RC</c30></a><c5>&lt;</c5><a href="../rt/rc.rs.html#26"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;drop</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert!</c13><c25>(</c25><a href="../rt/rc.rs.html#67"><c0>self</c0></a><c0>.</c0><a href="../rt/rc.rs.html#67"><c10>refcount</c10></a><c25>()</c25><c10>&nbsp;&gt;</c10><c2>&nbsp;</c2><c12>0</c12><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;FIXME(#4330)&nbsp;Need&nbsp;self&nbsp;by&nbsp;value&nbsp;to&nbsp;get&nbsp;mutability.
+</c24><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#81_16_refs"><c20>this</c20></a><c16>:&nbsp;</c16><c3>&amp;mut&nbsp;</c3><a href="../rt/rc.rs.html#26"><c3>RC</c3></a><c3>&lt;</c3><a href="../rt/rc.rs.html#26"><c3>T</c3></a><c3>&gt;</c3><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#78"><c8>cast</c8></a><c8>::</c8><a href="../cast.rs.html#78"><c8>transmute_mut</c8></a><c25>(</c25><c0>self</c0><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c13>&nbsp;</c13><c2>*</c2><a href="../rt/rc.rs.html#83"><c8>this</c8></a><c10>.</c10><a href="../rt/rc.rs.html#40"><c10>get_mut_state</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><c13>
+</c13><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c25>(</c25><c21>ref</c21><c20>&nbsp;</c20><c21>mut</c21><c20>&nbsp;</c20><a href="#84_17_refs"><c20>count</c20></a><c4>,</c4><c20>&nbsp;_</c20><c25>)</c25><c13>&nbsp;</c13><c4>=&gt;</c4><c13>&nbsp;</c13><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c2>*</c2><a href="../rt/rc.rs.html#86"><c8>count</c8></a><c2>&nbsp;=&nbsp;*</c2><a href="../rt/rc.rs.html#86"><c8>count</c8></a><c2>&nbsp;-&nbsp;</c2><c12>1</c12><c22>
+</c22><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c13>
+</c13><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../rt/rc.rs.html#83"><c8>this</c8></a><c10>.</c10><a href="../rt/rc.rs.html#67"><c10>refcount</c10></a><c25>()</c25><c10>&nbsp;</c10><a href="../rt/rc.rs.html#67"><c10>==</c10></a><c2>&nbsp;</c2><c12>0</c12><c7>&nbsp;</c7><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>_</c20><c16>:&nbsp;</c16><c3>~</c3><c25>(</c25><c3>uint</c3><c4>,</c4><c3>&nbsp;T</c3><c25>)</c25><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast</c8></a><c8>::</c8><a href="../cast.rs.html#72"><c8>transmute</c8></a><c25>(</c25><a href="../rt/rc.rs.html#83"><c8>this</c8></a><c6>.</c6><a href="../rt/rc.rs.html#28"><c6>p</c6></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29><a href="../clone.rs.html#27"><c29>Clone&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../rt/rc.rs.html#26"><c29>RC</c29><c5>&lt;T&gt;</c5></a><c29>&nbsp;</c29><c17>{
-</c17><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#97_4_refs"><c26>fn&nbsp;clone</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../rt/rc.rs.html#26"><c3>RC&lt;T&gt;</c3></a><a href="#97_4_refs"><c22>&nbsp;</c22><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a href="#97_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>unsafe&nbsp;</c13><c4>{</c4><c13>
-</c13><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a href="#97_4_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c24>//&nbsp;XXX:&nbsp;Mutable&nbsp;clone
-</c24><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a href="#97_4_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;</c13><a href="#100_16_refs"><c20>this</c20><a href="#97_4_refs"><c16>:&nbsp;</c16><c3>&amp;mut&nbsp;</c3><a href="../rt/rc.rs.html#26"><c3>RC&lt;T&gt;</c3></a><a href="#97_4_refs"><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#78"><c8>cast::transmute_mut</c8></a><a href="#97_4_refs"><c25>(</c25><c0>self</c0><c25>)</c25><c4>;</c4><c13>
-</c13><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a href="#97_4_refs"><c13>
-</c13><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a href="#97_4_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c7>match&nbsp;</c7><c2>*</c2><a href="../rt/rc.rs.html#102"><c8>this</c8></a><a href="../rt/rc.rs.html#40"><c10>.get_mut_state</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><a href="#97_4_refs"><c7>
-</c7><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a href="#97_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><a href="#103_17_refs"><c20>ref&nbsp;mut&nbsp;count</c20><a href="#97_4_refs"><c4>,</c4><c20>&nbsp;_</c20><c25>)</c25><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>
-</c21><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a href="#97_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c2>*</c2><a href="../rt/rc.rs.html#105"><c8>count</c8></a><a href="#97_4_refs"><c13>&nbsp;=&nbsp;</c13><c2>*</c2><a href="../rt/rc.rs.html#105"><c8>count</c8></a><a href="#97_4_refs"><c2>&nbsp;+&nbsp;</c2><c12>1</c12><c4>;</c4><c21>
-</c21><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a href="#97_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>
-</c7><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a href="#97_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c13>
-</c13><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a href="#97_4_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a href="#97_4_refs"><c21>
-</c21><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a href="#97_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/rc.rs.html#26"><c15>RC</c15></a><a href="#97_4_refs"><c21>&nbsp;</c21><c4>{</c4><c21>&nbsp;p:&nbsp;</c21><a href="../rt/rc.rs.html#28"><c0>self.</c0><c6>p</c6></a><a href="#97_4_refs"><c21>&nbsp;</c21><c4>}</c4><c21>
-</c21><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a href="#97_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../clone.rs.html#27"><c30>Clone</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../rt/rc.rs.html#26"><c30>RC</c30></a><c5>&lt;</c5><a href="../rt/rc.rs.html#26"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#97_4_refs"><c26>clone</c26></a><c25>(</c25><c18>&amp;</c18><a href="#97_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../rt/rc.rs.html#26"><c3>RC</c3></a><c3>&lt;</c3><a href="../rt/rc.rs.html#26"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><a href="#97_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#97_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><a href="#97_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;XXX:&nbsp;Mutable&nbsp;clone
+</c24><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#100_16_refs"><c20>this</c20></a><c16>:&nbsp;</c16><c3>&amp;</c3><a href="#97_4_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="../rt/rc.rs.html#26"><c3>RC</c3></a><c3>&lt;</c3><a href="#97_4_refs"><c3>T</c3></a><c3>&gt;</c3><c16>&nbsp;</c16><a href="#97_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../cast.rs.html#78"><c8>cast</c8></a><c8>::</c8><a href="../cast.rs.html#78"><c8>transmute_mut</c8></a><c25>(</c25><a href="#97_4_refs"><c0>self</c0></a><c25>)</c25><c4>;</c4><a href="#97_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a href="#97_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><c2>*</c2><a href="../rt/rc.rs.html#102"><c8>this</c8></a><c10>.</c10><a href="../rt/rc.rs.html#40"><c10>get_mut_state</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><a href="#97_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><c21>ref</c21><c20>&nbsp;</c20><c21>mut</c21><c20>&nbsp;</c20><a href="#103_17_refs"><c20>count</c20></a><c4>,</c4><c20>&nbsp;</c20><a href="#97_4_refs"><c20>_</c20></a><c25>)</c25><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><a href="#97_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c2>*</c2><a href="../rt/rc.rs.html#105"><c8>count</c8></a><c2>&nbsp;</c2><a href="#97_4_refs"><c2>=</c2></a><c2>&nbsp;*</c2><a href="../rt/rc.rs.html#105"><c8>count</c8></a><c2>&nbsp;+&nbsp;</c2><a href="#97_4_refs"><c12>1</c12></a><c4>;</c4><a href="#97_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#97_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><a href="#97_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#97_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a href="#97_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../rt/rc.rs.html#26"><c23>RC</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="#97_4_refs"><c22>p</c22></a><c22>:&nbsp;</c22><a href="../rt/rc.rs.html#28"><c0>self</c0></a><c0>.</c0><a href="../rt/rc.rs.html#28"><c6>p</c6></a><c22>&nbsp;</c22><c4>}</c4><a href="#97_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>test</c0><c25>)</c25><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c0>mod&nbsp;test&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;super::RC</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c21>mod</c21><c0>&nbsp;test&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::RC</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;smoke_test</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;smoke_test</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;v1&nbsp;=&nbsp;RC::new</c0><c25>(</c25><c0>100</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;v1&nbsp;=&nbsp;RC::new</c0><c25>(</c25><c0>100</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>*v1.unsafe_borrow_mut</c0><c25>()</c25><c0>&nbsp;==&nbsp;100</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>v1.refcount</c0><c25>()</c25><c0>&nbsp;==&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;v2&nbsp;=&nbsp;v1.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;v2&nbsp;=&nbsp;v1.clone</c0><c25>()</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>*v2.unsafe_borrow_mut</c0><c25>()</c25><c0>&nbsp;==&nbsp;100</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>v2.refcount</c0><c25>()</c25><c0>&nbsp;==&nbsp;2</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c0>
@@ -167,11 +169,11 @@ c23{color:#e0f0ff; font-weight:bold}
 </c0><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>*v2.unsafe_borrow_mut</c0><c25>()</c25><c0>&nbsp;==&nbsp;200</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>*v1.unsafe_borrow_mut</c0><c25>()</c25><c0>&nbsp;==&nbsp;200</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;v3&nbsp;=&nbsp;v2.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;v3&nbsp;=&nbsp;v2.clone</c0><c25>()</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>v3.refcount</c0><c25>()</c25><c0>&nbsp;==&nbsp;3</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;_v1&nbsp;=&nbsp;v1</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;_v2&nbsp;=&nbsp;v2</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;_v1&nbsp;=&nbsp;v1</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;_v2&nbsp;=&nbsp;v2</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>v3.refcount</c0><c25>()</c25><c0>&nbsp;==&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
@@ -179,14 +181,14 @@ c23{color:#e0f0ff; font-weight:bold}
 </c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><div/><br/><a id="24_1_refs"><a href="#25"><c24>rt/rc.rs:25:1-25:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
 <br/>pub&nbsp;struct&nbsp;RC&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/rc.rs.html#98"><c24>98:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;RC&lt;T&gt;&nbsp;{
-<br/></a><a href="../rt/rc.rs.html#35"><c24>35:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RC&nbsp;{&nbsp;p:&nbsp;p&nbsp;}
-<br/></a><a href="../rt/rc.rs.html#97"><c24>97:&nbsp;</c24>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;RC&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/rc.rs.html#101"><c24>101:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;this:&nbsp;&amp;mut&nbsp;RC&lt;T&gt;&nbsp;=&nbsp;cast::transmute_mut(self);
 <br/></a><a href="../rt/rc.rs.html#31"><c24>31:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(val:&nbsp;T)&nbsp;-&gt;&nbsp;RC&lt;T&gt;&nbsp;{
-<br/></a><a href="../rt/rc.rs.html#30"><c24>30:&nbsp;</c24>impl&lt;T&gt;&nbsp;RC&lt;T&gt;&nbsp;{
-<br/></a><a href="../rt/rc.rs.html#110"><c24>110:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RC&nbsp;{&nbsp;p:&nbsp;self.p&nbsp;}
-<br/></a><a href="../rt/rc.rs.html#101"><c24>101:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;this:&nbsp;&amp;mut&nbsp;RC&lt;T&gt;&nbsp;=&nbsp;cast::transmute_mut(self);
-<br/></a><a href="../rt/rc.rs.html#76"><c24>76:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;RC&lt;T&gt;&nbsp;{
 <br/></a><a href="../rt/rc.rs.html#82"><c24>82:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;this:&nbsp;&amp;mut&nbsp;RC&lt;T&gt;&nbsp;=&nbsp;cast::transmute_mut(self);
+<br/></a><a href="../rt/rc.rs.html#98"><c24>98:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;RC&lt;T&gt;&nbsp;{
+<br/></a><a href="../rt/rc.rs.html#30"><c24>30:&nbsp;</c24>impl&lt;T&gt;&nbsp;RC&lt;T&gt;&nbsp;{
+<br/></a><a href="../rt/rc.rs.html#35"><c24>35:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RC&nbsp;{&nbsp;p:&nbsp;p&nbsp;}
+<br/></a><a href="../rt/rc.rs.html#110"><c24>110:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RC&nbsp;{&nbsp;p:&nbsp;self.p&nbsp;}
+<br/></a><a href="../rt/rc.rs.html#97"><c24>97:&nbsp;</c24>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;RC&lt;T&gt;&nbsp;{
+<br/></a><a href="../rt/rc.rs.html#76"><c24>76:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;RC&lt;T&gt;&nbsp;{
 <br/></a><a href="../rt/tube.rs.html"><c24>rt/tube.rs:<br/></c24><a href="../rt/tube.rs.html#31"><c24>31:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;p:&nbsp;RC&lt;TubeState&lt;T&gt;&gt;
-<br/></a><br/></a></a>
+<br/></a><br/></a></maintext>

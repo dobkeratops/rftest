@@ -3,16 +3,18 @@ a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
 a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
 pr{font-weight:bold}
-ln{color:#606060; }
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
 c24{color:#ffffff; font-style:italic; opacity:0.5}
 c25{color:#ffffff; opacity:0.92}
 c26{color:#ffffff; font-weight:bold; }
-c27{color:#ffffa0; font-weight:bold; }
-c28{color:#afffff; font-weight:bold; }
-c29{color:#afffaf; font-weight:bold; }
-c30{color:#cfcfff; font-weight:bold; }
-c31{color:#ffffff; font-style:italic; opacity:0.6}
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
 c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
 c2{color:#60f0c0}
 c3{color:#50e0ff; }
 c4{color:#f090f0}
@@ -32,9 +34,9 @@ c17{color:#90d0f0}
 c18{color:#f0a0d0}
 c19{color:#d0f0a0}
 c20{color:#0f0ff}
-c21{color:#dde009; font-weight:bold}
-c22{color:#e0f0d0; font-weight:bold}
-c23{color:#e0f0ff; font-weight:bold}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
 </style><body style="background-color:#3a3636;"><maintext><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
@@ -45,94 +47,94 @@ c23{color:#e0f0ff; font-weight:bold}
 </c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
 </c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
 </c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c0>/*!
-</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>The&nbsp;task&nbsp;interface&nbsp;to&nbsp;the&nbsp;runtime
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c0>*/
-</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c0>#</c0><c4>[</c4><c0>doc</c0><c25>(</c25><c0>hidden</c0><c25>)</c25><c4>];</c4><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c0>use&nbsp;libc</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c24>/*!
+</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c24>The&nbsp;task&nbsp;interface&nbsp;to&nbsp;the&nbsp;runtime
+</c24><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c24>*/
+</c24><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c33>#</c33><c4>[</c4><c33>doc</c33><c25>(</c25><c33>hidden</c33><c25>)</c25><c4>];</c4><c33>
+</c33><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c21>use</c21><c0>&nbsp;libc</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c0>#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>non_camel_case_types</c0><c25>)</c25><c4>]</c4><c0>&nbsp;</c0><c24>//&nbsp;runtime&nbsp;type
-</c24><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a href="#20_47_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;sched_id&nbsp;=&nbsp;int;</c28><c28>
-</c28><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c0>#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>non_camel_case_types</c0><c25>)</c25><c4>]</c4><c0>&nbsp;</c0><c24>//&nbsp;runtime&nbsp;type
-</c24><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a href="#22_47_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;task_id&nbsp;=&nbsp;int;</c28><c28>
-</c28><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>non_camel_case_types</c33><c25>)</c25><c4>]</c4><c33>&nbsp;</c33><c24>//&nbsp;runtime&nbsp;type
+</c24><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c21>pub</c21><c3>&nbsp;</c3><c31>type&nbsp;</c31><a href="#20_47_refs"><c31>sched_id</c31></a><c31>&nbsp;</c31><a href="#20_47_refs"><c31>=</c31></a><c31>&nbsp;</c31><a href="#20_47_refs"><c31>int</c31></a><c31>;
+</c31><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>non_camel_case_types</c33><c25>)</c25><c4>]</c4><c33>&nbsp;</c33><c24>//&nbsp;runtime&nbsp;type
+</c24><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c21>pub</c21><c3>&nbsp;</c3><c31>type&nbsp;</c31><a href="#22_47_refs"><c31>task_id</c31></a><c31>&nbsp;</c31><a href="#22_47_refs"><c31>=</c31></a><c31>&nbsp;</c31><a href="#22_47_refs"><c31>int</c31></a><c31>;
+</c31><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c24>//&nbsp;These&nbsp;are&nbsp;both&nbsp;opaque&nbsp;runtime/compiler&nbsp;types&nbsp;that&nbsp;we&nbsp;don't&nbsp;know&nbsp;the
 </c24><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c24>//&nbsp;structure&nbsp;of&nbsp;and&nbsp;should&nbsp;only&nbsp;deal&nbsp;with&nbsp;via&nbsp;unsafe&nbsp;pointer
-</c24><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c0>#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>non_camel_case_types</c0><c25>)</c25><c4>]</c4><c0>&nbsp;</c0><c24>//&nbsp;runtime&nbsp;type
-</c24><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a href="#27_47_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;rust_task&nbsp;=&nbsp;</c28><a href="../libc.rs.html#197"><c28>libc::c_void</c28></a><a href="#27_47_refs"><c28>;</c28><c28>
-</c28><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c0>#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>non_camel_case_types</c0><c25>)</c25><c4>]</c4><c0>&nbsp;</c0><c24>//&nbsp;runtime&nbsp;type
-</c24><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a href="#29_47_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;rust_closure&nbsp;=&nbsp;</c28><a href="../libc.rs.html#197"><c28>libc::c_void</c28></a><a href="#29_47_refs"><c28>;</c28><c28>
-</c28><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c0>
+</c24><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>non_camel_case_types</c33><c25>)</c25><c4>]</c4><c33>&nbsp;</c33><c24>//&nbsp;runtime&nbsp;type
+</c24><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c21>pub</c21><c3>&nbsp;</c3><c31>type&nbsp;</c31><a href="#27_47_refs"><c31>rust_task</c31></a><c31>&nbsp;</c31><a href="#27_47_refs"><c31>=</c31></a><c31>&nbsp;</c31><a href="../libc.rs.html#197"><c31>libc</c31></a><c31>::</c31><a href="../libc.rs.html#197"><c31>c_void</c31></a><c31>;
+</c31><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>non_camel_case_types</c33><c25>)</c25><c4>]</c4><c33>&nbsp;</c33><c24>//&nbsp;runtime&nbsp;type
+</c24><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c21>pub</c21><c3>&nbsp;</c3><c31>type&nbsp;</c31><a href="#29_47_refs"><c31>rust_closure</c31></a><c31>&nbsp;</c31><a href="#29_47_refs"><c31>=</c31></a><c31>&nbsp;</c31><a href="../libc.rs.html#197"><c31>libc</c31></a><c31>::</c31><a href="../libc.rs.html#197"><c31>c_void</c31></a><c31>;
+</c31><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c0>extern&nbsp;</c0><c4>{</c4><c0>
 </c0><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>rust_stack</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_task_yield</c26><c0>(</c0><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>bool</c3><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_task_yield</c26><c25>(</c25><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>bool</c3><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_get_sched_id</c26><c0>(</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><a href="../task/rt.rs.html#22"><c3>sched_id</c3></a><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_new_sched</c26><c0>(</c0><c20>num_threads</c20><c0>:&nbsp;</c0><a href="../libc.rs.html#417"><c3>libc::uintptr_t</c3></a><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><a href="../task/rt.rs.html#22"><c3>sched_id</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_get_sched_id</c26><c25>()</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><a href="../task/rt.rs.html#22"><c3>sched_id</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_new_sched</c26><c25>(</c25><c20>num_threads</c20><c0>:&nbsp;</c0><a href="../libc.rs.html#417"><c3>libc</c3></a><c3>::</c3><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><a href="../task/rt.rs.html#22"><c3>sched_id</c3></a><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;get_task_id</c26><c0>(</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><a href="../task/rt.rs.html#24"><c3>task_id</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;get_task_id</c26><c25>()</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><a href="../task/rt.rs.html#24"><c3>task_id</c3></a><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>rust_stack</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_get_task</c26><c0>(</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_get_task</c26><c25>()</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;new_task</c26><c0>(</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_new_task_in_sched</c26><c0>(</c0><c20>id</c20><c0>:&nbsp;</c0><a href="../task/rt.rs.html#22"><c3>sched_id</c3></a><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;new_task</c26><c25>()</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_new_task_in_sched</c26><c25>(</c25><c20>id</c20><c0>:&nbsp;</c0><a href="../task/rt.rs.html#22"><c3>sched_id</c3></a><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;start_task</c26><c0>(</c0><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c4>,</c4><c0>&nbsp;</c0><c20>closure</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#31"><c3>rust_closure</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;start_task</c26><c25>(</c25><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c4>,</c4><c0>&nbsp;</c0><c20>closure</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#31"><c3>rust_closure</c3></a><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_task_is_unwinding</c26><c0>(</c0><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>bool</c3><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_osmain_sched_id</c26><c0>(</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><a href="../task/rt.rs.html#22"><c3>sched_id</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_task_is_unwinding</c26><c25>(</c25><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>bool</c3><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_osmain_sched_id</c26><c25>()</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><a href="../task/rt.rs.html#22"><c3>sched_id</c3></a><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>rust_stack</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_task_inhibit_kill</c26><c0>(</c0><c20>t</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_task_inhibit_kill</c26><c25>(</c25><c20>t</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>rust_stack</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_task_allow_kill</c26><c0>(</c0><c20>t</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_task_allow_kill</c26><c25>(</c25><c20>t</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>rust_stack</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_task_inhibit_yield</c26><c0>(</c0><c20>t</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_task_inhibit_yield</c26><c25>(</c25><c20>t</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>rust_stack</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_task_allow_yield</c26><c0>(</c0><c20>t</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_task_kill_other</c26><c0>(</c0><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_task_kill_all</c26><c0>(</c0><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_task_allow_yield</c26><c25>(</c25><c20>t</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_task_kill_other</c26><c25>(</c25><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_task_kill_all</c26><c25>(</c25><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>rust_stack</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_get_task_local_data</c26><c0>(</c0><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>*mut&nbsp;*</c3><a href="../libc.rs.html#197"><c3>libc::c_void</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_get_task_local_data</c26><c25>(</c25><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>*mut&nbsp;*</c3><a href="../libc.rs.html#197"><c3>libc</c3></a><c3>::</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>rust_stack</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;</c0><c26>fn&nbsp;rust_task_local_data_atexit</c26><c0>(</c0><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c4>,</c4><c0>&nbsp;</c0><c20>cleanup_fn</c20><c0>:&nbsp;</c0><c3>*u8</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_task_local_data_atexit</c26><c25>(</c25><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../task/rt.rs.html#29"><c3>rust_task</c3></a><c4>,</c4><c0>&nbsp;</c0><c20>cleanup_fn</c20><c0>:&nbsp;</c0><c3>*u8</c3><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="20_47_refs"><a href="#21"><c24>task/rt.rs:21:47-21:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
-<br/>pub&nbsp;type&nbsp;sched_id&nbsp;=&nbsp;int;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../task/rt.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_osmain_sched_id()&nbsp;-&gt;&nbsp;sched_id;
-<br/></a><a href="../task/rt.rs.html#37"><c24>37:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_sched_id()&nbsp;-&gt;&nbsp;sched_id;
-<br/></a><a href="../task/rt.rs.html#38"><c24>38:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_sched(num_threads:&nbsp;libc::uintptr_t)&nbsp;-&gt;&nbsp;sched_id;
-<br/></a><a href="../task/rt.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_task_in_sched(id:&nbsp;sched_id)&nbsp;-&gt;&nbsp;*rust_task;
+</c0><br/><div/><br/><a id="29_47_refs"><a href="#30"><c24>task/rt.rs:30:47-30:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
+<br/>pub&nbsp;type&nbsp;rust_closure&nbsp;=&nbsp;libc::c_void;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../task/rt.rs.html#47"><c24>47:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;start_task(task:&nbsp;*rust_task,&nbsp;closure:&nbsp;*rust_closure);
 <br/></a><br/><br/><a id="27_47_refs"><a href="#28"><c24>task/rt.rs:28:47-28:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
 <br/>pub&nbsp;type&nbsp;rust_task&nbsp;=&nbsp;libc::c_void;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../task/rt.rs.html#63"><c24>63:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_task_local_data(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;*mut&nbsp;*libc::c_void;
-<br/></a><a href="../task/rt.rs.html#35"><c24>35:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_yield(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;bool;
-<br/></a><a href="../task/rt.rs.html#60"><c24>60:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_kill_all(task:&nbsp;*rust_task);
-<br/></a><a href="../task/rt.rs.html#49"><c24>49:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_is_unwinding(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;bool;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../task/rt.rs.html#49"><c24>49:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_is_unwinding(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;bool;
+<br/></a><a href="../task/rt.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_inhibit_yield(t:&nbsp;*rust_task);
+<br/></a><a href="../task/rt.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_allow_kill(t:&nbsp;*rust_task);
+<br/></a><a href="../task/rt.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_task_in_sched(id:&nbsp;sched_id)&nbsp;-&gt;&nbsp;*rust_task;
+<br/></a><a href="../task/rt.rs.html#63"><c24>63:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_task_local_data(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;*mut&nbsp;*libc::c_void;
+<br/></a><a href="../task/rt.rs.html#65"><c24>65:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_local_data_atexit(task:&nbsp;*rust_task,&nbsp;cleanup_fn:&nbsp;*u8);
 <br/></a><a href="../task/rt.rs.html#58"><c24>58:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_allow_yield(t:&nbsp;*rust_task);
 <br/></a><a href="../task/rt.rs.html#47"><c24>47:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;start_task(task:&nbsp;*rust_task,&nbsp;closure:&nbsp;*rust_closure);
-<br/></a><a href="../task/rt.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_allow_kill(t:&nbsp;*rust_task);
-<br/></a><a href="../task/rt.rs.html#65"><c24>65:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_local_data_atexit(task:&nbsp;*rust_task,&nbsp;cleanup_fn:&nbsp;*u8);
-<br/></a><a href="../task/rt.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_inhibit_yield(t:&nbsp;*rust_task);
 <br/></a><a href="../task/rt.rs.html#59"><c24>59:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_kill_other(task:&nbsp;*rust_task);
-<br/></a><a href="../task/rt.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_task_in_sched(id:&nbsp;sched_id)&nbsp;-&gt;&nbsp;*rust_task;
+<br/></a><a href="../task/rt.rs.html#60"><c24>60:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_kill_all(task:&nbsp;*rust_task);
+<br/></a><a href="../task/rt.rs.html#35"><c24>35:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_yield(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;bool;
 <br/></a><a href="../task/rt.rs.html#52"><c24>52:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_inhibit_kill(t:&nbsp;*rust_task);
 <br/></a><a href="../task/rt.rs.html#44"><c24>44:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new_task()&nbsp;-&gt;&nbsp;*rust_task;
 <br/></a><a href="../task/rt.rs.html#42"><c24>42:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_task()&nbsp;-&gt;&nbsp;*rust_task;
-<br/></a><a href="../task/spawn.rs.html"><c24>task/spawn.rs:<br/></c24><a href="../task/spawn.rs.html#109"><c24>109:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;OldTask(*rust_task),
-<br/></a><a href="../task/spawn.rs.html#864"><c24>864:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;new_task_in_sched()&nbsp;-&gt;&nbsp;*rust_task&nbsp;{
+<br/></a><a href="../task/spawn.rs.html"><c24>task/spawn.rs:<br/></c24><a href="../task/spawn.rs.html#864"><c24>864:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;new_task_in_sched()&nbsp;-&gt;&nbsp;*rust_task&nbsp;{
+<br/></a><a href="../task/spawn.rs.html#109"><c24>109:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;OldTask(*rust_task),
 <br/></a><a href="../task/spawn.rs.html#829"><c24>829:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;make_child_wrapper(child:&nbsp;*rust_task,&nbsp;child_arc:&nbsp;TaskGroupArc,
 <br/></a><a href="../rt/mod.rs.html"><c24>rt/mod.rs:<br/></c24><a href="../rt/mod.rs.html#432"><c24>432:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_try_get_task()&nbsp;-&gt;&nbsp;*rust_task;
 <br/></a><a href="../task/local_data_priv.rs.html"><c24>task/local_data_priv.rs:<br/></c24><a href="../task/local_data_priv.rs.html#26"><c24>26:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;OldHandle(*rust_task),
 <br/></a><a href="../task/local_data_priv.rs.html#112"><c24>112:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;fn&nbsp;oldsched_map(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;&amp;mut&nbsp;TaskLocalMap&nbsp;{
+<br/></a><br/><br/><a id="20_47_refs"><a href="#21"><c24>task/rt.rs:21:47-21:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
+<br/>pub&nbsp;type&nbsp;sched_id&nbsp;=&nbsp;int;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../task/rt.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_task_in_sched(id:&nbsp;sched_id)&nbsp;-&gt;&nbsp;*rust_task;
+<br/></a><a href="../task/rt.rs.html#37"><c24>37:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_sched_id()&nbsp;-&gt;&nbsp;sched_id;
+<br/></a><a href="../task/rt.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_osmain_sched_id()&nbsp;-&gt;&nbsp;sched_id;
+<br/></a><a href="../task/rt.rs.html#38"><c24>38:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_sched(num_threads:&nbsp;libc::uintptr_t)&nbsp;-&gt;&nbsp;sched_id;
 <br/></a><br/><br/><a id="22_47_refs"><a href="#23"><c24>task/rt.rs:23:47-23:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
 <br/>pub&nbsp;type&nbsp;task_id&nbsp;=&nbsp;int;
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../task/rt.rs.html#40"><c24>40:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;get_task_id()&nbsp;-&gt;&nbsp;task_id;
-<br/></a><br/><br/><a id="29_47_refs"><a href="#30"><c24>task/rt.rs:30:47-30:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
-<br/>pub&nbsp;type&nbsp;rust_closure&nbsp;=&nbsp;libc::c_void;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../task/rt.rs.html#47"><c24>47:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;start_task(task:&nbsp;*rust_task,&nbsp;closure:&nbsp;*rust_closure);
 <br/></a><br/></a></a>
