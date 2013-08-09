@@ -1,0 +1,107 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#343a3c;"><maintext><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c0>use&nbsp;option::</c0><c4>{</c4><c0>Option</c0><c4>,</c4><c0>&nbsp;Some</c0><c4>,</c4><c0>&nbsp;None</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>use&nbsp;result::</c0><c4>{</c4><c0>Ok</c0><c4>,</c4><c0>&nbsp;Err</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>use&nbsp;rt::io::</c0><c4>{</c4><c0>io_error</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>use&nbsp;rt::rtio::</c0><c4>{</c4><c0>IoFactory</c0><c4>,</c4><c0>&nbsp;IoFactoryObject</c0><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RtioTimer</c0><c4>,</c4><c0>&nbsp;RtioTimerObject</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c0>use&nbsp;rt::local::Local</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a href="#16_1_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;Timer</c27><c15>(</c15><c3>~</c3><a href="../../rt/rtio.rs.html#26"><c3>RtioTimerObject</c3></a><a href="#16_1_refs"><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/io/timer.rs.html#18"><c29>Timer</c29></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#20_4_refs"><c26>fn&nbsp;new_on_rt</c26><c22>(</c22><a href="#20_17_refs"><c20>i</c20><a href="#20_4_refs"><c22>:&nbsp;</c22><c3>~</c3><a href="../../rt/rtio.rs.html#26"><c3>RtioTimerObject</c3></a><a href="#20_4_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/timer.rs.html#18"><c3>Timer</c3></a><a href="#20_4_refs"><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a href="#20_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>Timer</c8><c25>(</c25><a href="../../rt/io/timer.rs.html#22"><c8>i</c8></a><a href="#20_4_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a href="#20_4_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../option.rs.html#55"><c3>Option&lt;</c3></a><a href="../../rt/io/timer.rs.html#18"><c3>Timer</c3></a><a href="../../option.rs.html#55"><c3>&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#25_12_refs"><c20>timer</c20><c16>&nbsp;=&nbsp;</c16><c21>unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>rtdebug!</c13><c25>(</c25><a href="../../rt/io/timer.rs.html#28"><c21>"Timer::init:&nbsp;borrowing&nbsp;io&nbsp;to&nbsp;init&nbsp;timer"</c21></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#27_16_refs"><c20>io</c20><c16>&nbsp;=&nbsp;</c16><a href="../../rt/local.rs.html#25"><c8>Local::unsafe_borrow::&lt;</c8></a><a href="../../rt/rtio.rs.html#22"><c3>IoFactoryObject</c3></a><a href="../../rt/local.rs.html#25"><c8>&gt;</c8></a><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>rtdebug!</c13><c25>(</c25><a href="../../rt/io/timer.rs.html#30"><c21>"about&nbsp;to&nbsp;init&nbsp;timer"</c21></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../rt/uv/uvio.rs.html#331"><c25>(</c25><c2>*</c2></a><a href="../../rt/io/timer.rs.html#29"><c8>io</c8></a><a href="../../rt/uv/uvio.rs.html#331"><c25>)</c25><c0>.</c0><c10>timer_init</c10><c25>()</c25><c10>
+</c10></a><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a href="../../rt/uv/uvio.rs.html#331"><c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4></a><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="../../rt/io/timer.rs.html#27"><c8>timer</c8></a><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../result.rs.html#29"><c20>Ok</c20><c25>(</c25></a><a href="#32_15_refs"><c20>t</c20><a href="../../result.rs.html#29"><c25>)</c25></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../option.rs.html#58"><c8>Some</c8></a><c25>(</c25><a href="../../rt/io/timer.rs.html#22"><c8>Timer::new_on_rt</c8></a><c25>(</c25><a href="../../rt/io/timer.rs.html#34"><c8>t</c8></a><c25>))</c25><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../result.rs.html#31"><c20>Err</c20><c25>(</c25></a><a href="#33_16_refs"><c20>ioerr</c20><a href="../../result.rs.html#31"><c25>)</c25></a><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>rtdebug!</c13><c25>(</c25><a href="#34_25_refs"><c20>"Timer::init:&nbsp;failed&nbsp;to&nbsp;init:&nbsp;%?"</c20><c4>,</c4><c13>&nbsp;</c13><a href="../../unstable/extfmt.rs.html#499"><c15>ioerr</c15></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../<std-macros>.html#170"><c8>io_error::cond</c8></a><a href="../../condition.rs.html#42"><c13>.raise</c13><c25>(</c25></a><a href="../../rt/io/timer.rs.html#35"><c8>ioerr</c8></a><a href="../../condition.rs.html#42"><c25>)</c25><c4>;</c4></a><c21>
+</c21><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../option.rs.html#57"><c8>None</c8></a><c21>
+</c21><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c29>impl&nbsp;</c29><a href="../../rt/rtio.rs.html#90"><c29>RtioTimer&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/timer.rs.html#18"><c29>Timer</c29></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;sleep</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#43_20_refs"><c20>msecs</c20><c22>:&nbsp;</c22><c3>u64</c3><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../rt/uv/uvio.rs.html#774"><c25>(</c25><c2>**</c2><c0>self</c0><c25>)</c25><c0>.</c0><c13>sleep</c13><c25>(</c25></a><a href="../../rt/io/timer.rs.html#45"><c8>msecs</c8></a><a href="../../rt/uv/uvio.rs.html#774"><c25>)</c25><c4>;</c4></a><c21>
+</c21><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>test</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><c0>mod&nbsp;test&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;rt::test::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;option::</c0><c4>{</c4><c0>Some</c0><c4>,</c4><c0>&nbsp;None</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_io_timer_sleep_simple</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;run_in_newsched_task&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;timer&nbsp;=&nbsp;Timer::new</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;timer&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some</c0><c25>(</c25><c0>t</c0><c25>)</c25><c0>&nbsp;=&gt;&nbsp;t.sleep</c0><c25>(</c25><c0>1</c0><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;=&gt;&nbsp;assert!</c0><c25>(</c25><c0>false</c0><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><c4>}</c4><br/><div/><br/><a id="16_1_refs"><a href="#17"><c24>rt/io/timer.rs:17:1-17:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;struct&nbsp;Timer(~RtioTimerObject);
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/timer.rs.html#43"><c24>43:&nbsp;</c24>impl&nbsp;RtioTimer&nbsp;for&nbsp;Timer&nbsp;{
+<br/></a><a href="../../rt/io/timer.rs.html#21"><c24>21:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;new_on_rt(i:&nbsp;~RtioTimerObject)&nbsp;-&gt;&nbsp;Timer&nbsp;{
+<br/></a><a href="../../rt/io/timer.rs.html#20"><c24>20:&nbsp;</c24>impl&nbsp;Timer&nbsp;{
+<br/></a><a href="../../rt/io/timer.rs.html#25"><c24>25:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;Option&lt;Timer&gt;&nbsp;{
+<br/></a><br/></a></a>

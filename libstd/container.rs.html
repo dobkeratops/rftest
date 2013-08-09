@@ -1,0 +1,186 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#343a3c;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;Container&nbsp;traits
+</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c0>use&nbsp;option::Option</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c31>///&nbsp;A&nbsp;trait&nbsp;to&nbsp;represent&nbsp;the&nbsp;abstract&nbsp;idea&nbsp;of&nbsp;a&nbsp;container.&nbsp;The&nbsp;only&nbsp;concrete
+</c31><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c31>///&nbsp;knowledge&nbsp;known&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;contained&nbsp;within.
+</c31><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><a href="#15_64_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;Container&nbsp;</c1><c18>{
+</c18><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><a href="#15_64_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Return&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;container
+</c31><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a href="#15_64_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><a href="#18_4_refs"><c26>fn&nbsp;len</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>uint</c3><a href="#15_64_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a href="#15_64_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a href="#15_64_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Return&nbsp;true&nbsp;if&nbsp;the&nbsp;container&nbsp;contains&nbsp;no&nbsp;elements
+</c31><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a href="#15_64_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;#</c18><c4>[</c4><c18>inline</c18><c4>]</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><a href="#15_64_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_empty</c26><c18>(&amp;self</c18><c25>)</c25><c18>&nbsp;-&gt;&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a href="#15_64_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="container.rs.html#20"><c0>self.</c0><c10>len</c10><c25>()</c25><c10>&nbsp;==</c10></a><a href="#15_64_refs"><c2>&nbsp;</c2><c12>0</c12><c21>
+</c21><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a href="#15_64_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a href="#15_64_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c31>///&nbsp;A&nbsp;trait&nbsp;to&nbsp;represent&nbsp;mutable&nbsp;containers
+</c31><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a href="#27_44_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;Mutable:&nbsp;</c1><a href="container.rs.html#17"><c1>Container&nbsp;</c1></a><a href="#27_44_refs"><c18>{
+</c18><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a href="#27_44_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Clear&nbsp;the&nbsp;container,&nbsp;removing&nbsp;all&nbsp;values.
+</c31><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a href="#27_44_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;clear</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a href="#27_44_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c31>///&nbsp;A&nbsp;map&nbsp;is&nbsp;a&nbsp;key-value&nbsp;store&nbsp;where&nbsp;values&nbsp;may&nbsp;be&nbsp;looked&nbsp;up&nbsp;by&nbsp;their&nbsp;keys.&nbsp;This
+</c31><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c31>///&nbsp;trait&nbsp;provides&nbsp;basic&nbsp;operations&nbsp;to&nbsp;operate&nbsp;on&nbsp;these&nbsp;stores.
+</c31><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a href="#34_64_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;Map</c1><c5>&lt;K,&nbsp;V&gt;</c5><c1>:&nbsp;</c1><a href="container.rs.html#17"><c1>Container&nbsp;</c1></a><a href="#34_64_refs"><c18>{
+</c18><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a href="#34_64_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Return&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;value&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;key
+</c31><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a href="#34_64_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><a href="#37_4_refs"><c26>fn&nbsp;find</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;self</c22><c4>,</c4><c22>&nbsp;key:&nbsp;</c22><a href="#34_64_refs"><c3>&amp;K</c3><a href="#37_4_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;&amp;'a&nbsp;V&gt;</c3></a><a href="#34_64_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a href="#34_64_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a href="#34_64_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Return&nbsp;true&nbsp;if&nbsp;the&nbsp;map&nbsp;contains&nbsp;a&nbsp;value&nbsp;for&nbsp;the&nbsp;specified&nbsp;key
+</c31><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a href="#34_64_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;contains_key</c26><c18>(&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#40_27_refs"><c20>key</c20><a href="#34_64_refs"><c18>:&nbsp;</c18><c3>&amp;K</c3><c25>)</c25><c18>&nbsp;-&gt;&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a href="#34_64_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="option.rs.html#128"><c0>self.</c0></a><a href="container.rs.html#39"><c10>find</c10><c25>(</c25></a><a href="container.rs.html#42"><c8>key</c8></a><a href="container.rs.html#39"><c25>)</c25><c10>.</c10></a><a href="option.rs.html#128"><c10>is_some</c10><c25>()</c25><c10>
+</c10></a><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a href="option.rs.html#128"><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4></a><a href="#34_64_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a href="#34_64_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c31>///&nbsp;This&nbsp;trait&nbsp;provides&nbsp;basic&nbsp;operations&nbsp;to&nbsp;modify&nbsp;the&nbsp;contents&nbsp;of&nbsp;a&nbsp;map.
+</c31><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a href="#45_74_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;MutableMap</c1><c5>&lt;K,&nbsp;V&gt;</c5><c1>:&nbsp;</c1><a href="container.rs.html#36"><c1>Map</c1><c5>&lt;K,&nbsp;V&gt;</c5><c1>&nbsp;</c1></a><a href="#45_74_refs"><c1>+&nbsp;</c1><a href="container.rs.html#29"><c1>Mutable&nbsp;</c1></a><a href="#45_74_refs"><c18>{
+</c18><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Insert&nbsp;a&nbsp;key-value&nbsp;pair&nbsp;into&nbsp;the&nbsp;map.&nbsp;An&nbsp;existing&nbsp;value&nbsp;for&nbsp;a
+</c31><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;key&nbsp;is&nbsp;replaced&nbsp;by&nbsp;the&nbsp;new&nbsp;value.&nbsp;Return&nbsp;true&nbsp;if&nbsp;the&nbsp;key&nbsp;did
+</c31><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;not&nbsp;already&nbsp;exist&nbsp;in&nbsp;the&nbsp;map.
+</c31><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;#</c18><c4>[</c4><c18>inline</c18><c4>]</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;insert</c26><c18>(&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#51_25_refs"><c20>key</c20><a href="#45_74_refs"><c18>:&nbsp;</c18><c3>K</c3><c4>,</c4><c18>&nbsp;</c18><a href="#51_33_refs"><c20>value</c20><a href="#45_74_refs"><c18>:&nbsp;</c18><c3>V</c3><c25>)</c25><c18>&nbsp;-&gt;&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a href="#45_74_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="container.rs.html#66"><c0>self.</c0><c10>swap</c10><c25>(</c25></a><a href="container.rs.html#53"><c8>key</c8></a><a href="container.rs.html#66"><c4>,</c4><c10>&nbsp;</c10></a><a href="container.rs.html#53"><c8>value</c8></a><a href="container.rs.html#66"><c25>)</c25><c10>.</c10></a><a href="option.rs.html#122"><c10>is_none</c10><c25>()</c25><c10>
+</c10></a><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a href="option.rs.html#122"><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4></a><a href="#45_74_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a href="#45_74_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Remove&nbsp;a&nbsp;key-value&nbsp;pair&nbsp;from&nbsp;the&nbsp;map.&nbsp;Return&nbsp;true&nbsp;if&nbsp;the&nbsp;key
+</c31><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;was&nbsp;present&nbsp;in&nbsp;the&nbsp;map,&nbsp;otherwise&nbsp;false.
+</c31><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;#</c18><c4>[</c4><c18>inline</c18><c4>]</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;remove</c26><c18>(&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#58_25_refs"><c20>key</c20><a href="#45_74_refs"><c18>:&nbsp;</c18><c3>&amp;K</c3><c25>)</c25><c18>&nbsp;-&gt;&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a href="#45_74_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="container.rs.html#70"><c0>self.</c0><c10>pop</c10><c25>(</c25></a><a href="container.rs.html#60"><c8>key</c8></a><a href="container.rs.html#70"><c25>)</c25><c10>.</c10></a><a href="option.rs.html#128"><c10>is_some</c10><c25>()</c25><c10>
+</c10></a><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a href="option.rs.html#128"><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4></a><a href="#45_74_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a href="#45_74_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Insert&nbsp;a&nbsp;key-value&nbsp;pair&nbsp;from&nbsp;the&nbsp;map.&nbsp;If&nbsp;the&nbsp;key&nbsp;already&nbsp;had&nbsp;a&nbsp;value
+</c31><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;present&nbsp;in&nbsp;the&nbsp;map,&nbsp;that&nbsp;value&nbsp;is&nbsp;returned.&nbsp;Otherwise&nbsp;None&nbsp;is&nbsp;returned.
+</c31><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><a href="#64_4_refs"><c26>fn&nbsp;swap</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;k:&nbsp;</c22><a href="#45_74_refs"><c3>K</c3><a href="#64_4_refs"><c4>,</c4><c22>&nbsp;v:&nbsp;</c22><a href="#45_74_refs"><c3>V</c3><a href="#64_4_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;</c3></a><a href="#45_74_refs"><c3>V</c3><a href="option.rs.html#55"><c3>&gt;</c3></a><a href="#45_74_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a href="#45_74_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Removes&nbsp;a&nbsp;key&nbsp;from&nbsp;the&nbsp;map,&nbsp;returning&nbsp;the&nbsp;value&nbsp;at&nbsp;the&nbsp;key&nbsp;if&nbsp;the&nbsp;key
+</c31><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;was&nbsp;previously&nbsp;in&nbsp;the&nbsp;map.
+</c31><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><a href="#68_4_refs"><c26>fn&nbsp;pop</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;k:&nbsp;</c22><c3>&amp;K</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;V&gt;</c3></a><a href="#45_74_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a href="#45_74_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Return&nbsp;a&nbsp;mutable&nbsp;reference&nbsp;to&nbsp;the&nbsp;value&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;key
+</c31><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a href="#45_74_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;find_mut</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;key:&nbsp;</c22><c3>&amp;K</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;&amp;'a&nbsp;mut&nbsp;V&gt;</c3></a><a href="#45_74_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a href="#45_74_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c31>///&nbsp;A&nbsp;set&nbsp;is&nbsp;a&nbsp;group&nbsp;of&nbsp;objects&nbsp;which&nbsp;are&nbsp;each&nbsp;distinct&nbsp;from&nbsp;one&nbsp;another.&nbsp;This
+</c31><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c31>///&nbsp;trait&nbsp;represents&nbsp;actions&nbsp;which&nbsp;can&nbsp;be&nbsp;performed&nbsp;on&nbsp;sets&nbsp;to&nbsp;iterate&nbsp;over
+</c31><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c31>///&nbsp;them.
+</c31><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a href="#76_10_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;Set</c1><c5>&lt;T&gt;</c5><c1>:&nbsp;</c1><a href="container.rs.html#17"><c1>Container&nbsp;</c1></a><a href="#76_10_refs"><c18>{
+</c18><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a href="#76_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Return&nbsp;true&nbsp;if&nbsp;the&nbsp;set&nbsp;contains&nbsp;a&nbsp;value
+</c31><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a href="#76_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;contains</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;value:&nbsp;</c22><c3>&amp;T</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a href="#76_10_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a href="#76_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Return&nbsp;true&nbsp;if&nbsp;the&nbsp;set&nbsp;has&nbsp;no&nbsp;elements&nbsp;in&nbsp;common&nbsp;with&nbsp;`other`.
+</c31><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a href="#76_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;This&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;checking&nbsp;for&nbsp;an&nbsp;empty&nbsp;intersection.
+</c31><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a href="#76_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_disjoint</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;other:&nbsp;</c22><c3>&amp;</c3><a href="container.rs.html#78"><c3>Self</c3></a><a href="#76_10_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a href="#76_10_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a href="#76_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Return&nbsp;true&nbsp;if&nbsp;the&nbsp;set&nbsp;is&nbsp;a&nbsp;subset&nbsp;of&nbsp;another
+</c31><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a href="#76_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_subset</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;other:&nbsp;</c22><c3>&amp;</c3><a href="container.rs.html#78"><c3>Self</c3></a><a href="#76_10_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a href="#76_10_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a href="#76_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Return&nbsp;true&nbsp;if&nbsp;the&nbsp;set&nbsp;is&nbsp;a&nbsp;superset&nbsp;of&nbsp;another
+</c31><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a href="#76_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_superset</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;other:&nbsp;</c22><c3>&amp;</c3><a href="container.rs.html#78"><c3>Self</c3></a><a href="#76_10_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a href="#76_10_refs"><c18>
+</c18><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a href="#76_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c24>//&nbsp;FIXME&nbsp;#8154:&nbsp;Add&nbsp;difference,&nbsp;sym.&nbsp;difference,&nbsp;intersection&nbsp;and&nbsp;union&nbsp;iterators
+</c24><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a href="#76_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c31>///&nbsp;This&nbsp;trait&nbsp;represents&nbsp;actions&nbsp;which&nbsp;can&nbsp;be&nbsp;performed&nbsp;on&nbsp;sets&nbsp;to&nbsp;mutate
+</c31><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c31>///&nbsp;them.
+</c31><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a href="#95_10_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;MutableSet</c1><c5>&lt;T&gt;</c5><c1>:&nbsp;</c1><a href="container.rs.html#78"><c1>Set</c1><c5>&lt;T&gt;</c5><c1>&nbsp;</c1></a><a href="#95_10_refs"><c1>+&nbsp;</c1><a href="container.rs.html#29"><c1>Mutable&nbsp;</c1></a><a href="#95_10_refs"><c18>{
+</c18><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a href="#95_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Add&nbsp;a&nbsp;value&nbsp;to&nbsp;the&nbsp;set.&nbsp;Return&nbsp;true&nbsp;if&nbsp;the&nbsp;value&nbsp;was&nbsp;not&nbsp;already
+</c31><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a href="#95_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;present&nbsp;in&nbsp;the&nbsp;set.
+</c31><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a href="#95_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;insert</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;value:&nbsp;</c22><c3>T</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a href="#95_10_refs"><c18>
+</c18><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a href="#95_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Remove&nbsp;a&nbsp;value&nbsp;from&nbsp;the&nbsp;set.&nbsp;Return&nbsp;true&nbsp;if&nbsp;the&nbsp;value&nbsp;was
+</c31><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a href="#95_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;present&nbsp;in&nbsp;the&nbsp;set.
+</c31><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a href="#95_10_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;remove</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;value:&nbsp;</c22><c3>&amp;T</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a href="#95_10_refs"><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="27_44_refs"><a href="#28"><c24>container.rs:28:44-28:44&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;A&nbsp;trait&nbsp;to&nbsp;represent&nbsp;mutable&nbsp;containers
+<br/>pub&nbsp;trait&nbsp;Mutable:&nbsp;Container&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="container.rs.html#97"><c24>97:&nbsp;</c24>pub&nbsp;trait&nbsp;MutableSet&lt;T&gt;:&nbsp;Set&lt;T&gt;&nbsp;+&nbsp;Mutable&nbsp;{
+<br/></a><a href="container.rs.html#47"><c24>47:&nbsp;</c24>pub&nbsp;trait&nbsp;MutableMap&lt;K,&nbsp;V&gt;:&nbsp;Map&lt;K,&nbsp;V&gt;&nbsp;+&nbsp;Mutable&nbsp;{
+<br/></a><a href="hashmap.rs.html"><c24>hashmap.rs:<br/></c24><a href="hashmap.rs.html#641"><c24>641:&nbsp;</c24>impl&lt;T:Hash&nbsp;+&nbsp;Eq&gt;&nbsp;Mutable&nbsp;for&nbsp;HashSet&lt;T&gt;&nbsp;{
+<br/></a><a href="hashmap.rs.html#264"><c24>264:&nbsp;</c24>impl&lt;K:Hash&nbsp;+&nbsp;Eq,V&gt;&nbsp;Mutable&nbsp;for&nbsp;HashMap&lt;K,&nbsp;V&gt;&nbsp;{
+<br/></a><a href="trie.rs.html"><c24>trie.rs:<br/></c24><a href="trie.rs.html#178"><c24>178:&nbsp;</c24>impl&nbsp;Mutable&nbsp;for&nbsp;TrieSet&nbsp;{
+<br/></a><a href="trie.rs.html#41"><c24>41:&nbsp;</c24>impl&lt;T&gt;&nbsp;Mutable&nbsp;for&nbsp;TrieMap&lt;T&gt;&nbsp;{
+<br/></a><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#1536"><c24>1536:&nbsp;</c24>impl&lt;T&gt;&nbsp;Mutable&nbsp;for&nbsp;~[T]&nbsp;{
+<br/></a><a href="str.rs.html"><c24>str.rs:<br/></c24><a href="str.rs.html#1156"><c24>1156:&nbsp;</c24>impl&nbsp;Mutable&nbsp;for&nbsp;~str&nbsp;{
+<br/></a><br/><br/><a id="34_64_refs"><a href="#35"><c24>container.rs:35:64-35:64&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;trait&nbsp;provides&nbsp;basic&nbsp;operations&nbsp;to&nbsp;operate&nbsp;on&nbsp;these&nbsp;stores.
+<br/>pub&nbsp;trait&nbsp;Map&lt;K,&nbsp;V&gt;:&nbsp;Container&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="container.rs.html#47"><c24>47:&nbsp;</c24>pub&nbsp;trait&nbsp;MutableMap&lt;K,&nbsp;V&gt;:&nbsp;Map&lt;K,&nbsp;V&gt;&nbsp;+&nbsp;Mutable&nbsp;{
+<br/></a><a href="hashmap.rs.html"><c24>hashmap.rs:<br/></c24><a href="hashmap.rs.html#274"><c24>274:&nbsp;</c24>impl&lt;K:Hash&nbsp;+&nbsp;Eq,V&gt;&nbsp;Map&lt;K,&nbsp;V&gt;&nbsp;for&nbsp;HashMap&lt;K,&nbsp;V&gt;&nbsp;{
+<br/></a><a href="trie.rs.html"><c24>trie.rs:<br/></c24><a href="trie.rs.html#50"><c24>50:&nbsp;</c24>impl&lt;T&gt;&nbsp;Map&lt;uint,&nbsp;T&gt;&nbsp;for&nbsp;TrieMap&lt;T&gt;&nbsp;{
+<br/></a><br/><br/><a id="76_10_refs"><a href="#77"><c24>container.rs:77:10-77:10&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;them.
+<br/>pub&nbsp;trait&nbsp;Set&lt;T&gt;:&nbsp;Container&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="container.rs.html#90"><c24>90:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_superset(&amp;self,&nbsp;other:&nbsp;&amp;Self)&nbsp;-&gt;&nbsp;bool;
+<br/></a><a href="container.rs.html#84"><c24>84:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_disjoint(&amp;self,&nbsp;other:&nbsp;&amp;Self)&nbsp;-&gt;&nbsp;bool;
+<br/></a><a href="container.rs.html#97"><c24>97:&nbsp;</c24>pub&nbsp;trait&nbsp;MutableSet&lt;T&gt;:&nbsp;Set&lt;T&gt;&nbsp;+&nbsp;Mutable&nbsp;{
+<br/></a><a href="container.rs.html#87"><c24>87:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_subset(&amp;self,&nbsp;other:&nbsp;&amp;Self)&nbsp;-&gt;&nbsp;bool;
+<br/></a><a href="hashmap.rs.html"><c24>hashmap.rs:<br/></c24><a href="hashmap.rs.html#646"><c24>646:&nbsp;</c24>impl&lt;T:Hash&nbsp;+&nbsp;Eq&gt;&nbsp;Set&lt;T&gt;&nbsp;for&nbsp;HashSet&lt;T&gt;&nbsp;{
+<br/></a><br/><br/><a id="15_64_refs"><a href="#16"><c24>container.rs:16:64-16:64&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;knowledge&nbsp;known&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;contained&nbsp;within.
+<br/>pub&nbsp;trait&nbsp;Container&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="container.rs.html#29"><c24>29:&nbsp;</c24>pub&nbsp;trait&nbsp;Mutable:&nbsp;Container&nbsp;{
+<br/></a><a href="container.rs.html#36"><c24>36:&nbsp;</c24>pub&nbsp;trait&nbsp;Map&lt;K,&nbsp;V&gt;:&nbsp;Container&nbsp;{
+<br/></a><a href="container.rs.html#78"><c24>78:&nbsp;</c24>pub&nbsp;trait&nbsp;Set&lt;T&gt;:&nbsp;Container&nbsp;{
+<br/></a><a href="hashmap.rs.html"><c24>hashmap.rs:<br/></c24><a href="hashmap.rs.html#636"><c24>636:&nbsp;</c24>impl&lt;T:Hash&nbsp;+&nbsp;Eq&gt;&nbsp;Container&nbsp;for&nbsp;HashSet&lt;T&gt;&nbsp;{
+<br/></a><a href="hashmap.rs.html#259"><c24>259:&nbsp;</c24>impl&lt;K:Hash&nbsp;+&nbsp;Eq,V&gt;&nbsp;Container&nbsp;for&nbsp;HashMap&lt;K,&nbsp;V&gt;&nbsp;{
+<br/></a><a href="trie.rs.html"><c24>trie.rs:<br/></c24><a href="trie.rs.html#35"><c24>35:&nbsp;</c24>impl&lt;T&gt;&nbsp;Container&nbsp;for&nbsp;TrieMap&lt;T&gt;&nbsp;{
+<br/></a><a href="trie.rs.html#172"><c24>172:&nbsp;</c24>impl&nbsp;Container&nbsp;for&nbsp;TrieSet&nbsp;{
+<br/></a><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#703"><c24>703:&nbsp;</c24>impl&lt;T&gt;&nbsp;Container&nbsp;for&nbsp;~[T]&nbsp;{
+<br/></a><a href="vec.rs.html#689"><c24>689:&nbsp;</c24>impl&lt;'self,&nbsp;T&gt;&nbsp;Container&nbsp;for&nbsp;&amp;'self&nbsp;[T]&nbsp;{
+<br/></a><a href="str.rs.html"><c24>str.rs:<br/></c24><a href="str.rs.html#1146"><c24>1146:&nbsp;</c24>impl&nbsp;Container&nbsp;for&nbsp;~str&nbsp;{
+<br/></a><a href="str.rs.html#1139"><c24>1139:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Container&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;{
+<br/></a><a href="str.rs.html#1151"><c24>1151:&nbsp;</c24>impl&nbsp;Container&nbsp;for&nbsp;@str&nbsp;{
+<br/></a><br/><br/><a id="45_74_refs"><a href="#46"><c24>container.rs:46:74-46:74&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;This&nbsp;trait&nbsp;provides&nbsp;basic&nbsp;operations&nbsp;to&nbsp;modify&nbsp;the&nbsp;contents&nbsp;of&nbsp;a&nbsp;map.
+<br/>pub&nbsp;trait&nbsp;MutableMap&lt;K,&nbsp;V&gt;:&nbsp;Map&lt;K,&nbsp;V&gt;&nbsp;+&nbsp;Mutable&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="hashmap.rs.html"><c24>hashmap.rs:<br/></c24><a href="hashmap.rs.html#284"><c24>284:&nbsp;</c24>impl&lt;K:Hash&nbsp;+&nbsp;Eq,V&gt;&nbsp;MutableMap&lt;K,&nbsp;V&gt;&nbsp;for&nbsp;HashMap&lt;K,&nbsp;V&gt;&nbsp;{
+<br/></a><a href="trie.rs.html"><c24>trie.rs:<br/></c24><a href="trie.rs.html#73"><c24>73:&nbsp;</c24>impl&lt;T&gt;&nbsp;MutableMap&lt;uint,&nbsp;T&gt;&nbsp;for&nbsp;TrieMap&lt;T&gt;&nbsp;{
+<br/></a><br/><br/><a id="95_10_refs"><a href="#96"><c24>container.rs:96:10-96:10&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;them.
+<br/>pub&nbsp;trait&nbsp;MutableSet&lt;T&gt;:&nbsp;Set&lt;T&gt;&nbsp;+&nbsp;Mutable&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="hashmap.rs.html"><c24>hashmap.rs:<br/></c24><a href="hashmap.rs.html#667"><c24>667:&nbsp;</c24>impl&lt;T:Hash&nbsp;+&nbsp;Eq&gt;&nbsp;MutableSet&lt;T&gt;&nbsp;for&nbsp;HashSet&lt;T&gt;&nbsp;{
+<br/></a><br/></a></a>

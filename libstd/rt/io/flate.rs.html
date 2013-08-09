@@ -1,0 +1,181 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#34383c;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;Some&nbsp;various&nbsp;other&nbsp;I/O&nbsp;types
+</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c24>//&nbsp;NOTE:&nbsp;These&nbsp;ultimately&nbsp;belong&nbsp;somewhere&nbsp;else
+</c24><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c0>use&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c0>use&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c31>///&nbsp;A&nbsp;Writer&nbsp;decorator&nbsp;that&nbsp;compresses&nbsp;using&nbsp;the&nbsp;'deflate'&nbsp;scheme
+</c31><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a href="#17_66_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;DeflateWriter</c27><c5>&lt;W&gt;</c5><c27>&nbsp;</c27><c15>{
+</c15><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a href="#17_66_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><c6>inner_writer:&nbsp;</c6><c3>W</c3><c15>
+</c15><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a href="#17_66_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c29>impl</c29><c5>&lt;W:&nbsp;</c5><a href="../../rt/io/mod.rs.html#405"><c5>Writer</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/flate.rs.html#19"><c29>DeflateWriter</c29><c5>&lt;W&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><a href="#23_15_refs"><c20>inner_writer</c20><c22>:&nbsp;</c22><c3>W</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/flate.rs.html#19"><c3>DeflateWriter&lt;W&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../rt/io/flate.rs.html#19"><c15>DeflateWriter</c15></a><c21>&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inner_writer:&nbsp;</c21><a href="../../rt/io/flate.rs.html#25"><c8>inner_writer</c8></a><c21>
+</c21><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c29>impl</c29><c5>&lt;W:&nbsp;</c5><a href="../../rt/io/mod.rs.html#405"><c5>Writer</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mod.rs.html#405"><c29>Writer&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/flate.rs.html#19"><c29>DeflateWriter</c29><c5>&lt;W&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_buf</c20><c22>:&nbsp;</c22><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c29>impl</c29><c5>&lt;W:&nbsp;</c5><a href="../../rt/io/mod.rs.html#405"><c5>Writer</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mod.rs.html#465"><c29>Decorator</c29><c5>&lt;W&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/flate.rs.html#19"><c29>DeflateWriter</c29><c5>&lt;W&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner</c26><c22>(self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>W</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/flate.rs.html#19"><c20>DeflateWriter&nbsp;</c20><c4>{</c4><c20>&nbsp;inner_writer:&nbsp;</c20></a><a href="#39_42_refs"><c20>w</c20><a href="../../rt/io/flate.rs.html#19"><c20>&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/flate.rs.html#41"><c21>w</c21></a><c7>
+</c7><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_ref</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>&amp;'a&nbsp;W</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/flate.rs.html#19"><c20>DeflateWriter&nbsp;</c20><c4>{</c4><c20>&nbsp;inner_writer:&nbsp;</c20></a><a href="#45_42_refs"><c20>ref&nbsp;w</c20><a href="../../rt/io/flate.rs.html#19"><c20>&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/flate.rs.html#47"><c8>w</c8></a><c7>
+</c7><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_mut_ref</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>&amp;'a&nbsp;mut&nbsp;W</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/flate.rs.html#19"><c20>DeflateWriter&nbsp;</c20><c4>{</c4><c20>&nbsp;inner_writer:&nbsp;</c20></a><a href="#51_42_refs"><c20>ref&nbsp;mut&nbsp;w</c20><a href="../../rt/io/flate.rs.html#19"><c20>&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/flate.rs.html#53"><c21>w</c21></a><c7>
+</c7><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c31>///&nbsp;A&nbsp;Reader&nbsp;decorator&nbsp;that&nbsp;decompresses&nbsp;using&nbsp;the&nbsp;'deflate'&nbsp;scheme
+</c31><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a href="#56_68_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;InflateReader</c27><c5>&lt;R&gt;</c5><c27>&nbsp;</c27><c15>{
+</c15><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a href="#56_68_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><c6>inner_reader:&nbsp;</c6><c3>R</c3><c15>
+</c15><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a href="#56_68_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c29>impl</c29><c5>&lt;R:&nbsp;</c5><a href="../../rt/io/mod.rs.html#365"><c5>Reader</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/flate.rs.html#58"><c29>InflateReader</c29><c5>&lt;R&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><a href="#62_15_refs"><c20>inner_reader</c20><c22>:&nbsp;</c22><c3>R</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/flate.rs.html#58"><c3>InflateReader&lt;R&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../../rt/io/flate.rs.html#58"><c15>InflateReader</c15></a><c21>&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inner_reader:&nbsp;</c21><a href="../../rt/io/flate.rs.html#64"><c8>inner_reader</c8></a><c21>
+</c21><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c29>impl</c29><c5>&lt;R:&nbsp;</c5><a href="../../rt/io/mod.rs.html#365"><c5>Reader</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mod.rs.html#365"><c29>Reader&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/flate.rs.html#58"><c29>InflateReader</c29><c5>&lt;R&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_buf</c20><c22>:&nbsp;</c22><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../option.rs.html#55"><c3>Option&lt;uint&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eof</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c29>impl</c29><c5>&lt;R:&nbsp;</c5><a href="../../rt/io/mod.rs.html#365"><c5>Reader</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mod.rs.html#465"><c29>Decorator</c29><c5>&lt;R&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/flate.rs.html#58"><c29>InflateReader</c29><c5>&lt;R&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner</c26><c22>(self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>R</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/flate.rs.html#58"><c20>InflateReader&nbsp;</c20><c4>{</c4><c20>&nbsp;inner_reader:&nbsp;</c20></a><a href="#78_42_refs"><c20>r</c20><a href="../../rt/io/flate.rs.html#58"><c20>&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/flate.rs.html#80"><c8>r</c8></a><c7>
+</c7><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_ref</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>&amp;'a&nbsp;R</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/flate.rs.html#58"><c20>InflateReader&nbsp;</c20><c4>{</c4><c20>&nbsp;inner_reader:&nbsp;</c20></a><a href="#84_42_refs"><c20>ref&nbsp;r</c20><a href="../../rt/io/flate.rs.html#58"><c20>&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/flate.rs.html#86"><c8>r</c8></a><c7>
+</c7><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;inner_mut_ref</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>&amp;'a&nbsp;mut&nbsp;R</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><c0>self&nbsp;</c0><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../rt/io/flate.rs.html#58"><c20>InflateReader&nbsp;</c20><c4>{</c4><c20>&nbsp;inner_reader:&nbsp;</c20></a><a href="#90_42_refs"><c20>ref&nbsp;mut&nbsp;r</c20><a href="../../rt/io/flate.rs.html#58"><c20>&nbsp;</c20><c4>}</c4></a><c7>&nbsp;=&gt;&nbsp;</c7><a href="../../rt/io/flate.rs.html#92"><c21>r</c21></a><c7>
+</c7><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>test</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c0>mod&nbsp;test&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;super::super::mem::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;super::super::Decorator</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;str</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>ignore</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;smoke_test</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mem_writer&nbsp;=&nbsp;MemWriter::new</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;deflate_writer&nbsp;=&nbsp;DeflateWriter::new</c0><c25>(</c25><c0>mem_writer</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;in_msg&nbsp;=&nbsp;"test"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;in_bytes&nbsp;=&nbsp;in_msg.as_bytes</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deflate_writer.write</c0><c25>(</c25><c0>in_bytes</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deflate_writer.flush</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;buf&nbsp;=&nbsp;deflate_writer.inner</c0><c25>()</c25><c0>.inner</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mem_reader&nbsp;=&nbsp;MemReader::new</c0><c25>(</c25><c0>buf</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;inflate_reader&nbsp;=&nbsp;InflateReader::new</c0><c25>(</c25><c0>mem_reader</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;out_bytes&nbsp;=&nbsp;</c0><c4>[</c4><c0>0</c0><c4>,</c4><c0>&nbsp;..&nbsp;100</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;bytes_read&nbsp;=&nbsp;inflate_reader.read</c0><c25>(</c25><c0>out_bytes</c0><c25>)</c25><c0>.get</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>bytes_read</c0><c4>,</c4><c0>&nbsp;in_bytes.len</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;out_msg&nbsp;=&nbsp;str::from_bytes</c0><c25>(</c25><c0>out_bytes</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>in_msg&nbsp;==&nbsp;out_msg</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="17_66_refs"><a href="#18"><c24>rt/io/flate.rs:18:66-18:66&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;A&nbsp;Writer&nbsp;decorator&nbsp;that&nbsp;compresses&nbsp;using&nbsp;the&nbsp;'deflate'&nbsp;scheme
+<br/>pub&nbsp;struct&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/flate.rs.html#40"><c24>40:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DeflateWriter&nbsp;{&nbsp;inner_writer:&nbsp;w&nbsp;}&nbsp;=&gt;&nbsp;w
+<br/></a><a href="../../rt/io/flate.rs.html#23"><c24>23:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
+<br/></a><a href="../../rt/io/flate.rs.html#25"><c24>25:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DeflateWriter&nbsp;{
+<br/></a><a href="../../rt/io/flate.rs.html#24"><c24>24:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(inner_writer:&nbsp;W)&nbsp;-&gt;&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
+<br/></a><a href="../../rt/io/flate.rs.html#31"><c24>31:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Writer&nbsp;for&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
+<br/></a><a href="../../rt/io/flate.rs.html#37"><c24>37:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Decorator&lt;W&gt;&nbsp;for&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
+<br/></a><a href="../../rt/io/flate.rs.html#46"><c24>46:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DeflateWriter&nbsp;{&nbsp;inner_writer:&nbsp;ref&nbsp;w&nbsp;}&nbsp;=&gt;&nbsp;w
+<br/></a><a href="../../rt/io/flate.rs.html#52"><c24>52:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DeflateWriter&nbsp;{&nbsp;inner_writer:&nbsp;ref&nbsp;mut&nbsp;w&nbsp;}&nbsp;=&gt;&nbsp;w
+<br/></a><br/><br/><a id="56_68_refs"><a href="#57"><c24>rt/io/flate.rs:57:68-57:68&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;A&nbsp;Reader&nbsp;decorator&nbsp;that&nbsp;decompresses&nbsp;using&nbsp;the&nbsp;'deflate'&nbsp;scheme
+<br/>pub&nbsp;struct&nbsp;InflateReader&lt;R&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/flate.rs.html#91"><c24>91:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;InflateReader&nbsp;{&nbsp;inner_reader:&nbsp;ref&nbsp;mut&nbsp;r&nbsp;}&nbsp;=&gt;&nbsp;r
+<br/></a><a href="../../rt/io/flate.rs.html#62"><c24>62:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;InflateReader&lt;R&gt;&nbsp;{
+<br/></a><a href="../../rt/io/flate.rs.html#76"><c24>76:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;Decorator&lt;R&gt;&nbsp;for&nbsp;InflateReader&lt;R&gt;&nbsp;{
+<br/></a><a href="../../rt/io/flate.rs.html#79"><c24>79:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;InflateReader&nbsp;{&nbsp;inner_reader:&nbsp;r&nbsp;}&nbsp;=&gt;&nbsp;r
+<br/></a><a href="../../rt/io/flate.rs.html#64"><c24>64:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;InflateReader&nbsp;{
+<br/></a><a href="../../rt/io/flate.rs.html#63"><c24>63:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(inner_reader:&nbsp;R)&nbsp;-&gt;&nbsp;InflateReader&lt;R&gt;&nbsp;{
+<br/></a><a href="../../rt/io/flate.rs.html#85"><c24>85:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;InflateReader&nbsp;{&nbsp;inner_reader:&nbsp;ref&nbsp;r&nbsp;}&nbsp;=&gt;&nbsp;r
+<br/></a><a href="../../rt/io/flate.rs.html#70"><c24>70:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;Reader&nbsp;for&nbsp;InflateReader&lt;R&gt;&nbsp;{
+<br/></a><br/></a></a>

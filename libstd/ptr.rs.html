@@ -1,0 +1,875 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#383c34;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;Unsafe&nbsp;pointer&nbsp;utility&nbsp;functions
+</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c0>use&nbsp;cast</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c0>use&nbsp;clone::Clone</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c0>use&nbsp;option::</c0><c4>{</c4><c0>Option</c0><c4>,</c4><c0>&nbsp;Some</c0><c4>,</c4><c0>&nbsp;None</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c0>use&nbsp;unstable::intrinsics</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c0>use&nbsp;util::swap</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>&nbsp;use&nbsp;ops::</c0><c4>{</c4><c0>Add</c0><c4>,</c4><c0>Sub</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>&nbsp;use&nbsp;num::Int</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>&nbsp;use&nbsp;cmp::</c0><c4>{</c4><c0>Eq</c0><c4>,</c4><c0>&nbsp;Ord</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c0>use&nbsp;uint</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c31>///&nbsp;Calculate&nbsp;the&nbsp;offset&nbsp;from&nbsp;a&nbsp;pointer
+</c31><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a href="#25_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;offset</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#26_17_refs"><c20>ptr</c20><a href="#25_10_refs"><c1>:&nbsp;</c1><c3>*T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#26_26_refs"><c20>count</c20><a href="#25_10_refs"><c1>:&nbsp;</c1><c3>int</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a href="#25_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><c8>intrinsics::offset</c8><c25>(</c25><a href="ptr.rs.html#28"><c8>ptr</c8></a><a href="#25_10_refs"><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#28"><c8>count</c8></a><a href="#25_10_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a href="#25_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c31>///&nbsp;Calculate&nbsp;the&nbsp;offset&nbsp;from&nbsp;a&nbsp;const&nbsp;pointer
+</c31><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c1>pub&nbsp;</c1><c26>fn&nbsp;const_offset</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#32_23_refs"><c20>ptr</c20><c1>:&nbsp;</c1><c3>*const&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#32_38_refs"><c20>count</c20><c1>:&nbsp;</c1><c3>int</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*const&nbsp;T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><c8>intrinsics::offset</c8><c25>(</c25><a href="ptr.rs.html#34"><c8>ptr</c8></a><c7>&nbsp;as&nbsp;</c7><c3>*T</c3><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#34"><c8>count</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c31>///&nbsp;Calculate&nbsp;the&nbsp;offset&nbsp;from&nbsp;a&nbsp;mut&nbsp;pointer
+</c31><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a href="#37_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;mut_offset</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#38_21_refs"><c20>ptr</c20><a href="#37_10_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#38_34_refs"><c20>count</c20><a href="#37_10_refs"><c1>:&nbsp;</c1><c3>int</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*mut&nbsp;T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a href="#37_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><c8>intrinsics::offset</c8><c25>(</c25><a href="ptr.rs.html#40"><c8>ptr</c8></a><a href="#37_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>*T</c3><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#40"><c8>count</c8></a><a href="#37_10_refs"><c25>)</c25><c9>&nbsp;as</c9><c7>&nbsp;</c7><c3>*mut&nbsp;T</c3><c21>&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a href="#37_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c31>///&nbsp;Return&nbsp;the&nbsp;offset&nbsp;of&nbsp;the&nbsp;first&nbsp;null&nbsp;pointer&nbsp;in&nbsp;`buf`.
+</c31><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a href="#43_10_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;buf_len</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#44_25_refs"><c20>buf</c20><a href="#43_10_refs"><c1>:&nbsp;</c1><c3>**T</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>uint</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a href="#43_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#57"><c8>position</c8></a><a href="#43_10_refs"><c25>(</c25><a href="ptr.rs.html#46"><c8>buf</c8></a><a href="#43_10_refs"><c4>,</c4><c0>&nbsp;|</c0><a href="#45_19_refs"><c20>i</c20><a href="#43_10_refs"><c3>|</c3><c0>&nbsp;</c0><c3>*</c3><a href="ptr.rs.html#47"><c8>i</c8></a><a href="#43_10_refs"><c2>&nbsp;==&nbsp;</c2><a href="ptr.rs.html#67"><c8>null</c8></a><a href="#43_10_refs"><c25>())</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a href="#43_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29><a href="clone.rs.html#27"><c29>Clone&nbsp;</c29></a><c29>for&nbsp;*T&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;clone</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*T</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c2>*</c2><c0>self
+</c0><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c31>///&nbsp;Return&nbsp;the&nbsp;first&nbsp;offset&nbsp;`i`&nbsp;such&nbsp;that&nbsp;`f(buf[i])&nbsp;==&nbsp;true`.
+</c31><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a href="#55_10_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;position</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#56_26_refs"><c20>buf</c20><a href="#55_10_refs"><c1>:&nbsp;</c1><c3>*T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#56_35_refs"><c20>f</c20><a href="#55_10_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(&amp;T</c3><c25>)</c25><c3>&nbsp;-&gt;&nbsp;bool</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>uint</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a href="#55_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;mut&nbsp;</c13><a href="#57_12_refs"><c20>i</c20><a href="#55_10_refs"><c16>&nbsp;=&nbsp;</c16><c12>0</c12><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a href="#55_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>loop&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a href="#55_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="ptr.rs.html#58"><c8>f</c8></a><a href="#55_10_refs"><c25>(</c25><c2>&amp;</c2><c25>(</c25><c2>*</c2><a href="ptr.rs.html#27"><c8>offset</c8></a><a href="#55_10_refs"><c25>(</c25><a href="ptr.rs.html#58"><c8>buf</c8></a><a href="#55_10_refs"><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#59"><c8>i</c8></a><a href="#55_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>int</c3><c25>)))</c25><c9>&nbsp;</c9><c4>{</c4><c21>&nbsp;</c21><c0>return&nbsp;</c0><a href="ptr.rs.html#59"><c8>i</c8></a><a href="#55_10_refs"><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a href="#55_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="ptr.rs.html#59"><c8>i</c8></a><a href="#55_10_refs"><c0>&nbsp;+=&nbsp;</c0><c12>1</c12><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a href="#55_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a href="#55_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c31>///&nbsp;Create&nbsp;an&nbsp;unsafe&nbsp;null&nbsp;pointer
+</c31><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a href="#65_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;null</c26><c5>&lt;T&gt;</c5><c1>(</c1><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*T</c3><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><c12>0</c12><c7>&nbsp;as&nbsp;</c7><c3>*T</c3><c21>&nbsp;</c21><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c31>///&nbsp;Create&nbsp;an&nbsp;unsafe&nbsp;mutable&nbsp;null&nbsp;pointer
+</c31><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a href="#69_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;mut_null</c26><c5>&lt;T&gt;</c5><c1>(</c1><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*mut&nbsp;T</c3><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><c12>0</c12><c7>&nbsp;as&nbsp;</c7><c3>*mut&nbsp;T</c3><c21>&nbsp;</c21><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c31>///&nbsp;Returns&nbsp;true&nbsp;if&nbsp;the&nbsp;pointer&nbsp;is&nbsp;equal&nbsp;to&nbsp;the&nbsp;null&nbsp;pointer.
+</c31><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a href="#73_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_null</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#74_18_refs"><c20>ptr</c20><a href="#73_10_refs"><c1>:&nbsp;</c1><c3>*const&nbsp;T</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><a href="ptr.rs.html#76"><c8>ptr</c8></a><a href="#73_10_refs"><c2>&nbsp;==&nbsp;</c2><a href="ptr.rs.html#67"><c8>null</c8></a><a href="#73_10_refs"><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c31>///&nbsp;Returns&nbsp;true&nbsp;if&nbsp;the&nbsp;pointer&nbsp;is&nbsp;not&nbsp;equal&nbsp;to&nbsp;the&nbsp;null&nbsp;pointer.
+</c31><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a href="#77_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_not_null</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#78_22_refs"><c20>ptr</c20><a href="#77_10_refs"><c1>:&nbsp;</c1><c3>*const&nbsp;T</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><c2>!</c2><a href="ptr.rs.html#75"><c8>is_null</c8></a><a href="#77_10_refs"><c25>(</c25><a href="ptr.rs.html#80"><c8>ptr</c8></a><a href="#77_10_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c0>&nbsp;*&nbsp;Copies&nbsp;data&nbsp;from&nbsp;one&nbsp;location&nbsp;to&nbsp;another.
+</c0><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c0>&nbsp;*
+</c0><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c0>&nbsp;*&nbsp;Copies&nbsp;`count`&nbsp;elements&nbsp;</c0><c25>(</c25><c0>not&nbsp;bytes</c0><c25>)</c25><c0>&nbsp;from&nbsp;`src`&nbsp;to&nbsp;`dst`.&nbsp;The&nbsp;source
+</c0><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c0>&nbsp;*&nbsp;and&nbsp;destination&nbsp;may&nbsp;overlap.
+</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>target_word_size&nbsp;=&nbsp;"32"</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c0>pub&nbsp;unsafe&nbsp;</c0><c26>fn&nbsp;copy_memory</c26><c5>&lt;T&gt;</c5><c0>(dst:&nbsp;*mut&nbsp;T</c0><c4>,</c4><c0>&nbsp;src:&nbsp;*const&nbsp;T</c0><c4>,</c4><c0>&nbsp;count:&nbsp;uint</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;intrinsics::memmove32</c0><c25>(</c25><c0>dst</c0><c4>,</c4><c0>&nbsp;src&nbsp;as&nbsp;*T</c0><c4>,</c4><c0>&nbsp;count&nbsp;as&nbsp;u32</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c0>&nbsp;*&nbsp;Copies&nbsp;data&nbsp;from&nbsp;one&nbsp;location&nbsp;to&nbsp;another.
+</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c0>&nbsp;*
+</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c0>&nbsp;*&nbsp;Copies&nbsp;`count`&nbsp;elements&nbsp;</c0><c25>(</c25><c0>not&nbsp;bytes</c0><c25>)</c25><c0>&nbsp;from&nbsp;`src`&nbsp;to&nbsp;`dst`.&nbsp;The&nbsp;source
+</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c0>&nbsp;*&nbsp;and&nbsp;destination&nbsp;may&nbsp;overlap.
+</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>target_word_size&nbsp;=&nbsp;"64"</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a href="#99_32_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;copy_memory</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#100_29_refs"><c20>dst</c20><a href="#99_32_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#100_42_refs"><c20>src</c20><a href="#99_32_refs"><c1>:&nbsp;</c1><c3>*const&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#100_57_refs"><c20>count</c20><a href="#99_32_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a href="#99_32_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>intrinsics::memmove64</c8><c25>(</c25><a href="ptr.rs.html#102"><c8>dst</c8></a><a href="#99_32_refs"><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#102"><c8>src</c8></a><a href="#99_32_refs"><c7>&nbsp;as&nbsp;</c7><c3>*T</c3><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#102"><c8>count</c8></a><a href="#99_32_refs"><c7>&nbsp;as&nbsp;</c7><c3>u64</c3><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a href="#99_32_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c0>&nbsp;*&nbsp;Copies&nbsp;data&nbsp;from&nbsp;one&nbsp;location&nbsp;to&nbsp;another.
+</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c0>&nbsp;*
+</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c0>&nbsp;*&nbsp;Copies&nbsp;`count`&nbsp;elements&nbsp;</c0><c25>(</c25><c0>not&nbsp;bytes</c0><c25>)</c25><c0>&nbsp;from&nbsp;`src`&nbsp;to&nbsp;`dst`.&nbsp;The&nbsp;source
+</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c0>&nbsp;*&nbsp;and&nbsp;destination&nbsp;may&nbsp;*not*&nbsp;overlap.
+</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>target_word_size&nbsp;=&nbsp;"32"</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c0>pub&nbsp;unsafe&nbsp;</c0><c26>fn&nbsp;copy_nonoverlapping_memory</c26><c5>&lt;T&gt;</c5><c0>(dst:&nbsp;*mut&nbsp;T</c0><c4>,</c4><c0>&nbsp;src:&nbsp;*const&nbsp;T</c0><c4>,</c4><c0>&nbsp;count:&nbsp;uint</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;intrinsics::memcpy32</c0><c25>(</c25><c0>dst</c0><c4>,</c4><c0>&nbsp;src&nbsp;as&nbsp;*T</c0><c4>,</c4><c0>&nbsp;count&nbsp;as&nbsp;u32</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c0>&nbsp;*&nbsp;Copies&nbsp;data&nbsp;from&nbsp;one&nbsp;location&nbsp;to&nbsp;another.
+</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c0>&nbsp;*
+</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c0>&nbsp;*&nbsp;Copies&nbsp;`count`&nbsp;elements&nbsp;</c0><c25>(</c25><c0>not&nbsp;bytes</c0><c25>)</c25><c0>&nbsp;from&nbsp;`src`&nbsp;to&nbsp;`dst`.&nbsp;The&nbsp;source
+</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c0>&nbsp;*&nbsp;and&nbsp;destination&nbsp;may&nbsp;*not*&nbsp;overlap.
+</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>target_word_size&nbsp;=&nbsp;"64"</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><a href="#123_32_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;copy_nonoverlapping_memory</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#124_44_refs"><c20>dst</c20><a href="#123_32_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#124_57_refs"><c20>src</c20><a href="#123_32_refs"><c1>:&nbsp;</c1><c3>*const&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#124_72_refs"><c20>count</c20><a href="#123_32_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><a href="#123_32_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>intrinsics::memcpy64</c8><c25>(</c25><a href="ptr.rs.html#126"><c8>dst</c8></a><a href="#123_32_refs"><c4>,</c4><c13>&nbsp;</c13><a href="ptr.rs.html#126"><c8>src</c8></a><a href="#123_32_refs"><c7>&nbsp;as&nbsp;</c7><c3>*T</c3><c4>,</c4><c13>&nbsp;</c13><a href="ptr.rs.html#126"><c8>count</c8></a><a href="#123_32_refs"><c7>&nbsp;as&nbsp;</c7><c3>u64</c3><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><a href="#123_32_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c0>&nbsp;*&nbsp;Invokes&nbsp;memset&nbsp;on&nbsp;the&nbsp;specified&nbsp;pointer</c0><c4>,</c4><c0>&nbsp;setting&nbsp;`count&nbsp;*&nbsp;size_of::&lt;T&gt;</c0><c25>()</c25><c0>`
+</c0><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><c0>&nbsp;*&nbsp;bytes&nbsp;of&nbsp;memory&nbsp;starting&nbsp;at&nbsp;`dst`&nbsp;to&nbsp;`c`.
+</c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>target_word_size&nbsp;=&nbsp;"32"</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><c0>pub&nbsp;unsafe&nbsp;</c0><c26>fn&nbsp;set_memory</c26><c5>&lt;T&gt;</c5><c0>(dst:&nbsp;*mut&nbsp;T</c0><c4>,</c4><c0>&nbsp;c:&nbsp;u8</c0><c4>,</c4><c0>&nbsp;count:&nbsp;uint</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;intrinsics::memset32</c0><c25>(</c25><c0>dst</c0><c4>,</c4><c0>&nbsp;c</c0><c4>,</c4><c0>&nbsp;count&nbsp;as&nbsp;u32</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c0>&nbsp;*&nbsp;Invokes&nbsp;memset&nbsp;on&nbsp;the&nbsp;specified&nbsp;pointer</c0><c4>,</c4><c0>&nbsp;setting&nbsp;`count&nbsp;*&nbsp;size_of::&lt;T&gt;</c0><c25>()</c25><c0>`
+</c0><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c0>&nbsp;*&nbsp;bytes&nbsp;of&nbsp;memory&nbsp;starting&nbsp;at&nbsp;`dst`&nbsp;to&nbsp;`c`.
+</c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>target_word_size&nbsp;=&nbsp;"64"</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><a href="#143_32_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;set_memory</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#144_28_refs"><c20>dst</c20><a href="#143_32_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#144_41_refs"><c20>c</c20><a href="#143_32_refs"><c1>:&nbsp;</c1><c3>u8</c3><c4>,</c4><c1>&nbsp;</c1><a href="#144_48_refs"><c20>count</c20><a href="#143_32_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><a href="#143_32_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>intrinsics::memset64</c8><c25>(</c25><a href="ptr.rs.html#146"><c8>dst</c8></a><a href="#143_32_refs"><c4>,</c4><c13>&nbsp;</c13><a href="ptr.rs.html#146"><c8>c</c8></a><a href="#143_32_refs"><c4>,</c4><c13>&nbsp;</c13><a href="ptr.rs.html#146"><c8>count</c8></a><a href="#143_32_refs"><c7>&nbsp;as&nbsp;</c7><c3>u64</c3><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><a href="#143_32_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><c0>&nbsp;*&nbsp;Zeroes&nbsp;out&nbsp;`count&nbsp;*&nbsp;size_of::&lt;T&gt;`&nbsp;bytes&nbsp;of&nbsp;memory&nbsp;at&nbsp;`dst`
+</c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><a href="#151_10_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;zero_memory</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#152_29_refs"><c20>dst</c20><a href="#151_10_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#152_42_refs"><c20>count</c20><a href="#151_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><a href="#151_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#145"><c8>set_memory</c8></a><a href="#151_10_refs"><c25>(</c25><a href="ptr.rs.html#154"><c8>dst</c8></a><a href="#151_10_refs"><c4>,</c4><c13>&nbsp;</c13><c12>0</c12><c4>,</c4><c13>&nbsp;</c13><a href="ptr.rs.html#154"><c8>count</c8></a><a href="#151_10_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><a href="#151_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><c0>&nbsp;*&nbsp;Swap&nbsp;the&nbsp;values&nbsp;at&nbsp;two&nbsp;mutable&nbsp;locations&nbsp;of&nbsp;the&nbsp;same&nbsp;</c0><c28>type,&nbsp;without
+</c28><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><c0>&nbsp;*&nbsp;deinitialising&nbsp;or&nbsp;copying&nbsp;either&nbsp;one.
+</c0><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><a href="#160_10_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;swap_ptr</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#161_26_refs"><c20>x</c20><a href="#160_10_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#161_37_refs"><c20>y</c20><a href="#160_10_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><a href="#160_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;Give&nbsp;ourselves&nbsp;some&nbsp;scratch&nbsp;space&nbsp;to&nbsp;work&nbsp;with
+</c24><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><a href="#160_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;mut&nbsp;</c13><a href="#163_12_refs"><c20>tmp</c20><a href="#160_10_refs"><c16>:&nbsp;</c16><c3>T</c3><c16>&nbsp;=&nbsp;</c16><c8>intrinsics::uninit</c8><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><a href="#160_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#164_8_refs"><c20>t</c20><a href="#160_10_refs"><c16>:&nbsp;</c16><c3>*mut&nbsp;T</c3><c16>&nbsp;=&nbsp;</c16><c2>&amp;mut&nbsp;</c2><a href="ptr.rs.html#165"><c8>tmp</c8></a><a href="#160_10_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><a href="#160_10_refs"><c21>
+</c21><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><a href="#160_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;Perform&nbsp;the&nbsp;swap
+</c24><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><a href="#160_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#125"><c8>copy_nonoverlapping_memory</c8></a><a href="#160_10_refs"><c25>(</c25><a href="ptr.rs.html#166"><c8>t</c8></a><a href="#160_10_refs"><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#163"><c8>x</c8></a><a href="#160_10_refs"><c4>,</c4><c9>&nbsp;</c9><c12>1</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><a href="#160_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#101"><c8>copy_memory</c8></a><a href="#160_10_refs"><c25>(</c25><a href="ptr.rs.html#163"><c8>x</c8></a><a href="#160_10_refs"><c4>,</c4><c13>&nbsp;</c13><a href="ptr.rs.html#163"><c8>y</c8></a><a href="#160_10_refs"><c4>,</c4><c13>&nbsp;</c13><c12>1</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c24>//&nbsp;`x`&nbsp;and&nbsp;`y`&nbsp;may&nbsp;overlap
+</c24><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><a href="#160_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#125"><c8>copy_nonoverlapping_memory</c8></a><a href="#160_10_refs"><c25>(</c25><a href="ptr.rs.html#163"><c8>y</c8></a><a href="#160_10_refs"><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#166"><c8>t</c8></a><a href="#160_10_refs"><c4>,</c4><c9>&nbsp;</c9><c12>1</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><a href="#160_10_refs"><c21>
+</c21><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><a href="#160_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;y&nbsp;and&nbsp;t&nbsp;now&nbsp;point&nbsp;to&nbsp;the&nbsp;same&nbsp;thing,&nbsp;but&nbsp;we&nbsp;need&nbsp;to&nbsp;completely&nbsp;forget&nbsp;`tmp`
+</c24><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><a href="#160_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;because&nbsp;it's&nbsp;no&nbsp;longer&nbsp;relevant.
+</c24><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><a href="#160_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="cast.rs.html#54"><c8>cast::forget</c8></a><a href="#160_10_refs"><c25>(</c25><a href="ptr.rs.html#165"><c8>tmp</c8></a><a href="#160_10_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><a href="#160_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><c0>&nbsp;*&nbsp;Replace&nbsp;the&nbsp;value&nbsp;at&nbsp;a&nbsp;mutable&nbsp;location&nbsp;with&nbsp;a&nbsp;new&nbsp;one</c0><c4>,</c4><c0>&nbsp;returning&nbsp;the&nbsp;old
+</c0><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><c0>&nbsp;*&nbsp;value</c0><c4>,</c4><c0>&nbsp;without&nbsp;deinitialising&nbsp;or&nbsp;copying&nbsp;either&nbsp;one.
+</c0><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><a href="#180_10_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;replace_ptr</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#181_29_refs"><c20>dest</c20><a href="#180_10_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c4>,</c4><c1>&nbsp;mut&nbsp;</c1><a href="#181_47_refs"><c20>src</c20><a href="#180_10_refs"><c1>:&nbsp;</c1><c3>T</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><a href="#180_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="util.rs.html#50"><c8>swap</c8></a><a href="#180_10_refs"><c25>(</c25><a href="cast.rs.html#72"><c8>cast::transmute</c8></a><a href="#180_10_refs"><c25>(</c25><a href="ptr.rs.html#183"><c8>dest</c8></a><a href="#180_10_refs"><c25>)</c25><c4>,</c4><c9>&nbsp;</c9><c2>&amp;mut&nbsp;</c2><a href="ptr.rs.html#183"><c8>src</c8></a><a href="#180_10_refs"><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c24>//&nbsp;cannot&nbsp;overlap
+</c24><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><a href="#180_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#183"><c8>src</c8></a><a href="#180_10_refs"><c21>
+</c21><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><a href="#180_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><c0>&nbsp;*&nbsp;Reads&nbsp;the&nbsp;value&nbsp;from&nbsp;`*src`&nbsp;and&nbsp;returns&nbsp;it.&nbsp;Does&nbsp;not&nbsp;copy&nbsp;`*src`.
+</c0><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c25>(</c25><c0>always</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><a href="#189_18_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;read_ptr</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#190_26_refs"><c20>src</c20><a href="#189_18_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><a href="#189_18_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;mut&nbsp;</c13><a href="#191_12_refs"><c20>tmp</c20><a href="#189_18_refs"><c16>:&nbsp;</c16><c3>T</c3><c16>&nbsp;=&nbsp;</c16><c8>intrinsics::uninit</c8><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><a href="#189_18_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#125"><c8>copy_nonoverlapping_memory</c8></a><a href="#189_18_refs"><c25>(</c25><c2>&amp;mut&nbsp;</c2><a href="ptr.rs.html#193"><c8>tmp</c8></a><a href="#189_18_refs"><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#192"><c8>src</c8></a><a href="#189_18_refs"><c4>,</c4><c9>&nbsp;</c9><c12>1</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><a href="#189_18_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#193"><c8>tmp</c8></a><a href="#189_18_refs"><c21>
+</c21><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><a href="#189_18_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><c0>&nbsp;*&nbsp;Reads&nbsp;the&nbsp;value&nbsp;from&nbsp;`*src`&nbsp;and&nbsp;nulls&nbsp;it&nbsp;out.
+</c0><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><c0>&nbsp;*&nbsp;This&nbsp;currently&nbsp;prevents&nbsp;destructors&nbsp;from&nbsp;executing.
+</c0><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c0>&nbsp;*/
+</c0><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c25>(</c25><c0>always</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><a href="#200_18_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;read_and_zero_ptr</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#201_35_refs"><c20>dest</c20><a href="#200_18_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><a href="#200_18_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;Copy&nbsp;the&nbsp;data&nbsp;out&nbsp;from&nbsp;`dest`:
+</c24><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><a href="#200_18_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#203_8_refs"><c20>tmp</c20><a href="#200_18_refs"><c16>&nbsp;=&nbsp;</c16><a href="ptr.rs.html#191"><c8>read_ptr</c8></a><a href="#200_18_refs"><c25>(</c25><a href="ptr.rs.html#203"><c8>dest</c8></a><a href="#200_18_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><a href="#200_18_refs"><c21>
+</c21><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><a href="#200_18_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;Now&nbsp;zero&nbsp;out&nbsp;`dest`:
+</c24><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><a href="#200_18_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#153"><c8>zero_memory</c8></a><a href="#200_18_refs"><c25>(</c25><a href="ptr.rs.html#203"><c8>dest</c8></a><a href="#200_18_refs"><c4>,</c4><c9>&nbsp;</c9><c12>1</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><a href="#200_18_refs"><c21>
+</c21><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><a href="#200_18_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#205"><c8>tmp</c8></a><a href="#200_18_refs"><c21>
+</c21><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><a href="#200_18_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><c31>///&nbsp;Transform&nbsp;a&nbsp;region&nbsp;pointer&nbsp;-&nbsp;&amp;T&nbsp;-&nbsp;to&nbsp;an&nbsp;unsafe&nbsp;pointer&nbsp;-&nbsp;*T.
+</c31><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><a href="#212_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;to_unsafe_ptr</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#213_24_refs"><c20>thing</c20><a href="#212_10_refs"><c1>:&nbsp;</c1><c3>&amp;T</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><a href="#212_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#215"><c8>thing</c8></a><a href="#212_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>*T</c3><c21>
+</c21><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a><a href="#212_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a><c31>///&nbsp;Transform&nbsp;a&nbsp;const&nbsp;region&nbsp;pointer&nbsp;-&nbsp;&amp;const&nbsp;T&nbsp;-&nbsp;to&nbsp;a&nbsp;const&nbsp;unsafe&nbsp;pointer&nbsp;-&nbsp;*const&nbsp;T.
+</c31><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><c1>pub&nbsp;</c1><c26>fn&nbsp;to_const_unsafe_ptr</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#219_30_refs"><c20>thing</c20><c1>:&nbsp;</c1><c3>&amp;const&nbsp;T</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*const&nbsp;T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#221"><c8>thing</c8></a><c7>&nbsp;as&nbsp;</c7><c3>*const&nbsp;T</c3><c21>
+</c21><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><c31>///&nbsp;Transform&nbsp;a&nbsp;mutable&nbsp;region&nbsp;pointer&nbsp;-&nbsp;&amp;mut&nbsp;T&nbsp;-&nbsp;to&nbsp;a&nbsp;mutable&nbsp;unsafe&nbsp;pointer&nbsp;-&nbsp;*mut&nbsp;T.
+</c31><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><a href="#224_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;to_mut_unsafe_ptr</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#225_28_refs"><c20>thing</c20><a href="#224_10_refs"><c1>:&nbsp;</c1><c3>&amp;mut&nbsp;T</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*mut&nbsp;T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><a href="#224_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#227"><c8>thing</c8></a><a href="#224_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>*mut&nbsp;T</c3><c21>
+</c21><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a><a href="#224_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><c0>&nbsp;&nbsp;Given&nbsp;a&nbsp;**T&nbsp;</c0><c25>(</c25><c0>pointer&nbsp;to&nbsp;an&nbsp;array&nbsp;of&nbsp;pointers</c0><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><c0>&nbsp;&nbsp;iterate&nbsp;through&nbsp;each&nbsp;*T</c0><c4>,</c4><c0>&nbsp;up&nbsp;to&nbsp;the&nbsp;provided&nbsp;`len`</c0><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><c0>&nbsp;&nbsp;passing&nbsp;to&nbsp;the&nbsp;provided&nbsp;callback&nbsp;function
+</c0><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a><c0>&nbsp;&nbsp;SAFETY&nbsp;NOTE:&nbsp;Pointer-arithmetic.&nbsp;Dragons&nbsp;be&nbsp;here.
+</c0><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><c0>*/
+</c0><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><a href="#235_3_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;array_each_with_len</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#236_37_refs"><c20>arr</c20><a href="#235_3_refs"><c1>:&nbsp;</c1><c3>**T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#236_47_refs"><c20>len</c20><a href="#235_3_refs"><c1>:&nbsp;</c1><c3>uint</c3><c4>,</c4><c1>&nbsp;</c1><a href="#236_58_refs"><c20>cb</c20><a href="#235_3_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(*T</c3><c25>))</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>debug!</c13><c25>(</c25><a href="unstable/extfmt.rs.html#495"><c8>"array_each_with_len:&nbsp;before&nbsp;iterate"</c8></a><a href="#235_3_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>if&nbsp;</c13><c25>(</c25><a href="ptr.rs.html#238"><c8>arr</c8></a><a href="#235_3_refs"><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c2>&nbsp;==&nbsp;</c2><c12>0</c12><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>fail!</c13><c25>(</c25><c12>"ptr::array_each_with_len&nbsp;failure:&nbsp;arr&nbsp;input&nbsp;is&nbsp;null&nbsp;pointer"</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//let&nbsp;start_ptr&nbsp;=&nbsp;*arr;
+</c24><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="num/uint.rs.html#88"><c8>uint::iterate</c8></a><a href="#235_3_refs"><c25>(</c25><c12>0</c12><c4>,</c4><c13>&nbsp;</c13><a href="ptr.rs.html#238"><c8>len</c8></a><a href="#235_3_refs"><c4>,</c4><c0>&nbsp;|</c0><a href="#242_27_refs"><c20>e</c20><a href="#235_3_refs"><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#243_12_refs"><c20>n</c20><a href="#235_3_refs"><c16>&nbsp;=&nbsp;</c16><a href="ptr.rs.html#27"><c8>offset</c8></a><a href="#235_3_refs"><c25>(</c25><a href="ptr.rs.html#238"><c8>arr</c8></a><a href="#235_3_refs"><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#244"><c8>e</c8></a><a href="#235_3_refs"><c7>&nbsp;as&nbsp;</c7><c3>int</c3><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#238"><c8>cb</c8></a><a href="#235_3_refs"><c25>(</c25><c2>*</c2><a href="ptr.rs.html#245"><c8>n</c8></a><a href="#235_3_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c12>true</c12><c21>
+</c21><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><a href="#235_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>debug!</c13><c25>(</c25><a href="unstable/extfmt.rs.html#488"><c8>"array_each_with_len:&nbsp;after&nbsp;iterate"</c8></a><a href="#235_3_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><a href="#235_3_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><c0>/**
+</c0><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><c0>&nbsp;&nbsp;Given&nbsp;a&nbsp;null-pointer-terminated&nbsp;**T&nbsp;</c0><c25>(</c25><c0>pointer&nbsp;to
+</c0><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><c0>&nbsp;&nbsp;an&nbsp;array&nbsp;of&nbsp;pointers</c0><c25>)</c25><c4>,</c4><c0>&nbsp;iterate&nbsp;through&nbsp;each&nbsp;*T</c0><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><c0>&nbsp;&nbsp;passing&nbsp;to&nbsp;the&nbsp;provided&nbsp;callback&nbsp;function
+</c0><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><c0>&nbsp;&nbsp;SAFETY&nbsp;NOTE:&nbsp;This&nbsp;will&nbsp;only&nbsp;work&nbsp;with&nbsp;a&nbsp;null-terminated
+</c0><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><c0>&nbsp;&nbsp;pointer&nbsp;array.&nbsp;Barely&nbsp;less-dodgey&nbsp;Pointer&nbsp;Arithmetic.
+</c0><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><c0>&nbsp;&nbsp;Dragons&nbsp;be&nbsp;here.
+</c0><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><c0>*/
+</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><a href="#258_3_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;array_each</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#259_28_refs"><c20>arr</c20><a href="#258_3_refs"><c1>:&nbsp;</c1><c3>**T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#259_38_refs"><c20>cb</c20><a href="#258_3_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(*T</c3><c25>))</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><a href="#258_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>if&nbsp;</c13><c25>(</c25><a href="ptr.rs.html#261"><c8>arr</c8></a><a href="#258_3_refs"><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c2>&nbsp;==&nbsp;</c2><c12>0</c12><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><a href="#258_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>fail!</c13><c25>(</c25><c12>"ptr::array_each_with_len&nbsp;failure:&nbsp;arr&nbsp;input&nbsp;is&nbsp;null&nbsp;pointer"</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><a href="#258_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><a href="#258_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#263_8_refs"><c20>len</c20><a href="#258_3_refs"><c16>&nbsp;=&nbsp;</c16><a href="ptr.rs.html#45"><c8>buf_len</c8></a><a href="#258_3_refs"><c25>(</c25><a href="ptr.rs.html#261"><c8>arr</c8></a><a href="#258_3_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><a href="#258_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>debug!</c13><c25>(</c25><c16>"array_each&nbsp;inferred&nbsp;len:&nbsp;%u"</c16><c4>,</c4><c13>
+</c13><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><a href="#258_3_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><a href="unstable/extfmt.rs.html#488"><c8>len</c8></a><a href="#258_3_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><a href="#258_3_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#237"><c8>array_each_with_len</c8></a><a href="#258_3_refs"><c25>(</c25><a href="ptr.rs.html#261"><c8>arr</c8></a><a href="#258_3_refs"><c4>,</c4><c13>&nbsp;</c13><a href="ptr.rs.html#265"><c8>len</c8></a><a href="#258_3_refs"><c4>,</c4><c13>&nbsp;</c13><a href="ptr.rs.html#261"><c8>cb</c8></a><a href="#258_3_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><a href="#258_3_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a><c0>#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>missing_doc</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a><a href="#269_22_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;RawPtr</c1><c5>&lt;T&gt;</c5><c1>&nbsp;</c1><c18>{
+</c18><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a><a href="#269_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_null</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a><a href="#269_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_not_null</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a><a href="#269_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c22>unsafe&nbsp;</c22><c26>fn&nbsp;to_option</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;</c3></a><a href="#269_22_refs"><c3>&amp;T</c3><a href="option.rs.html#55"><c3>&gt;</c3></a><a href="#269_22_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a><a href="#269_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;offset</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;count:&nbsp;</c22><c3>int</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="ptr.rs.html#271"><c3>Self</c3></a><a href="#269_22_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a><a href="#269_22_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a><c31>///&nbsp;Extension&nbsp;methods&nbsp;for&nbsp;immutable&nbsp;pointers
+</c31><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29><a href="ptr.rs.html#271"><c29>RawPtr</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;*T&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Returns&nbsp;true&nbsp;if&nbsp;the&nbsp;pointer&nbsp;is&nbsp;equal&nbsp;to&nbsp;the&nbsp;null&nbsp;pointer.
+</c31><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#281_4_refs"><c26>fn&nbsp;is_null</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="ptr.rs.html#75"><c8>is_null</c8></a><a href="#281_4_refs"><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Returns&nbsp;true&nbsp;if&nbsp;the&nbsp;pointer&nbsp;is&nbsp;not&nbsp;equal&nbsp;to&nbsp;the&nbsp;null&nbsp;pointer.
+</c31><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#285_4_refs"><c26>fn&nbsp;is_not_null</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="ptr.rs.html#79"><c8>is_not_null</c8></a><a href="#285_4_refs"><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///
+</c31><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Returns&nbsp;`None`&nbsp;if&nbsp;the&nbsp;pointer&nbsp;is&nbsp;null,&nbsp;or&nbsp;else&nbsp;returns&nbsp;the&nbsp;value&nbsp;wrapped
+</c31><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;in&nbsp;`Some`.
+</c31><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///
+</c31><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;#&nbsp;Safety&nbsp;Notes
+</c31><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///
+</c31><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;While&nbsp;this&nbsp;method&nbsp;is&nbsp;useful&nbsp;for&nbsp;null-safety,&nbsp;it&nbsp;is&nbsp;important&nbsp;to&nbsp;note
+</c31><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;that&nbsp;this&nbsp;is&nbsp;still&nbsp;an&nbsp;unsafe&nbsp;operation&nbsp;because&nbsp;the&nbsp;returned&nbsp;value&nbsp;could
+</c31><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;be&nbsp;pointing&nbsp;to&nbsp;invalid&nbsp;memory.
+</c31><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///
+</c31><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>unsafe&nbsp;</c22><c26>fn&nbsp;to_option</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;&amp;T&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="ptr.rs.html#283"><c0>self.</c0><c10>is_null</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><c21>&nbsp;</c21><a href="option.rs.html#57"><c8>None</c8></a><c21>&nbsp;</c21><c4>}</c4><c7>&nbsp;else&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="option.rs.html#58"><c8>Some</c8></a><c25>(</c25><a href="cast.rs.html#72"><c8>cast::transmute</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>))</c25><c9>
+</c9><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Calculates&nbsp;the&nbsp;offset&nbsp;from&nbsp;a&nbsp;pointer.
+</c31><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#306_4_refs"><c26>fn&nbsp;offset</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#306_21_refs"><c20>count</c20><a href="#306_4_refs"><c22>:&nbsp;</c22><c3>int</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*T</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="ptr.rs.html#27"><c8>offset</c8></a><a href="#306_4_refs"><c25>(</c25><c2>*</c2><c0>self</c0><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#308"><c8>count</c8></a><a href="#306_4_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><c31>///&nbsp;Extension&nbsp;methods&nbsp;for&nbsp;mutable&nbsp;pointers
+</c31><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29><a href="ptr.rs.html#271"><c29>RawPtr</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;*mut&nbsp;T&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Returns&nbsp;true&nbsp;if&nbsp;the&nbsp;pointer&nbsp;is&nbsp;equal&nbsp;to&nbsp;the&nbsp;null&nbsp;pointer.
+</c31><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#313_4_refs"><c26>fn&nbsp;is_null</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="ptr.rs.html#75"><c8>is_null</c8></a><a href="#313_4_refs"><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Returns&nbsp;true&nbsp;if&nbsp;the&nbsp;pointer&nbsp;is&nbsp;not&nbsp;equal&nbsp;to&nbsp;the&nbsp;null&nbsp;pointer.
+</c31><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#317_4_refs"><c26>fn&nbsp;is_not_null</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="ptr.rs.html#79"><c8>is_not_null</c8></a><a href="#317_4_refs"><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///
+</c31><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Returns&nbsp;`None`&nbsp;if&nbsp;the&nbsp;pointer&nbsp;is&nbsp;null,&nbsp;or&nbsp;else&nbsp;returns&nbsp;the&nbsp;value&nbsp;wrapped
+</c31><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;in&nbsp;`Some`.
+</c31><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///
+</c31><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;#&nbsp;Safety&nbsp;Notes
+</c31><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///
+</c31><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;While&nbsp;this&nbsp;method&nbsp;is&nbsp;useful&nbsp;for&nbsp;null-safety,&nbsp;it&nbsp;is&nbsp;important&nbsp;to&nbsp;note
+</c31><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;that&nbsp;this&nbsp;is&nbsp;still&nbsp;an&nbsp;unsafe&nbsp;operation&nbsp;because&nbsp;the&nbsp;returned&nbsp;value&nbsp;could
+</c31><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;be&nbsp;pointing&nbsp;to&nbsp;invalid&nbsp;memory.
+</c31><br/><ln>&nbsp;329</ln><a id="329">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///
+</c31><br/><ln>&nbsp;330</ln><a id="330">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;331</ln><a id="331">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>unsafe&nbsp;</c22><c26>fn&nbsp;to_option</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;&amp;T&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;332</ln><a id="332">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="ptr.rs.html#315"><c0>self.</c0><c10>is_null</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><c21>&nbsp;</c21><a href="option.rs.html#57"><c8>None</c8></a><c21>&nbsp;</c21><c4>}</c4><c7>&nbsp;else&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;333</ln><a id="333">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="option.rs.html#58"><c8>Some</c8></a><c25>(</c25><a href="cast.rs.html#72"><c8>cast::transmute</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>))</c25><c9>
+</c9><br/><ln>&nbsp;334</ln><a id="334">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;335</ln><a id="335">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;336</ln><a id="336">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;337</ln><a id="337">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Calculates&nbsp;the&nbsp;offset&nbsp;from&nbsp;a&nbsp;mutable&nbsp;pointer.
+</c31><br/><ln>&nbsp;338</ln><a id="338">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;339</ln><a id="339">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#338_4_refs"><c26>fn&nbsp;offset</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#338_21_refs"><c20>count</c20><a href="#338_4_refs"><c22>:&nbsp;</c22><c3>int</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*mut&nbsp;T</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="ptr.rs.html#39"><c8>mut_offset</c8></a><a href="#338_4_refs"><c25>(</c25><c2>*</c2><c0>self</c0><c4>,</c4><c9>&nbsp;</c9><a href="ptr.rs.html#340"><c8>count</c8></a><a href="#338_4_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;340</ln><a id="340">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;341</ln><a id="341">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;342</ln><a id="342">&nbsp;</a><c24>//&nbsp;Equality&nbsp;for&nbsp;pointers
+</c24><br/><ln>&nbsp;343</ln><a id="343">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;344</ln><a id="344">&nbsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29><a href="cmp.rs.html#37"><c29>Eq&nbsp;</c29></a><c29>for&nbsp;*const&nbsp;T&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;345</ln><a id="345">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;346</ln><a id="346">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#345_4_refs"><c26>fn&nbsp;eq</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#345_17_refs"><c20>other</c20><a href="#345_4_refs"><c22>:&nbsp;</c22><c3>&amp;*const&nbsp;T</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;347</ln><a id="347">&nbsp;</a><a href="#345_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c25>(</c25><c2>*</c2><c0>self&nbsp;as</c0><c7>&nbsp;</c7><c3>uint</c3><c25>)</c25><c0>&nbsp;==</c0><c2>&nbsp;</c2><c25>(</c25><c2>*</c2><a href="ptr.rs.html#347"><c8>other</c8></a><a href="#345_4_refs"><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;348</ln><a id="348">&nbsp;</a><a href="#345_4_refs"><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;349</ln><a id="349">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;350</ln><a id="350">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#349_4_refs"><c26>fn&nbsp;ne</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#349_17_refs"><c20>other</c20><a href="#349_4_refs"><c22>:&nbsp;</c22><c3>&amp;*const&nbsp;T</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c2>!</c2><c0>self.</c0><a href="ptr.rs.html#347"><c10>eq</c10><c25>(</c25></a><a href="ptr.rs.html#351"><c8>other</c8></a><a href="ptr.rs.html#347"><c25>)</c25><c10>&nbsp;</c10><c4>}</c4></a><c17>
+</c17><br/><ln>&nbsp;351</ln><a id="351">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;352</ln><a id="352">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;353</ln><a id="353">&nbsp;</a><c24>//&nbsp;Comparison&nbsp;for&nbsp;pointers
+</c24><br/><ln>&nbsp;354</ln><a id="354">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;355</ln><a id="355">&nbsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29><a href="cmp.rs.html#176"><c29>Ord&nbsp;</c29></a><c29>for&nbsp;*const&nbsp;T&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;356</ln><a id="356">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;357</ln><a id="357">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;lt</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#356_17_refs"><c20>other</c20><c22>:&nbsp;</c22><c3>&amp;*const&nbsp;T</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;358</ln><a id="358">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c25>(</c25><c2>*</c2><c0>self&nbsp;as</c0><c7>&nbsp;</c7><c3>uint</c3><c25>)</c25><c0>&nbsp;&lt;&nbsp;</c0><c25>(</c25><c2>*</c2><a href="ptr.rs.html#358"><c8>other</c8></a><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;359</ln><a id="359">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;360</ln><a id="360">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;361</ln><a id="361">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;le</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#360_17_refs"><c20>other</c20><c22>:&nbsp;</c22><c3>&amp;*const&nbsp;T</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;362</ln><a id="362">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c25>(</c25><c2>*</c2><c0>self&nbsp;as</c0><c7>&nbsp;</c7><c3>uint</c3><c25>)</c25><c0>&nbsp;&lt;=</c0><c2>&nbsp;</c2><c25>(</c25><c2>*</c2><a href="ptr.rs.html#362"><c8>other</c8></a><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;363</ln><a id="363">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;364</ln><a id="364">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;365</ln><a id="365">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;ge</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#364_17_refs"><c20>other</c20><c22>:&nbsp;</c22><c3>&amp;*const&nbsp;T</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;366</ln><a id="366">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c25>(</c25><c2>*</c2><c0>self&nbsp;as</c0><c7>&nbsp;</c7><c3>uint</c3><c25>)</c25><c0>&nbsp;&gt;=</c0><c2>&nbsp;</c2><c25>(</c25><c2>*</c2><a href="ptr.rs.html#366"><c8>other</c8></a><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;367</ln><a id="367">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;368</ln><a id="368">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;369</ln><a id="369">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;gt</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#368_17_refs"><c20>other</c20><c22>:&nbsp;</c22><c3>&amp;*const&nbsp;T</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;370</ln><a id="370">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c25>(</c25><c2>*</c2><c0>self&nbsp;as</c0><c7>&nbsp;</c7><c3>uint</c3><c25>)</c25><c0>&nbsp;&gt;</c0><c2>&nbsp;</c2><c25>(</c25><c2>*</c2><a href="ptr.rs.html#370"><c8>other</c8></a><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;371</ln><a id="371">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;372</ln><a id="372">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;373</ln><a id="373">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;374</ln><a id="374">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;375</ln><a id="375">&nbsp;</a><c29>impl</c29><c5>&lt;T,&nbsp;I:&nbsp;</c5><a href="num/num.rs.html#279"><c5>Int</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="ops.rs.html#21"><c29>Add</c29><c5>&lt;I,&nbsp;*T&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;*T&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;376</ln><a id="376">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Add&nbsp;an&nbsp;integer&nbsp;value&nbsp;to&nbsp;a&nbsp;pointer&nbsp;to&nbsp;get&nbsp;an&nbsp;offset&nbsp;pointer.
+</c31><br/><ln>&nbsp;377</ln><a id="377">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Is&nbsp;calculated&nbsp;according&nbsp;to&nbsp;the&nbsp;size&nbsp;of&nbsp;the&nbsp;type&nbsp;pointed&nbsp;to.
+</c31><br/><ln>&nbsp;378</ln><a id="378">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;379</ln><a id="379">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;add</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#378_22_refs"><c20>rhs</c20><c22>:&nbsp;</c22><c3>&amp;I</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*T</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;380</ln><a id="380">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#308"><c0>self.</c0><c10>offset</c10><c25>(</c25></a><a href="ptr.rs.html#380"><c8>rhs</c8></a><a href="num/num.rs.html#366"><c10>.to_int</c10><c25>()</c25><c10>&nbsp;as</c10></a><a href="ptr.rs.html#308"><c7>&nbsp;</c7><c3>int</c3><c25>)</c25><c10>
+</c10></a><br/><ln>&nbsp;381</ln><a id="381">&nbsp;</a><a href="ptr.rs.html#308"><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4></a><c17>
+</c17><br/><ln>&nbsp;382</ln><a id="382">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;383</ln><a id="383">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;384</ln><a id="384">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;385</ln><a id="385">&nbsp;</a><c29>impl</c29><c5>&lt;T,&nbsp;I:&nbsp;</c5><a href="num/num.rs.html#279"><c5>Int</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="ops.rs.html#26"><c29>Sub</c29><c5>&lt;I,&nbsp;*T&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;*T&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;386</ln><a id="386">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Subtract&nbsp;an&nbsp;integer&nbsp;value&nbsp;from&nbsp;a&nbsp;pointer&nbsp;to&nbsp;get&nbsp;an&nbsp;offset&nbsp;pointer.
+</c31><br/><ln>&nbsp;387</ln><a id="387">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Is&nbsp;calculated&nbsp;according&nbsp;to&nbsp;the&nbsp;size&nbsp;of&nbsp;the&nbsp;type&nbsp;pointed&nbsp;to.
+</c31><br/><ln>&nbsp;388</ln><a id="388">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;389</ln><a id="389">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;sub</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#388_22_refs"><c20>rhs</c20><c22>:&nbsp;</c22><c3>&amp;I</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*T</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;390</ln><a id="390">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#308"><c0>self.</c0><c10>offset</c10><c25>(</c25><c2>-</c2></a><a href="ptr.rs.html#390"><c8>rhs</c8></a><a href="num/num.rs.html#366"><c10>.to_int</c10><c25>()</c25><c10>&nbsp;as</c10></a><a href="ptr.rs.html#308"><c7>&nbsp;</c7><c3>int</c3><c25>)</c25><c10>
+</c10></a><br/><ln>&nbsp;391</ln><a id="391">&nbsp;</a><a href="ptr.rs.html#308"><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4></a><c17>
+</c17><br/><ln>&nbsp;392</ln><a id="392">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;393</ln><a id="393">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;394</ln><a id="394">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;395</ln><a id="395">&nbsp;</a><c29>impl</c29><c5>&lt;T,&nbsp;I:&nbsp;</c5><a href="num/num.rs.html#279"><c5>Int</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="ops.rs.html#21"><c29>Add</c29><c5>&lt;I,&nbsp;*mut&nbsp;T&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;*mut&nbsp;T&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;396</ln><a id="396">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Add&nbsp;an&nbsp;integer&nbsp;value&nbsp;to&nbsp;a&nbsp;pointer&nbsp;to&nbsp;get&nbsp;an&nbsp;offset&nbsp;pointer.
+</c31><br/><ln>&nbsp;397</ln><a id="397">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Is&nbsp;calculated&nbsp;according&nbsp;to&nbsp;the&nbsp;size&nbsp;of&nbsp;the&nbsp;type&nbsp;pointed&nbsp;to.
+</c31><br/><ln>&nbsp;398</ln><a id="398">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;399</ln><a id="399">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;add</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#398_22_refs"><c20>rhs</c20><c22>:&nbsp;</c22><c3>&amp;I</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*mut&nbsp;T</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;400</ln><a id="400">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#340"><c0>self.</c0><c10>offset</c10><c25>(</c25></a><a href="ptr.rs.html#400"><c8>rhs</c8></a><a href="num/num.rs.html#366"><c10>.to_int</c10><c25>()</c25><c10>&nbsp;as</c10></a><a href="ptr.rs.html#340"><c7>&nbsp;</c7><c3>int</c3><c25>)</c25><c10>
+</c10></a><br/><ln>&nbsp;401</ln><a id="401">&nbsp;</a><a href="ptr.rs.html#340"><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4></a><c17>
+</c17><br/><ln>&nbsp;402</ln><a id="402">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;403</ln><a id="403">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;404</ln><a id="404">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;405</ln><a id="405">&nbsp;</a><c29>impl</c29><c5>&lt;T,&nbsp;I:&nbsp;</c5><a href="num/num.rs.html#279"><c5>Int</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="ops.rs.html#26"><c29>Sub</c29><c5>&lt;I,&nbsp;*mut&nbsp;T&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;*mut&nbsp;T&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;406</ln><a id="406">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Subtract&nbsp;an&nbsp;integer&nbsp;value&nbsp;from&nbsp;a&nbsp;pointer&nbsp;to&nbsp;get&nbsp;an&nbsp;offset&nbsp;pointer.
+</c31><br/><ln>&nbsp;407</ln><a id="407">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c31>///&nbsp;Is&nbsp;calculated&nbsp;according&nbsp;to&nbsp;the&nbsp;size&nbsp;of&nbsp;the&nbsp;type&nbsp;pointed&nbsp;to.
+</c31><br/><ln>&nbsp;408</ln><a id="408">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;409</ln><a id="409">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;sub</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#408_22_refs"><c20>rhs</c20><c22>:&nbsp;</c22><c3>&amp;I</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*mut&nbsp;T</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;410</ln><a id="410">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="ptr.rs.html#340"><c0>self.</c0><c10>offset</c10><c25>(</c25><c2>-</c2></a><a href="ptr.rs.html#410"><c8>rhs</c8></a><a href="num/num.rs.html#366"><c10>.to_int</c10><c25>()</c25><c10>&nbsp;as</c10></a><a href="ptr.rs.html#340"><c7>&nbsp;</c7><c3>int</c3><c25>)</c25><c10>
+</c10></a><br/><ln>&nbsp;411</ln><a id="411">&nbsp;</a><a href="ptr.rs.html#340"><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4></a><c17>
+</c17><br/><ln>&nbsp;412</ln><a id="412">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;413</ln><a id="413">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;414</ln><a id="414">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>test</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;415</ln><a id="415">&nbsp;</a><c0>pub&nbsp;mod&nbsp;ptr_tests&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;416</ln><a id="416">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;417</ln><a id="417">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;418</ln><a id="418">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;419</ln><a id="419">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;cast</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;420</ln><a id="420">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;libc</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;421</ln><a id="421">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;str</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;422</ln><a id="422">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;vec</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;423</ln><a id="423">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;424</ln><a id="424">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;425</ln><a id="425">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;426</ln><a id="426">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;427</ln><a id="427">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c27>struct&nbsp;Pair&nbsp;</c27><c0>{
+</c0><br/><ln>&nbsp;428</ln><a id="428">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fst:&nbsp;int</c0><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;429</ln><a id="429">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;snd:&nbsp;int
+</c0><br/><ln>&nbsp;430</ln><a id="430">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;431</ln><a id="431">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;p&nbsp;=&nbsp;Pair&nbsp;</c0><c4>{</c4><c0>fst:&nbsp;10</c0><c4>,</c4><c0>&nbsp;snd:&nbsp;20</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;432</ln><a id="432">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;pptr:&nbsp;*mut&nbsp;Pair&nbsp;=&nbsp;&amp;mut&nbsp;p</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;433</ln><a id="433">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;iptr:&nbsp;*mut&nbsp;int&nbsp;=&nbsp;cast::transmute</c0><c25>(</c25><c0>pptr</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;434</ln><a id="434">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*iptr</c0><c4>,</c4><c0>&nbsp;10</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;435</ln><a id="435">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*iptr&nbsp;=&nbsp;30</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;436</ln><a id="436">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*iptr</c0><c4>,</c4><c0>&nbsp;30</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;437</ln><a id="437">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>p.fst</c0><c4>,</c4><c0>&nbsp;30</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;438</ln><a id="438">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;439</ln><a id="439">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*pptr&nbsp;=&nbsp;Pair&nbsp;</c0><c4>{</c4><c0>fst:&nbsp;50</c0><c4>,</c4><c0>&nbsp;snd:&nbsp;60</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;440</ln><a id="440">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*iptr</c0><c4>,</c4><c0>&nbsp;50</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;441</ln><a id="441">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>p.fst</c0><c4>,</c4><c0>&nbsp;50</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;442</ln><a id="442">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>p.snd</c0><c4>,</c4><c0>&nbsp;60</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;443</ln><a id="443">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;444</ln><a id="444">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;v0&nbsp;=&nbsp;~</c0><c4>[</c4><c0>32000u16</c0><c4>,</c4><c0>&nbsp;32001u16</c0><c4>,</c4><c0>&nbsp;32002u16</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;445</ln><a id="445">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;v1&nbsp;=&nbsp;~</c0><c4>[</c4><c0>0u16</c0><c4>,</c4><c0>&nbsp;0u16</c0><c4>,</c4><c0>&nbsp;0u16</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;446</ln><a id="446">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;447</ln><a id="447">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy_memory</c0><c25>(</c25><c0>mut_offset</c0><c25>(</c25><c0>vec::raw::to_mut_ptr</c0><c25>(</c25><c0>v1</c0><c25>)</c25><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;448</ln><a id="448">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;offset</c0><c25>(</c25><c0>vec::raw::to_ptr</c0><c25>(</c25><c0>v0</c0><c25>)</c25><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;449</ln><a id="449">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>((</c25><c0>v1</c0><c4>[</c4><c0>0</c0><c4>]</c4><c0>&nbsp;==&nbsp;0u16&nbsp;&amp;&amp;&nbsp;v1</c0><c4>[</c4><c0>1</c0><c4>]</c4><c0>&nbsp;==&nbsp;32001u16&nbsp;&amp;&amp;&nbsp;v1</c0><c4>[</c4><c0>2</c0><c4>]</c4><c0>&nbsp;==&nbsp;0u16</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;450</ln><a id="450">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy_memory</c0><c25>(</c25><c0>vec::raw::to_mut_ptr</c0><c25>(</c25><c0>v1</c0><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;451</ln><a id="451">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;offset</c0><c25>(</c25><c0>vec::raw::to_ptr</c0><c25>(</c25><c0>v0</c0><c25>)</c25><c4>,</c4><c0>&nbsp;2</c0><c25>)</c25><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;452</ln><a id="452">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>((</c25><c0>v1</c0><c4>[</c4><c0>0</c0><c4>]</c4><c0>&nbsp;==&nbsp;32002u16&nbsp;&amp;&amp;&nbsp;v1</c0><c4>[</c4><c0>1</c0><c4>]</c4><c0>&nbsp;==&nbsp;32001u16&nbsp;&amp;&amp;
+</c0><br/><ln>&nbsp;453</ln><a id="453">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v1</c0><c4>[</c4><c0>2</c0><c4>]</c4><c0>&nbsp;==&nbsp;0u16</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;454</ln><a id="454">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy_memory</c0><c25>(</c25><c0>mut_offset</c0><c25>(</c25><c0>vec::raw::to_mut_ptr</c0><c25>(</c25><c0>v1</c0><c25>)</c25><c4>,</c4><c0>&nbsp;2</c0><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;455</ln><a id="455">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vec::raw::to_ptr</c0><c25>(</c25><c0>v0</c0><c25>)</c25><c4>,</c4><c0>&nbsp;1u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;456</ln><a id="456">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>((</c25><c0>v1</c0><c4>[</c4><c0>0</c0><c4>]</c4><c0>&nbsp;==&nbsp;32002u16&nbsp;&amp;&amp;&nbsp;v1</c0><c4>[</c4><c0>1</c0><c4>]</c4><c0>&nbsp;==&nbsp;32001u16&nbsp;&amp;&amp;
+</c0><br/><ln>&nbsp;457</ln><a id="457">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v1</c0><c4>[</c4><c0>2</c0><c4>]</c4><c0>&nbsp;==&nbsp;32000u16</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;458</ln><a id="458">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;459</ln><a id="459">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;460</ln><a id="460">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;461</ln><a id="461">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;462</ln><a id="462">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_position</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;463</ln><a id="463">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;libc::c_char</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;464</ln><a id="464">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;465</ln><a id="465">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;s&nbsp;=&nbsp;~"hello"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;466</ln><a id="466">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;467</ln><a id="467">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>2u&nbsp;==&nbsp;s.as_c_str</c0><c25>(</c25><c0>|p|&nbsp;position</c0><c25>(</c25><c0>p</c0><c4>,</c4><c0>&nbsp;|c|&nbsp;*c&nbsp;==&nbsp;'l'&nbsp;as&nbsp;c_char</c0><c25>)))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;468</ln><a id="468">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>4u&nbsp;==&nbsp;s.as_c_str</c0><c25>(</c25><c0>|p|&nbsp;position</c0><c25>(</c25><c0>p</c0><c4>,</c4><c0>&nbsp;|c|&nbsp;*c&nbsp;==&nbsp;'o'&nbsp;as&nbsp;c_char</c0><c25>)))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;469</ln><a id="469">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>5u&nbsp;==&nbsp;s.as_c_str</c0><c25>(</c25><c0>|p|&nbsp;position</c0><c25>(</c25><c0>p</c0><c4>,</c4><c0>&nbsp;|c|&nbsp;*c&nbsp;==&nbsp;0&nbsp;as&nbsp;c_char</c0><c25>)))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;470</ln><a id="470">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;471</ln><a id="471">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;472</ln><a id="472">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;473</ln><a id="473">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;474</ln><a id="474">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_buf_len</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;475</ln><a id="475">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;s0&nbsp;=&nbsp;~"hello"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;476</ln><a id="476">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;s1&nbsp;=&nbsp;~"there"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;477</ln><a id="477">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;s2&nbsp;=&nbsp;~"thing"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;478</ln><a id="478">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;s0.as_c_str&nbsp;|p0|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;479</ln><a id="479">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;s1.as_c_str&nbsp;|p1|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;480</ln><a id="480">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;s2.as_c_str&nbsp;|p2|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;481</ln><a id="481">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;v&nbsp;=&nbsp;~</c0><c4>[</c4><c0>p0</c0><c4>,</c4><c0>&nbsp;p1</c0><c4>,</c4><c0>&nbsp;p2</c0><c4>,</c4><c0>&nbsp;null</c0><c25>()</c25><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;482</ln><a id="482">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;v.as_imm_buf&nbsp;|vp</c0><c4>,</c4><c0>&nbsp;len|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;483</ln><a id="483">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>unsafe&nbsp;</c0><c4>{</c4><c0>&nbsp;buf_len</c0><c25>(</c25><c0>vp</c0><c25>)</c25><c0>&nbsp;</c0><c4>},</c4><c0>&nbsp;3u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;484</ln><a id="484">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>len</c0><c4>,</c4><c0>&nbsp;4u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;485</ln><a id="485">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;486</ln><a id="486">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;487</ln><a id="487">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;488</ln><a id="488">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;489</ln><a id="489">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;490</ln><a id="490">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;491</ln><a id="491">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;492</ln><a id="492">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_is_null</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;493</ln><a id="493">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p:&nbsp;*int&nbsp;=&nbsp;null</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;494</ln><a id="494">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>p.is_null</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;495</ln><a id="495">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!p.is_not_null</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;496</ln><a id="496">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;497</ln><a id="497">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;q&nbsp;=&nbsp;offset</c0><c25>(</c25><c0>p</c0><c4>,</c4><c0>&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;498</ln><a id="498">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!q.is_null</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;499</ln><a id="499">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>q.is_not_null</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;500</ln><a id="500">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;501</ln><a id="501">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mp:&nbsp;*mut&nbsp;int&nbsp;=&nbsp;mut_null</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;502</ln><a id="502">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>mp.is_null</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;503</ln><a id="503">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!mp.is_not_null</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;504</ln><a id="504">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;505</ln><a id="505">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mq&nbsp;=&nbsp;mp.offset</c0><c25>(</c25><c0>1</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;506</ln><a id="506">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!mq.is_null</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;507</ln><a id="507">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>mq.is_not_null</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;508</ln><a id="508">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;509</ln><a id="509">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;510</ln><a id="510">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;511</ln><a id="511">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_to_option</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;512</ln><a id="512">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;513</ln><a id="513">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p:&nbsp;*int&nbsp;=&nbsp;null</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;514</ln><a id="514">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>p.to_option</c0><c25>()</c25><c4>,</c4><c0>&nbsp;None</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;515</ln><a id="515">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;516</ln><a id="516">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;q:&nbsp;*int&nbsp;=&nbsp;&amp;2</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;517</ln><a id="517">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>q.to_option</c0><c25>()</c25><c0>.unwrap</c0><c25>()</c25><c4>,</c4><c0>&nbsp;&amp;2</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;518</ln><a id="518">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;519</ln><a id="519">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p:&nbsp;*mut&nbsp;int&nbsp;=&nbsp;mut_null</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;520</ln><a id="520">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>p.to_option</c0><c25>()</c25><c4>,</c4><c0>&nbsp;None</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;521</ln><a id="521">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;522</ln><a id="522">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;q:&nbsp;*mut&nbsp;int&nbsp;=&nbsp;&amp;mut&nbsp;2</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;523</ln><a id="523">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>q.to_option</c0><c25>()</c25><c0>.unwrap</c0><c25>()</c25><c4>,</c4><c0>&nbsp;&amp;2</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;524</ln><a id="524">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;525</ln><a id="525">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;526</ln><a id="526">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;527</ln><a id="527">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;528</ln><a id="528">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_ptr_addition</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;529</ln><a id="529">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;vec::raw::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;530</ln><a id="530">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;531</ln><a id="531">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;532</ln><a id="532">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;xs&nbsp;=&nbsp;~</c0><c4>[</c4><c0>5</c0><c4>,</c4><c0>&nbsp;..16</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;533</ln><a id="533">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;ptr&nbsp;=&nbsp;to_ptr</c0><c25>(</c25><c0>xs</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;534</ln><a id="534">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;end&nbsp;=&nbsp;ptr&nbsp;+&nbsp;16</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;535</ln><a id="535">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;536</ln><a id="536">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;ptr&nbsp;&lt;&nbsp;end&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;537</ln><a id="537">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*ptr</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;538</ln><a id="538">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr&nbsp;=&nbsp;ptr&nbsp;+&nbsp;1u</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;539</ln><a id="539">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;540</ln><a id="540">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;541</ln><a id="541">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;xs_mut&nbsp;=&nbsp;xs.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;542</ln><a id="542">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;m_ptr&nbsp;=&nbsp;to_mut_ptr</c0><c25>(</c25><c0>xs_mut</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;543</ln><a id="543">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;m_end&nbsp;=&nbsp;m_ptr&nbsp;+&nbsp;16i16</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;544</ln><a id="544">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;545</ln><a id="545">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;m_ptr&nbsp;&lt;&nbsp;m_end&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;546</ln><a id="546">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*m_ptr&nbsp;+=&nbsp;5</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;547</ln><a id="547">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_ptr&nbsp;=&nbsp;m_ptr&nbsp;+&nbsp;1u8</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;548</ln><a id="548">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;549</ln><a id="549">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;550</ln><a id="550">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>xs_mut</c0><c4>,</c4><c0>&nbsp;~</c0><c4>[</c4><c0>10</c0><c4>,</c4><c0>&nbsp;..16</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;551</ln><a id="551">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;552</ln><a id="552">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;553</ln><a id="553">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;554</ln><a id="554">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;555</ln><a id="555">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_ptr_subtraction</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;556</ln><a id="556">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;vec::raw::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;557</ln><a id="557">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;558</ln><a id="558">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;559</ln><a id="559">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;xs&nbsp;=&nbsp;~</c0><c4>[</c4><c0>0</c0><c4>,</c4><c0>1</c0><c4>,</c4><c0>2</c0><c4>,</c4><c0>3</c0><c4>,</c4><c0>4</c0><c4>,</c4><c0>5</c0><c4>,</c4><c0>6</c0><c4>,</c4><c0>7</c0><c4>,</c4><c0>8</c0><c4>,</c4><c0>9</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;560</ln><a id="560">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;idx&nbsp;=&nbsp;9i8</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;561</ln><a id="561">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr&nbsp;=&nbsp;to_ptr</c0><c25>(</c25><c0>xs</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;562</ln><a id="562">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;563</ln><a id="563">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;idx&nbsp;&gt;=&nbsp;0i8&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;564</ln><a id="564">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*</c0><c25>(</c25><c0>ptr&nbsp;+&nbsp;idx</c0><c25>)</c25><c4>,</c4><c0>&nbsp;idx&nbsp;as&nbsp;int</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;565</ln><a id="565">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idx&nbsp;=&nbsp;idx&nbsp;-&nbsp;1i8</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;566</ln><a id="566">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;567</ln><a id="567">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;568</ln><a id="568">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;xs_mut&nbsp;=&nbsp;xs.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;569</ln><a id="569">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;m_start&nbsp;=&nbsp;to_mut_ptr</c0><c25>(</c25><c0>xs_mut</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;570</ln><a id="570">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;m_ptr&nbsp;=&nbsp;m_start&nbsp;+&nbsp;9u32</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;571</ln><a id="571">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;572</ln><a id="572">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;m_ptr&nbsp;&gt;=&nbsp;m_start&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;573</ln><a id="573">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*m_ptr&nbsp;+=&nbsp;*m_ptr</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;574</ln><a id="574">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_ptr&nbsp;=&nbsp;m_ptr&nbsp;-&nbsp;1i8</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;575</ln><a id="575">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;576</ln><a id="576">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;577</ln><a id="577">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>xs_mut</c0><c4>,</c4><c0>&nbsp;~</c0><c4>[</c4><c0>0</c0><c4>,</c4><c0>2</c0><c4>,</c4><c0>4</c0><c4>,</c4><c0>6</c0><c4>,</c4><c0>8</c0><c4>,</c4><c0>10</c0><c4>,</c4><c0>12</c0><c4>,</c4><c0>14</c0><c4>,</c4><c0>16</c0><c4>,</c4><c0>18</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;578</ln><a id="578">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;579</ln><a id="579">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;580</ln><a id="580">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;581</ln><a id="581">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;582</ln><a id="582">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_ptr_array_each_with_len</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;583</ln><a id="583">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;584</ln><a id="584">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;one&nbsp;=&nbsp;~"oneOne"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;585</ln><a id="585">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;two&nbsp;=&nbsp;~"twoTwo"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;586</ln><a id="586">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;three&nbsp;=&nbsp;~"threeThree"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;587</ln><a id="587">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;arr:&nbsp;~</c0><c4>[</c4><c0>*i8</c0><c4>]</c4><c0>&nbsp;=&nbsp;~</c0><c4>[</c4><c0>
+</c0><br/><ln>&nbsp;588</ln><a id="588">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::cast::transmute</c0><c25>(</c25><c0>&amp;one</c0><c4>[</c4><c0>0</c0><c4>]</c4><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;589</ln><a id="589">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::cast::transmute</c0><c25>(</c25><c0>&amp;two</c0><c4>[</c4><c0>0</c0><c4>]</c4><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;590</ln><a id="590">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::cast::transmute</c0><c25>(</c25><c0>&amp;three</c0><c4>[</c4><c0>0</c0><c4>]</c4><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;591</ln><a id="591">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;592</ln><a id="592">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;expected_arr&nbsp;=&nbsp;</c0><c4>[</c4><c0>
+</c0><br/><ln>&nbsp;593</ln><a id="593">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;one</c0><c4>,</c4><c0>&nbsp;two</c0><c4>,</c4><c0>&nbsp;three
+</c0><br/><ln>&nbsp;594</ln><a id="594">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;595</ln><a id="595">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;arr_ptr&nbsp;=&nbsp;&amp;arr</c0><c4>[</c4><c0>0</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;596</ln><a id="596">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;ctr&nbsp;=&nbsp;0</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;597</ln><a id="597">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;iteration_count&nbsp;=&nbsp;0</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;598</ln><a id="598">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array_each_with_len</c0><c25>(</c25><c0>arr_ptr</c0><c4>,</c4><c0>&nbsp;arr.len</c0><c25>()</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;599</ln><a id="599">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|e|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;600</ln><a id="600">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;actual&nbsp;=&nbsp;str::raw::from_c_str</c0><c25>(</c25><c0>e</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;601</ln><a id="601">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;expected&nbsp;=&nbsp;expected_arr</c0><c4>[</c4><c0>ctr</c0><c4>]</c4><c0>.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;602</ln><a id="602">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug!</c0><c25>(</c25><c0>
+</c0><br/><ln>&nbsp;603</ln><a id="603">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"test_ptr_array_each&nbsp;e:&nbsp;%s</c0><c4>,</c4><c0>&nbsp;a:&nbsp;%s"</c0><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;604</ln><a id="604">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;expected</c0><c4>,</c4><c0>&nbsp;actual</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;605</ln><a id="605">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>actual</c0><c4>,</c4><c0>&nbsp;expected</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;606</ln><a id="606">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctr&nbsp;+=&nbsp;1</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;607</ln><a id="607">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iteration_count&nbsp;+=&nbsp;1</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;608</ln><a id="608">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;609</ln><a id="609">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>iteration_count</c0><c4>,</c4><c0>&nbsp;3u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;610</ln><a id="610">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;611</ln><a id="611">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;612</ln><a id="612">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;613</ln><a id="613">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_ptr_array_each</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;614</ln><a id="614">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;615</ln><a id="615">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;one&nbsp;=&nbsp;~"oneOne"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;616</ln><a id="616">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;two&nbsp;=&nbsp;~"twoTwo"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;617</ln><a id="617">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;three&nbsp;=&nbsp;~"threeThree"</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;618</ln><a id="618">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;arr:&nbsp;~</c0><c4>[</c4><c0>*i8</c0><c4>]</c4><c0>&nbsp;=&nbsp;~</c0><c4>[</c4><c0>
+</c0><br/><ln>&nbsp;619</ln><a id="619">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::cast::transmute</c0><c25>(</c25><c0>&amp;one</c0><c4>[</c4><c0>0</c0><c4>]</c4><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;620</ln><a id="620">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::cast::transmute</c0><c25>(</c25><c0>&amp;two</c0><c4>[</c4><c0>0</c0><c4>]</c4><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;621</ln><a id="621">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::cast::transmute</c0><c25>(</c25><c0>&amp;three</c0><c4>[</c4><c0>0</c0><c4>]</c4><c25>)</c25><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;622</ln><a id="622">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;fake&nbsp;a&nbsp;null&nbsp;terminator
+</c24><br/><ln>&nbsp;623</ln><a id="623">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;as&nbsp;*i8
+</c0><br/><ln>&nbsp;624</ln><a id="624">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;625</ln><a id="625">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;expected_arr&nbsp;=&nbsp;</c0><c4>[</c4><c0>
+</c0><br/><ln>&nbsp;626</ln><a id="626">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;one</c0><c4>,</c4><c0>&nbsp;two</c0><c4>,</c4><c0>&nbsp;three
+</c0><br/><ln>&nbsp;627</ln><a id="627">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;628</ln><a id="628">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;arr_ptr&nbsp;=&nbsp;&amp;arr</c0><c4>[</c4><c0>0</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;629</ln><a id="629">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;ctr&nbsp;=&nbsp;0</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;630</ln><a id="630">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;iteration_count&nbsp;=&nbsp;0</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;631</ln><a id="631">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array_each</c0><c25>(</c25><c0>arr_ptr</c0><c4>,</c4><c0>&nbsp;|e|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;632</ln><a id="632">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;actual&nbsp;=&nbsp;str::raw::from_c_str</c0><c25>(</c25><c0>e</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;633</ln><a id="633">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;expected&nbsp;=&nbsp;expected_arr</c0><c4>[</c4><c0>ctr</c0><c4>]</c4><c0>.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;634</ln><a id="634">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug!</c0><c25>(</c25><c0>
+</c0><br/><ln>&nbsp;635</ln><a id="635">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"test_ptr_array_each&nbsp;e:&nbsp;%s</c0><c4>,</c4><c0>&nbsp;a:&nbsp;%s"</c0><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;636</ln><a id="636">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;expected</c0><c4>,</c4><c0>&nbsp;actual</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;637</ln><a id="637">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>actual</c0><c4>,</c4><c0>&nbsp;expected</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;638</ln><a id="638">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctr&nbsp;+=&nbsp;1</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;639</ln><a id="639">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iteration_count&nbsp;+=&nbsp;1</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;640</ln><a id="640">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;641</ln><a id="641">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>iteration_count</c0><c4>,</c4><c0>&nbsp;3</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;642</ln><a id="642">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;643</ln><a id="643">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;644</ln><a id="644">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;645</ln><a id="645">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;646</ln><a id="646">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>ignore</c0><c25>(</c25><c0>cfg</c0><c25>(</c25><c0>windows</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;647</ln><a id="647">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_ptr_array_each_with_len_null_ptr</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;648</ln><a id="648">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;649</ln><a id="649">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array_each_with_len</c0><c25>(</c25><c0>0&nbsp;as&nbsp;**libc::c_char</c0><c4>,</c4><c0>&nbsp;1</c0><c4>,</c4><c0>&nbsp;|e|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;650</ln><a id="650">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;str::raw::from_c_str</c0><c25>(</c25><c0>e</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;651</ln><a id="651">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;652</ln><a id="652">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;653</ln><a id="653">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;654</ln><a id="654">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;655</ln><a id="655">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;656</ln><a id="656">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>ignore</c0><c25>(</c25><c0>cfg</c0><c25>(</c25><c0>windows</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;657</ln><a id="657">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_ptr_array_each_null_ptr</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;658</ln><a id="658">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;659</ln><a id="659">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array_each</c0><c25>(</c25><c0>0&nbsp;as&nbsp;**libc::c_char</c0><c4>,</c4><c0>&nbsp;|e|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;660</ln><a id="660">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;str::raw::from_c_str</c0><c25>(</c25><c0>e</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;661</ln><a id="661">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;662</ln><a id="662">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;663</ln><a id="663">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;664</ln><a id="664">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;665</ln><a id="665">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;666</ln><a id="666">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_set_memory</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;667</ln><a id="667">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;xs&nbsp;=&nbsp;</c0><c4>[</c4><c0>0u8</c0><c4>,</c4><c0>&nbsp;..20</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;668</ln><a id="668">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr&nbsp;=&nbsp;vec::raw::to_mut_ptr</c0><c25>(</c25><c0>xs</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;669</ln><a id="669">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>&nbsp;set_memory</c0><c25>(</c25><c0>ptr</c0><c4>,</c4><c0>&nbsp;5u8</c0><c4>,</c4><c0>&nbsp;xs.len</c0><c25>())</c25><c4>;</c4><c0>&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;670</ln><a id="670">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>xs</c0><c4>,</c4><c0>&nbsp;</c0><c4>[</c4><c0>5u8</c0><c4>,</c4><c0>&nbsp;..20</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;671</ln><a id="671">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;672</ln><a id="672">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="160_10_refs"><a href="#161"><c24>ptr.rs:161:10-161:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;swap_ptr&lt;T&gt;(x:&nbsp;*mut&nbsp;T,&nbsp;y:&nbsp;*mut&nbsp;T)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#1819"><c24>1819:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::swap_ptr(pa,&nbsp;pb);
+<br/></a><br/><br/><a id="25_10_refs"><a href="#26"><c24>ptr.rs:26:10-26:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;offset&lt;T&gt;(ptr:&nbsp;*T,&nbsp;count:&nbsp;int)&nbsp;-&gt;&nbsp;*T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#60"><c24>60:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;f(&amp;(*offset(buf,&nbsp;i&nbsp;as&nbsp;int)))&nbsp;{&nbsp;return&nbsp;i;&nbsp;}
+<br/></a><a href="ptr.rs.html#244"><c24>244:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;n&nbsp;=&nbsp;offset(arr,&nbsp;e&nbsp;as&nbsp;int);
+<br/></a><a href="ptr.rs.html#307"><c24>307:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;offset(&amp;self,&nbsp;count:&nbsp;int)&nbsp;-&gt;&nbsp;*T&nbsp;{&nbsp;offset(*self,&nbsp;count)&nbsp;}
+<br/></a><a href="io.rs.html"><c24>io.rs:<br/></c24><a href="io.rs.html#1218"><c24>1218:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;vb&nbsp;=&nbsp;ptr::offset(vbuf,&nbsp;count&nbsp;as&nbsp;int)&nbsp;as&nbsp;*c_void;
+<br/></a><a href="repr.rs.html"><c24>repr.rs:<br/></c24><a href="repr.rs.html#216"><c24>216:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p&nbsp;=&nbsp;align(ptr::offset(p,&nbsp;sz&nbsp;as&nbsp;int)&nbsp;as&nbsp;uint,&nbsp;al)&nbsp;as&nbsp;*u8;
+<br/></a><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#1294"><c24>1294:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;ptr::offset(p,&nbsp;fill&nbsp;as&nbsp;int)&nbsp;as&nbsp;*mut&nbsp;T;
+<br/></a><a href="vec.rs.html#1287"><c24>1287:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;ptr::offset(p,&nbsp;fill&nbsp;as&nbsp;int)&nbsp;as&nbsp;*mut&nbsp;T;
+<br/></a><a href="vec.rs.html#785"><c24>785:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;ptr::offset(p,&nbsp;start&nbsp;as&nbsp;int),
+<br/></a><a href="vec.rs.html#1973"><c24>1973:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v.as_imm_buf(|p,&nbsp;_len|&nbsp;(*ptr::offset(p,&nbsp;i&nbsp;as&nbsp;int)).clone())
+<br/></a><a href="at_vec.rs.html"><c24>at_vec.rs:<br/></c24><a href="at_vec.rs.html#235"><c24>235:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;ptr::offset(&amp;(*repr).data.data&nbsp;as&nbsp;*T,&nbsp;amt&nbsp;as&nbsp;int)&nbsp;as&nbsp;*mut&nbsp;T;
+<br/></a><a href="str.rs.html"><c24>str.rs:<br/></c24><a href="str.rs.html#2072"><c24>2072:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;dst&nbsp;=&nbsp;ptr::offset(lbuf,&nbsp;llen&nbsp;as&nbsp;int);
+<br/></a><a href="str.rs.html#2090"><c24>2090:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;dst&nbsp;=&nbsp;ptr::offset(lbuf,&nbsp;llen&nbsp;as&nbsp;int);
+<br/></a><a href="str.rs.html#1999"><c24>1999:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;unsafe&nbsp;{&nbsp;*(ptr::offset(buf,&nbsp;(len&nbsp;-&nbsp;1)&nbsp;as&nbsp;int))&nbsp;!=&nbsp;0&nbsp;}&nbsp;{
+<br/></a><a href="str.rs.html#872"><c24>872:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curr&nbsp;=&nbsp;ptr::offset(s,&nbsp;len&nbsp;as&nbsp;int);
+<br/></a><a href="str.rs.html#811"><c24>811:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curr&nbsp;=&nbsp;ptr::offset(buf,&nbsp;i&nbsp;as&nbsp;int);
+<br/></a><a href="str.rs.html#894"><c24>894:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;ptr::offset(sbuf,&nbsp;begin&nbsp;as&nbsp;int),
+<br/></a><br/><br/><a id="123_32_refs"><a href="#124"><c24>ptr.rs:124:32-124:32&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[cfg(target_word_size&nbsp;=&nbsp;"64")]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;copy_nonoverlapping_memory&lt;T&gt;(dst:&nbsp;*mut&nbsp;T,&nbsp;src:&nbsp;*const&nbsp;T,&nbsp;count:&nbsp;uint)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#170"><c24>170:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;copy_nonoverlapping_memory(y,&nbsp;t,&nbsp;1);
+<br/></a><a href="ptr.rs.html#168"><c24>168:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;copy_nonoverlapping_memory(t,&nbsp;x,&nbsp;1);
+<br/></a><a href="ptr.rs.html#193"><c24>193:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;copy_nonoverlapping_memory(&amp;mut&nbsp;tmp,&nbsp;src,&nbsp;1);
+<br/></a><a href="util.rs.html"><c24>util.rs:<br/></c24><a href="util.rs.html#58"><c24>58:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_nonoverlapping_memory(x,&nbsp;y,&nbsp;1);
+<br/></a><a href="util.rs.html#57"><c24>57:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_nonoverlapping_memory(t,&nbsp;x,&nbsp;1);
+<br/></a><a href="util.rs.html#59"><c24>59:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_nonoverlapping_memory(y,&nbsp;t,&nbsp;1);
+<br/></a><br/><br/><a id="258_3_refs"><a href="#259"><c24>ptr.rs:259:3-259:3&nbsp;-fn-&nbsp;definition:<br/></c24><pr>*/
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;array_each&lt;T&gt;(arr:&nbsp;**T,&nbsp;cb:&nbsp;&amp;fn(*T))&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="os.rs.html"><c24>os.rs:<br/></c24><a href="os.rs.html#211"><c24>211:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::array_each(environ,&nbsp;|e|&nbsp;{
+<br/></a><br/><br/><a id="73_10_refs"><a href="#74"><c24>ptr.rs:74:10-74:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;is_null&lt;T&gt;(ptr:&nbsp;*const&nbsp;T)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;ptr&nbsp;==&nbsp;null()&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#282"><c24>282:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_null(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_null(*self)&nbsp;}
+<br/></a><a href="ptr.rs.html#79"><c24>79:&nbsp;</c24>pub&nbsp;fn&nbsp;is_not_null&lt;T&gt;(ptr:&nbsp;*const&nbsp;T)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;!is_null(ptr)&nbsp;}
+<br/></a><a href="ptr.rs.html#314"><c24>314:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_null(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_null(*self)&nbsp;}
+<br/></a><br/><br/><a id="212_10_refs"><a href="#213"><c24>ptr.rs:213:10-213:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;to_unsafe_ptr&lt;T&gt;(thing:&nbsp;&amp;T)&nbsp;-&gt;&nbsp;*T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="managed.rs.html"><c24>managed.rs:<br/></c24><a href="managed.rs.html#30"><c24>30:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;(a_ptr,&nbsp;b_ptr):&nbsp;(*T,&nbsp;*T)&nbsp;=&nbsp;(to_unsafe_ptr(&amp;*a),&nbsp;to_unsafe_ptr(&amp;*b));
+<br/></a><a href="managed.rs.html#30"><c24>30:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;(a_ptr,&nbsp;b_ptr):&nbsp;(*T,&nbsp;*T)&nbsp;=&nbsp;(to_unsafe_ptr(&amp;*a),&nbsp;to_unsafe_ptr(&amp;*b));
+<br/></a><a href="managed.rs.html#23"><c24>23:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;(a_ptr,&nbsp;b_ptr):&nbsp;(*T,&nbsp;*T)&nbsp;=&nbsp;(to_unsafe_ptr(&amp;*a),&nbsp;to_unsafe_ptr(&amp;*b));
+<br/></a><a href="managed.rs.html#23"><c24>23:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;(a_ptr,&nbsp;b_ptr):&nbsp;(*T,&nbsp;*T)&nbsp;=&nbsp;(to_unsafe_ptr(&amp;*a),&nbsp;to_unsafe_ptr(&amp;*b));
+<br/></a><a href="pipes.rs.html"><c24>pipes.rs:<br/></c24><a href="pipes.rs.html#538"><c24>538:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::to_unsafe_ptr(&amp;(p.header))&nbsp;as&nbsp;*libc::c_void);
+<br/></a><a href="pipes.rs.html#356"><c24>356:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!(ptr::to_unsafe_ptr(&amp;(p.header)),&nbsp;header);
+<br/></a><a href="pipes.rs.html#376"><c24>376:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::to_unsafe_ptr(&amp;(p.header))&nbsp;as&nbsp;*libc::c_void);
+<br/></a><a href="repr.rs.html"><c24>repr.rs:<br/></c24><a href="repr.rs.html#305"><c24>305:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;ptr::to_unsafe_ptr(&amp;b.data)&nbsp;as&nbsp;*c_void;
+<br/></a><a href="repr.rs.html#548"><c24>548:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;ptr::to_unsafe_ptr(&amp;b.data)&nbsp;as&nbsp;*c_void;
+<br/></a><a href="repr.rs.html#561"><c24>561:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr&nbsp;=&nbsp;ptr::to_unsafe_ptr(object)&nbsp;as&nbsp;*c_void;
+<br/></a><a href="repr.rs.html#290"><c24>290:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;ptr::to_unsafe_ptr(&amp;b.data)&nbsp;as&nbsp;*c_void;
+<br/></a><a href="repr.rs.html#367"><c24>367:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.write_vec_range(mtbl,&nbsp;ptr::to_unsafe_ptr(b),&nbsp;sz,&nbsp;inner);
+<br/></a><a href="repr.rs.html#228"><c24>228:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.write_vec_range(mtbl,&nbsp;ptr::to_unsafe_ptr(&amp;v.data),
+<br/></a><a href="rt/uv/uvll.rs.html"><c24>rt/uv/uvll.rs:<br/></c24><a href="rt/uv/uvll.rs.html#469"><c24>469:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;err_ptr&nbsp;=&nbsp;ptr::to_unsafe_ptr(&amp;err);
+<br/></a><a href="rt/uv/uvll.rs.html#350"><c24>350:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;out_buf_ptr&nbsp;=&nbsp;ptr::to_unsafe_ptr(&amp;out_buf);
+<br/></a><a href="rt/uv/uvll.rs.html#460"><c24>460:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;err_ptr&nbsp;=&nbsp;ptr::to_unsafe_ptr(&amp;err);
+<br/></a><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#1293"><c24>1293:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;to_unsafe_ptr(&amp;((**repr).data));
+<br/></a><a href="vec.rs.html#1286"><c24>1286:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;to_unsafe_ptr(&amp;((**repr).data.data));
+<br/></a><br/><br/><a id="55_10_refs"><a href="#56"><c24>ptr.rs:56:10-56:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;position&lt;T&gt;(buf:&nbsp;*T,&nbsp;f:&nbsp;&amp;fn(&amp;T)&nbsp;-&gt;&nbsp;bool)&nbsp;-&gt;&nbsp;uint&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#46"><c24>46:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;position(buf,&nbsp;|i|&nbsp;*i&nbsp;==&nbsp;null())
+<br/></a><br/><br/><a id="269_22_refs"><a href="#270"><c24>ptr.rs:270:22-270:22&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[allow(missing_doc)]
+<br/>pub&nbsp;trait&nbsp;RawPtr&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#275"><c24>275:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;offset(&amp;self,&nbsp;count:&nbsp;int)&nbsp;-&gt;&nbsp;Self;
+<br/></a><a href="ptr.rs.html#279"><c24>279:&nbsp;</c24>impl&lt;T&gt;&nbsp;RawPtr&lt;T&gt;&nbsp;for&nbsp;*T&nbsp;{
+<br/></a><a href="ptr.rs.html#311"><c24>311:&nbsp;</c24>impl&lt;T&gt;&nbsp;RawPtr&lt;T&gt;&nbsp;for&nbsp;*mut&nbsp;T&nbsp;{
+<br/></a><br/><br/><a id="43_10_refs"><a href="#44"><c24>ptr.rs:44:10-44:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;buf_len&lt;T&gt;(buf:&nbsp;**T)&nbsp;-&gt;&nbsp;uint&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#264"><c24>264:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;len&nbsp;=&nbsp;buf_len(arr);
+<br/></a><br/><br/><a id="77_10_refs"><a href="#78"><c24>ptr.rs:78:10-78:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;is_not_null&lt;T&gt;(ptr:&nbsp;*const&nbsp;T)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;!is_null(ptr)&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#318"><c24>318:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_not_null(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_not_null(*self)&nbsp;}
+<br/></a><a href="ptr.rs.html#286"><c24>286:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_not_null(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_not_null(*self)&nbsp;}
+<br/></a><br/><br/><a id="235_3_refs"><a href="#236"><c24>ptr.rs:236:3-236:3&nbsp;-fn-&nbsp;definition:<br/></c24><pr>*/
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;array_each_with_len&lt;T&gt;(arr:&nbsp;**T,&nbsp;len:&nbsp;uint,&nbsp;cb:&nbsp;&amp;fn(*T))&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#267"><c24>267:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;array_each_with_len(arr,&nbsp;len,&nbsp;cb);
+<br/></a><br/><br/><a id="99_32_refs"><a href="#100"><c24>ptr.rs:100:32-100:32&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[cfg(target_word_size&nbsp;=&nbsp;"64")]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;copy_memory&lt;T&gt;(dst:&nbsp;*mut&nbsp;T,&nbsp;src:&nbsp;*const&nbsp;T,&nbsp;count:&nbsp;uint)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#169"><c24>169:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;copy_memory(x,&nbsp;y,&nbsp;1);&nbsp;//&nbsp;`x`&nbsp;and&nbsp;`y`&nbsp;may&nbsp;overlap
+<br/></a><a href="rt/uv/mod.rs.html"><c24>rt/uv/mod.rs:<br/></c24><a href="rt/uv/mod.rs.html#318"><c24>318:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(data,&nbsp;b,&nbsp;l)
+<br/></a><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#1320"><c24>1320:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(ptr::mut_offset(self_p,&nbsp;self_len&nbsp;as&nbsp;int),&nbsp;rhs_p,&nbsp;rhs_len);
+<br/></a><a href="vec.rs.html#2021"><c24>2021:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(p_dst,&nbsp;p_src,&nbsp;count)
+<br/></a><a href="vec.rs.html#2003"><c24>2003:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dst.as_mut_buf(|p_dst,&nbsp;_len_dst|&nbsp;ptr::copy_memory(p_dst,&nbsp;ptr,&nbsp;elts));
+<br/></a><a href="str.rs.html"><c24>str.rs:<br/></c24><a href="str.rs.html#2074"><c24>2074:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(dst,&nbsp;rbuf,&nbsp;rlen);
+<br/></a><a href="str.rs.html#1868"><c24>1868:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(rbuf,&nbsp;buf,&nbsp;len);
+<br/></a><a href="str.rs.html#223"><c24>223:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(buf,&nbsp;ssbuf,&nbsp;sslen);
+<br/></a><a href="str.rs.html#184"><c24>184:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(buf,&nbsp;ssbuf,&nbsp;sslen);
+<br/></a><a href="str.rs.html#2092"><c24>2092:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(dst,&nbsp;rbuf,&nbsp;rlen);
+<br/></a><a href="str.rs.html#820"><c24>820:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(vbuf,&nbsp;buf&nbsp;as&nbsp;*u8,&nbsp;len)
+<br/></a><a href="str.rs.html#1626"><c24>1626:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(dst,&nbsp;src,&nbsp;len&nbsp;-&nbsp;1);
+<br/></a><a href="str.rs.html#220"><c24>220:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(buf,&nbsp;sepbuf,&nbsp;seplen);
+<br/></a><br/><br/><a id="37_10_refs"><a href="#38"><c24>ptr.rs:38:10-38:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;mut_offset&lt;T&gt;(ptr:&nbsp;*mut&nbsp;T,&nbsp;count:&nbsp;int)&nbsp;-&gt;&nbsp;*mut&nbsp;T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#339"><c24>339:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;offset(&amp;self,&nbsp;count:&nbsp;int)&nbsp;-&gt;&nbsp;*mut&nbsp;T&nbsp;{&nbsp;mut_offset(*self,&nbsp;count)&nbsp;}
+<br/></a><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#1320"><c24>1320:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::copy_memory(ptr::mut_offset(self_p,&nbsp;self_len&nbsp;as&nbsp;int),&nbsp;rhs_p,&nbsp;rhs_len);
+<br/></a><a href="vec.rs.html#1685"><c24>1685:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p_wm1&nbsp;=&nbsp;ptr::mut_offset(p,&nbsp;(w&nbsp;-&nbsp;1)&nbsp;as&nbsp;int);
+<br/></a><a href="vec.rs.html#101"><c24>101:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intrinsics::move_val_init(&amp;mut(*ptr::mut_offset(p,&nbsp;i&nbsp;as&nbsp;int)),&nbsp;op(i));
+<br/></a><a href="vec.rs.html#1684"><c24>1684:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p_r&nbsp;=&nbsp;ptr::mut_offset(p,&nbsp;r&nbsp;as&nbsp;int);
+<br/></a><a href="vec.rs.html#1985"><c24>1985:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intrinsics::move_val_init(&amp;mut(*ptr::mut_offset(p,&nbsp;i&nbsp;as&nbsp;int)),
+<br/></a><a href="vec.rs.html#1401"><c24>1401:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;vp&nbsp;=&nbsp;ptr::mut_offset(vp,&nbsp;(next_ln&nbsp;-&nbsp;1)&nbsp;as&nbsp;int);
+<br/></a><a href="vec.rs.html#1752"><c24>1752:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;ptr::mut_offset(p,&nbsp;start&nbsp;as&nbsp;int)&nbsp;as&nbsp;*T,
+<br/></a><a href="vec.rs.html#1688"><c24>1688:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p_w&nbsp;=&nbsp;ptr::mut_offset(p_wm1,&nbsp;1);
+<br/></a><a href="vec.rs.html#125"><c24>125:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intrinsics::move_val_init(&amp;mut(*ptr::mut_offset(p,&nbsp;i&nbsp;as&nbsp;int)),&nbsp;t.clone());
+<br/></a><a href="vec.rs.html#1465"><c24>1465:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::read_and_zero_ptr(ptr::mut_offset(p,&nbsp;i&nbsp;as&nbsp;int));
+<br/></a><a href="vec.rs.html#1843"><c24>1843:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::mut_offset(self.repr().data&nbsp;as&nbsp;*mut&nbsp;T,&nbsp;index&nbsp;as&nbsp;int)
+<br/></a><a href="str.rs.html"><c24>str.rs:<br/></c24><a href="str.rs.html#2131"><c24>2131:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*ptr::mut_offset(buf,&nbsp;off&nbsp;+&nbsp;3)&nbsp;=&nbsp;(code&nbsp;&amp;&nbsp;63u&nbsp;|&nbsp;TAG_CONT)&nbsp;as&nbsp;u8;
+<br/></a><a href="str.rs.html#2119"><c24>2119:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*ptr::mut_offset(buf,&nbsp;off)&nbsp;=&nbsp;(code&nbsp;&gt;&gt;&nbsp;6u&nbsp;&amp;&nbsp;31u&nbsp;|&nbsp;TAG_TWO_B)&nbsp;as&nbsp;u8;
+<br/></a><a href="str.rs.html#2116"><c24>2116:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*ptr::mut_offset(buf,&nbsp;off)&nbsp;=&nbsp;code&nbsp;as&nbsp;u8;
+<br/></a><a href="str.rs.html#2120"><c24>2120:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*ptr::mut_offset(buf,&nbsp;off&nbsp;+&nbsp;1)&nbsp;=&nbsp;(code&nbsp;&amp;&nbsp;63u&nbsp;|&nbsp;TAG_CONT)&nbsp;as&nbsp;u8;
+<br/></a><a href="str.rs.html#941"><c24>941:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;null&nbsp;=&nbsp;ptr::mut_offset(&amp;mut&nbsp;((*repr).data),&nbsp;new_len&nbsp;as&nbsp;int);
+<br/></a><a href="str.rs.html#2128"><c24>2128:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*ptr::mut_offset(buf,&nbsp;off)&nbsp;=&nbsp;(code&nbsp;&gt;&gt;&nbsp;18u&nbsp;&amp;&nbsp;7u&nbsp;|&nbsp;TAG_FOUR_B)&nbsp;as&nbsp;u8;
+<br/></a><a href="str.rs.html#2130"><c24>2130:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*ptr::mut_offset(buf,&nbsp;off&nbsp;+&nbsp;2)&nbsp;=&nbsp;(code&nbsp;&gt;&gt;&nbsp;6u&nbsp;&amp;&nbsp;63u&nbsp;|&nbsp;TAG_CONT)&nbsp;as&nbsp;u8;
+<br/></a><a href="str.rs.html#2129"><c24>2129:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*ptr::mut_offset(buf,&nbsp;off&nbsp;+&nbsp;1)&nbsp;=&nbsp;(code&nbsp;&gt;&gt;&nbsp;12u&nbsp;&amp;&nbsp;63u&nbsp;|&nbsp;TAG_CONT)&nbsp;as&nbsp;u8;
+<br/></a><a href="str.rs.html#905"><c24>(905)</c24></a><a href="str.rs.html#2124"><c24>(2124)</c24></a><a href="str.rs.html#2123"><c24>(2123)</c24></a><a href="str.rs.html#2125"><c24>(2125)</c24></a><br/><br/><a id="151_10_refs"><a href="#152"><c24>ptr.rs:152:10-152:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;zero_memory&lt;T&gt;(dst:&nbsp;*mut&nbsp;T,&nbsp;count:&nbsp;uint)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#207"><c24>207:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;zero_memory(dest,&nbsp;1);
+<br/></a><br/><br/><a id="69_10_refs"><a href="#70"><c24>ptr.rs:70:10-70:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;mut_null&lt;T&gt;()&nbsp;-&gt;&nbsp;*mut&nbsp;T&nbsp;{&nbsp;0&nbsp;as&nbsp;*mut&nbsp;T&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="cleanup.rs.html"><c24>cleanup.rs:<br/></c24><a href="cleanup.rs.html#40"><c24>40:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;box&nbsp;!=&nbsp;mut_null()&nbsp;{
+<br/></a><a href="unstable/sync.rs.html"><c24>unstable/sync.rs:<br/></c24><a href="unstable/sync.rs.html#201"><c24>201:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.data&nbsp;=&nbsp;ptr::mut_null();
+<br/></a><a href="unstable/sync.rs.html#134"><c24>134:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.data&nbsp;=&nbsp;ptr::mut_null();
+<br/></a><a href="rt/local_ptr.rs.html"><c24>rt/local_ptr.rs:<br/></c24><a href="rt/local_ptr.rs.html#59"><c24>59:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;tls::set(key,&nbsp;ptr::mut_null());
+<br/></a><br/><br/><a id="224_10_refs"><a href="#225"><c24>ptr.rs:225:10-225:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;to_mut_unsafe_ptr&lt;T&gt;(thing:&nbsp;&amp;mut&nbsp;T)&nbsp;-&gt;&nbsp;*mut&nbsp;T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="comm.rs.html"><c24>comm.rs:<br/></c24><a href="comm.rs.html#331"><c24>331:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to_mut_unsafe_ptr(&amp;mut&nbsp;data.Oneshot)
+<br/></a><a href="pipes.rs.html"><c24>pipes.rs:<br/></c24><a href="pipes.rs.html#756"><c24>756:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;header&nbsp;=&nbsp;ptr::to_mut_unsafe_ptr(&amp;mut&nbsp;packet.header);
+<br/></a><a href="pipes.rs.html#225"><c24>225:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;ptr::to_mut_unsafe_ptr(&amp;mut&nbsp;b.data);
+<br/></a><a href="pipes.rs.html#703"><c24>703:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;header&nbsp;=&nbsp;ptr::to_mut_unsafe_ptr(&amp;mut&nbsp;packet.header);
+<br/></a><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#1331"><c24>1331:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;valptr&nbsp;=&nbsp;ptr::to_mut_unsafe_ptr(&amp;mut&nbsp;self[ln&nbsp;-&nbsp;1u]);
+<br/></a><br/><br/><a id="180_10_refs"><a href="#181"><c24>ptr.rs:181:10-181:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;replace_ptr&lt;T&gt;(dest:&nbsp;*mut&nbsp;T,&nbsp;mut&nbsp;src:&nbsp;T)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#1403"><c24>1403:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(ptr::replace_ptr(vp,&nbsp;work_elt))
+<br/></a><br/><br/><a id="143_32_refs"><a href="#144"><c24>ptr.rs:144:32-144:32&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[cfg(target_word_size&nbsp;=&nbsp;"64")]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;set_memory&lt;T&gt;(dst:&nbsp;*mut&nbsp;T,&nbsp;c:&nbsp;u8,&nbsp;count:&nbsp;uint)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#154"><c24>154:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;set_memory(dst,&nbsp;0,&nbsp;count);
+<br/></a><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#2045"><c24>2045:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;{&nbsp;ptr::set_memory(p,&nbsp;value,&nbsp;len)&nbsp;};
+<br/></a><br/><br/><a id="189_18_refs"><a href="#190"><c24>ptr.rs:190:18-190:18&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline(always)]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;read_ptr&lt;T&gt;(src:&nbsp;*mut&nbsp;T)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#204"><c24>204:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;tmp&nbsp;=&nbsp;read_ptr(dest);
+<br/></a><a href="task/local_data_priv.rs.html"><c24>task/local_data_priv.rs:<br/></c24><a href="task/local_data_priv.rs.html#191"><c24>191:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ret&nbsp;=&nbsp;ptr::read_ptr(cast::transmute::&lt;&amp;T,&nbsp;*mut&nbsp;T&gt;(*box));
+<br/></a><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#1334"><c24>1334:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(ptr::read_ptr(valptr))
+<br/></a><br/><br/><a id="200_18_refs"><a href="#201"><c24>ptr.rs:201:18-201:18&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline(always)]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;read_and_zero_ptr&lt;T&gt;(dest:&nbsp;*mut&nbsp;T)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="vec.rs.html"><c24>vec.rs:<br/></c24><a href="vec.rs.html#1465"><c24>1465:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr::read_and_zero_ptr(ptr::mut_offset(p,&nbsp;i&nbsp;as&nbsp;int));
+<br/></a><br/><br/><a id="65_10_refs"><a href="#66"><c24>ptr.rs:66:10-66:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;null&lt;T&gt;()&nbsp;-&gt;&nbsp;*T&nbsp;{&nbsp;0&nbsp;as&nbsp;*T&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="ptr.rs.html#46"><c24>46:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;position(buf,&nbsp;|i|&nbsp;*i&nbsp;==&nbsp;null())
+<br/></a><a href="ptr.rs.html#75"><c24>75:&nbsp;</c24>pub&nbsp;fn&nbsp;is_null&lt;T&gt;(ptr:&nbsp;*const&nbsp;T)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;ptr&nbsp;==&nbsp;null()&nbsp;}
+<br/></a><a href="pipes.rs.html"><c24>pipes.rs:<br/></c24><a href="pipes.rs.html#485"><c24>485:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;old_task&nbsp;=&nbsp;swap_task(&amp;mut&nbsp;p.header.blocked_task,&nbsp;ptr::null());
+<br/></a><a href="pipes.rs.html#499"><c24>499:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;old_task&nbsp;=&nbsp;swap_task(&amp;mut&nbsp;p.header.blocked_task,&nbsp;ptr::null());
+<br/></a><a href="pipes.rs.html#146"><c24>146:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;blocked_task:&nbsp;ptr::null(),
+<br/></a><a href="pipes.rs.html#316"><c24>316:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;null_buffer:&nbsp;~Buffer&lt;T&gt;&nbsp;=&nbsp;transmute(ptr::null::&lt;Buffer&lt;T&gt;&gt;());
+<br/></a><a href="pipes.rs.html#420"><c24>420:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;old_task&nbsp;=&nbsp;swap_task(&amp;mut&nbsp;p.header.blocked_task,&nbsp;ptr::null());
+<br/></a><a href="pipes.rs.html#371"><c24>371:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;old_task&nbsp;=&nbsp;swap_task(&amp;mut&nbsp;p.header.blocked_task,&nbsp;ptr::null());
+<br/></a><a href="pipes.rs.html#161"><c24>161:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;old_task&nbsp;=&nbsp;swap_task(&amp;mut&nbsp;self.blocked_task,&nbsp;ptr::null());
+<br/></a><a href="pipes.rs.html#277"><c24>277:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;event&nbsp;=&nbsp;ptr::null();
+<br/></a><a href="pipes.rs.html#147"><c24>147:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buffer:&nbsp;ptr::null()
+<br/></a><a href="pipes.rs.html#533"><c24>533:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;old_task&nbsp;=&nbsp;swap_task(&amp;mut&nbsp;p.header.blocked_task,&nbsp;ptr::null());
+<br/></a><a href="pipes.rs.html#565"><c24>565:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;old_task&nbsp;=&nbsp;swap_task(&amp;mut&nbsp;p.header.blocked_task,&nbsp;ptr::null());
+<br/></a><a href="os.rs.html"><c24>os.rs:<br/></c24><a href="os.rs.html#1252"><c24>1252:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gl_pathv:&nbsp;ptr::null(),
+<br/></a><a href="os.rs.html#1254"><c24>1254:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__unused1:&nbsp;ptr::null(),
+<br/></a><a href="os.rs.html#1258"><c24>1258:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__unused5:&nbsp;ptr::null(),
+<br/></a><a href="os.rs.html#245"><c24>245:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;ptr::null::&lt;u8&gt;()&nbsp;==&nbsp;cast::transmute(s)&nbsp;{
+<br/></a><a href="os.rs.html#1255"><c24>1255:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__unused2:&nbsp;ptr::null(),
+<br/></a><a href="os.rs.html#1257"><c24>1257:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__unused4:&nbsp;ptr::null(),
+<br/></a><a href="os.rs.html#1298"><c24>1298:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;{&nbsp;libc::glob(c_pattern,&nbsp;0,&nbsp;ptr::null(),&nbsp;&amp;mut&nbsp;g)&nbsp;}
+<br/></a><a href="os.rs.html#1421"><c24>(1421)</c24></a><a href="os.rs.html#1465"><c24>(1465)</c24></a><a href="os.rs.html#1256"><c24>(1256)</c24></a><br/><a href="run.rs.html"><c24>run.rs:<br/></c24><a href="run.rs.html#653"><c24>(653)</c24></a><a href="run.rs.html#761"><c24>(761)</c24></a><a href="run.rs.html#727"><c24>(727)</c24></a><a href="run.rs.html#732"><c24>(732)</c24></a><a href="run.rs.html#702"><c24>(702)</c24></a><br/><a href="unstable/dynamic_lib.rs.html"><c24>unstable/dynamic_lib.rs:<br/></c24><a href="unstable/dynamic_lib.rs.html#163"><c24>(163)</c24></a><a href="unstable/dynamic_lib.rs.html#152"><c24>(152)</c24></a><br/><a href="unstable/lang.rs.html"><c24>unstable/lang.rs:<br/></c24><a href="unstable/lang.rs.html#64"><c24>(64)</c24></a><br/><a href="rt/task.rs.html"><c24>rt/task.rs:<br/></c24><a href="rt/task.rs.html#156"><c24>(156)</c24></a><a href="rt/task.rs.html#126"><c24>(126)</c24></a><a href="rt/task.rs.html#176"><c24>(176)</c24></a><br/><a href="rt/uv/mod.rs.html"><c24>rt/uv/mod.rs:<br/></c24><a href="rt/uv/mod.rs.html#197"><c24>(197)</c24></a><br/><a href="rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="rt/uv/uvio.rs.html#673"><c24>(673)</c24></a><a href="rt/uv/uvio.rs.html#659"><c24>(659)</c24></a><br/><a href="rt/uv/uvll.rs.html"><c24>rt/uv/uvll.rs:<br/></c24><a href="rt/uv/uvll.rs.html#349"><c24>(349)</c24></a><br/><a href="rt/uv/file.rs.html"><c24>rt/uv/file.rs:<br/></c24><a href="rt/uv/file.rs.html#26"><c24>(26)</c24></a><br/><a href="rt/logging.rs.html"><c24>rt/logging.rs:<br/></c24><a href="rt/logging.rs.html#62"><c24>(62)</c24></a><br/><a href="rt/thread_local_storage.rs.html"><c24>rt/thread_local_storage.rs:<br/></c24><a href="rt/thread_local_storage.rs.html#24"><c24>(24)</c24></a><br/></a></a>

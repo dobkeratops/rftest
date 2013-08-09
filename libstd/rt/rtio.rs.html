@@ -1,0 +1,213 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#3a343a;"><maintext><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c0>use&nbsp;option::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>use&nbsp;result::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>use&nbsp;rt::io::IoError</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c0>use&nbsp;super::io::net::ip::</c0><c4>{</c4><c0>IpAddr</c0><c4>,</c4><c0>&nbsp;SocketAddr</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c0>use&nbsp;rt::uv::uvio</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c24>//&nbsp;XXX:&nbsp;~object&nbsp;doesn't&nbsp;work&nbsp;currently&nbsp;so&nbsp;these&nbsp;are&nbsp;some&nbsp;placeholder
+</c24><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c24>//&nbsp;types&nbsp;to&nbsp;use&nbsp;instead
+</c24><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a href="#18_24_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;EventLoopObject&nbsp;=&nbsp;</c28><a href="../rt/uv/uvio.rs.html#82"><c28>uvio::UvEventLoop</c28></a><a href="#18_24_refs"><c28>;</c28><c28>
+</c28><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a href="#19_46_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;RemoteCallbackObject&nbsp;=&nbsp;</c28><a href="../rt/uv/uvio.rs.html#151"><c28>uvio::UvRemoteCallback</c28></a><a href="#19_46_refs"><c28>;</c28><c28>
+</c28><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a href="#20_56_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;IoFactoryObject&nbsp;=&nbsp;</c28><a href="../rt/uv/uvio.rs.html#235"><c28>uvio::UvIoFactory</c28></a><a href="#20_56_refs"><c28>;</c28><c28>
+</c28><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a href="#21_46_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;RtioTcpStreamObject&nbsp;=&nbsp;</c28><a href="../rt/uv/uvio.rs.html#431"><c28>uvio::UvTcpStream</c28></a><a href="#21_46_refs"><c28>;</c28><c28>
+</c28><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a href="#22_50_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;RtioTcpListenerObject&nbsp;=&nbsp;</c28><a href="../rt/uv/uvio.rs.html#335"><c28>uvio::UvTcpListener</c28></a><a href="#22_50_refs"><c28>;</c28><c28>
+</c28><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a href="#23_54_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;RtioUdpSocketObject&nbsp;=&nbsp;</c28><a href="../rt/uv/uvio.rs.html#572"><c28>uvio::UvUdpSocket</c28></a><a href="#23_54_refs"><c28>;</c28><c28>
+</c28><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a href="#24_50_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;RtioTimerObject&nbsp;=&nbsp;</c28><a href="../rt/uv/uvio.rs.html#750"><c28>uvio::UvTimer</c28></a><a href="#24_50_refs"><c28>;</c28><c28>
+</c28><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a href="#26_1_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;EventLoop&nbsp;</c1><c18>{
+</c18><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a href="#26_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;run</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a href="#26_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;callback</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c3>~</c3><c26>fn</c26><c3>(</c3><c25>))</c25><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a href="#26_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;callback_ms</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;ms:&nbsp;</c22><c3>u64</c3><c4>,</c4><c22>&nbsp;</c22><c3>~</c3><c26>fn</c26><c3>(</c3><c25>))</c25><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a href="#26_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;remote_callback</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c3>~</c3><c26>fn</c26><c3>(</c3><c25>))</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>~</c3><a href="../rt/rtio.rs.html#21"><c3>RemoteCallbackObject</c3></a><a href="#26_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a href="#26_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;The&nbsp;asynchronous&nbsp;I/O&nbsp;services.&nbsp;Not&nbsp;all&nbsp;event&nbsp;loops&nbsp;may&nbsp;provide&nbsp;one
+</c31><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a href="#26_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;io</c26><c5>&lt;'a&gt;</c5><c22>(&amp;'a&nbsp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../option.rs.html#55"><c3>Option&lt;</c3></a><a href="#26_1_refs"><c3>&amp;'a&nbsp;mut&nbsp;</c3><a href="../rt/rtio.rs.html#22"><c3>IoFactoryObject</c3></a><a href="../option.rs.html#55"><c3>&gt;</c3></a><a href="#26_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a href="#26_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a href="#35_1_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;RemoteCallback&nbsp;</c1><c18>{
+</c18><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a href="#35_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;Trigger&nbsp;the&nbsp;remote&nbsp;callback.&nbsp;Note&nbsp;that&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;callback
+</c31><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a href="#35_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;is&nbsp;run&nbsp;is&nbsp;not&nbsp;guaranteed.&nbsp;All&nbsp;that&nbsp;is&nbsp;guaranteed&nbsp;is&nbsp;that,&nbsp;after&nbsp;calling&nbsp;'fire',
+</c31><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a href="#35_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;the&nbsp;callback&nbsp;will&nbsp;be&nbsp;called&nbsp;at&nbsp;least&nbsp;once,&nbsp;but&nbsp;multiple&nbsp;callbacks&nbsp;may&nbsp;be&nbsp;coalesced
+</c31><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a href="#35_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;and&nbsp;callbacks&nbsp;may&nbsp;be&nbsp;called&nbsp;more&nbsp;often&nbsp;requested.&nbsp;Destruction&nbsp;also&nbsp;triggers&nbsp;the
+</c31><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a href="#35_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c31>///&nbsp;callback.
+</c31><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a href="#35_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;fire</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a href="#35_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a href="#44_1_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;IoFactory&nbsp;</c1><c18>{
+</c18><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a href="#44_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;tcp_connect</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;addr:&nbsp;</c22><a href="../rt/io/net/ip.rs.html#62"><c3>SocketAddr</c3></a><a href="#44_1_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;~</c3></a><a href="../rt/rtio.rs.html#23"><c3>RtioTcpStreamObject</c3></a><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#44_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a href="#44_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;tcp_bind</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;addr:&nbsp;</c22><a href="../rt/io/net/ip.rs.html#62"><c3>SocketAddr</c3></a><a href="#44_1_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3></a><a href="#44_1_refs"><c3>~</c3><a href="../rt/rtio.rs.html#24"><c3>RtioTcpListenerObject</c3></a><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#44_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a href="#44_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;udp_bind</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;addr:&nbsp;</c22><a href="../rt/io/net/ip.rs.html#62"><c3>SocketAddr</c3></a><a href="#44_1_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;~</c3></a><a href="../rt/rtio.rs.html#25"><c3>RtioUdpSocketObject</c3></a><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#44_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a href="#44_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;timer_init</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3></a><a href="#44_1_refs"><c3>~</c3><a href="../rt/rtio.rs.html#26"><c3>RtioTimerObject</c3></a><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#44_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><a href="#44_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a href="#51_1_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;RtioTcpListener&nbsp;:&nbsp;</c1><a href="../rt/rtio.rs.html#69"><c1>RtioSocket&nbsp;</c1></a><a href="#51_1_refs"><c18>{
+</c18><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a href="#51_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;accept</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3></a><a href="#51_1_refs"><c3>~</c3><a href="../rt/rtio.rs.html#23"><c3>RtioTcpStreamObject</c3></a><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#51_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a href="#51_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;accept_simultaneously</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#51_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a href="#51_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;dont_accept_simultaneously</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3></a><a href="#51_1_refs"><c25>()</c25><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#51_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a href="#51_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><a href="#57_1_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;RtioTcpStream&nbsp;:&nbsp;</c1><a href="../rt/rtio.rs.html#69"><c1>RtioSocket&nbsp;</c1></a><a href="#57_1_refs"><c18>{
+</c18><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><a href="#57_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;read</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;buf:&nbsp;</c22><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;uint</c3><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#57_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><a href="#57_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;write</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;buf:&nbsp;</c22><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#57_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><a href="#57_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;peer_name</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3></a><a href="../rt/io/net/ip.rs.html#62"><c3>SocketAddr</c3></a><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#57_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><a href="#57_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;control_congestion</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#57_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><a href="#57_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;nodelay</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#57_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><a href="#57_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;keepalive</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;delay_in_seconds:&nbsp;</c22><c3>uint</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#57_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><a href="#57_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;letdie</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3></a><a href="#57_1_refs"><c25>()</c25><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#57_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><a href="#57_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a><a href="#67_1_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;RtioSocket&nbsp;</c1><c18>{
+</c18><br/><ln>&nbsp;70</ln><a id="70">&nbsp;</a><a href="#67_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;socket_name</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3></a><a href="../rt/io/net/ip.rs.html#62"><c3>SocketAddr</c3></a><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#67_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a><a href="#67_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;72</ln><a id="72">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;73</ln><a id="73">&nbsp;</a><a href="#71_1_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;RtioUdpSocket&nbsp;:&nbsp;</c1><a href="../rt/rtio.rs.html#69"><c1>RtioSocket&nbsp;</c1></a><a href="#71_1_refs"><c18>{
+</c18><br/><ln>&nbsp;74</ln><a id="74">&nbsp;</a><a href="#71_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;recvfrom</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;buf:&nbsp;</c22><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>(</c25><c3>uint</c3><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/net/ip.rs.html#62"><c3>SocketAddr</c3></a><a href="../result.rs.html#26"><c25>)</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#71_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;75</ln><a id="75">&nbsp;</a><a href="#71_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;sendto</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;buf:&nbsp;</c22><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>],</c4><c22>&nbsp;dst:&nbsp;</c22><a href="../rt/io/net/ip.rs.html#62"><c3>SocketAddr</c3></a><a href="#71_1_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#71_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;76</ln><a id="76">&nbsp;</a><a href="#71_1_refs"><c18>
+</c18><br/><ln>&nbsp;77</ln><a id="77">&nbsp;</a><a href="#71_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;join_multicast</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;multi:&nbsp;</c22><a href="../rt/io/net/ip.rs.html#17"><c3>IpAddr</c3></a><a href="#71_1_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#71_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;78</ln><a id="78">&nbsp;</a><a href="#71_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;leave_multicast</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;multi:&nbsp;</c22><a href="../rt/io/net/ip.rs.html#17"><c3>IpAddr</c3></a><a href="#71_1_refs"><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3></a><a href="#71_1_refs"><c25>()</c25><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#71_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;79</ln><a id="79">&nbsp;</a><a href="#71_1_refs"><c18>
+</c18><br/><ln>&nbsp;80</ln><a id="80">&nbsp;</a><a href="#71_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;loop_multicast_locally</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3></a><a href="#71_1_refs"><c25>()</c25><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#71_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;81</ln><a id="81">&nbsp;</a><a href="#71_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;dont_loop_multicast_locally</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#71_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;82</ln><a id="82">&nbsp;</a><a href="#71_1_refs"><c18>
+</c18><br/><ln>&nbsp;83</ln><a id="83">&nbsp;</a><a href="#71_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;multicast_time_to_live</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;ttl:&nbsp;</c22><c3>int</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3></a><a href="#71_1_refs"><c25>()</c25><a href="../result.rs.html#26"><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#71_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;84</ln><a id="84">&nbsp;</a><a href="#71_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;time_to_live</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;ttl:&nbsp;</c22><c3>int</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#71_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;85</ln><a id="85">&nbsp;</a><a href="#71_1_refs"><c18>
+</c18><br/><ln>&nbsp;86</ln><a id="86">&nbsp;</a><a href="#71_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;hear_broadcasts</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#71_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;87</ln><a id="87">&nbsp;</a><a href="#71_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;ignore_broadcasts</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../result.rs.html#26"><c3>Result&lt;</c3><c25>()</c25><c4>,</c4><c3>&nbsp;</c3></a><a href="../rt/io/mod.rs.html#331"><c3>IoError</c3></a><a href="../result.rs.html#26"><c3>&gt;</c3></a><a href="#71_1_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;88</ln><a id="88">&nbsp;</a><a href="#71_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;89</ln><a id="89">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;90</ln><a id="90">&nbsp;</a><a href="#88_1_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;RtioTimer&nbsp;</c1><c18>{
+</c18><br/><ln>&nbsp;91</ln><a id="91">&nbsp;</a><a href="#88_1_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;sleep</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;msecs:&nbsp;</c22><c3>u64</c3><c25>)</c25><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;92</ln><a id="92">&nbsp;</a><a href="#88_1_refs"><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="51_1_refs"><a href="#52"><c24>rt/rtio.rs:52:1-52:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;trait&nbsp;RtioTcpListener&nbsp;:&nbsp;RtioSocket&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#373"><c24>373:&nbsp;</c24>impl&nbsp;RtioTcpListener&nbsp;for&nbsp;UvTcpListener&nbsp;{
+<br/></a><br/><br/><a id="71_1_refs"><a href="#72"><c24>rt/rtio.rs:72:1-72:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;trait&nbsp;RtioUdpSocket&nbsp;:&nbsp;RtioSocket&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#594"><c24>594:&nbsp;</c24>impl&nbsp;RtioUdpSocket&nbsp;for&nbsp;UvUdpSocket&nbsp;{
+<br/></a><br/><br/><a id="26_1_refs"><a href="#27"><c24>rt/rtio.rs:27:1-27:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;trait&nbsp;EventLoop&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#104"><c24>104:&nbsp;</c24>impl&nbsp;EventLoop&nbsp;for&nbsp;UvEventLoop&nbsp;{
+<br/></a><br/><br/><a id="18_24_refs"><a href="#19"><c24>rt/rtio.rs:19:24-19:24&nbsp;-ty-&nbsp;definition:<br/></c24><pr>//&nbsp;types&nbsp;to&nbsp;use&nbsp;instead
+<br/>pub&nbsp;type&nbsp;EventLoopObject&nbsp;=&nbsp;uvio::UvEventLoop;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/sched.rs.html"><c24>rt/sched.rs:<br/></c24><a href="../rt/sched.rs.html#109"><c24>109:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new_special(event_loop:&nbsp;~EventLoopObject,
+<br/></a><a href="../rt/sched.rs.html#62"><c24>62:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;event_loop:&nbsp;~EventLoopObject,
+<br/></a><a href="../rt/sched.rs.html#98"><c24>98:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(event_loop:&nbsp;~EventLoopObject,
+<br/></a><a href="../rt/sched.rs.html#198"><c24>198:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;event_loop:&nbsp;*mut&nbsp;~EventLoopObject&nbsp;=&nbsp;&amp;mut&nbsp;self_sched.event_loop;
+<br/></a><br/><br/><a id="21_46_refs"><a href="#22"><c24>rt/rtio.rs:22:46-22:46&nbsp;-ty-&nbsp;definition:<br/></c24><pr>pub&nbsp;type&nbsp;IoFactoryObject&nbsp;=&nbsp;uvio::UvIoFactory;
+<br/>pub&nbsp;type&nbsp;RtioTcpStreamObject&nbsp;=&nbsp;uvio::UvTcpStream;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/rtio.rs.html#47"><c24>47:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;tcp_connect(&amp;mut&nbsp;self,&nbsp;addr:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;~RtioTcpStreamObject,&nbsp;IoError&gt;;
+<br/></a><a href="../rt/rtio.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;accept(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;~RtioTcpStreamObject,&nbsp;IoError&gt;;
+<br/></a><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#247"><c24>247:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;tcp_connect(&amp;mut&nbsp;self,&nbsp;addr:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;~RtioTcpStreamObject,&nbsp;IoError&gt;&nbsp;{
+<br/></a><a href="../rt/uv/uvio.rs.html#251"><c24>251:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;result_cell_ptr:&nbsp;*Cell&lt;Result&lt;~RtioTcpStreamObject,&nbsp;IoError&gt;&gt;&nbsp;=&nbsp;&amp;result_cell;
+<br/></a><a href="../rt/uv/uvio.rs.html#338"><c24>338:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;incoming_streams:&nbsp;Tube&lt;Result&lt;~RtioTcpStreamObject,&nbsp;IoError&gt;&gt;
+<br/></a><a href="../rt/uv/uvio.rs.html#375"><c24>375:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;accept(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;~RtioTcpStreamObject,&nbsp;IoError&gt;&nbsp;{
+<br/></a><a href="../rt/io/net/tcp.rs.html"><c24>rt/io/net/tcp.rs:<br/></c24><a href="../rt/io/net/tcp.rs.html#22"><c24>22:&nbsp;</c24>pub&nbsp;struct&nbsp;TcpStream(~RtioTcpStreamObject);
+<br/></a><a href="../rt/io/net/tcp.rs.html#25"><c24>25:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;new(s:&nbsp;~RtioTcpStreamObject)&nbsp;-&gt;&nbsp;TcpStream&nbsp;{
+<br/></a><br/><br/><a id="44_1_refs"><a href="#45"><c24>rt/rtio.rs:45:1-45:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;trait&nbsp;IoFactory&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#243"><c24>243:&nbsp;</c24>impl&nbsp;IoFactory&nbsp;for&nbsp;UvIoFactory&nbsp;{
+<br/></a><br/><br/><a id="19_46_refs"><a href="#20"><c24>rt/rtio.rs:20:46-20:46&nbsp;-ty-&nbsp;definition:<br/></c24><pr>pub&nbsp;type&nbsp;EventLoopObject&nbsp;=&nbsp;uvio::UvEventLoop;
+<br/>pub&nbsp;type&nbsp;RemoteCallbackObject&nbsp;=&nbsp;uvio::UvRemoteCallback;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/rtio.rs.html#32"><c24>32:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;remote_callback(&amp;mut&nbsp;self,&nbsp;~fn())&nbsp;-&gt;&nbsp;~RemoteCallbackObject;
+<br/></a><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#128"><c24>128:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;remote_callback(&amp;mut&nbsp;self,&nbsp;f:&nbsp;~fn())&nbsp;-&gt;&nbsp;~RemoteCallbackObject&nbsp;{
+<br/></a><a href="../rt/sched.rs.html"><c24>rt/sched.rs:<br/></c24><a href="../rt/sched.rs.html#77"><c24>77:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;remote:&nbsp;~RemoteCallbackObject,
+<br/></a><br/><br/><a id="23_54_refs"><a href="#24"><c24>rt/rtio.rs:24:54-24:54&nbsp;-ty-&nbsp;definition:<br/></c24><pr>pub&nbsp;type&nbsp;RtioTcpListenerObject&nbsp;=&nbsp;uvio::UvTcpListener;
+<br/>pub&nbsp;type&nbsp;RtioUdpSocketObject&nbsp;=&nbsp;uvio::UvUdpSocket;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/rtio.rs.html#49"><c24>49:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;udp_bind(&amp;mut&nbsp;self,&nbsp;addr:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;~RtioUdpSocketObject,&nbsp;IoError&gt;;
+<br/></a><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#312"><c24>312:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;udp_bind(&amp;mut&nbsp;self,&nbsp;addr:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;~RtioUdpSocketObject,&nbsp;IoError&gt;&nbsp;{
+<br/></a><a href="../rt/io/net/udp.rs.html"><c24>rt/io/net/udp.rs:<br/></c24><a href="../rt/io/net/udp.rs.html#19"><c24>19:&nbsp;</c24>pub&nbsp;struct&nbsp;UdpSocket(~RtioUdpSocketObject);
+<br/></a><br/><br/><a id="57_1_refs"><a href="#58"><c24>rt/rtio.rs:58:1-58:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;trait&nbsp;RtioTcpStream&nbsp;:&nbsp;RtioSocket&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#453"><c24>453:&nbsp;</c24>impl&nbsp;RtioTcpStream&nbsp;for&nbsp;UvTcpStream&nbsp;{
+<br/></a><br/><br/><a id="67_1_refs"><a href="#68"><c24>rt/rtio.rs:68:1-68:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;trait&nbsp;RtioSocket&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/rtio.rs.html#73"><c24>73:&nbsp;</c24>pub&nbsp;trait&nbsp;RtioUdpSocket&nbsp;:&nbsp;RtioSocket&nbsp;{
+<br/></a><a href="../rt/rtio.rs.html#53"><c24>53:&nbsp;</c24>pub&nbsp;trait&nbsp;RtioTcpListener&nbsp;:&nbsp;RtioSocket&nbsp;{
+<br/></a><a href="../rt/rtio.rs.html#59"><c24>59:&nbsp;</c24>pub&nbsp;trait&nbsp;RtioTcpStream&nbsp;:&nbsp;RtioSocket&nbsp;{
+<br/></a><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#588"><c24>588:&nbsp;</c24>impl&nbsp;RtioSocket&nbsp;for&nbsp;UvUdpSocket&nbsp;{
+<br/></a><a href="../rt/uv/uvio.rs.html#447"><c24>447:&nbsp;</c24>impl&nbsp;RtioSocket&nbsp;for&nbsp;UvTcpStream&nbsp;{
+<br/></a><a href="../rt/uv/uvio.rs.html#367"><c24>367:&nbsp;</c24>impl&nbsp;RtioSocket&nbsp;for&nbsp;UvTcpListener&nbsp;{
+<br/></a><br/><br/><a id="24_50_refs"><a href="#25"><c24>rt/rtio.rs:25:50-25:50&nbsp;-ty-&nbsp;definition:<br/></c24><pr>pub&nbsp;type&nbsp;RtioUdpSocketObject&nbsp;=&nbsp;uvio::UvUdpSocket;
+<br/>pub&nbsp;type&nbsp;RtioTimerObject&nbsp;=&nbsp;uvio::UvTimer;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/rtio.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;timer_init(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;~RtioTimerObject,&nbsp;IoError&gt;;
+<br/></a><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#330"><c24>330:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;timer_init(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;~RtioTimerObject,&nbsp;IoError&gt;&nbsp;{
+<br/></a><a href="../rt/io/timer.rs.html"><c24>rt/io/timer.rs:<br/></c24><a href="../rt/io/timer.rs.html#21"><c24>21:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;new_on_rt(i:&nbsp;~RtioTimerObject)&nbsp;-&gt;&nbsp;Timer&nbsp;{
+<br/></a><a href="../rt/io/timer.rs.html#18"><c24>18:&nbsp;</c24>pub&nbsp;struct&nbsp;Timer(~RtioTimerObject);
+<br/></a><br/><br/><a id="20_56_refs"><a href="#21"><c24>rt/rtio.rs:21:56-21:56&nbsp;-ty-&nbsp;definition:<br/></c24><pr>pub&nbsp;type&nbsp;RemoteCallbackObject&nbsp;=&nbsp;uvio::UvRemoteCallback;
+<br/>pub&nbsp;type&nbsp;IoFactoryObject&nbsp;=&nbsp;uvio::UvIoFactory;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/rtio.rs.html#34"><c24>34:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;io&lt;'a&gt;(&amp;'a&nbsp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Option&lt;&amp;'a&nbsp;mut&nbsp;IoFactoryObject&gt;;
+<br/></a><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#1063"><c24>1063:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;io&nbsp;=&nbsp;Local::unsafe_borrow::&lt;IoFactoryObject&gt;();
+<br/></a><a href="../rt/uv/uvio.rs.html#132"><c24>132:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;io&lt;'a&gt;(&amp;'a&nbsp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Option&lt;&amp;'a&nbsp;mut&nbsp;IoFactoryObject&gt;&nbsp;{
+<br/></a><a href="../rt/local.rs.html"><c24>rt/local.rs:<br/></c24><a href="../rt/local.rs.html#115"><c24>115:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;take()&nbsp;-&gt;&nbsp;~IoFactoryObject&nbsp;{&nbsp;rtabort!("unimpl")&nbsp;}
+<br/></a><a href="../rt/local.rs.html#117"><c24>117:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;borrow&lt;T&gt;(_f:&nbsp;&amp;fn(&amp;mut&nbsp;IoFactoryObject)&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;T&nbsp;{&nbsp;rtabort!("unimpl")&nbsp;}
+<br/></a><a href="../rt/local.rs.html#123"><c24>123:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;fn&nbsp;try_unsafe_borrow()&nbsp;-&gt;&nbsp;Option&lt;*mut&nbsp;IoFactoryObject&gt;&nbsp;{&nbsp;rtabort!("unimpl")&nbsp;}
+<br/></a><a href="../rt/local.rs.html#113"><c24>113:&nbsp;</c24>impl&nbsp;Local&nbsp;for&nbsp;IoFactoryObject&nbsp;{
+<br/></a><a href="../rt/local.rs.html#114"><c24>114:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;put(_value:&nbsp;~IoFactoryObject)&nbsp;{&nbsp;rtabort!("unimpl")&nbsp;}
+<br/></a><a href="../rt/local.rs.html#118"><c24>118:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;fn&nbsp;unsafe_borrow()&nbsp;-&gt;&nbsp;*mut&nbsp;IoFactoryObject&nbsp;{
+<br/></a><a href="../rt/local.rs.html#120"><c24>120:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;io:&nbsp;*mut&nbsp;IoFactoryObject&nbsp;=&nbsp;(*sched).event_loop.io().unwrap();
+<br/></a><a href="../rt/io/net/tcp.rs.html"><c24>rt/io/net/tcp.rs:<br/></c24><a href="../rt/io/net/tcp.rs.html#105"><c24>105:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;io&nbsp;=&nbsp;Local::unsafe_borrow::&lt;IoFactoryObject&gt;();
+<br/></a><a href="../rt/io/net/tcp.rs.html#32"><c24>32:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;io&nbsp;=&nbsp;Local::unsafe_borrow::&lt;IoFactoryObject&gt;();
+<br/></a><a href="../rt/io/net/udp.rs.html"><c24>rt/io/net/udp.rs:<br/></c24><a href="../rt/io/net/udp.rs.html#23"><c24>23:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;socket&nbsp;=&nbsp;unsafe&nbsp;{&nbsp;(*Local::unsafe_borrow::&lt;IoFactoryObject&gt;()).udp_bind(addr)&nbsp;};
+<br/></a><a href="../rt/io/timer.rs.html"><c24>rt/io/timer.rs:<br/></c24><a href="../rt/io/timer.rs.html#28"><c24>28:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;io&nbsp;=&nbsp;Local::unsafe_borrow::&lt;IoFactoryObject&gt;();
+<br/></a><br/><br/><a id="22_50_refs"><a href="#23"><c24>rt/rtio.rs:23:50-23:50&nbsp;-ty-&nbsp;definition:<br/></c24><pr>pub&nbsp;type&nbsp;RtioTcpStreamObject&nbsp;=&nbsp;uvio::UvTcpStream;
+<br/>pub&nbsp;type&nbsp;RtioTcpListenerObject&nbsp;=&nbsp;uvio::UvTcpListener;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/rtio.rs.html#48"><c24>48:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;tcp_bind(&amp;mut&nbsp;self,&nbsp;addr:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;~RtioTcpListenerObject,&nbsp;IoError&gt;;
+<br/></a><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#294"><c24>294:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;tcp_bind(&amp;mut&nbsp;self,&nbsp;addr:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;~RtioTcpListenerObject,&nbsp;IoError&gt;&nbsp;{
+<br/></a><a href="../rt/io/net/tcp.rs.html"><c24>rt/io/net/tcp.rs:<br/></c24><a href="../rt/io/net/tcp.rs.html#100"><c24>100:&nbsp;</c24>pub&nbsp;struct&nbsp;TcpListener(~RtioTcpListenerObject);
+<br/></a><br/><br/><a id="35_1_refs"><a href="#36"><c24>rt/rtio.rs:36:1-36:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;trait&nbsp;RemoteCallback&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#181"><c24>181:&nbsp;</c24>impl&nbsp;RemoteCallback&nbsp;for&nbsp;UvRemoteCallback&nbsp;{
+<br/></a><br/><br/><a id="88_1_refs"><a href="#89"><c24>rt/rtio.rs:89:1-89:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;trait&nbsp;RtioTimer&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#772"><c24>772:&nbsp;</c24>impl&nbsp;RtioTimer&nbsp;for&nbsp;UvTimer&nbsp;{
+<br/></a><a href="../rt/io/timer.rs.html"><c24>rt/io/timer.rs:<br/></c24><a href="../rt/io/timer.rs.html#43"><c24>43:&nbsp;</c24>impl&nbsp;RtioTimer&nbsp;for&nbsp;Timer&nbsp;{
+<br/></a><br/></a></a>

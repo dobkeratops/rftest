@@ -1,0 +1,368 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#3a343a;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;A&nbsp;type&nbsp;that&nbsp;represents&nbsp;one&nbsp;of&nbsp;two&nbsp;alternatives
+</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c0>#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>missing_doc</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c0>use&nbsp;option::</c0><c4>{</c4><c0>Some</c0><c4>,</c4><c0>&nbsp;None</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c0>use&nbsp;clone::Clone</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c0>use&nbsp;container::Container</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c0>use&nbsp;cmp::Eq</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c0>use&nbsp;iterator::Iterator</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>use&nbsp;result::Result</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>use&nbsp;result</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c0>use&nbsp;str::StrSlice</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c0>use&nbsp;vec</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c0>use&nbsp;vec::</c0><c4>{</c4><c0>OwnedVector</c0><c4>,</c4><c0>&nbsp;ImmutableVector</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c31>///&nbsp;The&nbsp;either&nbsp;type
+</c31><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c0>#</c0><c4>[</c4><c0>deriving</c0><c25>(</c25><a href="#26_11_refs"><c3>Clone</c3><c4>,</c4><c0>&nbsp;</c0><a href="#26_18_refs"><c3>Eq</c3><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a href="#26_23_refs"><c11>pub&nbsp;</c11><c30>enum&nbsp;Either</c30><c5>&lt;T,&nbsp;U&gt;</c5><c30>&nbsp;</c30><c11>{
+</c11><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a href="#26_23_refs"><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#28_4_refs"><c0>Left</c0><c25>(</c25><c3>T</c3><c25>)</c25><a href="#26_23_refs"><c4>,</c4><c11>
+</c11><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a href="#26_23_refs"><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#29_4_refs"><c0>Right</c0><c25>(</c25><c3>U</c3><c25>)</c25><a href="#26_23_refs"><c11>
+</c11><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a href="#26_23_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c31>///&nbsp;Applies&nbsp;a&nbsp;function&nbsp;based&nbsp;on&nbsp;the&nbsp;given&nbsp;either&nbsp;value
+</c31><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c31>///&nbsp;If&nbsp;`value`&nbsp;is&nbsp;left(T)&nbsp;then&nbsp;`f_left`&nbsp;is&nbsp;applied&nbsp;to&nbsp;its&nbsp;contents,&nbsp;if
+</c31><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c31>///&nbsp;`value`&nbsp;is&nbsp;right(U)&nbsp;then&nbsp;`f_right`&nbsp;is&nbsp;applied&nbsp;to&nbsp;its&nbsp;contents,&nbsp;and&nbsp;the
+</c31><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c31>///&nbsp;result&nbsp;is&nbsp;returned.
+</c31><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a href="#37_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;either</c26><c5>&lt;T,&nbsp;U,&nbsp;V&gt;</c5><c1>(</c1><a href="#38_23_refs"><c20>f_left</c20><a href="#37_10_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(&amp;T</c3><c25>)</c25><c3>&nbsp;-&gt;&nbsp;V</c3><c4>,</c4><c1>
+</c1><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a href="#37_10_refs"><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><a href="#39_23_refs"><c20>f_right</c20><a href="#37_10_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(&amp;U</c3><c25>)</c25><c3>&nbsp;-&gt;&nbsp;V</c3><c4>,</c4><c1>&nbsp;</c1><a href="#39_46_refs"><c20>value</c20><a href="#37_10_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><a href="either.rs.html#28"><c3>Either&lt;T</c3><c4>,</c4><c3>&nbsp;U&gt;</c3></a><a href="#37_10_refs"><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>V</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a href="#37_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><a href="either.rs.html#41"><c8>value</c8></a><a href="#37_10_refs"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a href="#37_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#30"><c20>Left</c20><c25>(</c25></a><a href="#41_13_refs"><c20>ref&nbsp;l</c20><a href="either.rs.html#30"><c25>)</c25></a><a href="#37_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><a href="either.rs.html#40"><c8>f_left</c8></a><a href="#37_10_refs"><c25>(</c25><a href="either.rs.html#43"><c8>l</c8></a><a href="#37_10_refs"><c25>)</c25><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a href="#37_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#31"><c20>Right</c20><c25>(</c25></a><a href="#42_14_refs"><c20>ref&nbsp;r</c20><a href="either.rs.html#31"><c25>)</c25></a><a href="#37_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><a href="either.rs.html#41"><c8>f_right</c8></a><a href="#37_10_refs"><c25>(</c25><a href="either.rs.html#44"><c8>r</c8></a><a href="#37_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a href="#37_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a href="#37_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c31>///&nbsp;Extracts&nbsp;from&nbsp;a&nbsp;vector&nbsp;of&nbsp;either&nbsp;all&nbsp;the&nbsp;left&nbsp;values
+</c31><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c1>pub&nbsp;</c1><c26>fn&nbsp;lefts</c26><c5>&lt;T:</c5><a href="clone.rs.html#27"><c5>Clone</c5></a><c5>,U&gt;</c5><c1>(</c1><a href="#47_24_refs"><c20>eithers</c20><c1>:&nbsp;</c1><c3>&amp;</c3><c4>[</c4><a href="either.rs.html#28"><c3>Either&lt;T</c3><c4>,</c4><c3>&nbsp;U&gt;</c3></a><c4>]</c4><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>~</c3><c4>[</c4><c3>T</c3><c4>]</c4><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c9>do&nbsp;</c9><a href="vec.rs.html#164"><c8>vec::build_sized</c8></a><c25>(</c25><a href="either.rs.html#49"><c8>eithers</c8></a><a href="vec.rs.html#699"><c10>.len</c10><c25>())</c25></a><c0>&nbsp;|</c0><a href="#48_40_refs"><c20>push</c20><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="vec.rs.html#2138"><c13>for&nbsp;</c13></a><a href="#49_12_refs"><c20>elt</c20><a href="vec.rs.html#2138"><c13>&nbsp;in&nbsp;</c13></a><a href="either.rs.html#49"><c8>eithers</c8></a><a href="vec.rs.html#2138"><c16>.iter</c16><c25>()</c25><c16>&nbsp;</c16><c4>{</c4><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a href="vec.rs.html#2138"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2></a><a href="either.rs.html#51"><c8>elt</c8></a><a href="vec.rs.html#2138"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a href="vec.rs.html#2138"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7></a><a href="either.rs.html#30"><c20>Left</c20><c25>(</c25></a><a href="#51_21_refs"><c20>ref&nbsp;l</c20><a href="either.rs.html#30"><c25>)</c25></a><a href="vec.rs.html#2138"><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21></a><a href="either.rs.html#50"><c8>push</c8></a><a href="vec.rs.html#2138"><c25>(</c25></a><a href="clone.rs.html#32"><c25>(</c25><c2>*</c2></a><a href="either.rs.html#53"><c8>l</c8></a><a href="clone.rs.html#32"><c25>)</c25><c0>.</c0><c10>clone</c10><c25>())</c25></a><a href="vec.rs.html#2138"><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a href="vec.rs.html#2138"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>&nbsp;/*&nbsp;fallthrough&nbsp;*/&nbsp;</c21><c4>}</c4><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a href="vec.rs.html#2138"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a href="vec.rs.html#2138"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c13>
+</c13></a><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a href="vec.rs.html#2138"><c13>&nbsp;&nbsp;&nbsp;&nbsp;</c13><c4>}</c4></a><c21>
+</c21><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c31>///&nbsp;Extracts&nbsp;from&nbsp;a&nbsp;vector&nbsp;of&nbsp;either&nbsp;all&nbsp;the&nbsp;right&nbsp;values
+</c31><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c1>pub&nbsp;</c1><c26>fn&nbsp;rights</c26><c5>&lt;T,&nbsp;U:&nbsp;</c5><a href="clone.rs.html#27"><c5>Clone</c5></a><c5>&gt;</c5><c1>(</c1><a href="#59_27_refs"><c20>eithers</c20><c1>:&nbsp;</c1><c3>&amp;</c3><c4>[</c4><a href="either.rs.html#28"><c3>Either&lt;T</c3><c4>,</c4><c3>&nbsp;U&gt;</c3></a><c4>]</c4><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>~</c3><c4>[</c4><c3>U</c3><c4>]</c4><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c9>do&nbsp;</c9><a href="vec.rs.html#164"><c8>vec::build_sized</c8></a><c25>(</c25><a href="either.rs.html#61"><c8>eithers</c8></a><a href="vec.rs.html#699"><c10>.len</c10><c25>())</c25></a><c0>&nbsp;|</c0><a href="#60_40_refs"><c20>push</c20><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="option.rs.html#57"><c13>for&nbsp;</c13></a><a href="option.rs.html#58"><c20>elt</c20></a><a href="option.rs.html#57"><c13>&nbsp;in&nbsp;</c13></a><a href="either.rs.html#61"><c8>eithers</c8></a><a href="#61_19_refs"><c20>.iter</c20><c25>()</c25><c20>&nbsp;</c20><c4>{</c4><a href="option.rs.html#57"><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a href="option.rs.html#57"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2></a><a href="either.rs.html#63"><c8>elt</c8></a><a href="option.rs.html#57"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a href="option.rs.html#57"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7></a><a href="either.rs.html#31"><c20>Right</c20><c25>(</c25></a><a href="#63_22_refs"><c20>ref&nbsp;r</c20><a href="either.rs.html#31"><c25>)</c25></a><a href="option.rs.html#57"><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21></a><a href="either.rs.html#62"><c8>push</c8></a><a href="option.rs.html#57"><c25>((</c25><c2>*</c2></a><a href="either.rs.html#65"><c8>r</c8></a><a href="option.rs.html#57"><c25>)</c25><c0>.</c0></a><a href="clone.rs.html#32"><c10>clone</c10><c25>())</c25></a><a href="option.rs.html#57"><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a href="option.rs.html#57"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>&nbsp;/*&nbsp;fallthrough&nbsp;*/&nbsp;</c21><c4>}</c4><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a href="option.rs.html#57"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a href="option.rs.html#57"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c13>
+</c13></a><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a href="option.rs.html#57"><c13>&nbsp;&nbsp;&nbsp;&nbsp;</c13><c4>}</c4></a><c21>
+</c21><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c31>///&nbsp;Extracts&nbsp;from&nbsp;a&nbsp;vector&nbsp;of&nbsp;either&nbsp;all&nbsp;the&nbsp;left&nbsp;values&nbsp;and&nbsp;right&nbsp;values
+</c31><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c31>///&nbsp;Returns&nbsp;a&nbsp;structure&nbsp;containing&nbsp;a&nbsp;vector&nbsp;of&nbsp;left&nbsp;values&nbsp;and&nbsp;a&nbsp;vector&nbsp;of
+</c31><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c31>///&nbsp;right&nbsp;values.
+</c31><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c1>pub&nbsp;</c1><c26>fn&nbsp;partition</c26><c5>&lt;T,&nbsp;U&gt;</c5><c1>(</c1><a href="#74_23_refs"><c20>eithers</c20><c1>:&nbsp;</c1><c3>~</c3><c4>[</c4><a href="either.rs.html#28"><c3>Either&lt;T</c3><c4>,</c4><c3>&nbsp;U&gt;</c3></a><c4>]</c4><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c25>(</c25><c3>~</c3><c4>[</c4><c3>T</c3><c4>],</c4><c3>&nbsp;~</c3><c4>[</c4><c3>U</c3><c4>]</c4><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;mut&nbsp;</c13><a href="#75_12_refs"><c20>lefts</c20><c16>:&nbsp;</c16><c3>~</c3><c4>[</c4><c3>T</c3><c4>]</c4><c16>&nbsp;=&nbsp;~</c16><c4>[];</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;mut&nbsp;</c13><a href="#76_12_refs"><c20>rights</c20><c16>:&nbsp;</c16><c3>~</c3><c4>[</c4><c3>U</c3><c4>]</c4><c16>&nbsp;=&nbsp;~</c16><c4>[];</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="vec.rs.html#2245"><c7>for&nbsp;</c7></a><a href="#77_8_refs"><c20>elt</c20><a href="vec.rs.html#2245"><c7>&nbsp;in&nbsp;</c7></a><a href="either.rs.html#76"><c8>eithers</c8></a><a href="vec.rs.html#1179"><c2>.consume_iter</c2><c25>()</c25><c2>&nbsp;</c2><c4>{</c4></a><a href="vec.rs.html#2245"><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a href="vec.rs.html#2245"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7></a><a href="either.rs.html#79"><c8>elt</c8></a><a href="vec.rs.html#2245"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a href="vec.rs.html#2245"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7></a><a href="either.rs.html#30"><c20>Left</c20><c25>(</c25></a><a href="#79_17_refs"><c20>l</c20><a href="either.rs.html#30"><c25>)</c25></a><a href="vec.rs.html#2245"><c7>&nbsp;=&gt;&nbsp;</c7></a><a href="either.rs.html#77"><c8>lefts</c8></a><a href="vec.rs.html#2245"><c21>.push</c21><c25>(</c25></a><a href="either.rs.html#81"><c8>l</c8></a><a href="vec.rs.html#2245"><c25>)</c25><c4>,</c4><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a href="vec.rs.html#2245"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7></a><a href="either.rs.html#31"><c20>Right</c20><c25>(</c25></a><a href="#80_18_refs"><c20>r</c20><a href="either.rs.html#31"><c25>)</c25></a><a href="vec.rs.html#2245"><c7>&nbsp;=&gt;&nbsp;</c7></a><a href="either.rs.html#78"><c8>rights</c8></a><a href="vec.rs.html#2245"><c21>.push</c21><c25>(</c25></a><a href="either.rs.html#82"><c8>r</c8></a><a href="vec.rs.html#2245"><c25>)</c25><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a href="vec.rs.html#2245"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a href="vec.rs.html#2245"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>
+</c7></a><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a href="vec.rs.html#2245"><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c13>return</c13></a><c13>&nbsp;</c13><c25>(</c25><a href="either.rs.html#77"><c8>lefts</c8></a><c4>,&nbsp;</c4><a href="either.rs.html#78"><c8>rights</c8></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c31>///&nbsp;Flips&nbsp;between&nbsp;left&nbsp;and&nbsp;right&nbsp;of&nbsp;a&nbsp;given&nbsp;either
+</c31><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a href="#87_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;flip</c26><c5>&lt;T,&nbsp;U&gt;</c5><c1>(</c1><a href="#88_18_refs"><c20>eith</c20><a href="#87_10_refs"><c1>:&nbsp;</c1><a href="either.rs.html#28"><c3>Either&lt;T</c3><c4>,</c4><c3>&nbsp;U&gt;</c3></a><a href="#87_10_refs"><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><a href="either.rs.html#28"><c3>Either&lt;U</c3><c4>,</c4><c3>&nbsp;T&gt;</c3></a><a href="#87_10_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a href="#87_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="either.rs.html#90"><c8>eith</c8></a><a href="#87_10_refs"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a href="#87_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#31"><c20>Right</c20><c25>(</c25></a><a href="#90_14_refs"><c20>r</c20><a href="either.rs.html#31"><c25>)</c25></a><a href="#87_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><a href="either.rs.html#30"><c8>Left</c8></a><a href="#87_10_refs"><c25>(</c25><a href="either.rs.html#92"><c8>r</c8></a><a href="#87_10_refs"><c25>)</c25><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a href="#87_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#30"><c20>Left</c20><c25>(</c25></a><a href="#91_13_refs"><c20>l</c20><a href="either.rs.html#30"><c25>)</c25></a><a href="#87_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><a href="either.rs.html#31"><c8>Right</c8></a><a href="#87_10_refs"><c25>(</c25><a href="either.rs.html#93"><c8>l</c8></a><a href="#87_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a href="#87_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a href="#87_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c31>///&nbsp;Converts&nbsp;either::t&nbsp;to&nbsp;a&nbsp;result::t
+</c31><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c31>///&nbsp;Converts&nbsp;an&nbsp;`either`&nbsp;type&nbsp;to&nbsp;a&nbsp;`result`&nbsp;type,&nbsp;making&nbsp;the&nbsp;"right"&nbsp;choice
+</c31><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c31>///&nbsp;an&nbsp;ok&nbsp;result,&nbsp;and&nbsp;the&nbsp;"left"&nbsp;choice&nbsp;a&nbsp;fail
+</c31><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a href="#99_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;to_result</c26><c5>&lt;T,&nbsp;U&gt;</c5><c1>(</c1><a href="#100_23_refs"><c20>eith</c20><a href="#99_10_refs"><c1>:&nbsp;</c1><a href="either.rs.html#28"><c3>Either&lt;</c3></a><a href="#99_10_refs"><c3>T</c3><a href="either.rs.html#28"><c4>,</c4><c3>&nbsp;</c3></a><a href="#99_10_refs"><c3>U</c3><a href="either.rs.html#28"><c3>&gt;</c3></a><a href="#99_10_refs"><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><a href="result.rs.html#26"><c3>Result&lt;U</c3><c4>,</c4><c3>&nbsp;</c3></a><a href="#99_10_refs"><c3>T</c3><a href="result.rs.html#26"><c3>&gt;</c3></a><a href="#99_10_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a href="#99_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="either.rs.html#102"><c8>eith</c8></a><a href="#99_10_refs"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a href="#99_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#31"><c20>Right</c20><c25>(</c25></a><a href="#102_14_refs"><c20>r</c20><a href="either.rs.html#31"><c25>)</c25></a><a href="#99_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><a href="result.rs.html#29"><c8>result::Ok</c8></a><a href="#99_10_refs"><c25>(</c25><a href="either.rs.html#104"><c8>r</c8></a><a href="#99_10_refs"><c25>)</c25><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a href="#99_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#30"><c20>Left</c20><c25>(</c25></a><a href="#103_13_refs"><c20>l</c20><a href="either.rs.html#30"><c25>)</c25></a><a href="#99_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><a href="result.rs.html#31"><c8>result::Err</c8></a><a href="#99_10_refs"><c25>(</c25><a href="either.rs.html#105"><c8>l</c8></a><a href="#99_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a href="#99_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a href="#99_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c31>///&nbsp;Checks&nbsp;whether&nbsp;the&nbsp;given&nbsp;value&nbsp;is&nbsp;a&nbsp;left
+</c31><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a href="#108_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_left</c26><c5>&lt;T,&nbsp;U&gt;</c5><c1>(</c1><a href="#109_21_refs"><c20>eith</c20><a href="#108_10_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><a href="either.rs.html#28"><c3>Either&lt;</c3></a><a href="#108_10_refs"><c3>T</c3><a href="either.rs.html#28"><c4>,</c4><c3>&nbsp;</c3></a><a href="#108_10_refs"><c3>U</c3><a href="either.rs.html#28"><c3>&gt;</c3></a><a href="#108_10_refs"><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a href="#108_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><a href="either.rs.html#111"><c8>eith</c8></a><a href="#108_10_refs"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><a href="#108_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#30"><c20>Left</c20><c25>(</c25><c20>_</c20><c25>)</c25></a><a href="#108_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><c12>true</c12><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a href="#108_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;=&gt;&nbsp;</c7><c12>false</c12><c7>
+</c7><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a href="#108_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a href="#108_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c31>///&nbsp;Checks&nbsp;whether&nbsp;the&nbsp;given&nbsp;value&nbsp;is&nbsp;a&nbsp;right
+</c31><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><a href="#117_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_right</c26><c5>&lt;T,&nbsp;U&gt;</c5><c1>(</c1><a href="#118_22_refs"><c20>eith</c20><a href="#117_10_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><a href="either.rs.html#28"><c3>Either&lt;</c3></a><a href="#117_10_refs"><c3>T</c3><a href="either.rs.html#28"><c4>,</c4><c3>&nbsp;U&gt;</c3></a><a href="#117_10_refs"><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><a href="#117_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><c2>*</c2><a href="either.rs.html#120"><c8>eith</c8></a><a href="#117_10_refs"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><a href="#117_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#31"><c20>Right</c20><c25>(</c25></a><a href="#117_10_refs"><c20>_</c20><a href="either.rs.html#31"><c25>)</c25></a><a href="#117_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><c21>true</c21><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><a href="#117_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;=&gt;&nbsp;</c7><c12>false</c12><c7>
+</c7><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><a href="#117_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><a href="#117_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c31>///&nbsp;Retrieves&nbsp;the&nbsp;value&nbsp;in&nbsp;the&nbsp;left&nbsp;branch.
+</c31><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><c31>///&nbsp;Fails&nbsp;with&nbsp;a&nbsp;specified&nbsp;reason&nbsp;if&nbsp;the&nbsp;either&nbsp;is&nbsp;Right.
+</c31><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><a href="#127_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;expect_left</c26><c5>&lt;T,U&gt;</c5><c1>(</c1><a href="#128_24_refs"><c20>eith</c20><a href="#127_10_refs"><c1>:&nbsp;</c1><a href="either.rs.html#28"><c3>Either&lt;T</c3><c4>,</c4><c3>U&gt;</c3></a><a href="#127_10_refs"><c4>,</c4><c1>&nbsp;</c1><a href="#128_43_refs"><c20>reason</c20><a href="#127_10_refs"><c1>:&nbsp;</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><a href="#127_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="either.rs.html#130"><c8>eith</c8></a><a href="#127_10_refs"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><a href="#127_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#30"><c20>Left</c20><c25>(</c25></a><a href="#130_13_refs"><c20>x</c20><a href="either.rs.html#30"><c25>)</c25></a><a href="#127_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><a href="either.rs.html#132"><c8>x</c8></a><a href="#127_10_refs"><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><a href="#127_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#31"><c20>Right</c20><c25>(</c25></a><a href="#127_10_refs"><c20>_</c20><a href="either.rs.html#31"><c25>)</c25></a><a href="#127_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><c21>fail!</c21><c25>(</c25><a href="either.rs.html#130"><c8>reason</c8></a><a href="str.rs.html#1620"><c10>.to_owned</c10><c25>()</c25></a><a href="#127_10_refs"><c25>)</c25><c21>
+</c21><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a href="#127_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><a href="#127_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c31>///&nbsp;Retrieves&nbsp;the&nbsp;value&nbsp;in&nbsp;the&nbsp;left&nbsp;branch.&nbsp;Fails&nbsp;if&nbsp;the&nbsp;either&nbsp;is&nbsp;Right.
+</c31><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><a href="#136_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;unwrap_left</c26><c5>&lt;T,U&gt;</c5><c1>(</c1><a href="#137_24_refs"><c20>eith</c20><a href="#136_10_refs"><c1>:&nbsp;</c1><a href="either.rs.html#28"><c3>Either&lt;T</c3><c4>,</c4><c3>U&gt;</c3></a><a href="#136_10_refs"><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><a href="#136_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="either.rs.html#129"><c8>expect_left</c8></a><a href="#136_10_refs"><c25>(</c25><a href="either.rs.html#139"><c8>eith</c8></a><a href="#136_10_refs"><c4>,</c4><c9>&nbsp;</c9><c12>"either::unwrap_left&nbsp;Right"</c12><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><a href="#136_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c31>///&nbsp;Retrieves&nbsp;the&nbsp;value&nbsp;in&nbsp;the&nbsp;right&nbsp;branch.
+</c31><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c31>///&nbsp;Fails&nbsp;with&nbsp;a&nbsp;specified&nbsp;reason&nbsp;if&nbsp;the&nbsp;either&nbsp;is&nbsp;Left.
+</c31><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><a href="#143_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;expect_right</c26><c5>&lt;T,U&gt;</c5><c1>(</c1><a href="#144_25_refs"><c20>eith</c20><a href="#143_10_refs"><c1>:&nbsp;</c1><a href="either.rs.html#28"><c3>Either&lt;</c3></a><a href="#143_10_refs"><c3>T</c3><a href="either.rs.html#28"><c4>,</c4></a><a href="#143_10_refs"><c3>U</c3><a href="either.rs.html#28"><c3>&gt;</c3></a><a href="#143_10_refs"><c4>,</c4><c1>&nbsp;</c1><a href="#144_44_refs"><c20>reason</c20><a href="#143_10_refs"><c1>:&nbsp;</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>U</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><a href="#143_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="either.rs.html#146"><c8>eith</c8></a><a href="#143_10_refs"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><a href="#143_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#31"><c20>Right</c20><c25>(</c25></a><a href="#146_14_refs"><c20>x</c20><a href="either.rs.html#31"><c25>)</c25></a><a href="#143_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><a href="either.rs.html#148"><c8>x</c8></a><a href="#143_10_refs"><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><a href="#143_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="either.rs.html#30"><c20>Left</c20><c25>(</c25></a><a href="#143_10_refs"><c20>_</c20><a href="either.rs.html#30"><c25>)</c25></a><a href="#143_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><c21>fail!</c21><c25>(</c25><a href="either.rs.html#146"><c8>reason</c8></a><a href="str.rs.html#1620"><c10>.to_owned</c10><c25>()</c25></a><a href="#143_10_refs"><c25>)</c25><c21>
+</c21><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><a href="#143_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><a href="#143_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c31>///&nbsp;Retrieves&nbsp;the&nbsp;value&nbsp;in&nbsp;the&nbsp;right&nbsp;branch.&nbsp;Fails&nbsp;if&nbsp;the&nbsp;either&nbsp;is&nbsp;Left.
+</c31><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><a href="#151_74_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;unwrap_right</c26><c5>&lt;T,U&gt;</c5><c1>(</c1><a href="#152_25_refs"><c20>eith</c20><a href="#151_74_refs"><c1>:&nbsp;</c1><a href="either.rs.html#28"><c3>Either&lt;T</c3><c4>,</c4><c3>U&gt;</c3></a><a href="#151_74_refs"><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>U</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><a href="#151_74_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="either.rs.html#145"><c8>expect_right</c8></a><a href="#151_74_refs"><c25>(</c25><a href="either.rs.html#154"><c8>eith</c8></a><a href="#151_74_refs"><c4>,</c4><c9>&nbsp;</c9><c12>"either::unwrap_right&nbsp;Left"</c12><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><a href="#151_74_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><c29>impl</c29><c5>&lt;T,&nbsp;U&gt;</c5><c29>&nbsp;</c29><a href="either.rs.html#28"><c29>Either</c29><c5>&lt;T,&nbsp;U&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;either</c26><c5>&lt;V&gt;</c5><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#158_28_refs"><c20>f_left</c20><c22>:&nbsp;</c22><c3>&amp;</c3><c26>fn</c26><c3>(&amp;T</c3><c25>)</c25><c3>&nbsp;-&gt;&nbsp;V</c3><c4>,</c4><c22>&nbsp;</c22><a href="#158_50_refs"><c20>f_right</c20><c22>:&nbsp;</c22><c3>&amp;</c3><c26>fn</c26><c3>(&amp;U</c3><c25>)</c25><c3>&nbsp;-&gt;&nbsp;V</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>V</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="either.rs.html#39"><c8>either</c8></a><c25>(</c25><a href="either.rs.html#160"><c8>f_left</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="either.rs.html#160"><c8>f_right</c8></a><c4>,</c4><c9>&nbsp;</c9><c0>self</c0><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;flip</c26><c22>(self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="either.rs.html#28"><c3>Either&lt;U</c3><c4>,</c4><c3>&nbsp;T&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="either.rs.html#89"><c8>flip</c8></a><c25>(</c25><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;to_result</c26><c22>(self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="result.rs.html#26"><c3>Result&lt;U</c3><c4>,</c4><c3>&nbsp;T&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="either.rs.html#101"><c8>to_result</c8></a><c25>(</c25><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;is_left</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="either.rs.html#110"><c8>is_left</c8></a><c25>(</c25><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;is_right</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="either.rs.html#119"><c8>is_right</c8></a><c25>(</c25><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;expect_left</c26><c22>(self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#175_29_refs"><c20>reason</c20><c22>:&nbsp;</c22><c3>&amp;str</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>T</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="either.rs.html#129"><c8>expect_left</c8></a><c25>(</c25><c0>self</c0><c4>,</c4><c9>&nbsp;</c9><a href="either.rs.html#177"><c8>reason</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;unwrap_left</c26><c22>(self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>T</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="either.rs.html#138"><c8>unwrap_left</c8></a><c25>(</c25><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;expect_right</c26><c22>(self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#181_30_refs"><c20>reason</c20><c22>:&nbsp;</c22><c3>&amp;str</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>U</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="either.rs.html#145"><c8>expect_right</c8></a><c25>(</c25><c0>self</c0><c4>,</c4><c9>&nbsp;</c9><a href="either.rs.html#183"><c8>reason</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;unwrap_right</c26><c22>(self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>U</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="either.rs.html#153"><c8>unwrap_right</c8></a><c25>(</c25><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><c26>fn&nbsp;test_either_left</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;val&nbsp;=&nbsp;Left</c0><c25>(</c25><c0>10</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;f_left</c26><c0>(x:&nbsp;&amp;int</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;bool&nbsp;</c0><c4>{</c4><c0>&nbsp;*x&nbsp;==&nbsp;10&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;f_right</c26><c0>(_x:&nbsp;&amp;uint</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;bool&nbsp;</c0><c4>{</c4><c0>&nbsp;false&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>((</c25><c0>either</c0><c25>(</c25><c0>f_left</c0><c4>,</c4><c0>&nbsp;f_right</c0><c4>,</c4><c0>&nbsp;&amp;val</c0><c25>)))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><c26>fn&nbsp;test_either_right</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;val&nbsp;=&nbsp;Right</c0><c25>(</c25><c0>10u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;f_left</c26><c0>(_x:&nbsp;&amp;int</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;bool&nbsp;</c0><c4>{</c4><c0>&nbsp;false&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;f_right</c26><c0>(x:&nbsp;&amp;uint</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;bool&nbsp;</c0><c4>{</c4><c0>&nbsp;*x&nbsp;==&nbsp;10u&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>((</c25><c0>either</c0><c25>(</c25><c0>f_left</c0><c4>,</c4><c0>&nbsp;f_right</c0><c4>,</c4><c0>&nbsp;&amp;val</c0><c25>)))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><c26>fn&nbsp;test_lefts</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;input&nbsp;=&nbsp;~</c0><c4>[</c4><c0>Left</c0><c25>(</c25><c0>10</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Right</c0><c25>(</c25><c0>11</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Left</c0><c25>(</c25><c0>12</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Right</c0><c25>(</c25><c0>13</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Left</c0><c25>(</c25><c0>14</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;result&nbsp;=&nbsp;lefts</c0><c25>(</c25><c0>input</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>result</c0><c4>,</c4><c0>&nbsp;~</c0><c4>[</c4><c0>10</c0><c4>,</c4><c0>&nbsp;12</c0><c4>,</c4><c0>&nbsp;14</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><c26>fn&nbsp;test_lefts_none</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;input:&nbsp;~</c0><c4>[</c4><c0>Either&lt;int</c0><c4>,</c4><c0>&nbsp;int&gt;</c0><c4>]</c4><c0>&nbsp;=&nbsp;~</c0><c4>[</c4><c0>Right</c0><c25>(</c25><c0>10</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Right</c0><c25>(</c25><c0>10</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;result&nbsp;=&nbsp;lefts</c0><c25>(</c25><c0>input</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>result.len</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a><c26>fn&nbsp;test_lefts_empty</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;input:&nbsp;~</c0><c4>[</c4><c0>Either&lt;int</c0><c4>,</c4><c0>&nbsp;int&gt;</c0><c4>]</c4><c0>&nbsp;=&nbsp;~</c0><c4>[];</c4><c0>
+</c0><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;result&nbsp;=&nbsp;lefts</c0><c25>(</c25><c0>input</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>result.len</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><c26>fn&nbsp;test_rights</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;input&nbsp;=&nbsp;~</c0><c4>[</c4><c0>Left</c0><c25>(</c25><c0>10</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Right</c0><c25>(</c25><c0>11</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Left</c0><c25>(</c25><c0>12</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Right</c0><c25>(</c25><c0>13</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Left</c0><c25>(</c25><c0>14</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;result&nbsp;=&nbsp;rights</c0><c25>(</c25><c0>input</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>result</c0><c4>,</c4><c0>&nbsp;~</c0><c4>[</c4><c0>11</c0><c4>,</c4><c0>&nbsp;13</c0><c4>]</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><c26>fn&nbsp;test_rights_none</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;input:&nbsp;~</c0><c4>[</c4><c0>Either&lt;int</c0><c4>,</c4><c0>&nbsp;int&gt;</c0><c4>]</c4><c0>&nbsp;=&nbsp;~</c0><c4>[</c4><c0>Left</c0><c25>(</c25><c0>10</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Left</c0><c25>(</c25><c0>10</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;result&nbsp;=&nbsp;rights</c0><c25>(</c25><c0>input</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>result.len</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a><c26>fn&nbsp;test_rights_empty</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;input:&nbsp;~</c0><c4>[</c4><c0>Either&lt;int</c0><c4>,</c4><c0>&nbsp;int&gt;</c0><c4>]</c4><c0>&nbsp;=&nbsp;~</c0><c4>[];</c4><c0>
+</c0><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;result&nbsp;=&nbsp;rights</c0><c25>(</c25><c0>input</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>result.len</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><c26>fn&nbsp;test_partition</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;input&nbsp;=&nbsp;~</c0><c4>[</c4><c0>Left</c0><c25>(</c25><c0>10</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Right</c0><c25>(</c25><c0>11</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Left</c0><c25>(</c25><c0>12</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Right</c0><c25>(</c25><c0>13</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Left</c0><c25>(</c25><c0>14</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;</c0><c25>(</c25><c0>lefts</c0><c4>,</c4><c0>&nbsp;rights</c0><c25>)</c25><c0>&nbsp;=&nbsp;partition</c0><c25>(</c25><c0>input</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>lefts</c0><c4>[</c4><c0>0</c0><c4>],</c4><c0>&nbsp;10</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>lefts</c0><c4>[</c4><c0>1</c0><c4>],</c4><c0>&nbsp;12</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>lefts</c0><c4>[</c4><c0>2</c0><c4>],</c4><c0>&nbsp;14</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>rights</c0><c4>[</c4><c0>0</c0><c4>],</c4><c0>&nbsp;11</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>rights</c0><c4>[</c4><c0>1</c0><c4>],</c4><c0>&nbsp;13</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><c26>fn&nbsp;test_partition_no_lefts</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;input:&nbsp;~</c0><c4>[</c4><c0>Either&lt;int</c0><c4>,</c4><c0>&nbsp;int&gt;</c0><c4>]</c4><c0>&nbsp;=&nbsp;~</c0><c4>[</c4><c0>Right</c0><c25>(</c25><c0>10</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Right</c0><c25>(</c25><c0>11</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;</c0><c25>(</c25><c0>lefts</c0><c4>,</c4><c0>&nbsp;rights</c0><c25>)</c25><c0>&nbsp;=&nbsp;partition</c0><c25>(</c25><c0>input</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>lefts.len</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>rights.len</c0><c25>()</c25><c4>,</c4><c0>&nbsp;2u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><c26>fn&nbsp;test_partition_no_rights</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;input:&nbsp;~</c0><c4>[</c4><c0>Either&lt;int</c0><c4>,</c4><c0>&nbsp;int&gt;</c0><c4>]</c4><c0>&nbsp;=&nbsp;~</c0><c4>[</c4><c0>Left</c0><c25>(</c25><c0>10</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Left</c0><c25>(</c25><c0>11</c0><c25>)</c25><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;</c0><c25>(</c25><c0>lefts</c0><c4>,</c4><c0>&nbsp;rights</c0><c25>)</c25><c0>&nbsp;=&nbsp;partition</c0><c25>(</c25><c0>input</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>lefts.len</c0><c25>()</c25><c4>,</c4><c0>&nbsp;2u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>rights.len</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a><c26>fn&nbsp;test_partition_empty</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;input:&nbsp;~</c0><c4>[</c4><c0>Either&lt;int</c0><c4>,</c4><c0>&nbsp;int&gt;</c0><c4>]</c4><c0>&nbsp;=&nbsp;~</c0><c4>[];</c4><c0>
+</c0><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;</c0><c25>(</c25><c0>lefts</c0><c4>,</c4><c0>&nbsp;rights</c0><c25>)</c25><c0>&nbsp;=&nbsp;partition</c0><c25>(</c25><c0>input</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>lefts.len</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>rights.len</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="127_10_refs"><a href="#128"><c24>either.rs:128:10-128:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;expect_left&lt;T,U&gt;(eith:&nbsp;Either&lt;T,U&gt;,&nbsp;reason:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="either.rs.html#139"><c24>139:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;expect_left(eith,&nbsp;"either::unwrap_left&nbsp;Right")
+<br/></a><a href="either.rs.html#176"><c24>176:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;expect_left(self,&nbsp;reason:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;T&nbsp;{&nbsp;expect_left(self,&nbsp;reason)&nbsp;}
+<br/></a><br/><br/><a id="117_10_refs"><a href="#118"><c24>either.rs:118:10-118:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;is_right&lt;T,&nbsp;U&gt;(eith:&nbsp;&amp;Either&lt;T,&nbsp;U&gt;)&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="either.rs.html#173"><c24>173:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;is_right(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_right(self)&nbsp;}
+<br/></a><br/><br/><a id="108_10_refs"><a href="#109"><c24>either.rs:109:10-109:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;is_left&lt;T,&nbsp;U&gt;(eith:&nbsp;&amp;Either&lt;T,&nbsp;U&gt;)&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="either.rs.html#170"><c24>170:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;is_left(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_left(self)&nbsp;}
+<br/></a><br/><br/><a id="99_10_refs"><a href="#100"><c24>either.rs:100:10-100:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;to_result&lt;T,&nbsp;U&gt;(eith:&nbsp;Either&lt;T,&nbsp;U&gt;)&nbsp;-&gt;&nbsp;Result&lt;U,&nbsp;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="either.rs.html#167"><c24>167:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;to_result(self)&nbsp;-&gt;&nbsp;Result&lt;U,&nbsp;T&gt;&nbsp;{&nbsp;to_result(self)&nbsp;}
+<br/></a><br/><br/><a id="151_74_refs"><a href="#152"><c24>either.rs:152:74-152:74&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///&nbsp;Retrieves&nbsp;the&nbsp;value&nbsp;in&nbsp;the&nbsp;right&nbsp;branch.&nbsp;Fails&nbsp;if&nbsp;the&nbsp;either&nbsp;is&nbsp;Left.
+<br/>pub&nbsp;fn&nbsp;unwrap_right&lt;T,U&gt;(eith:&nbsp;Either&lt;T,U&gt;)&nbsp;-&gt;&nbsp;U&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="either.rs.html#185"><c24>185:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;unwrap_right(self)&nbsp;-&gt;&nbsp;U&nbsp;{&nbsp;unwrap_right(self)&nbsp;}
+<br/></a><br/><br/><a id="143_10_refs"><a href="#144"><c24>either.rs:144:10-144:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;expect_right&lt;T,U&gt;(eith:&nbsp;Either&lt;T,U&gt;,&nbsp;reason:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;U&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="either.rs.html#182"><c24>182:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;expect_right(self,&nbsp;reason:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;U&nbsp;{&nbsp;expect_right(self,&nbsp;reason)&nbsp;}
+<br/></a><a href="either.rs.html#154"><c24>154:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;expect_right(eith,&nbsp;"either::unwrap_right&nbsp;Left")
+<br/></a><br/><br/><a id="136_10_refs"><a href="#137"><c24>either.rs:137:10-137:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;unwrap_left&lt;T,U&gt;(eith:&nbsp;Either&lt;T,U&gt;)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="either.rs.html#179"><c24>179:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;unwrap_left(self)&nbsp;-&gt;&nbsp;T&nbsp;{&nbsp;unwrap_left(self)&nbsp;}
+<br/></a><br/><br/><a id="26_23_refs"><a href="#27"><c24>either.rs:27:23-27:23&nbsp;-enum-&nbsp;definition:<br/></c24><pr>#[deriving(Clone,&nbsp;Eq)]
+<br/>pub&nbsp;enum&nbsp;Either&lt;T,&nbsp;U&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="either.rs.html#27"><c24>27:&nbsp;</c24>#[deriving(Clone,&nbsp;Eq)]
+<br/></a><a href="either.rs.html#75"><c24>75:&nbsp;</c24>pub&nbsp;fn&nbsp;partition&lt;T,&nbsp;U&gt;(eithers:&nbsp;~[Either&lt;T,&nbsp;U&gt;])&nbsp;-&gt;&nbsp;(~[T],&nbsp;~[U])&nbsp;{
+<br/></a><a href="either.rs.html#48"><c24>48:&nbsp;</c24>pub&nbsp;fn&nbsp;lefts&lt;T:Clone,U&gt;(eithers:&nbsp;&amp;[Either&lt;T,&nbsp;U&gt;])&nbsp;-&gt;&nbsp;~[T]&nbsp;{
+<br/></a><a href="either.rs.html#60"><c24>60:&nbsp;</c24>pub&nbsp;fn&nbsp;rights&lt;T,&nbsp;U:&nbsp;Clone&gt;(eithers:&nbsp;&amp;[Either&lt;T,&nbsp;U&gt;])&nbsp;-&gt;&nbsp;~[U]&nbsp;{
+<br/></a><a href="either.rs.html#89"><c24>89:&nbsp;</c24>pub&nbsp;fn&nbsp;flip&lt;T,&nbsp;U&gt;(eith:&nbsp;Either&lt;T,&nbsp;U&gt;)&nbsp;-&gt;&nbsp;Either&lt;U,&nbsp;T&gt;&nbsp;{
+<br/></a><a href="either.rs.html#157"><c24>157:&nbsp;</c24>impl&lt;T,&nbsp;U&gt;&nbsp;Either&lt;T,&nbsp;U&gt;&nbsp;{
+<br/></a><a href="either.rs.html#27"><c24>27:&nbsp;</c24>#[deriving(Clone,&nbsp;Eq)]
+<br/></a><a href="either.rs.html#40"><c24>40:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f_right:&nbsp;&amp;fn(&amp;U)&nbsp;-&gt;&nbsp;V,&nbsp;value:&nbsp;&amp;Either&lt;T,&nbsp;U&gt;)&nbsp;-&gt;&nbsp;V&nbsp;{
+<br/></a><a href="either.rs.html#119"><c24>119:&nbsp;</c24>pub&nbsp;fn&nbsp;is_right&lt;T,&nbsp;U&gt;(eith:&nbsp;&amp;Either&lt;T,&nbsp;U&gt;)&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></a><a href="either.rs.html#27"><c24>27:&nbsp;</c24>#[deriving(Clone,&nbsp;Eq)]
+<br/></a><a href="either.rs.html#129"><c24>129:&nbsp;</c24>pub&nbsp;fn&nbsp;expect_left&lt;T,U&gt;(eith:&nbsp;Either&lt;T,U&gt;,&nbsp;reason:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></a><a href="either.rs.html#110"><c24>110:&nbsp;</c24>pub&nbsp;fn&nbsp;is_left&lt;T,&nbsp;U&gt;(eith:&nbsp;&amp;Either&lt;T,&nbsp;U&gt;)&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></a><a href="either.rs.html#153"><c24>153:&nbsp;</c24>pub&nbsp;fn&nbsp;unwrap_right&lt;T,U&gt;(eith:&nbsp;Either&lt;T,U&gt;)&nbsp;-&gt;&nbsp;U&nbsp;{
+<br/></a><a href="either.rs.html#27"><c24>27:&nbsp;</c24>#[deriving(Clone,&nbsp;Eq)]
+<br/></a><a href="either.rs.html#89"><c24>89:&nbsp;</c24>pub&nbsp;fn&nbsp;flip&lt;T,&nbsp;U&gt;(eith:&nbsp;Either&lt;T,&nbsp;U&gt;)&nbsp;-&gt;&nbsp;Either&lt;U,&nbsp;T&gt;&nbsp;{
+<br/></a><a href="either.rs.html#145"><c24>145:&nbsp;</c24>pub&nbsp;fn&nbsp;expect_right&lt;T,U&gt;(eith:&nbsp;Either&lt;T,U&gt;,&nbsp;reason:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;U&nbsp;{
+<br/></a><a href="either.rs.html#101"><c24>101:&nbsp;</c24>pub&nbsp;fn&nbsp;to_result&lt;T,&nbsp;U&gt;(eith:&nbsp;Either&lt;T,&nbsp;U&gt;)&nbsp;-&gt;&nbsp;Result&lt;U,&nbsp;T&gt;&nbsp;{
+<br/></a><a href="either.rs.html#138"><c24>138:&nbsp;</c24>pub&nbsp;fn&nbsp;unwrap_left&lt;T,U&gt;(eith:&nbsp;Either&lt;T,U&gt;)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></a><a href="either.rs.html#27"><c24>27:&nbsp;</c24>#[deriving(Clone,&nbsp;Eq)]
+<br/></a><a href="either.rs.html#164"><c24>164:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;flip(self)&nbsp;-&gt;&nbsp;Either&lt;U,&nbsp;T&gt;&nbsp;{&nbsp;flip(self)&nbsp;}
+<br/></a><a href="comm.rs.html"><c24>comm.rs:<br/></c24><a href="comm.rs.html#62"><c24>(62)</c24></a><a href="comm.rs.html#57"><c24>(57)</c24></a><a href="comm.rs.html#144"><c24>(144)</c24></a><a href="comm.rs.html#202"><c24>(202)</c24></a><a href="comm.rs.html#198"><c24>(198)</c24></a><br/><a href="pipes.rs.html"><c24>pipes.rs:<br/></c24><a href="pipes.rs.html#836"><c24>(836)</c24></a><a href="pipes.rs.html#810"><c24>(810)</c24></a><br/><a href="unstable/sync.rs.html"><c24>unstable/sync.rs:<br/></c24><a href="unstable/sync.rs.html#186"><c24>(186)</c24></a><br/><a href="rt/kill.rs.html"><c24>rt/kill.rs:<br/></c24><a href="rt/kill.rs.html#195"><c24>(195)</c24></a><br/><a href="rt/logging.rs.html"><c24>rt/logging.rs:<br/></c24><a href="rt/logging.rs.html#21"><c24>(21)</c24></a><a href="rt/logging.rs.html#15"><c24>(15)</c24></a><br/><a href="result.rs.html"><c24>result.rs:<br/></c24><a href="result.rs.html#41"><c24>(41)</c24></a><br/><br/><a id="87_10_refs"><a href="#88"><c24>either.rs:88:10-88:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;flip&lt;T,&nbsp;U&gt;(eith:&nbsp;Either&lt;T,&nbsp;U&gt;)&nbsp;-&gt;&nbsp;Either&lt;U,&nbsp;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="either.rs.html#164"><c24>164:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;flip(self)&nbsp;-&gt;&nbsp;Either&lt;U,&nbsp;T&gt;&nbsp;{&nbsp;flip(self)&nbsp;}
+<br/></a><br/><br/><a id="37_10_refs"><a href="#38"><c24>either.rs:38:10-38:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;either&lt;T,&nbsp;U,&nbsp;V&gt;(f_left:&nbsp;&amp;fn(&amp;T)&nbsp;-&gt;&nbsp;V,
+<br/></pr></a></a><c24>references:-<br/></c24><a href="either.rs.html#160"><c24>160:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;either(f_left,&nbsp;f_right,&nbsp;self)
+<br/></a><br/></a></a>

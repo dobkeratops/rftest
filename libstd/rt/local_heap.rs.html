@@ -1,0 +1,242 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#343838;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;The&nbsp;local,&nbsp;garbage&nbsp;collected&nbsp;heap
+</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c0>use&nbsp;libc</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c0>use&nbsp;libc::</c0><c4>{</c4><c0>c_void</c0><c4>,</c4><c0>&nbsp;uintptr_t</c0><c4>,</c4><c0>&nbsp;size_t</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c0>use&nbsp;ops::Drop</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c0>use&nbsp;rt</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c0>use&nbsp;rt::OldTaskContext</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c0>use&nbsp;rt::local::Local</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c0>use&nbsp;rt::task::Task</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>use&nbsp;unstable::raw</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a href="#20_1_refs"><c28>type&nbsp;MemoryRegion&nbsp;=&nbsp;</c28><a href="../libc.rs.html#197"><c28>c_void</c28></a><a href="#20_1_refs"><c28>;</c28><c28>
+</c28><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a href="#22_1_refs"><c27>struct&nbsp;Env&nbsp;</c27><c15>{&nbsp;priv&nbsp;</c15><c6>opaque:&nbsp;</c6><c25>()</c25><c15>&nbsp;</c15><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a href="#24_1_refs"><c27>struct&nbsp;BoxedRegion&nbsp;</c27><c15>{
+</c15><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a href="#24_1_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><c6>env:&nbsp;</c6><c3>*</c3><a href="../rt/local_heap.rs.html#24"><c3>Env</c3></a><a href="#24_1_refs"><c4>,</c4><c15>
+</c15><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a href="#24_1_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><c6>backing_region:&nbsp;</c6><c3>*</c3><a href="../rt/local_heap.rs.html#22"><c3>MemoryRegion</c3></a><a href="#24_1_refs"><c4>,</c4><c15>
+</c15><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a href="#24_1_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><a href="#28_4_refs"><c6>live_allocs:&nbsp;</c6><c3>*</c3><a href="../unstable/raw.rs.html#15"><c3>raw::Box&lt;</c3></a><a href="#28_4_refs"><c25>()</c25><a href="../unstable/raw.rs.html#15"><c3>&gt;</c3></a><a href="#24_1_refs"><c4>,</c4><c15>
+</c15><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a href="#24_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a href="#30_1_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;OpaqueBox&nbsp;=&nbsp;</c28><a href="../libc.rs.html#197"><c28>c_void</c28></a><a href="#30_1_refs"><c28>;</c28><c28>
+</c28><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a href="#31_29_refs"><c3>pub&nbsp;</c3><c28>type&nbsp;TypeDesc&nbsp;=&nbsp;</c28><a href="../libc.rs.html#197"><c28>c_void</c28></a><a href="#31_29_refs"><c28>;</c28><c28>
+</c28><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a href="#33_1_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;LocalHeap&nbsp;</c27><c15>{
+</c15><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a href="#33_1_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><a href="#35_4_refs"><c6>memory_region:&nbsp;</c6><a href="#33_1_refs"><c3>*</c3><a href="../rt/local_heap.rs.html#22"><c3>MemoryRegion</c3></a><a href="#33_1_refs"><c4>,</c4><c15>
+</c15><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a href="#33_1_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><a href="#36_4_refs"><c6>boxed_region:&nbsp;</c6><a href="#33_1_refs"><c3>*</c3><a href="../rt/local_heap.rs.html#26"><c3>BoxedRegion</c3></a><a href="#33_1_refs"><c15>
+</c15><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a href="#33_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c29>impl&nbsp;</c29><a href="../rt/local_heap.rs.html#35"><c29>LocalHeap</c29></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#40_4_refs"><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../rt/local_heap.rs.html#35"><c3>LocalHeap</c3></a><a href="#40_4_refs"><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;Don't&nbsp;need&nbsp;synchronization&nbsp;for&nbsp;the&nbsp;single-threaded&nbsp;local&nbsp;heap
+</c24><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#43_16_refs"><c20>synchronized</c20><a href="#40_4_refs"><c16>&nbsp;=&nbsp;</c16><c12>false</c12><c7>&nbsp;as&nbsp;</c7><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><a href="#40_4_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;XXX:&nbsp;These&nbsp;usually&nbsp;come&nbsp;from&nbsp;the&nbsp;environment
+</c24><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#45_16_refs"><c20>detailed_leaks</c20><a href="#40_4_refs"><c16>&nbsp;=&nbsp;</c16><c12>false</c12><c7>&nbsp;as&nbsp;</c7><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><a href="#40_4_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#46_16_refs"><c20>poison_on_free</c20><a href="#40_4_refs"><c16>&nbsp;=&nbsp;</c16><c12>false</c12><c7>&nbsp;as&nbsp;</c7><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><a href="#40_4_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#47_16_refs"><c20>region</c20><a href="#40_4_refs"><c16>&nbsp;=&nbsp;</c16><c8>rust_new_memory_region</c8><c25>(</c25><a href="../rt/local_heap.rs.html#45"><c8>synchronized</c8></a><a href="#40_4_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../rt/local_heap.rs.html#47"><c8>detailed_leaks</c8></a><a href="#40_4_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../rt/local_heap.rs.html#48"><c8>poison_on_free</c8></a><a href="#40_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>assert!</c13><c25>(</c25><a href="../rt/local_heap.rs.html#49"><c8>region</c8></a><a href="../ptr.rs.html#287"><c10>.is_not_null</c10><c25>()</c25></a><a href="#40_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#49_16_refs"><c20>boxed</c20><a href="#40_4_refs"><c16>&nbsp;=&nbsp;</c16><c8>rust_new_boxed_region</c8><c25>(</c25><a href="../rt/local_heap.rs.html#49"><c8>region</c8></a><a href="#40_4_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../rt/local_heap.rs.html#48"><c8>poison_on_free</c8></a><a href="#40_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>assert!</c13><c25>(</c25><a href="../rt/local_heap.rs.html#51"><c8>boxed</c8></a><a href="../ptr.rs.html#287"><c10>.is_not_null</c10><c25>()</c25></a><a href="#40_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/local_heap.rs.html#35"><c15>LocalHeap</c15></a><a href="#40_4_refs"><c21>&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;memory_region:&nbsp;</c21><a href="../rt/local_heap.rs.html#49"><c8>region</c8></a><a href="#40_4_refs"><c4>,</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;boxed_region:&nbsp;</c21><a href="../rt/local_heap.rs.html#51"><c8>boxed</c8></a><a href="#40_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a href="#40_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#58_4_refs"><c22>pub&nbsp;</c22><c26>fn&nbsp;alloc</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#58_28_refs"><c20>td</c20><a href="#58_4_refs"><c22>:&nbsp;</c22><c3>*</c3><a href="../rt/local_heap.rs.html#33"><c3>TypeDesc</c3></a><a href="#58_4_refs"><c4>,</c4><c22>&nbsp;</c22><a href="#58_43_refs"><c20>size</c20><a href="#58_4_refs"><c22>:&nbsp;</c22><c3>uint</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*</c3><a href="../rt/local_heap.rs.html#32"><c3>OpaqueBox</c3></a><a href="#58_4_refs"><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a href="#58_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a href="#58_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c0>return&nbsp;</c0><c8>rust_boxed_region_malloc</c8><c25>(</c25><a href="../rt/local_heap.rs.html#38"><c0>self.</c0><c6>boxed_region</c6></a><a href="#58_4_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../rt/local_heap.rs.html#60"><c8>td</c8></a><a href="#58_4_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../rt/local_heap.rs.html#60"><c8>size</c8></a><a href="#58_4_refs"><c7>&nbsp;as&nbsp;</c7><a href="../libc.rs.html#407"><c3>size_t</c3></a><a href="#58_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a href="#58_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a href="#58_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#64_4_refs"><c22>pub&nbsp;</c22><c26>fn&nbsp;realloc</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#64_30_refs"><c20>ptr</c20><a href="#64_4_refs"><c22>:&nbsp;</c22><c3>*</c3><a href="../rt/local_heap.rs.html#32"><c3>OpaqueBox</c3></a><a href="#64_4_refs"><c4>,</c4><c22>&nbsp;</c22><a href="#64_47_refs"><c20>size</c20><a href="#64_4_refs"><c22>:&nbsp;</c22><c3>uint</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>*</c3><a href="../rt/local_heap.rs.html#32"><c3>OpaqueBox</c3></a><a href="#64_4_refs"><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a href="#64_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a href="#64_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>return&nbsp;</c13><c8>rust_boxed_region_realloc</c8><c25>(</c25><c0>self.</c0><a href="../rt/local_heap.rs.html#38"><c6>boxed_region</c6></a><a href="#64_4_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../rt/local_heap.rs.html#66"><c8>ptr</c8></a><a href="#64_4_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../rt/local_heap.rs.html#66"><c8>size</c8></a><a href="#64_4_refs"><c7>&nbsp;as&nbsp;</c7><a href="../libc.rs.html#407"><c3>size_t</c3></a><a href="#64_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a href="#64_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a href="#64_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#70_4_refs"><c22>pub&nbsp;</c22><c26>fn&nbsp;free</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#70_27_refs"><c20>box</c20><a href="#70_4_refs"><c22>:&nbsp;</c22><c3>*</c3><a href="../rt/local_heap.rs.html#32"><c3>OpaqueBox</c3></a><a href="#70_4_refs"><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a href="#70_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a href="#70_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>return&nbsp;</c13><c8>rust_boxed_region_free</c8><c25>(</c25><a href="../rt/local_heap.rs.html#38"><c0>self.</c0><c6>boxed_region</c6></a><a href="#70_4_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../rt/local_heap.rs.html#72"><c8>box</c8></a><a href="#70_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a href="#70_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a href="#70_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c29>impl&nbsp;</c29><a href="../ops.rs.html#16"><c29>Drop&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../rt/local_heap.rs.html#35"><c29>LocalHeap</c29></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;drop</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>rust_delete_boxed_region</c8><c25>(</c25><a href="../rt/local_heap.rs.html#38"><c0>self.</c0><c6>boxed_region</c6></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>rust_delete_memory_region</c8><c25>(</c25><a href="../rt/local_heap.rs.html#37"><c0>self.</c0><c6>memory_region</c6></a><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c24>//&nbsp;A&nbsp;little&nbsp;compatibility&nbsp;function
+</c24><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a href="#86_35_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;local_free</c26><c1>(</c1><a href="#87_25_refs"><c20>ptr</c20><a href="#86_35_refs"><c1>:&nbsp;</c1><c3>*</c3><a href="../libc.rs.html#396"><c3>libc::c_char</c3></a><a href="#86_35_refs"><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a href="#86_35_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="../rt/mod.rs.html#409"><c8>rt::context</c8></a><a href="#86_35_refs"><c25>()</c25><c9>&nbsp;</c9><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a href="#86_35_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../rt/mod.rs.html#406"><c20>OldTaskContext</c20></a><a href="#86_35_refs"><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a href="#86_35_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>rust_upcall_free_noswitch</c8><c25>(</c25><a href="../rt/local_heap.rs.html#89"><c8>ptr</c8></a><a href="#86_35_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a href="#86_35_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a href="#86_35_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>extern&nbsp;</c13><c4>{</c4><c13>
+</c13><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a href="#86_35_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</c13><c4>[</c4><c13>fast_ffi</c13><c4>]</c4><c13>
+</c13><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a href="#86_35_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c26>fn&nbsp;rust_upcall_free_noswitch</c26><c13>(</c13><c20>ptr</c20><c13>:&nbsp;</c13><c3>*</c3><a href="../libc.rs.html#396"><c3>libc::c_char</c3></a><a href="#86_35_refs"><c25>)</c25><c4>;</c4><c13>
+</c13><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a href="#86_35_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a href="#86_35_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a href="#86_35_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a href="#86_35_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c9>do&nbsp;</c9><a href="../rt/local.rs.html#24"><c8>Local::borrow::&lt;</c8></a><a href="../rt/task.rs.html#40"><c3>Task</c3></a><a href="../rt/local.rs.html#24"><c4>,</c4><c25>()</c25><c8>&gt;&nbsp;</c8></a><a href="#86_35_refs"><c0>|</c0><a href="#98_41_refs"><c20>task</c20><a href="#86_35_refs"><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a href="#86_35_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/local_heap.rs.html#100"><c8>task</c8></a><a href="../rt/task.rs.html#42"><c6>.heap</c6></a><a href="#86_35_refs"><c13>.free</c13><c25>(</c25><a href="../rt/local_heap.rs.html#89"><c8>ptr</c8></a><a href="#86_35_refs"><c7>&nbsp;as&nbsp;</c7><c3>*</c3><a href="../libc.rs.html#197"><c3>libc::c_void</c3></a><a href="#86_35_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a href="#86_35_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a href="#86_35_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a href="#86_35_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a href="#86_35_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a href="#104_1_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;live_allocs</c26><c1>(</c1><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*</c3><a href="../unstable/raw.rs.html#15"><c3>raw::Box&lt;</c3></a><a href="#104_1_refs"><c25>()</c25><a href="../unstable/raw.rs.html#15"><c3>&gt;</c3></a><a href="#104_1_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a href="#104_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#106_8_refs"><c20>region</c20><a href="#104_1_refs"><c16>&nbsp;=&nbsp;</c16><c7>match&nbsp;</c7><a href="../rt/mod.rs.html#409"><c8>rt::context</c8></a><a href="#104_1_refs"><c25>()</c25><c9>&nbsp;</c9><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a href="#104_1_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../rt/mod.rs.html#406"><c20>OldTaskContext</c20></a><a href="#104_1_refs"><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a href="#104_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><c8>rust_current_boxed_region</c8><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a href="#104_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a href="#104_1_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;=&gt;&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><a href="#104_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c9>do&nbsp;</c9><a href="../rt/local.rs.html#24"><c8>Local::borrow::&lt;</c8></a><a href="../rt/task.rs.html#40"><c3>Task</c3></a><a href="../rt/local.rs.html#24"><c4>,</c4><c8>&nbsp;</c8></a><a href="#104_1_refs"><c3>*</c3><a href="../rt/local_heap.rs.html#26"><c3>BoxedRegion</c3></a><a href="../rt/local.rs.html#24"><c8>&gt;&nbsp;</c8></a><a href="#104_1_refs"><c0>|</c0><a href="#111_52_refs"><c20>task</c20><a href="#104_1_refs"><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a href="#104_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/local_heap.rs.html#113"><c8>task</c8></a><a href="../rt/task.rs.html#42"><c6>.heap</c6></a><a href="../rt/local_heap.rs.html#38"><c6>.boxed_region</c6></a><a href="#104_1_refs"><c21>
+</c21><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a href="#104_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a href="#104_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a href="#104_1_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>};</c4><c21>
+</c21><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><a href="#104_1_refs"><c21>
+</c21><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><a href="#104_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c0>return&nbsp;</c0><c21>unsafe&nbsp;</c21><c4>{</c4><c21>&nbsp;</c21><a href="../rt/local_heap.rs.html#30"><c25>(</c25></a><a href="#104_1_refs"><c2>*</c2><a href="../rt/local_heap.rs.html#108"><c8>region</c8></a><a href="../rt/local_heap.rs.html#30"><c25>)</c25><c0>.</c0><c6>live_allocs</c6></a><a href="#104_1_refs"><c21>&nbsp;</c21><c4>};</c4><c21>
+</c21><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><a href="#104_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c0>extern&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_new_memory_region</c26><c0>(</c0><c20>synchronized</c20><c0>:&nbsp;</c0><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c20>detailed_leaks</c20><c0>:&nbsp;</c0><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c20>poison_on_free</c20><c0>:&nbsp;</c0><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#22"><c3>MemoryRegion</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_delete_memory_region</c26><c0>(</c0><c20>region</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#22"><c3>MemoryRegion</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_new_boxed_region</c26><c0>(</c0><c20>region</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#22"><c3>MemoryRegion</c3></a><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c20>poison_on_free</c20><c0>:&nbsp;</c0><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#26"><c3>BoxedRegion</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_delete_boxed_region</c26><c0>(</c0><c20>region</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#26"><c3>BoxedRegion</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_boxed_region_malloc</c26><c0>(</c0><c20>region</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#26"><c3>BoxedRegion</c3></a><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c20>td</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#33"><c3>TypeDesc</c3></a><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c20>size</c20><c0>:&nbsp;</c0><a href="../libc.rs.html#407"><c3>size_t</c3></a><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#32"><c3>OpaqueBox</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_boxed_region_realloc</c26><c0>(</c0><c20>region</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#26"><c3>BoxedRegion</c3></a><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c20>ptr</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#32"><c3>OpaqueBox</c3></a><c4>,</c4><c0>
+</c0><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c20>size</c20><c0>:&nbsp;</c0><a href="../libc.rs.html#407"><c3>size_t</c3></a><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#32"><c3>OpaqueBox</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_boxed_region_free</c26><c0>(</c0><c20>region</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#26"><c3>BoxedRegion</c3></a><c4>,</c4><c0>&nbsp;</c0><c20>box</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#32"><c3>OpaqueBox</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_current_boxed_region</c26><c0>(</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>*</c3><a href="../rt/local_heap.rs.html#26"><c3>BoxedRegion</c3></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>test</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c0>mod&nbsp;bench&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;extra::test::BenchHarness</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>bench</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;alloc_managed_small</c26><c0>(bh:&nbsp;&amp;mut&nbsp;BenchHarness</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;bh.iter&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@10</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>bench</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;alloc_managed_big</c26><c0>(bh:&nbsp;&amp;mut&nbsp;BenchHarness</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;bh.iter&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@</c0><c4>[</c4><c0>10</c0><c4>,</c4><c0>&nbsp;..1000</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="104_1_refs"><a href="#105"><c24>rt/local_heap.rs:105:1-105:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;fn&nbsp;live_allocs()&nbsp;-&gt;&nbsp;*raw::Box&lt;()&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../cleanup.rs.html"><c24>cleanup.rs:<br/></c24><a href="../cleanup.rs.html#39"><c24>39:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;box&nbsp;=&nbsp;local_heap::live_allocs();
+<br/></a><br/><br/><a id="30_1_refs"><a href="#31"><c24>rt/local_heap.rs:31:1-31:1&nbsp;-ty-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;type&nbsp;OpaqueBox&nbsp;=&nbsp;c_void;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local_heap.rs.html#65"><c24>65:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;realloc(&amp;mut&nbsp;self,&nbsp;ptr:&nbsp;*OpaqueBox,&nbsp;size:&nbsp;uint)&nbsp;-&gt;&nbsp;*OpaqueBox&nbsp;{
+<br/></a><a href="../rt/local_heap.rs.html#71"><c24>71:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;free(&amp;mut&nbsp;self,&nbsp;box:&nbsp;*OpaqueBox)&nbsp;{
+<br/></a><a href="../rt/local_heap.rs.html#133"><c24>133:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptr:&nbsp;*OpaqueBox,
+<br/></a><a href="../rt/local_heap.rs.html#131"><c24>131:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size:&nbsp;size_t)&nbsp;-&gt;&nbsp;*OpaqueBox;
+<br/></a><a href="../rt/local_heap.rs.html#59"><c24>59:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;alloc(&amp;mut&nbsp;self,&nbsp;td:&nbsp;*TypeDesc,&nbsp;size:&nbsp;uint)&nbsp;-&gt;&nbsp;*OpaqueBox&nbsp;{
+<br/></a><a href="../rt/local_heap.rs.html#134"><c24>134:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size:&nbsp;size_t)&nbsp;-&gt;&nbsp;*OpaqueBox;
+<br/></a><a href="../rt/local_heap.rs.html#65"><c24>65:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;realloc(&amp;mut&nbsp;self,&nbsp;ptr:&nbsp;*OpaqueBox,&nbsp;size:&nbsp;uint)&nbsp;-&gt;&nbsp;*OpaqueBox&nbsp;{
+<br/></a><a href="../rt/local_heap.rs.html#135"><c24>135:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;rust_boxed_region_free(region:&nbsp;*BoxedRegion,&nbsp;box:&nbsp;*OpaqueBox);
+<br/></a><br/><br/><a id="86_35_refs"><a href="#87"><c24>rt/local_heap.rs:87:35-87:35&nbsp;-fn-&nbsp;definition:<br/></c24><pr>//&nbsp;A&nbsp;little&nbsp;compatibility&nbsp;function
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;local_free(ptr:&nbsp;*libc::c_char)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../cleanup.rs.html"><c24>cleanup.rs:<br/></c24><a href="../cleanup.rs.html#132"><c24>132:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_free(box&nbsp;as&nbsp;*i8);
+<br/></a><a href="../unstable/lang.rs.html"><c24>unstable/lang.rs:<br/></c24><a href="../unstable/lang.rs.html#78"><c24>78:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;::rt::local_heap::local_free(ptr);
+<br/></a><br/><br/><a id="33_1_refs"><a href="#34"><c24>rt/local_heap.rs:34:1-34:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;struct&nbsp;LocalHeap&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local_heap.rs.html#52"><c24>52:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LocalHeap&nbsp;{
+<br/></a><a href="../rt/local_heap.rs.html#40"><c24>40:&nbsp;</c24>impl&nbsp;LocalHeap&nbsp;{
+<br/></a><a href="../rt/local_heap.rs.html#41"><c24>41:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;LocalHeap&nbsp;{
+<br/></a><a href="../rt/local_heap.rs.html#78"><c24>78:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;LocalHeap&nbsp;{
+<br/></a><a href="../rt/task.rs.html"><c24>rt/task.rs:<br/></c24><a href="../rt/task.rs.html#41"><c24>41:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;heap:&nbsp;LocalHeap,
+<br/></a><br/><br/><a id="22_1_refs"><a href="#23"><c24>rt/local_heap.rs:23:1-23:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;Env&nbsp;{&nbsp;priv&nbsp;opaque:&nbsp;()&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local_heap.rs.html#27"><c24>27:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;env:&nbsp;*Env,
+<br/></a><br/><br/><a id="31_29_refs"><a href="#32"><c24>rt/local_heap.rs:32:29-32:29&nbsp;-ty-&nbsp;definition:<br/></c24><pr>pub&nbsp;type&nbsp;OpaqueBox&nbsp;=&nbsp;c_void;
+<br/>pub&nbsp;type&nbsp;TypeDesc&nbsp;=&nbsp;c_void;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local_heap.rs.html#59"><c24>59:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;alloc(&amp;mut&nbsp;self,&nbsp;td:&nbsp;*TypeDesc,&nbsp;size:&nbsp;uint)&nbsp;-&gt;&nbsp;*OpaqueBox&nbsp;{
+<br/></a><a href="../rt/local_heap.rs.html#130"><c24>130:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;td:&nbsp;*TypeDesc,
+<br/></a><br/><br/><a id="24_1_refs"><a href="#25"><c24>rt/local_heap.rs:25:1-25:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;BoxedRegion&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local_heap.rs.html#135"><c24>135:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;rust_boxed_region_free(region:&nbsp;*BoxedRegion,&nbsp;box:&nbsp;*OpaqueBox);
+<br/></a><a href="../rt/local_heap.rs.html#129"><c24>129:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;rust_boxed_region_malloc(region:&nbsp;*BoxedRegion,
+<br/></a><a href="../rt/local_heap.rs.html#112"><c24>112:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;Local::borrow::&lt;Task,&nbsp;*BoxedRegion&gt;&nbsp;|task|&nbsp;{
+<br/></a><a href="../rt/local_heap.rs.html#132"><c24>132:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;rust_boxed_region_realloc(region:&nbsp;*BoxedRegion,
+<br/></a><a href="../rt/local_heap.rs.html#127"><c24>127:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;poison_on_free:&nbsp;uintptr_t)&nbsp;-&gt;&nbsp;*BoxedRegion;
+<br/></a><a href="../rt/local_heap.rs.html#136"><c24>136:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;rust_current_boxed_region()&nbsp;-&gt;&nbsp;*BoxedRegion;
+<br/></a><a href="../rt/local_heap.rs.html#37"><c24>37:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;boxed_region:&nbsp;*BoxedRegion
+<br/></a><a href="../rt/local_heap.rs.html#128"><c24>128:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;rust_delete_boxed_region(region:&nbsp;*BoxedRegion);
+<br/></a><br/><br/><a id="20_1_refs"><a href="#21"><c24>rt/local_heap.rs:21:1-21:1&nbsp;-ty-&nbsp;definition:<br/></c24><pr>
+<br/>type&nbsp;MemoryRegion&nbsp;=&nbsp;c_void;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local_heap.rs.html#28"><c24>28:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;backing_region:&nbsp;*MemoryRegion,
+<br/></a><a href="../rt/local_heap.rs.html#124"><c24>124:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;poison_on_free:&nbsp;uintptr_t)&nbsp;-&gt;&nbsp;*MemoryRegion;
+<br/></a><a href="../rt/local_heap.rs.html#36"><c24>36:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;memory_region:&nbsp;*MemoryRegion,
+<br/></a><a href="../rt/local_heap.rs.html#126"><c24>126:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;rust_new_boxed_region(region:&nbsp;*MemoryRegion,
+<br/></a><a href="../rt/local_heap.rs.html#125"><c24>125:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;rust_delete_memory_region(region:&nbsp;*MemoryRegion);
+<br/></a><br/></a></a>

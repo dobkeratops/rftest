@@ -1,0 +1,116 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#36363a;"><maintext><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c0>use&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>use&nbsp;super::</c0><c4>{</c4><c0>Reader</c0><c4>,</c4><c0>&nbsp;Writer</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a href="#12_1_refs"><c27>struct&nbsp;PortReader</c27><c5>&lt;P&gt;</c5><c27>;</c27><c27>
+</c27><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c29>impl</c29><c5>&lt;P:&nbsp;</c5><a href="../../comm.rs.html#39"><c5>GenericPort&lt;~[u8]&gt;</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/comm_adapters.rs.html#14"><c29>PortReader</c29><c5>&lt;P&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><c20>_port</c20><c22>:&nbsp;</c22><c3>P</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/comm_adapters.rs.html#14"><c3>PortReader&lt;P&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c29>impl</c29><c5>&lt;P:&nbsp;</c5><a href="../../comm.rs.html#39"><c5>GenericPort&lt;~[u8]&gt;</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mod.rs.html#365"><c29>Reader&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/comm_adapters.rs.html#14"><c29>PortReader</c29><c5>&lt;P&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_buf</c20><c22>:&nbsp;</c22><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../option.rs.html#55"><c3>Option&lt;uint&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eof</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a href="#24_1_refs"><c27>struct&nbsp;ChanWriter</c27><c5>&lt;C&gt;</c5><c27>;</c27><c27>
+</c27><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c29>impl</c29><c5>&lt;C:&nbsp;</c5><a href="../../comm.rs.html#26"><c5>GenericChan&lt;~[u8]&gt;</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/comm_adapters.rs.html#26"><c29>ChanWriter</c29><c5>&lt;C&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><c20>_chan</c20><c22>:&nbsp;</c22><c3>C</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/comm_adapters.rs.html#26"><c3>ChanWriter&lt;C&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c29>impl</c29><c5>&lt;C:&nbsp;</c5><a href="../../comm.rs.html#26"><c5>GenericChan&lt;~[u8]&gt;</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/mod.rs.html#405"><c29>Writer&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/comm_adapters.rs.html#26"><c29>ChanWriter</c29><c5>&lt;C&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;write</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_buf</c20><c22>:&nbsp;</c22><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;flush</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a href="#36_1_refs"><c27>struct&nbsp;ReaderPort</c27><c5>&lt;R&gt;</c5><c27>;</c27><c27>
+</c27><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c29>impl</c29><c5>&lt;R:&nbsp;</c5><a href="../../rt/io/mod.rs.html#365"><c5>Reader</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/comm_adapters.rs.html#38"><c29>ReaderPort</c29><c5>&lt;R&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><c20>_reader</c20><c22>:&nbsp;</c22><c3>R</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/comm_adapters.rs.html#38"><c3>ReaderPort&lt;R&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c29>impl</c29><c5>&lt;R:&nbsp;</c5><a href="../../rt/io/mod.rs.html#365"><c5>Reader</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../comm.rs.html#39"><c29>GenericPort</c29><c5>&lt;~[u8]&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/comm_adapters.rs.html#38"><c29>ReaderPort</c29><c5>&lt;R&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;recv</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;try_recv</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../option.rs.html#55"><c3>Option&lt;~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c3>&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a href="#48_1_refs"><c27>struct&nbsp;WriterChan</c27><c5>&lt;W&gt;</c5><c27>;</c27><c27>
+</c27><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c29>impl</c29><c5>&lt;W:&nbsp;</c5><a href="../../rt/io/mod.rs.html#405"><c5>Writer</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../rt/io/comm_adapters.rs.html#50"><c29>WriterChan</c29><c5>&lt;W&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><c20>_writer</c20><c22>:&nbsp;</c22><c3>W</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../../rt/io/comm_adapters.rs.html#50"><c3>WriterChan&lt;W&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><c29>impl</c29><c5>&lt;W:&nbsp;</c5><a href="../../rt/io/mod.rs.html#405"><c5>Writer</c5></a><c5>&gt;</c5><c29>&nbsp;</c29><a href="../../comm.rs.html#26"><c29>GenericChan</c29><c5>&lt;~[u8]&gt;</c5><c29>&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../../rt/io/comm_adapters.rs.html#50"><c29>WriterChan</c29><c5>&lt;W&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;send</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><c20>_x</c20><c22>:&nbsp;</c22><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="24_1_refs"><a href="#25"><c24>rt/io/comm_adapters.rs:25:1-25:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;ChanWriter&lt;C&gt;;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/comm_adapters.rs.html#32"><c24>32:&nbsp;</c24>impl&lt;C:&nbsp;GenericChan&lt;~[u8]&gt;&gt;&nbsp;Writer&nbsp;for&nbsp;ChanWriter&lt;C&gt;&nbsp;{
+<br/></a><a href="../../rt/io/comm_adapters.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_chan:&nbsp;C)&nbsp;-&gt;&nbsp;ChanWriter&lt;C&gt;&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../rt/io/comm_adapters.rs.html#28"><c24>28:&nbsp;</c24>impl&lt;C:&nbsp;GenericChan&lt;~[u8]&gt;&gt;&nbsp;ChanWriter&lt;C&gt;&nbsp;{
+<br/></a><br/><br/><a id="36_1_refs"><a href="#37"><c24>rt/io/comm_adapters.rs:37:1-37:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;ReaderPort&lt;R&gt;;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/comm_adapters.rs.html#44"><c24>44:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;GenericPort&lt;~[u8]&gt;&nbsp;for&nbsp;ReaderPort&lt;R&gt;&nbsp;{
+<br/></a><a href="../../rt/io/comm_adapters.rs.html#40"><c24>40:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;ReaderPort&lt;R&gt;&nbsp;{
+<br/></a><a href="../../rt/io/comm_adapters.rs.html#41"><c24>41:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_reader:&nbsp;R)&nbsp;-&gt;&nbsp;ReaderPort&lt;R&gt;&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><br/><br/><a id="12_1_refs"><a href="#13"><c24>rt/io/comm_adapters.rs:13:1-13:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;PortReader&lt;P&gt;;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/comm_adapters.rs.html#20"><c24>20:&nbsp;</c24>impl&lt;P:&nbsp;GenericPort&lt;~[u8]&gt;&gt;&nbsp;Reader&nbsp;for&nbsp;PortReader&lt;P&gt;&nbsp;{
+<br/></a><a href="../../rt/io/comm_adapters.rs.html#17"><c24>17:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_port:&nbsp;P)&nbsp;-&gt;&nbsp;PortReader&lt;P&gt;&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../rt/io/comm_adapters.rs.html#16"><c24>16:&nbsp;</c24>impl&lt;P:&nbsp;GenericPort&lt;~[u8]&gt;&gt;&nbsp;PortReader&lt;P&gt;&nbsp;{
+<br/></a><br/><br/><a id="48_1_refs"><a href="#49"><c24>rt/io/comm_adapters.rs:49:1-49:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;WriterChan&lt;W&gt;;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../rt/io/comm_adapters.rs.html#53"><c24>53:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_writer:&nbsp;W)&nbsp;-&gt;&nbsp;WriterChan&lt;W&gt;&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../rt/io/comm_adapters.rs.html#56"><c24>56:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;GenericChan&lt;~[u8]&gt;&nbsp;for&nbsp;WriterChan&lt;W&gt;&nbsp;{
+<br/></a><a href="../../rt/io/comm_adapters.rs.html#52"><c24>52:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;WriterChan&lt;W&gt;&nbsp;{
+<br/></a><br/></a></a>

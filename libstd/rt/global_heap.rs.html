@@ -1,0 +1,180 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#3c3834;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c0>use&nbsp;libc::</c0><c4>{</c4><c0>c_void</c0><c4>,</c4><c0>&nbsp;c_char</c0><c4>,</c4><c0>&nbsp;size_t</c0><c4>,</c4><c0>&nbsp;uintptr_t</c0><c4>,</c4><c0>&nbsp;free</c0><c4>,</c4><c0>&nbsp;malloc</c0><c4>,</c4><c0>&nbsp;realloc</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>use&nbsp;unstable::intrinsics::TyDesc</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c0>use&nbsp;unstable::raw</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c0>use&nbsp;sys::size_of</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c0>extern&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>rust_stack</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;abort</c26><c0>(</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a href="#20_10_refs"><c26>fn&nbsp;get_box_size</c26><c1>(</c1><a href="#21_16_refs"><c20>body_size</c20><a href="#20_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c4>,</c4><c1>&nbsp;</c1><a href="#21_33_refs"><c20>body_align</c20><a href="#20_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>uint</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><a href="#20_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#22_8_refs"><c20>header_size</c20><a href="#20_10_refs"><c16>&nbsp;=&nbsp;</c16><a href="../sys.rs.html#35"><c8>size_of::&lt;</c8></a><a href="../unstable/raw.rs.html#15"><c3>raw::Box&lt;</c3><c25>()</c25></a><a href="../sys.rs.html#35"><c8>&gt;&gt;</c8></a><a href="#20_10_refs"><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a href="#20_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;FIXME&nbsp;(#2699):&nbsp;This&nbsp;alignment&nbsp;calculation&nbsp;is&nbsp;suspicious.&nbsp;Is&nbsp;it&nbsp;right?
+</c24><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a href="#20_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#24_8_refs"><c20>total_size</c20><a href="#20_10_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/global_heap.rs.html#32"><c8>align_to</c8></a><a href="#20_10_refs"><c25>(</c25><a href="../rt/global_heap.rs.html#24"><c8>header_size</c8></a><a href="#20_10_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../rt/global_heap.rs.html#23"><c8>body_align</c8></a><a href="#20_10_refs"><c25>)</c25><c9>&nbsp;+</c9><c2>&nbsp;</c2><a href="../rt/global_heap.rs.html#23"><c8>body_size</c8></a><a href="#20_10_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a href="#20_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/global_heap.rs.html#26"><c8>total_size</c8></a><a href="#20_10_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a href="#20_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c24>//&nbsp;Rounds&nbsp;|size|&nbsp;to&nbsp;the&nbsp;nearest&nbsp;|alignment|.&nbsp;Invariant:&nbsp;|alignment|&nbsp;is&nbsp;a&nbsp;power
+</c24><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c24>//&nbsp;of&nbsp;two.
+</c24><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a href="#30_10_refs"><c26>fn&nbsp;align_to</c26><c1>(</c1><a href="#31_12_refs"><c20>size</c20><a href="#30_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c4>,</c4><c1>&nbsp;</c1><a href="#31_24_refs"><c20>align</c20><a href="#30_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>uint</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a href="#30_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>assert!</c13><c25>(</c25><a href="../rt/global_heap.rs.html#33"><c8>align</c8></a><a href="#30_10_refs"><c2>&nbsp;!=&nbsp;</c2><c12>0</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a href="#30_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c25>(</c25><a href="../rt/global_heap.rs.html#33"><c8>size</c8></a><a href="#30_10_refs"><c2>&nbsp;+&nbsp;</c2><a href="../rt/global_heap.rs.html#33"><c8>align</c8></a><a href="#30_10_refs"><c2>&nbsp;-&nbsp;</c2><c12>1</c12><c25>)</c25><c0>&nbsp;&amp;</c0><c2>&nbsp;!</c2><c25>(</c25><a href="../rt/global_heap.rs.html#33"><c8>align</c8></a><a href="#30_10_refs"><c2>&nbsp;-&nbsp;</c2><c12>1</c12><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a href="#30_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c31>///&nbsp;A&nbsp;wrapper&nbsp;around&nbsp;libc::malloc,&nbsp;aborting&nbsp;on&nbsp;out-of-memory
+</c31><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a href="#37_10_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;malloc_raw</c26><c1>(</c1><a href="#38_25_refs"><c20>size</c20><a href="#37_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#37_10_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a href="#37_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#39_8_refs"><c20>p</c20><a href="#37_10_refs"><c16>&nbsp;=&nbsp;</c16><c8>malloc</c8><c25>(</c25><a href="../rt/global_heap.rs.html#40"><c8>size</c8></a><a href="#37_10_refs"><c7>&nbsp;as&nbsp;</c7><a href="../libc.rs.html#407"><c3>size_t</c3></a><a href="#37_10_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a href="#37_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>if&nbsp;</c13><a href="../rt/global_heap.rs.html#41"><c8>p</c8></a><a href="../ptr.rs.html#283"><c10>.is_null</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><a href="#37_10_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a href="#37_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;we&nbsp;need&nbsp;a&nbsp;non-allocating&nbsp;way&nbsp;to&nbsp;print&nbsp;an&nbsp;error&nbsp;here
+</c24><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a href="#37_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>abort</c8><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a href="#37_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a href="#37_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/global_heap.rs.html#41"><c8>p</c8></a><a href="#37_10_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a href="#37_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c31>///&nbsp;A&nbsp;wrapper&nbsp;around&nbsp;libc::realloc,&nbsp;aborting&nbsp;on&nbsp;out-of-memory
+</c31><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a href="#48_10_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;realloc_raw</c26><c1>(</c1><a href="#49_26_refs"><c20>ptr</c20><a href="#48_10_refs"><c1>:&nbsp;</c1><c3>*mut&nbsp;</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#48_10_refs"><c4>,</c4><c1>&nbsp;</c1><a href="#49_44_refs"><c20>size</c20><a href="#48_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*mut&nbsp;</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#48_10_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a href="#48_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#50_8_refs"><c20>p</c20><a href="#48_10_refs"><c16>&nbsp;=&nbsp;</c16><c8>realloc</c8><c25>(</c25><a href="../rt/global_heap.rs.html#51"><c8>ptr</c8></a><a href="#48_10_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../rt/global_heap.rs.html#51"><c8>size</c8></a><a href="#48_10_refs"><c7>&nbsp;as&nbsp;</c7><a href="../libc.rs.html#407"><c3>size_t</c3></a><a href="#48_10_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a href="#48_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>if&nbsp;</c13><a href="../rt/global_heap.rs.html#52"><c8>p</c8></a><a href="../ptr.rs.html#315"><c10>.is_null</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><a href="#48_10_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a href="#48_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;we&nbsp;need&nbsp;a&nbsp;non-allocating&nbsp;way&nbsp;to&nbsp;print&nbsp;an&nbsp;error&nbsp;here
+</c24><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a href="#48_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>abort</c8><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a href="#48_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a href="#48_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/global_heap.rs.html#52"><c8>p</c8></a><a href="#48_10_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a href="#48_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c31>///&nbsp;The&nbsp;allocator&nbsp;for&nbsp;unique&nbsp;pointers&nbsp;without&nbsp;contained&nbsp;managed&nbsp;pointers.
+</c31><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c0>#</c0><c4>[</c4><c0>lang="exchange_malloc"</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;exchange_malloc</c26><c1>(</c1><a href="#62_30_refs"><c20>size</c20><c1>:&nbsp;</c1><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*</c3><a href="../libc.rs.html#396"><c3>c_char</c3></a><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/global_heap.rs.html#39"><c8>malloc_raw</c8></a><c25>(</c25><a href="../rt/global_heap.rs.html#64"><c8>size</c8></a><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c25>)</c25><c9>&nbsp;as</c9><c7>&nbsp;</c7><c3>*</c3><a href="../libc.rs.html#396"><c3>c_char</c3></a><c21>
+</c21><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c24>//&nbsp;FIXME:&nbsp;#7496
+</c24><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c0>#</c0><c4>[</c4><c0>lang="closure_exchange_malloc"</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;closure_exchange_malloc_</c26><c1>(</c1><a href="#70_39_refs"><c20>td</c20><c1>:&nbsp;</c1><c3>*</c3><a href="../libc.rs.html#396"><c3>c_char</c3></a><c4>,</c4><c1>&nbsp;</c1><a href="#70_52_refs"><c20>size</c20><c1>:&nbsp;</c1><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*</c3><a href="../libc.rs.html#396"><c3>c_char</c3></a><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/global_heap.rs.html#76"><c8>closure_exchange_malloc</c8></a><c25>(</c25><a href="../rt/global_heap.rs.html#72"><c8>td</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../rt/global_heap.rs.html#72"><c8>size</c8></a><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a href="#74_10_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;closure_exchange_malloc</c26><c1>(</c1><a href="#75_38_refs"><c20>td</c20><a href="#74_10_refs"><c1>:&nbsp;</c1><c3>*</c3><a href="../libc.rs.html#396"><c3>c_char</c3></a><a href="#74_10_refs"><c4>,</c4><c1>&nbsp;</c1><a href="#75_51_refs"><c20>size</c20><a href="#74_10_refs"><c1>:&nbsp;</c1><a href="../libc.rs.html#417"><c3>uintptr_t</c3></a><a href="#74_10_refs"><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*</c3><a href="../libc.rs.html#396"><c3>c_char</c3></a><a href="#74_10_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a href="#74_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#76_8_refs"><c20>td</c20><a href="#74_10_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/global_heap.rs.html#77"><c8>td</c8></a><a href="#74_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>*</c3><a href="../unstable/intrinsics.rs.html#44"><c3>TyDesc</c3></a><a href="#74_10_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a href="#74_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#77_8_refs"><c20>size</c20><a href="#74_10_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/global_heap.rs.html#77"><c8>size</c8></a><a href="#74_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a href="#74_10_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a href="#74_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>assert!</c13><c25>(</c25><a href="../rt/global_heap.rs.html#78"><c8>td</c8></a><a href="../ptr.rs.html#287"><c10>.is_not_null</c10><c25>()</c25></a><a href="#74_10_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a href="#74_10_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a href="#74_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#81_8_refs"><c20>total_size</c20><a href="#74_10_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/global_heap.rs.html#22"><c8>get_box_size</c8></a><a href="#74_10_refs"><c25>(</c25><a href="../rt/global_heap.rs.html#79"><c8>size</c8></a><a href="#74_10_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../unstable/intrinsics.rs.html#47"><c25>(</c25><c2>*</c2></a><a href="../rt/global_heap.rs.html#78"><c8>td</c8></a><a href="../unstable/intrinsics.rs.html#47"><c25>)</c25><c0>.</c0><c6>align</c6></a><a href="#74_10_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a href="#74_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#82_8_refs"><c20>p</c20><a href="#74_10_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/global_heap.rs.html#39"><c8>malloc_raw</c8></a><a href="#74_10_refs"><c25>(</c25><a href="../rt/global_heap.rs.html#83"><c8>total_size</c8></a><a href="#74_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a href="#74_10_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a href="#74_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#84_8_refs"><c20>box</c20><a href="#74_10_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/global_heap.rs.html#84"><c8>p</c8></a><a href="#74_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>*mut&nbsp;</c3><a href="../unstable/raw.rs.html#15"><c3>raw::Box&lt;</c3><c25>()</c25><c3>&gt;</c3></a><a href="#74_10_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a href="#74_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c25>(</c25><c2>*</c2><a href="../rt/global_heap.rs.html#86"><c8>box</c8></a><a href="#74_10_refs"><c25>)</c25><c0>.</c0><a href="../unstable/raw.rs.html#18"><c6>type_desc</c6></a><a href="#74_10_refs"><c2>&nbsp;=&nbsp;</c2><a href="../rt/global_heap.rs.html#78"><c8>td</c8></a><a href="#74_10_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a href="#74_10_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a href="#74_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/global_heap.rs.html#86"><c8>box</c8></a><a href="#74_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>*</c3><a href="../libc.rs.html#396"><c3>c_char</c3></a><a href="#74_10_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a href="#74_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c24>//&nbsp;NB:&nbsp;Calls&nbsp;to&nbsp;free&nbsp;CANNOT&nbsp;be&nbsp;allowed&nbsp;to&nbsp;fail,&nbsp;as&nbsp;throwing&nbsp;an&nbsp;exception&nbsp;from
+</c24><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c24>//&nbsp;inside&nbsp;a&nbsp;landing&nbsp;pad&nbsp;may&nbsp;corrupt&nbsp;the&nbsp;state&nbsp;of&nbsp;the&nbsp;exception&nbsp;handler.
+</c24><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c0>#</c0><c4>[</c4><c0>lang="exchange_free"</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;exchange_free_</c26><c1>(</c1><a href="#95_29_refs"><c20>ptr</c20><c1>:&nbsp;</c1><c3>*</c3><a href="../libc.rs.html#396"><c3>c_char</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/global_heap.rs.html#101"><c8>exchange_free</c8></a><c25>(</c25><a href="../rt/global_heap.rs.html#97"><c8>ptr</c8></a><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a href="#99_10_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;exchange_free</c26><c1>(</c1><a href="#100_28_refs"><c20>ptr</c20><a href="#99_10_refs"><c1>:&nbsp;</c1><c3>*</c3><a href="../libc.rs.html#396"><c3>c_char</c3></a><a href="#99_10_refs"><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a href="#99_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>free</c8><c25>(</c25><a href="../rt/global_heap.rs.html#102"><c8>ptr</c8></a><a href="#99_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>*</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#99_10_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a href="#99_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>test</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c0>mod&nbsp;bench&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;extra::test::BenchHarness</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>bench</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;alloc_owned_small</c26><c0>(bh:&nbsp;&amp;mut&nbsp;BenchHarness</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;bh.iter&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~10</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>bench</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;alloc_owned_big</c26><c0>(bh:&nbsp;&amp;mut&nbsp;BenchHarness</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;bh.iter&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~</c0><c4>[</c4><c0>10</c0><c4>,</c4><c0>&nbsp;..1000</c0><c4>];</c4><c0>
+</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="37_10_refs"><a href="#38"><c24>rt/global_heap.rs:38:10-38:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;malloc_raw(size:&nbsp;uint)&nbsp;-&gt;&nbsp;*c_void&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/global_heap.rs.html#64"><c24>64:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;malloc_raw(size&nbsp;as&nbsp;uint)&nbsp;as&nbsp;*c_char
+<br/></a><a href="../rt/global_heap.rs.html#83"><c24>83:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;malloc_raw(total_size&nbsp;as&nbsp;uint);
+<br/></a><a href="../vec.rs.html"><c24>vec.rs:<br/></c24><a href="../vec.rs.html#143"><c24>143:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr&nbsp;=&nbsp;malloc_raw(alloc&nbsp;+&nbsp;sys::size_of::&lt;Vec&lt;()&gt;&gt;())&nbsp;as&nbsp;*mut&nbsp;Vec&lt;()&gt;;
+<br/></a><br/><br/><a id="99_10_refs"><a href="#100"><c24>rt/global_heap.rs:100:10-100:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;exchange_free(ptr:&nbsp;*c_char)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/global_heap.rs.html#97"><c24>97:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;exchange_free(ptr)
+<br/></a><br/><br/><a id="48_10_refs"><a href="#49"><c24>rt/global_heap.rs:49:10-49:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;realloc_raw(ptr:&nbsp;*mut&nbsp;c_void,&nbsp;size:&nbsp;uint)&nbsp;-&gt;&nbsp;*mut&nbsp;c_void&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../vec.rs.html"><c24>vec.rs:<br/></c24><a href="../vec.rs.html#1213"><c24>1213:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*ptr&nbsp;=&nbsp;realloc_raw(*ptr&nbsp;as&nbsp;*mut&nbsp;c_void,&nbsp;size)
+<br/></a><br/><br/><a id="30_10_refs"><a href="#31"><c24>rt/global_heap.rs:31:10-31:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>fn&nbsp;align_to(size:&nbsp;uint,&nbsp;align:&nbsp;uint)&nbsp;-&gt;&nbsp;uint&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/global_heap.rs.html#25"><c24>25:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;total_size&nbsp;=&nbsp;align_to(header_size,&nbsp;body_align)&nbsp;+&nbsp;body_size;
+<br/></a><br/><br/><a id="74_10_refs"><a href="#75"><c24>rt/global_heap.rs:75:10-75:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;closure_exchange_malloc(td:&nbsp;*c_char,&nbsp;size:&nbsp;uintptr_t)&nbsp;-&gt;&nbsp;*c_char&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/global_heap.rs.html#72"><c24>72:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;closure_exchange_malloc(td,&nbsp;size)
+<br/></a><br/><br/><a id="20_10_refs"><a href="#21"><c24>rt/global_heap.rs:21:10-21:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>fn&nbsp;get_box_size(body_size:&nbsp;uint,&nbsp;body_align:&nbsp;uint)&nbsp;-&gt;&nbsp;uint&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/global_heap.rs.html#82"><c24>82:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;total_size&nbsp;=&nbsp;get_box_size(size,&nbsp;(*td).align);
+<br/></a><br/></a></a>

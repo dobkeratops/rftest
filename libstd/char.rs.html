@@ -1,0 +1,526 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#36363a;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;Utilities&nbsp;for&nbsp;manipulating&nbsp;the&nbsp;char&nbsp;type
+</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c0>use&nbsp;option::</c0><c4>{</c4><c0>None</c0><c4>,</c4><c0>&nbsp;Option</c0><c4>,</c4><c0>&nbsp;Some</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c0>use&nbsp;int</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c0>use&nbsp;str::StrSlice</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c0>use&nbsp;unicode::</c0><c4>{</c4><c0>derived_property</c0><c4>,</c4><c0>&nbsp;general_category</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>test</c0><c25>)</c25><c4>]</c4><c0>&nbsp;use&nbsp;str::OwnedStr</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>&nbsp;use&nbsp;cmp::</c0><c4>{</c4><c0>Eq</c0><c4>,</c4><c0>&nbsp;Ord</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>&nbsp;use&nbsp;num::Zero</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c0>/*
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Lu&nbsp;&nbsp;Uppercase_Letter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;uppercase&nbsp;letter
+</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Ll&nbsp;&nbsp;Lowercase_Letter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;lowercase&nbsp;letter
+</c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Lt&nbsp;&nbsp;Titlecase_Letter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;digraphic&nbsp;character</c0><c4>,</c4><c0>&nbsp;with&nbsp;first&nbsp;part&nbsp;uppercase
+</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Lm&nbsp;&nbsp;Modifier_Letter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;modifier&nbsp;letter
+</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Lo&nbsp;&nbsp;Other_Letter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;other&nbsp;letters</c0><c4>,</c4><c0>&nbsp;including&nbsp;syllables&nbsp;and&nbsp;ideographs
+</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Mn&nbsp;&nbsp;Nonspacing_Mark&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;nonspacing&nbsp;combining&nbsp;mark&nbsp;</c0><c25>(</c25><c0>zero&nbsp;advance&nbsp;width</c0><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Mc&nbsp;&nbsp;Spacing_Mark&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;spacing&nbsp;combining&nbsp;mark&nbsp;</c0><c25>(</c25><c0>positive&nbsp;advance&nbsp;width</c0><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Me&nbsp;&nbsp;Enclosing_Mark&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;enclosing&nbsp;combining&nbsp;mark
+</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Nd&nbsp;&nbsp;Decimal_Number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;decimal&nbsp;digit
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Nl&nbsp;&nbsp;Letter_Number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;letterlike&nbsp;numeric&nbsp;character
+</c0><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;No&nbsp;&nbsp;Other_Number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;numeric&nbsp;character&nbsp;of&nbsp;other&nbsp;type
+</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Pc&nbsp;&nbsp;Connector_Punctuation&nbsp;&nbsp;&nbsp;a&nbsp;connecting&nbsp;punctuation&nbsp;mark</c0><c4>,</c4><c0>&nbsp;like&nbsp;a&nbsp;tie
+</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Pd&nbsp;&nbsp;Dash_Punctuation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;dash&nbsp;or&nbsp;hyphen&nbsp;punctuation&nbsp;mark
+</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Ps&nbsp;&nbsp;Open_Punctuation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;opening&nbsp;punctuation&nbsp;mark&nbsp;</c0><c25>(</c25><c0>of&nbsp;a&nbsp;pair</c0><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Pe&nbsp;&nbsp;Close_Punctuation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;closing&nbsp;punctuation&nbsp;mark&nbsp;</c0><c25>(</c25><c0>of&nbsp;a&nbsp;pair</c0><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Pi&nbsp;&nbsp;Initial_Punctuation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;initial&nbsp;quotation&nbsp;mark
+</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Pf&nbsp;&nbsp;Final_Punctuation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;final&nbsp;quotation&nbsp;mark
+</c0><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Po&nbsp;&nbsp;Other_Punctuation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;punctuation&nbsp;mark&nbsp;of&nbsp;other&nbsp;type
+</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Sm&nbsp;&nbsp;Math_Symbol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;symbol&nbsp;of&nbsp;primarily&nbsp;mathematical&nbsp;use
+</c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Sc&nbsp;&nbsp;Currency_Symbol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;currency&nbsp;sign
+</c0><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Sk&nbsp;&nbsp;Modifier_Symbol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;non-letterlike&nbsp;modifier&nbsp;symbol
+</c0><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;So&nbsp;&nbsp;Other_Symbol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;symbol&nbsp;of&nbsp;other&nbsp;type
+</c0><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Zs&nbsp;&nbsp;Space_Separator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;space&nbsp;character&nbsp;</c0><c25>(</c25><c0>of&nbsp;various&nbsp;non-zero&nbsp;widths</c0><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Zl&nbsp;&nbsp;Line_Separator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U+2028&nbsp;LINE&nbsp;SEPARATOR&nbsp;only
+</c0><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Zp&nbsp;&nbsp;Paragraph_Separator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;U+2029&nbsp;PARAGRAPH&nbsp;SEPARATOR&nbsp;only
+</c0><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Cc&nbsp;&nbsp;Control&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;C0&nbsp;or&nbsp;C1&nbsp;control&nbsp;code
+</c0><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Cf&nbsp;&nbsp;Format&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;format&nbsp;control&nbsp;character
+</c0><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Cs&nbsp;&nbsp;Surrogate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;surrogate&nbsp;code&nbsp;point
+</c0><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Co&nbsp;&nbsp;Private_Use&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;private-use&nbsp;character
+</c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;Cn&nbsp;&nbsp;Unassigned&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;reserved&nbsp;unassigned&nbsp;code&nbsp;point&nbsp;or&nbsp;a&nbsp;noncharacter
+</c0><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c0>*/
+</c0><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c31>///&nbsp;Returns&nbsp;whether&nbsp;the&nbsp;specified&nbsp;character&nbsp;is&nbsp;considered&nbsp;a&nbsp;unicode&nbsp;alphabetic
+</c31><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c31>///&nbsp;character
+</c31><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a href="#56_14_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_alphabetic</c26><c1>(</c1><a href="#57_21_refs"><c20>c</c20><a href="#56_14_refs"><c1>:&nbsp;</c1><c3>char</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;&nbsp;&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><a href="unicode.rs.html#1874"><c8>derived_property::Alphabetic</c8></a><a href="#56_14_refs"><c25>(</c25><a href="char.rs.html#59"><c8>c</c8></a><a href="#56_14_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c0>#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>missing_doc</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a href="#58_22_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_XID_start</c26><c1>(</c1><a href="#59_20_refs"><c20>c</c20><a href="#58_22_refs"><c1>:&nbsp;</c1><c3>char</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><a href="unicode.rs.html#2641"><c8>derived_property::XID_Start</c8></a><a href="#58_22_refs"><c25>(</c25><a href="char.rs.html#61"><c8>c</c8></a><a href="#58_22_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c0>#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>missing_doc</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a href="#60_22_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_XID_continue</c26><c1>(</c1><a href="#61_23_refs"><c20>c</c20><a href="#60_22_refs"><c1>:&nbsp;</c1><c3>char</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><a href="unicode.rs.html#2357"><c8>derived_property::XID_Continue</c8></a><a href="#60_22_refs"><c25>(</c25><a href="char.rs.html#63"><c8>c</c8></a><a href="#60_22_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c31>///&nbsp;Indicates&nbsp;whether&nbsp;a&nbsp;character&nbsp;is&nbsp;in&nbsp;lower&nbsp;case,&nbsp;defined
+</c31><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c31>///&nbsp;in&nbsp;terms&nbsp;of&nbsp;the&nbsp;Unicode&nbsp;General&nbsp;Category&nbsp;'Ll'
+</c31><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a href="#67_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_lowercase</c26><c1>(</c1><a href="#68_20_refs"><c20>c</c20><a href="#67_10_refs"><c1>:&nbsp;</c1><c3>char</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><a href="unicode.rs.html#371"><c8>general_category::Ll</c8></a><a href="#67_10_refs"><c25>(</c25><a href="char.rs.html#70"><c8>c</c8></a><a href="#67_10_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c31>///&nbsp;Indicates&nbsp;whether&nbsp;a&nbsp;character&nbsp;is&nbsp;in&nbsp;upper&nbsp;case,&nbsp;defined
+</c31><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c31>///&nbsp;in&nbsp;terms&nbsp;of&nbsp;the&nbsp;Unicode&nbsp;General&nbsp;Category&nbsp;'Lu'.
+</c31><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a href="#74_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_uppercase</c26><c1>(</c1><a href="#75_20_refs"><c20>c</c20><a href="#74_10_refs"><c1>:&nbsp;</c1><c3>char</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>&nbsp;</c21><a href="unicode.rs.html#820"><c8>general_category::Lu</c8></a><a href="#74_10_refs"><c25>(</c25><a href="char.rs.html#77"><c8>c</c8></a><a href="#74_10_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c31>///&nbsp;Indicates&nbsp;whether&nbsp;a&nbsp;character&nbsp;is&nbsp;whitespace.&nbsp;Whitespace&nbsp;is&nbsp;defined&nbsp;in
+</c31><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c31>///&nbsp;terms&nbsp;of&nbsp;the&nbsp;Unicode&nbsp;General&nbsp;Categories&nbsp;'Zs',&nbsp;'Zl',&nbsp;'Zp'
+</c31><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c31>///&nbsp;additional&nbsp;'Cc'-category&nbsp;control&nbsp;codes&nbsp;in&nbsp;the&nbsp;range&nbsp;[0x09,&nbsp;0x0d]
+</c31><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a href="#82_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_whitespace</c26><c1>(</c1><a href="#83_21_refs"><c20>c</c20><a href="#82_10_refs"><c1>:&nbsp;</c1><c3>char</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a href="#82_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="char.rs.html#85"><c8>c</c8></a><a href="#82_10_refs"><c2>&nbsp;==&nbsp;</c2><c12>'&nbsp;'</c12><c0>
+</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a href="#82_10_refs"><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;</c0><c25>(</c25><c12>'\x09'</c12><c2>&nbsp;&lt;=&nbsp;</c2><a href="char.rs.html#85"><c8>c</c8></a><a href="#82_10_refs"><c0>&nbsp;&amp;&amp;&nbsp;</c0><a href="char.rs.html#85"><c8>c</c8></a><a href="#82_10_refs"><c2>&nbsp;&lt;=&nbsp;</c2><c12>'\x0d'</c12><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a href="#82_10_refs"><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;</c0><a href="unicode.rs.html#1447"><c8>general_category::Zs</c8></a><a href="#82_10_refs"><c25>(</c25><a href="char.rs.html#85"><c8>c</c8></a><a href="#82_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a href="#82_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||</c9><c0>&nbsp;</c0><a href="unicode.rs.html#1428"><c8>general_category::Zl</c8></a><a href="#82_10_refs"><c25>(</c25><a href="char.rs.html#85"><c8>c</c8></a><a href="#82_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a href="#82_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||</c9><c0>&nbsp;</c0><a href="unicode.rs.html#1436"><c8>general_category::Zp</c8></a><a href="#82_10_refs"><c25>(</c25><a href="char.rs.html#85"><c8>c</c8></a><a href="#82_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a href="#82_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c31>///&nbsp;Indicates&nbsp;whether&nbsp;a&nbsp;character&nbsp;is&nbsp;alphanumeric.&nbsp;Alphanumericness&nbsp;is
+</c31><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c31>///&nbsp;defined&nbsp;in&nbsp;terms&nbsp;of&nbsp;the&nbsp;Unicode&nbsp;General&nbsp;Categories&nbsp;'Nd',&nbsp;'Nl',&nbsp;'No'
+</c31><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c31>///&nbsp;and&nbsp;the&nbsp;Derived&nbsp;Core&nbsp;Property&nbsp;'Alphabetic'.
+</c31><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a href="#96_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_alphanumeric</c26><c1>(</c1><a href="#97_23_refs"><c20>c</c20><a href="#96_10_refs"><c1>:&nbsp;</c1><c3>char</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a href="#96_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="unicode.rs.html#1874"><c8>derived_property::Alphabetic</c8></a><a href="#96_10_refs"><c25>(</c25><a href="char.rs.html#99"><c8>c</c8></a><a href="#96_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a href="#96_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||</c9><c0>&nbsp;</c0><a href="unicode.rs.html#1031"><c8>general_category::Nd</c8></a><a href="#96_10_refs"><c25>(</c25><a href="char.rs.html#99"><c8>c</c8></a><a href="#96_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a href="#96_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||</c9><c0>&nbsp;</c0><a href="unicode.rs.html#1044"><c8>general_category::Nl</c8></a><a href="#96_10_refs"><c25>(</c25><a href="char.rs.html#99"><c8>c</c8></a><a href="#96_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a href="#96_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||</c9><c0>&nbsp;</c0><a href="unicode.rs.html#1072"><c8>general_category::No</c8></a><a href="#96_10_refs"><c25>(</c25><a href="char.rs.html#99"><c8>c</c8></a><a href="#96_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a href="#96_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c31>///&nbsp;Indicates&nbsp;whether&nbsp;the&nbsp;character&nbsp;is&nbsp;numeric&nbsp;(Nd,&nbsp;Nl,&nbsp;or&nbsp;No)
+</c31><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a href="#105_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_digit</c26><c1>(</c1><a href="#106_16_refs"><c20>c</c20><a href="#105_10_refs"><c1>:&nbsp;</c1><c3>char</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a href="#105_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="unicode.rs.html#1031"><c8>general_category::Nd</c8></a><a href="#105_10_refs"><c25>(</c25><a href="char.rs.html#108"><c8>c</c8></a><a href="#105_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a href="#105_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||</c9><c0>&nbsp;</c0><a href="unicode.rs.html#1044"><c8>general_category::Nl</c8></a><a href="#105_10_refs"><c25>(</c25><a href="char.rs.html#108"><c8>c</c8></a><a href="#105_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a href="#105_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||</c9><c0>&nbsp;</c0><a href="unicode.rs.html#1072"><c8>general_category::No</c8></a><a href="#105_10_refs"><c25>(</c25><a href="char.rs.html#108"><c8>c</c8></a><a href="#105_10_refs"><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a href="#105_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c31>///&nbsp;Checks&nbsp;if&nbsp;a&nbsp;character&nbsp;parses&nbsp;as&nbsp;a&nbsp;numeric&nbsp;digit&nbsp;in&nbsp;the&nbsp;given&nbsp;radix.
+</c31><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c31>///&nbsp;Compared&nbsp;to&nbsp;`is_digit()`,&nbsp;this&nbsp;function&nbsp;only&nbsp;recognizes&nbsp;the
+</c31><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c31>///&nbsp;characters&nbsp;`0-9`,&nbsp;`a-z`&nbsp;and&nbsp;`A-Z`.
+</c31><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c31>///&nbsp;#&nbsp;Return&nbsp;value
+</c31><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c31>///&nbsp;Returns&nbsp;`true`&nbsp;if&nbsp;`c`&nbsp;is&nbsp;a&nbsp;valid&nbsp;digit&nbsp;under&nbsp;`radix`,&nbsp;and&nbsp;`false`
+</c31><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c31>///&nbsp;otherwise.
+</c31><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c31>///&nbsp;#&nbsp;Failure
+</c31><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c31>///&nbsp;Fails&nbsp;if&nbsp;given&nbsp;a&nbsp;`radix`&nbsp;&gt;&nbsp;36.
+</c31><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><c31>///&nbsp;#&nbsp;Note
+</c31><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><c31>///&nbsp;This&nbsp;just&nbsp;wraps&nbsp;`to_digit()`.
+</c31><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><a href="#130_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;is_digit_radix</c26><c1>(</c1><a href="#131_22_refs"><c20>c</c20><a href="#130_10_refs"><c1>:&nbsp;</c1><c3>char</c3><c4>,</c4><c1>&nbsp;</c1><a href="#131_31_refs"><c20>radix</c20><a href="#130_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a href="#130_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="char.rs.html#154"><c8>to_digit</c8></a><a href="#130_10_refs"><c25>(</c25><a href="char.rs.html#133"><c8>c</c8></a><a href="#130_10_refs"><c4>,</c4><c9>&nbsp;</c9><a href="char.rs.html#133"><c8>radix</c8></a><a href="#130_10_refs"><c25>)</c25><c9>&nbsp;</c9><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><a href="#130_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="option.rs.html#58"><c20>Some</c20><c25>(</c25><c20>_</c20><c25>)</c25></a><a href="#130_10_refs"><c7>&nbsp;=&gt;&nbsp;</c7><c21>true</c21><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><a href="#130_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="option.rs.html#57"><c20>None</c20></a><a href="#130_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;</c7><c21>false</c21><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><a href="#130_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><a href="#130_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c31>///&nbsp;Convert&nbsp;a&nbsp;char&nbsp;to&nbsp;the&nbsp;corresponding&nbsp;digit.
+</c31><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c31>///&nbsp;#&nbsp;Return&nbsp;value
+</c31><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><c31>///&nbsp;If&nbsp;`c`&nbsp;is&nbsp;between&nbsp;'0'&nbsp;and&nbsp;'9',&nbsp;the&nbsp;corresponding&nbsp;value
+</c31><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><c31>///&nbsp;between&nbsp;0&nbsp;and&nbsp;9.&nbsp;If&nbsp;`c`&nbsp;is&nbsp;'a'&nbsp;or&nbsp;'A',&nbsp;10.&nbsp;If&nbsp;`c`&nbsp;is
+</c31><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><c31>///&nbsp;'b'&nbsp;or&nbsp;'B',&nbsp;11,&nbsp;etc.&nbsp;Returns&nbsp;none&nbsp;if&nbsp;the&nbsp;char&nbsp;does&nbsp;not
+</c31><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><c31>///&nbsp;refer&nbsp;to&nbsp;a&nbsp;digit&nbsp;in&nbsp;the&nbsp;given&nbsp;radix.
+</c31><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><c31>///&nbsp;#&nbsp;Failure
+</c31><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c31>///&nbsp;Fails&nbsp;if&nbsp;given&nbsp;a&nbsp;`radix`&nbsp;outside&nbsp;the&nbsp;range&nbsp;`[0..36]`.
+</c31><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><a href="#152_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;to_digit</c26><c1>(</c1><a href="#153_16_refs"><c20>c</c20><a href="#152_10_refs"><c1>:&nbsp;</c1><c3>char</c3><c4>,</c4><c1>&nbsp;</c1><a href="#153_25_refs"><c20>radix</c20><a href="#152_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><a href="option.rs.html#55"><c3>Option&lt;</c3></a><a href="#152_10_refs"><c3>uint</c3><a href="option.rs.html#55"><c3>&gt;</c3></a><a href="#152_10_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><a href="#152_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="char.rs.html#155"><c8>radix</c8></a><a href="#152_10_refs"><c2>&nbsp;&gt;&nbsp;</c2><c12>36</c12><c7>&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><a href="#152_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>fail!</c13><c25>(</c25><a href="unstable/extfmt.rs.html#583"><c3>"to_digit:&nbsp;radix&nbsp;%?&nbsp;is&nbsp;to&nbsp;high&nbsp;</c3><c25>(</c25><c3>maximum&nbsp;36</c3><c25>)</c25><c3>"</c3></a><a href="#152_10_refs"><c4>,</c4><c13>&nbsp;</c13><a href="unstable/extfmt.rs.html#488"><c8>radix</c8></a><a href="#152_10_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><a href="#152_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><a href="#152_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#157_8_refs"><c20>val</c20><a href="#152_10_refs"><c16>&nbsp;=&nbsp;</c16><c7>match&nbsp;</c7><a href="char.rs.html#155"><c8>c</c8></a><a href="#152_10_refs"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><a href="#152_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c12>'0'&nbsp;..</c12><c20>&nbsp;</c20><c12>'9'&nbsp;=&gt;</c12><c7>&nbsp;</c7><a href="char.rs.html#155"><c8>c</c8></a><a href="#152_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c2>&nbsp;-&nbsp;</c2><c25>(</c25><c12>'0'</c12><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c25>)</c25><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><a href="#152_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c12>'a'&nbsp;..</c12><c20>&nbsp;</c20><c12>'z'&nbsp;=&gt;</c12><c7>&nbsp;</c7><a href="char.rs.html#155"><c8>c</c8></a><a href="#152_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c2>&nbsp;+&nbsp;</c2><c12>10u</c12><c2>&nbsp;-&nbsp;</c2><c25>(</c25><c12>'a'</c12><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c25>)</c25><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><a href="#152_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c12>'A'&nbsp;..</c12><c20>&nbsp;</c20><c12>'Z'&nbsp;=&gt;</c12><c7>&nbsp;</c7><a href="char.rs.html#155"><c8>c</c8></a><a href="#152_10_refs"><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c2>&nbsp;+&nbsp;</c2><c12>10u</c12><c2>&nbsp;-&nbsp;</c2><c25>(</c25><c12>'A'</c12><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c25>)</c25><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><a href="#152_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;=&gt;&nbsp;</c7><c0>return&nbsp;</c0><a href="option.rs.html#57"><c8>None</c8></a><a href="#152_10_refs"><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><a href="#152_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>};</c4><c21>
+</c21><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><a href="#152_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="char.rs.html#159"><c8>val</c8></a><a href="#152_10_refs"><c0>&nbsp;&lt;&nbsp;</c0><a href="char.rs.html#155"><c8>radix</c8></a><a href="#152_10_refs"><c7>&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="option.rs.html#58"><c8>Some</c8></a><a href="#152_10_refs"><c25>(</c25><a href="char.rs.html#159"><c8>val</c8></a><a href="#152_10_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><a href="#152_10_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="option.rs.html#57"><c8>None</c8></a><a href="#152_10_refs"><c21>&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><a href="#152_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><c31>///&nbsp;Converts&nbsp;a&nbsp;number&nbsp;to&nbsp;the&nbsp;character&nbsp;representing&nbsp;it.
+</c31><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><c31>///&nbsp;#&nbsp;Return&nbsp;value
+</c31><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><c31>///&nbsp;Returns&nbsp;`Some(char)`&nbsp;if&nbsp;`num`&nbsp;represents&nbsp;one&nbsp;digit&nbsp;under&nbsp;`radix`,
+</c31><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><c31>///&nbsp;using&nbsp;one&nbsp;character&nbsp;of&nbsp;`0-9`&nbsp;or&nbsp;`a-z`,&nbsp;or&nbsp;`None`&nbsp;if&nbsp;it&nbsp;doesn't.
+</c31><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><c31>///&nbsp;#&nbsp;Failure
+</c31><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><c31>///&nbsp;Fails&nbsp;if&nbsp;given&nbsp;an&nbsp;`radix`&nbsp;&gt;&nbsp;36.
+</c31><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><c0>#</c0><c4>[</c4><c0>inline</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><a href="#179_10_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;from_digit</c26><c1>(</c1><a href="#180_18_refs"><c20>num</c20><a href="#179_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c4>,</c4><c1>&nbsp;</c1><a href="#180_29_refs"><c20>radix</c20><a href="#179_10_refs"><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><a href="option.rs.html#55"><c3>Option&lt;char&gt;</c3></a><a href="#179_10_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><a href="#179_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>if&nbsp;</c13><a href="char.rs.html#182"><c8>radix</c8></a><a href="#179_10_refs"><c2>&nbsp;&gt;&nbsp;</c2><c12>36</c12><c13>&nbsp;</c13><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><a href="#179_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>fail!</c13><c25>(</c25><a href="#182_14_refs"><c20>"from_digit:&nbsp;radix&nbsp;%?&nbsp;is&nbsp;to&nbsp;high&nbsp;</c20><c25>(</c25><c20>maximum&nbsp;36</c20><c25>)</c25><c20>"</c20><a href="#179_10_refs"><c4>,</c4><c13>&nbsp;</c13><a href="unstable/extfmt.rs.html#495"><c8>num</c8></a><a href="#179_10_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><a href="#179_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><a href="#179_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="char.rs.html#182"><c8>num</c8></a><a href="#179_10_refs"><c0>&nbsp;&lt;&nbsp;</c0><a href="char.rs.html#182"><c8>radix</c8></a><a href="#179_10_refs"><c7>&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><a href="#179_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="char.rs.html#182"><c8>num</c8></a><a href="#179_10_refs"><c0>&nbsp;&lt;&nbsp;</c0><c12>10</c12><c7>&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><a href="#179_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="option.rs.html#58"><c8>Some</c8></a><a href="#179_10_refs"><c25>((</c25><c12>'0'</c12><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c2>&nbsp;+&nbsp;</c2><a href="char.rs.html#182"><c8>num</c8></a><a href="#179_10_refs"><c25>)</c25><c0>&nbsp;as</c0><c7>&nbsp;</c7><c3>char</c3><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><a href="#179_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c7>&nbsp;else&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><a href="#179_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="option.rs.html#58"><c8>Some</c8></a><a href="#179_10_refs"><c25>((</c25><c12>'a'</c12><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c2>&nbsp;+&nbsp;</c2><a href="char.rs.html#182"><c8>num</c8></a><a href="#179_10_refs"><c2>&nbsp;-&nbsp;</c2><c12>10u</c12><c25>)</c25><c0>&nbsp;as</c0><c7>&nbsp;</c7><c3>char</c3><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><a href="#179_10_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><a href="#179_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>&nbsp;else&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><a href="#179_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="option.rs.html#57"><c8>None</c8></a><a href="#179_10_refs"><c21>
+</c21><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><a href="#179_10_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><a href="#179_10_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><c31>///&nbsp;Return&nbsp;the&nbsp;hexadecimal&nbsp;unicode&nbsp;escape&nbsp;of&nbsp;a&nbsp;char.
+</c31><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><c31>///&nbsp;The&nbsp;rules&nbsp;are&nbsp;as&nbsp;follows:
+</c31><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><c31>///&nbsp;-&nbsp;chars&nbsp;in&nbsp;[0,0xff]&nbsp;get&nbsp;2-digit&nbsp;escapes:&nbsp;`\\xNN`
+</c31><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><c31>///&nbsp;-&nbsp;chars&nbsp;in&nbsp;[0x100,0xffff]&nbsp;get&nbsp;4-digit&nbsp;escapes:&nbsp;`\\uNNNN`
+</c31><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c31>///&nbsp;-&nbsp;chars&nbsp;above&nbsp;0x10000&nbsp;get&nbsp;8-digit&nbsp;escapes:&nbsp;`\\UNNNNNNNN`
+</c31><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><a href="#203_4_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;escape_unicode</c26><c1>(</c1><a href="#204_22_refs"><c20>c</c20><a href="#203_4_refs"><c1>:&nbsp;</c1><c3>char</c3><c4>,</c4><c1>&nbsp;</c1><a href="#204_31_refs"><c20>f</c20><a href="#203_4_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(char</c3><c25>))</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><a href="#203_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;avoid&nbsp;calling&nbsp;str::to_str_radix&nbsp;because&nbsp;we&nbsp;don't&nbsp;really&nbsp;need&nbsp;to&nbsp;allocate
+</c24><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><a href="#203_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;here.
+</c24><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><a href="#203_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="char.rs.html#206"><c8>f</c8></a><a href="#203_4_refs"><c25>(</c25><c12>'\\'</c12><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><a href="#203_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#208_8_refs"><c20>pad</c20><a href="#203_4_refs"><c16>&nbsp;=&nbsp;</c16><c7>cond!</c7><c25>(</c25><c7>
+</c7><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><a href="#203_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><a href="char.rs.html#206"><c8>c</c8></a><a href="#203_4_refs"><c2>&nbsp;&lt;=&nbsp;</c2><c12>'\xff'</c12><c25>)</c25><c7>&nbsp;&nbsp;&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#206"><c8>f</c8></a><a href="#203_4_refs"><c25>(</c25><c12>'x'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c12>2</c12><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><a href="#203_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><a href="char.rs.html#206"><c8>c</c8></a><a href="#203_4_refs"><c2>&nbsp;&lt;=&nbsp;</c2><c12>'\uffff'</c12><c25>)</c25><c7>&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#206"><c8>f</c8></a><a href="#203_4_refs"><c25>(</c25><c12>'u'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c12>4</c12><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><a href="#203_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#206"><c8>f</c8></a><a href="#203_4_refs"><c25>(</c25><c12>'U'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c12>8</c12><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><a href="#203_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><a href="#203_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>do&nbsp;</c13><a href="num/int_macros.rs.html#109"><c8>int::range_step</c8></a><a href="#203_4_refs"><c25>(</c25><c12>4</c12><c2>&nbsp;*&nbsp;</c2><c25>(</c25><a href="char.rs.html#210"><c8>pad</c8></a><a href="#203_4_refs"><c2>&nbsp;-&nbsp;</c2><c12>1</c12><c25>)</c25><c4>,</c4><c13>&nbsp;</c13><c2>-</c2><c12>1</c12><c4>,</c4><c13>&nbsp;</c13><c2>-</c2><c12>4</c12><c25>)</c25><c0>&nbsp;|</c0><a href="#213_47_refs"><c20>offset</c20><a href="#203_4_refs"><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><a href="#203_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>match&nbsp;</c13><c25>((</c25><a href="char.rs.html#206"><c8>c</c8></a><a href="#203_4_refs"><c7>&nbsp;as&nbsp;</c7><c3>u32</c3><c25>)</c25><c0>&nbsp;&gt;&gt;</c0><c2>&nbsp;</c2><a href="char.rs.html#215"><c8>offset</c8></a><a href="#203_4_refs"><c25>)</c25><c0>&nbsp;&amp;</c0><c2>&nbsp;</c2><c12>0xf</c12><c13>&nbsp;</c13><c4>{</c4><c13>
+</c13><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a><a href="#203_4_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><a href="#215_12_refs"><c20>i&nbsp;@&nbsp;</c20><c12>0&nbsp;..</c12><c20>&nbsp;</c20><c12>9</c12><a href="#203_4_refs"><c12>&nbsp;=&gt;</c12><c13>&nbsp;</c13><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#206"><c8>f</c8></a><a href="#203_4_refs"><c25>(</c25><c12>'0'</c12><c2>&nbsp;+&nbsp;</c2><a href="char.rs.html#217"><c8>i</c8></a><a href="#203_4_refs"><c7>&nbsp;as&nbsp;</c7><c3>char</c3><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c13>
+</c13><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a><a href="#203_4_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><a href="#216_12_refs"><c20>i</c20><a href="#203_4_refs"><c13>&nbsp;=&gt;&nbsp;</c13><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#206"><c8>f</c8></a><a href="#203_4_refs"><c25>(</c25><c12>'a'</c12><c2>&nbsp;+&nbsp;</c2><c25>(</c25><a href="char.rs.html#218"><c8>i</c8></a><a href="#203_4_refs"><c2>&nbsp;-&nbsp;</c2><c12>10</c12><c25>)</c25><c0>&nbsp;as</c0><c7>&nbsp;</c7><c3>char</c3><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c13>
+</c13><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a><a href="#203_4_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a><a href="#203_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c12>true</c12><c21>
+</c21><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><a href="#203_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>};</c4><c21>
+</c21><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><a href="#203_4_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><c31>///&nbsp;Return&nbsp;a&nbsp;'default'&nbsp;ASCII&nbsp;and&nbsp;C++11-like&nbsp;char-literal&nbsp;escape&nbsp;of&nbsp;a&nbsp;char.
+</c31><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><c31>///&nbsp;The&nbsp;default&nbsp;is&nbsp;chosen&nbsp;with&nbsp;a&nbsp;bias&nbsp;toward&nbsp;producing&nbsp;literals&nbsp;that&nbsp;are
+</c31><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><c31>///&nbsp;legal&nbsp;in&nbsp;a&nbsp;variety&nbsp;of&nbsp;languages,&nbsp;including&nbsp;C++11&nbsp;and&nbsp;similar&nbsp;C-family
+</c31><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a><c31>///&nbsp;languages.&nbsp;The&nbsp;exact&nbsp;rules&nbsp;are:
+</c31><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a><c31>///&nbsp;-&nbsp;Tab,&nbsp;CR&nbsp;and&nbsp;LF&nbsp;are&nbsp;escaped&nbsp;as&nbsp;'\t',&nbsp;'\r'&nbsp;and&nbsp;'\n'&nbsp;respectively.
+</c31><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><c31>///&nbsp;-&nbsp;Single-quote,&nbsp;double-quote&nbsp;and&nbsp;backslash&nbsp;chars&nbsp;are&nbsp;backslash-escaped.
+</c31><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><c31>///&nbsp;-&nbsp;Any&nbsp;other&nbsp;chars&nbsp;in&nbsp;the&nbsp;range&nbsp;[0x20,0x7e]&nbsp;are&nbsp;not&nbsp;escaped.
+</c31><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><c31>///&nbsp;-&nbsp;Any&nbsp;other&nbsp;chars&nbsp;are&nbsp;given&nbsp;hex&nbsp;unicode&nbsp;escapes;&nbsp;see&nbsp;`escape_unicode`.
+</c31><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a><a href="#233_4_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;escape_default</c26><c1>(</c1><a href="#234_22_refs"><c20>c</c20><a href="#233_4_refs"><c1>:&nbsp;</c1><c3>char</c3><c4>,</c4><c1>&nbsp;</c1><a href="#234_31_refs"><c20>f</c20><a href="#233_4_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(char</c3><c25>))</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><a href="#233_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="char.rs.html#236"><c8>c</c8></a><a href="#233_4_refs"><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><a href="#233_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>'\t'</c20><c12>&nbsp;=&gt;</c12><c7>&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'\\'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'t'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><a href="#233_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>'\r'</c20><c12>&nbsp;=&gt;</c12><c7>&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'\\'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'r'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><a href="#233_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>'\n'</c20><c12>&nbsp;=&gt;</c12><c7>&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'\\'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'n'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a><a href="#233_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>'\\'</c20><c12>&nbsp;=&gt;</c12><c7>&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'\\'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'\\'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a><a href="#233_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>'\''</c20><c12>&nbsp;=&gt;</c12><c7>&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'\\'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'\''</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a><a href="#233_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>'"'</c20><c12>&nbsp;&nbsp;=&gt;</c12><c7>&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'\\'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><c12>'"'</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><a href="#233_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c12>'\x20'&nbsp;..</c12><c20>&nbsp;</c20><c12>'\x7e'&nbsp;=&gt;</c12><c7>&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#236"><c8>f</c8></a><a href="#233_4_refs"><c25>(</c25><a href="char.rs.html#236"><c8>c</c8></a><a href="#233_4_refs"><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><a href="#233_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;=&gt;&nbsp;</c7><a href="char.rs.html#236"><c8>c</c8></a><a href="char.rs.html#307"><c10>.escape_unicode</c10><c25>(</c25></a><a href="char.rs.html#236"><c8>f</c8></a><a href="char.rs.html#307"><c25>)</c25><c4>,</c4></a><a href="#233_4_refs"><c7>
+</c7><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><a href="#233_4_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><a href="#233_4_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><c31>///&nbsp;Returns&nbsp;the&nbsp;amount&nbsp;of&nbsp;bytes&nbsp;this&nbsp;character&nbsp;would&nbsp;need&nbsp;if&nbsp;encoded&nbsp;in&nbsp;utf8
+</c31><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><a href="#247_77_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;len_utf8_bytes</c26><c1>(</c1><a href="#248_22_refs"><c20>c</c20><a href="#247_77_refs"><c1>:&nbsp;</c1><c3>char</c3><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>uint</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><a href="#247_77_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>static&nbsp;MAX_ONE_B:&nbsp;&nbsp;&nbsp;</c13><c3>uint</c3><c13>&nbsp;=&nbsp;</c13><c12>128u</c12><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><a href="#247_77_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="#250_4_refs"><c0>static&nbsp;MAX_TWO_B:&nbsp;&nbsp;&nbsp;</c0><c3>uint</c3><c0>&nbsp;=&nbsp;</c0><c12>2048u</c12><c4>;</c4><a href="#247_77_refs"><c21>
+</c21><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><a href="#247_77_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>static&nbsp;MAX_THREE_B:&nbsp;</c13><c3>uint</c3><c13>&nbsp;=&nbsp;</c13><c12>65536u</c12><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><a href="#247_77_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="#252_4_refs"><c0>static&nbsp;MAX_FOUR_B:&nbsp;&nbsp;</c0><c3>uint</c3><c0>&nbsp;=&nbsp;</c0><c12>2097152u</c12><c4>;</c4><a href="#247_77_refs"><c21>
+</c21><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><a href="#247_77_refs"><c21>
+</c21><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><a href="#247_77_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#254_8_refs"><c20>code</c20><a href="#247_77_refs"><c16>&nbsp;=&nbsp;</c16><a href="char.rs.html#250"><c8>c</c8></a><a href="#247_77_refs"><c7>&nbsp;as&nbsp;</c7><c3>uint</c3><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><a href="#247_77_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>cond!</c7><c25>(</c25><c7>
+</c7><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><a href="#247_77_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><a href="char.rs.html#256"><c8>code</c8></a><a href="#247_77_refs"><c0>&nbsp;&lt;&nbsp;</c0><a href="char.rs.html#251"><c8>MAX_ONE_B</c8></a><a href="#247_77_refs"><c25>)</c25><c7>&nbsp;&nbsp;&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><c12>1u</c12><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><a href="#247_77_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><a href="char.rs.html#256"><c8>code</c8></a><a href="#247_77_refs"><c0>&nbsp;&lt;&nbsp;</c0><a href="char.rs.html#252"><c8>MAX_TWO_B</c8></a><a href="#247_77_refs"><c25>)</c25><c7>&nbsp;&nbsp;&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><c12>2u</c12><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><a href="#247_77_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><a href="char.rs.html#256"><c8>code</c8></a><a href="#247_77_refs"><c0>&nbsp;&lt;&nbsp;</c0><a href="char.rs.html#253"><c8>MAX_THREE_B</c8></a><a href="#247_77_refs"><c25>)</c25><c7>&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><c12>3u</c12><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><a href="#247_77_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>(</c25><a href="char.rs.html#256"><c8>code</c8></a><a href="#247_77_refs"><c0>&nbsp;&lt;&nbsp;</c0><a href="char.rs.html#254"><c8>MAX_FOUR_B</c8></a><a href="#247_77_refs"><c25>)</c25><c7>&nbsp;&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><c12>4u</c12><c21>&nbsp;</c21><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><a href="#247_77_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_&nbsp;</c7><c4>{</c4><c21>&nbsp;</c21><c9>fail!</c9><c25>(</c25><c12>"invalid&nbsp;character!"</c12><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><a href="#247_77_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c25>)</c25><c7>
+</c7><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><a href="#247_77_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><c0>#</c0><c4>[</c4><c0>allow</c0><c25>(</c25><c0>missing_doc</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><a href="#264_22_refs"><c18>pub&nbsp;</c18><c1>trait&nbsp;Char&nbsp;</c1><c18>{
+</c18><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_alphabetic</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_XID_start</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_XID_continue</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_lowercase</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_uppercase</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_whitespace</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_alphanumeric</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_digit</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;is_digit_radix</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;radix:&nbsp;</c22><c3>uint</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;to_digit</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;radix:&nbsp;</c22><c3>uint</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;uint&gt;</c3></a><a href="#264_22_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;from_digit</c26><c22>(num:&nbsp;</c22><c3>uint</c3><c4>,</c4><c22>&nbsp;radix:&nbsp;</c22><c3>uint</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;char&gt;</c3></a><a href="#264_22_refs"><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;escape_unicode</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;f:&nbsp;</c22><c3>&amp;</c3><c26>fn</c26><c3>(char</c3><c25>))</c25><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;escape_default</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;f:&nbsp;</c22><c3>&amp;</c3><c26>fn</c26><c3>(char</c3><c25>))</c25><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a><a href="#264_22_refs"><c18>&nbsp;&nbsp;&nbsp;&nbsp;</c18><c26>fn&nbsp;len_utf8_bytes</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>uint</c3><c4>;</c4><c18>
+</c18><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a><a href="#264_22_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><c29>impl&nbsp;</c29><a href="char.rs.html#266"><c29>Char&nbsp;</c29></a><c29>for&nbsp;char&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_alphabetic</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#58"><c8>is_alphabetic</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_XID_start</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#60"><c8>is_XID_start</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_XID_continue</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#62"><c8>is_XID_continue</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_lowercase</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#69"><c8>is_lowercase</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_uppercase</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#76"><c8>is_uppercase</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_whitespace</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#84"><c8>is_whitespace</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_alphanumeric</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#98"><c8>is_alphanumeric</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_digit</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#107"><c8>is_digit</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_digit_radix</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#299_29_refs"><c20>radix</c20><c22>:&nbsp;</c22><c3>uint</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#132"><c8>is_digit_radix</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c4>,</c4><c9>&nbsp;</c9><a href="char.rs.html#301"><c8>radix</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;to_digit</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#301_23_refs"><c20>radix</c20><c22>:&nbsp;</c22><c3>uint</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;uint&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#154"><c8>to_digit</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c4>,</c4><c9>&nbsp;</c9><a href="char.rs.html#303"><c8>radix</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;from_digit</c26><c22>(</c22><a href="#303_18_refs"><c20>num</c20><c22>:&nbsp;</c22><c3>uint</c3><c4>,</c4><c22>&nbsp;</c22><a href="#303_29_refs"><c20>radix</c20><c22>:&nbsp;</c22><c3>uint</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="option.rs.html#55"><c3>Option&lt;char&gt;</c3></a><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#181"><c8>from_digit</c8></a><c25>(</c25><a href="char.rs.html#305"><c8>num</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="char.rs.html#305"><c8>radix</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#305_4_refs"><c26>fn&nbsp;escape_unicode</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#305_29_refs"><c20>f</c20><a href="#305_4_refs"><c22>:&nbsp;</c22><c3>&amp;</c3><c26>fn</c26><c3>(char</c3><c25>))</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#205"><c8>escape_unicode</c8></a><a href="#305_4_refs"><c25>(</c25><c2>*</c2><c0>self</c0><c4>,</c4><c9>&nbsp;</c9><a href="char.rs.html#307"><c8>f</c8></a><a href="#305_4_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#307_4_refs"><c26>fn&nbsp;escape_default</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#307_29_refs"><c20>f</c20><a href="#307_4_refs"><c22>:&nbsp;</c22><c3>&amp;</c3><c26>fn</c26><c3>(char</c3><c25>))</c25><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#235"><c8>escape_default</c8></a><a href="#307_4_refs"><c25>(</c25><c2>*</c2><c0>self</c0><c4>,</c4><c9>&nbsp;</c9><a href="char.rs.html#309"><c8>f</c8></a><a href="#307_4_refs"><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#309_4_refs"><c26>fn&nbsp;len_utf8_bytes</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>uint</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><a href="char.rs.html#249"><c8>len_utf8_bytes</c8></a><a href="#309_4_refs"><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a><c29>impl&nbsp;</c29><a href="cmp.rs.html#37"><c29>Eq&nbsp;</c29></a><c29>for&nbsp;char&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eq</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#315_17_refs"><c20>other</c20><c22>:&nbsp;</c22><c3>&amp;char</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c0>&nbsp;==</c0><c2>&nbsp;</c2><c25>(</c25><c2>*</c2><a href="char.rs.html#317"><c8>other</c8></a><c25>)</c25><c0>&nbsp;</c0><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;ne</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#317_17_refs"><c20>other</c20><c22>:&nbsp;</c22><c3>&amp;char</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c0>&nbsp;!=</c0><c2>&nbsp;</c2><c25>(</c25><c2>*</c2><a href="char.rs.html#319"><c8>other</c8></a><c25>)</c25><c0>&nbsp;</c0><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a><c29>impl&nbsp;</c29><a href="cmp.rs.html#176"><c29>Ord&nbsp;</c29></a><c29>for&nbsp;char&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;lt</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#323_17_refs"><c20>other</c20><c22>:&nbsp;</c22><c3>&amp;char</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c2>*</c2><c0>self&nbsp;&lt;&nbsp;</c0><c2>*</c2><a href="char.rs.html#325"><c8>other</c8></a><c21>&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;le</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#325_17_refs"><c20>other</c20><c22>:&nbsp;</c22><c3>&amp;char</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c2>*</c2><c0>self&nbsp;&lt;=</c0><c2>&nbsp;*</c2><a href="char.rs.html#327"><c8>other</c8></a><c21>&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;gt</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#327_17_refs"><c20>other</c20><c22>:&nbsp;</c22><c3>&amp;char</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c2>*</c2><c0>self&nbsp;&gt;</c0><c2>&nbsp;*</c2><a href="char.rs.html#329"><c8>other</c8></a><c21>&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;329</ln><a id="329">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;330</ln><a id="330">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;ge</c26><c22>(&amp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#329_17_refs"><c20>other</c20><c22>:&nbsp;</c22><c3>&amp;char</c3><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c2>*</c2><c0>self&nbsp;&gt;=</c0><c2>&nbsp;*</c2><a href="char.rs.html#331"><c8>other</c8></a><c21>&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;331</ln><a id="331">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;332</ln><a id="332">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;333</ln><a id="333">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>not</c0><c25>(</c25><c0>test</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;334</ln><a id="334">&nbsp;</a><c29>impl&nbsp;</c29><a href="num/num.rs.html#53"><c29>Zero&nbsp;</c29></a><c29>for&nbsp;char&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;335</ln><a id="335">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;zero</c26><c22>(</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>char</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c12>0</c12><c7>&nbsp;as&nbsp;</c7><c3>char</c3><c21>&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;336</ln><a id="336">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_zero</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>bool</c3><c22>&nbsp;</c22><c4>{</c4><c21>&nbsp;</c21><c2>*</c2><c0>self&nbsp;==</c0><c2>&nbsp;</c2><c12>0</c12><c7>&nbsp;as&nbsp;</c7><c3>char</c3><c21>&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;337</ln><a id="337">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;338</ln><a id="338">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;339</ln><a id="339">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;340</ln><a id="340">&nbsp;</a><c26>fn&nbsp;test_is_lowercase</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;341</ln><a id="341">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'a'.is_lowercase</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;342</ln><a id="342">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'Ã¶'.is_lowercase</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;343</ln><a id="343">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'Ã'.is_lowercase</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;344</ln><a id="344">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'Ã'.is_lowercase</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;345</ln><a id="345">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'P'.is_lowercase</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;346</ln><a id="346">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;347</ln><a id="347">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;348</ln><a id="348">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;349</ln><a id="349">&nbsp;</a><c26>fn&nbsp;test_is_uppercase</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;350</ln><a id="350">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'h'.is_uppercase</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;351</ln><a id="351">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'Ã¤'.is_uppercase</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;352</ln><a id="352">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'Ã'.is_uppercase</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;353</ln><a id="353">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'Ã'.is_uppercase</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;354</ln><a id="354">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'T'.is_uppercase</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;355</ln><a id="355">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;356</ln><a id="356">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;357</ln><a id="357">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;358</ln><a id="358">&nbsp;</a><c26>fn&nbsp;test_is_whitespace</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;359</ln><a id="359">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'&nbsp;'.is_whitespace</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;360</ln><a id="360">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'\u2007'.is_whitespace</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;361</ln><a id="361">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'\t'.is_whitespace</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;362</ln><a id="362">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'\n'.is_whitespace</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;363</ln><a id="363">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'a'.is_whitespace</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;364</ln><a id="364">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'_'.is_whitespace</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;365</ln><a id="365">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'\u0000'.is_whitespace</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;366</ln><a id="366">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;367</ln><a id="367">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;368</ln><a id="368">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;369</ln><a id="369">&nbsp;</a><c26>fn&nbsp;test_to_digit</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;370</ln><a id="370">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'0'.to_digit</c0><c25>(</c25><c0>10u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>0u</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;371</ln><a id="371">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'1'.to_digit</c0><c25>(</c25><c0>2u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>1u</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;372</ln><a id="372">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'2'.to_digit</c0><c25>(</c25><c0>3u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>2u</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;373</ln><a id="373">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'9'.to_digit</c0><c25>(</c25><c0>10u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>9u</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;374</ln><a id="374">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'a'.to_digit</c0><c25>(</c25><c0>16u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>10u</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;375</ln><a id="375">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'A'.to_digit</c0><c25>(</c25><c0>16u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>10u</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;376</ln><a id="376">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'b'.to_digit</c0><c25>(</c25><c0>16u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>11u</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;377</ln><a id="377">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'B'.to_digit</c0><c25>(</c25><c0>16u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>11u</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;378</ln><a id="378">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'z'.to_digit</c0><c25>(</c25><c0>36u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>35u</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;379</ln><a id="379">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'Z'.to_digit</c0><c25>(</c25><c0>36u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Some</c0><c25>(</c25><c0>35u</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;380</ln><a id="380">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'&nbsp;'.to_digit</c0><c25>(</c25><c0>10u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;None</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;381</ln><a id="381">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>'$'.to_digit</c0><c25>(</c25><c0>36u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;None</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;382</ln><a id="382">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;383</ln><a id="383">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;384</ln><a id="384">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;385</ln><a id="385">&nbsp;</a><c26>fn&nbsp;test_is_digit</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;386</ln><a id="386">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'2'.is_digit</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;387</ln><a id="387">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>'7'.is_digit</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;388</ln><a id="388">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'c'.is_digit</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;389</ln><a id="389">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'i'.is_digit</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;390</ln><a id="390">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'z'.is_digit</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;391</ln><a id="391">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!'Q'.is_digit</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;392</ln><a id="392">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;393</ln><a id="393">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;394</ln><a id="394">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;395</ln><a id="395">&nbsp;</a><c26>fn&nbsp;test_escape_default</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;396</ln><a id="396">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;string</c26><c0>(c:&nbsp;char</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;~str&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;397</ln><a id="397">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;result&nbsp;=&nbsp;~""</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;398</ln><a id="398">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;escape_default</c0><c25>(</c25><c0>c</c0><c25>)</c25><c0>&nbsp;|c|&nbsp;</c0><c4>{</c4><c0>&nbsp;result.push_char</c0><c25>(</c25><c0>c</c0><c25>)</c25><c4>;</c4><c0>&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;399</ln><a id="399">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;result</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;400</ln><a id="400">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;401</ln><a id="401">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\n'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\n"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;402</ln><a id="402">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\r'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\r"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;403</ln><a id="403">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\''</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\'"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;404</ln><a id="404">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'"'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\\""</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;405</ln><a id="405">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'&nbsp;'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"&nbsp;"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;406</ln><a id="406">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'a'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"a"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;407</ln><a id="407">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'~'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"~"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;408</ln><a id="408">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\x00'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\x00"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;409</ln><a id="409">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\x1f'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\x1f"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;410</ln><a id="410">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\x7f'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\x7f"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;411</ln><a id="411">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\xff'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\xff"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;412</ln><a id="412">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\u011b'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\u011b"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;413</ln><a id="413">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\U0001d4b6'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\U0001d4b6"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;414</ln><a id="414">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;415</ln><a id="415">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;416</ln><a id="416">&nbsp;</a><c0>#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;417</ln><a id="417">&nbsp;</a><c26>fn&nbsp;test_escape_unicode</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;418</ln><a id="418">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;string</c26><c0>(c:&nbsp;char</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;~str&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;419</ln><a id="419">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;result&nbsp;=&nbsp;~""</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;420</ln><a id="420">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;escape_unicode</c0><c25>(</c25><c0>c</c0><c25>)</c25><c0>&nbsp;|c|&nbsp;</c0><c4>{</c4><c0>&nbsp;result.push_char</c0><c25>(</c25><c0>c</c0><c25>)</c25><c4>;</c4><c0>&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;421</ln><a id="421">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;result</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;422</ln><a id="422">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;423</ln><a id="423">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\x00'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\x00"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;424</ln><a id="424">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\n'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\x0a"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;425</ln><a id="425">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'&nbsp;'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\x20"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;426</ln><a id="426">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'a'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\x61"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;427</ln><a id="427">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\u011b'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\u011b"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;428</ln><a id="428">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>string</c0><c25>(</c25><c0>'\U0001d4b6'</c0><c25>)</c25><c4>,</c4><c0>&nbsp;~"\\U0001d4b6"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;429</ln><a id="429">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="203_4_refs"><a href="#204"><c24>char.rs:204:4-204:4&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///
+<br/>pub&nbsp;fn&nbsp;escape_unicode(c:&nbsp;char,&nbsp;f:&nbsp;&amp;fn(char))&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#306"><c24>306:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;escape_unicode(&amp;self,&nbsp;f:&nbsp;&amp;fn(char))&nbsp;{&nbsp;escape_unicode(*self,&nbsp;f)&nbsp;}
+<br/></a><a href="repr.rs.html"><c24>repr.rs:<br/></c24><a href="repr.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;char::escape_unicode(ch)&nbsp;|c|&nbsp;{
+<br/></a><br/><br/><a id="264_22_refs"><a href="#265"><c24>char.rs:265:22-265:22&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[allow(missing_doc)]
+<br/>pub&nbsp;trait&nbsp;Char&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#283"><c24>283:&nbsp;</c24>impl&nbsp;Char&nbsp;for&nbsp;char&nbsp;{
+<br/></a><br/><br/><a id="67_10_refs"><a href="#68"><c24>char.rs:68:10-68:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;is_lowercase(c:&nbsp;char)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;general_category::Ll(c)&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#290"><c24>290:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_lowercase(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_lowercase(*self)&nbsp;}
+<br/></a><br/><br/><a id="58_22_refs"><a href="#59"><c24>char.rs:59:22-59:22&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[allow(missing_doc)]
+<br/>pub&nbsp;fn&nbsp;is_XID_start(c:&nbsp;char)&nbsp;-&gt;&nbsp;bool&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;derived_property::XID_Start(c)&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#286"><c24>286:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_XID_start(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_XID_start(*self)&nbsp;}
+<br/></a><br/><br/><a id="105_10_refs"><a href="#106"><c24>char.rs:106:10-106:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;is_digit(c:&nbsp;char)&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#298"><c24>298:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_digit(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_digit(*self)&nbsp;}
+<br/></a><br/><br/><a id="60_22_refs"><a href="#61"><c24>char.rs:61:22-61:22&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[allow(missing_doc)]
+<br/>pub&nbsp;fn&nbsp;is_XID_continue(c:&nbsp;char)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;derived_property::XID_Continue(c)&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#288"><c24>288:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_XID_continue(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_XID_continue(*self)&nbsp;}
+<br/></a><br/><br/><a id="233_4_refs"><a href="#234"><c24>char.rs:234:4-234:4&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///
+<br/>pub&nbsp;fn&nbsp;escape_default(c:&nbsp;char,&nbsp;f:&nbsp;&amp;fn(char))&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#308"><c24>308:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;escape_default(&amp;self,&nbsp;f:&nbsp;&amp;fn(char))&nbsp;{&nbsp;escape_default(*self,&nbsp;f)&nbsp;}
+<br/></a><br/><br/><a id="247_77_refs"><a href="#248"><c24>char.rs:248:77-248:77&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///&nbsp;Returns&nbsp;the&nbsp;amount&nbsp;of&nbsp;bytes&nbsp;this&nbsp;character&nbsp;would&nbsp;need&nbsp;if&nbsp;encoded&nbsp;in&nbsp;utf8
+<br/>pub&nbsp;fn&nbsp;len_utf8_bytes(c:&nbsp;char)&nbsp;-&gt;&nbsp;uint&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#310"><c24>310:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;len_utf8_bytes(&amp;self)&nbsp;-&gt;&nbsp;uint&nbsp;{&nbsp;len_utf8_bytes(*self)&nbsp;}
+<br/></a><br/><br/><a id="179_10_refs"><a href="#180"><c24>char.rs:180:10-180:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;from_digit(num:&nbsp;uint,&nbsp;radix:&nbsp;uint)&nbsp;-&gt;&nbsp;Option&lt;char&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#304"><c24>304:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;from_digit(num:&nbsp;uint,&nbsp;radix:&nbsp;uint)&nbsp;-&gt;&nbsp;Option&lt;char&gt;&nbsp;{&nbsp;from_digit(num,&nbsp;radix)&nbsp;}
+<br/></a><a href="num/strconv.rs.html"><c24>num/strconv.rs:<br/></c24><a href="num/strconv.rs.html#269"><c24>269:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buf.push(char::from_digit(current_digit.to_int()&nbsp;as&nbsp;uint,&nbsp;radix)
+<br/></a><a href="num/strconv.rs.html#325"><c24>325:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buf.push(char::from_digit(
+<br/></a><a href="num/strconv.rs.html#341"><c24>341:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char::from_digit(val,&nbsp;radix).unwrap()&nbsp;as&nbsp;u8
+<br/></a><br/><br/><a id="82_10_refs"><a href="#83"><c24>char.rs:83:10-83:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;is_whitespace(c:&nbsp;char)&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#294"><c24>294:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_whitespace(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_whitespace(*self)&nbsp;}
+<br/></a><a href="str.rs.html"><c24>str.rs:<br/></c24><a href="str.rs.html#1523"><c24>1523:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.trim_left_chars(&amp;char::is_whitespace)
+<br/></a><a href="str.rs.html#1398"><c24>1398:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.split_iter(char::is_whitespace).filter(|s|&nbsp;!s.is_empty())
+<br/></a><a href="str.rs.html#1529"><c24>1529:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.trim_right_chars(&amp;char::is_whitespace)
+<br/></a><a href="str.rs.html#1405"><c24>1405:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_whitespace(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;self.iter().all(char::is_whitespace)&nbsp;}
+<br/></a><br/><br/><a id="130_10_refs"><a href="#131"><c24>char.rs:131:10-131:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;is_digit_radix(c:&nbsp;char,&nbsp;radix:&nbsp;uint)&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#300"><c24>300:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_digit_radix(&amp;self,&nbsp;radix:&nbsp;uint)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_digit_radix(*self,&nbsp;radix)&nbsp;}
+<br/></a><br/><br/><a id="152_10_refs"><a href="#153"><c24>char.rs:153:10-153:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;to_digit(c:&nbsp;char,&nbsp;radix:&nbsp;uint)&nbsp;-&gt;&nbsp;Option&lt;uint&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#302"><c24>302:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;to_digit(&amp;self,&nbsp;radix:&nbsp;uint)&nbsp;-&gt;&nbsp;Option&lt;uint&gt;&nbsp;{&nbsp;to_digit(*self,&nbsp;radix)&nbsp;}
+<br/></a><a href="char.rs.html#133"><c24>133:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;to_digit(c,&nbsp;radix)&nbsp;{
+<br/></a><a href="num/strconv.rs.html"><c24>num/strconv.rs:<br/></c24><a href="num/strconv.rs.html#585"><c24>585:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;char::to_digit(c,&nbsp;radix)&nbsp;{
+<br/></a><a href="num/strconv.rs.html#338"><c24>338:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char::to_digit(chr&nbsp;as&nbsp;char,&nbsp;radix).unwrap()&nbsp;as&nbsp;uint
+<br/></a><a href="num/strconv.rs.html#540"><c24>540:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;char::to_digit(c,&nbsp;radix)&nbsp;{
+<br/></a><a href="unstable/extfmt.rs.html"><c24>unstable/extfmt.rs:<br/></c24><a href="unstable/extfmt.rs.html#209"><c24>209:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;char::to_digit(s[i]&nbsp;as&nbsp;char,&nbsp;10)&nbsp;{
+<br/></a><br/><br/><a id="74_10_refs"><a href="#75"><c24>char.rs:75:10-75:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;is_uppercase(c:&nbsp;char)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;general_category::Lu(c)&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#292"><c24>292:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_uppercase(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_uppercase(*self)&nbsp;}
+<br/></a><br/><br/><a id="96_10_refs"><a href="#97"><c24>char.rs:97:10-97:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;is_alphanumeric(c:&nbsp;char)&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#296"><c24>296:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_alphanumeric(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_alphanumeric(*self)&nbsp;}
+<br/></a><a href="str.rs.html"><c24>str.rs:<br/></c24><a href="str.rs.html#1411"><c24>1411:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_alphanumeric(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;self.iter().all(char::is_alphanumeric)&nbsp;}
+<br/></a><br/><br/><a id="56_14_refs"><a href="#57"><c24>char.rs:57:14-57:14&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///&nbsp;character
+<br/>pub&nbsp;fn&nbsp;is_alphabetic(c:&nbsp;char)&nbsp;-&gt;&nbsp;bool&nbsp;&nbsp;&nbsp;{&nbsp;derived_property::Alphabetic(c)&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="char.rs.html#284"><c24>284:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;is_alphabetic(&amp;self)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;is_alphabetic(*self)&nbsp;}
+<br/></a><br/></a></a>

@@ -1,0 +1,216 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#3a333a;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;Access&nbsp;to&nbsp;a&nbsp;single&nbsp;thread-local&nbsp;pointer.
+</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c24>//!
+</c24><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c24>//!&nbsp;The&nbsp;runtime&nbsp;will&nbsp;use&nbsp;this&nbsp;for&nbsp;storing&nbsp;~Task.
+</c24><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c24>//!
+</c24><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c24>//!&nbsp;XXX:&nbsp;Add&nbsp;runtime&nbsp;checks&nbsp;for&nbsp;usage&nbsp;of&nbsp;inconsistent&nbsp;pointer&nbsp;types.
+</c24><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c24>//!&nbsp;and&nbsp;for&nbsp;overwriting&nbsp;an&nbsp;existing&nbsp;pointer.
+</c24><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c0>use&nbsp;libc::c_void</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c0>use&nbsp;cast</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>use&nbsp;ptr</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>use&nbsp;cell::Cell</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c0>use&nbsp;option::</c0><c4>{</c4><c0>Option</c0><c4>,</c4><c0>&nbsp;Some</c0><c4>,</c4><c0>&nbsp;None</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c0>use&nbsp;unstable::finally::Finally</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c0>use&nbsp;tls&nbsp;=&nbsp;rt::thread_local_storage</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c31>///&nbsp;Initialize&nbsp;the&nbsp;TLS&nbsp;key.&nbsp;Other&nbsp;ops&nbsp;will&nbsp;fail&nbsp;if&nbsp;this&nbsp;isn't&nbsp;executed&nbsp;first.
+</c31><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a href="#25_78_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;init_tls_key</c26><c1>(</c1><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a href="#25_78_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a href="#25_78_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c8>rust_initialize_rt_tls_key</c8><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a href="#25_78_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>extern&nbsp;</c13><c4>{</c4><c13>
+</c13><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a href="#25_78_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c26>fn&nbsp;rust_initialize_rt_tls_key</c26><c13>(</c13><c25>)</c25><c4>;</c4><c13>
+</c13><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a href="#25_78_refs"><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a href="#25_78_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a href="#25_78_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c31>///&nbsp;Give&nbsp;a&nbsp;pointer&nbsp;to&nbsp;thread-local&nbsp;storage.
+</c31><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c31>///&nbsp;#&nbsp;Safety&nbsp;note
+</c31><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c31>///&nbsp;Does&nbsp;not&nbsp;validate&nbsp;the&nbsp;pointer&nbsp;type.
+</c31><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a href="#39_40_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;put</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#40_21_refs"><c20>sched</c20><a href="#39_40_refs"><c1>:&nbsp;</c1><c3>~T</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a href="#39_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#41_8_refs"><c20>key</c20><a href="#39_40_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/local_ptr.rs.html#113"><c8>tls_key</c8></a><a href="#39_40_refs"><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a href="#39_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#42_8_refs"><c20>void_ptr</c20><a href="#39_40_refs"><c16>:&nbsp;</c16><c3>*mut&nbsp;</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#39_40_refs"><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast::transmute</c8></a><a href="#39_40_refs"><c25>(</c25><a href="../rt/local_ptr.rs.html#42"><c8>sched</c8></a><a href="#39_40_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a href="#39_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/thread_local_storage.rs.html#28"><c8>tls::set</c8></a><a href="#39_40_refs"><c25>(</c25><a href="../rt/local_ptr.rs.html#43"><c8>key</c8></a><a href="#39_40_refs"><c4>,</c4><c13>&nbsp;</c13><a href="../rt/local_ptr.rs.html#44"><c8>void_ptr</c8></a><a href="#39_40_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a href="#39_40_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c31>///&nbsp;Take&nbsp;ownership&nbsp;of&nbsp;a&nbsp;pointer&nbsp;from&nbsp;thread-local&nbsp;storage.
+</c31><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c31>///&nbsp;#&nbsp;Safety&nbsp;note
+</c31><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c31>///&nbsp;Does&nbsp;not&nbsp;validate&nbsp;the&nbsp;pointer&nbsp;type.
+</c31><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a href="#50_40_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;take</c26><c5>&lt;T&gt;</c5><c1>(</c1><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>~T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a href="#50_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#52_8_refs"><c20>key</c20><a href="#50_40_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/local_ptr.rs.html#113"><c8>tls_key</c8></a><a href="#50_40_refs"><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a href="#50_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#53_8_refs"><c20>void_ptr</c20><a href="#50_40_refs"><c16>:&nbsp;</c16><c3>*mut&nbsp;</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#50_40_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/thread_local_storage.rs.html#33"><c8>tls::get</c8></a><a href="#50_40_refs"><c25>(</c25><a href="../rt/local_ptr.rs.html#54"><c8>key</c8></a><a href="#50_40_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a href="#50_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="../rt/local_ptr.rs.html#55"><c8>void_ptr</c8></a><a href="../ptr.rs.html#315"><c10>.is_null</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><a href="#50_40_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a href="#50_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>rtabort!</c13><c25>(</c25><a href="../rt/local_ptr.rs.html#57"><c8>"thread-local&nbsp;pointer&nbsp;is&nbsp;null.&nbsp;bogus!"</c8></a><a href="#50_40_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a href="#50_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a href="#50_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#57_8_refs"><c20>ptr</c20><a href="#50_40_refs"><c16>:&nbsp;</c16><c3>~T</c3><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast::transmute</c8></a><a href="#50_40_refs"><c25>(</c25><a href="../rt/local_ptr.rs.html#55"><c8>void_ptr</c8></a><a href="#50_40_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a href="#50_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/thread_local_storage.rs.html#28"><c8>tls::set</c8></a><a href="#50_40_refs"><c25>(</c25><a href="../rt/local_ptr.rs.html#54"><c8>key</c8></a><a href="#50_40_refs"><c4>,</c4><c9>&nbsp;</c9><a href="../ptr.rs.html#71"><c8>ptr::mut_null</c8></a><a href="#50_40_refs"><c25>())</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a href="#50_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>return&nbsp;</c13><a href="../rt/local_ptr.rs.html#59"><c8>ptr</c8></a><a href="#50_40_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a href="#50_40_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c31>///&nbsp;Check&nbsp;whether&nbsp;there&nbsp;is&nbsp;a&nbsp;thread-local&nbsp;pointer&nbsp;installed.
+</c31><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a href="#62_61_refs"><c1>pub&nbsp;</c1><c26>fn&nbsp;exists</c26><c1>(</c1><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a href="#62_61_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a href="#62_61_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="../rt/local_ptr.rs.html#120"><c8>maybe_tls_key</c8></a><a href="#62_61_refs"><c25>()</c25><c9>&nbsp;</c9><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a href="#62_61_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../option.rs.html#58"><c20>Some</c20><c25>(</c25></a><a href="#66_17_refs"><c20>key</c20><a href="../option.rs.html#58"><c25>)</c25></a><a href="#62_61_refs"><c7>&nbsp;=&gt;&nbsp;</c7><a href="../rt/thread_local_storage.rs.html#33"><c8>tls::get</c8></a><a href="../ptr.rs.html#319"><c25>(</c25></a><a href="../rt/local_ptr.rs.html#68"><c8>key</c8></a><a href="../ptr.rs.html#319"><c25>)</c25><c9>.</c9><c10>is_not_null</c10><c25>()</c25><c4>,</c4></a><a href="#62_61_refs"><c7>
+</c7><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a href="#62_61_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../option.rs.html#57"><c20>None</c20></a><a href="#62_61_refs"><c7>&nbsp;=&gt;&nbsp;</c7><c12>false</c12><c7>
+</c7><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a href="#62_61_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a href="#62_61_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a href="#62_61_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c31>///&nbsp;Borrow&nbsp;the&nbsp;thread-local&nbsp;value&nbsp;from&nbsp;thread-local&nbsp;storage.
+</c31><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c31>///&nbsp;While&nbsp;the&nbsp;value&nbsp;is&nbsp;borrowed&nbsp;it&nbsp;is&nbsp;not&nbsp;available&nbsp;in&nbsp;TLS.
+</c31><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c31>///&nbsp;#&nbsp;Safety&nbsp;note
+</c31><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c31>///&nbsp;Does&nbsp;not&nbsp;validate&nbsp;the&nbsp;pointer&nbsp;type.
+</c31><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a href="#77_40_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;borrow</c26><c5>&lt;T&gt;</c5><c1>(</c1><a href="#78_24_refs"><c20>f</c20><a href="#77_40_refs"><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c3>(&amp;mut&nbsp;T</c3><c25>))</c25><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a href="#77_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;mut&nbsp;</c13><a href="#79_12_refs"><c20>value</c20><a href="#77_40_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/local_ptr.rs.html#52"><c8>take</c8></a><a href="#77_40_refs"><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a href="#77_40_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a href="#77_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;XXX:&nbsp;Need&nbsp;a&nbsp;different&nbsp;abstraction&nbsp;from&nbsp;'finally'&nbsp;here&nbsp;to&nbsp;avoid&nbsp;unsafety
+</c24><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a href="#77_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#82_8_refs"><c20>unsafe_ptr</c20><a href="#77_40_refs"><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#106"><c8>cast::transmute_mut_region</c8></a><a href="#77_40_refs"><c25>(</c25><c2>&amp;mut&nbsp;*</c2><a href="../rt/local_ptr.rs.html#81"><c8>value</c8></a><a href="#77_40_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a href="#77_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#83_8_refs"><c20>value_cell</c20><a href="#77_40_refs"><c16>&nbsp;=&nbsp;</c16><a href="../cell.rs.html#34"><c8>Cell::new</c8></a><a href="#77_40_refs"><c25>(</c25><a href="../rt/local_ptr.rs.html#81"><c8>value</c8></a><a href="#77_40_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a href="#77_40_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a href="#77_40_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../unstable/finally.rs.html#49"><c10>do&nbsp;</c10><c25>(</c25><c0>||&nbsp;</c0><c4>{</c4><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a href="../unstable/finally.rs.html#49"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21></a><a href="../rt/local_ptr.rs.html#80"><c8>f</c8></a><a href="../unstable/finally.rs.html#49"><c25>(</c25></a><a href="../rt/local_ptr.rs.html#84"><c8>unsafe_ptr</c8></a><a href="../unstable/finally.rs.html#49"><c25>)</c25><c4>;</c4><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a href="../unstable/finally.rs.html#49"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c25>)</c25><c0>.finally&nbsp;</c0><c4>{</c4><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a href="../unstable/finally.rs.html#49"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21></a><a href="../rt/local_ptr.rs.html#41"><c8>put</c8></a><a href="../unstable/finally.rs.html#49"><c25>(</c25></a><a href="../rt/local_ptr.rs.html#85"><c8>value_cell</c8></a><a href="../cell.rs.html#44"><c10>.take</c10><c25>())</c25></a><a href="../unstable/finally.rs.html#49"><c4>;</c4><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a href="../unstable/finally.rs.html#49"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4></a><a href="#77_40_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a href="#77_40_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c31>///&nbsp;Borrow&nbsp;a&nbsp;mutable&nbsp;reference&nbsp;to&nbsp;the&nbsp;thread-local&nbsp;value
+</c31><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c31>///&nbsp;#&nbsp;Safety&nbsp;Note
+</c31><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c31>///
+</c31><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c31>///&nbsp;Because&nbsp;this&nbsp;leaves&nbsp;the&nbsp;value&nbsp;in&nbsp;thread-local&nbsp;storage&nbsp;it&nbsp;is&nbsp;possible
+</c31><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c31>///&nbsp;For&nbsp;the&nbsp;Scheduler&nbsp;pointer&nbsp;to&nbsp;be&nbsp;aliased
+</c31><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a href="#97_44_refs"><c1>pub&nbsp;unsafe&nbsp;</c1><c26>fn&nbsp;unsafe_borrow</c26><c5>&lt;T&gt;</c5><c1>(</c1><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><c3>*mut&nbsp;T</c3><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#99_8_refs"><c20>key</c20><a href="#97_44_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/local_ptr.rs.html#113"><c8>tls_key</c8></a><a href="#97_44_refs"><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;mut&nbsp;</c13><a href="#100_12_refs"><c20>void_ptr</c20><a href="#97_44_refs"><c16>:&nbsp;</c16><c3>*mut&nbsp;</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#97_44_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/thread_local_storage.rs.html#33"><c8>tls::get</c8></a><a href="#97_44_refs"><c25>(</c25><a href="../rt/local_ptr.rs.html#101"><c8>key</c8></a><a href="#97_44_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>if&nbsp;</c13><a href="../rt/local_ptr.rs.html#102"><c8>void_ptr</c8></a><a href="../ptr.rs.html#315"><c10>.is_null</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><a href="#97_44_refs"><c21>
+</c21><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>rtabort!</c13><c25>(</c25><a href="../rt/local_ptr.rs.html#104"><c13>"thread-local&nbsp;pointer&nbsp;is&nbsp;null.&nbsp;bogus!"</c13></a><a href="#97_44_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#105_12_refs"><c20>ptr</c20><a href="#97_44_refs"><c16>:&nbsp;</c16><c3>*mut&nbsp;*mut&nbsp;</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#97_44_refs"><c16>&nbsp;=&nbsp;</c16><c2>&amp;mut&nbsp;</c2><a href="../rt/local_ptr.rs.html#102"><c8>void_ptr</c8></a><a href="#97_44_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#106_12_refs"><c20>ptr</c20><a href="#97_44_refs"><c16>:&nbsp;</c16><c3>*mut&nbsp;~T</c3><c16>&nbsp;=&nbsp;</c16><a href="../rt/local_ptr.rs.html#107"><c8>ptr</c8></a><a href="#97_44_refs"><c7>&nbsp;as&nbsp;</c7><c3>*mut&nbsp;~T</c3><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#107_12_refs"><c20>ptr</c20><a href="#97_44_refs"><c16>:&nbsp;</c16><c3>*mut&nbsp;T</c3><c16>&nbsp;=&nbsp;</c16><c2>&amp;mut&nbsp;**</c2><a href="../rt/local_ptr.rs.html#108"><c8>ptr</c8></a><a href="#97_44_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>return&nbsp;</c13><a href="../rt/local_ptr.rs.html#109"><c8>ptr</c8></a><a href="#97_44_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a href="#97_44_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a href="#97_44_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a href="#111_1_refs"><c26>fn&nbsp;tls_key</c26><c1>(</c1><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><a href="../rt/thread_local_storage.rs.html#20"><c3>tls::Key</c3></a><a href="#111_1_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a href="#111_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>match&nbsp;</c7><a href="../rt/local_ptr.rs.html#120"><c8>maybe_tls_key</c8></a><a href="#111_1_refs"><c25>()</c25><c9>&nbsp;</c9><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a href="#111_1_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../option.rs.html#58"><c20>Some</c20><c25>(</c25></a><a href="#114_13_refs"><c20>key</c20><a href="../option.rs.html#58"><c25>)</c25></a><a href="#111_1_refs"><c7>&nbsp;=&gt;&nbsp;</c7><c21>key</c21><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a href="#111_1_refs"><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../option.rs.html#57"><c20>None</c20></a><a href="#111_1_refs"><c7>&nbsp;=&gt;&nbsp;</c7><c21>rtabort!</c21><c25>(</c25><a href="../rt/local_ptr.rs.html#117"><c8>"runtime&nbsp;tls&nbsp;key&nbsp;not&nbsp;initialized"</c8></a><a href="#111_1_refs"><c25>)</c25><c21>
+</c21><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><a href="#111_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><a href="#111_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><a href="#118_1_refs"><c26>fn&nbsp;maybe_tls_key</c26><c1>(</c1><c25>)</c25><c1>&nbsp;-&gt;&nbsp;</c1><a href="../option.rs.html#55"><c3>Option&lt;</c3></a><a href="../rt/thread_local_storage.rs.html#20"><c3>tls::Key</c3></a><a href="../option.rs.html#55"><c3>&gt;</c3></a><a href="#118_1_refs"><c1>&nbsp;</c1><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#121_12_refs"><c20>key</c20><a href="#118_1_refs"><c16>:&nbsp;</c16><c3>*mut&nbsp;</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#118_1_refs"><c16>&nbsp;=&nbsp;</c16><c8>rust_get_rt_tls_key</c8><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#122_12_refs"><c20>key</c20><a href="#118_1_refs"><c16>:&nbsp;</c16><c3>&amp;mut&nbsp;</c3><a href="../rt/thread_local_storage.rs.html#20"><c3>tls::Key</c3></a><a href="#118_1_refs"><c16>&nbsp;=&nbsp;</c16><a href="../cast.rs.html#72"><c8>cast::transmute</c8></a><a href="#118_1_refs"><c25>(</c25><a href="../rt/local_ptr.rs.html#123"><c8>key</c8></a><a href="#118_1_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#123_12_refs"><c20>key</c20><a href="#118_1_refs"><c16>&nbsp;=&nbsp;</c16><c2>*</c2><a href="../rt/local_ptr.rs.html#124"><c8>key</c8></a><a href="#118_1_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;Check&nbsp;that&nbsp;the&nbsp;key&nbsp;has&nbsp;been&nbsp;initialized.
+</c24><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><a href="#118_1_refs"><c21>
+</c21><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;NB:&nbsp;This&nbsp;is&nbsp;a&nbsp;little&nbsp;racy&nbsp;because,&nbsp;while&nbsp;the&nbsp;key&nbsp;is
+</c24><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;initalized&nbsp;under&nbsp;a&nbsp;mutex&nbsp;and&nbsp;it's&nbsp;assumed&nbsp;to&nbsp;be&nbsp;initalized
+</c24><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;in&nbsp;the&nbsp;Scheduler&nbsp;ctor&nbsp;by&nbsp;any&nbsp;thread&nbsp;that&nbsp;needs&nbsp;to&nbsp;use&nbsp;it,
+</c24><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;we&nbsp;are&nbsp;not&nbsp;accessing&nbsp;the&nbsp;key&nbsp;under&nbsp;a&nbsp;mutex.&nbsp;&nbsp;Threads&nbsp;that
+</c24><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;are&nbsp;not&nbsp;using&nbsp;the&nbsp;new&nbsp;Scheduler&nbsp;but&nbsp;still&nbsp;*want&nbsp;to&nbsp;check*
+</c24><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;whether&nbsp;they&nbsp;are&nbsp;running&nbsp;under&nbsp;a&nbsp;new&nbsp;Scheduler&nbsp;may&nbsp;see&nbsp;a&nbsp;0
+</c24><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;value&nbsp;here&nbsp;that&nbsp;is&nbsp;in&nbsp;the&nbsp;process&nbsp;of&nbsp;being&nbsp;initialized&nbsp;in
+</c24><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;another&nbsp;thread.&nbsp;I&nbsp;think&nbsp;this&nbsp;is&nbsp;fine&nbsp;since&nbsp;the&nbsp;only&nbsp;action
+</c24><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;they&nbsp;could&nbsp;take&nbsp;if&nbsp;it&nbsp;was&nbsp;initialized&nbsp;would&nbsp;be&nbsp;to&nbsp;check&nbsp;the
+</c24><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;thread-local&nbsp;value&nbsp;and&nbsp;see&nbsp;that&nbsp;it's&nbsp;not&nbsp;set.
+</c24><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="../rt/local_ptr.rs.html#125"><c8>key</c8></a><a href="#118_1_refs"><c2>&nbsp;!=&nbsp;-</c2><c12>1</c12><c7>&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c0>return&nbsp;</c0><a href="../option.rs.html#58"><c8>Some</c8></a><a href="#118_1_refs"><c25>(</c25><a href="../rt/local_ptr.rs.html#125"><c8>key</c8></a><a href="#118_1_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>&nbsp;else&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c0>return&nbsp;</c0><a href="../option.rs.html#57"><c8>None</c8></a><a href="#118_1_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><a href="#118_1_refs"><c21>
+</c21><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><a href="#118_1_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c0>extern&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><a href="#118_1_refs"><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>fast_ffi</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><a href="#118_1_refs"><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_get_rt_tls_key</c26><c0>(</c0><c25>)</c25><c0>&nbsp;-&gt;&nbsp;</c0><c3>*mut&nbsp;</c3><a href="../libc.rs.html#197"><c3>c_void</c3></a><a href="#118_1_refs"><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><a href="#118_1_refs"><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><a href="#118_1_refs"><c21>
+</c21><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><a href="#118_1_refs"><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="118_1_refs"><a href="#119"><c24>rt/local_ptr.rs:119:1-119:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;maybe_tls_key()&nbsp;-&gt;&nbsp;Option&lt;tls::Key&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local_ptr.rs.html#114"><c24>114:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;maybe_tls_key()&nbsp;{
+<br/></a><a href="../rt/local_ptr.rs.html#66"><c24>66:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;maybe_tls_key()&nbsp;{
+<br/></a><br/><br/><a id="111_1_refs"><a href="#112"><c24>rt/local_ptr.rs:112:1-112:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;tls_key()&nbsp;-&gt;&nbsp;tls::Key&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local_ptr.rs.html#100"><c24>100:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;key&nbsp;=&nbsp;tls_key();
+<br/></a><a href="../rt/local_ptr.rs.html#53"><c24>53:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;key&nbsp;=&nbsp;tls_key();
+<br/></a><a href="../rt/local_ptr.rs.html#42"><c24>42:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;key&nbsp;=&nbsp;tls_key();
+<br/></a><br/><br/><a id="97_44_refs"><a href="#98"><c24>rt/local_ptr.rs:98:44-98:44&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///&nbsp;For&nbsp;the&nbsp;Scheduler&nbsp;pointer&nbsp;to&nbsp;be&nbsp;aliased
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;unsafe_borrow&lt;T&gt;()&nbsp;-&gt;&nbsp;*mut&nbsp;T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local.rs.html"><c24>rt/local.rs:<br/></c24><a href="../rt/local.rs.html#46"><c24>46:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;fn&nbsp;unsafe_borrow()&nbsp;-&gt;&nbsp;*mut&nbsp;Task&nbsp;{&nbsp;local_ptr::unsafe_borrow()&nbsp;}
+<br/></a><br/><br/><a id="62_61_refs"><a href="#63"><c24>rt/local_ptr.rs:63:61-63:61&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///&nbsp;Check&nbsp;whether&nbsp;there&nbsp;is&nbsp;a&nbsp;thread-local&nbsp;pointer&nbsp;installed.
+<br/>pub&nbsp;fn&nbsp;exists()&nbsp;-&gt;&nbsp;bool&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local.rs.html"><c24>rt/local.rs:<br/></c24><a href="../rt/local.rs.html#31"><c24>31:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;exists()&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;local_ptr::exists()&nbsp;}
+<br/></a><br/><br/><a id="39_40_refs"><a href="#40"><c24>rt/local_ptr.rs:40:40-40:40&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///&nbsp;Does&nbsp;not&nbsp;validate&nbsp;the&nbsp;pointer&nbsp;type.
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;put&lt;T&gt;(sched:&nbsp;~T)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local_ptr.rs.html#89"><c24>89:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;put(value_cell.take());
+<br/></a><a href="../rt/local.rs.html"><c24>rt/local.rs:<br/></c24><a href="../rt/local.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;put(value:&nbsp;~Task)&nbsp;{&nbsp;unsafe&nbsp;{&nbsp;local_ptr::put(value)&nbsp;}&nbsp;}
+<br/></a><br/><br/><a id="25_78_refs"><a href="#26"><c24>rt/local_ptr.rs:26:78-26:78&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///&nbsp;Initialize&nbsp;the&nbsp;TLS&nbsp;key.&nbsp;Other&nbsp;ops&nbsp;will&nbsp;fail&nbsp;if&nbsp;this&nbsp;isn't&nbsp;executed&nbsp;first.
+<br/>pub&nbsp;fn&nbsp;init_tls_key()&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/sched.rs.html"><c24>rt/sched.rs:<br/></c24><a href="../rt/sched.rs.html#142"><c24>142:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_ptr::init_tls_key();
+<br/></a><br/><br/><a id="50_40_refs"><a href="#51"><c24>rt/local_ptr.rs:51:40-51:40&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///&nbsp;Does&nbsp;not&nbsp;validate&nbsp;the&nbsp;pointer&nbsp;type.
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;take&lt;T&gt;()&nbsp;-&gt;&nbsp;~T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local_ptr.rs.html#80"><c24>80:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;value&nbsp;=&nbsp;take();
+<br/></a><a href="../rt/local.rs.html"><c24>rt/local.rs:<br/></c24><a href="../rt/local.rs.html#30"><c24>30:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;take()&nbsp;-&gt;&nbsp;~Task&nbsp;{&nbsp;unsafe&nbsp;{&nbsp;local_ptr::take()&nbsp;}&nbsp;}
+<br/></a><br/><br/><a id="77_40_refs"><a href="#78"><c24>rt/local_ptr.rs:78:40-78:40&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///&nbsp;Does&nbsp;not&nbsp;validate&nbsp;the&nbsp;pointer&nbsp;type.
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;borrow&lt;T&gt;(f:&nbsp;&amp;fn(&amp;mut&nbsp;T))&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/local.rs.html"><c24>rt/local.rs:<br/></c24><a href="../rt/local.rs.html#36"><c24>36:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;local_ptr::borrow&nbsp;|task|&nbsp;{
+<br/></a><br/></a></a>

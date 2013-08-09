@@ -1,0 +1,226 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; }
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#ffffa0; font-weight:bold; }
+c28{color:#afffff; font-weight:bold; }
+c29{color:#afffaf; font-weight:bold; }
+c30{color:#cfcfff; font-weight:bold; }
+c31{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#dde009; font-weight:bold}
+c22{color:#e0f0d0; font-weight:bold}
+c23{color:#e0f0ff; font-weight:bold}
+</style><body style="background-color:#3a3636;"><maintext><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;A&nbsp;very&nbsp;simple&nbsp;unsynchronized&nbsp;channel&nbsp;type&nbsp;for&nbsp;sending&nbsp;buffered&nbsp;data&nbsp;from
+</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c24>//!&nbsp;scheduler&nbsp;context&nbsp;to&nbsp;task&nbsp;context.
+</c24><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c24>//!
+</c24><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c24>//!&nbsp;XXX:&nbsp;This&nbsp;would&nbsp;be&nbsp;safer&nbsp;to&nbsp;use&nbsp;if&nbsp;split&nbsp;into&nbsp;two&nbsp;types&nbsp;like&nbsp;Port/Chan
+</c24><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c0>use&nbsp;option::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c0>use&nbsp;clone::Clone</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c0>use&nbsp;super::rc::RC</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c0>use&nbsp;rt::sched::Scheduler</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c0>use&nbsp;rt::kill::BlockedTask</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>use&nbsp;rt::local::Local</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c0>use&nbsp;vec::OwnedVector</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c0>use&nbsp;container::Container</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a href="#23_1_refs"><c27>struct&nbsp;TubeState</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c15>{
+</c15><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a href="#23_1_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><a href="#25_4_refs"><c6>blocked_task:&nbsp;</c6><a href="../option.rs.html#55"><c3>Option&lt;</c3></a><a href="../rt/kill.rs.html#93"><c3>BlockedTask</c3></a><a href="../option.rs.html#55"><c3>&gt;</c3></a><a href="#23_1_refs"><c4>,</c4><c15>
+</c15><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a href="#23_1_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><a href="#26_4_refs"><c6>buf:&nbsp;</c6><c3>~</c3><c4>[</c4><c3>T</c3><c4>]</c4><a href="#23_1_refs"><c15>
+</c15><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a href="#23_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a href="#28_1_refs"><c15>pub&nbsp;</c15><c27>struct&nbsp;Tube</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c15>{
+</c15><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a href="#28_1_refs"><c15>&nbsp;&nbsp;&nbsp;&nbsp;</c15><a href="#30_4_refs"><c6>p:&nbsp;</c6><a href="../rt/rc.rs.html#26"><c3>RC&lt;</c3></a><a href="../rt/tube.rs.html#25"><c3>TubeState&lt;T</c3></a><a href="../rt/rc.rs.html#26"><c3>&gt;&gt;</c3></a><a href="#28_1_refs"><c15>
+</c15><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a href="#28_1_refs"><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29><a href="../rt/tube.rs.html#30"><c29>Tube</c29><c5>&lt;T&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#34_4_refs"><c22>pub&nbsp;</c22><c26>fn&nbsp;new</c26><c22>(</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../rt/tube.rs.html#30"><c3>Tube&lt;T&gt;</c3></a><a href="#34_4_refs"><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a href="#34_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/tube.rs.html#30"><c15>Tube</c15></a><a href="#34_4_refs"><c21>&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a href="#34_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p:&nbsp;</c21><a href="../rt/rc.rs.html#32"><c8>RC::new</c8></a><a href="#34_4_refs"><c25>(</c25><a href="../rt/tube.rs.html#25"><c15>TubeState</c15></a><a href="#34_4_refs"><c9>&nbsp;</c9><c4>{</c4><c9>
+</c9><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a href="#34_4_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;blocked_task:&nbsp;</c9><a href="../option.rs.html#57"><c8>None</c8></a><a href="#34_4_refs"><c4>,</c4><c9>
+</c9><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a href="#34_4_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buf:&nbsp;</c9><c16>~</c16><c4>[]</c4><c9>
+</c9><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a href="#34_4_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a href="#34_4_refs"><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a href="#34_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#43_4_refs"><c22>pub&nbsp;</c22><c26>fn&nbsp;send</c26><c22>(&amp;mut&nbsp;self</c22><c4>,</c4><c22>&nbsp;</c22><a href="#43_27_refs"><c20>val</c20><a href="#43_4_refs"><c22>:&nbsp;</c22><c3>T</c3><c25>)</c25><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>rtdebug!</c13><c25>(</c25><a href="#44_17_refs"><c20>"tube&nbsp;send"</c20><a href="#43_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#46_16_refs"><c20>state</c20><a href="#43_4_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/rc.rs.html#56"><c0>self.</c0></a><a href="../rt/tube.rs.html#32"><c6>p</c6></a><a href="../rt/rc.rs.html#56"><c10>.unsafe_borrow_mut</c10><c25>()</c25><c4>;</c4></a><a href="#43_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c25>(</c25><c2>*</c2><a href="../rt/tube.rs.html#48"><c8>state</c8></a><a href="#43_4_refs"><c25>)</c25><c0>.</c0><a href="../rt/tube.rs.html#28"><c6>buf</c6></a><a href="#43_4_refs"><c13>.push</c13><c25>(</c25><a href="../rt/tube.rs.html#45"><c8>val</c8></a><a href="#43_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a href="#43_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><a href="../rt/tube.rs.html#27"><c25>(</c25></a><a href="#43_4_refs"><c2>*</c2><a href="../rt/tube.rs.html#48"><c8>state</c8></a><a href="../rt/tube.rs.html#27"><c25>)</c25><c0>.</c0><c6>blocked_task</c6></a><a href="../option.rs.html#128"><c10>.is_some</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><a href="#43_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;There's&nbsp;a&nbsp;waiting&nbsp;task.&nbsp;Wake&nbsp;it&nbsp;up
+</c24><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>rtdebug!</c13><c25>(</c25><c16>"waking&nbsp;blocked&nbsp;tube"</c16><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#52_20_refs"><c20>task</c20><a href="#43_4_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/tube.rs.html#27"><c25>(</c25><c2>*</c2></a><a href="../rt/tube.rs.html#48"><c8>state</c8></a><a href="../rt/tube.rs.html#27"><c25>)</c25><c0>.</c0><c6>blocked_task</c6></a><a href="../option.rs.html#337"><c10>.take_unwrap</c10><c25>()</c25><c4>;</c4></a><a href="#43_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#53_20_refs"><c20>sched</c20><a href="#43_4_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/local.rs.html#22"><c8>Local::take::&lt;</c8></a><a href="../rt/sched.rs.html#39"><c3>Scheduler</c3></a><a href="../rt/local.rs.html#22"><c8>&gt;</c8></a><a href="#43_4_refs"><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/tube.rs.html#55"><c8>sched</c8></a><a href="../rt/sched.rs.html#631"><c10>.resume_blocked_task_immediately</c10><c25>(</c25></a><a href="../rt/tube.rs.html#54"><c8>task</c8></a><a href="../rt/sched.rs.html#631"><c25>)</c25><c4>;</c4></a><a href="#43_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a href="#43_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c17>
+</c17><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#59_4_refs"><c22>pub&nbsp;</c22><c26>fn&nbsp;recv</c26><c22>(&amp;mut&nbsp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><c3>T</c3><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;</c21><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#61_16_refs"><c20>state</c20><a href="#59_4_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/tube.rs.html#32"><c0>self.</c0><c6>p</c6></a><a href="../rt/rc.rs.html#56"><c10>.unsafe_borrow_mut</c10><c25>()</c25><c4>;</c4></a><a href="#59_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c7>if&nbsp;</c7><c2>!</c2><a href="../vec.rs.html#707"><c25>(</c25><c2>*</c2></a><a href="../rt/tube.rs.html#63"><c8>state</c8></a><a href="../vec.rs.html#707"><c25>)</c25><c0>.</c0></a><a href="../rt/tube.rs.html#28"><c6>buf</c6></a><a href="../vec.rs.html#707"><c10>.is_empty</c10><c25>()</c25><c10>&nbsp;</c10><c4>{</c4></a><a href="#59_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c0>return&nbsp;</c0><a href="../rt/tube.rs.html#28"><c25>(</c25><c2>*</c2></a><a href="../rt/tube.rs.html#63"><c8>state</c8></a><a href="../rt/tube.rs.html#28"><c25>)</c25><c0>.</c0><c6>buf</c6></a><a href="../vec.rs.html#1350"><c10>.shift</c10><c25>()</c25><c4>;</c4></a><a href="#59_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c7>&nbsp;else&nbsp;</c7><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c24>//&nbsp;Block&nbsp;and&nbsp;wait&nbsp;for&nbsp;the&nbsp;next&nbsp;message
+</c24><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>rtdebug!</c13><c25>(</c25><a href="../rt/tube.rs.html#68"><c13>"blocking&nbsp;on&nbsp;tube&nbsp;recv"</c13></a><a href="#59_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>assert!</c13><c25>(</c25><a href="../rt/tube.rs.html#32"><c0>self.</c0><c6>p</c6></a><a href="../rt/rc.rs.html#67"><c10>.refcount</c10><c25>()</c25><c10>&nbsp;&gt;</c10></a><a href="#59_4_refs"><c2>&nbsp;</c2><c12>1</c12><c25>)</c25><c4>;</c4><c21>&nbsp;</c21><c24>//&nbsp;There&nbsp;better&nbsp;be&nbsp;somebody&nbsp;to&nbsp;wake&nbsp;us&nbsp;up
+</c24><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>assert!</c13><c25>(</c25><a href="../rt/tube.rs.html#27"><c25>(</c25><c2>*</c2></a><a href="../rt/tube.rs.html#63"><c8>state</c8></a><a href="../rt/tube.rs.html#27"><c25>)</c25><c0>.</c0><c6>blocked_task</c6></a><a href="../option.rs.html#122"><c10>.is_none</c10><c25>()</c25></a><a href="#59_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#69_20_refs"><c20>sched</c20><a href="#59_4_refs"><c16>&nbsp;=&nbsp;</c16><a href="../rt/local.rs.html#22"><c8>Local::take::&lt;</c8></a><a href="../rt/sched.rs.html#39"><c3>Scheduler</c3></a><a href="../rt/local.rs.html#22"><c8>&gt;</c8></a><a href="#59_4_refs"><c25>()</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/sched.rs.html#650"><c13>do&nbsp;</c13></a><a href="../rt/tube.rs.html#71"><c8>sched</c8></a><a href="../rt/sched.rs.html#650"><c13>.</c13><c0>deschedule_running_task_and_then&nbsp;|</c0><c20>_</c20><c4>,</c4><c0>&nbsp;</c0></a><a href="#70_62_refs"><c20>task</c20><a href="../rt/sched.rs.html#650"><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a href="../rt/sched.rs.html#650"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21></a><a href="../rt/tube.rs.html#27"><c25>(</c25><c2>*</c2></a><a href="../rt/tube.rs.html#63"><c8>state</c8></a><a href="../rt/tube.rs.html#27"><c25>)</c25><c0>.</c0><c6>blocked_task</c6></a><a href="../rt/sched.rs.html#650"><c2>&nbsp;=&nbsp;</c2></a><a href="../option.rs.html#58"><c8>Some</c8></a><a href="../rt/sched.rs.html#650"><c25>(</c25></a><a href="../rt/tube.rs.html#72"><c8>task</c8></a><a href="../rt/sched.rs.html#650"><c25>)</c25><c4>;</c4><c21>
+</c21></a><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a href="../rt/sched.rs.html#650"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4></a><a href="#59_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>rtdebug!</c13><c25>(</c25><a href="#73_25_refs"><c16>"waking&nbsp;after&nbsp;tube&nbsp;recv"</c16><a href="#59_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>let&nbsp;</c13><a href="#74_20_refs"><c20>buf</c20><a href="#59_4_refs"><c16>&nbsp;=&nbsp;</c16><c2>&amp;mut&nbsp;</c2><a href="../rt/tube.rs.html#28"><c25>(</c25><c2>*</c2></a><a href="../rt/tube.rs.html#63"><c8>state</c8></a><a href="../rt/tube.rs.html#28"><c25>)</c25><c0>.</c0><c6>buf</c6></a><a href="#59_4_refs"><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c13>assert!</c13><c25>(</c25><c2>!</c2><a href="../rt/tube.rs.html#76"><c8>buf</c8></a><a href="../vec.rs.html#707"><c10>.is_empty</c10><c25>()</c25></a><a href="#59_4_refs"><c25>)</c25><c4>;</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c0>return&nbsp;</c0><a href="../rt/tube.rs.html#76"><c8>buf</c8></a><a href="../vec.rs.html#1350"><c10>.shift</c10><c25>()</c25><c4>;</c4></a><a href="#59_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a href="#59_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c29>impl</c29><c5>&lt;T&gt;</c5><c29>&nbsp;</c29><a href="../clone.rs.html#27"><c29>Clone&nbsp;</c29></a><c29>for&nbsp;</c29><a href="../rt/tube.rs.html#30"><c29>Tube</c29><c5>&lt;T&gt;</c5></a><c29>&nbsp;</c29><c17>{
+</c17><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><a href="#83_4_refs"><c26>fn&nbsp;clone</c26><c22>(&amp;self</c22><c25>)</c25><c22>&nbsp;-&gt;&nbsp;</c22><a href="../rt/tube.rs.html#30"><c3>Tube&lt;</c3></a><a href="#83_4_refs"><c3>T</c3><a href="../rt/tube.rs.html#30"><c3>&gt;</c3></a><a href="#83_4_refs"><c22>&nbsp;</c22><c4>{</c4><c21>
+</c21><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a href="#83_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><a href="../rt/tube.rs.html#30"><c15>Tube</c15></a><a href="#83_4_refs"><c21>&nbsp;</c21><c4>{</c4><c21>&nbsp;p:&nbsp;</c21><c0>self.</c0><a href="../rt/tube.rs.html#32"><c6>p</c6></a><a href="../rt/rc.rs.html#99"><c10>.clone</c10><c25>()</c25><c10>&nbsp;</c10><c4>}</c4></a><a href="#83_4_refs"><c21>
+</c21><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a href="#83_4_refs"><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c0>#</c0><c4>[</c4><c0>cfg</c0><c25>(</c25><c0>test</c0><c25>)</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c0>mod&nbsp;test&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;cell::Cell</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;rt::test::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;rt::rtio::EventLoop</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;rt::sched::Scheduler</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;rt::local::Local</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;simple_test</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;run_in_newsched_task&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;tube:&nbsp;Tube&lt;int&gt;&nbsp;=&nbsp;Tube::new</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;tube_clone&nbsp;=&nbsp;tube.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;tube_clone_cell&nbsp;=&nbsp;Cell::new</c0><c25>(</c25><c0>tube_clone</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;sched&nbsp;=&nbsp;Local::take::&lt;Scheduler&gt;</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;sched.deschedule_running_task_and_then&nbsp;|sched</c0><c4>,</c4><c0>&nbsp;task|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;tube_clone&nbsp;=&nbsp;tube_clone_cell.take</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tube_clone.send</c0><c25>(</c25><c0>1</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sched.enqueue_blocked_task</c0><c25>(</c25><c0>task</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>tube.recv</c0><c25>()</c25><c0>&nbsp;==&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;blocking_test</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;run_in_newsched_task&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;tube:&nbsp;Tube&lt;int&gt;&nbsp;=&nbsp;Tube::new</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;tube_clone&nbsp;=&nbsp;tube.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;tube_clone&nbsp;=&nbsp;Cell::new</c0><c25>(</c25><c0>tube_clone</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;sched&nbsp;=&nbsp;Local::take::&lt;Scheduler&gt;</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;sched.deschedule_running_task_and_then&nbsp;|sched</c0><c4>,</c4><c0>&nbsp;task|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;tube_clone&nbsp;=&nbsp;Cell::new</c0><c25>(</c25><c0>tube_clone.take</c0><c25>())</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;sched.event_loop.callback&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;tube_clone&nbsp;=&nbsp;tube_clone.take</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;The&nbsp;task&nbsp;should&nbsp;be&nbsp;blocked&nbsp;on&nbsp;this&nbsp;now&nbsp;and
+</c24><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;sending&nbsp;will&nbsp;wake&nbsp;it&nbsp;up.
+</c24><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tube_clone.send</c0><c25>(</c25><c0>1</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sched.enqueue_blocked_task</c0><c25>(</c25><c0>task</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>tube.recv</c0><c25>()</c25><c0>&nbsp;==&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;many_blocking_test</c26><c0>(</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;MAX:&nbsp;int&nbsp;=&nbsp;100</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;run_in_newsched_task&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;tube:&nbsp;Tube&lt;int&gt;&nbsp;=&nbsp;Tube::new</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;tube_clone&nbsp;=&nbsp;tube.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;tube_clone&nbsp;=&nbsp;Cell::new</c0><c25>(</c25><c0>tube_clone</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;sched&nbsp;=&nbsp;Local::take::&lt;Scheduler&gt;</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;sched.deschedule_running_task_and_then&nbsp;|sched</c0><c4>,</c4><c0>&nbsp;task|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;callback_send</c0><c25>(</c25><c0>tube_clone.take</c0><c25>()</c25><c4>,</c4><c0>&nbsp;0</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;callback_send</c26><c0>(tube:&nbsp;Tube&lt;int&gt;</c0><c4>,</c4><c0>&nbsp;i:&nbsp;int</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;i&nbsp;==&nbsp;100&nbsp;</c0><c4>{</c4><c0>&nbsp;return</c0><c4>;</c4><c0>&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;tube&nbsp;=&nbsp;Cell::new</c0><c25>(</c25><c0>Cell::new</c0><c25>(</c25><c0>tube</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;Local::borrow::&lt;Scheduler</c0><c4>,</c4><c0>&nbsp;</c0><c25>()</c25><c0>&gt;&nbsp;|sched|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;tube&nbsp;=&nbsp;tube.take</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;sched.event_loop.callback&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;tube&nbsp;=&nbsp;tube.take</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;The&nbsp;task&nbsp;should&nbsp;be&nbsp;blocked&nbsp;on&nbsp;this&nbsp;now&nbsp;and
+</c24><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;sending&nbsp;will&nbsp;wake&nbsp;it&nbsp;up.
+</c24><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tube.send</c0><c25>(</c25><c0>i</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;callback_send</c0><c25>(</c25><c0>tube</c0><c4>,</c4><c0>&nbsp;i&nbsp;+&nbsp;1</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sched.enqueue_blocked_task</c0><c25>(</c25><c0>task</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;in&nbsp;range</c0><c25>(</c25><c0>0</c0><c4>,</c4><c0>&nbsp;MAX</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;j&nbsp;=&nbsp;tube.recv</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>j&nbsp;==&nbsp;i</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="23_1_refs"><a href="#24"><c24>rt/tube.rs:24:1-24:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;TubeState&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/tube.rs.html#31"><c24>31:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;p:&nbsp;RC&lt;TubeState&lt;T&gt;&gt;
+<br/></a><a href="../rt/tube.rs.html#37"><c24>37:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p:&nbsp;RC::new(TubeState&nbsp;{
+<br/></a><br/><br/><a id="28_1_refs"><a href="#29"><c24>rt/tube.rs:29:1-29:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;struct&nbsp;Tube&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../rt/tube.rs.html#83"><c24>83:&nbsp;</c24>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;Tube&lt;T&gt;&nbsp;{
+<br/></a><a href="../rt/tube.rs.html#34"><c24>34:&nbsp;</c24>impl&lt;T&gt;&nbsp;Tube&lt;T&gt;&nbsp;{
+<br/></a><a href="../rt/tube.rs.html#36"><c24>36:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tube&nbsp;{
+<br/></a><a href="../rt/tube.rs.html#85"><c24>85:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tube&nbsp;{&nbsp;p:&nbsp;self.p.clone()&nbsp;}
+<br/></a><a href="../rt/tube.rs.html#35"><c24>35:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;Tube&lt;T&gt;&nbsp;{
+<br/></a><a href="../rt/tube.rs.html#84"><c24>84:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;Tube&lt;T&gt;&nbsp;{
+<br/></a><a href="../rt/uv/uvio.rs.html"><c24>rt/uv/uvio.rs:<br/></c24><a href="../rt/uv/uvio.rs.html#338"><c24>338:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;incoming_streams:&nbsp;Tube&lt;Result&lt;~RtioTcpStreamObject,&nbsp;IoError&gt;&gt;
+<br/></a><br/></a></a>
