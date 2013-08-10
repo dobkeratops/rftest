@@ -37,7 +37,7 @@ c20{color:#0f0ff}
 c21{color:#d0d0d0; font-weight:bold}
 c22{color:#c0ffd0; }
 c23{color:#d0f0ff; }
-</style><body style="background-color:#383838;"><maintext><br/><a href="./../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../src/">src</a><c1>/</c1><c0><a href="./../../../src/libextra/">libextra</a><c1>/</c1><c0><a href="./../../../src/libextra/terminfo/">terminfo</a><c1>/</c1><c0><a href="./../../../src/libextra/terminfo/terminfo.rs.html">terminfo.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</style><body style="background-color:#343a3c;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libextra/">libextra</a><c1>/</c1><c0><a href="./../../libextra/terminfo/">terminfo</a><c1>/</c1><c0><a href="./../../libextra/terminfo/terminfo.rs.html">terminfo.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
 </c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
@@ -50,15 +50,15 @@ c23{color:#d0f0ff; }
 </c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c21>use</c21><c0>&nbsp;std::hashmap::HashMap</c0><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c32>///&nbsp;A&nbsp;parsed&nbsp;terminfo&nbsp;entry.
-</c32><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#12_29_refs"><c27>TermInfo</c27></a><c27>&nbsp;</c27><c4>{</c4><a href="#12_29_refs"><c23>
+</c32><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#13_29_refs"><c27>TermInfo</c27></a><c27>&nbsp;</c27><c4>{</c4><a href="#13_29_refs"><c23>
 </c23></a><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c32>///&nbsp;Names&nbsp;for&nbsp;the&nbsp;terminal
-</c32><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#12_29_refs"><c6>names</c6></a><c6>:&nbsp;</c6><c3>~</c3><c4>[</c4><c3>~</c3><a href="#12_29_refs"><c3>str</c3></a><c4>],</c4><a href="#12_29_refs"><c23>
+</c32><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#13_29_refs"><c6>names</c6></a><c6>:&nbsp;</c6><c3>~</c3><c4>[</c4><c3>~</c3><a href="#13_29_refs"><c3>str</c3></a><c4>],</c4><a href="#13_29_refs"><c23>
 </c23></a><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c32>///&nbsp;Map&nbsp;of&nbsp;capability&nbsp;name&nbsp;to&nbsp;boolean&nbsp;value
-</c32><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#12_29_refs"><c6>bools</c6></a><c6>:&nbsp;</c6><a href="#12_29_refs"><c3>HashMap</c3></a><c3>&lt;~</c3><a href="#12_29_refs"><c3>str</c3></a><c4>,</c4><c3>&nbsp;</c3><a href="#12_29_refs"><c3>bool</c3></a><c3>&gt;</c3><c4>,</c4><a href="#12_29_refs"><c23>
+</c32><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#13_29_refs"><c6>bools</c6></a><c6>:&nbsp;</c6><a href="#13_29_refs"><c3>HashMap</c3></a><c3>&lt;~</c3><a href="#13_29_refs"><c3>str</c3></a><c4>,</c4><c3>&nbsp;</c3><a href="#13_29_refs"><c3>bool</c3></a><c3>&gt;</c3><c4>,</c4><a href="#13_29_refs"><c23>
 </c23></a><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c32>///&nbsp;Map&nbsp;of&nbsp;capability&nbsp;name&nbsp;to&nbsp;numeric&nbsp;value
-</c32><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#19_4_refs"><c6>numbers</c6></a><c6>:&nbsp;</c6><a href="#12_29_refs"><c3>HashMap</c3></a><c3>&lt;~</c3><a href="#12_29_refs"><c3>str</c3></a><c4>,</c4><c3>&nbsp;</c3><a href="#12_29_refs"><c3>u16</c3></a><c3>&gt;</c3><c4>,</c4><a href="#12_29_refs"><c23>
+</c32><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#20_4_refs"><c6>numbers</c6></a><c6>:&nbsp;</c6><a href="#20_4_refs"><c3>HashMap</c3></a><c3>&lt;~</c3><a href="#13_29_refs"><c3>str</c3></a><c4>,</c4><c3>&nbsp;</c3><a href="#13_29_refs"><c3>u16</c3></a><c3>&gt;</c3><c4>,</c4><a href="#13_29_refs"><c23>
 </c23></a><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c32>///&nbsp;Map&nbsp;of&nbsp;capability&nbsp;name&nbsp;to&nbsp;raw&nbsp;(unexpanded)&nbsp;string
-</c32><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#21_4_refs"><c6>strings</c6></a><c6>:&nbsp;</c6><a href="#12_29_refs"><c3>HashMap</c3></a><c3>&lt;~</c3><a href="#12_29_refs"><c3>str</c3></a><c4>,</c4><c3>&nbsp;~</c3><c4>[</c4><a href="#12_29_refs"><c3>u8</c3></a><c4>]</c4><c3>&gt;</c3><a href="#12_29_refs"><c23>
+</c32><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#22_4_refs"><c6>strings</c6></a><c6>:&nbsp;</c6><a href="#13_29_refs"><c3>HashMap</c3></a><c3>&lt;~</c3><a href="#13_29_refs"><c3>str</c3></a><c4>,</c4><c3>&nbsp;~</c3><c4>[</c4><a href="#13_29_refs"><c3>u8</c3></a><c4>]</c4><c3>&gt;</c3><a href="#13_29_refs"><c23>
 </c23></a><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;searcher</c14><c4>;</c4><c0>
@@ -66,9 +66,9 @@ c23{color:#d0f0ff; }
 </c14><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;compiled</c14><c4>;</c4><c14>
 </c14><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;parm</c14><c4>;</c4><c0>
-</c0><br/><div/><br/><a id="12_29_refs"><a href="#13"><c24>src/libextra/terminfo/terminfo.rs:13:29-13:29&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;A&nbsp;parsed&nbsp;terminfo&nbsp;entry.
+</c0><br/><div/><br/><a id="13_29_refs"><a href="#13"><c24>libextra/terminfo/terminfo.rs:13:29-13:29&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;A&nbsp;parsed&nbsp;terminfo&nbsp;entry.
 <br/>pub&nbsp;struct&nbsp;TermInfo&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../src/libextra/terminfo/parser/compiled.rs.html"><c24>src/libextra/terminfo/parser/compiled.rs:<br/></c24><a href="../../../src/libextra/terminfo/parser/compiled.rs.html#163"><c24>163:&nbsp;</c24>pub&nbsp;fn&nbsp;parse(file:&nbsp;@Reader,&nbsp;longnames:&nbsp;bool)&nbsp;-&gt;&nbsp;Result&lt;~TermInfo,&nbsp;~str&gt;&nbsp;{
-<br/></a><a href="../../../src/libextra/terminfo/parser/compiled.rs.html#312"><c24>312:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;Ok(~TermInfo&nbsp;{names:&nbsp;term_names,&nbsp;bools:&nbsp;bools_map,&nbsp;numbers:&nbsp;numbers_map,&nbsp;strings:&nbsp;string_map&nbsp;})
-<br/></a><a href="../../../src/libextra/term.rs.html"><c24>src/libextra/term.rs:<br/></c24><a href="../../../src/libextra/term.rs.html#100"><c24>100:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;ti:&nbsp;~TermInfo
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libextra/terminfo/parser/compiled.rs.html"><c24>libextra/terminfo/parser/compiled.rs:<br/></c24><a href="../../libextra/terminfo/parser/compiled.rs.html#163"><c24>163:&nbsp;</c24>pub&nbsp;fn&nbsp;parse(file:&nbsp;@Reader,&nbsp;longnames:&nbsp;bool)&nbsp;-&gt;&nbsp;Result&lt;~TermInfo,&nbsp;~str&gt;&nbsp;{
+<br/></a><a href="../../libextra/terminfo/parser/compiled.rs.html#312"><c24>312:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;Ok(~TermInfo&nbsp;{names:&nbsp;term_names,&nbsp;bools:&nbsp;bools_map,&nbsp;numbers:&nbsp;numbers_map,&nbsp;strings:&nbsp;string_map&nbsp;})
+<br/></a><a href="../../libextra/term.rs.html"><c24>libextra/term.rs:<br/></c24><a href="../../libextra/term.rs.html#100"><c24>100:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;ti:&nbsp;~TermInfo
 <br/></a><br/></a></a>
