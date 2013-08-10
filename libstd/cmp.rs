@@ -101,12 +101,6 @@ impl TotalOrd for Ordering {
 impl Ord for Ordering {
     #[inline]
     fn lt(&self, other: &Ordering) -> bool { (*self as int) < (*other as int) }
-    #[inline]
-    fn le(&self, other: &Ordering) -> bool { (*self as int) <= (*other as int) }
-    #[inline]
-    fn gt(&self, other: &Ordering) -> bool { (*self as int) > (*other as int) }
-    #[inline]
-    fn ge(&self, other: &Ordering) -> bool { (*self as int) >= (*other as int) }
 }
 
 macro_rules! totalord_impl(
@@ -153,7 +147,6 @@ pub fn cmp2<A:TotalOrd,B:TotalOrd>(
 Return `o1` if it is not `Equal`, otherwise `o2`. Simulates the
 lexical ordering on a type `(int, int)`.
 */
-// used in deriving code in libsyntax
 #[inline]
 pub fn lexical_ordering(o1: Ordering, o2: Ordering) -> Ordering {
     match o1 {
@@ -175,8 +168,11 @@ pub fn lexical_ordering(o1: Ordering, o2: Ordering) -> Ordering {
 #[lang="ord"]
 pub trait Ord {
     fn lt(&self, other: &Self) -> bool;
+    #[inline]
     fn le(&self, other: &Self) -> bool { !other.lt(self) }
+    #[inline]
     fn gt(&self, other: &Self) -> bool {  other.lt(self) }
+    #[inline]
     fn ge(&self, other: &Self) -> bool { !self.lt(other) }
 }
 

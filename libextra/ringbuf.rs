@@ -437,12 +437,12 @@ mod tests {
         assert_eq!(deq.len(), 3);
         deq.push_back(d.clone());
         assert_eq!(deq.len(), 4);
-        assert_eq!((*deq.front().get()).clone(), b.clone());
-        assert_eq!((*deq.back().get()).clone(), d.clone());
-        assert_eq!(deq.pop_front().get(), b.clone());
-        assert_eq!(deq.pop_back().get(), d.clone());
-        assert_eq!(deq.pop_back().get(), c.clone());
-        assert_eq!(deq.pop_back().get(), a.clone());
+        assert_eq!((*deq.front().unwrap()).clone(), b.clone());
+        assert_eq!((*deq.back().unwrap()).clone(), d.clone());
+        assert_eq!(deq.pop_front().unwrap(), b.clone());
+        assert_eq!(deq.pop_back().unwrap(), d.clone());
+        assert_eq!(deq.pop_back().unwrap(), c.clone());
+        assert_eq!(deq.pop_back().unwrap(), a.clone());
         assert_eq!(deq.len(), 0);
         deq.push_back(c.clone());
         assert_eq!(deq.len(), 1);
@@ -696,7 +696,7 @@ mod tests {
         let u: ~[int] = deq.iter().transform(|&x| x).collect();
         assert_eq!(u, v);
 
-        let mut seq = iterator::Counter::new(0u, 2).take_(256);
+        let mut seq = iterator::count(0u, 2).take_(256);
         let deq: RingBuf<uint> = seq.collect();
         for (i, &x) in deq.iter().enumerate() {
             assert_eq!(2*i, x);

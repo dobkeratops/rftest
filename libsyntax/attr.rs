@@ -83,7 +83,7 @@ impl AttrMetaMethods for MetaItem {
     }
 
     pub fn name_str_pair(&self) -> Option<(@str, @str)> {
-        self.value_str().map_consume(|s| (self.name(), s))
+        self.value_str().map_move(|s| (self.name(), s))
     }
 }
 
@@ -114,7 +114,7 @@ impl AttributeMethods for Attribute {
     /// non-sugared doc attributes.)
     pub fn desugar_doc(&self) -> Attribute {
         if self.node.is_sugared_doc {
-            let comment = self.value_str().get();
+            let comment = self.value_str().unwrap();
             let meta = mk_name_value_item_str(@"doc",
                                               strip_doc_comment_decoration(comment).to_managed());
             mk_attr(meta)

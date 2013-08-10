@@ -282,301 +282,306 @@ c23{color:#d0f0ff; }
 </c0><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><c24>*/
 </c24><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><c24>//&nbsp;Reexports
-</c24><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::stdio::stdin</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::stdio::stdout</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::stdio::stderr</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::stdio::print</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::stdio::println</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::file::FileStream</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::timer::Timer</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::net::ip::IpAddr</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::net::tcp::TcpListener</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::net::tcp::TcpStream</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::net::udp::UdpStream</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><c24>//&nbsp;Some&nbsp;extension&nbsp;traits&nbsp;that&nbsp;all&nbsp;Readers&nbsp;and&nbsp;Writers&nbsp;get.
-</c24><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::extensions::ReaderUtil</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::extensions::ReaderByteConversions</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::extensions::WriterByteConversions</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><c32>///&nbsp;Synchronous,&nbsp;non-blocking&nbsp;file&nbsp;I/O.
-</c32><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;file</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><c32>///&nbsp;Synchronous,&nbsp;non-blocking&nbsp;network&nbsp;I/O.
-</c32><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;net&nbsp;</c14><c4>{</c4><c14>
-</c14><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;tcp</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;udp</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;ip</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;#</c14><c4>[</c4><c14>cfg</c14><c25>(</c25><c14>unix</c14><c25>)</c25><c4>]</c4><c14>
-</c14><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;unix</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;http</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a><c32>///&nbsp;Readers&nbsp;and&nbsp;Writers&nbsp;for&nbsp;memory&nbsp;buffers&nbsp;and&nbsp;strings.
-</c32><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;mem</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><c32>///&nbsp;Non-blocking&nbsp;access&nbsp;to&nbsp;stdin,&nbsp;stdout,&nbsp;stderr
-</c32><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;stdio</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><c32>///&nbsp;Implementations&nbsp;for&nbsp;Option
-</c32><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><c21>mod</c21><c14>&nbsp;option</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><c32>///&nbsp;Basic&nbsp;stream&nbsp;compression.&nbsp;XXX:&nbsp;Belongs&nbsp;with&nbsp;other&nbsp;flate&nbsp;code
-</c32><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;flate</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a><c32>///&nbsp;Interop&nbsp;between&nbsp;byte&nbsp;streams&nbsp;and&nbsp;pipes.&nbsp;Not&nbsp;sure&nbsp;where&nbsp;it&nbsp;belongs
-</c32><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;comm_adapters</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a><c32>///&nbsp;Extension&nbsp;traits
-</c32><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><c21>mod</c21><c14>&nbsp;extensions</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><c32>///&nbsp;Non-I/O&nbsp;things&nbsp;needed&nbsp;by&nbsp;the&nbsp;I/O&nbsp;module
-</c32><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><c21>mod</c21><c14>&nbsp;support</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><c32>///&nbsp;Basic&nbsp;Timer
-</c32><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;timer</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a><c32>///&nbsp;Thread-blocking&nbsp;implementations
-</c32><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;native&nbsp;</c14><c4>{</c4><c14>
-</c14><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c32>///&nbsp;Posix&nbsp;file&nbsp;I/O
-</c32><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;file</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c32>///&nbsp;#&nbsp;XXX&nbsp;-&nbsp;implement&nbsp;this
-</c32><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;stdio&nbsp;</c14><c4>{</c4><c14>&nbsp;</c14><c4>}</c4><c14>
-</c14><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c32>///&nbsp;Sockets
-</c32><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c32>///&nbsp;#&nbsp;XXX&nbsp;-&nbsp;implement&nbsp;this
-</c32><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;net&nbsp;</c14><c4>{</c4><c14>
-</c14><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;tcp&nbsp;</c14><c4>{</c4><c14>&nbsp;</c14><c4>}</c4><c14>
-</c14><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;udp&nbsp;</c14><c4>{</c4><c14>&nbsp;</c14><c4>}</c4><c14>
-</c14><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</c14><c4>[</c4><c14>cfg</c14><c25>(</c25><c14>unix</c14><c25>)</c25><c4>]</c4><c14>
-</c14><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;unix&nbsp;</c14><c4>{</c4><c14>&nbsp;</c14><c4>}</c4><c14>
-</c14><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c4>}</c4><c14>
-</c14><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a><c32>///&nbsp;Mock&nbsp;implementations&nbsp;for&nbsp;testing
-</c32><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><c21>mod</c21><c14>&nbsp;mock</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a><c32>///&nbsp;The&nbsp;default&nbsp;buffer&nbsp;size&nbsp;for&nbsp;various&nbsp;I/O&nbsp;operations
-</c32><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a><c32>///&nbsp;XXX:&nbsp;Not&nbsp;pub
-</c32><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><a href="#323_17_refs"><c0>static</c0></a><c0>&nbsp;</c0><a href="#323_17_refs"><c0>DEFAULT_BUF_SIZE</c0></a><c0>:&nbsp;</c0><a href="#323_17_refs"><c3>uint</c3></a><c0>&nbsp;</c0><a href="#323_17_refs"><c0>=</c0></a><c0>&nbsp;</c0><a href="#323_17_refs"><c12>1024</c12></a><c2>&nbsp;*&nbsp;</c2><a href="#323_17_refs"><c12>64</c12></a><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a><c32>///&nbsp;The&nbsp;type&nbsp;passed&nbsp;to&nbsp;I/O&nbsp;condition&nbsp;handlers&nbsp;to&nbsp;indicate&nbsp;error
-</c32><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a><c32>///
-</c32><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a><c32>///&nbsp;#&nbsp;XXX
+</c0><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><c21>use</c21><c0>&nbsp;to_str::ToStr</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><c21>use</c21><c0>&nbsp;str::</c0><c4>{</c4><c0>StrSlice</c0><c4>,</c4><c0>&nbsp;OwnedStr</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><c24>//&nbsp;Reexports
+</c24><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::stdio::stdin</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::stdio::stdout</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::stdio::stderr</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::stdio::print</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::stdio::println</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::file::FileStream</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::timer::Timer</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::net::ip::IpAddr</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::net::tcp::TcpListener</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::net::tcp::TcpStream</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::net::udp::UdpStream</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><c24>//&nbsp;Some&nbsp;extension&nbsp;traits&nbsp;that&nbsp;all&nbsp;Readers&nbsp;and&nbsp;Writers&nbsp;get.
+</c24><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::extensions::ReaderUtil</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::extensions::ReaderByteConversions</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::extensions::WriterByteConversions</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><c32>///&nbsp;Synchronous,&nbsp;non-blocking&nbsp;file&nbsp;I/O.
+</c32><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;file</c14><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a><c32>///&nbsp;Synchronous,&nbsp;non-blocking&nbsp;network&nbsp;I/O.
+</c32><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;net&nbsp;</c14><c4>{</c4><c14>
+</c14><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;tcp</c14><c4>;</c4><c14>
+</c14><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;udp</c14><c4>;</c4><c14>
+</c14><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;ip</c14><c4>;</c4><c14>
+</c14><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;#</c14><c4>[</c4><c14>cfg</c14><c25>(</c25><c14>unix</c14><c25>)</c25><c4>]</c4><c14>
+</c14><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;unix</c14><c4>;</c4><c14>
+</c14><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;http</c14><c4>;</c4><c14>
+</c14><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a><c32>///&nbsp;Readers&nbsp;and&nbsp;Writers&nbsp;for&nbsp;memory&nbsp;buffers&nbsp;and&nbsp;strings.
+</c32><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;mem</c14><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><c32>///&nbsp;Non-blocking&nbsp;access&nbsp;to&nbsp;stdin,&nbsp;stdout,&nbsp;stderr
+</c32><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;stdio</c14><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><c32>///&nbsp;Implementations&nbsp;for&nbsp;Option
+</c32><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><c21>mod</c21><c14>&nbsp;option</c14><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><c32>///&nbsp;Basic&nbsp;stream&nbsp;compression.&nbsp;XXX:&nbsp;Belongs&nbsp;with&nbsp;other&nbsp;flate&nbsp;code
+</c32><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;flate</c14><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a><c32>///&nbsp;Interop&nbsp;between&nbsp;byte&nbsp;streams&nbsp;and&nbsp;pipes.&nbsp;Not&nbsp;sure&nbsp;where&nbsp;it&nbsp;belongs
+</c32><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;comm_adapters</c14><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><c32>///&nbsp;Extension&nbsp;traits
+</c32><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><c21>mod</c21><c14>&nbsp;extensions</c14><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><c32>///&nbsp;Non-I/O&nbsp;things&nbsp;needed&nbsp;by&nbsp;the&nbsp;I/O&nbsp;module
+</c32><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><c21>mod</c21><c14>&nbsp;support</c14><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a><c32>///&nbsp;Basic&nbsp;Timer
+</c32><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;timer</c14><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><c32>///&nbsp;Thread-blocking&nbsp;implementations
+</c32><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;native&nbsp;</c14><c4>{</c4><c14>
+</c14><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c32>///&nbsp;Posix&nbsp;file&nbsp;I/O
+</c32><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;file</c14><c4>;</c4><c14>
+</c14><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c32>///&nbsp;#&nbsp;XXX&nbsp;-&nbsp;implement&nbsp;this
+</c32><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;stdio&nbsp;</c14><c4>{</c4><c14>&nbsp;</c14><c4>}</c4><c14>
+</c14><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c32>///&nbsp;Sockets
+</c32><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c32>///&nbsp;#&nbsp;XXX&nbsp;-&nbsp;implement&nbsp;this
+</c32><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;net&nbsp;</c14><c4>{</c4><c14>
+</c14><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;tcp&nbsp;</c14><c4>{</c4><c14>&nbsp;</c14><c4>}</c4><c14>
+</c14><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;udp&nbsp;</c14><c4>{</c4><c14>&nbsp;</c14><c4>}</c4><c14>
+</c14><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</c14><c4>[</c4><c14>cfg</c14><c25>(</c25><c14>unix</c14><c25>)</c25><c4>]</c4><c14>
+</c14><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;unix&nbsp;</c14><c4>{</c4><c14>&nbsp;</c14><c4>}</c4><c14>
+</c14><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c4>}</c4><c14>
+</c14><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a><c32>///&nbsp;Mock&nbsp;implementations&nbsp;for&nbsp;testing
+</c32><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a><c21>mod</c21><c14>&nbsp;mock</c14><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a><c32>///&nbsp;The&nbsp;default&nbsp;buffer&nbsp;size&nbsp;for&nbsp;various&nbsp;I/O&nbsp;operations
+</c32><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a><c32>///&nbsp;XXX:&nbsp;Not&nbsp;pub
+</c32><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><a href="#325_17_refs"><c0>static</c0></a><c0>&nbsp;</c0><a href="#325_17_refs"><c0>DEFAULT_BUF_SIZE</c0></a><c0>:&nbsp;</c0><a href="#325_17_refs"><c3>uint</c3></a><c0>&nbsp;</c0><a href="#325_17_refs"><c0>=</c0></a><c0>&nbsp;</c0><a href="#325_17_refs"><c12>1024</c12></a><c2>&nbsp;*&nbsp;</c2><a href="#325_17_refs"><c12>64</c12></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a><c32>///&nbsp;The&nbsp;type&nbsp;passed&nbsp;to&nbsp;I/O&nbsp;condition&nbsp;handlers&nbsp;to&nbsp;indicate&nbsp;error
 </c32><br/><ln>&nbsp;329</ln><a id="329">&nbsp;</a><c32>///
-</c32><br/><ln>&nbsp;330</ln><a id="330">&nbsp;</a><c32>///&nbsp;Is&nbsp;something&nbsp;like&nbsp;this&nbsp;sufficient?&nbsp;It's&nbsp;kind&nbsp;of&nbsp;archaic
-</c32><br/><ln>&nbsp;331</ln><a id="331">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#330_60_refs"><c27>IoError</c27></a><c27>&nbsp;</c27><c4>{</c4><a href="#330_60_refs"><c23>
-</c23></a><br/><ln>&nbsp;332</ln><a id="332">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#332_4_refs"><c6>kind</c6></a><c6>:&nbsp;</c6><a href="../../../libstd/rt/io/mod.rs.html#337"><c3>IoErrorKind</c3></a><c4>,</c4><a href="#330_60_refs"><c23>
-</c23></a><br/><ln>&nbsp;333</ln><a id="333">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#330_60_refs"><c6>desc</c6></a><c6>:&nbsp;</c6><c3>&amp;'</c3><a href="#330_60_refs"><c3>static</c3></a><c3>&nbsp;</c3><a href="#330_60_refs"><c3>str</c3></a><c4>,</c4><a href="#330_60_refs"><c23>
-</c23></a><br/><ln>&nbsp;334</ln><a id="334">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#330_60_refs"><c6>detail</c6></a><c6>:&nbsp;</c6><a href="../../../libstd/option.rs.html#54"><c3>Option</c3></a><c3>&lt;~</c3><a href="../../../libstd/option.rs.html#54"><c3>str</c3></a><c3>&gt;</c3><a href="#330_60_refs"><c23>
-</c23></a><br/><ln>&nbsp;335</ln><a id="335">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;336</ln><a id="336">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;337</ln><a id="337">&nbsp;</a><c33>#</c33><c4>[</c4><c33>deriving</c33><c25>(</c25><a href="../../../libstd/rt/io/mod.rs.html#339"><c33>Eq</c33></a><c25>)</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;338</ln><a id="338">&nbsp;</a><c21>pub</c21><c11>&nbsp;</c11><c29>enum&nbsp;</c29><a href="#337_16_refs"><c29>IoErrorKind</c29></a><c29>&nbsp;</c29><c4>{</c4><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;339</ln><a id="339">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#339_4_refs"><c0>PreviousIoError</c0></a><c4>,</c4><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;340</ln><a id="340">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#340_4_refs"><c0>OtherIoError</c0></a><c4>,</c4><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;341</ln><a id="341">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#341_4_refs"><c0>EndOfFile</c0></a><c4>,</c4><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;342</ln><a id="342">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#342_4_refs"><c0>FileNotFound</c0></a><c4>,</c4><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;343</ln><a id="343">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#343_4_refs"><c0>PermissionDenied</c0></a><c4>,</c4><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;344</ln><a id="344">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#344_4_refs"><c0>ConnectionFailed</c0></a><c4>,</c4><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;345</ln><a id="345">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#345_4_refs"><c0>Closed</c0></a><c4>,</c4><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;346</ln><a id="346">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#346_4_refs"><c0>ConnectionRefused</c0></a><c4>,</c4><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;347</ln><a id="347">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#347_4_refs"><c0>ConnectionReset</c0></a><c4>,</c4><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;348</ln><a id="348">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#348_4_refs"><c0>BrokenPipe</c0></a><a href="#337_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;349</ln><a id="349">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;350</ln><a id="350">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;351</ln><a id="351">&nbsp;</a><c24>//&nbsp;XXX:&nbsp;Can't&nbsp;put&nbsp;doc&nbsp;comments&nbsp;on&nbsp;macros
-</c24><br/><ln>&nbsp;352</ln><a id="352">&nbsp;</a><c24>//&nbsp;Raised&nbsp;by&nbsp;`I/O`&nbsp;operations&nbsp;on&nbsp;error.
-</c24><br/><ln>&nbsp;353</ln><a id="353">&nbsp;</a><c0>condition!&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;354</ln><a id="354">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;FIXME&nbsp;(#6009):&nbsp;uncomment&nbsp;`pub`&nbsp;after&nbsp;expansion&nbsp;support&nbsp;lands.
-</c24><br/><ln>&nbsp;355</ln><a id="355">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>/*pub*/</c24><c0>&nbsp;io_error:&nbsp;</c0><a href="../../../libstd/rt/io/mod.rs.html#330"><c3>super</c3></a><c3>::</c3><a href="../../../libstd/rt/io/mod.rs.html#330"><c3>IoError</c3></a><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;356</ln><a id="356">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;357</ln><a id="357">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;358</ln><a id="358">&nbsp;</a><c24>//&nbsp;XXX:&nbsp;Can't&nbsp;put&nbsp;doc&nbsp;comments&nbsp;on&nbsp;macros
-</c24><br/><ln>&nbsp;359</ln><a id="359">&nbsp;</a><c24>//&nbsp;Raised&nbsp;by&nbsp;`read`&nbsp;on&nbsp;error
-</c24><br/><ln>&nbsp;360</ln><a id="360">&nbsp;</a><c0>condition!&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;361</ln><a id="361">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;FIXME&nbsp;(#6009):&nbsp;uncomment&nbsp;`pub`&nbsp;after&nbsp;expansion&nbsp;support&nbsp;lands.
-</c24><br/><ln>&nbsp;362</ln><a id="362">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>/*pub*/</c24><c0>&nbsp;read_error:&nbsp;</c0><a href="../../../libstd/rt/io/mod.rs.html#330"><c3>super</c3></a><c3>::</c3><a href="../../../libstd/rt/io/mod.rs.html#330"><c3>IoError</c3></a><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;363</ln><a id="363">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;364</ln><a id="364">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;365</ln><a id="365">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#364_1_refs"><c28>Reader</c28></a><c28>&nbsp;</c28><c4>{</c4><a href="#364_1_refs"><c28>
-</c28></a><br/><ln>&nbsp;366</ln><a id="366">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Read&nbsp;bytes,&nbsp;up&nbsp;to&nbsp;the&nbsp;length&nbsp;of&nbsp;`buf`&nbsp;and&nbsp;place&nbsp;them&nbsp;in&nbsp;`buf`.
-</c32><br/><ln>&nbsp;367</ln><a id="367">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Returns&nbsp;the&nbsp;number&nbsp;of&nbsp;bytes&nbsp;read.&nbsp;The&nbsp;number&nbsp;of&nbsp;bytes&nbsp;read&nbsp;my
-</c32><br/><ln>&nbsp;368</ln><a id="368">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;be&nbsp;less&nbsp;than&nbsp;the&nbsp;number&nbsp;requested,&nbsp;even&nbsp;0.&nbsp;Returns&nbsp;`None`&nbsp;on&nbsp;EOF.
-</c32><br/><ln>&nbsp;369</ln><a id="369">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;370</ln><a id="370">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;Failure
-</c32><br/><ln>&nbsp;371</ln><a id="371">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;372</ln><a id="372">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Raises&nbsp;the&nbsp;`read_error`&nbsp;condition&nbsp;on&nbsp;error.&nbsp;If&nbsp;the&nbsp;condition
-</c32><br/><ln>&nbsp;373</ln><a id="373">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;is&nbsp;handled&nbsp;then&nbsp;no&nbsp;guarantee&nbsp;is&nbsp;made&nbsp;about&nbsp;the&nbsp;number&nbsp;of&nbsp;bytes
-</c32><br/><ln>&nbsp;374</ln><a id="374">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;read&nbsp;and&nbsp;the&nbsp;contents&nbsp;of&nbsp;`buf`.&nbsp;If&nbsp;the&nbsp;condition&nbsp;is&nbsp;handled
-</c32><br/><ln>&nbsp;375</ln><a id="375">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;returns&nbsp;`None`&nbsp;(XXX&nbsp;see&nbsp;below).
-</c32><br/><ln>&nbsp;376</ln><a id="376">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;377</ln><a id="377">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;XXX
-</c32><br/><ln>&nbsp;378</ln><a id="378">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;379</ln><a id="379">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;*&nbsp;Should&nbsp;raise_default&nbsp;error&nbsp;on&nbsp;eof?
-</c32><br/><ln>&nbsp;380</ln><a id="380">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;*&nbsp;If&nbsp;the&nbsp;condition&nbsp;is&nbsp;handled&nbsp;it&nbsp;should&nbsp;still&nbsp;return&nbsp;the&nbsp;bytes&nbsp;read,
-</c32><br/><ln>&nbsp;381</ln><a id="381">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;in&nbsp;which&nbsp;case&nbsp;there's&nbsp;no&nbsp;need&nbsp;to&nbsp;return&nbsp;Option&nbsp;-&nbsp;but&nbsp;then&nbsp;you&nbsp;*have*
-</c32><br/><ln>&nbsp;382</ln><a id="382">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;to&nbsp;install&nbsp;a&nbsp;handler&nbsp;to&nbsp;detect&nbsp;eof.
-</c32><br/><ln>&nbsp;383</ln><a id="383">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;384</ln><a id="384">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;This&nbsp;doesn't&nbsp;take&nbsp;a&nbsp;`len`&nbsp;argument&nbsp;like&nbsp;the&nbsp;old&nbsp;`read`.
-</c32><br/><ln>&nbsp;385</ln><a id="385">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Will&nbsp;people&nbsp;often&nbsp;need&nbsp;to&nbsp;slice&nbsp;their&nbsp;vectors&nbsp;to&nbsp;call&nbsp;this
-</c32><br/><ln>&nbsp;386</ln><a id="386">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;and&nbsp;will&nbsp;that&nbsp;be&nbsp;annoying?
-</c32><br/><ln>&nbsp;387</ln><a id="387">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Is&nbsp;it&nbsp;actually&nbsp;possible&nbsp;for&nbsp;0&nbsp;bytes&nbsp;to&nbsp;be&nbsp;read&nbsp;successfully?
-</c32><br/><ln>&nbsp;388</ln><a id="388">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#388_4_refs"><c26>read</c26></a><c25>(</c25><c18>&amp;</c18><a href="#388_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#388_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#388_4_refs"><c18>buf</c18></a><c18>:&nbsp;</c18><c3>&amp;</c3><a href="#364_1_refs"><c3>mut</c3></a><c3>&nbsp;</c3><c4>[</c4><a href="#364_1_refs"><c3>u8</c3></a><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/option.rs.html#54"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../libstd/option.rs.html#54"><c3>uint</c3></a><c3>&gt;</c3><c4>;</c4><a href="#364_1_refs"><c28>
-</c28></a><br/><ln>&nbsp;389</ln><a id="389">&nbsp;</a><a href="#364_1_refs"><c28>
-</c28></a><br/><ln>&nbsp;390</ln><a id="390">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Return&nbsp;whether&nbsp;the&nbsp;Reader&nbsp;has&nbsp;reached&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;stream.
-</c32><br/><ln>&nbsp;391</ln><a id="391">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;392</ln><a id="392">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;Example
-</c32><br/><ln>&nbsp;393</ln><a id="393">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;394</ln><a id="394">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;reader&nbsp;=&nbsp;FileStream::new()
-</c32><br/><ln>&nbsp;395</ln><a id="395">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;!reader.eof()&nbsp;{
-</c32><br/><ln>&nbsp;396</ln><a id="396">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println(reader.read_line());
-</c32><br/><ln>&nbsp;397</ln><a id="397">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-</c32><br/><ln>&nbsp;398</ln><a id="398">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;399</ln><a id="399">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;Failue
-</c32><br/><ln>&nbsp;400</ln><a id="400">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;401</ln><a id="401">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Returns&nbsp;`true`&nbsp;on&nbsp;failure.
-</c32><br/><ln>&nbsp;402</ln><a id="402">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#402_4_refs"><c26>eof</c26></a><c25>(</c25><c18>&amp;</c18><a href="#402_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#402_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#402_4_refs"><c3>bool</c3></a><c4>;</c4><a href="#364_1_refs"><c28>
-</c28></a><br/><ln>&nbsp;403</ln><a id="403">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;404</ln><a id="404">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;405</ln><a id="405">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#404_1_refs"><c28>Writer</c28></a><c28>&nbsp;</c28><c4>{</c4><a href="#404_1_refs"><c28>
-</c28></a><br/><ln>&nbsp;406</ln><a id="406">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Write&nbsp;the&nbsp;given&nbsp;buffer
-</c32><br/><ln>&nbsp;407</ln><a id="407">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;408</ln><a id="408">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;Failure
-</c32><br/><ln>&nbsp;409</ln><a id="409">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;410</ln><a id="410">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Raises&nbsp;the&nbsp;`io_error`&nbsp;condition&nbsp;on&nbsp;error
-</c32><br/><ln>&nbsp;411</ln><a id="411">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#411_4_refs"><c26>write</c26></a><c25>(</c25><c18>&amp;</c18><a href="#411_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#411_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#411_4_refs"><c18>buf</c18></a><c18>:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><a href="#404_1_refs"><c3>u8</c3></a><c4>]</c4><c25>)</c25><c4>;</c4><a href="#404_1_refs"><c28>
-</c28></a><br/><ln>&nbsp;412</ln><a id="412">&nbsp;</a><a href="#404_1_refs"><c28>
-</c28></a><br/><ln>&nbsp;413</ln><a id="413">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Flush&nbsp;output
-</c32><br/><ln>&nbsp;414</ln><a id="414">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#414_4_refs"><c26>flush</c26></a><c25>(</c25><c18>&amp;</c18><a href="#414_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#414_4_refs"><c18>self</c18></a><c25>)</c25><c4>;</c4><a href="#404_1_refs"><c28>
-</c28></a><br/><ln>&nbsp;415</ln><a id="415">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;416</ln><a id="416">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;417</ln><a id="417">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;Stream:&nbsp;</c28><a href="../../../libstd/rt/io/mod.rs.html#364"><c28>Reader</c28></a><c28>&nbsp;+&nbsp;</c28><a href="../../../libstd/rt/io/mod.rs.html#404"><c28>Writer</c28></a><c28>&nbsp;</c28><c4>{</c4><c28>&nbsp;</c28><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;418</ln><a id="418">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;419</ln><a id="419">&nbsp;</a><c21>pub</c21><c11>&nbsp;</c11><c29>enum&nbsp;</c29><a href="#418_1_refs"><c29>SeekStyle</c29></a><c29>&nbsp;</c29><c4>{</c4><a href="#418_1_refs"><c11>
-</c11></a><br/><ln>&nbsp;420</ln><a id="420">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c32>///&nbsp;Seek&nbsp;from&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;stream
-</c32><br/><ln>&nbsp;421</ln><a id="421">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#418_1_refs"><c0>SeekSet</c0></a><c4>,</c4><a href="#418_1_refs"><c11>
-</c11></a><br/><ln>&nbsp;422</ln><a id="422">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c32>///&nbsp;Seek&nbsp;from&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;stream
-</c32><br/><ln>&nbsp;423</ln><a id="423">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#418_1_refs"><c0>SeekEnd</c0></a><c4>,</c4><a href="#418_1_refs"><c11>
-</c11></a><br/><ln>&nbsp;424</ln><a id="424">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c32>///&nbsp;Seek&nbsp;from&nbsp;the&nbsp;current&nbsp;position
-</c32><br/><ln>&nbsp;425</ln><a id="425">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#418_1_refs"><c0>SeekCur</c0></a><c4>,</c4><a href="#418_1_refs"><c11>
-</c11></a><br/><ln>&nbsp;426</ln><a id="426">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;427</ln><a id="427">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;428</ln><a id="428">&nbsp;</a><c32>///&nbsp;#&nbsp;XXX
-</c32><br/><ln>&nbsp;429</ln><a id="429">&nbsp;</a><c32>///&nbsp;*&nbsp;Are&nbsp;`u64`&nbsp;and&nbsp;`i64`&nbsp;the&nbsp;right&nbsp;choices?
-</c32><br/><ln>&nbsp;430</ln><a id="430">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#429_45_refs"><c28>Seek</c28></a><c28>&nbsp;</c28><c4>{</c4><a href="#429_45_refs"><c28>
-</c28></a><br/><ln>&nbsp;431</ln><a id="431">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#429_45_refs"><c26>tell</c26></a><c25>(</c25><c18>&amp;</c18><a href="#429_45_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#429_45_refs"><c3>u64</c3></a><c4>;</c4><a href="#429_45_refs"><c28>
-</c28></a><br/><ln>&nbsp;432</ln><a id="432">&nbsp;</a><a href="#429_45_refs"><c28>
-</c28></a><br/><ln>&nbsp;433</ln><a id="433">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Seek&nbsp;to&nbsp;an&nbsp;offset&nbsp;in&nbsp;a&nbsp;stream
+</c32><br/><ln>&nbsp;330</ln><a id="330">&nbsp;</a><c32>///&nbsp;#&nbsp;XXX
+</c32><br/><ln>&nbsp;331</ln><a id="331">&nbsp;</a><c32>///
+</c32><br/><ln>&nbsp;332</ln><a id="332">&nbsp;</a><c32>///&nbsp;Is&nbsp;something&nbsp;like&nbsp;this&nbsp;sufficient?&nbsp;It's&nbsp;kind&nbsp;of&nbsp;archaic
+</c32><br/><ln>&nbsp;333</ln><a id="333">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#332_60_refs"><c27>IoError</c27></a><c27>&nbsp;</c27><c4>{</c4><a href="#332_60_refs"><c23>
+</c23></a><br/><ln>&nbsp;334</ln><a id="334">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#334_4_refs"><c6>kind</c6></a><c6>:&nbsp;</c6><a href="../../../libstd/rt/io/mod.rs.html#353"><c3>IoErrorKind</c3></a><c4>,</c4><a href="#332_60_refs"><c23>
+</c23></a><br/><ln>&nbsp;335</ln><a id="335">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#335_4_refs"><c6>desc</c6></a><c6>:&nbsp;</c6><c3>&amp;'</c3><a href="#335_4_refs"><c3>static</c3></a><c3>&nbsp;</c3><a href="#335_4_refs"><c3>str</c3></a><c4>,</c4><a href="#332_60_refs"><c23>
+</c23></a><br/><ln>&nbsp;336</ln><a id="336">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#336_4_refs"><c6>detail</c6></a><c6>:&nbsp;</c6><a href="../../../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;~</c3><a href="#336_4_refs"><c3>str</c3></a><c3>&gt;</c3><a href="#332_60_refs"><c23>
+</c23></a><br/><ln>&nbsp;337</ln><a id="337">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;338</ln><a id="338">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;339</ln><a id="339">&nbsp;</a><c24>//&nbsp;FIXME:&nbsp;#8242&nbsp;implementing&nbsp;manually&nbsp;because&nbsp;deriving&nbsp;doesn't&nbsp;work&nbsp;for&nbsp;some&nbsp;reason
+</c24><br/><ln>&nbsp;340</ln><a id="340">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/to_str.rs.html#26"><c30>ToStr</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#332"><c30>IoError</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;341</ln><a id="341">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;to_str</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>~str</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;342</ln><a id="342">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#342_16_refs"><c20>s</c20></a><c16>&nbsp;=&nbsp;~</c16><c12>"IoError&nbsp;</c12><c4>{</c4><c12>&nbsp;kind:&nbsp;"</c12><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;343</ln><a id="343">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#342"><c8>s</c8></a><c10>.</c10><a href="../../../libstd/str.rs.html#2269"><c10>push_str</c10></a><c25>(</c25><a href="../../../libstd/rt/io/mod.rs.html#369"><c0>self</c0></a><c0>.</c0><a href="../../../libstd/rt/io/mod.rs.html#334"><c6>kind</c6></a><c10>.</c10><a href="../../../libstd/rt/io/mod.rs.html#369"><c10>to_str</c10></a><c25>())</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;344</ln><a id="344">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#342"><c8>s</c8></a><c10>.</c10><a href="../../../libstd/str.rs.html#2269"><c10>push_str</c10></a><c25>(</c25><a href="../../../libstd/str.rs.html#2269"><c12>"</c12></a><c4>,</c4><c12>&nbsp;</c12><a href="../../../libstd/str.rs.html#2269"><c12>desc</c12></a><c12>:&nbsp;</c12><a href="../../../libstd/str.rs.html#2269"><c12>"</c12></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;345</ln><a id="345">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#342"><c8>s</c8></a><c13>.</c13><a href="../../../libstd/str.rs.html#2269"><c13>push_str</c13></a><c25>(</c25><a href="../../../libstd/str.rs.html#2269"><c0>self</c0></a><c0>.</c0><a href="../../../libstd/rt/io/mod.rs.html#335"><c6>desc</c6></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;346</ln><a id="346">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#342"><c8>s</c8></a><c13>.</c13><a href="../../../libstd/str.rs.html#2269"><c13>push_str</c13></a><c25>(</c25><a href="../../../libstd/str.rs.html#2269"><c12>"</c12></a><c4>,</c4><c12>&nbsp;</c12><a href="../../../libstd/str.rs.html#2269"><c12>detail</c12></a><c12>:&nbsp;</c12><a href="../../../libstd/str.rs.html#2269"><c12>"</c12></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;347</ln><a id="347">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#342"><c8>s</c8></a><c13>.</c13><a href="../../../libstd/str.rs.html#2269"><c13>push_str</c13></a><c25>(</c25><a href="../../../libstd/rt/io/mod.rs.html#336"><c0>self</c0></a><c0>.</c0><a href="../../../libstd/rt/io/mod.rs.html#336"><c6>detail</c6></a><c10>.</c10><a href="../../../libstd/option.rs.html#103"><c10>to_str</c10></a><c25>())</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;348</ln><a id="348">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#342"><c8>s</c8></a><c13>.</c13><a href="../../../libstd/str.rs.html#2269"><c13>push_str</c13></a><c25>(</c25><a href="../../../libstd/str.rs.html#2269"><c12>"</c12></a><c12>&nbsp;</c12><c4>}</c4><a href="../../../libstd/str.rs.html#2269"><c12>"</c12></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;349</ln><a id="349">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#342"><c8>s</c8></a><c22>
+</c22><br/><ln>&nbsp;350</ln><a id="350">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;351</ln><a id="351">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;352</ln><a id="352">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;353</ln><a id="353">&nbsp;</a><c33>#</c33><c4>[</c4><c33>deriving</c33><c25>(</c25><a href="../../../libstd/rt/io/mod.rs.html#362"><c33>Eq</c33></a><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;354</ln><a id="354">&nbsp;</a><c21>pub</c21><c11>&nbsp;</c11><c29>enum&nbsp;</c29><a href="#353_16_refs"><c29>IoErrorKind</c29></a><c29>&nbsp;</c29><c4>{</c4><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;355</ln><a id="355">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#355_4_refs"><c0>PreviousIoError</c0></a><c4>,</c4><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;356</ln><a id="356">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#356_4_refs"><c0>OtherIoError</c0></a><c4>,</c4><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;357</ln><a id="357">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#357_4_refs"><c0>EndOfFile</c0></a><c4>,</c4><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;358</ln><a id="358">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#358_4_refs"><c0>FileNotFound</c0></a><c4>,</c4><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;359</ln><a id="359">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#359_4_refs"><c0>PermissionDenied</c0></a><c4>,</c4><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;360</ln><a id="360">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#360_4_refs"><c0>ConnectionFailed</c0></a><c4>,</c4><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;361</ln><a id="361">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#361_4_refs"><c0>Closed</c0></a><c4>,</c4><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;362</ln><a id="362">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#362_4_refs"><c0>ConnectionRefused</c0></a><c4>,</c4><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;363</ln><a id="363">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#363_4_refs"><c0>ConnectionReset</c0></a><c4>,</c4><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;364</ln><a id="364">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#364_4_refs"><c0>BrokenPipe</c0></a><a href="#353_16_refs"><c11>
+</c11></a><br/><ln>&nbsp;365</ln><a id="365">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;366</ln><a id="366">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;367</ln><a id="367">&nbsp;</a><c24>//&nbsp;FIXME:&nbsp;#8242&nbsp;implementing&nbsp;manually&nbsp;because&nbsp;deriving&nbsp;doesn't&nbsp;work&nbsp;for&nbsp;some&nbsp;reason
+</c24><br/><ln>&nbsp;368</ln><a id="368">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/to_str.rs.html#26"><c30>ToStr</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#353"><c30>IoErrorKind</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;369</ln><a id="369">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#369_4_refs"><c26>to_str</c26></a><c25>(</c25><c18>&amp;</c18><a href="#369_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>~</c3><a href="#369_4_refs"><c3>str</c3></a><c18>&nbsp;</c18><c4>{</c4><a href="#369_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;370</ln><a id="370">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><c2>*</c2><a href="#369_4_refs"><c0>self</c0></a><c0>&nbsp;</c0><c4>{</c4><a href="#369_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;371</ln><a id="371">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#355"><c20>PreviousIoError</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c16>~</c16><a href="#369_4_refs"><c12>"PreviousIoError"</c12></a><c4>,</c4><a href="#369_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;372</ln><a id="372">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#356"><c20>OtherIoError</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c16>~</c16><a href="#369_4_refs"><c12>"OtherIoError"</c12></a><c4>,</c4><a href="#369_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;373</ln><a id="373">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#357"><c20>EndOfFile</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c16>~</c16><a href="#369_4_refs"><c12>"EndOfFile"</c12></a><c4>,</c4><a href="#369_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;374</ln><a id="374">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#358"><c20>FileNotFound</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c22>~</c22><a href="#369_4_refs"><c12>"FileNotFound"</c12></a><c4>,</c4><a href="#369_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;375</ln><a id="375">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#359"><c20>PermissionDenied</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c22>~</c22><a href="#369_4_refs"><c12>"PermissionDenied"</c12></a><c4>,</c4><a href="#369_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;376</ln><a id="376">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#360"><c20>ConnectionFailed</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c16>~</c16><a href="#369_4_refs"><c12>"ConnectionFailed"</c12></a><c4>,</c4><a href="#369_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;377</ln><a id="377">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#361"><c20>Closed</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c22>~</c22><a href="#369_4_refs"><c12>"Closed"</c12></a><c4>,</c4><a href="#369_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;378</ln><a id="378">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#362"><c20>ConnectionRefused</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c16>~</c16><a href="#369_4_refs"><c12>"ConnectionRefused"</c12></a><c4>,</c4><a href="#369_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;379</ln><a id="379">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#363"><c20>ConnectionReset</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c16>~</c16><a href="#369_4_refs"><c12>"ConnectionReset"</c12></a><c4>,</c4><a href="#369_4_refs"><c7>
+</c7></a><br/><ln>&nbsp;380</ln><a id="380">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#364"><c20>BrokenPipe</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c16>~</c16><a href="#369_4_refs"><c12>"BrokenPipe"</c12><c7>
+</c7></a><br/><ln>&nbsp;381</ln><a id="381">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><a href="#369_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;382</ln><a id="382">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;383</ln><a id="383">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;384</ln><a id="384">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;385</ln><a id="385">&nbsp;</a><c24>//&nbsp;XXX:&nbsp;Can't&nbsp;put&nbsp;doc&nbsp;comments&nbsp;on&nbsp;macros
+</c24><br/><ln>&nbsp;386</ln><a id="386">&nbsp;</a><c24>//&nbsp;Raised&nbsp;by&nbsp;`I/O`&nbsp;operations&nbsp;on&nbsp;error.
+</c24><br/><ln>&nbsp;387</ln><a id="387">&nbsp;</a><c0>condition!&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;388</ln><a id="388">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;FIXME&nbsp;(#6009):&nbsp;uncomment&nbsp;`pub`&nbsp;after&nbsp;expansion&nbsp;support&nbsp;lands.
+</c24><br/><ln>&nbsp;389</ln><a id="389">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>/*pub*/</c24><c0>&nbsp;io_error:&nbsp;</c0><a href="../../../libstd/rt/io/mod.rs.html#332"><c3>super</c3></a><c3>::</c3><a href="../../../libstd/rt/io/mod.rs.html#332"><c3>IoError</c3></a><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;390</ln><a id="390">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;391</ln><a id="391">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;392</ln><a id="392">&nbsp;</a><c24>//&nbsp;XXX:&nbsp;Can't&nbsp;put&nbsp;doc&nbsp;comments&nbsp;on&nbsp;macros
+</c24><br/><ln>&nbsp;393</ln><a id="393">&nbsp;</a><c24>//&nbsp;Raised&nbsp;by&nbsp;`read`&nbsp;on&nbsp;error
+</c24><br/><ln>&nbsp;394</ln><a id="394">&nbsp;</a><c0>condition!&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;395</ln><a id="395">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;FIXME&nbsp;(#6009):&nbsp;uncomment&nbsp;`pub`&nbsp;after&nbsp;expansion&nbsp;support&nbsp;lands.
+</c24><br/><ln>&nbsp;396</ln><a id="396">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>/*pub*/</c24><c0>&nbsp;read_error:&nbsp;</c0><a href="../../../libstd/rt/io/mod.rs.html#332"><c3>super</c3></a><c3>::</c3><a href="../../../libstd/rt/io/mod.rs.html#332"><c3>IoError</c3></a><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;397</ln><a id="397">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;398</ln><a id="398">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;399</ln><a id="399">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#398_1_refs"><c28>Reader</c28></a><c28>&nbsp;</c28><c4>{</c4><a href="#398_1_refs"><c28>
+</c28></a><br/><ln>&nbsp;400</ln><a id="400">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Read&nbsp;bytes,&nbsp;up&nbsp;to&nbsp;the&nbsp;length&nbsp;of&nbsp;`buf`&nbsp;and&nbsp;place&nbsp;them&nbsp;in&nbsp;`buf`.
+</c32><br/><ln>&nbsp;401</ln><a id="401">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Returns&nbsp;the&nbsp;number&nbsp;of&nbsp;bytes&nbsp;read.&nbsp;The&nbsp;number&nbsp;of&nbsp;bytes&nbsp;read&nbsp;my
+</c32><br/><ln>&nbsp;402</ln><a id="402">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;be&nbsp;less&nbsp;than&nbsp;the&nbsp;number&nbsp;requested,&nbsp;even&nbsp;0.&nbsp;Returns&nbsp;`None`&nbsp;on&nbsp;EOF.
+</c32><br/><ln>&nbsp;403</ln><a id="403">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;404</ln><a id="404">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;Failure
+</c32><br/><ln>&nbsp;405</ln><a id="405">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;406</ln><a id="406">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Raises&nbsp;the&nbsp;`read_error`&nbsp;condition&nbsp;on&nbsp;error.&nbsp;If&nbsp;the&nbsp;condition
+</c32><br/><ln>&nbsp;407</ln><a id="407">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;is&nbsp;handled&nbsp;then&nbsp;no&nbsp;guarantee&nbsp;is&nbsp;made&nbsp;about&nbsp;the&nbsp;number&nbsp;of&nbsp;bytes
+</c32><br/><ln>&nbsp;408</ln><a id="408">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;read&nbsp;and&nbsp;the&nbsp;contents&nbsp;of&nbsp;`buf`.&nbsp;If&nbsp;the&nbsp;condition&nbsp;is&nbsp;handled
+</c32><br/><ln>&nbsp;409</ln><a id="409">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;returns&nbsp;`None`&nbsp;(XXX&nbsp;see&nbsp;below).
+</c32><br/><ln>&nbsp;410</ln><a id="410">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;411</ln><a id="411">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;XXX
+</c32><br/><ln>&nbsp;412</ln><a id="412">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;413</ln><a id="413">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;*&nbsp;Should&nbsp;raise_default&nbsp;error&nbsp;on&nbsp;eof?
+</c32><br/><ln>&nbsp;414</ln><a id="414">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;*&nbsp;If&nbsp;the&nbsp;condition&nbsp;is&nbsp;handled&nbsp;it&nbsp;should&nbsp;still&nbsp;return&nbsp;the&nbsp;bytes&nbsp;read,
+</c32><br/><ln>&nbsp;415</ln><a id="415">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;in&nbsp;which&nbsp;case&nbsp;there's&nbsp;no&nbsp;need&nbsp;to&nbsp;return&nbsp;Option&nbsp;-&nbsp;but&nbsp;then&nbsp;you&nbsp;*have*
+</c32><br/><ln>&nbsp;416</ln><a id="416">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;to&nbsp;install&nbsp;a&nbsp;handler&nbsp;to&nbsp;detect&nbsp;eof.
+</c32><br/><ln>&nbsp;417</ln><a id="417">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;418</ln><a id="418">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;This&nbsp;doesn't&nbsp;take&nbsp;a&nbsp;`len`&nbsp;argument&nbsp;like&nbsp;the&nbsp;old&nbsp;`read`.
+</c32><br/><ln>&nbsp;419</ln><a id="419">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Will&nbsp;people&nbsp;often&nbsp;need&nbsp;to&nbsp;slice&nbsp;their&nbsp;vectors&nbsp;to&nbsp;call&nbsp;this
+</c32><br/><ln>&nbsp;420</ln><a id="420">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;and&nbsp;will&nbsp;that&nbsp;be&nbsp;annoying?
+</c32><br/><ln>&nbsp;421</ln><a id="421">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Is&nbsp;it&nbsp;actually&nbsp;possible&nbsp;for&nbsp;0&nbsp;bytes&nbsp;to&nbsp;be&nbsp;read&nbsp;successfully?
+</c32><br/><ln>&nbsp;422</ln><a id="422">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#422_4_refs"><c26>read</c26></a><c25>(</c25><c18>&amp;</c18><a href="#422_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#422_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#422_4_refs"><c18>buf</c18></a><c18>:&nbsp;</c18><c3>&amp;</c3><a href="#422_4_refs"><c3>mut</c3></a><c3>&nbsp;</c3><c4>[</c4><a href="#398_1_refs"><c3>u8</c3></a><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../libstd/option.rs.html#55"><c3>uint</c3></a><c3>&gt;</c3><c4>;</c4><a href="#398_1_refs"><c28>
+</c28></a><br/><ln>&nbsp;423</ln><a id="423">&nbsp;</a><a href="#398_1_refs"><c28>
+</c28></a><br/><ln>&nbsp;424</ln><a id="424">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Return&nbsp;whether&nbsp;the&nbsp;Reader&nbsp;has&nbsp;reached&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;stream.
+</c32><br/><ln>&nbsp;425</ln><a id="425">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;426</ln><a id="426">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;Example
+</c32><br/><ln>&nbsp;427</ln><a id="427">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;428</ln><a id="428">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;reader&nbsp;=&nbsp;FileStream::new()
+</c32><br/><ln>&nbsp;429</ln><a id="429">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;!reader.eof()&nbsp;{
+</c32><br/><ln>&nbsp;430</ln><a id="430">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println(reader.read_line());
+</c32><br/><ln>&nbsp;431</ln><a id="431">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+</c32><br/><ln>&nbsp;432</ln><a id="432">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;433</ln><a id="433">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;Failue
 </c32><br/><ln>&nbsp;434</ln><a id="434">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;435</ln><a id="435">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;A&nbsp;successful&nbsp;seek&nbsp;clears&nbsp;the&nbsp;EOF&nbsp;indicator.
-</c32><br/><ln>&nbsp;436</ln><a id="436">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;437</ln><a id="437">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;XXX
-</c32><br/><ln>&nbsp;438</ln><a id="438">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;439</ln><a id="439">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;*&nbsp;What&nbsp;is&nbsp;the&nbsp;behavior&nbsp;when&nbsp;seeking&nbsp;past&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;stream?
-</c32><br/><ln>&nbsp;440</ln><a id="440">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#429_45_refs"><c26>seek</c26></a><c25>(</c25><c18>&amp;</c18><a href="#429_45_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#429_45_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#429_45_refs"><c18>pos</c18></a><c18>:&nbsp;</c18><a href="#429_45_refs"><c3>i64</c3></a><c4>,</c4><c18>&nbsp;</c18><a href="#429_45_refs"><c18>style</c18></a><c18>:&nbsp;</c18><a href="../../../libstd/rt/io/mod.rs.html#418"><c3>SeekStyle</c3></a><c25>)</c25><c4>;</c4><a href="#429_45_refs"><c28>
-</c28></a><br/><ln>&nbsp;441</ln><a id="441">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;442</ln><a id="442">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;443</ln><a id="443">&nbsp;</a><c32>///&nbsp;A&nbsp;listener&nbsp;is&nbsp;a&nbsp;value&nbsp;that&nbsp;listens&nbsp;for&nbsp;connections
-</c32><br/><ln>&nbsp;444</ln><a id="444">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#443_55_refs"><c28>Listener</c28></a><c5>&lt;</c5><a href="#443_55_refs"><c5>S</c5></a><c5>&gt;</c5><c28>&nbsp;</c28><c4>{</c4><a href="#443_55_refs"><c28>
-</c28></a><br/><ln>&nbsp;445</ln><a id="445">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Wait&nbsp;for&nbsp;and&nbsp;accept&nbsp;an&nbsp;incoming&nbsp;connection
-</c32><br/><ln>&nbsp;446</ln><a id="446">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;447</ln><a id="447">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Returns&nbsp;`None`&nbsp;on&nbsp;timeout.
-</c32><br/><ln>&nbsp;448</ln><a id="448">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;449</ln><a id="449">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;Failure
-</c32><br/><ln>&nbsp;450</ln><a id="450">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;451</ln><a id="451">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Raises&nbsp;`io_error`&nbsp;condition.&nbsp;If&nbsp;the&nbsp;condition&nbsp;is&nbsp;handled,
-</c32><br/><ln>&nbsp;452</ln><a id="452">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;then&nbsp;`accept`&nbsp;returns&nbsp;`None`.
-</c32><br/><ln>&nbsp;453</ln><a id="453">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#453_4_refs"><c26>accept</c26></a><c25>(</c25><c18>&amp;</c18><a href="#453_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#453_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/option.rs.html#54"><c3>Option</c3></a><c3>&lt;</c3><a href="#443_55_refs"><c3>S</c3></a><c3>&gt;</c3><c4>;</c4><a href="#443_55_refs"><c28>
-</c28></a><br/><ln>&nbsp;454</ln><a id="454">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;455</ln><a id="455">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;456</ln><a id="456">&nbsp;</a><c32>///&nbsp;Common&nbsp;trait&nbsp;for&nbsp;decorator&nbsp;types.
-</c32><br/><ln>&nbsp;457</ln><a id="457">&nbsp;</a><c32>///
-</c32><br/><ln>&nbsp;458</ln><a id="458">&nbsp;</a><c32>///&nbsp;Provides&nbsp;accessors&nbsp;to&nbsp;get&nbsp;the&nbsp;inner,&nbsp;'decorated'&nbsp;values.&nbsp;The&nbsp;I/O&nbsp;library
-</c32><br/><ln>&nbsp;459</ln><a id="459">&nbsp;</a><c32>///&nbsp;uses&nbsp;decorators&nbsp;to&nbsp;add&nbsp;functionality&nbsp;like&nbsp;compression&nbsp;and&nbsp;encryption&nbsp;to&nbsp;I/O
-</c32><br/><ln>&nbsp;460</ln><a id="460">&nbsp;</a><c32>///&nbsp;streams.
-</c32><br/><ln>&nbsp;461</ln><a id="461">&nbsp;</a><c32>///
-</c32><br/><ln>&nbsp;462</ln><a id="462">&nbsp;</a><c32>///&nbsp;#&nbsp;XXX
-</c32><br/><ln>&nbsp;463</ln><a id="463">&nbsp;</a><c32>///
-</c32><br/><ln>&nbsp;464</ln><a id="464">&nbsp;</a><c32>///&nbsp;Is&nbsp;this&nbsp;worth&nbsp;having&nbsp;a&nbsp;trait&nbsp;for?&nbsp;May&nbsp;be&nbsp;overkill
-</c32><br/><ln>&nbsp;465</ln><a id="465">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#464_54_refs"><c28>Decorator</c28></a><c5>&lt;</c5><a href="#464_54_refs"><c5>T</c5></a><c5>&gt;</c5><c28>&nbsp;</c28><c4>{</c4><a href="#464_54_refs"><c28>
-</c28></a><br/><ln>&nbsp;466</ln><a id="466">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Destroy&nbsp;the&nbsp;decorator&nbsp;and&nbsp;extract&nbsp;the&nbsp;decorated&nbsp;value
-</c32><br/><ln>&nbsp;467</ln><a id="467">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;468</ln><a id="468">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;XXX
-</c32><br/><ln>&nbsp;469</ln><a id="469">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
-</c32><br/><ln>&nbsp;470</ln><a id="470">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Because&nbsp;this&nbsp;takes&nbsp;`self'&nbsp;one&nbsp;could&nbsp;never&nbsp;'undecorate'&nbsp;a&nbsp;Reader/Writer
-</c32><br/><ln>&nbsp;471</ln><a id="471">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;that&nbsp;has&nbsp;been&nbsp;boxed.&nbsp;Is&nbsp;that&nbsp;ok?&nbsp;This&nbsp;feature&nbsp;is&nbsp;mostly&nbsp;useful&nbsp;for
-</c32><br/><ln>&nbsp;472</ln><a id="472">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;extracting&nbsp;the&nbsp;buffer&nbsp;from&nbsp;MemWriter
-</c32><br/><ln>&nbsp;473</ln><a id="473">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#464_54_refs"><c26>inner</c26></a><c25>(</c25><a href="#464_54_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#464_54_refs"><c3>T</c3></a><c4>;</c4><a href="#464_54_refs"><c28>
-</c28></a><br/><ln>&nbsp;474</ln><a id="474">&nbsp;</a><a href="#464_54_refs"><c28>
-</c28></a><br/><ln>&nbsp;475</ln><a id="475">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Take&nbsp;an&nbsp;immutable&nbsp;reference&nbsp;to&nbsp;the&nbsp;decorated&nbsp;value
-</c32><br/><ln>&nbsp;476</ln><a id="476">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#464_54_refs"><c26>inner_ref</c26></a><c5>&lt;'</c5><a href="#464_54_refs"><c5>a</c5></a><c5>&gt;</c5><c25>(</c25><c18>&amp;'</c18><a href="#464_54_refs"><c18>a</c18></a><c18>&nbsp;</c18><a href="#464_54_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>&amp;'</c3><a href="#464_54_refs"><c3>a</c3></a><c3>&nbsp;</c3><a href="#464_54_refs"><c3>T</c3></a><c4>;</c4><a href="#464_54_refs"><c28>
-</c28></a><br/><ln>&nbsp;477</ln><a id="477">&nbsp;</a><a href="#464_54_refs"><c28>
-</c28></a><br/><ln>&nbsp;478</ln><a id="478">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Take&nbsp;a&nbsp;mutable&nbsp;reference&nbsp;to&nbsp;the&nbsp;decorated&nbsp;value
-</c32><br/><ln>&nbsp;479</ln><a id="479">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#464_54_refs"><c26>inner_mut_ref</c26></a><c5>&lt;'</c5><a href="#464_54_refs"><c5>a</c5></a><c5>&gt;</c5><c25>(</c25><c18>&amp;'</c18><a href="#464_54_refs"><c18>a</c18></a><c18>&nbsp;</c18><a href="#464_54_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#464_54_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>&amp;'</c3><a href="#464_54_refs"><c3>a</c3></a><c3>&nbsp;</c3><a href="#464_54_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="#464_54_refs"><c3>T</c3></a><c4>;</c4><a href="#464_54_refs"><c28>
-</c28></a><br/><ln>&nbsp;480</ln><a id="480">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;481</ln><a id="481">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;482</ln><a id="482">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#481_1_refs"><c26>standard_error</c26></a><c25>(</c25><a href="#482_22_refs"><c20>kind</c20></a><c1>:&nbsp;</c1><a href="../../../libstd/rt/io/mod.rs.html#337"><c3>IoErrorKind</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../../libstd/rt/io/mod.rs.html#330"><c3>IoError</c3></a><c1>&nbsp;</c1><c4>{</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;483</ln><a id="483">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#482"><c8>kind</c8></a><c7>&nbsp;</c7><c4>{</c4><a href="#481_1_refs"><c7>
-</c7></a><br/><ln>&nbsp;484</ln><a id="484">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#339"><c20>PreviousIoError</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;485</ln><a id="485">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#330"><c23>IoError</c23></a><c22>&nbsp;</c22><c4>{</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;486</ln><a id="486">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#481_1_refs"><c22>kind</c22></a><c22>:&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#339"><c8>PreviousIoError</c8></a><c4>,</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;487</ln><a id="487">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#481_1_refs"><c22>desc</c22></a><c22>:&nbsp;</c22><a href="#481_1_refs"><c12>"Failing</c12></a><c12>&nbsp;</c12><a href="#481_1_refs"><c12>due</c12></a><c12>&nbsp;</c12><a href="#481_1_refs"><c12>to</c12></a><c12>&nbsp;</c12><a href="#481_1_refs"><c12>a</c12></a><c12>&nbsp;</c12><a href="#481_1_refs"><c12>previous</c12></a><c12>&nbsp;</c12><a href="#481_1_refs"><c12>I</c12></a><c12>/</c12><a href="#481_1_refs"><c12>O</c12></a><c12>&nbsp;</c12><a href="#481_1_refs"><c12>error"</c12></a><c4>,</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;488</ln><a id="488">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#481_1_refs"><c22>detail</c22></a><c22>:&nbsp;</c22><a href="../../../libstd/option.rs.html#56"><c8>None</c8></a><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;489</ln><a id="489">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;490</ln><a id="490">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#481_1_refs"><c7>
-</c7></a><br/><ln>&nbsp;491</ln><a id="491">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#341"><c20>EndOfFile</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;492</ln><a id="492">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#330"><c23>IoError</c23></a><c22>&nbsp;</c22><c4>{</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;493</ln><a id="493">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#481_1_refs"><c22>kind</c22></a><c22>:&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#341"><c8>EndOfFile</c8></a><c4>,</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;494</ln><a id="494">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#481_1_refs"><c22>desc</c22></a><c22>:&nbsp;</c22><a href="#481_1_refs"><c12>"End</c12></a><c12>&nbsp;</c12><a href="#481_1_refs"><c12>of</c12></a><c12>&nbsp;</c12><a href="#481_1_refs"><c12>file"</c12></a><c4>,</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;495</ln><a id="495">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#481_1_refs"><c22>detail</c22></a><c22>:&nbsp;</c22><a href="../../../libstd/option.rs.html#56"><c8>None</c8></a><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;496</ln><a id="496">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;497</ln><a id="497">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#481_1_refs"><c7>
-</c7></a><br/><ln>&nbsp;498</ln><a id="498">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="#481_1_refs"><c20>_</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="#481_1_refs"><c9>fail</c9></a><c9>!</c9><c25>()</c25><a href="#481_1_refs"><c9>
-</c9></a><br/><ln>&nbsp;499</ln><a id="499">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><a href="#481_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;500</ln><a id="500">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;501</ln><a id="501">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;502</ln><a id="502">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;placeholder_error</c26><c25>()</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><a href="../../../libstd/rt/io/mod.rs.html#330"><c3>IoError</c3></a><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;503</ln><a id="503">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><a href="../../../libstd/rt/io/mod.rs.html#330"><c23>IoError</c23></a><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;504</ln><a id="504">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kind:&nbsp;</c0><a href="../../../libstd/rt/io/mod.rs.html#340"><c8>OtherIoError</c8></a><c4>,</c4><c0>
-</c0><br/><ln>&nbsp;505</ln><a id="505">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;desc:&nbsp;</c0><c12>"Placeholder&nbsp;error.&nbsp;You&nbsp;shouldn't&nbsp;be&nbsp;seeing&nbsp;this"</c12><c4>,</c4><c0>
-</c0><br/><ln>&nbsp;506</ln><a id="506">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;detail:&nbsp;</c0><a href="../../../libstd/option.rs.html#56"><c8>None</c8></a><c0>
-</c0><br/><ln>&nbsp;507</ln><a id="507">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;508</ln><a id="508">&nbsp;</a><c4>}</c4><br/><div/><br/><a id="404_1_refs"><a href="#404"><c24>libstd/rt/io/mod.rs:404:1-404:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
-<br/>pub&nbsp;trait&nbsp;Writer&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mod.rs.html#417"><c24>417:&nbsp;</c24>pub&nbsp;trait&nbsp;Stream:&nbsp;Reader&nbsp;+&nbsp;Writer&nbsp;{&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/file.rs.html"><c24>libstd/rt/io/file.rs:<br/></c24><a href="../../../libstd/rt/io/file.rs.html#60"><c24>60:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;FileStream&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/net/tcp.rs.html"><c24>libstd/rt/io/net/tcp.rs:<br/></c24><a href="../../../libstd/rt/io/net/tcp.rs.html#87"><c24>87:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;TcpStream&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/net/udp.rs.html"><c24>libstd/rt/io/net/udp.rs:<br/></c24><a href="../../../libstd/rt/io/net/udp.rs.html#95"><c24>95:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;UdpStream&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/net/unix.rs.html"><c24>libstd/rt/io/net/unix.rs:<br/></c24><a href="../../../libstd/rt/io/net/unix.rs.html#29"><c24>29:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;UnixStream&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mem.rs.html"><c24>libstd/rt/io/mem.rs:<br/></c24><a href="../../../libstd/rt/io/mem.rs.html#145"><c24>145:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Writer&nbsp;for&nbsp;BufWriter&lt;'self&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mem.rs.html#32"><c24>32:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;MemWriter&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/stdio.rs.html"><c24>libstd/rt/io/stdio.rs:<br/></c24><a href="../../../libstd/rt/io/stdio.rs.html#48"><c24>48:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;StdWriter&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/option.rs.html"><c24>libstd/rt/io/option.rs:<br/></c24><a href="../../../libstd/rt/io/option.rs.html#27"><c24>27:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Writer&nbsp;for&nbsp;Option&lt;W&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/option.rs.html#27"><c24>27:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Writer&nbsp;for&nbsp;Option&lt;W&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/flate.rs.html"><c24>libstd/rt/io/flate.rs:<br/></c24><a href="../../../libstd/rt/io/flate.rs.html#31"><c24>31:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Writer&nbsp;for&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/flate.rs.html#37"><c24>37:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Decorator&lt;W&gt;&nbsp;for&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/flate.rs.html#23"><c24>23:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/flate.rs.html#31"><c24>31:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Writer&nbsp;for&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html"><c24>libstd/rt/io/comm_adapters.rs:<br/></c24><a href="../../../libstd/rt/io/comm_adapters.rs.html#52"><c24>52:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;WriterChan&lt;W&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#56"><c24>56:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;GenericChan&lt;~[u8]&gt;&nbsp;for&nbsp;WriterChan&lt;W&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#32"><c24>32:&nbsp;</c24>impl&lt;C:&nbsp;GenericChan&lt;~[u8]&gt;&gt;&nbsp;Writer&nbsp;for&nbsp;ChanWriter&lt;C&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/extensions.rs.html"><c24>libstd/rt/io/extensions.rs:<br/></c24><a href="../../../libstd/rt/io/extensions.rs.html#481"><c24>481:&nbsp;</c24>impl&lt;T:&nbsp;Writer&gt;&nbsp;WriterByteConversions&nbsp;for&nbsp;T&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/native/file.rs.html"><c24>libstd/rt/io/native/file.rs:<br/></c24><a href="../../../libstd/rt/io/native/file.rs.html#65"><c24>65:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;CFile&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/native/file.rs.html#37"><c24>37:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;FileDesc&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mock.rs.html"><c24>libstd/rt/io/mock.rs:<br/></c24><a href="../../../libstd/rt/io/mock.rs.html#47"><c24>47:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;MockWriter&nbsp;{
-<br/></a><a href="../../../libstd/hash.rs.html"><c24>libstd/hash.rs:<br/></c24><a href="../../../libstd/hash.rs.html#267"><c24>267:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;SipState&nbsp;{
-<br/></a><br/><br/><a id="443_55_refs"><a href="#443"><c24>libstd/rt/io/mod.rs:443:55-443:55&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;A&nbsp;listener&nbsp;is&nbsp;a&nbsp;value&nbsp;that&nbsp;listens&nbsp;for&nbsp;connections
-<br/>pub&nbsp;trait&nbsp;Listener&lt;S&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/net/tcp.rs.html"><c24>libstd/rt/io/net/tcp.rs:<br/></c24><a href="../../../libstd/rt/io/net/tcp.rs.html#129"><c24>129:&nbsp;</c24>impl&nbsp;Listener&lt;TcpStream&gt;&nbsp;for&nbsp;TcpListener&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/net/unix.rs.html"><c24>libstd/rt/io/net/unix.rs:<br/></c24><a href="../../../libstd/rt/io/net/unix.rs.html#43"><c24>43:&nbsp;</c24>impl&nbsp;Listener&lt;UnixStream&gt;&nbsp;for&nbsp;UnixListener&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/option.rs.html"><c24>libstd/rt/io/option.rs:<br/></c24><a href="../../../libstd/rt/io/option.rs.html#65"><c24>65:&nbsp;</c24>impl&lt;L:&nbsp;Listener&lt;S&gt;,&nbsp;S&gt;&nbsp;Listener&lt;S&gt;&nbsp;for&nbsp;Option&lt;L&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/option.rs.html#65"><c24>65:&nbsp;</c24>impl&lt;L:&nbsp;Listener&lt;S&gt;,&nbsp;S&gt;&nbsp;Listener&lt;S&gt;&nbsp;for&nbsp;Option&lt;L&gt;&nbsp;{
-<br/></a><br/><br/><a id="364_1_refs"><a href="#364"><c24>libstd/rt/io/mod.rs:364:1-364:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+</c32><br/><ln>&nbsp;435</ln><a id="435">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Returns&nbsp;`true`&nbsp;on&nbsp;failure.
+</c32><br/><ln>&nbsp;436</ln><a id="436">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#436_4_refs"><c26>eof</c26></a><c25>(</c25><c18>&amp;</c18><a href="#436_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#436_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#436_4_refs"><c3>bool</c3></a><c4>;</c4><a href="#398_1_refs"><c28>
+</c28></a><br/><ln>&nbsp;437</ln><a id="437">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;438</ln><a id="438">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;439</ln><a id="439">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#438_1_refs"><c28>Writer</c28></a><c28>&nbsp;</c28><c4>{</c4><a href="#438_1_refs"><c28>
+</c28></a><br/><ln>&nbsp;440</ln><a id="440">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Write&nbsp;the&nbsp;given&nbsp;buffer
+</c32><br/><ln>&nbsp;441</ln><a id="441">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;442</ln><a id="442">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;Failure
+</c32><br/><ln>&nbsp;443</ln><a id="443">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;444</ln><a id="444">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Raises&nbsp;the&nbsp;`io_error`&nbsp;condition&nbsp;on&nbsp;error
+</c32><br/><ln>&nbsp;445</ln><a id="445">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#445_4_refs"><c26>write</c26></a><c25>(</c25><c18>&amp;</c18><a href="#445_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#445_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#445_4_refs"><c18>buf</c18></a><c18>:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><a href="#445_4_refs"><c3>u8</c3></a><c4>]</c4><c25>)</c25><c4>;</c4><a href="#438_1_refs"><c28>
+</c28></a><br/><ln>&nbsp;446</ln><a id="446">&nbsp;</a><a href="#438_1_refs"><c28>
+</c28></a><br/><ln>&nbsp;447</ln><a id="447">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Flush&nbsp;output
+</c32><br/><ln>&nbsp;448</ln><a id="448">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#448_4_refs"><c26>flush</c26></a><c25>(</c25><c18>&amp;</c18><a href="#448_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#448_4_refs"><c18>self</c18></a><c25>)</c25><c4>;</c4><a href="#438_1_refs"><c28>
+</c28></a><br/><ln>&nbsp;449</ln><a id="449">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;450</ln><a id="450">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;451</ln><a id="451">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;Stream:&nbsp;</c28><a href="../../../libstd/rt/io/mod.rs.html#398"><c28>Reader</c28></a><c28>&nbsp;+&nbsp;</c28><a href="../../../libstd/rt/io/mod.rs.html#438"><c28>Writer</c28></a><c28>&nbsp;</c28><c4>{</c4><c28>&nbsp;</c28><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;452</ln><a id="452">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;453</ln><a id="453">&nbsp;</a><c21>pub</c21><c11>&nbsp;</c11><c29>enum&nbsp;</c29><a href="#452_1_refs"><c29>SeekStyle</c29></a><c29>&nbsp;</c29><c4>{</c4><a href="#452_1_refs"><c11>
+</c11></a><br/><ln>&nbsp;454</ln><a id="454">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c32>///&nbsp;Seek&nbsp;from&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;stream
+</c32><br/><ln>&nbsp;455</ln><a id="455">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#452_1_refs"><c0>SeekSet</c0></a><c4>,</c4><a href="#452_1_refs"><c11>
+</c11></a><br/><ln>&nbsp;456</ln><a id="456">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c32>///&nbsp;Seek&nbsp;from&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;stream
+</c32><br/><ln>&nbsp;457</ln><a id="457">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#452_1_refs"><c0>SeekEnd</c0></a><c4>,</c4><a href="#452_1_refs"><c11>
+</c11></a><br/><ln>&nbsp;458</ln><a id="458">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c32>///&nbsp;Seek&nbsp;from&nbsp;the&nbsp;current&nbsp;position
+</c32><br/><ln>&nbsp;459</ln><a id="459">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#452_1_refs"><c0>SeekCur</c0></a><c4>,</c4><a href="#452_1_refs"><c11>
+</c11></a><br/><ln>&nbsp;460</ln><a id="460">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;461</ln><a id="461">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;462</ln><a id="462">&nbsp;</a><c32>///&nbsp;#&nbsp;XXX
+</c32><br/><ln>&nbsp;463</ln><a id="463">&nbsp;</a><c32>///&nbsp;*&nbsp;Are&nbsp;`u64`&nbsp;and&nbsp;`i64`&nbsp;the&nbsp;right&nbsp;choices?
+</c32><br/><ln>&nbsp;464</ln><a id="464">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#463_45_refs"><c28>Seek</c28></a><c28>&nbsp;</c28><c4>{</c4><a href="#463_45_refs"><c28>
+</c28></a><br/><ln>&nbsp;465</ln><a id="465">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#463_45_refs"><c26>tell</c26></a><c25>(</c25><c18>&amp;</c18><a href="#463_45_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#463_45_refs"><c3>u64</c3></a><c4>;</c4><a href="#463_45_refs"><c28>
+</c28></a><br/><ln>&nbsp;466</ln><a id="466">&nbsp;</a><a href="#463_45_refs"><c28>
+</c28></a><br/><ln>&nbsp;467</ln><a id="467">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Seek&nbsp;to&nbsp;an&nbsp;offset&nbsp;in&nbsp;a&nbsp;stream
+</c32><br/><ln>&nbsp;468</ln><a id="468">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;469</ln><a id="469">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;A&nbsp;successful&nbsp;seek&nbsp;clears&nbsp;the&nbsp;EOF&nbsp;indicator.
+</c32><br/><ln>&nbsp;470</ln><a id="470">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;471</ln><a id="471">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;XXX
+</c32><br/><ln>&nbsp;472</ln><a id="472">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;473</ln><a id="473">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;*&nbsp;What&nbsp;is&nbsp;the&nbsp;behavior&nbsp;when&nbsp;seeking&nbsp;past&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;stream?
+</c32><br/><ln>&nbsp;474</ln><a id="474">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#463_45_refs"><c26>seek</c26></a><c25>(</c25><c18>&amp;</c18><a href="#463_45_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#463_45_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#463_45_refs"><c18>pos</c18></a><c18>:&nbsp;</c18><a href="#463_45_refs"><c3>i64</c3></a><c4>,</c4><c18>&nbsp;</c18><a href="#463_45_refs"><c18>style</c18></a><c18>:&nbsp;</c18><a href="../../../libstd/rt/io/mod.rs.html#452"><c3>SeekStyle</c3></a><c25>)</c25><c4>;</c4><a href="#463_45_refs"><c28>
+</c28></a><br/><ln>&nbsp;475</ln><a id="475">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;476</ln><a id="476">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;477</ln><a id="477">&nbsp;</a><c32>///&nbsp;A&nbsp;listener&nbsp;is&nbsp;a&nbsp;value&nbsp;that&nbsp;listens&nbsp;for&nbsp;connections
+</c32><br/><ln>&nbsp;478</ln><a id="478">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#477_55_refs"><c28>Listener</c28></a><c5>&lt;</c5><a href="#477_55_refs"><c5>S</c5></a><c5>&gt;</c5><c28>&nbsp;</c28><c4>{</c4><a href="#477_55_refs"><c28>
+</c28></a><br/><ln>&nbsp;479</ln><a id="479">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Wait&nbsp;for&nbsp;and&nbsp;accept&nbsp;an&nbsp;incoming&nbsp;connection
+</c32><br/><ln>&nbsp;480</ln><a id="480">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;481</ln><a id="481">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Returns&nbsp;`None`&nbsp;on&nbsp;timeout.
+</c32><br/><ln>&nbsp;482</ln><a id="482">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;483</ln><a id="483">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;Failure
+</c32><br/><ln>&nbsp;484</ln><a id="484">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;485</ln><a id="485">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Raises&nbsp;`io_error`&nbsp;condition.&nbsp;If&nbsp;the&nbsp;condition&nbsp;is&nbsp;handled,
+</c32><br/><ln>&nbsp;486</ln><a id="486">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;then&nbsp;`accept`&nbsp;returns&nbsp;`None`.
+</c32><br/><ln>&nbsp;487</ln><a id="487">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#487_4_refs"><c26>accept</c26></a><c25>(</c25><c18>&amp;</c18><a href="#487_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#487_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../libstd/option.rs.html#55"><c3>S</c3></a><c3>&gt;</c3><c4>;</c4><a href="#477_55_refs"><c28>
+</c28></a><br/><ln>&nbsp;488</ln><a id="488">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;489</ln><a id="489">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;490</ln><a id="490">&nbsp;</a><c32>///&nbsp;Common&nbsp;trait&nbsp;for&nbsp;decorator&nbsp;types.
+</c32><br/><ln>&nbsp;491</ln><a id="491">&nbsp;</a><c32>///
+</c32><br/><ln>&nbsp;492</ln><a id="492">&nbsp;</a><c32>///&nbsp;Provides&nbsp;accessors&nbsp;to&nbsp;get&nbsp;the&nbsp;inner,&nbsp;'decorated'&nbsp;values.&nbsp;The&nbsp;I/O&nbsp;library
+</c32><br/><ln>&nbsp;493</ln><a id="493">&nbsp;</a><c32>///&nbsp;uses&nbsp;decorators&nbsp;to&nbsp;add&nbsp;functionality&nbsp;like&nbsp;compression&nbsp;and&nbsp;encryption&nbsp;to&nbsp;I/O
+</c32><br/><ln>&nbsp;494</ln><a id="494">&nbsp;</a><c32>///&nbsp;streams.
+</c32><br/><ln>&nbsp;495</ln><a id="495">&nbsp;</a><c32>///
+</c32><br/><ln>&nbsp;496</ln><a id="496">&nbsp;</a><c32>///&nbsp;#&nbsp;XXX
+</c32><br/><ln>&nbsp;497</ln><a id="497">&nbsp;</a><c32>///
+</c32><br/><ln>&nbsp;498</ln><a id="498">&nbsp;</a><c32>///&nbsp;Is&nbsp;this&nbsp;worth&nbsp;having&nbsp;a&nbsp;trait&nbsp;for?&nbsp;May&nbsp;be&nbsp;overkill
+</c32><br/><ln>&nbsp;499</ln><a id="499">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#498_54_refs"><c28>Decorator</c28></a><c5>&lt;</c5><a href="#498_54_refs"><c5>T</c5></a><c5>&gt;</c5><c28>&nbsp;</c28><c4>{</c4><a href="#498_54_refs"><c28>
+</c28></a><br/><ln>&nbsp;500</ln><a id="500">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Destroy&nbsp;the&nbsp;decorator&nbsp;and&nbsp;extract&nbsp;the&nbsp;decorated&nbsp;value
+</c32><br/><ln>&nbsp;501</ln><a id="501">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;502</ln><a id="502">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;#&nbsp;XXX
+</c32><br/><ln>&nbsp;503</ln><a id="503">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///
+</c32><br/><ln>&nbsp;504</ln><a id="504">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Because&nbsp;this&nbsp;takes&nbsp;`self'&nbsp;one&nbsp;could&nbsp;never&nbsp;'undecorate'&nbsp;a&nbsp;Reader/Writer
+</c32><br/><ln>&nbsp;505</ln><a id="505">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;that&nbsp;has&nbsp;been&nbsp;boxed.&nbsp;Is&nbsp;that&nbsp;ok?&nbsp;This&nbsp;feature&nbsp;is&nbsp;mostly&nbsp;useful&nbsp;for
+</c32><br/><ln>&nbsp;506</ln><a id="506">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;extracting&nbsp;the&nbsp;buffer&nbsp;from&nbsp;MemWriter
+</c32><br/><ln>&nbsp;507</ln><a id="507">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#498_54_refs"><c26>inner</c26></a><c25>(</c25><a href="#498_54_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#498_54_refs"><c3>T</c3></a><c4>;</c4><a href="#498_54_refs"><c28>
+</c28></a><br/><ln>&nbsp;508</ln><a id="508">&nbsp;</a><a href="#498_54_refs"><c28>
+</c28></a><br/><ln>&nbsp;509</ln><a id="509">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Take&nbsp;an&nbsp;immutable&nbsp;reference&nbsp;to&nbsp;the&nbsp;decorated&nbsp;value
+</c32><br/><ln>&nbsp;510</ln><a id="510">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#498_54_refs"><c26>inner_ref</c26></a><c5>&lt;'</c5><a href="#498_54_refs"><c5>a</c5></a><c5>&gt;</c5><c25>(</c25><c18>&amp;'</c18><a href="#498_54_refs"><c18>a</c18></a><c18>&nbsp;</c18><a href="#498_54_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>&amp;'</c3><a href="#498_54_refs"><c3>a</c3></a><c3>&nbsp;</c3><a href="#498_54_refs"><c3>T</c3></a><c4>;</c4><a href="#498_54_refs"><c28>
+</c28></a><br/><ln>&nbsp;511</ln><a id="511">&nbsp;</a><a href="#498_54_refs"><c28>
+</c28></a><br/><ln>&nbsp;512</ln><a id="512">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Take&nbsp;a&nbsp;mutable&nbsp;reference&nbsp;to&nbsp;the&nbsp;decorated&nbsp;value
+</c32><br/><ln>&nbsp;513</ln><a id="513">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#498_54_refs"><c26>inner_mut_ref</c26></a><c5>&lt;'</c5><a href="#498_54_refs"><c5>a</c5></a><c5>&gt;</c5><c25>(</c25><c18>&amp;'</c18><a href="#498_54_refs"><c18>a</c18></a><c18>&nbsp;</c18><a href="#498_54_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#498_54_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>&amp;'</c3><a href="#498_54_refs"><c3>a</c3></a><c3>&nbsp;</c3><a href="#498_54_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="#498_54_refs"><c3>T</c3></a><c4>;</c4><a href="#498_54_refs"><c28>
+</c28></a><br/><ln>&nbsp;514</ln><a id="514">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;515</ln><a id="515">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;516</ln><a id="516">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#515_1_refs"><c26>standard_error</c26></a><c25>(</c25><a href="#516_22_refs"><c20>kind</c20></a><c1>:&nbsp;</c1><a href="../../../libstd/rt/io/mod.rs.html#353"><c3>IoErrorKind</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../../libstd/rt/io/mod.rs.html#332"><c3>IoError</c3></a><c1>&nbsp;</c1><c4>{</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;517</ln><a id="517">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#516"><c8>kind</c8></a><c7>&nbsp;</c7><c4>{</c4><a href="#515_1_refs"><c7>
+</c7></a><br/><ln>&nbsp;518</ln><a id="518">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#355"><c20>PreviousIoError</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;519</ln><a id="519">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#332"><c23>IoError</c23></a><c22>&nbsp;</c22><c4>{</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;520</ln><a id="520">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#515_1_refs"><c22>kind</c22></a><c22>:&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#355"><c8>PreviousIoError</c8></a><c4>,</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;521</ln><a id="521">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#515_1_refs"><c22>desc</c22></a><c22>:&nbsp;</c22><a href="#515_1_refs"><c12>"Failing</c12></a><c12>&nbsp;</c12><a href="#515_1_refs"><c12>due</c12></a><c12>&nbsp;</c12><a href="#515_1_refs"><c12>to</c12></a><c12>&nbsp;</c12><a href="#515_1_refs"><c12>a</c12></a><c12>&nbsp;</c12><a href="#515_1_refs"><c12>previous</c12></a><c12>&nbsp;</c12><a href="#515_1_refs"><c12>I</c12></a><c12>/</c12><a href="#515_1_refs"><c12>O</c12></a><c12>&nbsp;</c12><a href="#515_1_refs"><c12>error"</c12></a><c4>,</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;522</ln><a id="522">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#515_1_refs"><c22>detail</c22></a><c22>:&nbsp;</c22><a href="../../../libstd/option.rs.html#57"><c8>None</c8></a><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;523</ln><a id="523">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;524</ln><a id="524">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#515_1_refs"><c7>
+</c7></a><br/><ln>&nbsp;525</ln><a id="525">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../../../libstd/rt/io/mod.rs.html#357"><c20>EndOfFile</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;526</ln><a id="526">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#332"><c23>IoError</c23></a><c22>&nbsp;</c22><c4>{</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;527</ln><a id="527">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#515_1_refs"><c22>kind</c22></a><c22>:&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#357"><c8>EndOfFile</c8></a><c4>,</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;528</ln><a id="528">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#515_1_refs"><c22>desc</c22></a><c22>:&nbsp;</c22><a href="#515_1_refs"><c12>"End</c12></a><c12>&nbsp;</c12><a href="#515_1_refs"><c12>of</c12></a><c12>&nbsp;</c12><a href="#515_1_refs"><c12>file"</c12></a><c4>,</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;529</ln><a id="529">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#515_1_refs"><c22>detail</c22></a><c22>:&nbsp;</c22><a href="../../../libstd/option.rs.html#57"><c8>None</c8></a><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;530</ln><a id="530">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;531</ln><a id="531">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#515_1_refs"><c7>
+</c7></a><br/><ln>&nbsp;532</ln><a id="532">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="#515_1_refs"><c20>_</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="#515_1_refs"><c9>fail</c9></a><c9>!</c9><c25>()</c25><a href="#515_1_refs"><c9>
+</c9></a><br/><ln>&nbsp;533</ln><a id="533">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><a href="#515_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;534</ln><a id="534">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;535</ln><a id="535">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;536</ln><a id="536">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;placeholder_error</c26><c25>()</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../../libstd/rt/io/mod.rs.html#332"><c3>IoError</c3></a><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;537</ln><a id="537">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#332"><c23>IoError</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;538</ln><a id="538">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kind:&nbsp;</c22><a href="../../../libstd/rt/io/mod.rs.html#356"><c8>OtherIoError</c8></a><c4>,</c4><c22>
+</c22><br/><ln>&nbsp;539</ln><a id="539">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;desc:&nbsp;</c22><c12>"Placeholder&nbsp;error.&nbsp;You&nbsp;shouldn't&nbsp;be&nbsp;seeing&nbsp;this"</c12><c4>,</c4><c22>
+</c22><br/><ln>&nbsp;540</ln><a id="540">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;detail:&nbsp;</c22><a href="../../../libstd/option.rs.html#57"><c8>None</c8></a><c22>
+</c22><br/><ln>&nbsp;541</ln><a id="541">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;542</ln><a id="542">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="398_1_refs"><a href="#398"><c24>libstd/rt/io/mod.rs:398:1-398:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
 <br/>pub&nbsp;trait&nbsp;Reader&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mod.rs.html#417"><c24>417:&nbsp;</c24>pub&nbsp;trait&nbsp;Stream:&nbsp;Reader&nbsp;+&nbsp;Writer&nbsp;{&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mod.rs.html#451"><c24>451:&nbsp;</c24>pub&nbsp;trait&nbsp;Stream:&nbsp;Reader&nbsp;+&nbsp;Writer&nbsp;{&nbsp;}
 <br/></a><a href="../../../libstd/rt/io/file.rs.html"><c24>libstd/rt/io/file.rs:<br/></c24><a href="../../../libstd/rt/io/file.rs.html#50"><c24>50:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;FileStream&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/net/tcp.rs.html"><c24>libstd/rt/io/net/tcp.rs:<br/></c24><a href="../../../libstd/rt/io/net/tcp.rs.html#70"><c24>70:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;TcpStream&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/net/udp.rs.html"><c24>libstd/rt/io/net/udp.rs:<br/></c24><a href="../../../libstd/rt/io/net/udp.rs.html#80"><c24>80:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;UdpStream&nbsp;{
@@ -586,85 +591,124 @@ c23{color:#d0f0ff; }
 <br/></a><a href="../../../libstd/rt/io/stdio.rs.html"><c24>libstd/rt/io/stdio.rs:<br/></c24><a href="../../../libstd/rt/io/stdio.rs.html#36"><c24>36:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;StdReader&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/option.rs.html"><c24>libstd/rt/io/option.rs:<br/></c24><a href="../../../libstd/rt/io/option.rs.html#43"><c24>43:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;Reader&nbsp;for&nbsp;Option&lt;R&gt;&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/option.rs.html#43"><c24>43:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;Reader&nbsp;for&nbsp;Option&lt;R&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/flate.rs.html"><c24>libstd/rt/io/flate.rs:<br/></c24><a href="../../../libstd/rt/io/flate.rs.html#70"><c24>70:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;Reader&nbsp;for&nbsp;InflateReader&lt;R&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/flate.rs.html#62"><c24>62:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;InflateReader&lt;R&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/flate.rs.html"><c24>libstd/rt/io/flate.rs:<br/></c24><a href="../../../libstd/rt/io/flate.rs.html#76"><c24>76:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;Decorator&lt;R&gt;&nbsp;for&nbsp;InflateReader&lt;R&gt;&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/flate.rs.html#70"><c24>70:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;Reader&nbsp;for&nbsp;InflateReader&lt;R&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/flate.rs.html#76"><c24>76:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;Decorator&lt;R&gt;&nbsp;for&nbsp;InflateReader&lt;R&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html"><c24>libstd/rt/io/comm_adapters.rs:<br/></c24><a href="../../../libstd/rt/io/comm_adapters.rs.html#20"><c24>20:&nbsp;</c24>impl&lt;P:&nbsp;GenericPort&lt;~[u8]&gt;&gt;&nbsp;Reader&nbsp;for&nbsp;PortReader&lt;P&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#40"><c24>40:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;ReaderPort&lt;R&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#44"><c24>44:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;GenericPort&lt;~[u8]&gt;&nbsp;for&nbsp;ReaderPort&lt;R&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/extensions.rs.html"><c24>libstd/rt/io/extensions.rs:<br/></c24><a href="../../../libstd/rt/io/extensions.rs.html#276"><c24>276:&nbsp;</c24>impl&lt;T:&nbsp;Reader&gt;&nbsp;ReaderUtil&nbsp;for&nbsp;T&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/extensions.rs.html#342"><c24>342:&nbsp;</c24>impl&lt;T:&nbsp;Reader&gt;&nbsp;ReaderByteConversions&nbsp;for&nbsp;T&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/flate.rs.html#70"><c24>70:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;Reader&nbsp;for&nbsp;InflateReader&lt;R&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/flate.rs.html#62"><c24>62:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;InflateReader&lt;R&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html"><c24>libstd/rt/io/comm_adapters.rs:<br/></c24><a href="../../../libstd/rt/io/comm_adapters.rs.html#21"><c24>21:&nbsp;</c24>impl&lt;P:&nbsp;GenericPort&lt;~[u8]&gt;&gt;&nbsp;Reader&nbsp;for&nbsp;PortReader&lt;P&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#41"><c24>41:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;ReaderPort&lt;R&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#45"><c24>45:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;GenericPort&lt;~[u8]&gt;&nbsp;for&nbsp;ReaderPort&lt;R&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/extensions.rs.html"><c24>libstd/rt/io/extensions.rs:<br/></c24><a href="../../../libstd/rt/io/extensions.rs.html#342"><c24>342:&nbsp;</c24>impl&lt;T:&nbsp;Reader&gt;&nbsp;ReaderByteConversions&nbsp;for&nbsp;T&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/extensions.rs.html#276"><c24>276:&nbsp;</c24>impl&lt;T:&nbsp;Reader&gt;&nbsp;ReaderUtil&nbsp;for&nbsp;T&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/native/file.rs.html"><c24>libstd/rt/io/native/file.rs:<br/></c24><a href="../../../libstd/rt/io/native/file.rs.html#59"><c24>59:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;CFile&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/native/file.rs.html#31"><c24>31:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;FileDesc&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/mock.rs.html"><c24>libstd/rt/io/mock.rs:<br/></c24><a href="../../../libstd/rt/io/mock.rs.html#28"><c24>28:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;MockReader&nbsp;{
-<br/></a><br/><br/><a id="464_54_refs"><a href="#464"><c24>libstd/rt/io/mod.rs:464:54-464:54&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;Is&nbsp;this&nbsp;worth&nbsp;having&nbsp;a&nbsp;trait&nbsp;for?&nbsp;May&nbsp;be&nbsp;overkill
+<br/></a><br/><br/><a id="515_1_refs"><a href="#515"><c24>libstd/rt/io/mod.rs:515:1-515:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;fn&nbsp;standard_error(kind:&nbsp;IoErrorKind)&nbsp;-&gt;&nbsp;IoError&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/option.rs.html"><c24>libstd/rt/io/option.rs:<br/></c24><a href="../../../libstd/rt/io/option.rs.html#24"><c24>24:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;standard_error(PreviousIoError)
+<br/></a><a href="../../../libstd/rt/io/extensions.rs.html"><c24>libstd/rt/io/extensions.rs:<br/></c24><a href="../../../libstd/rt/io/extensions.rs.html#307"><c24>307:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read_error::cond.raise(standard_error(EndOfFile));
+<br/></a><a href="../../../libstd/rt/uv/uvio.rs.html"><c24>libstd/rt/uv/uvio.rs:<br/></c24><a href="../../../libstd/rt/uv/uvio.rs.html#397"><c24>397:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Err(standard_error(OtherIoError))
+<br/></a><br/><br/><a id="463_45_refs"><a href="#463"><c24>libstd/rt/io/mod.rs:463:45-463:45&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;*&nbsp;Are&nbsp;`u64`&nbsp;and&nbsp;`i64`&nbsp;the&nbsp;right&nbsp;choices?
+<br/>pub&nbsp;trait&nbsp;Seek&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/file.rs.html"><c24>libstd/rt/io/file.rs:<br/></c24><a href="../../../libstd/rt/io/file.rs.html#66"><c24>66:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;FileStream&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mem.rs.html"><c24>libstd/rt/io/mem.rs:<br/></c24><a href="../../../libstd/rt/io/mem.rs.html#102"><c24>102:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;MemReader&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mem.rs.html#179"><c24>179:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Seek&nbsp;for&nbsp;BufReader&lt;'self&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mem.rs.html#40"><c24>40:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;MemWriter&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mem.rs.html#151"><c24>151:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Seek&nbsp;for&nbsp;BufWriter&lt;'self&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/native/file.rs.html"><c24>libstd/rt/io/native/file.rs:<br/></c24><a href="../../../libstd/rt/io/native/file.rs.html#71"><c24>71:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;CFile&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/native/file.rs.html#43"><c24>43:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;FileDesc&nbsp;{
+<br/></a><br/><br/><a id="477_55_refs"><a href="#477"><c24>libstd/rt/io/mod.rs:477:55-477:55&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;A&nbsp;listener&nbsp;is&nbsp;a&nbsp;value&nbsp;that&nbsp;listens&nbsp;for&nbsp;connections
+<br/>pub&nbsp;trait&nbsp;Listener&lt;S&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/net/tcp.rs.html"><c24>libstd/rt/io/net/tcp.rs:<br/></c24><a href="../../../libstd/rt/io/net/tcp.rs.html#129"><c24>129:&nbsp;</c24>impl&nbsp;Listener&lt;TcpStream&gt;&nbsp;for&nbsp;TcpListener&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/net/unix.rs.html"><c24>libstd/rt/io/net/unix.rs:<br/></c24><a href="../../../libstd/rt/io/net/unix.rs.html#43"><c24>43:&nbsp;</c24>impl&nbsp;Listener&lt;UnixStream&gt;&nbsp;for&nbsp;UnixListener&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/option.rs.html"><c24>libstd/rt/io/option.rs:<br/></c24><a href="../../../libstd/rt/io/option.rs.html#65"><c24>65:&nbsp;</c24>impl&lt;L:&nbsp;Listener&lt;S&gt;,&nbsp;S&gt;&nbsp;Listener&lt;S&gt;&nbsp;for&nbsp;Option&lt;L&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/option.rs.html#65"><c24>65:&nbsp;</c24>impl&lt;L:&nbsp;Listener&lt;S&gt;,&nbsp;S&gt;&nbsp;Listener&lt;S&gt;&nbsp;for&nbsp;Option&lt;L&gt;&nbsp;{
+<br/></a><br/><br/><a id="332_60_refs"><a href="#332"><c24>libstd/rt/io/mod.rs:332:60-332:60&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;Is&nbsp;something&nbsp;like&nbsp;this&nbsp;sufficient?&nbsp;It's&nbsp;kind&nbsp;of&nbsp;archaic
+<br/>pub&nbsp;struct&nbsp;IoError&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mod.rs.html#389"><c24>389:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;/*pub*/&nbsp;io_error:&nbsp;super::IoError&nbsp;-&gt;&nbsp;();
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#526"><c24>526:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IoError&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#340"><c24>340:&nbsp;</c24>impl&nbsp;ToStr&nbsp;for&nbsp;IoError&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#537"><c24>537:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;IoError&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#396"><c24>396:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;/*pub*/&nbsp;read_error:&nbsp;super::IoError&nbsp;-&gt;&nbsp;();
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#516"><c24>516:&nbsp;</c24>pub&nbsp;fn&nbsp;standard_error(kind:&nbsp;IoErrorKind)&nbsp;-&gt;&nbsp;IoError&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#519"><c24>519:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IoError&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#536"><c24>536:&nbsp;</c24>pub&nbsp;fn&nbsp;placeholder_error()&nbsp;-&gt;&nbsp;IoError&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/option.rs.html"><c24>libstd/rt/io/option.rs:<br/></c24><a href="../../../libstd/rt/io/option.rs.html#23"><c24>23:&nbsp;</c24>fn&nbsp;prev_io_error()&nbsp;-&gt;&nbsp;IoError&nbsp;{
+<br/></a><a href="../../../libstd/rt/rtio.rs.html"><c24>libstd/rt/rtio.rs:<br/></c24><a href="../../../libstd/rt/rtio.rs.html#87"><c24>87:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;ignore_broadcasts(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#61"><c24>61:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;write(&amp;mut&nbsp;self,&nbsp;buf:&nbsp;&amp;[u8])&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#60"><c24>60:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;read(&amp;mut&nbsp;self,&nbsp;buf:&nbsp;&amp;mut&nbsp;[u8])&nbsp;-&gt;&nbsp;Result&lt;uint,&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#83"><c24>83:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;multicast_time_to_live(&amp;mut&nbsp;self,&nbsp;ttl:&nbsp;int)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#78"><c24>78:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;leave_multicast(&amp;mut&nbsp;self,&nbsp;multi:&nbsp;IpAddr)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#74"><c24>74:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;recvfrom(&amp;mut&nbsp;self,&nbsp;buf:&nbsp;&amp;mut&nbsp;[u8])&nbsp;-&gt;&nbsp;Result&lt;(uint,&nbsp;SocketAddr),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#47"><c24>47:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;tcp_connect(&amp;mut&nbsp;self,&nbsp;addr:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;~RtioTcpStreamObject,&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#63"><c24>63:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;control_congestion(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#84"><c24>84:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;time_to_live(&amp;mut&nbsp;self,&nbsp;ttl:&nbsp;int)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#70"><c24>70:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;socket_name(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;SocketAddr,&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;accept(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;~RtioTcpStreamObject,&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;dont_accept_simultaneously(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#86"><c24>86:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;hear_broadcasts(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#80"><c24>80:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;loop_multicast_locally(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#77"><c24>77:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;join_multicast(&amp;mut&nbsp;self,&nbsp;multi:&nbsp;IpAddr)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#81"><c24>81:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;dont_loop_multicast_locally(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#62"><c24>62:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;peer_name(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;SocketAddr,&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#75"><c24>75:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;sendto(&amp;mut&nbsp;self,&nbsp;buf:&nbsp;&amp;[u8],&nbsp;dst:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#49"><c24>49:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;udp_bind(&amp;mut&nbsp;self,&nbsp;addr:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;~RtioUdpSocketObject,&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#65"><c24>65:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;keepalive(&amp;mut&nbsp;self,&nbsp;delay_in_seconds:&nbsp;uint)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#66"><c24>66:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;letdie(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
+<br/></a><a href="../../../libstd/rt/rtio.rs.html#50"><c24>(50)</c24></a><a href="../../../libstd/rt/rtio.rs.html#64"><c24>(64)</c24></a><a href="../../../libstd/rt/rtio.rs.html#55"><c24>(55)</c24></a><a href="../../../libstd/rt/rtio.rs.html#48"><c24>(48)</c24></a><br/><a href="../../../libstd/rt/uv/mod.rs.html"><c24>libstd/rt/uv/mod.rs:<br/></c24><a href="../../../libstd/rt/uv/mod.rs.html#276"><c24>(276)</c24></a><a href="../../../libstd/rt/uv/mod.rs.html#251"><c24>(251)</c24></a><br/><a href="../../../libstd/rt/uv/uvio.rs.html"><c24>libstd/rt/uv/uvio.rs:<br/></c24><a href="../../../libstd/rt/uv/uvio.rs.html#537"><c24>(537)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#330"><c24>(330)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#694"><c24>(694)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#669"><c24>(669)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#560"><c24>(560)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#526"><c24>(526)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#522"><c24>(522)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#589"><c24>(589)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#368"><c24>(368)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#497"><c24>(497)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#716"><c24>(716)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#456"><c24>(456)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#495"><c24>(495)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#629"><c24>(629)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#454"><c24>(454)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#727"><c24>(727)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#251"><c24>(251)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#448"><c24>(448)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#548"><c24>(548)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#738"><c24>(738)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#408"><c24>(408)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#375"><c24>(375)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#655"><c24>(655)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#597"><c24>(597)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#312"><c24>(312)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#294"><c24>(294)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#419"><c24>(419)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#683"><c24>(683)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#338"><c24>(338)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#247"><c24>(247)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#631"><c24>(631)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#47"><c24>(47)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#595"><c24>(595)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#705"><c24>(705)</c24></a><br/><br/><a id="452_1_refs"><a href="#452"><c24>libstd/rt/io/mod.rs:452:1-452:1&nbsp;-enum-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;enum&nbsp;SeekStyle&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mod.rs.html#474"><c24>474:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;pos:&nbsp;i64,&nbsp;style:&nbsp;SeekStyle);
+<br/></a><a href="../../../libstd/rt/io/file.rs.html"><c24>libstd/rt/io/file.rs:<br/></c24><a href="../../../libstd/rt/io/file.rs.html#69"><c24>69:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/mem.rs.html"><c24>libstd/rt/io/mem.rs:<br/></c24><a href="../../../libstd/rt/io/mem.rs.html#182"><c24>182:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/mem.rs.html#154"><c24>154:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/mem.rs.html#43"><c24>43:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/mem.rs.html#105"><c24>105:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/native/file.rs.html"><c24>libstd/rt/io/native/file.rs:<br/></c24><a href="../../../libstd/rt/io/native/file.rs.html#73"><c24>73:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/native/file.rs.html#46"><c24>46:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><br/><br/><a id="498_54_refs"><a href="#498"><c24>libstd/rt/io/mod.rs:498:54-498:54&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;Is&nbsp;this&nbsp;worth&nbsp;having&nbsp;a&nbsp;trait&nbsp;for?&nbsp;May&nbsp;be&nbsp;overkill
 <br/>pub&nbsp;trait&nbsp;Decorator&lt;T&gt;&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mem.rs.html"><c24>libstd/rt/io/mem.rs:<br/></c24><a href="../../../libstd/rt/io/mem.rs.html#108"><c24>108:&nbsp;</c24>impl&nbsp;Decorator&lt;~[u8]&gt;&nbsp;for&nbsp;MemReader&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/mem.rs.html#46"><c24>46:&nbsp;</c24>impl&nbsp;Decorator&lt;~[u8]&gt;&nbsp;for&nbsp;MemWriter&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/flate.rs.html"><c24>libstd/rt/io/flate.rs:<br/></c24><a href="../../../libstd/rt/io/flate.rs.html#37"><c24>37:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Decorator&lt;W&gt;&nbsp;for&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/flate.rs.html#76"><c24>76:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;Decorator&lt;R&gt;&nbsp;for&nbsp;InflateReader&lt;R&gt;&nbsp;{
-<br/></a><br/><br/><a id="418_1_refs"><a href="#418"><c24>libstd/rt/io/mod.rs:418:1-418:1&nbsp;-enum-&nbsp;definition:<br/></c24><pr>
-<br/>pub&nbsp;enum&nbsp;SeekStyle&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mod.rs.html#440"><c24>440:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;pos:&nbsp;i64,&nbsp;style:&nbsp;SeekStyle);
-<br/></a><a href="../../../libstd/rt/io/file.rs.html"><c24>libstd/rt/io/file.rs:<br/></c24><a href="../../../libstd/rt/io/file.rs.html#69"><c24>69:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/mem.rs.html"><c24>libstd/rt/io/mem.rs:<br/></c24><a href="../../../libstd/rt/io/mem.rs.html#154"><c24>154:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/mem.rs.html#182"><c24>182:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/mem.rs.html#105"><c24>105:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/mem.rs.html#43"><c24>43:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/native/file.rs.html"><c24>libstd/rt/io/native/file.rs:<br/></c24><a href="../../../libstd/rt/io/native/file.rs.html#46"><c24>46:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/native/file.rs.html#73"><c24>73:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;seek(&amp;mut&nbsp;self,&nbsp;_pos:&nbsp;i64,&nbsp;_style:&nbsp;SeekStyle)&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><br/><br/><a id="481_1_refs"><a href="#481"><c24>libstd/rt/io/mod.rs:481:1-481:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
-<br/>pub&nbsp;fn&nbsp;standard_error(kind:&nbsp;IoErrorKind)&nbsp;-&gt;&nbsp;IoError&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/option.rs.html"><c24>libstd/rt/io/option.rs:<br/></c24><a href="../../../libstd/rt/io/option.rs.html#24"><c24>24:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;standard_error(PreviousIoError)
-<br/></a><a href="../../../libstd/rt/io/extensions.rs.html"><c24>libstd/rt/io/extensions.rs:<br/></c24><a href="../../../libstd/rt/io/extensions.rs.html#307"><c24>307:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read_error::cond.raise(standard_error(EndOfFile));
-<br/></a><a href="../../../libstd/rt/uv/uvio.rs.html"><c24>libstd/rt/uv/uvio.rs:<br/></c24><a href="../../../libstd/rt/uv/uvio.rs.html#397"><c24>397:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Err(standard_error(OtherIoError))
-<br/></a><br/><br/><a id="429_45_refs"><a href="#429"><c24>libstd/rt/io/mod.rs:429:45-429:45&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;*&nbsp;Are&nbsp;`u64`&nbsp;and&nbsp;`i64`&nbsp;the&nbsp;right&nbsp;choices?
-<br/>pub&nbsp;trait&nbsp;Seek&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/file.rs.html"><c24>libstd/rt/io/file.rs:<br/></c24><a href="../../../libstd/rt/io/file.rs.html#66"><c24>66:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;FileStream&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mem.rs.html"><c24>libstd/rt/io/mem.rs:<br/></c24><a href="../../../libstd/rt/io/mem.rs.html#102"><c24>102:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;MemReader&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mem.rs.html#40"><c24>40:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;MemWriter&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mem.rs.html#179"><c24>179:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Seek&nbsp;for&nbsp;BufReader&lt;'self&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mem.rs.html#151"><c24>151:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Seek&nbsp;for&nbsp;BufWriter&lt;'self&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/native/file.rs.html"><c24>libstd/rt/io/native/file.rs:<br/></c24><a href="../../../libstd/rt/io/native/file.rs.html#43"><c24>43:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;FileDesc&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/native/file.rs.html#71"><c24>71:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;CFile&nbsp;{
-<br/></a><br/><br/><a id="337_16_refs"><a href="#337"><c24>libstd/rt/io/mod.rs:337:16-337:16&nbsp;-enum-&nbsp;definition:<br/></c24><pr>#[deriving(Eq)]
+<br/></a><br/><br/><a id="438_1_refs"><a href="#438"><c24>libstd/rt/io/mod.rs:438:1-438:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;trait&nbsp;Writer&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mod.rs.html#451"><c24>451:&nbsp;</c24>pub&nbsp;trait&nbsp;Stream:&nbsp;Reader&nbsp;+&nbsp;Writer&nbsp;{&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/file.rs.html"><c24>libstd/rt/io/file.rs:<br/></c24><a href="../../../libstd/rt/io/file.rs.html#60"><c24>60:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;FileStream&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/net/tcp.rs.html"><c24>libstd/rt/io/net/tcp.rs:<br/></c24><a href="../../../libstd/rt/io/net/tcp.rs.html#87"><c24>87:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;TcpStream&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/net/udp.rs.html"><c24>libstd/rt/io/net/udp.rs:<br/></c24><a href="../../../libstd/rt/io/net/udp.rs.html#95"><c24>95:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;UdpStream&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/net/unix.rs.html"><c24>libstd/rt/io/net/unix.rs:<br/></c24><a href="../../../libstd/rt/io/net/unix.rs.html#29"><c24>29:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;UnixStream&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mem.rs.html"><c24>libstd/rt/io/mem.rs:<br/></c24><a href="../../../libstd/rt/io/mem.rs.html#32"><c24>32:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;MemWriter&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mem.rs.html#145"><c24>145:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Writer&nbsp;for&nbsp;BufWriter&lt;'self&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/stdio.rs.html"><c24>libstd/rt/io/stdio.rs:<br/></c24><a href="../../../libstd/rt/io/stdio.rs.html#48"><c24>48:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;StdWriter&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/option.rs.html"><c24>libstd/rt/io/option.rs:<br/></c24><a href="../../../libstd/rt/io/option.rs.html#27"><c24>27:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Writer&nbsp;for&nbsp;Option&lt;W&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/option.rs.html#27"><c24>27:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Writer&nbsp;for&nbsp;Option&lt;W&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/flate.rs.html"><c24>libstd/rt/io/flate.rs:<br/></c24><a href="../../../libstd/rt/io/flate.rs.html#37"><c24>37:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Decorator&lt;W&gt;&nbsp;for&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/flate.rs.html#31"><c24>31:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Writer&nbsp;for&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/flate.rs.html#23"><c24>23:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/flate.rs.html#31"><c24>31:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;Writer&nbsp;for&nbsp;DeflateWriter&lt;W&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html"><c24>libstd/rt/io/comm_adapters.rs:<br/></c24><a href="../../../libstd/rt/io/comm_adapters.rs.html#33"><c24>33:&nbsp;</c24>impl&lt;C:&nbsp;GenericChan&lt;~[u8]&gt;&gt;&nbsp;Writer&nbsp;for&nbsp;ChanWriter&lt;C&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#53"><c24>53:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;WriterChan&lt;W&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#57"><c24>57:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;GenericChan&lt;~[u8]&gt;&nbsp;for&nbsp;WriterChan&lt;W&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/extensions.rs.html"><c24>libstd/rt/io/extensions.rs:<br/></c24><a href="../../../libstd/rt/io/extensions.rs.html#481"><c24>481:&nbsp;</c24>impl&lt;T:&nbsp;Writer&gt;&nbsp;WriterByteConversions&nbsp;for&nbsp;T&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/native/file.rs.html"><c24>libstd/rt/io/native/file.rs:<br/></c24><a href="../../../libstd/rt/io/native/file.rs.html#65"><c24>65:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;CFile&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/native/file.rs.html#37"><c24>37:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;FileDesc&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mock.rs.html"><c24>libstd/rt/io/mock.rs:<br/></c24><a href="../../../libstd/rt/io/mock.rs.html#47"><c24>47:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;MockWriter&nbsp;{
+<br/></a><a href="../../../libstd/hash.rs.html"><c24>libstd/hash.rs:<br/></c24><a href="../../../libstd/hash.rs.html#267"><c24>267:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;SipState&nbsp;{
+<br/></a><a href="../../../libstd/fmt/mod.rs.html"><c24>libstd/fmt/mod.rs:<br/></c24><a href="../../../libstd/fmt/mod.rs.html#43"><c24>43:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;buf:&nbsp;&amp;'self&nbsp;mut&nbsp;io::Writer,
+<br/></a><a href="../../../libstd/fmt/mod.rs.html#319"><c24>319:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f.buf.write(buf);
+<br/></a><a href="../../../libstd/fmt/mod.rs.html#301"><c24>301:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f.buf.write(buf);
+<br/></a><a href="../../../libstd/fmt/mod.rs.html#353"><c24>353:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f.buf.write(s.as_bytes());
+<br/></a><a href="../../../libstd/fmt/mod.rs.html#293"><c24>293:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f.buf.write(s.as_bytes());
+<br/></a><a href="../../../libstd/fmt/mod.rs.html#310"><c24>310:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f.buf.write(buf);
+<br/></a><a href="../../../libstd/fmt/mod.rs.html#143"><c24>143:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt::CurrentArgument(())&nbsp;=&gt;&nbsp;{&nbsp;self.buf.write(cur.unwrap().as_bytes());&nbsp;}
+<br/></a><a href="../../../libstd/fmt/mod.rs.html#142"><c24>142:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt::String(s)&nbsp;=&gt;&nbsp;{&nbsp;self.buf.write(s.as_bytes());&nbsp;}
+<br/></a><a href="../../../libstd/fmt/mod.rs.html#344"><c24>(344)</c24></a><a href="../../../libstd/fmt/mod.rs.html#328"><c24>(328)</c24></a><a href="../../../libstd/fmt/mod.rs.html#283"><c24>(283)</c24></a><a href="../../../libstd/fmt/mod.rs.html#111"><c24>(111)</c24></a><a href="../../../libstd/fmt/mod.rs.html#362"><c24>(362)</c24></a><br/><br/><a id="353_16_refs"><a href="#353"><c24>libstd/rt/io/mod.rs:353:16-353:16&nbsp;-enum-&nbsp;definition:<br/></c24><pr>#[deriving(Eq)]
 <br/>pub&nbsp;enum&nbsp;IoErrorKind&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mod.rs.html#482"><c24>482:&nbsp;</c24>pub&nbsp;fn&nbsp;standard_error(kind:&nbsp;IoErrorKind)&nbsp;-&gt;&nbsp;IoError&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mod.rs.html#337"><c24>337:&nbsp;</c24>#[deriving(Eq)]
-<br/></a><a href="../../../libstd/rt/io/mod.rs.html#332"><c24>332:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;kind:&nbsp;IoErrorKind,
-<br/></a><a href="../../../libstd/rt/io/mod.rs.html#337"><c24>337:&nbsp;</c24>#[deriving(Eq)]
-<br/></a><a href="../../../libstd/rt/io/mod.rs.html#337"><c24>337:&nbsp;</c24>#[deriving(Eq)]
-<br/></a><br/><br/><a id="330_60_refs"><a href="#330"><c24>libstd/rt/io/mod.rs:330:60-330:60&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;Is&nbsp;something&nbsp;like&nbsp;this&nbsp;sufficient?&nbsp;It's&nbsp;kind&nbsp;of&nbsp;archaic
-<br/>pub&nbsp;struct&nbsp;IoError&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mod.rs.html#362"><c24>362:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;/*pub*/&nbsp;read_error:&nbsp;super::IoError&nbsp;-&gt;&nbsp;();
-<br/></a><a href="../../../libstd/rt/io/mod.rs.html#503"><c24>503:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;IoError&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mod.rs.html#355"><c24>355:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;/*pub*/&nbsp;io_error:&nbsp;super::IoError&nbsp;-&gt;&nbsp;();
-<br/></a><a href="../../../libstd/rt/io/mod.rs.html#485"><c24>485:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IoError&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mod.rs.html#492"><c24>492:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IoError&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mod.rs.html#502"><c24>502:&nbsp;</c24>pub&nbsp;fn&nbsp;placeholder_error()&nbsp;-&gt;&nbsp;IoError&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/mod.rs.html#482"><c24>482:&nbsp;</c24>pub&nbsp;fn&nbsp;standard_error(kind:&nbsp;IoErrorKind)&nbsp;-&gt;&nbsp;IoError&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/option.rs.html"><c24>libstd/rt/io/option.rs:<br/></c24><a href="../../../libstd/rt/io/option.rs.html#23"><c24>23:&nbsp;</c24>fn&nbsp;prev_io_error()&nbsp;-&gt;&nbsp;IoError&nbsp;{
-<br/></a><a href="../../../libstd/rt/rtio.rs.html"><c24>libstd/rt/rtio.rs:<br/></c24><a href="../../../libstd/rt/rtio.rs.html#62"><c24>62:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;peer_name(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;SocketAddr,&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#81"><c24>81:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;dont_loop_multicast_locally(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#75"><c24>75:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;sendto(&amp;mut&nbsp;self,&nbsp;buf:&nbsp;&amp;[u8],&nbsp;dst:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#77"><c24>77:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;join_multicast(&amp;mut&nbsp;self,&nbsp;multi:&nbsp;IpAddr)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#61"><c24>61:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;write(&amp;mut&nbsp;self,&nbsp;buf:&nbsp;&amp;[u8])&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#78"><c24>78:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;leave_multicast(&amp;mut&nbsp;self,&nbsp;multi:&nbsp;IpAddr)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#66"><c24>66:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;letdie(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#60"><c24>60:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;read(&amp;mut&nbsp;self,&nbsp;buf:&nbsp;&amp;mut&nbsp;[u8])&nbsp;-&gt;&nbsp;Result&lt;uint,&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#55"><c24>55:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;accept_simultaneously(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#63"><c24>63:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;control_congestion(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;dont_accept_simultaneously(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;accept(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;~RtioTcpStreamObject,&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#83"><c24>83:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;multicast_time_to_live(&amp;mut&nbsp;self,&nbsp;ttl:&nbsp;int)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#80"><c24>80:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;loop_multicast_locally(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#65"><c24>65:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;keepalive(&amp;mut&nbsp;self,&nbsp;delay_in_seconds:&nbsp;uint)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#86"><c24>86:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;hear_broadcasts(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#70"><c24>70:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;socket_name(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;SocketAddr,&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#49"><c24>49:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;udp_bind(&amp;mut&nbsp;self,&nbsp;addr:&nbsp;SocketAddr)&nbsp;-&gt;&nbsp;Result&lt;~RtioUdpSocketObject,&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;timer_init(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;~RtioTimerObject,&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#74"><c24>74:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;recvfrom(&amp;mut&nbsp;self,&nbsp;buf:&nbsp;&amp;mut&nbsp;[u8])&nbsp;-&gt;&nbsp;Result&lt;(uint,&nbsp;SocketAddr),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#84"><c24>84:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;time_to_live(&amp;mut&nbsp;self,&nbsp;ttl:&nbsp;int)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#87"><c24>87:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;ignore_broadcasts(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Result&lt;(),&nbsp;IoError&gt;;
-<br/></a><a href="../../../libstd/rt/rtio.rs.html#48"><c24>(48)</c24></a><a href="../../../libstd/rt/rtio.rs.html#47"><c24>(47)</c24></a><a href="../../../libstd/rt/rtio.rs.html#64"><c24>(64)</c24></a><br/><a href="../../../libstd/rt/uv/mod.rs.html"><c24>libstd/rt/uv/mod.rs:<br/></c24><a href="../../../libstd/rt/uv/mod.rs.html#276"><c24>(276)</c24></a><a href="../../../libstd/rt/uv/mod.rs.html#251"><c24>(251)</c24></a><br/><a href="../../../libstd/rt/uv/uvio.rs.html"><c24>libstd/rt/uv/uvio.rs:<br/></c24><a href="../../../libstd/rt/uv/uvio.rs.html#408"><c24>(408)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#597"><c24>(597)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#589"><c24>(589)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#537"><c24>(537)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#456"><c24>(456)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#526"><c24>(526)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#655"><c24>(655)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#47"><c24>(47)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#251"><c24>(251)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#495"><c24>(495)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#330"><c24>(330)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#683"><c24>(683)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#294"><c24>(294)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#738"><c24>(738)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#522"><c24>(522)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#548"><c24>(548)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#312"><c24>(312)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#629"><c24>(629)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#454"><c24>(454)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#727"><c24>(727)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#375"><c24>(375)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#669"><c24>(669)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#247"><c24>(247)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#560"><c24>(560)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#419"><c24>(419)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#694"><c24>(694)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#497"><c24>(497)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#595"><c24>(595)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#448"><c24>(448)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#705"><c24>(705)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#631"><c24>(631)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#368"><c24>(368)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#716"><c24>(716)</c24></a><a href="../../../libstd/rt/uv/uvio.rs.html#338"><c24>(338)</c24></a><br/></a></a>
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/mod.rs.html#334"><c24>334:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;kind:&nbsp;IoErrorKind,
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#516"><c24>516:&nbsp;</c24>pub&nbsp;fn&nbsp;standard_error(kind:&nbsp;IoErrorKind)&nbsp;-&gt;&nbsp;IoError&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#353"><c24>353:&nbsp;</c24>#[deriving(Eq)]
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#353"><c24>353:&nbsp;</c24>#[deriving(Eq)]
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#353"><c24>353:&nbsp;</c24>#[deriving(Eq)]
+<br/></a><a href="../../../libstd/rt/io/mod.rs.html#368"><c24>368:&nbsp;</c24>impl&nbsp;ToStr&nbsp;for&nbsp;IoErrorKind&nbsp;{
+<br/></a><br/></a></a>

@@ -159,10 +159,10 @@ impl<'self> CheckLoanCtxt<'self> {
             true
         };
 
-        for i in range(0u, new_loan_indices.len()) {
-            let old_loan = &self.all_loans[new_loan_indices[i]];
-            for j in range(i+1, new_loan_indices.len()) {
-                let new_loan = &self.all_loans[new_loan_indices[j]];
+        for (i, &x) in new_loan_indices.iter().enumerate() {
+            let old_loan = &self.all_loans[x];
+            for &y in new_loan_indices.slice_from(i+1).iter() {
+                let new_loan = &self.all_loans[y];
                 self.report_error_if_loans_conflict(old_loan, new_loan);
             }
         }
@@ -307,7 +307,7 @@ impl<'self> CheckLoanCtxt<'self> {
         // if they cannot already have been assigned
         if self.is_local_variable(cmt) {
             assert!(cmt.mutbl.is_immutable()); // no "const" locals
-            let lp = opt_loan_path(cmt).get();
+            let lp = opt_loan_path(cmt).unwrap();
             do self.move_data.each_assignment_of(expr.id, lp) |assign| {
                 self.bccx.report_reassigned_immutable_variable(
                     expr.span,

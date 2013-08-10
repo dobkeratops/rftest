@@ -18,6 +18,7 @@ use syntax::opt_vec::OptVec;
 use syntax::opt_vec;
 use syntax::parse::token::special_idents;
 
+#[deriving(ToStr)]
 pub struct RegionError {
     msg: ~str,
     replacement: ty::Region
@@ -214,7 +215,7 @@ impl region_scope for MethodRscope {
 pub struct type_rscope(Option<RegionParameterization>);
 
 impl type_rscope {
-    priv fn replacement(&self) -> ty::Region {
+    fn replacement(&self) -> ty::Region {
         if self.is_some() {
             ty::re_bound(ty::br_self)
         } else {

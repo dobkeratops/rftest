@@ -12,7 +12,7 @@
 
 use clone::Clone;
 use container::Container;
-use iterator::{Iterator, range};
+use iterator::Iterator;
 use option::{Option, Some, None};
 use sys;
 use unstable::raw::Repr;
@@ -78,10 +78,8 @@ pub fn build<A>(builder: &fn(push: &fn(v: A))) -> @[A] {
  *             onto the vector being constructed.
  */
 #[inline]
-pub fn build_sized_opt<A>(size: Option<uint>,
-                          builder: &fn(push: &fn(v: A)))
-                       -> @[A] {
-    build_sized(size.get_or_default(4), builder)
+pub fn build_sized_opt<A>(size: Option<uint>, builder: &fn(push: &fn(v: A))) -> @[A] {
+    build_sized(size.unwrap_or_default(4), builder)
 }
 
 // Appending
@@ -94,8 +92,8 @@ pub fn append<T:Clone>(lhs: @[T], rhs: &[T]) -> @[T] {
         for x in lhs.iter() {
             push((*x).clone());
         }
-        for i in range(0u, rhs.len()) {
-            push(rhs[i].clone());
+        for elt in rhs.iter() {
+            push(elt.clone());
         }
     }
 }
@@ -277,24 +275,11 @@ pub mod raw {
         }
 
         fn local_realloc(ptr: *(), size: uint) -> *() {
-            use rt;
-            use rt::OldTaskContext;
             use rt::local::Local;
             use rt::task::Task;
 
-            if rt::context() == OldTaskContext {
-                unsafe {
-                    return rust_local_realloc(ptr, size as libc::size_t);
-                }
-
-                extern {
-                    #[fast_ffi]
-                    fn rust_local_realloc(ptr: *(), size: libc::size_t) -> *();
-                }
-            } else {
-                do Local::borrow::<Task, *()> |task| {
-                    task.heap.realloc(ptr as *libc::c_void, size) as *()
-                }
+            do Local::borrow::<Task, *()> |task| {
+                task.heap.realloc(ptr as *libc::c_void, size) as *()
             }
         }
     }

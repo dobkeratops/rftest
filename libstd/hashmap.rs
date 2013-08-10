@@ -19,7 +19,8 @@ use container::{Container, Mutable, Map, MutableMap, Set, MutableSet};
 use clone::Clone;
 use cmp::{Eq, Equiv};
 use hash::Hash;
-use iterator::{Iterator, IteratorUtil, FromIterator, Extendable, Chain, range};
+use iterator::{Iterator, IteratorUtil, FromIterator, Extendable};
+use iterator::{FilterMap, Chain, Repeat, Zip};
 use num;
 use option::{None, Option, Some};
 use rand::RngUtil;
@@ -237,7 +238,7 @@ impl<K:Hash + Eq,V> HashMap<K, V> {
         let len_buckets = self.buckets.len();
         let bucket = self.buckets[idx].take();
 
-        let value = do bucket.map_consume |bucket| {
+        let value = do bucket.map_move |bucket| {
             bucket.value
         };
 
@@ -264,8 +265,8 @@ impl<K:Hash + Eq,V> Container for HashMap<K, V> {
 impl<K:Hash + Eq,V> Mutable for HashMap<K, V> {
     /// Clear the map, removing all key-value pairs.
     fn clear(&mut self) {
-        for idx in range(0u, self.buckets.len()) {
-            self.buckets[idx] = None;
+        for bkt in self.buckets.mut_iter() {
+            *bkt = None;
         }
         self.size = 0;
     }
@@ -478,7 +479,7 @@ impl<K: Hash + Eq, V> HashMap<K, V> {
 impl<K: Hash + Eq, V: Clone> HashMap<K, V> {
     /// Like `find`, but returns a copy of the value.
     pub fn find_copy(&self, k: &K) -> Option<V> {
-        self.find(k).map_consume(|v| (*v).clone())
+        self.find(k).map_move(|v| (*v).clone())
     }
 
     /// Like `get`, but returns a copy of the value.
@@ -712,10 +713,12 @@ impl<T:Hash + Eq> HashSet<T> {
     }
 
     /// Visit the values representing the difference
-    pub fn difference_iter<'a>(&'a self, other: &'a HashSet<T>)
-        -> SetAlgebraIter<'a, T> {
-        EnvFilterIterator{iter: self.iter(), env: other,
-                          filter: |elt, other| !other.contains(elt) }
+    pub fn difference_iter<'a>(&'a self, other: &'a HashSet<T>) -> SetAlgebraIter<'a, T> {
+        Repeat::new(other)
+            .zip(self.iter())
+            .filter_map(|(other, elt)| {
+                if !other.contains(elt) { Some(elt) } else { None }
+            })
     }
 
     /// Visit the values representing the symmetric difference
@@ -727,8 +730,11 @@ impl<T:Hash + Eq> HashSet<T> {
     /// Visit the values representing the intersection
     pub fn intersection_iter<'a>(&'a self, other: &'a HashSet<T>)
         -> SetAlgebraIter<'a, T> {
-        EnvFilterIterator{iter: self.iter(), env: other,
-                          filter: |elt, other| other.contains(elt) }
+        Repeat::new(other)
+            .zip(self.iter())
+            .filter_map(|(other, elt)| {
+                if other.contains(elt) { Some(elt) } else { None }
+            })
     }
 
     /// Visit the values representing the union
@@ -756,38 +762,12 @@ impl<K: Eq + Hash, T: Iterator<K>> Extendable<K, T> for HashSet<K> {
     }
 }
 
-// FIXME #7814: use std::iterator::FilterIterator
-/// Building block for Set operation iterators
-pub struct EnvFilterIterator<A, Env, I> {
-    priv env: Env,
-    priv filter: &'static fn(&A, Env) -> bool,
-    priv iter: I,
-}
-
-impl<'self, A, Env: Clone, I: Iterator<&'self A>> Iterator<&'self A>
-        for EnvFilterIterator<A, Env, I> {
-    #[inline]
-    fn next(&mut self) -> Option<&'self A> {
-        loop {
-            match self.iter.next() {
-                Some(elt) => if (self.filter)(elt, self.env.clone()) {
-                    return Some(elt)
-                },
-                None => return None,
-            }
-        }
-    }
-
-    #[inline]
-    fn size_hint(&self) -> (uint, Option<uint>) {
-        let (_, upper) = self.iter.size_hint();
-        (0, upper)
-    }
-}
-
+// `Repeat` is used to feed the filter closure an explicit capture
+// of a reference to the other set
 /// Set operations iterator
 pub type SetAlgebraIter<'self, T> =
-    EnvFilterIterator<T, &'self HashSet<T>, HashSetIterator<'self, T>>;
+    FilterMap<'static,(&'self HashSet<T>, &'self T), &'self T,
+              Zip<Repeat<&'self HashSet<T>>,HashSetIterator<'self,T>>>;
 
 
 #[cfg(test)]

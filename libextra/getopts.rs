@@ -114,7 +114,8 @@ pub enum Occur {
 pub struct Opt {
     name: Name,
     hasarg: HasArg,
-    occur: Occur
+    occur: Occur,
+    aliases: ~[Opt],
 }
 
 fn mkname(nm: &str) -> Name {
@@ -127,29 +128,29 @@ fn mkname(nm: &str) -> Name {
 
 /// Create an option that is required and takes an argument
 pub fn reqopt(name: &str) -> Opt {
-    return Opt {name: mkname(name), hasarg: Yes, occur: Req};
+    return Opt {name: mkname(name), hasarg: Yes, occur: Req, aliases: ~[]};
 }
 
 /// Create an option that is optional and takes an argument
 pub fn optopt(name: &str) -> Opt {
-    return Opt {name: mkname(name), hasarg: Yes, occur: Optional};
+    return Opt {name: mkname(name), hasarg: Yes, occur: Optional, aliases: ~[]};
 }
 
 /// Create an option that is optional and does not take an argument
 pub fn optflag(name: &str) -> Opt {
-    return Opt {name: mkname(name), hasarg: No, occur: Optional};
+    return Opt {name: mkname(name), hasarg: No, occur: Optional, aliases: ~[]};
 }
 
 /** Create an option that is optional, does not take an argument,
   * and may occur multiple times.
   */
 pub fn optflagmulti(name: &str) -> Opt {
-    return Opt {name: mkname(name), hasarg: No, occur: Multi};
+    return Opt {name: mkname(name), hasarg: No, occur: Multi, aliases: ~[]};
 }
 
 /// Create an option that is optional and takes an optional argument
 pub fn optflagopt(name: &str) -> Opt {
-    return Opt {name: mkname(name), hasarg: Maybe, occur: Optional};
+    return Opt {name: mkname(name), hasarg: Maybe, occur: Optional, aliases: ~[]};
 }
 
 /**
@@ -157,7 +158,7 @@ pub fn optflagopt(name: &str) -> Opt {
  * multiple times
  */
 pub fn optmulti(name: &str) -> Opt {
-    return Opt {name: mkname(name), hasarg: Yes, occur: Multi};
+    return Opt {name: mkname(name), hasarg: Yes, occur: Multi, aliases: ~[]};
 }
 
 #[deriving(Clone, Eq)]
@@ -189,14 +190,27 @@ fn name_str(nm: &Name) -> ~str {
 }
 
 fn find_opt(opts: &[Opt], nm: Name) -> Option<uint> {
-    opts.iter().position(|opt| opt.name == nm)
+    // search main options
+    let pos = opts.iter().position(|opt| opt.name == nm);
+    if pos.is_some() {
+        return pos
+    }
+
+    // search in aliases
+    for candidate in opts.iter() {
+        if candidate.aliases.iter().position(|opt| opt.name == nm).is_some() {
+            return opts.iter().position(|opt| opt.name == candidate.name);
+        }
+    }
+
+    None
 }
 
 /**
  * The type returned when the command line does not conform to the
  * expected format. Pass this value to <fail_str> to get an error message.
  */
-#[deriving(Clone, Eq)]
+#[deriving(Clone, Eq, ToStr)]
 pub enum Fail_ {
     ArgumentMissing(~str),
     UnrecognizedOption(~str),
@@ -288,7 +302,7 @@ pub fn getopts(args: &[~str], opts: &[Opt]) -> Result {
                       None => {
                         let arg_follows =
                             last_valid_opt_id.is_some() &&
-                            match opts[last_valid_opt_id.get()]
+                            match opts[last_valid_opt_id.unwrap()]
                               .hasarg {
 
                               Yes | Maybe => true,
@@ -322,7 +336,7 @@ pub fn getopts(args: &[~str], opts: &[Opt]) -> Result {
                   }
                   Maybe => {
                     if !i_arg.is_none() {
-                        vals[optid].push(Val((i_arg.clone()).get()));
+                        vals[optid].push(Val((i_arg.clone()).unwrap()));
                     } else if name_pos < names.len() ||
                                   i + 1 == l || is_arg(args[i + 1]) {
                         vals[optid].push(Given);
@@ -330,7 +344,7 @@ pub fn getopts(args: &[~str], opts: &[Opt]) -> Result {
                   }
                   Yes => {
                     if !i_arg.is_none() {
-                        vals[optid].push(Val(i_arg.clone().get()));
+                        vals[optid].push(Val(i_arg.clone().unwrap()));
                     } else if i + 1 == l {
                         return Err(ArgumentMissing(name_str(nm)));
                     } else { i += 1; vals[optid].push(Val(args[i].clone())); }
@@ -488,8 +502,6 @@ pub mod groups {
     use getopts::{HasArg, Long, Maybe, Multi, No, Occur, Opt, Optional, Req};
     use getopts::{Short, Yes};
 
-    use std::vec;
-
     /** one group of options, e.g., both -h and --help, along with
      * their shared description and properties
      */
@@ -542,6 +554,20 @@ pub mod groups {
                 occur: Optional};
     }
 
+    /// Create a long option that can occur more than once and does not
+    /// take an argument
+    pub fn optflagmulti(short_name: &str, long_name: &str,
+                   desc: &str) -> OptGroup {
+        let len = short_name.len();
+        assert!(len == 1 || len == 0);
+        return OptGroup {short_name: short_name.to_owned(),
+                long_name: long_name.to_owned(),
+                hint: ~"",
+                desc: desc.to_owned(),
+                hasarg: No,
+                occur: Multi};
+    }
+
     /// Create a long option that is optional and takes an optional argument
     pub fn optflagopt(short_name: &str, long_name: &str,
                       desc: &str, hint: &str) -> OptGroup {
@@ -573,7 +599,7 @@ pub mod groups {
 
     // translate OptGroup into Opt
     // (both short and long names correspond to different Opts)
-    pub fn long_to_short(lopt: &OptGroup) -> ~[Opt] {
+    pub fn long_to_short(lopt: &OptGroup) -> Opt {
         let OptGroup{short_name: short_name,
                      long_name: long_name,
                      hasarg: hasarg,
@@ -581,24 +607,29 @@ pub mod groups {
                      _} = (*lopt).clone();
 
         match (short_name.len(), long_name.len()) {
-           (0,0) => fail!("this long-format option was given no name"),
+            (0,0) => fail!("this long-format option was given no name"),
 
-           (0,_) => ~[Opt {name: Long((long_name)),
-                           hasarg: hasarg,
-                           occur: occur}],
+            (0,_) => Opt {name: Long((long_name)),
+                          hasarg: hasarg,
+                          occur: occur,
+                          aliases: ~[]},
 
-           (1,0) => ~[Opt {name: Short(short_name.char_at(0)),
-                           hasarg: hasarg,
-                           occur: occur}],
+            (1,0) => Opt {name: Short(short_name.char_at(0)),
+                          hasarg: hasarg,
+                          occur: occur,
+                          aliases: ~[]},
 
-           (1,_) => ~[Opt {name: Short(short_name.char_at(0)),
-                           hasarg: hasarg,
-                           occur:  occur},
-                      Opt {name:   Long((long_name)),
-                           hasarg: hasarg,
-                           occur:  occur}],
+            (1,_) => Opt {name: Long((long_name)),
+                          hasarg: hasarg,
+                          occur:  occur,
+                          aliases: ~[Opt {
+                              name: Short(short_name.char_at(0)),
+                              hasarg: hasarg,
+                              occur:  occur,
+                              aliases: ~[]
+                          }]},
 
-           (_,_) => fail!("something is wrong with the long-form opt")
+            (_,_) => fail!("something is wrong with the long-form opt")
         }
     }
 
@@ -606,7 +637,7 @@ pub mod groups {
      * Parse command line args with the provided long format options
      */
     pub fn getopts(args: &[~str], opts: &[OptGroup]) -> ::getopts::Result {
-        ::getopts::getopts(args, vec::flat_map(opts, long_to_short))
+        ::getopts::getopts(args, opts.map(long_to_short))
     }
 
     /**
@@ -708,9 +739,9 @@ pub mod groups {
      *  Fails during iteration if the string contains a non-whitespace
      *  sequence longer than the limit.
      */
-    priv fn each_split_within<'a>(ss: &'a str,
-                                lim: uint,
-                                it: &fn(&'a str) -> bool) -> bool {
+    fn each_split_within<'a>(ss: &'a str,
+                             lim: uint,
+                             it: &fn(&'a str) -> bool) -> bool {
         // Just for fun, let's write this as an state machine:
 
         enum SplitWithinState {
@@ -778,7 +809,7 @@ pub mod groups {
     }
 
     #[test]
-    priv fn test_split_within() {
+    fn test_split_within() {
         fn t(s: &str, i: uint, u: &[~str]) {
             let mut v = ~[];
             do each_split_within(s, i) |s| { v.push(s.to_owned()); true };
@@ -1440,7 +1471,8 @@ mod tests {
 
     #[test]
     fn test_groups_long_to_short() {
-        let short = ~[reqopt("b"), reqopt("banana")];
+        let mut short = reqopt("banana");
+        short.aliases = ~[reqopt("b")];
         let verbose = groups::reqopt("b", "banana", "some bananas", "VAL");
 
         assert_eq!(groups::long_to_short(&verbose), short);
@@ -1448,10 +1480,16 @@ mod tests {
 
     #[test]
     fn test_groups_getopts() {
+        let mut banana = reqopt("banana");
+        banana.aliases = ~[reqopt("b")];
+        let mut apple = optopt("apple");
+        apple.aliases = ~[optopt("a")];
+        let mut kiwi = optflag("kiwi");
+        kiwi.aliases = ~[optflag("k")];
         let short = ~[
-            reqopt("b"), reqopt("banana"),
-            optopt("a"), optopt("apple"),
-            optflag("k"), optflagopt("kiwi"),
+            banana,
+            apple,
+            kiwi,
             optflagopt("p"),
             optmulti("l")
         ];
@@ -1464,12 +1502,25 @@ mod tests {
             groups::optmulti("l", "", "Desc", "VAL"),
         ];
 
-        let sample_args = ~[~"-k", ~"15", ~"--apple", ~"1", ~"k",
+        let sample_args = ~[~"--kiwi", ~"15", ~"--apple", ~"1", ~"k",
                             ~"-p", ~"16", ~"l", ~"35"];
 
         // FIXME #4681: sort options here?
         assert!(getopts(sample_args, short)
             == groups::getopts(sample_args, verbose));
+    }
+
+    #[test]
+    fn test_groups_aliases_long_and_short() {
+        let opts = ~[
+            groups::optflagmulti("a", "apple", "Desc"),
+        ];
+
+        let args = ~[~"-a", ~"--apple", ~"-a"];
+
+        let matches = groups::getopts(args, opts).unwrap();
+        assert_eq!(3, opt_count(&matches, "a"));
+        assert_eq!(3, opt_count(&matches, "apple"));
     }
 
     #[test]

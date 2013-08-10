@@ -37,6 +37,7 @@ use util::ppaux::ty_to_short_str;
 
 use middle::trans::type_::Type;
 
+use std::c_str::ToCStr;
 use std::libc::c_uint;
 use syntax::ast;
 
@@ -311,7 +312,7 @@ pub fn call_tydesc_glue_full(bcx: @mut Block,
     let llrawptr = if static_ti.is_none() || static_glue_fn.is_none() {
         PointerCast(bcx, v, Type::i8p())
     } else {
-        let ty = static_ti.get().ty;
+        let ty = static_ti.unwrap().ty;
         let simpl = simplified_glue_type(ccx.tcx, field, ty);
         if simpl != ty {
             PointerCast(bcx, v, type_of(ccx, simpl).ptr_to())
@@ -659,7 +660,7 @@ pub fn declare_tydesc(ccx: &mut CrateContext, t: ty::t) -> @mut tydesc_info {
     let name = mangle_internal_name_by_type_and_seq(ccx, t, "tydesc").to_managed();
     note_unique_llvm_symbol(ccx, name);
     debug!("+++ declare_tydesc %s %s", ppaux::ty_to_str(ccx.tcx, t), name);
-    let gvar = do name.as_c_str |buf| {
+    let gvar = do name.to_c_str().with_ref |buf| {
         unsafe {
             llvm::LLVMAddGlobal(ccx.llmod, ccx.tydesc_type.to_ref(), buf)
         }
@@ -708,7 +709,7 @@ pub fn make_generic_glue_inner(ccx: @mut CrateContext,
     // llfn is expected be declared to take a parameter of the appropriate
     // type, so we don't need to explicitly cast the function parameter.
 
-    let bcx = fcx.entry_bcx.get();
+    let bcx = fcx.entry_bcx.unwrap();
     let rawptr0_arg = fcx.arg_pos(0u);
     let llrawptr0 = unsafe { llvm::LLVMGetParam(llfn, rawptr0_arg as c_uint) };
     let bcx = helper(bcx, llrawptr0, t);

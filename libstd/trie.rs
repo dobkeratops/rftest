@@ -14,6 +14,7 @@ use prelude::*;
 use iterator::{IteratorUtil, FromIterator, Extendable};
 use uint;
 use util::{swap, replace};
+use vec;
 
 // FIXME: #5244: need to manually update the TrieNode constructor
 static SHIFT: uint = 4;
@@ -146,6 +147,15 @@ impl<T> TrieMap<T> {
     pub fn each_value_reverse(&self, f: &fn(&T) -> bool) -> bool {
         self.each_reverse(|_, v| f(v))
     }
+
+    /// Get an iterator over the key-value pairs in the map
+    pub fn iter<'a>(&'a self) -> TrieMapIterator<'a, T> {
+        TrieMapIterator {
+            stack: ~[self.root.children.iter()],
+            remaining_min: self.length,
+            remaining_max: self.length
+        }
+    }
 }
 
 impl<T, Iter: Iterator<(uint, T)>> FromIterator<(uint, T), Iter> for TrieMap<T> {
@@ -217,6 +227,12 @@ impl TrieSet {
     pub fn each_reverse(&self, f: &fn(&uint) -> bool) -> bool {
         self.map.each_key_reverse(f)
     }
+
+    /// Get an iterator over the values in the set
+    #[inline]
+    pub fn iter<'a>(&'a self) -> TrieSetIterator<'a> {
+        TrieSetIterator{iter: self.map.iter()}
+    }
 }
 
 impl<Iter: Iterator<uint>> FromIterator<uint, Iter> for TrieSet {
@@ -255,8 +271,8 @@ impl<T> TrieNode<T> {
 
 impl<T> TrieNode<T> {
     fn each<'a>(&'a self, f: &fn(&uint, &'a T) -> bool) -> bool {
-        for idx in range(0u, self.children.len()) {
-            match self.children[idx] {
+        for elt in self.children.iter() {
+            match *elt {
                 Internal(ref x) => if !x.each(|i,t| f(i,t)) { return false },
                 External(k, ref v) => if !f(&k, v) { return false },
                 Nothing => ()
@@ -266,13 +282,14 @@ impl<T> TrieNode<T> {
     }
 
     fn each_reverse<'a>(&'a self, f: &fn(&uint, &'a T) -> bool) -> bool {
-        do uint::range_rev(self.children.len(), 0) |idx| {
-            match self.children[idx] {
-                Internal(ref x) => x.each_reverse(|i,t| f(i,t)),
-                External(k, ref v) => f(&k, v),
-                Nothing => true
+        for elt in self.children.rev_iter() {
+            match *elt {
+                Internal(ref x) => if !x.each_reverse(|i,t| f(i,t)) { return false },
+                External(k, ref v) => if !f(&k, v) { return false },
+                Nothing => ()
             }
         }
+        true
     }
 
     fn mutate_values<'a>(&'a mut self, f: &fn(&uint, &mut T) -> bool) -> bool {
@@ -364,6 +381,61 @@ fn remove<T>(count: &mut uint, child: &mut Child<T>, key: uint,
         *count -= 1;
     }
     return ret;
+}
+
+/// Forward iterator over a map
+pub struct TrieMapIterator<'self, T> {
+    priv stack: ~[vec::VecIterator<'self, Child<T>>],
+    priv remaining_min: uint,
+    priv remaining_max: uint
+}
+
+impl<'self, T> Iterator<(uint, &'self T)> for TrieMapIterator<'self, T> {
+    fn next(&mut self) -> Option<(uint, &'self T)> {
+        while !self.stack.is_empty() {
+            match self.stack[self.stack.len() - 1].next() {
+                None => {
+                    self.stack.pop();
+                }
+                Some(ref child) => {
+                    match **child {
+                        Internal(ref node) => {
+                            self.stack.push(node.children.iter());
+                        }
+                        External(key, ref value) => {
+                            self.remaining_max -= 1;
+                            if self.remaining_min > 0 {
+                                self.remaining_min -= 1;
+                            }
+                            return Some((key, value));
+                        }
+                        Nothing => {}
+                    }
+                }
+            }
+        }
+        return None;
+    }
+
+    #[inline]
+    fn size_hint(&self) -> (uint, Option<uint>) {
+        (self.remaining_min, Some(self.remaining_max))
+    }
+}
+
+/// Forward iterator over a set
+pub struct TrieSetIterator<'self> {
+    priv iter: TrieMapIterator<'self, ()>
+}
+
+impl<'self> Iterator<uint> for TrieSetIterator<'self> {
+    fn next(&mut self) -> Option<uint> {
+        do self.iter.next().map |&(key, _)| { key }
+    }
+
+    fn size_hint(&self) -> (uint, Option<uint>) {
+        self.iter.size_hint()
+    }
 }
 
 #[cfg(test)]
@@ -468,10 +540,9 @@ mod test_map {
     fn test_each_break() {
         let mut m = TrieMap::new();
 
-        do uint::range_rev(uint::max_value, uint::max_value - 10000) |x| {
+        for x in range(uint::max_value - 10000, uint::max_value).invert() {
             m.insert(x, x / 2);
-            true
-        };
+        }
 
         let mut n = uint::max_value - 10000;
         do m.each |k, v| {
@@ -509,10 +580,9 @@ mod test_map {
     fn test_each_reverse_break() {
         let mut m = TrieMap::new();
 
-        do uint::range_rev(uint::max_value, uint::max_value - 10000) |x| {
+        for x in range(uint::max_value - 10000, uint::max_value).invert() {
             m.insert(x, x / 2);
-            true
-        };
+        }
 
         let mut n = uint::max_value - 1;
         do m.each_reverse |k, v| {
@@ -552,6 +622,28 @@ mod test_map {
         for &(k, v) in xs.iter() {
             assert_eq!(map.find(&k), Some(&v));
         }
+    }
+
+    #[test]
+    fn test_iteration() {
+        let empty_map : TrieMap<uint> = TrieMap::new();
+        assert_eq!(empty_map.iter().next(), None);
+
+        let first = uint::max_value - 10000;
+        let last = uint::max_value;
+
+        let mut map = TrieMap::new();
+        for x in range(first, last).invert() {
+            map.insert(x, x / 2);
+        }
+
+        let mut i = 0;
+        for (k, &v) in map.iter() {
+            assert_eq!(k, first + i);
+            assert_eq!(v, k / 2);
+            i += 1;
+        }
+        assert_eq!(i, last - first);
     }
 }
 

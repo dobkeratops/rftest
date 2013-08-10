@@ -531,7 +531,7 @@ pub fn ty_of_arg<AC:AstConv,
                  expected_ty: Option<ty::t>)
                  -> ty::t {
     match a.ty.node {
-        ast::ty_infer if expected_ty.is_some() => expected_ty.get(),
+        ast::ty_infer if expected_ty.is_some() => expected_ty.unwrap(),
         ast::ty_infer => this.ty_infer(a.ty.span),
         _ => ast_ty_to_ty(this, rscope, &a.ty),
     }
@@ -587,7 +587,7 @@ pub fn ty_of_method<AC:AstConv,RS:region_scope + Clone + 'static>(
     };
     let (a, b) = ty_of_method_or_bare_fn(
         this, rscope, purity, AbiSet::Rust(), lifetimes, Some(&self_info), decl);
-    (a.get(), b)
+    (a.unwrap(), b)
 }
 
 pub fn ty_of_bare_fn<AC:AstConv,RS:region_scope + Clone + 'static>(
@@ -621,9 +621,9 @@ fn ty_of_method_or_bare_fn<AC:AstConv,RS:region_scope + Clone + 'static>(
         in_binding_rscope(rscope,
                           RegionParamNames(bound_lifetime_names.clone()));
 
-    let opt_transformed_self_ty = opt_self_info.map(|&self_info| {
+    let opt_transformed_self_ty = do opt_self_info.map_move |self_info| {
         transform_self_ty(this, &rb, self_info)
-    });
+    };
 
     let input_tys = decl.inputs.map(|a| ty_of_arg(this, &rb, a, None));
 
@@ -735,7 +735,7 @@ pub fn ty_of_closure<AC:AstConv,RS:region_scope + Clone + 'static>(
 
     let expected_ret_ty = expected_sig.map(|e| e.output);
     let output_ty = match decl.output.node {
-        ast::ty_infer if expected_ret_ty.is_some() => expected_ret_ty.get(),
+        ast::ty_infer if expected_ret_ty.is_some() => expected_ret_ty.unwrap(),
         ast::ty_infer => this.ty_infer(decl.output.span),
         _ => ast_ty_to_ty(this, &rb, &decl.output)
     };

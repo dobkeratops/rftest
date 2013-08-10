@@ -144,260 +144,261 @@ c23{color:#d0f0ff; }
 </c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HasDtor&nbsp;</c0><c4>{</c4><c0>&nbsp;x&nbsp;:&nbsp;10&nbsp;</c0><c4>};</c4><c0>
 </c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c4>}</c4><br/><div/><br/><a id="15_15_refs"><a href="#15"><c24>libstd/ops.rs:15:15-15:15&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="drop"]
-<br/>pub&nbsp;trait&nbsp;Drop&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/io.rs.html"><c24>libstd/io.rs:<br/></c24><a href="../libstd/io.rs.html#1789"><c24>1789:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;Res&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/io.rs.html#1005"><c24>1005:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;FILERes&nbsp;{
-<br/></a><a href="../libstd/io.rs.html#1256"><c24>1256:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;FdRes&nbsp;{
-<br/></a><a href="../libstd/task/spawn.rs.html"><c24>libstd/task/spawn.rs:<br/></c24><a href="../libstd/task/spawn.rs.html#350"><c24>350:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Taskgroup&nbsp;{
-<br/></a><a href="../libstd/task/spawn.rs.html#407"><c24>407:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;AutoNotify&nbsp;{
-<br/></a><a href="../libstd/pipes.rs.html"><c24>libstd/pipes.rs:<br/></c24><a href="../libstd/pipes.rs.html#673"><c24>673:&nbsp;</c24>impl&lt;T:Send,Tbuffer:Send&gt;&nbsp;Drop&nbsp;for&nbsp;SendPacketBuffered&lt;T,Tbuffer&gt;&nbsp;{
-<br/></a><a href="../libstd/pipes.rs.html#730"><c24>730:&nbsp;</c24>impl&lt;T:Send,Tbuffer:Send&gt;&nbsp;Drop&nbsp;for&nbsp;RecvPacketBuffered&lt;T,Tbuffer&gt;&nbsp;{
-<br/></a><a href="../libstd/pipes.rs.html#310"><c24>310:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;BufferResource&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/os.rs.html"><c24>libstd/os.rs:<br/></c24><a href="../libstd/os.rs.html#1473"><c24>1473:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;MemoryMap&nbsp;{
-<br/></a><a href="../libstd/run.rs.html"><c24>libstd/run.rs:<br/></c24><a href="../libstd/run.rs.html#428"><c24>428:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Process&nbsp;{
-<br/></a><a href="../libstd/condition.rs.html"><c24>libstd/condition.rs:<br/></c24><a href="../libstd/condition.rs.html#89"><c24>89:&nbsp;</c24>impl&lt;'self,&nbsp;T,&nbsp;U&gt;&nbsp;Drop&nbsp;for&nbsp;Guard&lt;'self,&nbsp;T,&nbsp;U&gt;&nbsp;{
-<br/></a><a href="../libstd/util.rs.html"><c24>libstd/util.rs:<br/></c24><a href="../libstd/util.rs.html#88"><c24>88:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;NonCopyable&nbsp;{
-<br/></a><a href="../libstd/unstable/dynamic_lib.rs.html"><c24>libstd/unstable/dynamic_lib.rs:<br/></c24><a href="../libstd/unstable/dynamic_lib.rs.html#27"><c24>27:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;DynamicLibrary&nbsp;{
-<br/></a><a href="../libstd/unstable/finally.rs.html"><c24>libstd/unstable/finally.rs:<br/></c24><a href="../libstd/unstable/finally.rs.html#66"><c24>66:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Drop&nbsp;for&nbsp;Finallyalizer&lt;'self&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html"><c24>libstd/unstable/sync.rs:<br/></c24><a href="../libstd/unstable/sync.rs.html#226"><c24>226:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;UnsafeAtomicRcBox&lt;T&gt;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#320"><c24>320:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;LittleLock&nbsp;{
-<br/></a><a href="../libstd/unstable/atomics.rs.html"><c24>libstd/unstable/atomics.rs:<br/></c24><a href="../libstd/unstable/atomics.rs.html#340"><c24>340:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;AtomicOption&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/task.rs.html"><c24>libstd/rt/task.rs:<br/></c24><a href="../libstd/rt/task.rs.html#303"><c24>303:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Task&nbsp;{
-<br/></a><a href="../libstd/rt/kill.rs.html"><c24>libstd/rt/kill.rs:<br/></c24><a href="../libstd/rt/kill.rs.html#151"><c24>151:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;KillFlag&nbsp;{
-<br/></a><a href="../libstd/rt/kill.rs.html#595"><c24>595:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Death&nbsp;{
-<br/></a><a href="../libstd/rt/uv/uvio.rs.html"><c24>libstd/rt/uv/uvio.rs:<br/></c24><a href="../libstd/rt/uv/uvio.rs.html#433"><c24>433:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvTcpStream&nbsp;{
-<br/></a><a href="../libstd/rt/uv/uvio.rs.html#574"><c24>574:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvUdpSocket&nbsp;{
-<br/></a><a href="../libstd/rt/uv/uvio.rs.html#758"><c24>758:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvTimer&nbsp;{
-<br/></a><a href="../libstd/rt/uv/uvio.rs.html#94"><c24>94:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvEventLoop&nbsp;{
-<br/></a><a href="../libstd/rt/uv/uvio.rs.html#353"><c24>353:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvTcpListener&nbsp;{
-<br/></a><a href="../libstd/rt/uv/uvio.rs.html#185"><c24>185:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvRemoteCallback&nbsp;{
-<br/></a><a href="../libstd/rt/stack.rs.html"><c24>libstd/rt/stack.rs:<br/></c24><a href="../libstd/rt/stack.rs.html#51"><c24>51:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;StackSegment&nbsp;{
-<br/></a><a href="../libstd/rt/thread.rs.html"><c24>libstd/rt/thread.rs:<br/></c24><a href="../libstd/rt/thread.rs.html#44"><c24>44:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Thread&nbsp;{
-<br/></a><a href="../libstd/rt/local_heap.rs.html"><c24>libstd/rt/local_heap.rs:<br/></c24><a href="../libstd/rt/local_heap.rs.html#78"><c24>78:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;LocalHeap&nbsp;{
-<br/></a><a href="../libstd/rt/rc.rs.html"><c24>libstd/rt/rc.rs:<br/></c24><a href="../libstd/rt/rc.rs.html#76"><c24>76:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;RC&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html"><c24>libstd/rt/comm.rs:<br/></c24><a href="../libstd/rt/comm.rs.html#394"><c24>(394)</c24></a><a href="../libstd/rt/comm.rs.html#366"><c24>(366)</c24></a><br/><br/><a id="65_17_refs"><a href="#65"><c24>libstd/ops.rs:65:17-65:17&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="bitxor"]
-<br/>pub&nbsp;trait&nbsp;BitXor&lt;RHS,Result&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#245"><c24>245:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;BitXor&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#437"><c24>437:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#437"><c24>437:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#437"><c24>437:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#437"><c24>437:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#437"><c24>437:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#299"><c24>299:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#299"><c24>299:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#299"><c24>299:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#299"><c24>299:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#299"><c24>299:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><br/><br/><a id="35_14_refs"><a href="#35"><c24>libstd/ops.rs:35:14-35:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="div"]
-<br/>pub&nbsp;trait&nbsp;Div&lt;RHS,Result&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#114"><c24>114:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Div&lt;Self,Self&gt;&nbsp;{
-<br/></a><a href="../libstd/num/num.rs.html#271"><c24>271:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Div&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/num.rs.html#435"><c24>435:&nbsp;</c24>pub&nbsp;fn&nbsp;pow_with_uint&lt;T:NumCast+One+Zero+Div&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(radix:&nbsp;uint,&nbsp;pow:&nbsp;uint)&nbsp;-&gt;&nbsp;T&nbsp;{
-<br/></a><a href="../libstd/num/num.rs.html#84"><c24>84:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Div&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/num.rs.html#31"><c24>31:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Div&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#137"><c24>137:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#468"><c24>468:&nbsp;</c24>pub&nbsp;fn&nbsp;from_str_bytes_common&lt;T:NumCast+Zero+One+Eq+Ord+Div&lt;T,T&gt;+
-<br/></a><a href="../libstd/num/strconv.rs.html#224"><c24>224:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#665"><c24>665:&nbsp;</c24>pub&nbsp;fn&nbsp;from_str_common&lt;T:NumCast+Zero+One+Eq+Ord+Div&lt;T,T&gt;+Mul&lt;T,T&gt;+
-<br/></a><a href="../libstd/num/strconv.rs.html#415"><c24>415:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#207"><c24>207:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#207"><c24>207:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#207"><c24>207:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#207"><c24>207:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#207"><c24>207:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#211"><c24>211:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#211"><c24>211:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#211"><c24>211:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#211"><c24>211:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#211"><c24>211:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#740"><c24>740:&nbsp;</c24>impl&nbsp;Div&lt;float,float&gt;&nbsp;for&nbsp;float&nbsp;{
-<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#275"><c24>275:&nbsp;</c24>impl&nbsp;Div&lt;f32,f32&gt;&nbsp;for&nbsp;f32&nbsp;{
-<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#292"><c24>292:&nbsp;</c24>impl&nbsp;Div&lt;f64,f64&gt;&nbsp;for&nbsp;f64&nbsp;{
-<br/></a><br/><br/><a id="60_16_refs"><a href="#60"><c24>libstd/ops.rs:60:16-60:16&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="bitor"]
-<br/>pub&nbsp;trait&nbsp;BitOr&lt;RHS,Result&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#244"><c24>244:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;BitOr&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#425"><c24>425:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#425"><c24>425:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#425"><c24>425:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#425"><c24>425:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#425"><c24>425:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#287"><c24>287:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#287"><c24>287:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#287"><c24>287:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#287"><c24>287:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#287"><c24>287:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><br/><br/><a id="25_14_refs"><a href="#25"><c24>libstd/ops.rs:25:14-25:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="sub"]
-<br/>pub&nbsp;trait&nbsp;Sub&lt;RHS,Result&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Sub&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/num.rs.html#269"><c24>269:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Sub&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#666"><c24>666:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+NumStrConv+Clone&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#469"><c24>469:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mul&lt;T,T&gt;+Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#195"><c24>195:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#195"><c24>195:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#195"><c24>195:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#195"><c24>195:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#195"><c24>195:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#199"><c24>199:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#199"><c24>199:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#199"><c24>199:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#199"><c24>199:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#199"><c24>199:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#728"><c24>728:&nbsp;</c24>impl&nbsp;Sub&lt;float,float&gt;&nbsp;for&nbsp;float&nbsp;{
-<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#263"><c24>263:&nbsp;</c24>impl&nbsp;Sub&lt;f32,f32&gt;&nbsp;for&nbsp;f32&nbsp;{
-<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#284"><c24>284:&nbsp;</c24>impl&nbsp;Sub&lt;f64,f64&gt;&nbsp;for&nbsp;f64&nbsp;{
-<br/></a><a href="../libstd/ptr.rs.html"><c24>libstd/ptr.rs:<br/></c24><a href="../libstd/ptr.rs.html#385"><c24>385:&nbsp;</c24>impl&lt;T,&nbsp;I:&nbsp;Int&gt;&nbsp;Sub&lt;I,&nbsp;*T&gt;&nbsp;for&nbsp;*T&nbsp;{
-<br/></a><a href="../libstd/ptr.rs.html#405"><c24>405:&nbsp;</c24>impl&lt;T,&nbsp;I:&nbsp;Int&gt;&nbsp;Sub&lt;I,&nbsp;*mut&nbsp;T&gt;&nbsp;for&nbsp;*mut&nbsp;T&nbsp;{
-<br/></a><br/><br/><a id="40_14_refs"><a href="#40"><c24>libstd/ops.rs:40:14-40:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="rem"]
-<br/>pub&nbsp;trait&nbsp;Rem&lt;RHS,Result&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#272"><c24>272:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Rem&lt;Self,Self&gt;&nbsp;{
-<br/></a><a href="../libstd/num/num.rs.html#32"><c24>32:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Rem&lt;Self,Self&gt;&nbsp;{}
-<br/></a><a href="../libstd/num/num.rs.html#85"><c24>85:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Rem&lt;Self,Self&gt;&nbsp;{
-<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#224"><c24>224:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#137"><c24>137:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#415"><c24>415:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#231"><c24>231:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#231"><c24>231:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#231"><c24>231:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#231"><c24>231:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#231"><c24>231:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#217"><c24>217:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#217"><c24>217:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#217"><c24>217:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#217"><c24>217:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#217"><c24>217:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#746"><c24>746:&nbsp;</c24>impl&nbsp;Rem&lt;float,float&gt;&nbsp;for&nbsp;float&nbsp;{
-<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#281"><c24>281:&nbsp;</c24>impl&nbsp;Rem&lt;f32,f32&gt;&nbsp;for&nbsp;f32&nbsp;{
-<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#296"><c24>296:&nbsp;</c24>impl&nbsp;Rem&lt;f64,f64&gt;&nbsp;for&nbsp;f64&nbsp;{
-<br/></a><br/><br/><a id="30_14_refs"><a href="#30"><c24>libstd/ops.rs:30:14-30:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="mul"]
-<br/>pub&nbsp;trait&nbsp;Mul&lt;RHS,Result&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#30"><c24>30:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Mul&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/num.rs.html#435"><c24>435:&nbsp;</c24>pub&nbsp;fn&nbsp;pow_with_uint&lt;T:NumCast+One+Zero+Div&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(radix:&nbsp;uint,&nbsp;pow:&nbsp;uint)&nbsp;-&gt;&nbsp;T&nbsp;{
-<br/></a><a href="../libstd/num/num.rs.html#270"><c24>270:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Mul&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#665"><c24>665:&nbsp;</c24>pub&nbsp;fn&nbsp;from_str_common&lt;T:NumCast+Zero+One+Eq+Ord+Div&lt;T,T&gt;+Mul&lt;T,T&gt;+
-<br/></a><a href="../libstd/num/strconv.rs.html#469"><c24>469:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mul&lt;T,T&gt;+Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+
-<br/></a><a href="../libstd/num/strconv.rs.html#224"><c24>224:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#137"><c24>137:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#415"><c24>415:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/iterator.rs.html"><c24>libstd/iterator.rs:<br/></c24><a href="../libstd/iterator.rs.html#714"><c24>714:&nbsp;</c24>impl&lt;A:&nbsp;Mul&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;One,&nbsp;T:&nbsp;Iterator&lt;A&gt;&gt;&nbsp;MultiplicativeIterator&lt;A&gt;&nbsp;for&nbsp;T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#201"><c24>201:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#201"><c24>201:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#201"><c24>201:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#201"><c24>201:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#201"><c24>201:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#205"><c24>205:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#205"><c24>205:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#205"><c24>205:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#205"><c24>205:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#205"><c24>205:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#734"><c24>734:&nbsp;</c24>impl&nbsp;Mul&lt;float,float&gt;&nbsp;for&nbsp;float&nbsp;{
-<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#269"><c24>269:&nbsp;</c24>impl&nbsp;Mul&lt;f32,f32&gt;&nbsp;for&nbsp;f32&nbsp;{
-<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#288"><c24>288:&nbsp;</c24>impl&nbsp;Mul&lt;f64,f64&gt;&nbsp;for&nbsp;f64&nbsp;{
-<br/></a><br/><br/><a id="45_14_refs"><a href="#45"><c24>libstd/ops.rs:45:14-45:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="neg"]
-<br/>pub&nbsp;trait&nbsp;Neg&lt;Result&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#267"><c24>267:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Neg&lt;Self&gt;
-<br/></a><a href="../libstd/num/num.rs.html#27"><c24>27:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Neg&lt;Self&gt;
-<br/></a><a href="../libstd/num/num.rs.html#67"><c24>67:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Neg&lt;Self&gt;&nbsp;{
-<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#415"><c24>415:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#469"><c24>469:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mul&lt;T,T&gt;+Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+
-<br/></a><a href="../libstd/num/strconv.rs.html#137"><c24>137:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#224"><c24>224:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#666"><c24>666:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+NumStrConv+Clone&gt;(
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#258"><c24>258:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#258"><c24>258:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#258"><c24>258:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#258"><c24>258:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#258"><c24>258:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#223"><c24>223:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#223"><c24>223:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#223"><c24>223:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#223"><c24>223:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#223"><c24>223:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#751"><c24>751:&nbsp;</c24>impl&nbsp;Neg&lt;float&gt;&nbsp;for&nbsp;float&nbsp;{
-<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#287"><c24>287:&nbsp;</c24>impl&nbsp;Neg&lt;f32&gt;&nbsp;for&nbsp;f32&nbsp;{
-<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#301"><c24>301:&nbsp;</c24>impl&nbsp;Neg&lt;f64&gt;&nbsp;for&nbsp;f64&nbsp;{
-<br/></a><br/><br/><a id="75_14_refs"><a href="#75"><c24>libstd/ops.rs:75:14-75:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="shr"]
-<br/>pub&nbsp;trait&nbsp;Shr&lt;RHS,Result&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#247"><c24>247:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Shr&lt;Self,Self&gt;&nbsp;{}
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#449"><c24>449:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#449"><c24>449:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#449"><c24>449:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#449"><c24>449:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#449"><c24>449:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#311"><c24>311:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#311"><c24>311:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#311"><c24>311:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#311"><c24>311:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#311"><c24>311:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><br/><br/><a id="70_14_refs"><a href="#70"><c24>libstd/ops.rs:70:14-70:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="shl"]
-<br/>pub&nbsp;trait&nbsp;Shl&lt;RHS,Result&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#246"><c24>246:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Shl&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#443"><c24>443:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#443"><c24>443:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#443"><c24>443:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#443"><c24>443:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#443"><c24>443:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#305"><c24>305:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#305"><c24>305:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#305"><c24>305:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#305"><c24>305:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#305"><c24>305:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><br/><br/><a id="20_14_refs"><a href="#20"><c24>libstd/ops.rs:20:14-20:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="add"]
+</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c4>}</c4><br/><div/><br/><a id="20_14_refs"><a href="#20"><c24>libstd/ops.rs:20:14-20:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="add"]
 <br/>pub&nbsp;trait&nbsp;Add&lt;RHS,Result&gt;&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#268"><c24>268:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Add&lt;Self,Self&gt;
 <br/></a><a href="../libstd/num/num.rs.html#28"><c24>28:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Add&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#666"><c24>666:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+NumStrConv+Clone&gt;(
-<br/></a><a href="../libstd/num/strconv.rs.html#469"><c24>469:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mul&lt;T,T&gt;+Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+
-<br/></a><a href="../libstd/iterator.rs.html"><c24>libstd/iterator.rs:<br/></c24><a href="../libstd/iterator.rs.html#689"><c24>689:&nbsp;</c24>impl&lt;A:&nbsp;Add&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;Zero,&nbsp;T:&nbsp;Iterator&lt;A&gt;&gt;&nbsp;AdditiveIterator&lt;A&gt;&nbsp;for&nbsp;T&nbsp;{
-<br/></a><a href="../libstd/iterator.rs.html#1531"><c24>1531:&nbsp;</c24>impl&lt;A:&nbsp;Add&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;Ord&nbsp;+&nbsp;Clone&nbsp;+&nbsp;One&gt;&nbsp;Iterator&lt;A&gt;&nbsp;for&nbsp;Range&lt;A&gt;&nbsp;{
-<br/></a><a href="../libstd/iterator.rs.html#1544"><c24>1544:&nbsp;</c24>impl&lt;A:&nbsp;Add&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;Clone&gt;&nbsp;Iterator&lt;A&gt;&nbsp;for&nbsp;Counter&lt;A&gt;&nbsp;{
-<br/></a><a href="../libstd/iterator.rs.html#1527"><c24>1527:&nbsp;</c24>pub&nbsp;fn&nbsp;range&lt;A:&nbsp;Add&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;Ord&nbsp;+&nbsp;Clone&nbsp;+&nbsp;One&gt;(start:&nbsp;A,&nbsp;stop:&nbsp;A)&nbsp;-&gt;&nbsp;Range&lt;A&gt;&nbsp;{
-<br/></a><a href="../libstd/option.rs.html"><c24>libstd/option.rs:<br/></c24><a href="../libstd/option.rs.html#88"><c24>88:&nbsp;</c24>impl&lt;T:Clone+Add&lt;T,T&gt;&gt;&nbsp;Add&lt;Option&lt;T&gt;,&nbsp;Option&lt;T&gt;&gt;&nbsp;for&nbsp;Option&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/option.rs.html#88"><c24>88:&nbsp;</c24>impl&lt;T:Clone+Add&lt;T,T&gt;&gt;&nbsp;Add&lt;Option&lt;T&gt;,&nbsp;Option&lt;T&gt;&gt;&nbsp;for&nbsp;Option&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#189"><c24>189:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#189"><c24>189:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#189"><c24>189:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#189"><c24>189:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#189"><c24>189:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#193"><c24>193:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#193"><c24>193:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#193"><c24>193:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#193"><c24>193:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#193"><c24>193:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#469"><c24>469:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mul&lt;T,T&gt;+Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+
+<br/></a><a href="../libstd/num/strconv.rs.html#666"><c24>666:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+NumStrConv+Clone&gt;(
+<br/></a><a href="../libstd/iterator.rs.html"><c24>libstd/iterator.rs:<br/></c24><a href="../libstd/iterator.rs.html#710"><c24>710:&nbsp;</c24>impl&lt;A:&nbsp;Add&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;Zero,&nbsp;T:&nbsp;Iterator&lt;A&gt;&gt;&nbsp;AdditiveIterator&lt;A&gt;&nbsp;for&nbsp;T&nbsp;{
+<br/></a><a href="../libstd/iterator.rs.html#1530"><c24>1530:&nbsp;</c24>pub&nbsp;fn&nbsp;range&lt;A:&nbsp;Add&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;Ord&nbsp;+&nbsp;Clone&nbsp;+&nbsp;One&gt;(start:&nbsp;A,&nbsp;stop:&nbsp;A)&nbsp;-&gt;&nbsp;Range&lt;A&gt;&nbsp;{
+<br/></a><a href="../libstd/iterator.rs.html#1563"><c24>1563:&nbsp;</c24>impl&lt;A:&nbsp;Add&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;Clone&gt;&nbsp;Iterator&lt;A&gt;&nbsp;for&nbsp;Counter&lt;A&gt;&nbsp;{
+<br/></a><a href="../libstd/iterator.rs.html#1534"><c24>1534:&nbsp;</c24>impl&lt;A:&nbsp;Add&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;Ord&nbsp;+&nbsp;Clone&gt;&nbsp;Iterator&lt;A&gt;&nbsp;for&nbsp;Range&lt;A&gt;&nbsp;{
+<br/></a><a href="../libstd/option.rs.html"><c24>libstd/option.rs:<br/></c24><a href="../libstd/option.rs.html#89"><c24>89:&nbsp;</c24>impl&lt;T:&nbsp;Add&lt;T,&nbsp;T&gt;&gt;&nbsp;Add&lt;Option&lt;T&gt;,&nbsp;Option&lt;T&gt;&gt;&nbsp;for&nbsp;Option&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/option.rs.html#89"><c24>89:&nbsp;</c24>impl&lt;T:&nbsp;Add&lt;T,&nbsp;T&gt;&gt;&nbsp;Add&lt;Option&lt;T&gt;,&nbsp;Option&lt;T&gt;&gt;&nbsp;for&nbsp;Option&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#175"><c24>175:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#175"><c24>175:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#175"><c24>175:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#175"><c24>175:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#175"><c24>175:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#180"><c24>180:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#180"><c24>180:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#180"><c24>180:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#180"><c24>180:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#180"><c24>180:&nbsp;</c24>impl&nbsp;Add&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
 <br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#722"><c24>722:&nbsp;</c24>impl&nbsp;Add&lt;float,float&gt;&nbsp;for&nbsp;float&nbsp;{
 <br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#257"><c24>257:&nbsp;</c24>impl&nbsp;Add&lt;f32,f32&gt;&nbsp;for&nbsp;f32&nbsp;{
 <br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#280"><c24>280:&nbsp;</c24>impl&nbsp;Add&lt;f64,f64&gt;&nbsp;for&nbsp;f64&nbsp;{
-<br/></a><a href="../libstd/vec.rs.html"><c24>libstd/vec.rs:<br/></c24><a href="../libstd/vec.rs.html#658"><c24>658:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;T:Clone,&nbsp;V:&nbsp;Vector&lt;T&gt;&gt;&nbsp;Add&lt;V,&nbsp;~[T]&gt;&nbsp;for&nbsp;~[T]&nbsp;{
-<br/></a><a href="../libstd/vec.rs.html#650"><c24>650:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;'self,T:Clone,&nbsp;V:&nbsp;Vector&lt;T&gt;&gt;&nbsp;Add&lt;V,&nbsp;~[T]&gt;&nbsp;for&nbsp;&amp;'self&nbsp;[T]&nbsp;{
-<br/></a><a href="../libstd/at_vec.rs.html"><c24>libstd/at_vec.rs:<br/></c24><a href="../libstd/at_vec.rs.html#178"><c24>178:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;'self,T:Clone,&nbsp;V:&nbsp;Vector&lt;T&gt;&gt;&nbsp;Add&lt;V,@[T]&gt;&nbsp;for&nbsp;@[T]&nbsp;{
-<br/></a><a href="../libstd/str.rs.html"><c24>libstd/str.rs:<br/></c24><a href="../libstd/str.rs.html#968"><c24>968:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;'self&gt;&nbsp;Add&lt;&amp;'self&nbsp;str,~str&gt;&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;{
-<br/></a><a href="../libstd/ptr.rs.html"><c24>libstd/ptr.rs:<br/></c24><a href="../libstd/ptr.rs.html#395"><c24>395:&nbsp;</c24>impl&lt;T,&nbsp;I:&nbsp;Int&gt;&nbsp;Add&lt;I,&nbsp;*mut&nbsp;T&gt;&nbsp;for&nbsp;*mut&nbsp;T&nbsp;{
-<br/></a><a href="../libstd/ptr.rs.html#375"><c24>375:&nbsp;</c24>impl&lt;T,&nbsp;I:&nbsp;Int&gt;&nbsp;Add&lt;I,&nbsp;*T&gt;&nbsp;for&nbsp;*T&nbsp;{
-<br/></a><br/><br/><a id="55_17_refs"><a href="#55"><c24>libstd/ops.rs:55:17-55:17&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="bitand"]
-<br/>pub&nbsp;trait&nbsp;BitAnd&lt;RHS,Result&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#243"><c24>243:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;BitAnd&lt;Self,Self&gt;
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#431"><c24>431:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#431"><c24>431:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#431"><c24>431:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#431"><c24>431:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#431"><c24>431:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#293"><c24>293:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#293"><c24>293:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#293"><c24>293:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#293"><c24>293:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#293"><c24>293:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/vec.rs.html"><c24>libstd/vec.rs:<br/></c24><a href="../libstd/vec.rs.html#694"><c24>694:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;T:Clone,&nbsp;V:&nbsp;Vector&lt;T&gt;&gt;&nbsp;Add&lt;V,&nbsp;~[T]&gt;&nbsp;for&nbsp;~[T]&nbsp;{
+<br/></a><a href="../libstd/vec.rs.html#686"><c24>686:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;'self,T:Clone,&nbsp;V:&nbsp;Vector&lt;T&gt;&gt;&nbsp;Add&lt;V,&nbsp;~[T]&gt;&nbsp;for&nbsp;&amp;'self&nbsp;[T]&nbsp;{
+<br/></a><a href="../libstd/at_vec.rs.html"><c24>libstd/at_vec.rs:<br/></c24><a href="../libstd/at_vec.rs.html#176"><c24>176:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;'self,T:Clone,&nbsp;V:&nbsp;Vector&lt;T&gt;&gt;&nbsp;Add&lt;V,@[T]&gt;&nbsp;for&nbsp;@[T]&nbsp;{
+<br/></a><a href="../libstd/str.rs.html"><c24>libstd/str.rs:<br/></c24><a href="../libstd/str.rs.html#1161"><c24>1161:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;'self&gt;&nbsp;Add&lt;&amp;'self&nbsp;str,~str&gt;&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;{
+<br/></a><a href="../libstd/ptr.rs.html"><c24>libstd/ptr.rs:<br/></c24><a href="../libstd/ptr.rs.html#415"><c24>415:&nbsp;</c24>impl&lt;T,&nbsp;I:&nbsp;Int&gt;&nbsp;Add&lt;I,&nbsp;*T&gt;&nbsp;for&nbsp;*T&nbsp;{
+<br/></a><a href="../libstd/ptr.rs.html#435"><c24>435:&nbsp;</c24>impl&lt;T,&nbsp;I:&nbsp;Int&gt;&nbsp;Add&lt;I,&nbsp;*mut&nbsp;T&gt;&nbsp;for&nbsp;*mut&nbsp;T&nbsp;{
+<br/></a><br/><br/><a id="35_14_refs"><a href="#35"><c24>libstd/ops.rs:35:14-35:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="div"]
+<br/>pub&nbsp;trait&nbsp;Div&lt;RHS,Result&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#31"><c24>31:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Div&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/num.rs.html#271"><c24>271:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Div&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/num.rs.html#114"><c24>114:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Div&lt;Self,Self&gt;&nbsp;{
+<br/></a><a href="../libstd/num/num.rs.html#84"><c24>84:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Div&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/num.rs.html#435"><c24>435:&nbsp;</c24>pub&nbsp;fn&nbsp;pow_with_uint&lt;T:NumCast+One+Zero+Div&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(radix:&nbsp;uint,&nbsp;pow:&nbsp;uint)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#665"><c24>665:&nbsp;</c24>pub&nbsp;fn&nbsp;from_str_common&lt;T:NumCast+Zero+One+Eq+Ord+Div&lt;T,T&gt;+Mul&lt;T,T&gt;+
+<br/></a><a href="../libstd/num/strconv.rs.html#224"><c24>224:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#137"><c24>137:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#415"><c24>415:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#468"><c24>468:&nbsp;</c24>pub&nbsp;fn&nbsp;from_str_bytes_common&lt;T:NumCast+Zero+One+Eq+Ord+Div&lt;T,T&gt;+
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#193"><c24>193:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#193"><c24>193:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#193"><c24>193:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#193"><c24>193:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#193"><c24>193:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#198"><c24>198:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#198"><c24>198:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#198"><c24>198:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#198"><c24>198:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#198"><c24>198:&nbsp;</c24>impl&nbsp;Div&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#740"><c24>740:&nbsp;</c24>impl&nbsp;Div&lt;float,float&gt;&nbsp;for&nbsp;float&nbsp;{
+<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#275"><c24>275:&nbsp;</c24>impl&nbsp;Div&lt;f32,f32&gt;&nbsp;for&nbsp;f32&nbsp;{
+<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#295"><c24>295:&nbsp;</c24>impl&nbsp;Div&lt;f64,f64&gt;&nbsp;for&nbsp;f64&nbsp;{
+<br/></a><br/><br/><a id="30_14_refs"><a href="#30"><c24>libstd/ops.rs:30:14-30:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="mul"]
+<br/>pub&nbsp;trait&nbsp;Mul&lt;RHS,Result&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#435"><c24>435:&nbsp;</c24>pub&nbsp;fn&nbsp;pow_with_uint&lt;T:NumCast+One+Zero+Div&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(radix:&nbsp;uint,&nbsp;pow:&nbsp;uint)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></a><a href="../libstd/num/num.rs.html#30"><c24>30:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Mul&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/num.rs.html#270"><c24>270:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Mul&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#665"><c24>665:&nbsp;</c24>pub&nbsp;fn&nbsp;from_str_common&lt;T:NumCast+Zero+One+Eq+Ord+Div&lt;T,T&gt;+Mul&lt;T,T&gt;+
+<br/></a><a href="../libstd/num/strconv.rs.html#137"><c24>137:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#224"><c24>224:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#469"><c24>469:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mul&lt;T,T&gt;+Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+
+<br/></a><a href="../libstd/num/strconv.rs.html#415"><c24>415:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/iterator.rs.html"><c24>libstd/iterator.rs:<br/></c24><a href="../libstd/iterator.rs.html#735"><c24>735:&nbsp;</c24>impl&lt;A:&nbsp;Mul&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;One,&nbsp;T:&nbsp;Iterator&lt;A&gt;&gt;&nbsp;MultiplicativeIterator&lt;A&gt;&nbsp;for&nbsp;T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#187"><c24>187:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#187"><c24>187:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#187"><c24>187:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#187"><c24>187:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#187"><c24>187:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#192"><c24>192:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#192"><c24>192:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#192"><c24>192:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#192"><c24>192:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#192"><c24>192:&nbsp;</c24>impl&nbsp;Mul&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#734"><c24>734:&nbsp;</c24>impl&nbsp;Mul&lt;float,float&gt;&nbsp;for&nbsp;float&nbsp;{
+<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#269"><c24>269:&nbsp;</c24>impl&nbsp;Mul&lt;f32,f32&gt;&nbsp;for&nbsp;f32&nbsp;{
+<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#290"><c24>290:&nbsp;</c24>impl&nbsp;Mul&lt;f64,f64&gt;&nbsp;for&nbsp;f64&nbsp;{
 <br/></a><br/><br/><a id="50_14_refs"><a href="#50"><c24>libstd/ops.rs:50:14-50:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="not"]
 <br/>pub&nbsp;trait&nbsp;Not&lt;Result&gt;&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#242"><c24>242:&nbsp;</c24>pub&nbsp;trait&nbsp;Bitwise:&nbsp;Not&lt;Self&gt;
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#455"><c24>455:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#455"><c24>455:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#455"><c24>455:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#455"><c24>455:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#455"><c24>455:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#317"><c24>317:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#317"><c24>317:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#317"><c24>317:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#317"><c24>317:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#317"><c24>317:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#441"><c24>441:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#441"><c24>441:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#441"><c24>441:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#441"><c24>441:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#441"><c24>441:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#304"><c24>304:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#304"><c24>304:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#304"><c24>304:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#304"><c24>304:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#304"><c24>304:&nbsp;</c24>impl&nbsp;Not&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
 <br/></a><a href="../libstd/bool.rs.html"><c24>libstd/bool.rs:<br/></c24><a href="../libstd/bool.rs.html#278"><c24>278:&nbsp;</c24>impl&nbsp;Not&lt;bool&gt;&nbsp;for&nbsp;bool&nbsp;{
+<br/></a><br/><br/><a id="60_16_refs"><a href="#60"><c24>libstd/ops.rs:60:16-60:16&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="bitor"]
+<br/>pub&nbsp;trait&nbsp;BitOr&lt;RHS,Result&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#244"><c24>244:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;BitOr&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#411"><c24>411:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#411"><c24>411:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#411"><c24>411:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#411"><c24>411:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#411"><c24>411:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#274"><c24>274:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#274"><c24>274:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#274"><c24>274:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#274"><c24>274:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#274"><c24>274:&nbsp;</c24>impl&nbsp;BitOr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><br/><br/><a id="40_14_refs"><a href="#40"><c24>libstd/ops.rs:40:14-40:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="rem"]
+<br/>pub&nbsp;trait&nbsp;Rem&lt;RHS,Result&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#32"><c24>32:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Rem&lt;Self,Self&gt;&nbsp;{}
+<br/></a><a href="../libstd/num/num.rs.html#85"><c24>85:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Rem&lt;Self,Self&gt;&nbsp;{
+<br/></a><a href="../libstd/num/num.rs.html#272"><c24>272:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Rem&lt;Self,Self&gt;&nbsp;{
+<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#137"><c24>137:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#224"><c24>224:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#415"><c24>415:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#217"><c24>217:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#217"><c24>217:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#217"><c24>217:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#217"><c24>217:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#217"><c24>217:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#204"><c24>204:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#204"><c24>204:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#204"><c24>204:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#204"><c24>204:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#204"><c24>204:&nbsp;</c24>impl&nbsp;Rem&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#746"><c24>746:&nbsp;</c24>impl&nbsp;Rem&lt;float,float&gt;&nbsp;for&nbsp;float&nbsp;{
+<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#281"><c24>281:&nbsp;</c24>impl&nbsp;Rem&lt;f32,f32&gt;&nbsp;for&nbsp;f32&nbsp;{
+<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#300"><c24>300:&nbsp;</c24>impl&nbsp;Rem&lt;f64,f64&gt;&nbsp;for&nbsp;f64&nbsp;{
+<br/></a><br/><br/><a id="70_14_refs"><a href="#70"><c24>libstd/ops.rs:70:14-70:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="shl"]
+<br/>pub&nbsp;trait&nbsp;Shl&lt;RHS,Result&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#246"><c24>246:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Shl&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#429"><c24>429:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#429"><c24>429:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#429"><c24>429:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#429"><c24>429:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#429"><c24>429:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#292"><c24>292:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#292"><c24>292:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#292"><c24>292:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#292"><c24>292:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#292"><c24>292:&nbsp;</c24>impl&nbsp;Shl&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><br/><br/><a id="15_15_refs"><a href="#15"><c24>libstd/ops.rs:15:15-15:15&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="drop"]
+<br/>pub&nbsp;trait&nbsp;Drop&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/io.rs.html"><c24>libstd/io.rs:<br/></c24><a href="../libstd/io.rs.html#1795"><c24>1795:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;Res&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/io.rs.html#1257"><c24>1257:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;FdRes&nbsp;{
+<br/></a><a href="../libstd/io.rs.html#1006"><c24>1006:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;FILERes&nbsp;{
+<br/></a><a href="../libstd/task/spawn.rs.html"><c24>libstd/task/spawn.rs:<br/></c24><a href="../libstd/task/spawn.rs.html#345"><c24>345:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Taskgroup&nbsp;{
+<br/></a><a href="../libstd/task/spawn.rs.html#402"><c24>402:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;AutoNotify&nbsp;{
+<br/></a><a href="../libstd/c_str.rs.html"><c24>libstd/c_str.rs:<br/></c24><a href="../libstd/c_str.rs.html#100"><c24>100:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;CString&nbsp;{
+<br/></a><a href="../libstd/os.rs.html"><c24>libstd/os.rs:<br/></c24><a href="../libstd/os.rs.html#1461"><c24>1461:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;MemoryMap&nbsp;{
+<br/></a><a href="../libstd/run.rs.html"><c24>libstd/run.rs:<br/></c24><a href="../libstd/run.rs.html#429"><c24>429:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Process&nbsp;{
+<br/></a><a href="../libstd/condition.rs.html"><c24>libstd/condition.rs:<br/></c24><a href="../libstd/condition.rs.html#89"><c24>89:&nbsp;</c24>impl&lt;'self,&nbsp;T,&nbsp;U&gt;&nbsp;Drop&nbsp;for&nbsp;Guard&lt;'self,&nbsp;T,&nbsp;U&gt;&nbsp;{
+<br/></a><a href="../libstd/util.rs.html"><c24>libstd/util.rs:<br/></c24><a href="../libstd/util.rs.html#88"><c24>88:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;NonCopyable&nbsp;{
+<br/></a><a href="../libstd/unstable/dynamic_lib.rs.html"><c24>libstd/unstable/dynamic_lib.rs:<br/></c24><a href="../libstd/unstable/dynamic_lib.rs.html#28"><c24>28:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;DynamicLibrary&nbsp;{
+<br/></a><a href="../libstd/unstable/finally.rs.html"><c24>libstd/unstable/finally.rs:<br/></c24><a href="../libstd/unstable/finally.rs.html#66"><c24>66:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Drop&nbsp;for&nbsp;Finallyalizer&lt;'self&gt;&nbsp;{
+<br/></a><a href="../libstd/unstable/sync.rs.html"><c24>libstd/unstable/sync.rs:<br/></c24><a href="../libstd/unstable/sync.rs.html#226"><c24>226:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;UnsafeAtomicRcBox&lt;T&gt;{
+<br/></a><a href="../libstd/unstable/sync.rs.html#306"><c24>306:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;LittleLock&nbsp;{
+<br/></a><a href="../libstd/unstable/atomics.rs.html"><c24>libstd/unstable/atomics.rs:<br/></c24><a href="../libstd/unstable/atomics.rs.html#340"><c24>340:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;AtomicOption&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/task.rs.html"><c24>libstd/rt/task.rs:<br/></c24><a href="../libstd/rt/task.rs.html#323"><c24>323:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Task&nbsp;{
+<br/></a><a href="../libstd/rt/kill.rs.html"><c24>libstd/rt/kill.rs:<br/></c24><a href="../libstd/rt/kill.rs.html#151"><c24>151:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;KillFlag&nbsp;{
+<br/></a><a href="../libstd/rt/kill.rs.html#599"><c24>599:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Death&nbsp;{
+<br/></a><a href="../libstd/rt/uv/uvio.rs.html"><c24>libstd/rt/uv/uvio.rs:<br/></c24><a href="../libstd/rt/uv/uvio.rs.html#433"><c24>433:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvTcpStream&nbsp;{
+<br/></a><a href="../libstd/rt/uv/uvio.rs.html#353"><c24>353:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvTcpListener&nbsp;{
+<br/></a><a href="../libstd/rt/uv/uvio.rs.html#758"><c24>758:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvTimer&nbsp;{
+<br/></a><a href="../libstd/rt/uv/uvio.rs.html#185"><c24>185:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvRemoteCallback&nbsp;{
+<br/></a><a href="../libstd/rt/uv/uvio.rs.html#94"><c24>94:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvEventLoop&nbsp;{
+<br/></a><a href="../libstd/rt/uv/uvio.rs.html#574"><c24>574:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;UvUdpSocket&nbsp;{
+<br/></a><a href="../libstd/rt/stack.rs.html"><c24>libstd/rt/stack.rs:<br/></c24><a href="../libstd/rt/stack.rs.html#51"><c24>51:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;StackSegment&nbsp;{
+<br/></a><a href="../libstd/rt/thread.rs.html"><c24>libstd/rt/thread.rs:<br/></c24><a href="../libstd/rt/thread.rs.html#44"><c24>44:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Thread&nbsp;{
+<br/></a><a href="../libstd/rt/local_heap.rs.html"><c24>libstd/rt/local_heap.rs:<br/></c24><a href="../libstd/rt/local_heap.rs.html#76"><c24>76:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;LocalHeap&nbsp;{
+<br/></a><a href="../libstd/rt/rc.rs.html"><c24>libstd/rt/rc.rs:<br/></c24><a href="../libstd/rt/rc.rs.html#76"><c24>76:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;RC&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/comm.rs.html"><c24>libstd/rt/comm.rs:<br/></c24><a href="../libstd/rt/comm.rs.html#367"><c24>367:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;ChanOne&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/comm.rs.html#395"><c24>395:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;PortOne&lt;T&gt;&nbsp;{
+<br/></a><br/><br/><a id="55_17_refs"><a href="#55"><c24>libstd/ops.rs:55:17-55:17&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="bitand"]
+<br/>pub&nbsp;trait&nbsp;BitAnd&lt;RHS,Result&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#243"><c24>243:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;BitAnd&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#417"><c24>417:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#417"><c24>417:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#417"><c24>417:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#417"><c24>417:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#417"><c24>417:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#280"><c24>280:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#280"><c24>280:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#280"><c24>280:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#280"><c24>280:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#280"><c24>280:&nbsp;</c24>impl&nbsp;BitAnd&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><br/><br/><a id="25_14_refs"><a href="#25"><c24>libstd/ops.rs:25:14-25:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="sub"]
+<br/>pub&nbsp;trait&nbsp;Sub&lt;RHS,Result&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#269"><c24>269:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Sub&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/num.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Sub&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#666"><c24>666:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+NumStrConv+Clone&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#469"><c24>469:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mul&lt;T,T&gt;+Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+
+<br/></a><a href="../libstd/iterator.rs.html"><c24>libstd/iterator.rs:<br/></c24><a href="../libstd/iterator.rs.html#1547"><c24>1547:&nbsp;</c24>impl&lt;A:&nbsp;Sub&lt;A,&nbsp;A&gt;&nbsp;+&nbsp;Integer&nbsp;+&nbsp;Ord&nbsp;+&nbsp;Clone&gt;&nbsp;DoubleEndedIterator&lt;A&gt;&nbsp;for&nbsp;Range&lt;A&gt;&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#181"><c24>181:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#181"><c24>181:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#181"><c24>181:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#181"><c24>181:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#181"><c24>181:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#186"><c24>186:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#186"><c24>186:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#186"><c24>186:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#186"><c24>186:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#186"><c24>186:&nbsp;</c24>impl&nbsp;Sub&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#728"><c24>728:&nbsp;</c24>impl&nbsp;Sub&lt;float,float&gt;&nbsp;for&nbsp;float&nbsp;{
+<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#263"><c24>263:&nbsp;</c24>impl&nbsp;Sub&lt;f32,f32&gt;&nbsp;for&nbsp;f32&nbsp;{
+<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#285"><c24>285:&nbsp;</c24>impl&nbsp;Sub&lt;f64,f64&gt;&nbsp;for&nbsp;f64&nbsp;{
+<br/></a><a href="../libstd/ptr.rs.html"><c24>libstd/ptr.rs:<br/></c24><a href="../libstd/ptr.rs.html#445"><c24>445:&nbsp;</c24>impl&lt;T,&nbsp;I:&nbsp;Int&gt;&nbsp;Sub&lt;I,&nbsp;*mut&nbsp;T&gt;&nbsp;for&nbsp;*mut&nbsp;T&nbsp;{
+<br/></a><a href="../libstd/ptr.rs.html#425"><c24>425:&nbsp;</c24>impl&lt;T,&nbsp;I:&nbsp;Int&gt;&nbsp;Sub&lt;I,&nbsp;*T&gt;&nbsp;for&nbsp;*T&nbsp;{
+<br/></a><br/><br/><a id="75_14_refs"><a href="#75"><c24>libstd/ops.rs:75:14-75:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="shr"]
+<br/>pub&nbsp;trait&nbsp;Shr&lt;RHS,Result&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#247"><c24>247:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Shr&lt;Self,Self&gt;&nbsp;{}
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#435"><c24>435:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#435"><c24>435:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#435"><c24>435:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#435"><c24>435:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#435"><c24>435:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#298"><c24>298:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#298"><c24>298:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#298"><c24>298:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#298"><c24>298:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#298"><c24>298:&nbsp;</c24>impl&nbsp;Shr&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><br/><br/><a id="45_14_refs"><a href="#45"><c24>libstd/ops.rs:45:14-45:14&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="neg"]
+<br/>pub&nbsp;trait&nbsp;Neg&lt;Result&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#267"><c24>267:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Neg&lt;Self&gt;
+<br/></a><a href="../libstd/num/num.rs.html#67"><c24>67:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Neg&lt;Self&gt;&nbsp;{
+<br/></a><a href="../libstd/num/num.rs.html#27"><c24>27:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;Neg&lt;Self&gt;
+<br/></a><a href="../libstd/num/strconv.rs.html"><c24>libstd/num/strconv.rs:<br/></c24><a href="../libstd/num/strconv.rs.html#666"><c24>666:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+NumStrConv+Clone&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#415"><c24>415:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#224"><c24>224:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/strconv.rs.html#469"><c24>469:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mul&lt;T,T&gt;+Sub&lt;T,T&gt;+Neg&lt;T&gt;+Add&lt;T,T&gt;+
+<br/></a><a href="../libstd/num/strconv.rs.html#137"><c24>137:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Div&lt;T,T&gt;+Neg&lt;T&gt;+Rem&lt;T,T&gt;+Mul&lt;T,T&gt;&gt;(
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#244"><c24>244:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#244"><c24>244:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#244"><c24>244:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#244"><c24>244:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#244"><c24>244:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#210"><c24>210:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#210"><c24>210:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#210"><c24>210:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#210"><c24>210:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#210"><c24>210:&nbsp;</c24>impl&nbsp;Neg&lt;$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#751"><c24>751:&nbsp;</c24>impl&nbsp;Neg&lt;float&gt;&nbsp;for&nbsp;float&nbsp;{
+<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#287"><c24>287:&nbsp;</c24>impl&nbsp;Neg&lt;f32&gt;&nbsp;for&nbsp;f32&nbsp;{
+<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#305"><c24>305:&nbsp;</c24>impl&nbsp;Neg&lt;f64&gt;&nbsp;for&nbsp;f64&nbsp;{
+<br/></a><br/><br/><a id="65_17_refs"><a href="#65"><c24>libstd/ops.rs:65:17-65:17&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="bitxor"]
+<br/>pub&nbsp;trait&nbsp;BitXor&lt;RHS,Result&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/num.rs.html"><c24>libstd/num/num.rs:<br/></c24><a href="../libstd/num/num.rs.html#245"><c24>245:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;BitXor&lt;Self,Self&gt;
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#423"><c24>423:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#423"><c24>423:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#423"><c24>423:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#423"><c24>423:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#423"><c24>423:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#286"><c24>286:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#286"><c24>286:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#286"><c24>286:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#286"><c24>286:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#286"><c24>286:&nbsp;</c24>impl&nbsp;BitXor&lt;$T,$T&gt;&nbsp;for&nbsp;$T&nbsp;{
 <br/></a><br/></a></a>

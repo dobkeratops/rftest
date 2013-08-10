@@ -25,7 +25,6 @@ use util::ppaux::{note_and_explain_region, bound_region_ptr_to_str};
 use util::ppaux::{trait_store_to_str, ty_to_str, vstore_to_str};
 use util::ppaux::{Repr, UserString};
 use util::common::{indenter};
-use util::enum_set::{EnumSet, CLike};
 
 use std::cast;
 use std::cmp;
@@ -33,6 +32,7 @@ use std::hashmap::{HashMap, HashSet};
 use std::ops;
 use std::ptr::to_unsafe_ptr;
 use std::to_bytes;
+use std::to_str::ToStr;
 use std::u32;
 use std::vec;
 use syntax::ast::*;
@@ -47,6 +47,7 @@ use syntax::opt_vec::OptVec;
 use syntax::opt_vec;
 use syntax::abi::AbiSet;
 use syntax;
+use extra::enum_set::{EnumSet, CLike};
 
 pub static INITIAL_DISCRIMINANT_VALUE: uint = 0;
 
@@ -116,7 +117,7 @@ pub struct mt {
     mutbl: ast::mutability,
 }
 
-#[deriving(Clone, Eq, Encodable, Decodable, IterBytes)]
+#[deriving(Clone, Eq, Encodable, Decodable, IterBytes, ToStr)]
 pub enum vstore {
     vstore_fixed(uint),
     vstore_uniq,
@@ -124,7 +125,7 @@ pub enum vstore {
     vstore_slice(Region)
 }
 
-#[deriving(Clone, Eq, IterBytes, Encodable, Decodable)]
+#[deriving(Clone, Eq, IterBytes, Encodable, Decodable, ToStr)]
 pub enum TraitStore {
     BoxTraitStore,              // @Trait
     UniqTraitStore,             // ~Trait
@@ -350,6 +351,12 @@ pub struct t_box_ {
 enum t_opaque {}
 pub type t = *t_opaque;
 
+impl ToStr for t {
+    fn to_str(&self) -> ~str {
+        ~"*t_opaque"
+    }
+}
+
 pub fn get(t: t) -> t_box {
     unsafe {
         let t2: t_box = cast::transmute(t);
@@ -410,7 +417,7 @@ pub struct param_ty {
 }
 
 /// Representation of regions:
-#[deriving(Clone, Eq, IterBytes, Encodable, Decodable)]
+#[deriving(Clone, Eq, IterBytes, Encodable, Decodable, ToStr)]
 pub enum Region {
     /// Bound regions are found (primarily) in function types.  They indicate
     /// region parameters that have yet to be replaced with actual regions
@@ -456,13 +463,13 @@ impl Region {
     }
 }
 
-#[deriving(Clone, Eq, IterBytes, Encodable, Decodable)]
+#[deriving(Clone, Eq, IterBytes, Encodable, Decodable, ToStr)]
 pub struct FreeRegion {
     scope_id: NodeId,
     bound_region: bound_region
 }
 
-#[deriving(Clone, Eq, IterBytes, Encodable, Decodable)]
+#[deriving(Clone, Eq, IterBytes, Encodable, Decodable, ToStr)]
 pub enum bound_region {
     /// The self region for structs, impls (&T in a type defn or &'self T)
     br_self,
@@ -620,19 +627,22 @@ pub enum IntVarValue {
     UintType(ast::uint_ty),
 }
 
-#[deriving(Clone)]
+#[deriving(Clone, ToStr)]
 pub enum terr_vstore_kind {
-    terr_vec, terr_str, terr_fn, terr_trait
+    terr_vec,
+    terr_str,
+    terr_fn,
+    terr_trait
 }
 
-#[deriving(Clone)]
+#[deriving(Clone, ToStr)]
 pub struct expected_found<T> {
     expected: T,
     found: T
 }
 
 // Data structures used in type unification
-#[deriving(Clone)]
+#[deriving(Clone, ToStr)]
 pub enum type_err {
     terr_mismatch,
     terr_purity_mismatch(expected_found<purity>),
@@ -674,7 +684,7 @@ pub struct ParamBounds {
 
 pub type BuiltinBounds = EnumSet<BuiltinBound>;
 
-#[deriving(Clone, Eq, IterBytes)]
+#[deriving(Clone, Eq, IterBytes, ToStr)]
 pub enum BuiltinBound {
     BoundStatic,
     BoundSend,
@@ -725,7 +735,7 @@ pub enum InferTy {
     FloatVar(FloatVid)
 }
 
-#[deriving(Clone, Encodable, Decodable, IterBytes)]
+#[deriving(Clone, Encodable, Decodable, IterBytes, ToStr)]
 pub enum InferRegion {
     ReVar(RegionVid),
     ReSkolemized(uint, bound_region)
@@ -2277,7 +2287,7 @@ pub fn type_contents(cx: ctxt, ty: t) -> TypeContents {
         // This is like with typarams below, but less "pessimistic" and also
         // dependent on the trait store.
         let mut bt = TC_NONE;
-        do (AllBuiltinBounds() - bounds).each |bound| {
+        for bound in (AllBuiltinBounds() - bounds).iter() {
             bt = bt + match bound {
                 BoundStatic if bounds.contains_elem(BoundSend)
                             => TC_NONE, // Send bound implies static bound.
@@ -2286,8 +2296,7 @@ pub fn type_contents(cx: ctxt, ty: t) -> TypeContents {
                 BoundFreeze => TC_MUTABLE,
                 BoundSized  => TC_NONE, // don't care if interior is sized
             };
-            true
-        };
+        }
         st + mt + bt
     }
 
@@ -2298,7 +2307,7 @@ pub fn type_contents(cx: ctxt, ty: t) -> TypeContents {
         let _i = indenter();
 
         let mut tc = TC_ALL;
-        do type_param_def.bounds.builtin_bounds.each |bound| {
+        for bound in type_param_def.bounds.builtin_bounds.iter() {
             debug!("tc = %s, bound = %?", tc.to_str(), bound);
             tc = tc - match bound {
                 BoundStatic => TypeContents::nonstatic(cx),
@@ -2307,8 +2316,7 @@ pub fn type_contents(cx: ctxt, ty: t) -> TypeContents {
                 // The dynamic-size bit can be removed at pointer-level, etc.
                 BoundSized => TypeContents::dynamically_sized(cx),
             };
-            true
-        };
+        }
 
         debug!("result = %s", tc.to_str());
         return tc;
@@ -3549,7 +3557,7 @@ pub fn def_has_ty_params(def: ast::def) -> bool {
 
 pub fn provided_source(cx: ctxt, id: ast::def_id)
     -> Option<ast::def_id> {
-    cx.provided_method_sources.find(&id).map(|x| **x)
+    cx.provided_method_sources.find(&id).map_move(|x| *x)
 }
 
 pub fn provided_trait_methods(cx: ctxt, id: ast::def_id) -> ~[@Method] {
@@ -3702,8 +3710,9 @@ fn struct_ctor_id(cx: ctxt, struct_did: ast::def_id) -> Option<ast::def_id> {
         Some(&ast_map::node_item(item, _)) => {
             match item.node {
                 ast::item_struct(struct_def, _) => {
-                    struct_def.ctor_id.map(|ctor_id|
-                        ast_util::local_def(*ctor_id))
+                    do struct_def.ctor_id.map_move |ctor_id| {
+                        ast_util::local_def(ctor_id)
+                    }
                 }
                 _ => cx.sess.bug("called struct_ctor_id on non-struct")
             }
@@ -4435,15 +4444,15 @@ pub fn count_traits_and_supertraits(tcx: ctxt,
 }
 
 pub fn get_tydesc_ty(tcx: ctxt) -> Result<t, ~str> {
-    do tcx.lang_items.require(TyDescStructLangItem).map |tydesc_lang_item| {
-        tcx.intrinsic_defs.find_copy(tydesc_lang_item)
+    do tcx.lang_items.require(TyDescStructLangItem).map_move |tydesc_lang_item| {
+        tcx.intrinsic_defs.find_copy(&tydesc_lang_item)
             .expect("Failed to resolve TyDesc")
     }
 }
 
 pub fn get_opaque_ty(tcx: ctxt) -> Result<t, ~str> {
-    do tcx.lang_items.require(OpaqueStructLangItem).map |opaque_lang_item| {
-        tcx.intrinsic_defs.find_copy(opaque_lang_item)
+    do tcx.lang_items.require(OpaqueStructLangItem).map_move |opaque_lang_item| {
+        tcx.intrinsic_defs.find_copy(&opaque_lang_item)
             .expect("Failed to resolve Opaque")
     }
 }

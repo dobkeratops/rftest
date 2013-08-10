@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2013 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -408,11 +408,10 @@ pub fn stop_after_phase_5(sess: Session) -> bool {
 #[fixed_stack_segment]
 pub fn compile_input(sess: Session, cfg: ast::CrateConfig, input: &input,
                      outdir: &Option<Path>, output: &Option<Path>) {
-    let outputs = build_output_filenames(input, outdir, output, [], sess);
     // We need nested scopes here, because the intermediate results can keep
     // large chunks of memory alive and we want to free them as soon as
     // possible to keep the peak memory usage low
-    let trans = {
+    let (outputs, trans) = {
         let expanded_crate = {
             let crate = phase_1_parse_input(sess, cfg.clone(), input);
             if stop_after_phase_1(sess) { return; }
@@ -420,7 +419,10 @@ pub fn compile_input(sess: Session, cfg: ast::CrateConfig, input: &input,
         };
         let analysis = phase_3_run_analysis_passes(sess, expanded_crate);
         if stop_after_phase_3(sess) { return; }
-        phase_4_translate_to_llvm(sess, expanded_crate, &analysis, outputs)
+        let outputs = build_output_filenames(input, outdir, output, [], sess);
+        let trans = phase_4_translate_to_llvm(sess, expanded_crate,
+                                              &analysis, outputs);
+        (outputs, trans)
     };
     phase_5_run_llvm_passes(sess, &trans, outputs);
     if stop_after_phase_5(sess) { return; }
@@ -576,6 +578,7 @@ pub fn build_target_config(sopts: @session::options,
     return target_cfg;
 }
 
+#[cfg(stage0)]
 pub fn host_triple() -> ~str {
     // Get the host triple out of the build environment. This ensures that our
     // idea of the host triple is the same as for the set of libraries we've
@@ -591,6 +594,19 @@ pub fn host_triple() -> ~str {
         } else {
             fail!("rustc built without CFG_COMPILER_TRIPLE")
         };
+}
+
+#[cfg(not(stage0))]
+pub fn host_triple() -> ~str {
+    // Get the host triple out of the build environment. This ensures that our
+    // idea of the host triple is the same as for the set of libraries we've
+    // actually built.  We can't just take LLVM's host triple because they
+    // normalize all ix86 architectures to i386.
+    //
+    // Instead of grabbing the host triple (for the current host), we grab (at
+    // compile time) the target triple that this rustc is built with and
+    // calling that (at runtime) the host triple.
+    (env!("CFG_COMPILER_TRIPLE")).to_owned()
 }
 
 pub fn build_session_options(binary: @str,
@@ -667,8 +683,7 @@ pub fn build_session_options(binary: @str,
         } else if opt_present(matches, "emit-llvm") {
             link::output_type_bitcode
         } else { link::output_type_exe };
-    let sysroot_opt = getopts::opt_maybe_str(matches, "sysroot");
-    let sysroot_opt = sysroot_opt.map(|m| @Path(*m));
+    let sysroot_opt = getopts::opt_maybe_str(matches, "sysroot").map_move(|m| @Path(m));
     let target_opt = getopts::opt_maybe_str(matches, "target");
     let target_feature_opt = getopts::opt_maybe_str(matches, "target-feature");
     let save_temps = getopts::opt_present(matches, "save-temps");
@@ -820,7 +835,8 @@ pub fn optgroups() -> ~[getopts::groups::OptGroup] {
   optmulti("", "cfg", "Configure the compilation
                           environment", "SPEC"),
   optflag("",  "emit-llvm",
-                        "Produce an LLVM bitcode file"),
+                        "Produce an LLVM assembly file if used with -S option;
+                         produce an LLVM bitcode file otherwise"),
   optflag("h", "help","Display this message"),
   optmulti("L", "",   "Add a directory to the library search path",
                               "PATH"),
@@ -922,7 +938,7 @@ pub fn build_output_filenames(input: &input,
           };
 
           let mut stem = match *input {
-              file_input(ref ifile) => (*ifile).filestem().get().to_managed(),
+              file_input(ref ifile) => (*ifile).filestem().unwrap().to_managed(),
               str_input(_) => @"rust_out"
           };
 
@@ -957,10 +973,7 @@ pub fn build_output_filenames(input: &input,
         };
 
         if *sess.building_library {
-            // FIXME (#2401): We might want to warn here; we're actually not
-            // going to respect the user's choice of library name when it
-            // comes time to link, we'll be linking to
-            // lib<basename>-<hash>-<version>.so no matter what.
+            sess.warn("ignoring specified output filename for library.");
         }
 
         if *odir != None {

@@ -81,13 +81,13 @@ c23{color:#d0f0ff; }
 </c17><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;open</c26><c5>&lt;P:&nbsp;</c5><a href="../../../libstd/rt/io/support.rs.html#12"><c5>PathLike</c5></a><c5>&gt;</c5><c25>(</c25><c20>_path</c20><c18>:&nbsp;</c18><c3>&amp;P</c3><c4>,</c4><c18>
 </c18><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c18>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c18><c20>_mode</c20><c18>:&nbsp;</c18><a href="../../../libstd/rt/io/file.rs.html#17"><c3>FileMode</c3></a><c4>,</c4><c18>
 </c18><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c18>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c18><c20>_access</c20><c18>:&nbsp;</c18><a href="../../../libstd/rt/io/file.rs.html#32"><c3>FileAccess</c3></a><c18>
-</c18><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c18>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/option.rs.html#54"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../libstd/rt/io/file.rs.html#38"><c3>FileStream</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c18><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c18>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../libstd/rt/io/file.rs.html#38"><c3>FileStream</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
 </c22><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>
 </c9><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#364"><c30>Reader</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/file.rs.html#38"><c30>FileStream</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/option.rs.html#54"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../libstd/option.rs.html#54"><c3>uint</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#398"><c30>Reader</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/file.rs.html#38"><c30>FileStream</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../libstd/option.rs.html#55"><c3>uint</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
 </c22><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>
 </c9><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><c17>
@@ -96,16 +96,16 @@ c23{color:#d0f0ff; }
 </c9><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#404"><c30>Writer</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/file.rs.html#38"><c30>FileStream</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#438"><c30>Writer</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/file.rs.html#38"><c30>FileStream</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
 </c17><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_v</c20><c18>:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><c17>
 </c17><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#429"><c30>Seek</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/file.rs.html#38"><c30>FileStream</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c0><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#463"><c30>Seek</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/file.rs.html#38"><c30>FileStream</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
 </c17><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;tell</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>u64</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_pos</c20><c18>:&nbsp;</c18><c3>i64</c3><c4>,</c4><c18>&nbsp;</c18><c20>_style</c20><c18>:&nbsp;</c18><a href="../../../libstd/rt/io/mod.rs.html#418"><c3>SeekStyle</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;seek</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_pos</c20><c18>:&nbsp;</c18><c3>i64</c3><c4>,</c4><c18>&nbsp;</c18><c20>_style</c20><c18>:&nbsp;</c18><a href="../../../libstd/rt/io/mod.rs.html#452"><c3>SeekStyle</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;70</ln><a id="70">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;72</ln><a id="72">&nbsp;</a><c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
@@ -116,17 +116,17 @@ c23{color:#d0f0ff; }
 </c0><br/><ln>&nbsp;77</ln><a id="77">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;outstream&nbsp;=&nbsp;FileStream::open</c0><c25>(</c25><c0>filename</c0><c4>,</c4><c0>&nbsp;Create</c0><c4>,</c4><c0>&nbsp;Read</c0><c25>)</c25><c0>.unwrap</c0><c25>()</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;78</ln><a id="78">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;outstream.write</c0><c25>(</c25><c0>message.as_bytes</c0><c25>())</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;79</ln><a id="79">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="32_1_refs"><a href="#32"><c24>libstd/rt/io/file.rs:32:1-32:1&nbsp;-enum-&nbsp;definition:<br/></c24><pr>
-<br/>enum&nbsp;FileAccess&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/file.rs.html#44"><c24>44:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_access:&nbsp;FileAccess
-<br/></a><br/><br/><a id="17_80_refs"><a href="#17"><c24>libstd/rt/io/file.rs:17:80-17:80&nbsp;-enum-&nbsp;definition:<br/></c24><pr>///&nbsp;*&nbsp;Ugh,&nbsp;this&nbsp;is&nbsp;ridiculous.&nbsp;What&nbsp;is&nbsp;the&nbsp;best&nbsp;way&nbsp;to&nbsp;represent&nbsp;these&nbsp;options?
+</c0><br/><div/><br/><a id="17_80_refs"><a href="#17"><c24>libstd/rt/io/file.rs:17:80-17:80&nbsp;-enum-&nbsp;definition:<br/></c24><pr>///&nbsp;*&nbsp;Ugh,&nbsp;this&nbsp;is&nbsp;ridiculous.&nbsp;What&nbsp;is&nbsp;the&nbsp;best&nbsp;way&nbsp;to&nbsp;represent&nbsp;these&nbsp;options?
 <br/>enum&nbsp;FileMode&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/file.rs.html#43"><c24>43:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_mode:&nbsp;FileMode,
+<br/></a><br/><br/><a id="32_1_refs"><a href="#32"><c24>libstd/rt/io/file.rs:32:1-32:1&nbsp;-enum-&nbsp;definition:<br/></c24><pr>
+<br/>enum&nbsp;FileAccess&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/file.rs.html#44"><c24>44:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_access:&nbsp;FileAccess
 <br/></a><br/><br/><a id="38_1_refs"><a href="#38"><c24>libstd/rt/io/file.rs:38:1-38:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
 <br/>pub&nbsp;struct&nbsp;FileStream;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/file.rs.html#41"><c24>41:&nbsp;</c24>impl&nbsp;FileStream&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/file.rs.html#66"><c24>66:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;FileStream&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/file.rs.html#66"><c24>66:&nbsp;</c24>impl&nbsp;Seek&nbsp;for&nbsp;FileStream&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/file.rs.html#50"><c24>50:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;FileStream&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/file.rs.html#41"><c24>41:&nbsp;</c24>impl&nbsp;FileStream&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/file.rs.html#60"><c24>60:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;FileStream&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/file.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;-&gt;&nbsp;Option&lt;FileStream&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/file.rs.html#50"><c24>50:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;FileStream&nbsp;{
 <br/></a><br/></c0></c0>

@@ -195,10 +195,8 @@ pub fn build<A>(builder: &fn(push: &fn(v: A))) -> ~[A] {
  *             onto the vector being constructed.
  */
 #[inline]
-pub fn build_sized_opt<A>(size: Option<uint>,
-                          builder: &fn(push: &fn(v: A)))
-                       -> ~[A] {
-    build_sized(size.get_or_default(4), builder)
+pub fn build_sized_opt<A>(size: Option<uint>, builder: &fn(push: &fn(v: A))) -> ~[A] {
+    build_sized(size.unwrap_or_default(4), builder)
 }
 
 /// An iterator over the slices of a vector separated by elements that
@@ -481,6 +479,7 @@ pub fn each_permutation<T:Clone>(values: &[T], fun: &fn(perm : &[T]) -> bool) ->
 
 /// An iterator over the (overlapping) slices of length `size` within
 /// a vector.
+#[deriving(Clone)]
 pub struct WindowIter<'self, T> {
     priv v: &'self [T],
     priv size: uint
@@ -500,6 +499,10 @@ impl<'self, T> Iterator<&'self [T]> for WindowIter<'self, T> {
 
 /// An iterator over a vector in (non-overlapping) chunks (`size`
 /// elements at a time).
+///
+/// When the vector len is not evenly divided by the chunk size,
+/// the last slice of the iteration will be the remainer.
+#[deriving(Clone)]
 pub struct ChunkIter<'self, T> {
     priv v: &'self [T],
     priv size: uint
@@ -507,16 +510,49 @@ pub struct ChunkIter<'self, T> {
 
 impl<'self, T> Iterator<&'self [T]> for ChunkIter<'self, T> {
     fn next(&mut self) -> Option<&'self [T]> {
-        if self.size == 0 {
+        if self.v.len() == 0 {
             None
-        } else if self.size >= self.v.len() {
-            // finished
-            self.size = 0;
-            Some(self.v)
         } else {
-            let ret = Some(self.v.slice(0, self.size));
-            self.v = self.v.slice(self.size, self.v.len());
-            ret
+            let chunksz = cmp::min(self.v.len(), self.size);
+            let (fst, snd) = (self.v.slice_to(chunksz),
+                              self.v.slice_from(chunksz));
+            self.v = snd;
+            Some(fst)
+        }
+    }
+}
+
+impl<'self, T> DoubleEndedIterator<&'self [T]> for ChunkIter<'self, T> {
+    fn next_back(&mut self) -> Option<&'self [T]> {
+        if self.v.len() == 0 {
+            None
+        } else {
+            let remainder = self.v.len() % self.size;
+            let chunksz = if remainder != 0 { remainder } else { self.size };
+            let (fst, snd) = (self.v.slice_to(self.v.len() - chunksz),
+                              self.v.slice_from(self.v.len() - chunksz));
+            self.v = fst;
+            Some(snd)
+        }
+    }
+}
+
+impl<'self, T> RandomAccessIterator<&'self [T]> for ChunkIter<'self, T> {
+    #[inline]
+    fn indexable(&self) -> uint {
+        self.v.len()/self.size + if self.v.len() % self.size != 0 { 1 } else { 0 }
+    }
+
+    #[inline]
+    fn idx(&self, index: uint) -> Option<&'self [T]> {
+        if index < self.indexable() {
+            let lo = index * self.size;
+            let mut hi = lo + self.size;
+            if hi < lo || hi > self.v.len() { hi = self.v.len(); }
+
+            Some(self.v.slice(lo, hi))
+        } else {
+            None
         }
     }
 }
@@ -813,10 +849,15 @@ impl<'self,T> ImmutableVector<'self, T> for &'self [T] {
     fn iter(self) -> VecIterator<'self, T> {
         unsafe {
             let p = vec::raw::to_ptr(self);
-            VecIterator{ptr: p,
-                        end: (p as uint + self.len() *
-                              sys::nonzero_size_of::<T>()) as *T,
-                        lifetime: cast::transmute(p)}
+            if sys::size_of::<T>() == 0 {
+                VecIterator{ptr: p,
+                            end: (p as uint + self.len()) as *T,
+                            lifetime: cast::transmute(p)}
+            } else {
+                VecIterator{ptr: p,
+                            end: p.offset_inbounds(self.len() as int),
+                            lifetime: cast::transmute(p)}
+            }
         }
     }
 
@@ -1561,8 +1602,8 @@ impl<T:Clone> OwnedCopyableVector<T> for ~[T] {
         let new_len = self.len() + rhs.len();
         self.reserve(new_len);
 
-        for i in range(0u, rhs.len()) {
-            self.push(unsafe { raw::get(rhs, i) })
+        for elt in rhs.iter() {
+            self.push((*elt).clone())
         }
     }
 
@@ -1790,10 +1831,15 @@ impl<'self,T> MutableVector<'self, T> for &'self mut [T] {
     fn mut_iter(self) -> VecMutIterator<'self, T> {
         unsafe {
             let p = vec::raw::to_mut_ptr(self);
-            VecMutIterator{ptr: p,
-                           end: (p as uint + self.len() *
-                                 sys::nonzero_size_of::<T>()) as *mut T,
-                           lifetime: cast::transmute(p)}
+            if sys::size_of::<T>() == 0 {
+                VecMutIterator{ptr: p,
+                               end: (p as uint + self.len()) as *mut T,
+                               lifetime: cast::transmute(p)}
+            } else {
+                VecMutIterator{ptr: p,
+                               end: p.offset_inbounds(self.len() as int),
+                               lifetime: cast::transmute(p)}
+            }
         }
     }
 
@@ -2147,7 +2193,7 @@ macro_rules! iterator {
                             // same pointer.
                             cast::transmute(self.ptr as uint + 1)
                         } else {
-                            self.ptr.offset(1)
+                            self.ptr.offset_inbounds(1)
                         };
 
                         Some(cast::transmute(old))
@@ -2179,7 +2225,7 @@ macro_rules! double_ended_iterator {
                             // See above for why 'ptr.offset' isn't used
                             cast::transmute(self.end as uint - 1)
                         } else {
-                            self.end.offset(-1)
+                            self.end.offset_inbounds(-1)
                         };
                         Some(cast::transmute(self.end))
                     }
@@ -3380,6 +3426,14 @@ mod tests {
         assert_eq!(v.chunk_iter(2).collect::<~[&[int]]>(), ~[&[1i,2], &[3,4], &[5]]);
         assert_eq!(v.chunk_iter(3).collect::<~[&[int]]>(), ~[&[1i,2,3], &[4,5]]);
         assert_eq!(v.chunk_iter(6).collect::<~[&[int]]>(), ~[&[1i,2,3,4,5]]);
+
+        assert_eq!(v.chunk_iter(2).invert().collect::<~[&[int]]>(), ~[&[5i], &[3,4], &[1,2]]);
+        let it = v.chunk_iter(2);
+        assert_eq!(it.indexable(), 3);
+        assert_eq!(it.idx(0).unwrap(), &[1,2]);
+        assert_eq!(it.idx(1).unwrap(), &[3,4]);
+        assert_eq!(it.idx(2).unwrap(), &[5]);
+        assert_eq!(it.idx(3), None);
     }
 
     #[test]

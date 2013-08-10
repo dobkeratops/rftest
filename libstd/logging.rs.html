@@ -37,131 +37,81 @@ c20{color:#0f0ff}
 c21{color:#d0d0d0; font-weight:bold}
 c22{color:#c0ffd0; }
 c23{color:#d0f0ff; }
-</style><body style="background-color:#343838;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/logging.rs.html">logging.rs</a><br/><br/><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;Logging
-</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c21>use</c21><c0>&nbsp;option::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c21>use</c21><c0>&nbsp;os</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c21>use</c21><c0>&nbsp;either::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c21>use</c21><c0>&nbsp;rt</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c21>use</c21><c0>&nbsp;rt::OldTaskContext</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c21>use</c21><c0>&nbsp;rt::logging::</c0><c4>{</c4><c0>Logger</c0><c4>,</c4><c0>&nbsp;StdErrLogger</c0><c4>};</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c32>///&nbsp;Turns&nbsp;on&nbsp;logging&nbsp;to&nbsp;stdout&nbsp;globally
-</c32><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;console_on</c26><c25>()</c25><c1>&nbsp;</c1><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../libstd/rt/mod.rs.html#408"><c8>rt</c8></a><c8>::</c8><a href="../libstd/rt/mod.rs.html#408"><c8>context</c8></a><c25>()</c25><c9>&nbsp;==</c9><c2>&nbsp;</c2><a href="../libstd/rt/mod.rs.html#405"><c8>OldTaskContext</c8></a><c7>&nbsp;</c7><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>rustrt::rust_log_console_on</c8><c25>()</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/rt/logging.rs.html#67"><c8>rt</c8></a><c8>::</c8><a href="../libstd/rt/logging.rs.html#67"><c8>logging</c8></a><c8>::</c8><a href="../libstd/rt/logging.rs.html#67"><c8>console_on</c8></a><c25>()</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c24>/**
-</c24><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c24>&nbsp;*&nbsp;Turns&nbsp;off&nbsp;logging&nbsp;to&nbsp;stdout&nbsp;globally
-</c24><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c24>&nbsp;*
-</c24><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c24>&nbsp;*&nbsp;Turns&nbsp;off&nbsp;the&nbsp;console&nbsp;unless&nbsp;the&nbsp;user&nbsp;has&nbsp;overridden&nbsp;the
-</c24><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c24>&nbsp;*&nbsp;runtime&nbsp;environment's&nbsp;logging&nbsp;spec,&nbsp;e.g.&nbsp;by&nbsp;setting
-</c24><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c24>&nbsp;*&nbsp;the&nbsp;RUST_LOG&nbsp;environment&nbsp;variable
-</c24><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c32>&nbsp;*/
-</c32><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;console_off</c26><c25>()</c25><c1>&nbsp;</c1><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;If&nbsp;RUST_LOG&nbsp;is&nbsp;set&nbsp;then&nbsp;the&nbsp;console&nbsp;can't&nbsp;be&nbsp;turned&nbsp;off
-</c24><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../libstd/os.rs.html#240"><c8>os</c8></a><c8>::</c8><a href="../libstd/os.rs.html#240"><c8>getenv</c8></a><c25>(</c25><a href="../libstd/option.rs.html#127"><c12>"RUST_LOG"</c12></a><c25>)</c25><c9>.</c9><a href="../libstd/option.rs.html#127"><c10>is_some</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c22>
-</c22><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../libstd/rt/mod.rs.html#408"><c8>rt</c8></a><c8>::</c8><a href="../libstd/rt/mod.rs.html#408"><c8>context</c8></a><c25>()</c25><c9>&nbsp;==</c9><c2>&nbsp;</c2><a href="../libstd/rt/mod.rs.html#405"><c8>OldTaskContext</c8></a><c7>&nbsp;</c7><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>rustrt::rust_log_console_off</c8><c25>()</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/rt/logging.rs.html#68"><c8>rt</c8></a><c8>::</c8><a href="../libstd/rt/logging.rs.html#68"><c8>logging</c8></a><c8>::</c8><a href="../libstd/rt/logging.rs.html#68"><c8>console_off</c8></a><c25>()</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c33>#</c33><c4>[</c4><c33>lang="log_type"</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>missing_doc</c33><c25>)</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;log_type</c26><c5>&lt;T&gt;</c5><c25>(</c25><a href="#56_19_refs"><c20>level</c20></a><c1>:&nbsp;</c1><c3>u32</c3><c4>,</c4><c1>&nbsp;</c1><a href="#56_31_refs"><c20>object</c20></a><c1>:&nbsp;</c1><c3>&amp;T</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;cast</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;container::Container</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;io</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;libc</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;repr</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;rt</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;str</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;vec</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c22>
-</c22><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#66_8_refs"><c20>bytes</c20></a><c16>&nbsp;=&nbsp;</c16><c9>do&nbsp;</c9><a href="../libstd/io.rs.html#1702"><c8>io</c8></a><c8>::</c8><a href="../libstd/io.rs.html#1702"><c8>with_bytes_writer</c8></a><c0>&nbsp;|</c0><a href="#66_42_refs"><c20>writer</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/repr.rs.html#558"><c8>repr</c8></a><c8>::</c8><a href="../libstd/repr.rs.html#558"><c8>write_repr</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#66"><c8>writer</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="../libstd/logging.rs.html#56"><c8>object</c8></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>};</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c22>
-</c22><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><a href="../libstd/rt/mod.rs.html#408"><c8>rt</c8></a><c8>::</c8><a href="../libstd/rt/mod.rs.html#408"><c8>context</c8></a><c25>()</c25><c9>&nbsp;</c9><c4>{</c4><c7>
-</c7><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../libstd/rt/mod.rs.html#405"><c20>rt</c20></a><c20>::</c20><a href="../libstd/rt/mod.rs.html#405"><c20>OldTaskContext</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#73_20_refs"><c20>len</c20></a><c16>&nbsp;=&nbsp;</c16><a href="../libstd/logging.rs.html#66"><c8>bytes</c8></a><c10>.</c10><a href="../libstd/vec.rs.html#712"><c10>len</c10></a><c25>()</c25><c10>&nbsp;</c10><a href="../libstd/vec.rs.html#712"><c10>as</c10></a><c7>&nbsp;</c7><a href="../libstd/libc.rs.html#406"><c3>libc</c3></a><c3>::</c3><a href="../libstd/libc.rs.html#406"><c3>size_t</c3></a><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>rustrt::rust_log_str</c8><c25>(</c25><a href="../libstd/logging.rs.html#56"><c8>level</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../libstd/cast.rs.html#71"><c8>cast</c8></a><c8>::</c8><a href="../libstd/cast.rs.html#71"><c8>transmute</c8></a><c25>(</c25><a href="../libstd/vec.rs.html#1930"><c8>vec</c8></a><c8>::</c8><a href="../libstd/vec.rs.html#1930"><c8>raw</c8></a><c8>::</c8><a href="../libstd/vec.rs.html#1930"><c8>to_ptr</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#66"><c8>bytes</c8></a><c25>))</c25><c4>,</c4><c9>&nbsp;</c9><a href="../libstd/logging.rs.html#73"><c8>len</c8></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>
-</c7><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;XXX:&nbsp;Bad&nbsp;allocation
-</c24><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#79_16_refs"><c20>msg</c20></a><c16>&nbsp;=&nbsp;</c16><a href="../libstd/str.rs.html#56"><c8>str</c8></a><c8>::</c8><a href="../libstd/str.rs.html#56"><c8>from_bytes</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#66"><c8>bytes</c8></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/logging.rs.html#84"><c8>newsched_log_str</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#79"><c8>msg</c8></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>
-</c7><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c26>fn&nbsp;</c26><a href="#84_1_refs"><c26>newsched_log_str</c26></a><c25>(</c25><a href="#85_20_refs"><c20>msg</c20></a><c1>:&nbsp;</c1><c3>~</c3><a href="#84_1_refs"><c3>str</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;</c22><a href="#84_1_refs"><c22>rt</c22></a><c22>::</c22><a href="#84_1_refs"><c22>task</c22></a><c22>::</c22><a href="#84_1_refs"><c22>Task</c22></a><c4>;</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;</c22><a href="#84_1_refs"><c22>rt</c22></a><c22>::</c22><a href="#84_1_refs"><c22>local</c22></a><c22>::</c22><a href="#84_1_refs"><c22>Local</c22></a><c4>;</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;</c22><a href="#84_1_refs"><c22>str</c22></a><c22>::</c22><a href="#84_1_refs"><c22>StrSlice</c22></a><c4>;</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;</c22><a href="#84_1_refs"><c22>container</c22></a><c22>::</c22><a href="#84_1_refs"><c22>Container</c22></a><c4>;</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;Truncate&nbsp;the&nbsp;string
-</c24><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#92_8_refs"><c20>buf_bytes</c20></a><c16>&nbsp;</c16><a href="#84_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="#84_1_refs"><c12>256</c12></a><c4>;</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#93_8_refs"><c20>msg</c20></a><c16>&nbsp;</c16><a href="#84_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="#84_1_refs"><c7>if</c7></a><c7>&nbsp;</c7><a href="../libstd/logging.rs.html#85"><c8>msg</c8></a><c10>.</c10><a href="../libstd/str.rs.html#1148"><c10>len</c10></a><c25>()</c25><c10>&nbsp;&gt;</c10><c2>&nbsp;</c2><a href="../libstd/logging.rs.html#92"><c8>buf_bytes</c8></a><c7>&nbsp;</c7><c4>{</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/logging.rs.html#85"><c8>msg</c8></a><c10>.</c10><a href="../libstd/str.rs.html#1423"><c10>slice</c10></a><c25>(</c25><a href="#84_1_refs"><c12>0</c12></a><c4>,</c4><c10>&nbsp;</c10><a href="../libstd/logging.rs.html#92"><c8>buf_bytes</c8></a><c25>)</c25><c10>&nbsp;+</c10><c2>&nbsp;</c2><a href="#84_1_refs"><c12>"</c12></a><c4>[</c4><c12>...</c12><c4>]</c4><a href="#84_1_refs"><c12>"</c12><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/logging.rs.html#85"><c8>msg</c8></a><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>};</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><a href="../libstd/rt/local.rs.html#25"><c8>Local</c8></a><c8>::</c8><a href="../libstd/rt/local.rs.html#25"><c8>try_unsafe_borrow</c8></a><c8>::&lt;</c8><a href="../libstd/rt/task.rs.html#39"><c3>Task</c3></a><c8>&gt;</c8><c25>()</c25><c9>&nbsp;</c9><c4>{</c4><a href="#84_1_refs"><c7>
-</c7></a><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../libstd/option.rs.html#57"><c20>Some</c20></a><c25>(</c25><a href="#101_17_refs"><c20>local</c20></a><c25>)</c25><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;Use&nbsp;the&nbsp;available&nbsp;logger
-</c24><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libstd/logging.rs.html#101"><c8>local</c8></a><c25>)</c25><c0>.</c0><a href="../libstd/rt/task.rs.html#44"><c6>logger</c6></a><c10>.</c10><a href="../libstd/rt/logging.rs.html#21"><c10>log</c10></a><c25>(</c25><a href="../libstd/either.rs.html#29"><c8>Left</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#93"><c8>msg</c8></a><c25>))</c25><c4>;</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#84_1_refs"><c7>
-</c7></a><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../libstd/option.rs.html#56"><c20>None</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;There&nbsp;is&nbsp;no&nbsp;logger&nbsp;anywhere,&nbsp;just&nbsp;write&nbsp;to&nbsp;stderr
-</c24><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#107_24_refs"><c20>logger</c20></a><c16>&nbsp;</c16><a href="#84_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="#84_1_refs"><c8>StdErrLogger</c8></a><c4>;</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/logging.rs.html#107"><c8>logger</c8></a><c10>.</c10><a href="../libstd/rt/logging.rs.html#21"><c10>log</c10></a><c25>(</c25><a href="../libstd/either.rs.html#29"><c8>Left</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#93"><c8>msg</c8></a><c25>))</c25><c4>;</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#84_1_refs"><c7>
-</c7></a><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#84_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;rustrt&nbsp;</c14><c4>{</c4><c14>
-</c14><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>use</c21><c14>&nbsp;libc</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c14>
-</c14><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>extern</c21><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_log_console_on</c26><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_log_console_off</c26><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_log_str</c26><c25>(</c25><c20>level</c20><c0>:&nbsp;</c0><c3>u32</c3><c4>,</c4><c0>
-</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c20>string</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../libstd/libc.rs.html#395"><c3>libc</c3></a><c3>::</c3><a href="../libstd/libc.rs.html#395"><c3>c_char</c3></a><c4>,</c4><c0>
-</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c20>size</c20><c0>:&nbsp;</c0><a href="../libstd/libc.rs.html#406"><c3>libc</c3></a><c3>::</c3><a href="../libstd/libc.rs.html#406"><c3>size_t</c3></a><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c14>
-</c14><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="84_1_refs"><a href="#84"><c24>libstd/logging.rs:84:1-84:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+</style><body style="background-color:#343838;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/logging.rs.html">logging.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;Logging
+</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c21>use</c21><c0>&nbsp;option::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c21>use</c21><c0>&nbsp;os</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c21>use</c21><c0>&nbsp;either::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c21>use</c21><c0>&nbsp;rt</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c21>use</c21><c0>&nbsp;rt::logging::</c0><c4>{</c4><c0>Logger</c0><c4>,</c4><c0>&nbsp;StdErrLogger</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c32>///&nbsp;Turns&nbsp;on&nbsp;logging&nbsp;to&nbsp;stdout&nbsp;globally
+</c32><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;console_on</c26><c25>()</c25><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/rt/logging.rs.html#80"><c8>rt</c8></a><c8>::</c8><a href="../libstd/rt/logging.rs.html#80"><c8>logging</c8></a><c8>::</c8><a href="../libstd/rt/logging.rs.html#80"><c8>console_on</c8></a><c25>()</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c24>&nbsp;*&nbsp;Turns&nbsp;off&nbsp;logging&nbsp;to&nbsp;stdout&nbsp;globally
+</c24><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c24>&nbsp;*&nbsp;Turns&nbsp;off&nbsp;the&nbsp;console&nbsp;unless&nbsp;the&nbsp;user&nbsp;has&nbsp;overridden&nbsp;the
+</c24><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c24>&nbsp;*&nbsp;runtime&nbsp;environment's&nbsp;logging&nbsp;spec,&nbsp;e.g.&nbsp;by&nbsp;setting
+</c24><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c24>&nbsp;*&nbsp;the&nbsp;RUST_LOG&nbsp;environment&nbsp;variable
+</c24><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;console_off</c26><c25>()</c25><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;If&nbsp;RUST_LOG&nbsp;is&nbsp;set&nbsp;then&nbsp;the&nbsp;console&nbsp;can't&nbsp;be&nbsp;turned&nbsp;off
+</c24><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../libstd/os.rs.html#238"><c8>os</c8></a><c8>::</c8><a href="../libstd/os.rs.html#238"><c8>getenv</c8></a><c25>(</c25><a href="../libstd/option.rs.html#149"><c12>"RUST_LOG"</c12></a><c25>)</c25><c9>.</c9><a href="../libstd/option.rs.html#149"><c10>is_some</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/rt/logging.rs.html#81"><c8>rt</c8></a><c8>::</c8><a href="../libstd/rt/logging.rs.html#81"><c8>logging</c8></a><c8>::</c8><a href="../libstd/rt/logging.rs.html#81"><c8>console_off</c8></a><c25>()</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c33>#</c33><c4>[</c4><c33>lang="log_type"</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>missing_doc</c33><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;log_type</c26><c5>&lt;T&gt;</c5><c25>(</c25><c20>_level</c20><c1>:&nbsp;</c1><c3>u32</c3><c4>,</c4><c1>&nbsp;</c1><a href="#43_32_refs"><c20>object</c20></a><c1>:&nbsp;</c1><c3>&amp;T</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;io</c22><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;repr</c22><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;str</c22><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#48_8_refs"><c20>bytes</c20></a><c16>&nbsp;=&nbsp;</c16><c9>do&nbsp;</c9><a href="../libstd/io.rs.html#1702"><c8>io</c8></a><c8>::</c8><a href="../libstd/io.rs.html#1702"><c8>with_bytes_writer</c8></a><c0>&nbsp;|</c0><a href="#48_42_refs"><c20>writer</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/repr.rs.html#558"><c8>repr</c8></a><c8>::</c8><a href="../libstd/repr.rs.html#558"><c8>write_repr</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#48"><c8>writer</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../libstd/logging.rs.html#43"><c8>object</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>};</c4><c22>
+</c22><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;XXX:&nbsp;Bad&nbsp;allocation
+</c24><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#53_8_refs"><c20>msg</c20></a><c16>&nbsp;=&nbsp;</c16><a href="../libstd/str.rs.html#57"><c8>str</c8></a><c8>::</c8><a href="../libstd/str.rs.html#57"><c8>from_bytes</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#48"><c8>bytes</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/logging.rs.html#56"><c8>newsched_log_str</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#53"><c8>msg</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><c26>fn&nbsp;</c26><a href="#56_1_refs"><c26>newsched_log_str</c26></a><c25>(</c25><a href="#57_20_refs"><c20>msg</c20></a><c1>:&nbsp;</c1><c3>~</c3><a href="#56_1_refs"><c3>str</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;</c22><a href="#56_1_refs"><c22>rt</c22></a><c22>::</c22><a href="#56_1_refs"><c22>task</c22></a><c22>::</c22><a href="#56_1_refs"><c22>Task</c22></a><c4>;</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;</c22><a href="#56_1_refs"><c22>rt</c22></a><c22>::</c22><a href="#56_1_refs"><c22>local</c22></a><c22>::</c22><a href="#56_1_refs"><c22>Local</c22></a><c4>;</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><a href="../libstd/rt/local.rs.html#25"><c8>Local</c8></a><c8>::</c8><a href="../libstd/rt/local.rs.html#25"><c8>try_unsafe_borrow</c8></a><c8>::&lt;</c8><a href="../libstd/rt/task.rs.html#40"><c3>Task</c3></a><c8>&gt;</c8><c25>()</c25><c9>&nbsp;</c9><c4>{</c4><a href="#56_1_refs"><c7>
+</c7></a><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../libstd/option.rs.html#58"><c20>Some</c20></a><c25>(</c25><a href="#63_17_refs"><c20>local</c20></a><c25>)</c25><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;Use&nbsp;the&nbsp;available&nbsp;logger
+</c24><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libstd/logging.rs.html#63"><c8>local</c8></a><c25>)</c25><c0>.</c0><a href="../libstd/rt/task.rs.html#45"><c6>logger</c6></a><c13>.</c13><a href="#56_1_refs"><c13>log</c13></a><c25>(</c25><a href="../libstd/either.rs.html#29"><c8>Left</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#57"><c8>msg</c8></a><c25>))</c25><c4>;</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#56_1_refs"><c7>
+</c7></a><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><a href="../libstd/option.rs.html#57"><c20>None</c20></a><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c4>{</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;There&nbsp;is&nbsp;no&nbsp;logger&nbsp;anywhere,&nbsp;just&nbsp;write&nbsp;to&nbsp;stderr
+</c24><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#69_24_refs"><c20>logger</c20></a><c16>&nbsp;</c16><a href="#56_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="#56_1_refs"><c8>StdErrLogger</c8></a><c4>;</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;70</ln><a id="70">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/logging.rs.html#69"><c8>logger</c8></a><c13>.</c13><a href="#56_1_refs"><c13>log</c13></a><c25>(</c25><a href="../libstd/either.rs.html#29"><c8>Left</c8></a><c25>(</c25><a href="../libstd/logging.rs.html#57"><c8>msg</c8></a><c25>))</c25><c4>;</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#56_1_refs"><c7>
+</c7></a><br/><ln>&nbsp;72</ln><a id="72">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;73</ln><a id="73">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#56_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;74</ln><a id="74">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="56_1_refs"><a href="#56"><c24>libstd/logging.rs:56:1-56:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
 <br/>fn&nbsp;newsched_log_str(msg:&nbsp;~str)&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/logging.rs.html#80"><c24>80:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newsched_log_str(msg);
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/logging.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;newsched_log_str(msg);
 <br/></a><br/></c0></c0>

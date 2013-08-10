@@ -232,11 +232,11 @@ c23{color:#d0f0ff; }
 </c24><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><c24>*&nbsp;~~~
 </c24><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><c24>*/
 </c24><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><c30>impl&nbsp;</c30><a href="../libstd/from_str.rs.html#16"><c30>FromStr</c30></a><c30>&nbsp;for&nbsp;bool&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;from_str</c26><c25>(</c25><a href="#196_16_refs"><c20>s</c20></a><c18>:&nbsp;</c18><c3>&amp;str</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libstd/option.rs.html#54"><c3>Option</c3></a><c3>&lt;</c3><a href="../libstd/option.rs.html#54"><c3>bool</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c17><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;from_str</c26><c25>(</c25><a href="#196_16_refs"><c20>s</c20></a><c18>:&nbsp;</c18><c3>&amp;str</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../libstd/option.rs.html#55"><c3>bool</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
 </c22><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><a href="../libstd/bool.rs.html#196"><c8>s</c8></a><c7>&nbsp;</c7><c4>{</c4><c7>
-</c7><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>"true"</c20><c12>&nbsp;&nbsp;</c12><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../libstd/option.rs.html#57"><c8>Some</c8></a><c25>(</c25><c12>true</c12><c25>)</c25><c4>,</c4><c7>
-</c7><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>"false"</c20><c12>&nbsp;</c12><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../libstd/option.rs.html#57"><c8>Some</c8></a><c25>(</c25><c12>false</c12><c25>)</c25><c4>,</c4><c7>
-</c7><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../libstd/option.rs.html#56"><c8>None</c8></a><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>"true"</c20><c12>&nbsp;&nbsp;</c12><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../libstd/option.rs.html#58"><c8>Some</c8></a><c25>(</c25><c12>true</c12><c25>)</c25><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>"false"</c20><c12>&nbsp;</c12><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../libstd/option.rs.html#58"><c8>Some</c8></a><c25>(</c25><c12>false</c12><c25>)</c25><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../libstd/option.rs.html#57"><c8>None</c8></a><c4>,</c4><c7>
 </c7><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c22>
 </c22><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c4>}</c4><c0>
@@ -320,124 +320,112 @@ c23{color:#d0f0ff; }
 </c17><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><c30>impl&nbsp;</c30><a href="../libstd/cmp.rs.html#175"><c30>Ord</c30></a><c30>&nbsp;for&nbsp;bool&nbsp;</c30><c4>{</c4><c17>
+</c33><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><c30>impl&nbsp;</c30><a href="../libstd/cmp.rs.html#168"><c30>Ord</c30></a><c30>&nbsp;for&nbsp;bool&nbsp;</c30><c4>{</c4><c17>
 </c17><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
 </c17><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;lt</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#286_17_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;bool</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;&lt;</c9><c0>&nbsp;</c0><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><a href="../libstd/bool.rs.html#286"><c8>other</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;le</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#288_17_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;bool</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;&lt;=</c9><c2>&nbsp;</c2><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><a href="../libstd/bool.rs.html#288"><c8>other</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;gt</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#290_17_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;bool</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;&gt;</c9><c2>&nbsp;</c2><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><a href="../libstd/bool.rs.html#290"><c8>other</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><c30>impl&nbsp;</c30><a href="../libstd/cmp.rs.html#83"><c30>TotalOrd</c30></a><c30>&nbsp;for&nbsp;bool&nbsp;</c30><c4>{</c4><c17>
 </c17><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;ge</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#292_17_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;bool</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;&gt;=</c9><c2>&nbsp;</c2><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><a href="../libstd/bool.rs.html#292"><c8>other</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;cmp</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#292_18_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;bool</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libstd/cmp.rs.html#80"><c3>Ordering</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><a href="../libstd/cmp.rs.html#110"><c0>self</c0></a><c25>)</c25><c9>.</c9><a href="../libstd/cmp.rs.html#110"><c10>cmp</c10></a><c25>(</c25><c2>&amp;</c2><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><a href="../libstd/bool.rs.html#292"><c8>other</c8></a><c25>))</c25><c10>&nbsp;</c10><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><c30>impl&nbsp;</c30><a href="../libstd/cmp.rs.html#83"><c30>TotalOrd</c30></a><c30>&nbsp;for&nbsp;bool&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;cmp</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#298_18_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;bool</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libstd/cmp.rs.html#80"><c3>Ordering</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><a href="../libstd/cmp.rs.html#116"><c0>self</c0></a><c25>)</c25><c9>.</c9><a href="../libstd/cmp.rs.html#116"><c10>cmp</c10></a><c25>(</c25><c2>&amp;</c2><a href="../libstd/bool.rs.html#259"><c8>to_bit</c8></a><c25>(</c25><c2>*</c2><a href="../libstd/bool.rs.html#298"><c8>other</c8></a><c25>))</c25><c10>&nbsp;</c10><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><c24>/**
-</c24><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a><c24>*&nbsp;Equality&nbsp;between&nbsp;two&nbsp;boolean&nbsp;values.
-</c24><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a><c24>*
-</c24><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a><c24>*&nbsp;Two&nbsp;booleans&nbsp;are&nbsp;equal&nbsp;if&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;value.
-</c24><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><c24>*
-</c24><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><c24>*&nbsp;~~~&nbsp;{.rust}
-</c24><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><c24>*&nbsp;rusti&gt;&nbsp;false.eq(&amp;true)
-</c24><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a><c24>*&nbsp;false
-</c24><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a><c24>*&nbsp;~~~
-</c24><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><c24>*
-</c24><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a><c24>*&nbsp;~~~&nbsp;{.rust}
-</c24><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a><c24>*&nbsp;rusti&gt;&nbsp;false&nbsp;==&nbsp;false
-</c24><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a><c24>*&nbsp;true
-</c24><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a><c24>*&nbsp;~~~
-</c24><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><c24>*
-</c24><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><c24>*&nbsp;~~~&nbsp;{.rust}
-</c24><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><c24>*&nbsp;rusti&gt;&nbsp;false&nbsp;!=&nbsp;true
-</c24><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a><c24>*&nbsp;true
-</c24><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a><c24>*&nbsp;~~~
-</c24><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><c24>*
-</c24><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a><c24>*&nbsp;~~~&nbsp;{.rust}
-</c24><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a><c24>*&nbsp;rusti&gt;&nbsp;false.ne(&amp;false)
-</c24><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a><c24>*&nbsp;false
-</c24><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a><c24>*&nbsp;~~~
-</c24><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a><c24>*/
-</c24><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a><c30>impl&nbsp;</c30><a href="../libstd/cmp.rs.html#36"><c30>Eq</c30></a><c30>&nbsp;for&nbsp;bool&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;329</ln><a id="329">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#329_4_refs"><c26>eq</c26></a><c25>(</c25><c18>&amp;</c18><a href="#329_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#329_17_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;</c3><a href="#329_4_refs"><c3>bool</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#329_4_refs"><c3>bool</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c25>(</c25><c2>*</c2><a href="#329_4_refs"><c0>self</c0></a><c25>)</c25><c0>&nbsp;</c0><a href="#329_4_refs"><c0>==</c0></a><c2>&nbsp;</c2><c25>(</c25><c2>*</c2><a href="../libstd/bool.rs.html#329"><c8>other</c8></a><c25>)</c25><c0>&nbsp;</c0><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;330</ln><a id="330">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;331</ln><a id="331">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#331_4_refs"><c26>ne</c26></a><c25>(</c25><c18>&amp;</c18><a href="#331_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#331_17_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;</c3><a href="#331_4_refs"><c3>bool</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#331_4_refs"><c3>bool</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c25>(</c25><c2>*</c2><a href="#331_4_refs"><c0>self</c0></a><c25>)</c25><c0>&nbsp;!</c0><a href="#331_4_refs"><c0>=</c0></a><c2>&nbsp;</c2><c25>(</c25><c2>*</c2><a href="../libstd/bool.rs.html#331"><c8>other</c8></a><c25>)</c25><c0>&nbsp;</c0><c4>}</c4><c17>
+</c0><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><c24>*&nbsp;Equality&nbsp;between&nbsp;two&nbsp;boolean&nbsp;values.
+</c24><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><c24>*
+</c24><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><c24>*&nbsp;Two&nbsp;booleans&nbsp;are&nbsp;equal&nbsp;if&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;value.
+</c24><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><c24>*
+</c24><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><c24>*&nbsp;~~~&nbsp;{.rust}
+</c24><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><c24>*&nbsp;rusti&gt;&nbsp;false.eq(&amp;true)
+</c24><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a><c24>*&nbsp;false
+</c24><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a><c24>*&nbsp;~~~
+</c24><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a><c24>*
+</c24><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><c24>*&nbsp;~~~&nbsp;{.rust}
+</c24><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><c24>*&nbsp;rusti&gt;&nbsp;false&nbsp;==&nbsp;false
+</c24><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><c24>*&nbsp;true
+</c24><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a><c24>*&nbsp;~~~
+</c24><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a><c24>*
+</c24><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><c24>*&nbsp;~~~&nbsp;{.rust}
+</c24><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a><c24>*&nbsp;rusti&gt;&nbsp;false&nbsp;!=&nbsp;true
+</c24><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a><c24>*&nbsp;true
+</c24><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a><c24>*&nbsp;~~~
+</c24><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a><c24>*
+</c24><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><c24>*&nbsp;~~~&nbsp;{.rust}
+</c24><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><c24>*&nbsp;rusti&gt;&nbsp;false.ne(&amp;false)
+</c24><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><c24>*&nbsp;false
+</c24><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a><c24>*&nbsp;~~~
+</c24><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a><c24>*/
+</c24><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a><c30>impl&nbsp;</c30><a href="../libstd/cmp.rs.html#36"><c30>Eq</c30></a><c30>&nbsp;for&nbsp;bool&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#323_4_refs"><c26>eq</c26></a><c25>(</c25><c18>&amp;</c18><a href="#323_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#323_17_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;</c3><a href="#323_4_refs"><c3>bool</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#323_4_refs"><c3>bool</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c25>(</c25><c2>*</c2><a href="#323_4_refs"><c0>self</c0></a><c25>)</c25><c0>&nbsp;</c0><a href="#323_4_refs"><c0>==</c0></a><c2>&nbsp;</c2><c25>(</c25><c2>*</c2><a href="../libstd/bool.rs.html#323"><c8>other</c8></a><c25>)</c25><c0>&nbsp;</c0><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#325_4_refs"><c26>ne</c26></a><c25>(</c25><c18>&amp;</c18><a href="#325_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#325_17_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;</c3><a href="#325_4_refs"><c3>bool</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#325_4_refs"><c3>bool</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c25>(</c25><c2>*</c2><a href="#325_4_refs"><c0>self</c0></a><c25>)</c25><c0>&nbsp;!</c0><a href="#325_4_refs"><c0>=</c0></a><c2>&nbsp;</c2><c25>(</c25><c2>*</c2><a href="../libstd/bool.rs.html#325"><c8>other</c8></a><c25>)</c25><c0>&nbsp;</c0><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;329</ln><a id="329">&nbsp;</a><c30>impl&nbsp;</c30><a href="../libstd/num/num.rs.html#52"><c30>Zero</c30></a><c30>&nbsp;for&nbsp;bool&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;330</ln><a id="330">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;zero</c26><c25>()</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c12>false</c12><c22>&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;331</ln><a id="331">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_zero</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c2>*</c2><c0>self&nbsp;==</c0><c2>&nbsp;</c2><c12>false</c12><c22>&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;332</ln><a id="332">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;333</ln><a id="333">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;334</ln><a id="334">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;335</ln><a id="335">&nbsp;</a><c30>impl&nbsp;</c30><a href="../libstd/num/num.rs.html#52"><c30>Zero</c30></a><c30>&nbsp;for&nbsp;bool&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;336</ln><a id="336">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;zero</c26><c25>()</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c12>false</c12><c22>&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;337</ln><a id="337">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;is_zero</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c2>*</c2><c0>self&nbsp;==</c0><c2>&nbsp;</c2><c12>false</c12><c22>&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;338</ln><a id="338">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;339</ln><a id="339">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;340</ln><a id="340">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;341</ln><a id="341">&nbsp;</a><c21>mod</c21><c0>&nbsp;tests&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;342</ln><a id="342">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;343</ln><a id="343">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;344</ln><a id="344">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;345</ln><a id="345">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;346</ln><a id="346">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_bool_from_str</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;347</ln><a id="347">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;all_values&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;348</ln><a id="348">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>Some</c0><c25>(</c25><c0>v</c0><c25>)</c25><c0>&nbsp;==&nbsp;FromStr::from_str</c0><c25>(</c25><c0>v.to_str</c0><c25>()))</c25><c0>
-</c0><br/><ln>&nbsp;349</ln><a id="349">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;334</ln><a id="334">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;335</ln><a id="335">&nbsp;</a><c21>mod</c21><c0>&nbsp;tests&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;336</ln><a id="336">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;337</ln><a id="337">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;338</ln><a id="338">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;339</ln><a id="339">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;340</ln><a id="340">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_bool_from_str</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;341</ln><a id="341">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;all_values&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;342</ln><a id="342">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>Some</c0><c25>(</c25><c0>v</c0><c25>)</c25><c0>&nbsp;==&nbsp;FromStr::from_str</c0><c25>(</c25><c0>v.to_str</c0><c25>()))</c25><c0>
+</c0><br/><ln>&nbsp;343</ln><a id="343">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;344</ln><a id="344">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;345</ln><a id="345">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;346</ln><a id="346">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;347</ln><a id="347">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_bool_to_str</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;348</ln><a id="348">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>false.to_str</c0><c25>()</c25><c4>,</c4><c0>&nbsp;~"false"</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;349</ln><a id="349">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>true.to_str</c0><c25>()</c25><c4>,</c4><c0>&nbsp;~"true"</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;350</ln><a id="350">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;351</ln><a id="351">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;352</ln><a id="352">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;353</ln><a id="353">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_bool_to_str</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;354</ln><a id="354">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>false.to_str</c0><c25>()</c25><c4>,</c4><c0>&nbsp;~"false"</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;355</ln><a id="355">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>true.to_str</c0><c25>()</c25><c4>,</c4><c0>&nbsp;~"true"</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;356</ln><a id="356">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;357</ln><a id="357">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;358</ln><a id="358">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;359</ln><a id="359">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_bool_to_bit</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;360</ln><a id="360">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;all_values&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;361</ln><a id="361">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>to_bit</c0><c25>(</c25><c0>v</c0><c25>)</c25><c4>,</c4><c0>&nbsp;if&nbsp;is_true</c0><c25>(</c25><c0>v</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>&nbsp;1u8&nbsp;</c0><c4>}</c4><c0>&nbsp;else&nbsp;</c0><c4>{</c4><c0>&nbsp;0u8&nbsp;</c0><c4>}</c4><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;362</ln><a id="362">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;363</ln><a id="363">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;364</ln><a id="364">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;365</ln><a id="365">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;366</ln><a id="366">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_bool_ord</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;367</ln><a id="367">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>true&nbsp;&gt;&nbsp;false</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;368</ln><a id="368">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!</c0><c25>(</c25><c0>false&nbsp;&gt;&nbsp;true</c0><c25>))</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;369</ln><a id="369">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;370</ln><a id="370">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>false&nbsp;&lt;&nbsp;true</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;371</ln><a id="371">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!</c0><c25>(</c25><c0>true&nbsp;&lt;&nbsp;false</c0><c25>))</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;372</ln><a id="372">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;373</ln><a id="373">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>false&nbsp;&lt;=&nbsp;false</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;374</ln><a id="374">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>false&nbsp;&gt;=&nbsp;false</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;375</ln><a id="375">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>true&nbsp;&lt;=&nbsp;true</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;376</ln><a id="376">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>true&nbsp;&gt;=&nbsp;true</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;353</ln><a id="353">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_bool_to_bit</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;354</ln><a id="354">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;all_values&nbsp;|v|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;355</ln><a id="355">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>to_bit</c0><c25>(</c25><c0>v</c0><c25>)</c25><c4>,</c4><c0>&nbsp;if&nbsp;is_true</c0><c25>(</c25><c0>v</c0><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c0>&nbsp;1u8&nbsp;</c0><c4>}</c4><c0>&nbsp;else&nbsp;</c0><c4>{</c4><c0>&nbsp;0u8&nbsp;</c0><c4>}</c4><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;356</ln><a id="356">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;357</ln><a id="357">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;358</ln><a id="358">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;359</ln><a id="359">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;360</ln><a id="360">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_bool_ord</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;361</ln><a id="361">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>true&nbsp;&gt;&nbsp;false</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;362</ln><a id="362">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!</c0><c25>(</c25><c0>false&nbsp;&gt;&nbsp;true</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;363</ln><a id="363">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;364</ln><a id="364">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>false&nbsp;&lt;&nbsp;true</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;365</ln><a id="365">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!</c0><c25>(</c25><c0>true&nbsp;&lt;&nbsp;false</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;366</ln><a id="366">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;367</ln><a id="367">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>false&nbsp;&lt;=&nbsp;false</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;368</ln><a id="368">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>false&nbsp;&gt;=&nbsp;false</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;369</ln><a id="369">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>true&nbsp;&lt;=&nbsp;true</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;370</ln><a id="370">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>true&nbsp;&gt;=&nbsp;true</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;371</ln><a id="371">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;372</ln><a id="372">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>false&nbsp;&lt;=&nbsp;true</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;373</ln><a id="373">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!</c0><c25>(</c25><c0>false&nbsp;&gt;=&nbsp;true</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;374</ln><a id="374">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>true&nbsp;&gt;=&nbsp;false</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;375</ln><a id="375">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!</c0><c25>(</c25><c0>true&nbsp;&lt;=&nbsp;false</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;376</ln><a id="376">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;377</ln><a id="377">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;378</ln><a id="378">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>false&nbsp;&lt;=&nbsp;true</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;379</ln><a id="379">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!</c0><c25>(</c25><c0>false&nbsp;&gt;=&nbsp;true</c0><c25>))</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;380</ln><a id="380">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>true&nbsp;&gt;=&nbsp;false</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;381</ln><a id="381">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>!</c0><c25>(</c25><c0>true&nbsp;&lt;=&nbsp;false</c0><c25>))</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;382</ln><a id="382">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;383</ln><a id="383">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;384</ln><a id="384">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;385</ln><a id="385">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_bool_totalord</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;386</ln><a id="386">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>true.cmp</c0><c25>(</c25><c0>&amp;true</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Equal</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;387</ln><a id="387">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>false.cmp</c0><c25>(</c25><c0>&amp;false</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Equal</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;388</ln><a id="388">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>true.cmp</c0><c25>(</c25><c0>&amp;false</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Greater</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;389</ln><a id="389">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>false.cmp</c0><c25>(</c25><c0>&amp;true</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Less</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;390</ln><a id="390">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;391</ln><a id="391">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;378</ln><a id="378">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;379</ln><a id="379">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_bool_totalord</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;380</ln><a id="380">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>true.cmp</c0><c25>(</c25><c0>&amp;true</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Equal</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;381</ln><a id="381">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>false.cmp</c0><c25>(</c25><c0>&amp;false</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Equal</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;382</ln><a id="382">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>true.cmp</c0><c25>(</c25><c0>&amp;false</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Greater</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;383</ln><a id="383">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>false.cmp</c0><c25>(</c25><c0>&amp;true</c0><c25>)</c25><c4>,</c4><c0>&nbsp;Less</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;384</ln><a id="384">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;385</ln><a id="385">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><div/><br/><a id="259_10_refs"><a href="#259"><c24>libstd/bool.rs:259:10-259:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
 <br/>pub&nbsp;fn&nbsp;to_bit(v:&nbsp;bool)&nbsp;-&gt;&nbsp;u8&nbsp;{&nbsp;if&nbsp;v&nbsp;{&nbsp;1u8&nbsp;}&nbsp;else&nbsp;{&nbsp;0u8&nbsp;}&nbsp;}
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/bool.rs.html#290"><c24>290:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;gt(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&gt;&nbsp;to_bit(*other)&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/bool.rs.html#292"><c24>292:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;cmp(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;Ordering&nbsp;{&nbsp;to_bit(*self).cmp(&amp;to_bit(*other))&nbsp;}
 <br/></a><a href="../libstd/bool.rs.html#286"><c24>286:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;lt(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;&nbsp;to_bit(*other)&nbsp;}
+<br/></a><a href="../libstd/bool.rs.html#292"><c24>292:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;cmp(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;Ordering&nbsp;{&nbsp;to_bit(*self).cmp(&amp;to_bit(*other))&nbsp;}
 <br/></a><a href="../libstd/bool.rs.html#286"><c24>286:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;lt(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;&nbsp;to_bit(*other)&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#298"><c24>298:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;cmp(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;Ordering&nbsp;{&nbsp;to_bit(*self).cmp(&amp;to_bit(*other))&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#292"><c24>292:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;ge(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&gt;=&nbsp;to_bit(*other)&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#288"><c24>288:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;le(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;=&nbsp;to_bit(*other)&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#292"><c24>292:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;ge(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&gt;=&nbsp;to_bit(*other)&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#290"><c24>290:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;gt(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&gt;&nbsp;to_bit(*other)&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#298"><c24>298:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;cmp(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;Ordering&nbsp;{&nbsp;to_bit(*self).cmp(&amp;to_bit(*other))&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#288"><c24>288:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;le(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;=&nbsp;to_bit(*other)&nbsp;}
 <br/></a><br/></c0></c0>

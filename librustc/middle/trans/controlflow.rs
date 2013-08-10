@@ -8,6 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+use std::c_str::ToCStr;
 
 use back::link;
 use lib;
@@ -240,7 +241,7 @@ pub fn trans_log(log_ex: &ast::expr,
             ccx, modpath, "loglevel");
         let global;
         unsafe {
-            global = do s.as_c_str |buf| {
+            global = do s.to_c_str().with_ref |buf| {
                 llvm::LLVMAddGlobal(ccx.llmod, Type::i32().to_ref(), buf)
             };
             llvm::LLVMSetGlobalConstant(global, False);
@@ -314,7 +315,7 @@ pub fn trans_break_cont(bcx: @mut Block,
                     Some(bcx) => bcx,
                         // This is a return from a loop body block
                         None => {
-                            Store(bcx, C_bool(!to_end), bcx.fcx.llretptr.get());
+                            Store(bcx, C_bool(!to_end), bcx.fcx.llretptr.unwrap());
                             cleanup_and_leave(bcx, None, Some(bcx.fcx.get_llreturn()));
                             Unreachable(bcx);
                             return bcx;
@@ -346,7 +347,7 @@ pub fn trans_ret(bcx: @mut Block, e: Option<@ast::expr>) -> @mut Block {
         // to false, return flag to true, and then store the value in the
         // parent's retptr.
         Store(bcx, C_bool(true), flagptr);
-        Store(bcx, C_bool(false), bcx.fcx.llretptr.get());
+        Store(bcx, C_bool(false), bcx.fcx.llretptr.unwrap());
         expr::SaveIn(match e {
           Some(x) => PointerCast(bcx, retptr,
                                  type_of(bcx.ccx(), expr_ty(bcx, x)).ptr_to()),

@@ -282,7 +282,7 @@ fn mk_std(cx: &TestCtxt) -> ast::view_item {
                                             cx.sess.next_node_id()))])
     } else {
         let mi = attr::mk_name_value_item_str(@"vers", @"0.8-pre");
-        ast::view_item_extern_mod(id_extra, ~[mi], cx.sess.next_node_id())
+        ast::view_item_extern_mod(id_extra, None, ~[mi], cx.sess.next_node_id())
     };
     ast::view_item {
         node: vi,
@@ -308,7 +308,7 @@ fn mk_test_module(cx: &TestCtxt) -> @ast::item {
             #[main];
             extra::test::test_main_static(::std::os::args(), TESTS);
         }
-    )).get();
+    )).unwrap();
 
     let testmod = ast::_mod {
         view_items: view_items,
@@ -366,7 +366,7 @@ fn mk_tests(cx: &TestCtxt) -> @ast::item {
         pub static TESTS : &'static [self::extra::test::TestDescAndFn] =
             $test_descs
         ;
-    )).get()
+    )).unwrap()
 }
 
 fn is_extra(cx: &TestCtxt) -> bool {

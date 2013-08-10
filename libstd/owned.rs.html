@@ -49,7 +49,7 @@ c23{color:#d0f0ff; }
 </c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;Operations&nbsp;on&nbsp;unique&nbsp;pointer&nbsp;types
 </c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>&nbsp;use&nbsp;cmp::</c33><c4>{</c4><c33>Eq</c33><c4>,</c4><c33>&nbsp;Ord</c33><c4>};</c4><c33>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>&nbsp;use&nbsp;cmp::*</c33><c4>;</c4><c33>
 </c33><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
 </c33><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c30>impl</c30><c5>&lt;T:</c5><a href="../libstd/cmp.rs.html#36"><c5>Eq</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><a href="../libstd/cmp.rs.html#36"><c30>Eq</c30></a><c30>&nbsp;for&nbsp;~T&nbsp;</c30><c4>{</c4><c17>
@@ -60,7 +60,7 @@ c23{color:#d0f0ff; }
 </c17><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c30>impl</c30><c5>&lt;T:</c5><a href="../libstd/cmp.rs.html#175"><c5>Ord</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><a href="../libstd/cmp.rs.html#175"><c30>Ord</c30></a><c30>&nbsp;for&nbsp;~T&nbsp;</c30><c4>{</c4><c17>
+</c33><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c30>impl</c30><c5>&lt;T:</c5><a href="../libstd/cmp.rs.html#168"><c5>Ord</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><a href="../libstd/cmp.rs.html#168"><c30>Ord</c30></a><c30>&nbsp;for&nbsp;~T&nbsp;</c30><c4>{</c4><c17>
 </c17><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
 </c17><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;lt</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#26_17_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;~T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c2>*</c2><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c0>&nbsp;&lt;&nbsp;</c0><c2>*</c2><c25>(</c25><c2>*</c2><a href="../libstd/owned.rs.html#26"><c8>other</c8></a><c25>)</c25><c0>&nbsp;</c0><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
@@ -70,4 +70,16 @@ c23{color:#d0f0ff; }
 </c17><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
 </c17><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;gt</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#32_17_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;~T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c2>*</c2><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c0>&nbsp;&gt;</c0><c2>&nbsp;*</c2><c25>(</c25><c2>*</c2><a href="../libstd/owned.rs.html#32"><c8>other</c8></a><c25>)</c25><c0>&nbsp;</c0><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c30>impl</c30><c5>&lt;T:&nbsp;</c5><a href="../libstd/cmp.rs.html#83"><c5>TotalOrd</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><a href="../libstd/cmp.rs.html#83"><c30>TotalOrd</c30></a><c30>&nbsp;for&nbsp;~T&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;cmp</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#38_18_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;~T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libstd/cmp.rs.html#80"><c3>Ordering</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c25>(</c25><c2>**</c2><a href="../libstd/cmp.rs.html#85"><c0>self</c0></a><c25>)</c25><c0>.</c0><a href="../libstd/cmp.rs.html#85"><c10>cmp</c10></a><c25>(</c25><c2>*</c2><a href="../libstd/owned.rs.html#38"><c8>other</c8></a><c25>)</c25><c10>&nbsp;</c10><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c30>impl</c30><c5>&lt;T:&nbsp;</c5><a href="../libstd/cmp.rs.html#42"><c5>TotalEq</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><a href="../libstd/cmp.rs.html#42"><c30>TotalEq</c30></a><c30>&nbsp;for&nbsp;~T&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;equals</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#44_21_refs"><c20>other</c20></a><c18>:&nbsp;</c18><c3>&amp;~T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c25>(</c25><c2>**</c2><a href="../libstd/cmp.rs.html#44"><c0>self</c0></a><c25>)</c25><c0>.</c0><a href="../libstd/cmp.rs.html#44"><c10>equals</c10></a><c25>(</c25><c2>*</c2><a href="../libstd/owned.rs.html#44"><c8>other</c8></a><c25>)</c25><c10>&nbsp;</c10><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><div/></c0></c0>

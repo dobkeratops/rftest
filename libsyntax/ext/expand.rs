@@ -1014,7 +1014,9 @@ pub fn expand_crate(parse_sess: @mut parse::ParseSess,
         .. *afp};
     let f = make_fold(f_pre);
 
-    @f.fold_crate(c)
+    let ret = @f.fold_crate(c);
+    parse_sess.span_diagnostic.handler().abort_if_errors();
+    return ret;
 }
 
 // given a function from idents to idents, produce
@@ -1182,9 +1184,9 @@ mod test {
         let a2_name = intern("a2");
         let renamer = new_ident_renamer(ast::ident{name:a_name,ctxt:empty_ctxt},
                                         a2_name);
-        let renamed_ast = fun_to_ident_folder(renamer).fold_item(item_ast).get();
+        let renamed_ast = fun_to_ident_folder(renamer).fold_item(item_ast).unwrap();
         let resolver = new_ident_resolver();
-        let resolved_ast = fun_to_ident_folder(resolver).fold_item(renamed_ast).get();
+        let resolved_ast = fun_to_ident_folder(resolver).fold_item(renamed_ast).unwrap();
         let resolved_as_str = pprust::item_to_str(resolved_ast,
                                                   get_ident_interner());
         assert_eq!(resolved_as_str,~"fn a2() -> int { let b = 13; b }");

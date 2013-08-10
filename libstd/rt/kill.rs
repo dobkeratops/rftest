@@ -193,6 +193,10 @@ impl BlockedTask {
 
     /// Create a blocked task, unless the task was already killed.
     pub fn try_block(mut task: ~Task) -> Either<~Task, BlockedTask> {
+        // NB: As an optimization, we could give a free pass to being unkillable
+        // to tasks whose taskgroups haven't been initialized yet, but that
+        // introduces complications with select() and with the test cases below,
+        // and it's not clear the uncommon performance boost is worth it.
         if task.death.unkillable > 0 {
             Right(Unkillable(task))
         } else {
@@ -205,11 +209,10 @@ impl BlockedTask {
                 let flag_arc = match task.death.spare_kill_flag.take() {
                     Some(spare_flag) => spare_flag,
                     None => {
-                        // FIXME(#7544): Uncomment this when terminate_current_task
-                        // stops being *terrible*. That's the only place that violates
-                        // the assumption of "becoming unkillable will fail if the
-                        // task was killed".
-                        // rtassert!(task.unwinder.unwinding);
+                        // A task that kills us won't have a spare kill flag to
+                        // give back to us, so we restore it ourselves here. This
+                        // situation should only arise when we're already failing.
+                        rtassert!(task.unwinder.unwinding);
                         (*task.death.kill_handle.get_ref().get()).killed.clone()
                     }
                 };
@@ -399,10 +402,10 @@ impl KillHandle {
                     || {
                         // Prefer to check tombstones that were there first,
                         // being "more fair" at the expense of tail-recursion.
-                        others.take().map_consume_default(true, |f| f()) && {
+                        others.take().map_move_default(true, |f| f()) && {
                             let mut inner = this.take().unwrap();
                             (!inner.any_child_failed) &&
-                                inner.child_tombstones.take_map_default(true, |f| f())
+                                inner.child_tombstones.take().map_move_default(true, |f| f())
                         }
                     }
                 }
@@ -421,7 +424,7 @@ impl KillHandle {
                     let others = Cell::new(other_tombstones); // :(
                     || {
                         // Prefer fairness to tail-recursion, as in above case.
-                        others.take().map_consume_default(true, |f| f()) &&
+                        others.take().map_move_default(true, |f| f()) &&
                             f.take()()
                     }
                 }
@@ -490,7 +493,7 @@ impl Death {
         { use util; util::ignore(group); }
 
         // Step 1. Decide if we need to collect child failures synchronously.
-        do self.on_exit.take_map |on_exit| {
+        do self.on_exit.take().map_move |on_exit| {
             if success {
                 // We succeeded, but our children might not. Need to wait for them.
                 let mut inner = self.kill_handle.take_unwrap().unwrap();
@@ -498,7 +501,7 @@ impl Death {
                     success = false;
                 } else {
                     // Lockless access to tombstones protected by unwrap barrier.
-                    success = inner.child_tombstones.take_map_default(true, |f| f());
+                    success = inner.child_tombstones.take().map_move_default(true, |f| f());
                 }
             }
             on_exit(success);
@@ -507,12 +510,12 @@ impl Death {
         // Step 2. Possibly alert possibly-watching parent to failure status.
         // Note that as soon as parent_handle goes out of scope, the parent
         // can successfully unwrap its handle and collect our reported status.
-        do self.watching_parent.take_map |mut parent_handle| {
+        do self.watching_parent.take().map_move |mut parent_handle| {
             if success {
                 // Our handle might be None if we had an exit callback, and
                 // already unwrapped it. But 'success' being true means no
                 // child failed, so there's nothing to do (see below case).
-                do self.kill_handle.take_map |own_handle| {
+                do self.kill_handle.take().map_move |own_handle| {
                     own_handle.reparent_children_to(&mut parent_handle);
                 };
             } else {
@@ -587,7 +590,8 @@ impl Death {
     #[inline]
     pub fn assert_may_sleep(&self) {
         if self.wont_sleep != 0 {
-            rtabort!("illegal atomic-sleep: can't deschedule inside atomically()");
+            rtabort!("illegal atomic-sleep: attempt to reschedule while \
+                      using an Exclusive or LittleLock");
         }
     }
 }
@@ -611,6 +615,7 @@ mod test {
     // Test cases don't care about the spare killed flag.
     fn make_kill_handle() -> KillHandle { let (h,_) = KillHandle::new(); h }
 
+    #[ignore(reason = "linked failure")]
     #[test]
     fn no_tombstone_success() {
         do run_in_newsched_task {
@@ -816,6 +821,7 @@ mod test {
         }
     }
 
+    #[ignore(reason = "linked failure")]
     #[test]
     fn block_and_get_killed() {
         do with_test_task |mut task| {
@@ -827,6 +833,7 @@ mod test {
         }
     }
 
+    #[ignore(reason = "linked failure")]
     #[test]
     fn block_already_killed() {
         do with_test_task |mut task| {
@@ -836,6 +843,7 @@ mod test {
         }
     }
 
+    #[ignore(reason = "linked failure")]
     #[test]
     fn block_unkillably_and_get_killed() {
         do with_test_task |mut task| {
@@ -853,6 +861,7 @@ mod test {
         }
     }
 
+    #[ignore(reason = "linked failure")]
     #[test]
     fn block_on_pipe() {
         // Tests the "killable" path of casting to/from uint.
@@ -866,6 +875,7 @@ mod test {
         }
     }
 
+    #[ignore(reason = "linked failure")]
     #[test]
     fn block_unkillably_on_pipe() {
         // Tests the "indestructible" path of casting to/from uint.

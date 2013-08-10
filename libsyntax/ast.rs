@@ -24,7 +24,7 @@ use extra::serialize::{Encodable, Decodable, Encoder, Decoder};
 // table) and a SyntaxContext to track renaming and
 // macro expansion per Flatt et al., "Macros
 // That Work Together"
-#[deriving(Clone, Eq, IterBytes)]
+#[deriving(Clone, Eq, IterBytes, ToStr)]
 pub struct ident { name: Name, ctxt: SyntaxContext }
 
 /// Construct an identifier with the given name and an empty context:
@@ -121,7 +121,7 @@ pub type CrateNum = int;
 
 pub type NodeId = int;
 
-#[deriving(Clone, Eq, Encodable, Decodable, IterBytes)]
+#[deriving(Clone, Eq, Encodable, Decodable, IterBytes, ToStr)]
 pub struct def_id {
     crate: CrateNum,
     node: NodeId,
@@ -951,7 +951,11 @@ pub struct view_item {
 
 #[deriving(Clone, Eq, Encodable, Decodable, IterBytes)]
 pub enum view_item_ {
-    view_item_extern_mod(ident, ~[@MetaItem], NodeId),
+    // ident: name used to refer to this crate in the code
+    // optional @str: if present, this is a location (containing
+    // arbitrary characters) from which to fetch the crate sources
+    // For example, extern mod whatever = "github.com/mozilla/rust"
+    view_item_extern_mod(ident, Option<@str>, ~[@MetaItem], NodeId),
     view_item_use(~[@view_path]),
 }
 
