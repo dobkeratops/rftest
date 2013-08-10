@@ -137,27 +137,27 @@ c23{color:#d0f0ff; }
 </c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>value</c0><c4>,</c4><c0>&nbsp;~30</c0><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="44_47_refs"><a href="#44"><c24>libstd/rt/thread_local_storage.rs:44:47-44:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;foreign&nbsp;type
-<br/>type&nbsp;pthread_key_t&nbsp;=&nbsp;::libc::c_uint;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/thread_local_storage.rs.html#52"><c24>52:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_setspecific(key:&nbsp;pthread_key_t,&nbsp;value:&nbsp;*mut&nbsp;c_void)&nbsp;-&gt;&nbsp;c_int;
-<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_getspecific(key:&nbsp;pthread_key_t)&nbsp;-&gt;&nbsp;*mut&nbsp;c_void;
-<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#20"><c24>20:&nbsp;</c24>pub&nbsp;type&nbsp;Key&nbsp;=&nbsp;pthread_key_t;
-<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_key_create(key:&nbsp;*mut&nbsp;pthread_key_t,&nbsp;dtor:&nbsp;*u8)&nbsp;-&gt;&nbsp;c_int;
-<br/></a><br/><br/><a id="27_13_refs"><a href="#27"><c24>libstd/rt/thread_local_storage.rs:27:13-27:13&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[cfg(unix)]
-<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;set(key:&nbsp;Key,&nbsp;value:&nbsp;*mut&nbsp;c_void)&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/local_ptr.rs.html"><c24>libstd/rt/local_ptr.rs:<br/></c24><a href="../../libstd/rt/local_ptr.rs.html#59"><c24>59:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;tls::set(key,&nbsp;ptr::mut_null());
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#44"><c24>44:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;tls::set(key,&nbsp;void_ptr);
-<br/></a><br/><br/><a id="19_13_refs"><a href="#19"><c24>libstd/rt/thread_local_storage.rs:19:13-19:13&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[cfg(unix)]
+</c0><br/><div/><br/><a id="19_13_refs"><a href="#19"><c24>libstd/rt/thread_local_storage.rs:19:13-19:13&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[cfg(unix)]
 <br/>pub&nbsp;type&nbsp;Key&nbsp;=&nbsp;pthread_key_t;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/thread_local_storage.rs.html#28"><c24>28:&nbsp;</c24>pub&nbsp;unsafe&nbsp;fn&nbsp;set(key:&nbsp;Key,&nbsp;value:&nbsp;*mut&nbsp;c_void)&nbsp;{
-<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#23"><c24>23:&nbsp;</c24>pub&nbsp;unsafe&nbsp;fn&nbsp;create(key:&nbsp;&amp;mut&nbsp;Key)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/thread_local_storage.rs.html#23"><c24>23:&nbsp;</c24>pub&nbsp;unsafe&nbsp;fn&nbsp;create(key:&nbsp;&amp;mut&nbsp;Key)&nbsp;{
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#28"><c24>28:&nbsp;</c24>pub&nbsp;unsafe&nbsp;fn&nbsp;set(key:&nbsp;Key,&nbsp;value:&nbsp;*mut&nbsp;c_void)&nbsp;{
 <br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#33"><c24>33:&nbsp;</c24>pub&nbsp;unsafe&nbsp;fn&nbsp;get(key:&nbsp;Key)&nbsp;-&gt;&nbsp;*mut&nbsp;c_void&nbsp;{
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html"><c24>libstd/rt/local_ptr.rs:<br/></c24><a href="../../libstd/rt/local_ptr.rs.html#120"><c24>120:&nbsp;</c24>fn&nbsp;maybe_tls_key()&nbsp;-&gt;&nbsp;Option&lt;tls::Key&gt;&nbsp;{
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html"><c24>libstd/rt/local_ptr.rs:<br/></c24><a href="../../libstd/rt/local_ptr.rs.html#113"><c24>113:&nbsp;</c24>fn&nbsp;tls_key()&nbsp;-&gt;&nbsp;tls::Key&nbsp;{
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#120"><c24>120:&nbsp;</c24>fn&nbsp;maybe_tls_key()&nbsp;-&gt;&nbsp;Option&lt;tls::Key&gt;&nbsp;{
 <br/></a><a href="../../libstd/rt/local_ptr.rs.html#123"><c24>123:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;key:&nbsp;&amp;mut&nbsp;tls::Key&nbsp;=&nbsp;cast::transmute(key);
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#113"><c24>113:&nbsp;</c24>fn&nbsp;tls_key()&nbsp;-&gt;&nbsp;tls::Key&nbsp;{
+<br/></a><br/><br/><a id="44_47_refs"><a href="#44"><c24>libstd/rt/thread_local_storage.rs:44:47-44:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;foreign&nbsp;type
+<br/>type&nbsp;pthread_key_t&nbsp;=&nbsp;::libc::c_uint;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/thread_local_storage.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_key_create(key:&nbsp;*mut&nbsp;pthread_key_t,&nbsp;dtor:&nbsp;*u8)&nbsp;-&gt;&nbsp;c_int;
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#20"><c24>20:&nbsp;</c24>pub&nbsp;type&nbsp;Key&nbsp;=&nbsp;pthread_key_t;
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_getspecific(key:&nbsp;pthread_key_t)&nbsp;-&gt;&nbsp;*mut&nbsp;c_void;
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#52"><c24>52:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_setspecific(key:&nbsp;pthread_key_t,&nbsp;value:&nbsp;*mut&nbsp;c_void)&nbsp;-&gt;&nbsp;c_int;
 <br/></a><br/><br/><a id="32_13_refs"><a href="#32"><c24>libstd/rt/thread_local_storage.rs:32:13-32:13&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[cfg(unix)]
 <br/>pub&nbsp;unsafe&nbsp;fn&nbsp;get(key:&nbsp;Key)&nbsp;-&gt;&nbsp;*mut&nbsp;c_void&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/local_ptr.rs.html"><c24>libstd/rt/local_ptr.rs:<br/></c24><a href="../../libstd/rt/local_ptr.rs.html#67"><c24>67:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(key)&nbsp;=&gt;&nbsp;tls::get(key).is_not_null(),
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/local_ptr.rs.html"><c24>libstd/rt/local_ptr.rs:<br/></c24><a href="../../libstd/rt/local_ptr.rs.html#101"><c24>101:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;void_ptr:&nbsp;*mut&nbsp;c_void&nbsp;=&nbsp;tls::get(key);
 <br/></a><a href="../../libstd/rt/local_ptr.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;void_ptr:&nbsp;*mut&nbsp;c_void&nbsp;=&nbsp;tls::get(key);
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#101"><c24>101:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;void_ptr:&nbsp;*mut&nbsp;c_void&nbsp;=&nbsp;tls::get(key);
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#67"><c24>67:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(key)&nbsp;=&gt;&nbsp;tls::get(key).is_not_null(),
+<br/></a><br/><br/><a id="27_13_refs"><a href="#27"><c24>libstd/rt/thread_local_storage.rs:27:13-27:13&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[cfg(unix)]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;set(key:&nbsp;Key,&nbsp;value:&nbsp;*mut&nbsp;c_void)&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/local_ptr.rs.html"><c24>libstd/rt/local_ptr.rs:<br/></c24><a href="../../libstd/rt/local_ptr.rs.html#44"><c24>44:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;tls::set(key,&nbsp;void_ptr);
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#59"><c24>59:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;tls::set(key,&nbsp;ptr::mut_null());
 <br/></a><br/></a></a>

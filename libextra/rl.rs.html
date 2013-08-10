@@ -1,0 +1,143 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
+</style><body style="background-color:#343c38;"><maintext><br/><a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../src/">src</a><c1>/</c1><c0><a href="./../../src/libextra/">libextra</a><c1>/</c1><c0><a href="./../../src/libextra/rl.rs.html">rl.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c24>//&nbsp;FIXME&nbsp;#3921.&nbsp;This&nbsp;is&nbsp;unsafe&nbsp;because&nbsp;linenoise&nbsp;uses&nbsp;global&nbsp;mutable
+</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c24>//&nbsp;state&nbsp;without&nbsp;mutexes.
+</c24><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c21>use</c21><c0>&nbsp;std::libc::</c0><c4>{</c4><c0>c_char</c0><c4>,</c4><c0>&nbsp;c_int</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c21>use</c21><c0>&nbsp;std::local_data</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c21>use</c21><c0>&nbsp;std::str</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;rustrt&nbsp;</c14><c4>{</c4><c14>
+</c14><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>use</c21><c14>&nbsp;std::libc::</c14><c4>{</c4><c14>c_char</c14><c4>,</c4><c14>&nbsp;c_int</c14><c4>};</c4><c14>
+</c14><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c14>
+</c14><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>extern</c21><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;linenoise</c26><c25>(</c25><c20>prompt</c20><c0>:&nbsp;</c0><c3>*c_char</c3><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>*c_char</c3><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;linenoiseHistoryAdd</c26><c25>(</c25><c20>line</c20><c0>:&nbsp;</c0><c3>*c_char</c3><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>c_int</c3><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;linenoiseHistorySetMaxLen</c26><c25>(</c25><c20>len</c20><c0>:&nbsp;</c0><c3>c_int</c3><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>c_int</c3><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;linenoiseHistorySave</c26><c25>(</c25><c20>file</c20><c0>:&nbsp;</c0><c3>*c_char</c3><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>c_int</c3><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;linenoiseHistoryLoad</c26><c25>(</c25><c20>file</c20><c0>:&nbsp;</c0><c3>*c_char</c3><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>c_int</c3><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;linenoiseSetCompletionCallback</c26><c25>(</c25><c20>callback</c20><c0>:&nbsp;</c0><c3>*u8</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;linenoiseAddCompletion</c26><c25>(</c25><c20>completions</c20><c0>:&nbsp;</c0><c3>*</c3><c25>()</c25><c4>,</c4><c0>&nbsp;</c0><c20>line</c20><c0>:&nbsp;</c0><c3>*</c3><a href="#28_63_refs"><c3>c_char</c3></a><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c14>
+</c14><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c32>///&nbsp;Add&nbsp;a&nbsp;line&nbsp;to&nbsp;history
+</c32><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;add_history</c26><c25>(</c25><a href="#33_26_refs"><c20>line</c20></a><c1>:&nbsp;</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10>&nbsp;</c10><a href="../../src/libextra/rl.rs.html#35"><c8>line</c8></a><c10>.</c10><c0>a</c0><c0>s</c0><c0>_</c0><c0>c</c0><c0>_</c0><c0>s</c0><c0>t</c0><c0>r&nbsp;|</c0><a href="#34_22_refs"><c20>buf</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>r</c8><c8>u</c8><c8>s</c8><c8>t</c8><c8>r</c8><c8>t::</c8><c8>l</c8><c8>i</c8><c8>n</c8><c8>e</c8><c8>n</c8><c8>o</c8><c8>i</c8><c8>s</c8><c8>e</c8><c8>H</c8><c8>i</c8><c8>s</c8><c8>t</c8><c8>o</c8><c8>r</c8><c8>y</c8><c8>A</c8><c8>d</c8><c8>d</c8><c25>(</c25><a href="../../src/libextra/rl.rs.html#36"><c8>buf</c8></a><c25>)</c25><c9>&nbsp;</c9><c9>=</c9><c9>=</c9><c2>&nbsp;</c2><c12>1</c12><c7>&nbsp;</c7><c7>a</c7><c7>s&nbsp;</c7><c3>c</c3><c3>_</c3><c3>i</c3><c3>n</c3><c3>t</c3><c22>
+</c22><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c32>///&nbsp;Set&nbsp;the&nbsp;maximum&nbsp;amount&nbsp;of&nbsp;lines&nbsp;stored
+</c32><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;set_history_max_len</c26><c25>(</c25><a href="#40_34_refs"><c20>len</c20></a><c1>:&nbsp;</c1><c3>int</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>rustrt::linenoiseHistorySetMaxLen</c8><c25>(</c25><a href="../../src/libextra/rl.rs.html#42"><c8>len</c8></a><c7>&nbsp;as&nbsp;</c7><c3>c_int</c3><c25>)</c25><c9>&nbsp;==</c9><c2>&nbsp;</c2><c12>1</c12><c7>&nbsp;as&nbsp;</c7><c3>c_int</c3><c22>
+</c22><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c32>///&nbsp;Save&nbsp;line&nbsp;history&nbsp;to&nbsp;a&nbsp;file
+</c32><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;save_history</c26><c25>(</c25><a href="#45_27_refs"><c20>file</c20></a><c1>:&nbsp;</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10>&nbsp;</c10><a href="../../src/libextra/rl.rs.html#47"><c8>file</c8></a><c10>.</c10><c0>a</c0><c0>s</c0><c0>_</c0><c0>c</c0><c0>_</c0><c0>s</c0><c0>t</c0><c0>r&nbsp;|</c0><a href="#46_22_refs"><c20>buf</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>r</c8><c8>u</c8><c8>s</c8><c8>t</c8><c8>r</c8><c8>t::</c8><c8>l</c8><c8>i</c8><c8>n</c8><c8>e</c8><c8>n</c8><c8>o</c8><c8>i</c8><c8>s</c8><c8>e</c8><c8>H</c8><c8>i</c8><c8>s</c8><c8>t</c8><c8>o</c8><c8>r</c8><c8>y</c8><c8>S</c8><c8>a</c8><c8>v</c8><c8>e</c8><c25>(</c25><a href="../../src/libextra/rl.rs.html#48"><c8>buf</c8></a><c25>)</c25><c9>&nbsp;</c9><c9>=</c9><c9>=</c9><c2>&nbsp;</c2><c12>1</c12><c7>&nbsp;</c7><c7>a</c7><c7>s&nbsp;</c7><c3>c</c3><c3>_</c3><c3>i</c3><c3>n</c3><c3>t</c3><c22>
+</c22><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c32>///&nbsp;Load&nbsp;line&nbsp;history&nbsp;from&nbsp;a&nbsp;file
+</c32><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;load_history</c26><c25>(</c25><a href="#52_27_refs"><c20>file</c20></a><c1>:&nbsp;</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10>&nbsp;</c10><a href="../../src/libextra/rl.rs.html#54"><c8>file</c8></a><c10>.</c10><c0>a</c0><c0>s</c0><c0>_</c0><c0>c</c0><c0>_</c0><c0>s</c0><c0>t</c0><c0>r&nbsp;|</c0><a href="#53_22_refs"><c20>buf</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>r</c8><c8>u</c8><c8>s</c8><c8>t</c8><c8>r</c8><c8>t::</c8><c8>l</c8><c8>i</c8><c8>n</c8><c8>e</c8><c8>n</c8><c8>o</c8><c8>i</c8><c8>s</c8><c8>e</c8><c8>H</c8><c8>i</c8><c8>s</c8><c8>t</c8><c8>o</c8><c8>r</c8><c8>y</c8><c8>L</c8><c8>o</c8><c8>a</c8><c8>d</c8><c25>(</c25><a href="../../src/libextra/rl.rs.html#55"><c8>buf</c8></a><c25>)</c25><c9>&nbsp;</c9><c9>=</c9><c9>=</c9><c2>&nbsp;</c2><c12>1</c12><c7>&nbsp;</c7><c7>a</c7><c7>s&nbsp;</c7><c3>c</c3><c3>_</c3><c3>i</c3><c3>n</c3><c3>t</c3><c22>
+</c22><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><c32>///&nbsp;Print&nbsp;out&nbsp;a&nbsp;prompt&nbsp;and&nbsp;then&nbsp;wait&nbsp;for&nbsp;input&nbsp;and&nbsp;return&nbsp;it
+</c32><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;read</c26><c25>(</c25><a href="#59_19_refs"><c20>prompt</c20></a><c1>:&nbsp;</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>Option&lt;~str&gt;</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10>&nbsp;</c10><a href="../../src/libextra/rl.rs.html#61"><c8>prompt</c8></a><c10>.</c10><c0>a</c0><c0>s</c0><c0>_</c0><c0>c</c0><c0>_</c0><c0>s</c0><c0>t</c0><c0>r&nbsp;|</c0><a href="#60_24_refs"><c20>buf</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#61_12_refs"><c20>line</c20></a><c16>&nbsp;</c16><c16>=&nbsp;</c16><c8>r</c8><c8>u</c8><c8>s</c8><c8>t</c8><c8>r</c8><c8>t::</c8><c8>l</c8><c8>i</c8><c8>n</c8><c8>e</c8><c8>n</c8><c8>o</c8><c8>i</c8><c8>s</c8><c8>e</c8><c25>(</c25><a href="../../src/libextra/rl.rs.html#62"><c8>buf</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../../src/libextra/rl.rs.html#63"><c8>line</c8></a><c10>.</c10><a href="../../src/libextra/treemap.rs.html#116"><c10>is_null</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><c22>&nbsp;</c22><c8>N</c8><c8>o</c8><c8>n</c8><c8>e</c8><c22>&nbsp;</c22><c4>}</c4><c7>
+</c7><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><c22>&nbsp;</c22><c8>S</c8><c8>o</c8><c8>m</c8><c8>e</c8><c25>(</c25><c8>s</c8><c8>t</c8><c8>r::</c8><c8>r</c8><c8>a</c8><c8>w::</c8><c8>f</c8><c8>r</c8><c8>o</c8><c8>m</c8><c8>_</c8><c8>c</c8><c8>_</c8><c8>s</c8><c8>t</c8><c8>r</c8><c25>(</c25><a href="../../src/libextra/rl.rs.html#63"><c8>line</c8></a><c25>))</c25><c9>&nbsp;</c9><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a><c21>pub</c21><c3>&nbsp;</c3><c31>type&nbsp;</c31><a href="#67_1_refs"><c31>CompletionCb</c31></a><c31>&nbsp;</c31><a href="#67_1_refs"><c31>=</c31></a><c31>&nbsp;@</c31><a href="#67_1_refs"><c31>fn</c31></a><c25>(</c25><c3>~</c3><a href="#67_1_refs"><c3>str</c3></a><c4>,</c4><c3>&nbsp;@</c3><c26>fn</c26><c25>(</c25><c3>~</c3><a href="#67_1_refs"><c3>str</c3></a><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;70</ln><a id="70">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a><a href="#69_1_refs"><c0>static</c0></a><c0>&nbsp;</c0><a href="#69_1_refs"><c0>complete_key</c0></a><c0>:&nbsp;</c0><a href="#69_1_refs"><c3>local_data</c3></a><c3>::</c3><a href="#69_1_refs"><c3>Key</c3></a><c3>&lt;@</c3><a href="../../src/libextra/rl.rs.html#69"><c3>CompletionCb</c3></a><c3>&gt;</c3><c0>&nbsp;</c0><a href="#69_1_refs"><c0>=</c0></a><c0>&nbsp;</c0><c2>&amp;</c2><a href="#69_1_refs"><c8>local_data</c8></a><c8>::</c8><a href="#69_1_refs"><c8>Key</c8></a><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;72</ln><a id="72">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;73</ln><a id="73">&nbsp;</a><c32>///&nbsp;Bind&nbsp;to&nbsp;the&nbsp;main&nbsp;completion&nbsp;callback
+</c32><br/><ln>&nbsp;74</ln><a id="74">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;complete</c26><c25>(</c25><a href="#73_23_refs"><c20>cb</c20></a><c1>:&nbsp;</c1><a href="../../src/libextra/rl.rs.html#69"><c3>CompletionCb</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;75</ln><a id="75">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>local_data::set</c8><c25>(</c25><a href="../../src/libextra/rl.rs.html#71"><c8>complete_key</c8></a><c4>,</c4><c9>&nbsp;</c9><c2>@</c2><a href="../../src/libextra/rl.rs.html#75"><c8>cb</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;76</ln><a id="76">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;77</ln><a id="77">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>extern</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#76_4_refs"><c26>callback</c26></a><c25>(</c25><a href="#76_23_refs"><c20>line</c20></a><c1>:&nbsp;</c1><c3>*</c3><a href="#76_4_refs"><c3>c_char</c3></a><c4>,</c4><c1>&nbsp;</c1><a href="#76_38_refs"><c20>completions</c20></a><c1>:&nbsp;</c1><c3>*</c3><c25>())</c25><c1>&nbsp;</c1><c4>{</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;78</ln><a id="78">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c9>&nbsp;</c9><a href="#76_4_refs"><c8>local_data</c8></a><c8>::</c8><a href="#76_4_refs"><c8>get</c8></a><c25>(</c25><a href="../../src/libextra/rl.rs.html#71"><c8>complete_key</c8></a><c25>)</c25><c0>&nbsp;|</c0><a href="#77_42_refs"><c20>cb</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;79</ln><a id="79">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#78_16_refs"><c20>cb</c20></a><c16>&nbsp;</c16><a href="#76_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><c2>**</c2><a href="../../src/libextra/rl.rs.html#79"><c8>cb</c8></a><c10>.</c10><a href="../../src/libextra/json.rs.html#540"><c10>unwrap</c10></a><c25>()</c25><c4>;</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;80</ln><a id="80">&nbsp;</a><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;81</ln><a id="81">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;82</ln><a id="82">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c9>&nbsp;</c9><a href="../../src/libextra/rl.rs.html#80"><c8>cb</c8></a><c25>(</c25><a href="#76_4_refs"><c8>str</c8></a><c8>::</c8><a href="#76_4_refs"><c8>raw</c8></a><c8>::</c8><a href="#76_4_refs"><c8>from_c_str</c8></a><c25>(</c25><a href="../../src/libextra/rl.rs.html#78"><c8>line</c8></a><c25>))</c25><c0>&nbsp;|</c0><a href="#81_51_refs"><c20>suggestion</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;83</ln><a id="83">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10>&nbsp;</c10><a href="../../src/libextra/rl.rs.html#83"><c8>suggestion</c8></a><c10>.</c10><a href="#76_4_refs"><c0>as_c_str</c0></a><c0>&nbsp;|</c0><a href="#82_44_refs"><c20>buf</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;84</ln><a id="84">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#76_4_refs"><c8>rustrt</c8></a><c8>::</c8><a href="#76_4_refs"><c8>linenoiseAddCompletion</c8></a><c25>(</c25><a href="../../src/libextra/rl.rs.html#78"><c8>completions</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../../src/libextra/rl.rs.html#84"><c8>buf</c8></a><c25>)</c25><c4>;</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;85</ln><a id="85">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;86</ln><a id="86">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;87</ln><a id="87">&nbsp;</a><c4>}</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;88</ln><a id="88">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#76_4_refs"><c22>
+</c22></a><br/><ln>&nbsp;89</ln><a id="89">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;90</ln><a id="90">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;91</ln><a id="91">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>rustrt::linenoiseSetCompletionCallback</c8><c25>(</c25><a href="../../src/libextra/rl.rs.html#78"><c8>callback</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;92</ln><a id="92">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="67_1_refs"><a href="#68"><c24>src/libextra/rl.rs:68:1-68:1&nbsp;-ty-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;type&nbsp;CompletionCb&nbsp;=&nbsp;@fn(~str,&nbsp;@fn(~str));
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../src/libextra/rl.rs.html#74"><c24>74:&nbsp;</c24>pub&nbsp;unsafe&nbsp;fn&nbsp;complete(cb:&nbsp;CompletionCb)&nbsp;{
+<br/></a><a href="../../src/libextra/rl.rs.html#71"><c24>71:&nbsp;</c24>static&nbsp;complete_key:&nbsp;local_data::Key&lt;@CompletionCb&gt;&nbsp;=&nbsp;&amp;local_data::Key;
+<br/></a><br/><br/><a id="76_4_refs"><a href="#77"><c24>src/libextra/rl.rs:77:4-77:4&nbsp;-fn-&nbsp;definition:<br/></c24><pr>&nbsp;&nbsp;&nbsp;&nbsp;extern&nbsp;fn&nbsp;callback(line:&nbsp;*c_char,&nbsp;completions:&nbsp;*())&nbsp;{
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;local_data::get(complete_key)&nbsp;|cb|&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../src/libextra/rl.rs.html#91"><c24>91:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;rustrt::linenoiseSetCompletionCallback(callback);
+<br/></a><br/><br/><a id="28_63_refs"><a href="#29"><c24>src/libextra/rl.rs:29:63-29:63&nbsp;-ty-&nbsp;definition:<br/></c24><pr>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;linenoiseAddCompletion(completions:&nbsp;*(),&nbsp;line:&nbsp;*c_char);
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../src/libextra/test.rs.html"><c24>src/libextra/test.rs:<br/></c24><a href="../../src/libextra/test.rs.html#804"><c24>804:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;task.spawn(testfn_cell.take());
+<br/></a><a href="../../src/libextra/task_pool.rs.html"><c24>src/libextra/task_pool.rs:<br/></c24><a href="../../src/libextra/task_pool.rs.html#79"><c24>79:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;task.spawn(task_body);
+<br/></a><br/></a></a>

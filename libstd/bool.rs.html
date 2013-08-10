@@ -236,7 +236,7 @@ c23{color:#d0f0ff; }
 </c22><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><a href="../libstd/bool.rs.html#196"><c8>s</c8></a><c7>&nbsp;</c7><c4>{</c4><c7>
 </c7><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>"true"</c20><c12>&nbsp;&nbsp;</c12><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../libstd/option.rs.html#57"><c8>Some</c8></a><c25>(</c25><c12>true</c12><c25>)</c25><c4>,</c4><c7>
 </c7><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>"false"</c20><c12>&nbsp;</c12><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../libstd/option.rs.html#57"><c8>Some</c8></a><c25>(</c25><c12>false</c12><c25>)</c25><c4>,</c4><c7>
-</c7><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../libstd/option.rs.html#56"><c8>None</c8></a><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>_</c20><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../libstd/option.rs.html#56"><c22>None</c22></a><c4>,</c4><c7>
 </c7><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c4>}</c4><c22>
 </c22><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c4>}</c4><c0>
@@ -430,14 +430,14 @@ c23{color:#d0f0ff; }
 </c0><br/><ln>&nbsp;391</ln><a id="391">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><div/><br/><a id="259_10_refs"><a href="#259"><c24>libstd/bool.rs:259:10-259:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
 <br/>pub&nbsp;fn&nbsp;to_bit(v:&nbsp;bool)&nbsp;-&gt;&nbsp;u8&nbsp;{&nbsp;if&nbsp;v&nbsp;{&nbsp;1u8&nbsp;}&nbsp;else&nbsp;{&nbsp;0u8&nbsp;}&nbsp;}
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/bool.rs.html#286"><c24>286:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;lt(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;&nbsp;to_bit(*other)&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#288"><c24>288:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;le(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;=&nbsp;to_bit(*other)&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#288"><c24>288:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;le(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;=&nbsp;to_bit(*other)&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#292"><c24>292:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;ge(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&gt;=&nbsp;to_bit(*other)&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/bool.rs.html#292"><c24>292:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;ge(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&gt;=&nbsp;to_bit(*other)&nbsp;}
 <br/></a><a href="../libstd/bool.rs.html#286"><c24>286:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;lt(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;&nbsp;to_bit(*other)&nbsp;}
+<br/></a><a href="../libstd/bool.rs.html#290"><c24>290:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;gt(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&gt;&nbsp;to_bit(*other)&nbsp;}
 <br/></a><a href="../libstd/bool.rs.html#292"><c24>292:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;ge(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&gt;=&nbsp;to_bit(*other)&nbsp;}
 <br/></a><a href="../libstd/bool.rs.html#290"><c24>290:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;gt(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&gt;&nbsp;to_bit(*other)&nbsp;}
+<br/></a><a href="../libstd/bool.rs.html#286"><c24>286:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;lt(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;&nbsp;to_bit(*other)&nbsp;}
+<br/></a><a href="../libstd/bool.rs.html#288"><c24>288:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;le(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;=&nbsp;to_bit(*other)&nbsp;}
 <br/></a><a href="../libstd/bool.rs.html#298"><c24>298:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;cmp(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;Ordering&nbsp;{&nbsp;to_bit(*self).cmp(&amp;to_bit(*other))&nbsp;}
-<br/></a><a href="../libstd/bool.rs.html#290"><c24>290:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;gt(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&gt;&nbsp;to_bit(*other)&nbsp;}
+<br/></a><a href="../libstd/bool.rs.html#288"><c24>288:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;le(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;to_bit(*self)&nbsp;&lt;=&nbsp;to_bit(*other)&nbsp;}
 <br/></a><a href="../libstd/bool.rs.html#298"><c24>298:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;cmp(&amp;self,&nbsp;other:&nbsp;&amp;bool)&nbsp;-&gt;&nbsp;Ordering&nbsp;{&nbsp;to_bit(*self).cmp(&amp;to_bit(*other))&nbsp;}
 <br/></a><br/></c0></c0>

@@ -103,38 +103,38 @@ c23{color:#d0f0ff; }
 </c0><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>rust_stack</c0><c4>]</c4><c0>
 </c0><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_task_local_data_atexit</c26><c25>(</c25><c20>task</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../../libstd/task/rt.rs.html#28"><c3>rust_task</c3></a><c4>,</c4><c0>&nbsp;</c0><c20>cleanup_fn</c20><c0>:&nbsp;</c0><c3>*u8</c3><c25>)</c25><c4>;</c4><c0>
 </c0><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="21_47_refs"><a href="#21"><c24>libstd/task/rt.rs:21:47-21:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
-<br/>pub&nbsp;type&nbsp;sched_id&nbsp;=&nbsp;int;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/task/rt.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_task_in_sched(id:&nbsp;sched_id)&nbsp;-&gt;&nbsp;*rust_task;
-<br/></a><a href="../../libstd/task/rt.rs.html#38"><c24>38:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_sched(num_threads:&nbsp;libc::uintptr_t)&nbsp;-&gt;&nbsp;sched_id;
-<br/></a><a href="../../libstd/task/rt.rs.html#37"><c24>37:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_sched_id()&nbsp;-&gt;&nbsp;sched_id;
-<br/></a><a href="../../libstd/task/rt.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_osmain_sched_id()&nbsp;-&gt;&nbsp;sched_id;
-<br/></a><br/><br/><a id="23_47_refs"><a href="#23"><c24>libstd/task/rt.rs:23:47-23:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
-<br/>pub&nbsp;type&nbsp;task_id&nbsp;=&nbsp;int;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/task/rt.rs.html#40"><c24>40:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;get_task_id()&nbsp;-&gt;&nbsp;task_id;
-<br/></a><br/><br/><a id="30_47_refs"><a href="#30"><c24>libstd/task/rt.rs:30:47-30:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
+</c0><br/><div/><br/><a id="30_47_refs"><a href="#30"><c24>libstd/task/rt.rs:30:47-30:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
 <br/>pub&nbsp;type&nbsp;rust_closure&nbsp;=&nbsp;libc::c_void;
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/task/rt.rs.html#47"><c24>47:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;start_task(task:&nbsp;*rust_task,&nbsp;closure:&nbsp;*rust_closure);
 <br/></a><br/><br/><a id="28_47_refs"><a href="#28"><c24>libstd/task/rt.rs:28:47-28:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
 <br/>pub&nbsp;type&nbsp;rust_task&nbsp;=&nbsp;libc::c_void;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/task/rt.rs.html#49"><c24>49:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_is_unwinding(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;bool;
-<br/></a><a href="../../libstd/task/rt.rs.html#47"><c24>47:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;start_task(task:&nbsp;*rust_task,&nbsp;closure:&nbsp;*rust_closure);
-<br/></a><a href="../../libstd/task/rt.rs.html#60"><c24>60:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_kill_all(task:&nbsp;*rust_task);
-<br/></a><a href="../../libstd/task/rt.rs.html#35"><c24>35:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_yield(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;bool;
-<br/></a><a href="../../libstd/task/rt.rs.html#59"><c24>59:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_kill_other(task:&nbsp;*rust_task);
-<br/></a><a href="../../libstd/task/rt.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_allow_kill(t:&nbsp;*rust_task);
-<br/></a><a href="../../libstd/task/rt.rs.html#63"><c24>63:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_task_local_data(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;*mut&nbsp;*libc::c_void;
-<br/></a><a href="../../libstd/task/rt.rs.html#58"><c24>58:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_allow_yield(t:&nbsp;*rust_task);
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/task/rt.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_allow_kill(t:&nbsp;*rust_task);
 <br/></a><a href="../../libstd/task/rt.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_task_in_sched(id:&nbsp;sched_id)&nbsp;-&gt;&nbsp;*rust_task;
-<br/></a><a href="../../libstd/task/rt.rs.html#44"><c24>44:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new_task()&nbsp;-&gt;&nbsp;*rust_task;
-<br/></a><a href="../../libstd/task/rt.rs.html#52"><c24>52:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_inhibit_kill(t:&nbsp;*rust_task);
-<br/></a><a href="../../libstd/task/rt.rs.html#42"><c24>42:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_task()&nbsp;-&gt;&nbsp;*rust_task;
-<br/></a><a href="../../libstd/task/rt.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_inhibit_yield(t:&nbsp;*rust_task);
 <br/></a><a href="../../libstd/task/rt.rs.html#65"><c24>65:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_local_data_atexit(task:&nbsp;*rust_task,&nbsp;cleanup_fn:&nbsp;*u8);
-<br/></a><a href="../../libstd/task/spawn.rs.html"><c24>libstd/task/spawn.rs:<br/></c24><a href="../../libstd/task/spawn.rs.html#829"><c24>829:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;make_child_wrapper(child:&nbsp;*rust_task,&nbsp;child_arc:&nbsp;TaskGroupArc,
-<br/></a><a href="../../libstd/task/spawn.rs.html#864"><c24>864:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;new_task_in_sched()&nbsp;-&gt;&nbsp;*rust_task&nbsp;{
+<br/></a><a href="../../libstd/task/rt.rs.html#47"><c24>47:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;start_task(task:&nbsp;*rust_task,&nbsp;closure:&nbsp;*rust_closure);
+<br/></a><a href="../../libstd/task/rt.rs.html#59"><c24>59:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_kill_other(task:&nbsp;*rust_task);
+<br/></a><a href="../../libstd/task/rt.rs.html#60"><c24>60:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_kill_all(task:&nbsp;*rust_task);
+<br/></a><a href="../../libstd/task/rt.rs.html#52"><c24>52:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_inhibit_kill(t:&nbsp;*rust_task);
+<br/></a><a href="../../libstd/task/rt.rs.html#44"><c24>44:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new_task()&nbsp;-&gt;&nbsp;*rust_task;
+<br/></a><a href="../../libstd/task/rt.rs.html#63"><c24>63:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_task_local_data(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;*mut&nbsp;*libc::c_void;
+<br/></a><a href="../../libstd/task/rt.rs.html#35"><c24>35:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_yield(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;bool;
+<br/></a><a href="../../libstd/task/rt.rs.html#58"><c24>58:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_allow_yield(t:&nbsp;*rust_task);
+<br/></a><a href="../../libstd/task/rt.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_inhibit_yield(t:&nbsp;*rust_task);
+<br/></a><a href="../../libstd/task/rt.rs.html#42"><c24>42:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_task()&nbsp;-&gt;&nbsp;*rust_task;
+<br/></a><a href="../../libstd/task/rt.rs.html#49"><c24>49:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_task_is_unwinding(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;bool;
+<br/></a><a href="../../libstd/task/spawn.rs.html"><c24>libstd/task/spawn.rs:<br/></c24><a href="../../libstd/task/spawn.rs.html#864"><c24>864:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;new_task_in_sched()&nbsp;-&gt;&nbsp;*rust_task&nbsp;{
 <br/></a><a href="../../libstd/task/spawn.rs.html#109"><c24>109:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;OldTask(*rust_task),
+<br/></a><a href="../../libstd/task/spawn.rs.html#829"><c24>829:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;make_child_wrapper(child:&nbsp;*rust_task,&nbsp;child_arc:&nbsp;TaskGroupArc,
 <br/></a><a href="../../libstd/rt/mod.rs.html"><c24>libstd/rt/mod.rs:<br/></c24><a href="../../libstd/rt/mod.rs.html#432"><c24>432:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_try_get_task()&nbsp;-&gt;&nbsp;*rust_task;
-<br/></a><a href="../../libstd/task/local_data_priv.rs.html"><c24>libstd/task/local_data_priv.rs:<br/></c24><a href="../../libstd/task/local_data_priv.rs.html#26"><c24>26:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;OldHandle(*rust_task),
-<br/></a><a href="../../libstd/task/local_data_priv.rs.html#112"><c24>112:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;fn&nbsp;oldsched_map(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;&amp;mut&nbsp;TaskLocalMap&nbsp;{
+<br/></a><a href="../../libstd/task/local_data_priv.rs.html"><c24>libstd/task/local_data_priv.rs:<br/></c24><a href="../../libstd/task/local_data_priv.rs.html#112"><c24>112:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;fn&nbsp;oldsched_map(task:&nbsp;*rust_task)&nbsp;-&gt;&nbsp;&amp;mut&nbsp;TaskLocalMap&nbsp;{
+<br/></a><a href="../../libstd/task/local_data_priv.rs.html#26"><c24>26:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;OldHandle(*rust_task),
+<br/></a><br/><br/><a id="21_47_refs"><a href="#21"><c24>libstd/task/rt.rs:21:47-21:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
+<br/>pub&nbsp;type&nbsp;sched_id&nbsp;=&nbsp;int;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/task/rt.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_osmain_sched_id()&nbsp;-&gt;&nbsp;sched_id;
+<br/></a><a href="../../libstd/task/rt.rs.html#37"><c24>37:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_get_sched_id()&nbsp;-&gt;&nbsp;sched_id;
+<br/></a><a href="../../libstd/task/rt.rs.html#38"><c24>38:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_sched(num_threads:&nbsp;libc::uintptr_t)&nbsp;-&gt;&nbsp;sched_id;
+<br/></a><a href="../../libstd/task/rt.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_new_task_in_sched(id:&nbsp;sched_id)&nbsp;-&gt;&nbsp;*rust_task;
+<br/></a><br/><br/><a id="23_47_refs"><a href="#23"><c24>libstd/task/rt.rs:23:47-23:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
+<br/>pub&nbsp;type&nbsp;task_id&nbsp;=&nbsp;int;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/task/rt.rs.html#40"><c24>40:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;get_task_id()&nbsp;-&gt;&nbsp;task_id;
 <br/></a><br/></a></a>

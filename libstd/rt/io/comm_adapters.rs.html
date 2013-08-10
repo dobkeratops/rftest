@@ -95,24 +95,24 @@ c23{color:#d0f0ff; }
 </c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><c30>impl</c30><c5>&lt;W:&nbsp;</c5><a href="../../../libstd/rt/io/mod.rs.html#404"><c5>Writer</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><a href="../../../libstd/comm.rs.html#25"><c30>GenericChan</c30></a><c5>&lt;~[</c5><a href="../../../libstd/comm.rs.html#25"><c5>u8</c5></a><c5>]&gt;</c5><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/comm_adapters.rs.html#49"><c30>WriterChan</c30></a><c5>&lt;</c5><a href="../../../libstd/rt/io/comm_adapters.rs.html#49"><c5>W</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
 </c17><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;send</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_x</c20><c18>:&nbsp;</c18><c3>~</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
 </c17><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="25_1_refs"><a href="#25"><c24>libstd/rt/io/comm_adapters.rs:25:1-25:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
-<br/>struct&nbsp;ChanWriter&lt;C&gt;;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/comm_adapters.rs.html#32"><c24>32:&nbsp;</c24>impl&lt;C:&nbsp;GenericChan&lt;~[u8]&gt;&gt;&nbsp;Writer&nbsp;for&nbsp;ChanWriter&lt;C&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_chan:&nbsp;C)&nbsp;-&gt;&nbsp;ChanWriter&lt;C&gt;&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#28"><c24>28:&nbsp;</c24>impl&lt;C:&nbsp;GenericChan&lt;~[u8]&gt;&gt;&nbsp;ChanWriter&lt;C&gt;&nbsp;{
-<br/></a><br/><br/><a id="13_1_refs"><a href="#13"><c24>libstd/rt/io/comm_adapters.rs:13:1-13:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
-<br/>struct&nbsp;PortReader&lt;P&gt;;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/comm_adapters.rs.html#16"><c24>16:&nbsp;</c24>impl&lt;P:&nbsp;GenericPort&lt;~[u8]&gt;&gt;&nbsp;PortReader&lt;P&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#20"><c24>20:&nbsp;</c24>impl&lt;P:&nbsp;GenericPort&lt;~[u8]&gt;&gt;&nbsp;Reader&nbsp;for&nbsp;PortReader&lt;P&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#17"><c24>17:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_port:&nbsp;P)&nbsp;-&gt;&nbsp;PortReader&lt;P&gt;&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><br/><br/><a id="49_1_refs"><a href="#49"><c24>libstd/rt/io/comm_adapters.rs:49:1-49:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+</c0><br/><div/><br/><a id="49_1_refs"><a href="#49"><c24>libstd/rt/io/comm_adapters.rs:49:1-49:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
 <br/>struct&nbsp;WriterChan&lt;W&gt;;
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/comm_adapters.rs.html#52"><c24>52:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;WriterChan&lt;W&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#56"><c24>56:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;GenericChan&lt;~[u8]&gt;&nbsp;for&nbsp;WriterChan&lt;W&gt;&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#53"><c24>53:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_writer:&nbsp;W)&nbsp;-&gt;&nbsp;WriterChan&lt;W&gt;&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#56"><c24>56:&nbsp;</c24>impl&lt;W:&nbsp;Writer&gt;&nbsp;GenericChan&lt;~[u8]&gt;&nbsp;for&nbsp;WriterChan&lt;W&gt;&nbsp;{
+<br/></a><br/><br/><a id="13_1_refs"><a href="#13"><c24>libstd/rt/io/comm_adapters.rs:13:1-13:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;PortReader&lt;P&gt;;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/comm_adapters.rs.html#20"><c24>20:&nbsp;</c24>impl&lt;P:&nbsp;GenericPort&lt;~[u8]&gt;&gt;&nbsp;Reader&nbsp;for&nbsp;PortReader&lt;P&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#16"><c24>16:&nbsp;</c24>impl&lt;P:&nbsp;GenericPort&lt;~[u8]&gt;&gt;&nbsp;PortReader&lt;P&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#17"><c24>17:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_port:&nbsp;P)&nbsp;-&gt;&nbsp;PortReader&lt;P&gt;&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><br/><br/><a id="25_1_refs"><a href="#25"><c24>libstd/rt/io/comm_adapters.rs:25:1-25:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;ChanWriter&lt;C&gt;;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/comm_adapters.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_chan:&nbsp;C)&nbsp;-&gt;&nbsp;ChanWriter&lt;C&gt;&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#32"><c24>32:&nbsp;</c24>impl&lt;C:&nbsp;GenericChan&lt;~[u8]&gt;&gt;&nbsp;Writer&nbsp;for&nbsp;ChanWriter&lt;C&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#28"><c24>28:&nbsp;</c24>impl&lt;C:&nbsp;GenericChan&lt;~[u8]&gt;&gt;&nbsp;ChanWriter&lt;C&gt;&nbsp;{
 <br/></a><br/><br/><a id="37_1_refs"><a href="#37"><c24>libstd/rt/io/comm_adapters.rs:37:1-37:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
 <br/>struct&nbsp;ReaderPort&lt;R&gt;;
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/comm_adapters.rs.html#44"><c24>44:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;GenericPort&lt;~[u8]&gt;&nbsp;for&nbsp;ReaderPort&lt;R&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#40"><c24>40:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;ReaderPort&lt;R&gt;&nbsp;{
 <br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#41"><c24>41:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_reader:&nbsp;R)&nbsp;-&gt;&nbsp;ReaderPort&lt;R&gt;&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/comm_adapters.rs.html#40"><c24>40:&nbsp;</c24>impl&lt;R:&nbsp;Reader&gt;&nbsp;ReaderPort&lt;R&gt;&nbsp;{
 <br/></a><br/></c0></c0>

@@ -1,0 +1,271 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
+a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
+a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
+pr{font-weight:bold}
+ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
+c24{color:#ffffff; font-style:italic; opacity:0.5}
+c25{color:#ffffff; opacity:0.92}
+c26{color:#ffffff; font-weight:bold; }
+c27{color:#b0ffff; font-weight:bold; }
+c28{color:#b0ffb0; font-weight:bold; }
+c29{color:#d0e0ff; font-weight:bold; }
+c30{color:#fff0e0; font-weight:bold; }
+c31{color:#d0b0ff; font-weight:bold; }
+c32{color:#ffffff; font-style:italic; opacity:0.6}
+c1{color:#ffffc0;   font-weight:bold; }
+c33{color:#e0a0d0;  }
+c2{color:#60f0c0}
+c3{color:#50e0ff; }
+c4{color:#f090f0}
+c5{color:#50ff80; }
+c6{color:#f0f0e0}
+c7{color:#fff0d0}
+c8{color:#e0d0f0}
+c9{color:#70f0f0}
+c10{color:#f0f070}
+c11{color:#c0f070}
+c12{color:#70c0f0}
+c13{color:#c0f070}
+c14{color:#f0ffc0}
+c15{color:#f0f0e0}
+c16{color:#c0ffe0}
+c17{color:#90d0f0}
+c18{color:#f0a0d0}
+c19{color:#d0f0a0}
+c20{color:#0f0ff}
+c21{color:#d0d0d0; font-weight:bold}
+c22{color:#c0ffd0; }
+c23{color:#d0f0ff; }
+</style><body style="background-color:#363a36;"><maintext><br/><a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../src/">src</a><c1>/</c1><c0><a href="./../../src/libextra/">libextra</a><c1>/</c1><c0><a href="./../../src/libextra/c_vec.rs.html">c_vec.rs</a><br/><br/><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c24>/*!
+</c24><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c24>&nbsp;*&nbsp;Library&nbsp;to&nbsp;interface&nbsp;with&nbsp;chunks&nbsp;of&nbsp;memory&nbsp;allocated&nbsp;in&nbsp;C.
+</c24><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c24>&nbsp;*&nbsp;It&nbsp;is&nbsp;often&nbsp;desirable&nbsp;to&nbsp;safely&nbsp;interface&nbsp;with&nbsp;memory&nbsp;allocated&nbsp;from&nbsp;C,
+</c24><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c24>&nbsp;*&nbsp;encapsulating&nbsp;the&nbsp;unsafety&nbsp;into&nbsp;allocation&nbsp;and&nbsp;destruction&nbsp;time.&nbsp;&nbsp;Indeed,
+</c24><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c24>&nbsp;*&nbsp;allocating&nbsp;memory&nbsp;externally&nbsp;is&nbsp;currently&nbsp;the&nbsp;only&nbsp;way&nbsp;to&nbsp;give&nbsp;Rust&nbsp;shared
+</c24><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c24>&nbsp;*&nbsp;mut&nbsp;state&nbsp;with&nbsp;C&nbsp;programs&nbsp;that&nbsp;keep&nbsp;their&nbsp;own&nbsp;references;&nbsp;vectors&nbsp;are
+</c24><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c24>&nbsp;*&nbsp;unsuitable&nbsp;because&nbsp;they&nbsp;could&nbsp;be&nbsp;reallocated&nbsp;or&nbsp;moved&nbsp;at&nbsp;any&nbsp;time,&nbsp;and
+</c24><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c24>&nbsp;*&nbsp;importing&nbsp;C&nbsp;memory&nbsp;into&nbsp;a&nbsp;vector&nbsp;takes&nbsp;a&nbsp;one-time&nbsp;snapshot&nbsp;of&nbsp;the&nbsp;memory.
+</c24><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c24>&nbsp;*&nbsp;This&nbsp;module&nbsp;simplifies&nbsp;the&nbsp;usage&nbsp;of&nbsp;such&nbsp;external&nbsp;blocks&nbsp;of&nbsp;memory.&nbsp;&nbsp;Memory
+</c24><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c24>&nbsp;*&nbsp;is&nbsp;encapsulated&nbsp;into&nbsp;an&nbsp;opaque&nbsp;object&nbsp;after&nbsp;creation;&nbsp;the&nbsp;lifecycle&nbsp;of&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c24>&nbsp;*&nbsp;memory&nbsp;can&nbsp;be&nbsp;optionally&nbsp;managed&nbsp;by&nbsp;Rust,&nbsp;if&nbsp;an&nbsp;appropriate&nbsp;destructor
+</c24><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c24>&nbsp;*&nbsp;closure&nbsp;is&nbsp;provided.&nbsp;&nbsp;Safety&nbsp;is&nbsp;ensured&nbsp;by&nbsp;bounds-checking&nbsp;accesses,&nbsp;which
+</c24><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c24>&nbsp;*&nbsp;are&nbsp;marshalled&nbsp;through&nbsp;get&nbsp;and&nbsp;set&nbsp;functions.
+</c24><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c24>&nbsp;*&nbsp;There&nbsp;are&nbsp;three&nbsp;unsafe&nbsp;functions:&nbsp;the&nbsp;two&nbsp;introduction&nbsp;forms,&nbsp;and&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c24>&nbsp;*&nbsp;pointer&nbsp;elimination&nbsp;form.&nbsp;&nbsp;The&nbsp;introduction&nbsp;forms&nbsp;are&nbsp;unsafe&nbsp;for&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c24>&nbsp;*&nbsp;obvious&nbsp;reason&nbsp;(they&nbsp;act&nbsp;on&nbsp;a&nbsp;pointer&nbsp;that&nbsp;cannot&nbsp;be&nbsp;checked&nbsp;inside&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c24>&nbsp;*&nbsp;method),&nbsp;but&nbsp;the&nbsp;elimination&nbsp;form&nbsp;is&nbsp;somewhat&nbsp;more&nbsp;subtle&nbsp;in&nbsp;its&nbsp;unsafety.
+</c24><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c24>&nbsp;*&nbsp;By&nbsp;using&nbsp;a&nbsp;pointer&nbsp;taken&nbsp;from&nbsp;a&nbsp;c_vec::t&nbsp;without&nbsp;keeping&nbsp;a&nbsp;reference&nbsp;to&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c24>&nbsp;*&nbsp;c_vec::t&nbsp;itself&nbsp;around,&nbsp;the&nbsp;CVec&nbsp;could&nbsp;be&nbsp;garbage&nbsp;collected,&nbsp;and&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c24>&nbsp;*&nbsp;memory&nbsp;within&nbsp;could&nbsp;be&nbsp;destroyed.&nbsp;&nbsp;There&nbsp;are&nbsp;legitimate&nbsp;uses&nbsp;for&nbsp;the
+</c24><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c24>&nbsp;*&nbsp;pointer&nbsp;elimination&nbsp;form&nbsp;--&nbsp;for&nbsp;instance,&nbsp;to&nbsp;pass&nbsp;memory&nbsp;back&nbsp;into&nbsp;C&nbsp;--&nbsp;but
+</c24><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c24>&nbsp;*&nbsp;great&nbsp;care&nbsp;must&nbsp;be&nbsp;taken&nbsp;to&nbsp;ensure&nbsp;that&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;c_vec::t&nbsp;is
+</c24><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c24>&nbsp;*&nbsp;still&nbsp;held&nbsp;if&nbsp;needed.
+</c24><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c21>use</c21><c0>&nbsp;std::option</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c21>use</c21><c0>&nbsp;std::ptr</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c24>&nbsp;*&nbsp;The&nbsp;type&nbsp;representing&nbsp;a&nbsp;foreign&nbsp;chunk&nbsp;of&nbsp;memory
+</c24><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#45_4_refs"><c27>CVec</c27></a><c5>&lt;</c5><a href="#45_4_refs"><c5>T</c5></a><c5>&gt;</c5><c27>&nbsp;</c27><c4>{</c4><a href="#45_4_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c21>priv</c21><c23>&nbsp;</c23><a href="#47_9_refs"><c6>base</c6></a><c6>:&nbsp;</c6><c3>*</c3><a href="#45_4_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="#45_4_refs"><c3>T</c3></a><c4>,</c4><a href="#45_4_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c21>priv</c21><c23>&nbsp;</c23><a href="#48_9_refs"><c6>len</c6></a><c6>:&nbsp;</c6><a href="#45_4_refs"><c3>uint</c3></a><c4>,</c4><a href="#45_4_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c21>priv</c21><c23>&nbsp;</c23><a href="#45_4_refs"><c6>rsrc</c6></a><c6>:&nbsp;</c6><c3>@</c3><a href="../../src/libextra/c_vec.rs.html#53"><c3>DtorRes</c3></a><a href="#45_4_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c27>struct&nbsp;</c27><a href="#51_1_refs"><c27>DtorRes</c27></a><c27>&nbsp;</c27><c4>{</c4><a href="#51_1_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c23>&nbsp;&nbsp;</c23><a href="#53_2_refs"><c6>dtor</c6></a><c6>:&nbsp;</c6><a href="#51_1_refs"><c3>Option</c3></a><c3>&lt;@</c3><c26>fn</c26><c25>()</c25><c3>&gt;</c3><c4>,</c4><a href="#51_1_refs"><c23>
+</c23></a><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c33>#</c33><c4>[</c4><c33>unsafe_destructor</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c30>impl&nbsp;Drop&nbsp;for&nbsp;</c30><a href="../../src/libextra/c_vec.rs.html#53"><c30>DtorRes</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;drop</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match</c21><c7>&nbsp;</c7><a href="../../src/libextra/c_vec.rs.html#55"><c0>self</c0></a><c0>.</c0><a href="../../src/libextra/c_vec.rs.html#55"><c6>dtor</c6></a><c7>&nbsp;</c7><c4>{</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>option::None</c20><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><c25>()</c25><c4>,</c4><c7>
+</c7><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c20>option::Some</c20><c25>(</c25><a href="#61_25_refs"><c20>f</c20></a><c25>)</c25><c7>&nbsp;</c7><c4>=&gt;</c4><c7>&nbsp;</c7><a href="../../src/libextra/c_vec.rs.html#63"><c8>f</c8></a><c25>()</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c26>fn&nbsp;</c26><a href="#65_1_refs"><c26>DtorRes</c26></a><c25>(</c25><a href="#66_11_refs"><c20>dtor</c20></a><c1>:&nbsp;</c1><a href="#65_1_refs"><c3>Option</c3></a><c3>&lt;@</c3><c26>fn</c26><c25>()</c25><c3>&gt;</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../src/libextra/c_vec.rs.html#53"><c3>DtorRes</c3></a><c1>&nbsp;</c1><c4>{</c4><a href="#65_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../src/libextra/c_vec.rs.html#53"><c23>DtorRes</c23></a><c22>&nbsp;</c22><c4>{</c4><a href="#65_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#65_1_refs"><c22>dtor</c22></a><c22>:&nbsp;</c22><a href="../../src/libextra/c_vec.rs.html#68"><c8>dtor</c8></a><a href="#65_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#65_1_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c24>/*
+</c24><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c24>&nbsp;Section:&nbsp;Introduction&nbsp;forms
+</c24><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c24>&nbsp;*&nbsp;Create&nbsp;a&nbsp;`CVec`&nbsp;from&nbsp;a&nbsp;foreign&nbsp;buffer&nbsp;with&nbsp;a&nbsp;given&nbsp;length.
+</c24><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c24>&nbsp;*&nbsp;#&nbsp;Arguments
+</c24><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c24>&nbsp;*&nbsp;*&nbsp;base&nbsp;-&nbsp;A&nbsp;foreign&nbsp;pointer&nbsp;to&nbsp;a&nbsp;buffer
+</c24><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c24>&nbsp;*&nbsp;*&nbsp;len&nbsp;-&nbsp;The&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;buffer
+</c24><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;CVec</c26><c5>&lt;T&gt;</c5><c25>(</c25><a href="#84_22_refs"><c20>base</c20></a><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#84_36_refs"><c20>len</c20></a><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../src/libextra/c_vec.rs.html#47"><c3>CVec</c3></a><c3>&lt;</c3><a href="../../src/libextra/c_vec.rs.html#47"><c3>T</c3></a><c3>&gt;</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c0>&nbsp;</c0><a href="../../src/libextra/c_vec.rs.html#47"><c23>CVec</c23></a><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;base:&nbsp;</c22><a href="../../src/libextra/c_vec.rs.html#86"><c8>base</c8></a><c4>,</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;len:&nbsp;</c22><a href="../../src/libextra/c_vec.rs.html#86"><c8>len</c8></a><c4>,</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rsrc:&nbsp;</c22><c2>@</c2><a href="../../src/libextra/c_vec.rs.html#67"><c8>DtorRes</c8></a><c25>(</c25><c8>option::None</c8><c25>)</c25><c9>
+</c9><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>};</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c24>&nbsp;*&nbsp;Create&nbsp;a&nbsp;`CVec`&nbsp;from&nbsp;a&nbsp;foreign&nbsp;buffer,&nbsp;with&nbsp;a&nbsp;given&nbsp;length,
+</c24><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c24>&nbsp;*&nbsp;and&nbsp;a&nbsp;function&nbsp;to&nbsp;run&nbsp;upon&nbsp;destruction.
+</c24><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c24>&nbsp;*&nbsp;#&nbsp;Arguments
+</c24><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c24>&nbsp;*&nbsp;*&nbsp;base&nbsp;-&nbsp;A&nbsp;foreign&nbsp;pointer&nbsp;to&nbsp;a&nbsp;buffer
+</c24><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c24>&nbsp;*&nbsp;*&nbsp;len&nbsp;-&nbsp;The&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;buffer
+</c24><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><c24>&nbsp;*&nbsp;*&nbsp;dtor&nbsp;-&nbsp;A&nbsp;function&nbsp;to&nbsp;run&nbsp;when&nbsp;the&nbsp;value&nbsp;is&nbsp;destructed,&nbsp;useful
+</c24><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><c24>&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;freeing&nbsp;the&nbsp;buffer,&nbsp;etc.
+</c24><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;c_vec_with_dtor</c26><c5>&lt;T&gt;</c5><c25>(</c25><a href="#103_33_refs"><c20>base</c20></a><c1>:&nbsp;</c1><c3>*mut&nbsp;T</c3><c4>,</c4><c1>&nbsp;</c1><a href="#103_47_refs"><c20>len</c20></a><c1>:&nbsp;</c1><c3>uint</c3><c4>,</c4><c1>&nbsp;</c1><a href="#103_58_refs"><c20>dtor</c20></a><c1>:&nbsp;</c1><c3>@</c3><c26>fn</c26><c25>())</c25><c1>
+</c1><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c1>&nbsp;&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../src/libextra/c_vec.rs.html#47"><c3>CVec</c3></a><c3>&lt;</c3><a href="../../src/libextra/c_vec.rs.html#47"><c3>T</c3></a><c3>&gt;</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c0>&nbsp;</c0><a href="../../src/libextra/c_vec.rs.html#47"><c23>CVec</c23></a><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;base:&nbsp;</c22><a href="../../src/libextra/c_vec.rs.html#105"><c8>base</c8></a><c4>,</c4><c22>
+</c22><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;len:&nbsp;</c22><a href="../../src/libextra/c_vec.rs.html#105"><c8>len</c8></a><c4>,</c4><c22>
+</c22><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rsrc:&nbsp;</c22><c2>@</c2><a href="../../src/libextra/c_vec.rs.html#67"><c8>DtorRes</c8></a><c25>(</c25><c8>option::Some</c8><c25>(</c25><a href="../../src/libextra/c_vec.rs.html#105"><c8>dtor</c8></a><c25>))</c25><c9>
+</c9><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>};</c4><c22>
+</c22><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c24>/*
+</c24><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c24>&nbsp;Section:&nbsp;Operations
+</c24><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c24>&nbsp;*&nbsp;Retrieves&nbsp;an&nbsp;element&nbsp;at&nbsp;a&nbsp;given&nbsp;index
+</c24><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c24>&nbsp;*&nbsp;Fails&nbsp;if&nbsp;`ofs`&nbsp;is&nbsp;greater&nbsp;or&nbsp;equal&nbsp;to&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;vector
+</c24><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;get</c26><c5>&lt;T:Clone&gt;</c5><c25>(</c25><a href="#121_20_refs"><c20>t</c20></a><c1>:&nbsp;</c1><a href="../../src/libextra/c_vec.rs.html#47"><c3>CVec</c3></a><c3>&lt;</c3><a href="../../src/libextra/c_vec.rs.html#47"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><c1>&nbsp;</c1><a href="#121_32_refs"><c20>ofs</c20></a><c1>:&nbsp;</c1><c3>uint</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>T</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert!</c13><c25>(</c25><a href="../../src/libextra/c_vec.rs.html#123"><c8>ofs</c8></a><c0>&nbsp;&lt;&nbsp;</c0><a href="../../src/libextra/c_vec.rs.html#144"><c8>len</c8></a><c25>(</c25><a href="../../src/libextra/c_vec.rs.html#123"><c8>t</c8></a><c25>))</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c0>&nbsp;</c0><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../../src/libextra/ebml.rs.html#380"><c8>ptr</c8></a><c8>::</c8><a href="../../src/libextra/ebml.rs.html#380"><c8>mut_offset</c8></a><c25>(</c25><a href="../../src/libextra/c_vec.rs.html#123"><c8>t</c8></a><c6>.</c6><a href="../../src/libextra/c_vec.rs.html#49"><c6>base</c6></a><c4>,</c4><c9>&nbsp;</c9><a href="../../src/libextra/c_vec.rs.html#123"><c8>ofs</c8></a><c7>&nbsp;</c7><a href="../../src/libextra/ebml.rs.html#380"><c7>as</c7></a><c7>&nbsp;</c7><a href="../../src/libextra/ebml.rs.html#380"><c3>int</c3></a><c25>))</c25><c0>.</c0><a href="../../src/libextra/ebml.rs.html#380"><c10>clone</c10></a><c25>()</c25><a href="../../src/libextra/ebml.rs.html#380"><c10>
+</c10></a><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>};</c4><c22>
+</c22><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><c24>/**
+</c24><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c24>&nbsp;*&nbsp;Sets&nbsp;the&nbsp;value&nbsp;of&nbsp;an&nbsp;element&nbsp;at&nbsp;a&nbsp;given&nbsp;index
+</c24><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><c24>&nbsp;*
+</c24><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><c24>&nbsp;*&nbsp;Fails&nbsp;if&nbsp;`ofs`&nbsp;is&nbsp;greater&nbsp;or&nbsp;equal&nbsp;to&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;vector
+</c24><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;set</c26><c5>&lt;T&gt;</c5><c25>(</c25><a href="#133_14_refs"><c20>t</c20></a><c1>:&nbsp;</c1><a href="../../src/libextra/c_vec.rs.html#47"><c3>CVec</c3></a><c3>&lt;</c3><a href="../../src/libextra/c_vec.rs.html#47"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><c1>&nbsp;</c1><a href="#133_26_refs"><c20>ofs</c20></a><c1>:&nbsp;</c1><c3>uint</c3><c4>,</c4><c1>&nbsp;</c1><a href="#133_37_refs"><c20>v</c20></a><c1>:&nbsp;</c1><c3>T</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert!</c13><c25>(</c25><a href="../../src/libextra/c_vec.rs.html#135"><c8>ofs</c8></a><c0>&nbsp;&lt;&nbsp;</c0><a href="../../src/libextra/c_vec.rs.html#144"><c8>len</c8></a><c25>(</c25><a href="../../src/libextra/c_vec.rs.html#135"><c8>t</c8></a><c25>))</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c13>&nbsp;</c13><c4>{</c4><c13>&nbsp;</c13><c2>*</c2><c8>ptr::mut_offset</c8><c25>(</c25><a href="../../src/libextra/c_vec.rs.html#135"><c8>t</c8></a><c6>.</c6><a href="../../src/libextra/c_vec.rs.html#49"><c6>base</c6></a><c4>,</c4><c9>&nbsp;</c9><a href="../../src/libextra/c_vec.rs.html#135"><c8>ofs</c8></a><c7>&nbsp;as&nbsp;</c7><c3>int</c3><c25>)</c25><c9>&nbsp;=</c9><c2>&nbsp;</c2><a href="../../src/libextra/c_vec.rs.html#135"><c8>v</c8></a><c13>&nbsp;</c13><c4>};</c4><c22>
+</c22><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c24>/*
+</c24><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c24>&nbsp;Section:&nbsp;Elimination&nbsp;forms
+</c24><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c32>///&nbsp;Returns&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;vector
+</c32><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#142_37_refs"><c26>len</c26></a><c5>&lt;</c5><a href="#142_37_refs"><c5>T</c5></a><c5>&gt;</c5><c25>(</c25><a href="#143_14_refs"><c20>t</c20></a><c1>:&nbsp;</c1><a href="../../src/libextra/c_vec.rs.html#47"><c3>CVec</c3></a><c3>&lt;</c3><a href="../../src/libextra/c_vec.rs.html#47"><c3>T</c3></a><c3>&gt;</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="#142_37_refs"><c3>uint</c3></a><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><a href="../../src/libextra/c_vec.rs.html#145"><c8>t</c8></a><c6>.</c6><a href="../../src/libextra/c_vec.rs.html#50"><c6>len</c6></a><c22>&nbsp;</c22><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><c32>///&nbsp;Returns&nbsp;a&nbsp;pointer&nbsp;to&nbsp;the&nbsp;first&nbsp;element&nbsp;of&nbsp;the&nbsp;vector
+</c32><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;ptr</c26><c5>&lt;T&gt;</c5><c25>(</c25><a href="#146_21_refs"><c20>t</c20></a><c1>:&nbsp;</c1><a href="../../src/libextra/c_vec.rs.html#47"><c3>CVec</c3></a><c3>&lt;</c3><a href="../../src/libextra/c_vec.rs.html#47"><c3>T</c3></a><c3>&gt;</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>*mut&nbsp;T</c3><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><a href="../../src/libextra/c_vec.rs.html#148"><c8>t</c8></a><c6>.</c6><a href="../../src/libextra/c_vec.rs.html#49"><c6>base</c6></a><c22>&nbsp;</c22><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><c21>mod</c21><c0>&nbsp;tests&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;c_vec::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;std::libc::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;std::libc</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;malloc</c26><c25>(</c25><c0>n:&nbsp;size_t</c0><c25>)</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;CVec&lt;u8&gt;&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>unsafe</c21><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;mem&nbsp;=&nbsp;libc::malloc</c0><c25>(</c25><c0>n</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>mem&nbsp;as&nbsp;int&nbsp;!=&nbsp;0</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c_vec_with_dtor</c0><c25>(</c25><c0>mem&nbsp;as&nbsp;*mut&nbsp;u8</c0><c4>,</c4><c0>&nbsp;n&nbsp;as&nbsp;uint</c0><c4>,</c4><c0>&nbsp;||&nbsp;free</c0><c25>(</c25><c0>mem</c0><c25>))</c25><c0>
+</c0><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_basic</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;cv&nbsp;=&nbsp;malloc</c0><c25>(</c25><c0>16u&nbsp;as&nbsp;size_t</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>cv</c0><c4>,</c4><c0>&nbsp;3u</c0><c4>,</c4><c0>&nbsp;8u8</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>cv</c0><c4>,</c4><c0>&nbsp;4u</c0><c4>,</c4><c0>&nbsp;9u8</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>get</c0><c25>(</c25><c0>cv</c0><c4>,</c4><c0>&nbsp;3u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;8u8</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>get</c0><c25>(</c25><c0>cv</c0><c4>,</c4><c0>&nbsp;4u</c0><c25>)</c25><c4>,</c4><c0>&nbsp;9u8</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>len</c0><c25>(</c25><c0>cv</c0><c25>)</c25><c4>,</c4><c0>&nbsp;16u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>ignore</c0><c25>(</c25><c0>cfg</c0><c25>(</c25><c0>windows</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_overrun_get</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;cv&nbsp;=&nbsp;malloc</c0><c25>(</c25><c0>16u&nbsp;as&nbsp;size_t</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get</c0><c25>(</c25><c0>cv</c0><c4>,</c4><c0>&nbsp;17u</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>ignore</c0><c25>(</c25><c0>cfg</c0><c25>(</c25><c0>windows</c0><c25>))</c25><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_overrun_set</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;cv&nbsp;=&nbsp;malloc</c0><c25>(</c25><c0>16u&nbsp;as&nbsp;size_t</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>cv</c0><c4>,</c4><c0>&nbsp;17u</c0><c4>,</c4><c0>&nbsp;0u8</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_and_I_mean_it</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;cv&nbsp;=&nbsp;malloc</c0><c25>(</c25><c0>16u&nbsp;as&nbsp;size_t</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;p&nbsp;=&nbsp;unsafe&nbsp;</c0><c4>{</c4><c0>&nbsp;ptr</c0><c25>(</c25><c0>cv</c0><c25>)</c25><c0>&nbsp;</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>cv</c0><c4>,</c4><c0>&nbsp;0u</c0><c4>,</c4><c0>&nbsp;32u8</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>cv</c0><c4>,</c4><c0>&nbsp;1u</c0><c4>,</c4><c0>&nbsp;33u8</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>unsafe&nbsp;</c0><c4>{</c4><c0>&nbsp;*p&nbsp;</c0><c4>},</c4><c0>&nbsp;32u8</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c25>(</c25><c0>cv</c0><c4>,</c4><c0>&nbsp;2u</c0><c4>,</c4><c0>&nbsp;34u8</c0><c25>)</c25><c4>;</c4><c0>&nbsp;</c0><c24>/*&nbsp;safety&nbsp;*/</c24><c0>
+</c0><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><c4>}</c4><c0>
+</c0><br/><div/><br/><a id="51_1_refs"><a href="#52"><c24>src/libextra/c_vec.rs:52:1-52:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;DtorRes&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../src/libextra/c_vec.rs.html#58"><c24>58:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;DtorRes&nbsp;{
+<br/></a><a href="../../src/libextra/c_vec.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;rsrc:&nbsp;@DtorRes
+<br/></a><a href="../../src/libextra/c_vec.rs.html#68"><c24>68:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;DtorRes&nbsp;{
+<br/></a><a href="../../src/libextra/c_vec.rs.html#67"><c24>67:&nbsp;</c24>fn&nbsp;DtorRes(dtor:&nbsp;Option&lt;@fn()&gt;)&nbsp;-&gt;&nbsp;DtorRes&nbsp;{
+<br/></a><br/><br/><a id="45_4_refs"><a href="#46"><c24>src/libextra/c_vec.rs:46:4-46:4&nbsp;-struct-&nbsp;definition:<br/></c24><pr>&nbsp;*/
+<br/>pub&nbsp;struct&nbsp;CVec&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../src/libextra/c_vec.rs.html#122"><c24>122:&nbsp;</c24>pub&nbsp;fn&nbsp;get&lt;T:Clone&gt;(t:&nbsp;CVec&lt;T&gt;,&nbsp;ofs:&nbsp;uint)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></a><a href="../../src/libextra/c_vec.rs.html#105"><c24>105:&nbsp;</c24>&nbsp;&nbsp;-&gt;&nbsp;CVec&lt;T&gt;&nbsp;{
+<br/></a><a href="../../src/libextra/c_vec.rs.html#147"><c24>147:&nbsp;</c24>pub&nbsp;unsafe&nbsp;fn&nbsp;ptr&lt;T&gt;(t:&nbsp;CVec&lt;T&gt;)&nbsp;-&gt;&nbsp;*mut&nbsp;T&nbsp;{&nbsp;t.base&nbsp;}
+<br/></a><a href="../../src/libextra/c_vec.rs.html#134"><c24>134:&nbsp;</c24>pub&nbsp;fn&nbsp;set&lt;T&gt;(t:&nbsp;CVec&lt;T&gt;,&nbsp;ofs:&nbsp;uint,&nbsp;v:&nbsp;T)&nbsp;{
+<br/></a><a href="../../src/libextra/c_vec.rs.html#85"><c24>85:&nbsp;</c24>pub&nbsp;unsafe&nbsp;fn&nbsp;CVec&lt;T&gt;(base:&nbsp;*mut&nbsp;T,&nbsp;len:&nbsp;uint)&nbsp;-&gt;&nbsp;CVec&lt;T&gt;&nbsp;{
+<br/></a><a href="../../src/libextra/c_vec.rs.html#144"><c24>144:&nbsp;</c24>pub&nbsp;fn&nbsp;len&lt;T&gt;(t:&nbsp;CVec&lt;T&gt;)&nbsp;-&gt;&nbsp;uint&nbsp;{&nbsp;t.len&nbsp;}
+<br/></a><a href="../../src/libextra/c_vec.rs.html#106"><c24>106:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;CVec{
+<br/></a><a href="../../src/libextra/c_vec.rs.html#86"><c24>86:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;CVec{
+<br/></a><br/><br/><a id="142_37_refs"><a href="#143"><c24>src/libextra/c_vec.rs:143:37-143:37&nbsp;-fn-&nbsp;definition:<br/></c24><pr>///&nbsp;Returns&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;vector
+<br/>pub&nbsp;fn&nbsp;len&lt;T&gt;(t:&nbsp;CVec&lt;T&gt;)&nbsp;-&gt;&nbsp;uint&nbsp;{&nbsp;t.len&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../src/libextra/c_vec.rs.html#135"><c24>135:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;assert!(ofs&nbsp;&lt;&nbsp;len(t));
+<br/></a><a href="../../src/libextra/c_vec.rs.html#123"><c24>123:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;assert!(ofs&nbsp;&lt;&nbsp;len(t));
+<br/></a><br/><br/><a id="65_1_refs"><a href="#66"><c24>src/libextra/c_vec.rs:66:1-66:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
+<br/>fn&nbsp;DtorRes(dtor:&nbsp;Option&lt;@fn()&gt;)&nbsp;-&gt;&nbsp;DtorRes&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../src/libextra/c_vec.rs.html#109"><c24>109:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rsrc:&nbsp;@DtorRes(option::Some(dtor))
+<br/></a><a href="../../src/libextra/c_vec.rs.html#89"><c24>89:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rsrc:&nbsp;@DtorRes(option::None)
+<br/></a><br/></c0></c0>

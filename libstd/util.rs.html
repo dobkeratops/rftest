@@ -77,8 +77,8 @@ c23{color:#d0f0ff; }
 </c1><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c4>{</c4><c22>
 </c22><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#39_8_refs"><c20>prev</c20></a><c16>&nbsp;=&nbsp;</c16><a href="../libstd/util.rs.html#71"><c8>replace</c8></a><c25>(</c25><a href="../libstd/util.rs.html#35"><c8>ptr</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../libstd/util.rs.html#36"><c8>value</c8></a><c25>)</c25><c4>;</c4><c22>
 </c22><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#40_8_refs"><c20>result</c20></a><c16>&nbsp;=&nbsp;</c16><a href="../libstd/util.rs.html#37"><c8>op</c8></a><c25>()</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c2>*</c2><a href="../libstd/util.rs.html#35"><c8>ptr</c8></a><c2>&nbsp;=&nbsp;</c2><a href="../libstd/util.rs.html#39"><c8>prev</c8></a><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c13>&nbsp;</c13><a href="../libstd/util.rs.html#40"><c8>result</c8></a><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c2>*</c2><a href="../libstd/util.rs.html#35"><c8>ptr</c8></a><c13>&nbsp;=&nbsp;</c13><a href="../libstd/util.rs.html#39"><c8>prev</c8></a><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c0>&nbsp;</c0><a href="../libstd/util.rs.html#40"><c8>result</c8></a><c4>;</c4><c22>
 </c22><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c24>/**
@@ -95,7 +95,7 @@ c23{color:#d0f0ff; }
 </c22></a><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;Perform&nbsp;the&nbsp;swap,&nbsp;`&amp;mut`&nbsp;pointers&nbsp;never&nbsp;alias
 </c24><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/ptr.rs.html#124"><c8>ptr</c8></a><c8>::</c8><a href="../libstd/ptr.rs.html#124"><c8>copy_nonoverlapping_memory</c8></a><c25>(</c25><a href="../libstd/util.rs.html#54"><c8>t</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="../libstd/util.rs.html#50"><c8>x</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="#49_10_refs"><c12>1</c12></a><c25>)</c25><c4>;</c4><a href="#49_10_refs"><c22>
 </c22></a><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/ptr.rs.html#124"><c8>ptr</c8></a><c8>::</c8><a href="../libstd/ptr.rs.html#124"><c8>copy_nonoverlapping_memory</c8></a><c25>(</c25><a href="../libstd/util.rs.html#50"><c8>x</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../libstd/util.rs.html#50"><c8>y</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="#49_10_refs"><c12>1</c12></a><c25>)</c25><c4>;</c4><a href="#49_10_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/ptr.rs.html#124"><c8>ptr</c8></a><c8>::</c8><a href="../libstd/ptr.rs.html#124"><c8>copy_nonoverlapping_memory</c8></a><c25>(</c25><a href="../libstd/util.rs.html#50"><c8>y</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="../libstd/util.rs.html#54"><c8>t</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="#49_10_refs"><c12>1</c12></a><c25>)</c25><c4>;</c4><a href="#49_10_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/ptr.rs.html#124"><c8>ptr</c8></a><c8>::</c8><a href="../libstd/ptr.rs.html#124"><c8>copy_nonoverlapping_memory</c8></a><c25>(</c25><a href="../libstd/util.rs.html#50"><c8>y</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="../libstd/util.rs.html#54"><c8>t</c8></a><c4>,</c4><c13>&nbsp;</c13><a href="#49_10_refs"><c12>1</c12></a><c25>)</c25><c4>;</c4><a href="#49_10_refs"><c22>
 </c22></a><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a href="#49_10_refs"><c22>
 </c22></a><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;y&nbsp;and&nbsp;t&nbsp;now&nbsp;point&nbsp;to&nbsp;the&nbsp;same&nbsp;thing,&nbsp;but&nbsp;we&nbsp;need&nbsp;to&nbsp;completely&nbsp;forget&nbsp;`tmp`
 </c24><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;because&nbsp;it's&nbsp;no&nbsp;longer&nbsp;relevant.
@@ -109,12 +109,12 @@ c23{color:#d0f0ff; }
 </c24><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c32>&nbsp;*/
 </c32><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c33>#</c33><c4>[</c4><c33>inline</c33><c4>]</c4><c33>
 </c33><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#71_10_refs"><c26>replace</c26></a><c5>&lt;</c5><a href="#71_10_refs"><c5>T</c5></a><c5>&gt;</c5><c25>(</c25><a href="#72_18_refs"><c20>dest</c20></a><c1>:&nbsp;</c1><c3>&amp;</c3><a href="#71_10_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="#71_10_refs"><c3>T</c3></a><c4>,</c4><c1>&nbsp;</c1><a href="#71_10_refs"><c1>mut</c1></a><c1>&nbsp;</c1><a href="#72_36_refs"><c20>src</c20></a><c1>:&nbsp;</c1><a href="#71_10_refs"><c3>T</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="#71_10_refs"><c3>T</c3></a><c1>&nbsp;</c1><c4>{</c4><a href="#71_10_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/util.rs.html#49"><c8>swap</c8></a><c25>(</c25><a href="../libstd/util.rs.html#72"><c8>dest</c8></a><c4>,</c4><c13>&nbsp;</c13><c2>&amp;</c2><a href="#71_10_refs"><c2>mut</c2></a><c2>&nbsp;</c2><a href="../libstd/util.rs.html#72"><c8>src</c8></a><c25>)</c25><c4>;</c4><a href="#71_10_refs"><c22>
+</c22></a><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/util.rs.html#49"><c8>swap</c8></a><c25>(</c25><a href="../libstd/util.rs.html#72"><c8>dest</c8></a><c4>,</c4><c9>&nbsp;</c9><c2>&amp;</c2><a href="#71_10_refs"><c2>mut</c2></a><c2>&nbsp;</c2><a href="../libstd/util.rs.html#72"><c8>src</c8></a><c25>)</c25><c4>;</c4><a href="#71_10_refs"><c22>
 </c22></a><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libstd/util.rs.html#72"><c8>src</c8></a><a href="#71_10_refs"><c22>
 </c22></a><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c32>///&nbsp;A&nbsp;non-copyable&nbsp;dummy&nbsp;type.
-</c32><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c33>#</c33><c4>[</c4><c33>deriving</c33><c25>(</c25><a href="../libstd/util.rs.html#79"><c33>Eq</c33></a><c4>,</c4><c33>&nbsp;</c33><a href="../libstd/util.rs.html#78"><c33>TotalEq</c33></a><c4>,</c4><c33>&nbsp;</c33><a href="../libstd/util.rs.html#78"><c33>Ord</c33></a><c4>,</c4><c33>&nbsp;</c33><a href="../libstd/cmp.rs.html#83"><c33>TotalOrd</c33></a><c25>)</c25><c4>]</c4><c33>
+</c32><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c33>#</c33><c4>[</c4><c33>deriving</c33><c25>(</c25><a href="../libstd/util.rs.html#79"><c33>Eq</c33></a><c4>,</c4><c33>&nbsp;</c33><a href="../libstd/util.rs.html#79"><c33>TotalEq</c33></a><c4>,</c4><c33>&nbsp;</c33><a href="../libstd/util.rs.html#79"><c33>Ord</c33></a><c4>,</c4><c33>&nbsp;</c33><a href="../libstd/util.rs.html#79"><c33>TotalOrd</c33></a><c25>)</c25><c4>]</c4><c33>
 </c33><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c33>#</c33><c4>[</c4><c33>unsafe_no_drop_flag</c33><c4>]</c4><c33>
 </c33><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#79_23_refs"><c27>NonCopyable</c27></a><c27>;
 </c27><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c0>
@@ -305,45 +305,21 @@ c23{color:#d0f0ff; }
 </c0><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
 </c0><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="19_10_refs"><a href="#19"><c24>libstd/util.rs:19:10-19:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
-<br/>pub&nbsp;fn&nbsp;id&lt;T&gt;(x:&nbsp;T)&nbsp;-&gt;&nbsp;T&nbsp;{&nbsp;x&nbsp;}
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/rt/uv/net.rs.html"><c24>libstd/rt/uv/net.rs:<br/></c24><a href="../libstd/rt/uv/net.rs.html#163"><c24>163:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;uv_socket_addr_as_socket_addr(addr,&nbsp;util::id)
-<br/></a><br/><br/><a id="71_10_refs"><a href="#71"><c24>libstd/util.rs:71:10-71:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
-<br/>pub&nbsp;fn&nbsp;replace&lt;T&gt;(dest:&nbsp;&amp;mut&nbsp;T,&nbsp;mut&nbsp;src:&nbsp;T)&nbsp;-&gt;&nbsp;T&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/util.rs.html#39"><c24>39:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;prev&nbsp;=&nbsp;replace(ptr,&nbsp;value);
-<br/></a><a href="../libstd/rt/kill.rs.html"><c24>libstd/rt/kill.rs:<br/></c24><a href="../libstd/rt/kill.rs.html#444"><c24>444:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(blk(util::replace(&amp;mut&nbsp;inner.child_tombstones,&nbsp;None)));
-<br/></a><a href="../libstd/rt/args.rs.html"><c24>libstd/rt/args.rs:<br/></c24><a href="../libstd/rt/args.rs.html#75"><c24>75:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;val&nbsp;=&nbsp;util::replace(&amp;mut&nbsp;*ptr,&nbsp;None);
-<br/></a><a href="../libstd/vec.rs.html"><c24>libstd/vec.rs:<br/></c24><a href="../libstd/vec.rs.html#1409"><c24>1409:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;v&nbsp;=&nbsp;util::replace(self,&nbsp;~[x]);
-<br/></a><a href="../libstd/option.rs.html"><c24>libstd/option.rs:<br/></c24><a href="../libstd/option.rs.html#221"><c24>221:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;util::replace(self,&nbsp;None)
-<br/></a><a href="../libstd/option.rs.html#418"><c24>418:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;util::replace(&amp;mut&nbsp;self.opt,&nbsp;None)
-<br/></a><a href="../libstd/option.rs.html#436"><c24>436:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;util::replace(&amp;mut&nbsp;self.opt,&nbsp;None)
-<br/></a><a href="../libstd/hashmap.rs.html"><c24>libstd/hashmap.rs:<br/></c24><a href="../libstd/hashmap.rs.html#157"><c24>157:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;old_buckets&nbsp;=&nbsp;replace(&amp;mut&nbsp;self.buckets,
-<br/></a><a href="../libstd/hashmap.rs.html#210"><c24>210:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(replace(&amp;mut&nbsp;b.value,&nbsp;v))
-<br/></a><a href="../libstd/trie.rs.html"><c24>libstd/trie.rs:<br/></c24><a href="../libstd/trie.rs.html#348"><c24>348:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;replace(child,&nbsp;Nothing)&nbsp;{
-<br/></a><a href="../libstd/task/local_data_priv.rs.html"><c24>libstd/task/local_data_priv.rs:<br/></c24><a href="../libstd/task/local_data_priv.rs.html#180"><c24>180:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;data&nbsp;=&nbsp;match&nbsp;util::replace(entry,&nbsp;None)&nbsp;{
-<br/></a><a href="../libstd/task/spawn.rs.html"><c24>libstd/task/spawn.rs:<br/></c24><a href="../libstd/task/spawn.rs.html#329"><c24>329:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;rest&nbsp;=&nbsp;util::replace(&amp;mut&nbsp;nobe.ancestors,
-<br/></a><a href="../libstd/task/spawn.rs.html#461"><c24>461:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;newstate&nbsp;=&nbsp;util::replace(state,&nbsp;None);
-<br/></a><a href="../libstd/pipes.rs.html"><c24>libstd/pipes.rs:<br/></c24><a href="../libstd/pipes.rs.html#317"><c24>317:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;b&nbsp;=&nbsp;replace(&amp;mut&nbsp;this.buffer,&nbsp;null_buffer);
-<br/></a><br/><br/><a id="128_3_refs"><a href="#128"><c24>libstd/util.rs:128:3-128:3&nbsp;-fn-&nbsp;definition:<br/></c24><pr>*/
-<br/>pub&nbsp;fn&nbsp;unreachable()&nbsp;-&gt;&nbsp;!&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/rt/io/extensions.rs.html"><c24>libstd/rt/io/extensions.rs:<br/></c24><a href="../libstd/rt/io/extensions.rs.html#285"><c24>285:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(_)&nbsp;=&gt;&nbsp;util::unreachable(),
-<br/></a><a href="../libstd/hashmap.rs.html"><c24>libstd/hashmap.rs:<br/></c24><a href="../libstd/hashmap.rs.html#188"><c24>188:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;=&gt;&nbsp;unreachable()
-<br/></a><a href="../libstd/rand.rs.html"><c24>libstd/rand.rs:<br/></c24><a href="../libstd/rand.rs.html#576"><c24>576:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;util::unreachable();
-<br/></a><br/><br/><a id="79_23_refs"><a href="#79"><c24>libstd/util.rs:79:23-79:23&nbsp;-struct-&nbsp;definition:<br/></c24><pr>#[unsafe_no_drop_flag]
+</c0><br/><div/><br/><a id="79_23_refs"><a href="#79"><c24>libstd/util.rs:79:23-79:23&nbsp;-struct-&nbsp;definition:<br/></c24><pr>#[unsafe_no_drop_flag]
 <br/>pub&nbsp;struct&nbsp;NonCopyable;
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
-<br/></a><a href="../libstd/util.rs.html#85"><c24>85:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;NonCopyable&nbsp;{&nbsp;NonCopyable&nbsp;}
+<br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
+<br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
+<br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
+<br/></a><a href="../libstd/util.rs.html#82"><c24>82:&nbsp;</c24>impl&nbsp;NonCopyable&nbsp;{
+<br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
 <br/></a><a href="../libstd/util.rs.html#88"><c24>88:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;NonCopyable&nbsp;{
 <br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
 <br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
 <br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
 <br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
 <br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
-<br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
-<br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
-<br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
-<br/></a><a href="../libstd/util.rs.html#82"><c24>82:&nbsp;</c24>impl&nbsp;NonCopyable&nbsp;{
-<br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
+<br/></a><a href="../libstd/util.rs.html#85"><c24>85:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;NonCopyable&nbsp;{&nbsp;NonCopyable&nbsp;}
 <br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
 <br/></a><a href="../libstd/util.rs.html#78"><c24>78:&nbsp;</c24>#[deriving(Eq,&nbsp;TotalEq,&nbsp;Ord,&nbsp;TotalOrd)]
 <br/></a><a href="../libstd/task/mod.rs.html"><c24>libstd/task/mod.rs:<br/></c24><a href="../libstd/task/mod.rs.html#165"><c24>165:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;can_not_copy:&nbsp;Option&lt;util::NonCopyable&gt;,
@@ -354,13 +330,37 @@ c23{color:#d0f0ff; }
 <br/></a><a href="../libstd/vec.rs.html#1689"><c24>1689:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;util::swap(&amp;mut&nbsp;*p_r,&nbsp;&amp;mut&nbsp;*p_w);
 <br/></a><a href="../libstd/ptr.rs.html"><c24>libstd/ptr.rs:<br/></c24><a href="../libstd/ptr.rs.html#183"><c24>183:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;swap(cast::transmute(dest),&nbsp;&amp;mut&nbsp;src);&nbsp;//&nbsp;cannot&nbsp;overlap
 <br/></a><a href="../libstd/trie.rs.html"><c24>libstd/trie.rs:<br/></c24><a href="../libstd/trie.rs.html#311"><c24>311:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;swap(&amp;mut&nbsp;tmp,&nbsp;child);
+<br/></a><br/><br/><a id="19_10_refs"><a href="#19"><c24>libstd/util.rs:19:10-19:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;id&lt;T&gt;(x:&nbsp;T)&nbsp;-&gt;&nbsp;T&nbsp;{&nbsp;x&nbsp;}
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/rt/uv/net.rs.html"><c24>libstd/rt/uv/net.rs:<br/></c24><a href="../libstd/rt/uv/net.rs.html#163"><c24>163:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;uv_socket_addr_as_socket_addr(addr,&nbsp;util::id)
+<br/></a><br/><br/><a id="71_10_refs"><a href="#71"><c24>libstd/util.rs:71:10-71:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+<br/>pub&nbsp;fn&nbsp;replace&lt;T&gt;(dest:&nbsp;&amp;mut&nbsp;T,&nbsp;mut&nbsp;src:&nbsp;T)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/util.rs.html#39"><c24>39:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;prev&nbsp;=&nbsp;replace(ptr,&nbsp;value);
+<br/></a><a href="../libstd/rt/kill.rs.html"><c24>libstd/rt/kill.rs:<br/></c24><a href="../libstd/rt/kill.rs.html#444"><c24>444:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(blk(util::replace(&amp;mut&nbsp;inner.child_tombstones,&nbsp;None)));
+<br/></a><a href="../libstd/rt/args.rs.html"><c24>libstd/rt/args.rs:<br/></c24><a href="../libstd/rt/args.rs.html#75"><c24>75:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;val&nbsp;=&nbsp;util::replace(&amp;mut&nbsp;*ptr,&nbsp;None);
+<br/></a><a href="../libstd/vec.rs.html"><c24>libstd/vec.rs:<br/></c24><a href="../libstd/vec.rs.html#1409"><c24>1409:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;v&nbsp;=&nbsp;util::replace(self,&nbsp;~[x]);
+<br/></a><a href="../libstd/option.rs.html"><c24>libstd/option.rs:<br/></c24><a href="../libstd/option.rs.html#436"><c24>436:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;util::replace(&amp;mut&nbsp;self.opt,&nbsp;None)
+<br/></a><a href="../libstd/option.rs.html#418"><c24>418:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;util::replace(&amp;mut&nbsp;self.opt,&nbsp;None)
+<br/></a><a href="../libstd/option.rs.html#221"><c24>221:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;util::replace(self,&nbsp;None)
+<br/></a><a href="../libstd/hashmap.rs.html"><c24>libstd/hashmap.rs:<br/></c24><a href="../libstd/hashmap.rs.html#157"><c24>157:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;old_buckets&nbsp;=&nbsp;replace(&amp;mut&nbsp;self.buckets,
+<br/></a><a href="../libstd/hashmap.rs.html#210"><c24>210:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(replace(&amp;mut&nbsp;b.value,&nbsp;v))
+<br/></a><a href="../libstd/trie.rs.html"><c24>libstd/trie.rs:<br/></c24><a href="../libstd/trie.rs.html#348"><c24>348:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;replace(child,&nbsp;Nothing)&nbsp;{
+<br/></a><a href="../libstd/task/local_data_priv.rs.html"><c24>libstd/task/local_data_priv.rs:<br/></c24><a href="../libstd/task/local_data_priv.rs.html#180"><c24>180:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;data&nbsp;=&nbsp;match&nbsp;util::replace(entry,&nbsp;None)&nbsp;{
+<br/></a><a href="../libstd/task/spawn.rs.html"><c24>libstd/task/spawn.rs:<br/></c24><a href="../libstd/task/spawn.rs.html#461"><c24>461:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;newstate&nbsp;=&nbsp;util::replace(state,&nbsp;None);
+<br/></a><a href="../libstd/task/spawn.rs.html#329"><c24>329:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;rest&nbsp;=&nbsp;util::replace(&amp;mut&nbsp;nobe.ancestors,
+<br/></a><a href="../libstd/pipes.rs.html"><c24>libstd/pipes.rs:<br/></c24><a href="../libstd/pipes.rs.html#317"><c24>317:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;mut&nbsp;b&nbsp;=&nbsp;replace(&amp;mut&nbsp;this.buffer,&nbsp;null_buffer);
 <br/></a><br/><br/><a id="23_10_refs"><a href="#23"><c24>libstd/util.rs:23:10-23:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
 <br/>pub&nbsp;fn&nbsp;ignore&lt;T&gt;(_x:&nbsp;T)&nbsp;{&nbsp;}
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/rt/kill.rs.html"><c24>libstd/rt/kill.rs:<br/></c24><a href="../libstd/rt/kill.rs.html#490"><c24>490:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;use&nbsp;util;&nbsp;util::ignore(group);&nbsp;}
+<br/></a><br/><br/><a id="128_3_refs"><a href="#128"><c24>libstd/util.rs:128:3-128:3&nbsp;-fn-&nbsp;definition:<br/></c24><pr>*/
+<br/>pub&nbsp;fn&nbsp;unreachable()&nbsp;-&gt;&nbsp;!&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/rt/io/extensions.rs.html"><c24>libstd/rt/io/extensions.rs:<br/></c24><a href="../libstd/rt/io/extensions.rs.html#285"><c24>285:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(_)&nbsp;=&gt;&nbsp;util::unreachable(),
+<br/></a><a href="../libstd/hashmap.rs.html"><c24>libstd/hashmap.rs:<br/></c24><a href="../libstd/hashmap.rs.html#188"><c24>188:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;=&gt;&nbsp;unreachable()
+<br/></a><a href="../libstd/rand.rs.html"><c24>libstd/rand.rs:<br/></c24><a href="../libstd/rand.rs.html#576"><c24>576:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;util::unreachable();
 <br/></a><br/><br/><a id="92_31_refs"><a href="#92"><c24>libstd/util.rs:92:31-92:31&nbsp;-enum-&nbsp;definition:<br/></c24><pr>///&nbsp;A&nbsp;type&nbsp;with&nbsp;no&nbsp;inhabitants
 <br/>pub&nbsp;enum&nbsp;Void&nbsp;{&nbsp;}
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/util.rs.html#95"><c24>95:&nbsp;</c24>impl&nbsp;Void&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html"><c24>libstd/rt/comm.rs:<br/></c24><a href="../libstd/rt/comm.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;void_packet:&nbsp;*mut&nbsp;Void,
+<br/></a><a href="../libstd/rt/comm.rs.html"><c24>libstd/rt/comm.rs:<br/></c24><a href="../libstd/rt/comm.rs.html#67"><c24>67:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;packet:&nbsp;*mut&nbsp;Void&nbsp;=&nbsp;cast::transmute(packet);
+<br/></a><a href="../libstd/rt/comm.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;void_packet:&nbsp;*mut&nbsp;Void,
 <br/></a><a href="../libstd/rt/comm.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;void_packet:&nbsp;*mut&nbsp;Void,
-<br/></a><a href="../libstd/rt/comm.rs.html#67"><c24>67:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;packet:&nbsp;*mut&nbsp;Void&nbsp;=&nbsp;cast::transmute(packet);
 <br/></a><br/></a></a>
