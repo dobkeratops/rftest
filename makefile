@@ -11,5 +11,6 @@ push:
 	cp -r $(RUST_SRC)/libsyntax .
 	cp -r $(RUST_SRC)/librustc .
 	cp -r $(RUST_SRC)/libextra .
+	git commit -am "updated, push.."
 	git push origin gh-pages:gh-pages
 
