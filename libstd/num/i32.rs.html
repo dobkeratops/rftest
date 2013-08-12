@@ -37,36 +37,36 @@ c20{color:#0f0ff}
 c21{color:#d0d0d0; font-weight:bold}
 c22{color:#c0ffd0; }
 c23{color:#d0f0ff; }
-</style><body style="background-color:#3a343a;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/num/">num</a><c1>/</c1><c0><a href="./../../libstd/num/i32.rs.html">i32.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;Operations&nbsp;and&nbsp;constants&nbsp;for&nbsp;`i32`
-</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c21>use</c21><c0>&nbsp;num::BitCount</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c21>use</c21><c0>&nbsp;unstable::intrinsics</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::generated::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c0>int_module!</c0><c25>(</c25><c3>i32</c3><c4>,</c4><c0>&nbsp;</c0><c12>32</c12><c25>)</c25><c0>
-</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../libstd/num/num.rs.html#248"><c30>BitCount</c30></a><c30>&nbsp;for&nbsp;i32&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Counts&nbsp;the&nbsp;number&nbsp;of&nbsp;bits&nbsp;set.&nbsp;Wraps&nbsp;LLVM's&nbsp;`ctpop`&nbsp;intrinsic.
-</c32><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#23_4_refs"><c26>population_count</c26></a><c25>(</c25><c18>&amp;</c18><a href="#23_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#23_4_refs"><c3>i32</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="#23_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="#23_4_refs"><c8>intrinsics</c8></a><c8>::</c8><a href="#23_4_refs"><c8>ctpop32</c8></a><c25>(</c25><c2>*</c2><a href="#23_4_refs"><c0>self</c0></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Counts&nbsp;the&nbsp;number&nbsp;of&nbsp;leading&nbsp;zeros.&nbsp;Wraps&nbsp;LLVM's&nbsp;`ctlz`&nbsp;intrinsic.
-</c32><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#27_4_refs"><c26>leading_zeros</c26></a><c25>(</c25><c18>&amp;</c18><a href="#27_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#27_4_refs"><c3>i32</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="#27_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="#27_4_refs"><c8>intrinsics</c8></a><c8>::</c8><a href="#27_4_refs"><c8>ctlz32</c8></a><c25>(</c25><c2>*</c2><a href="#27_4_refs"><c0>self</c0></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Counts&nbsp;the&nbsp;number&nbsp;of&nbsp;trailing&nbsp;zeros.&nbsp;Wraps&nbsp;LLVM's&nbsp;`cttz`&nbsp;intrinsic.
-</c32><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;</c26><a href="#31_4_refs"><c26>trailing_zeros</c26></a><c25>(</c25><c18>&amp;</c18><a href="#31_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#31_4_refs"><c3>i32</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><a href="#31_4_refs"><c22>unsafe</c22></a><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="#31_4_refs"><c8>intrinsics</c8></a><c8>::</c8><a href="#31_4_refs"><c8>cttz32</c8></a><c25>(</c25><c2>*</c2><a href="#31_4_refs"><c0>self</c0></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c4>}</c4><c0>
+</style><body style="background-color:#3a343a;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/num/">num</a><c1>/</c1><c0><a href="./../../libstd/num/i32.rs.html">i32.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c24>//!&nbsp;Operations&nbsp;and&nbsp;constants&nbsp;for&nbsp;`i32`
+</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;num::BitCount</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;unstable::intrinsics</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::generated::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n236711"><a id="n236732"><a id="n236712">&nbsp;</a></a></a><c0>int_module!</c0><c25>(</c25><c3>i32</c3><c4>,</c4><c0>&nbsp;</c0><c12>32</c12><c25>)</c25><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n569">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n526"><a id="n523">&nbsp;</a></a><c30>impl&nbsp;</c30><a href="../../libstd/num/num.rs.html#248"><c30>BitCount</c30></a><c30>&nbsp;for&nbsp;i32&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Counts&nbsp;the&nbsp;number&nbsp;of&nbsp;bits&nbsp;set.&nbsp;Wraps&nbsp;LLVM's&nbsp;`ctpop`&nbsp;intrinsic.
+</c32><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n538"><a id="n529"><a id="n535"><a id="n530"><a id="n532"><a id="n528"><a id="n536"><a id="n533"><a id="n539">&nbsp;</a></a></a></a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;population_count</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>i32</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;unsafe&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><c8>intrinsics::ctpop32</c8><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c17>
+</c17><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Counts&nbsp;the&nbsp;number&nbsp;of&nbsp;leading&nbsp;zeros.&nbsp;Wraps&nbsp;LLVM's&nbsp;`ctlz`&nbsp;intrinsic.
+</c32><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n553"><a id="n542"><a id="n544"><a id="n547"><a id="n543"><a id="n549"><a id="n550"><a id="n546"><a id="n552">&nbsp;</a></a></a></a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;leading_zeros</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>i32</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;unsafe&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><c8>intrinsics::ctlz32</c8><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c17>
+</c17><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Counts&nbsp;the&nbsp;number&nbsp;of&nbsp;trailing&nbsp;zeros.&nbsp;Wraps&nbsp;LLVM's&nbsp;`cttz`&nbsp;intrinsic.
+</c32><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n558"><a id="n560"><a id="n566"><a id="n561"><a id="n557"><a id="n567"><a id="n563"><a id="n556"><a id="n564">&nbsp;</a></a></a></a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;trailing_zeros</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>i32</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;unsafe&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><c8>intrinsics::cttz32</c8><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c4>}</c4><c0>
 </c0><br/><div/></c0></c0>

@@ -247,7 +247,7 @@ pub fn unguarded_pat(a: &arm) -> Option<~[@pat]> {
 }
 
 pub fn public_methods(ms: ~[@method]) -> ~[@method] {
-    do ms.consume_iter().filter |m| {
+    do ms.move_iter().filter |m| {
         match m.vis {
             public => true,
             _   => false
@@ -975,6 +975,15 @@ pub fn xorPush(marks: &mut ~[uint], mark: uint) {
 pub fn getLast(arr: &~[Mrk]) -> uint {
     *arr.last()
 }
+trait HasDefaultArgs {
+	pub fn num_trailing_defaults(self)->uint;
+}
+impl<'self> HasDefaultArgs for &'self [ast::arg] {
+	pub fn num_trailing_defaults(self)->uint {
+		self.rev_iter().take_while( |a|{a.default.is_some()} ).len()
+	}
+}
+
 
 
 #[cfg(test)]

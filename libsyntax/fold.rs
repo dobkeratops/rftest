@@ -109,6 +109,7 @@ fn fold_arg_(a: arg, fld: @ast_fold) -> arg {
         ty: fld.fold_ty(&a.ty),
         pat: fld.fold_pat(a.pat),
         id: fld.new_id(a.id),
+        default: match a.default { Some(e)=>Some(fld.fold_expr(e)),None=>None }
     }
 }
 
@@ -176,7 +177,7 @@ pub fn fold_ty_param(tp: TyParam,
 pub fn fold_ty_params(tps: &OptVec<TyParam>,
                       fld: @ast_fold) -> OptVec<TyParam> {
     let tps = /*bad*/ (*tps).clone();
-    tps.map_consume(|tp| fold_ty_param(tp, fld))
+    tps.map_move(|tp| fold_ty_param(tp, fld))
 }
 
 pub fn fold_lifetime(l: &Lifetime,
@@ -704,7 +705,7 @@ pub fn noop_fold_ty(t: &ty_, fld: @ast_fold) -> ty_ {
 // ...nor do modules
 pub fn noop_fold_mod(m: &_mod, fld: @ast_fold) -> _mod {
     ast::_mod {
-        view_items: m.view_items.iter().transform(|x| fld.fold_view_item(x)).collect(),
+        view_items: m.view_items.iter().map(|x| fld.fold_view_item(x)).collect(),
         items: m.items.iter().filter_map(|x| fld.fold_item(*x)).collect(),
     }
 }
@@ -713,8 +714,8 @@ fn noop_fold_foreign_mod(nm: &foreign_mod, fld: @ast_fold) -> foreign_mod {
     ast::foreign_mod {
         sort: nm.sort,
         abis: nm.abis,
-        view_items: nm.view_items.iter().transform(|x| fld.fold_view_item(x)).collect(),
-        items: nm.items.iter().transform(|x| fld.fold_foreign_item(*x)).collect(),
+        view_items: nm.view_items.iter().map(|x| fld.fold_view_item(x)).collect(),
+        items: nm.items.iter().map(|x| fld.fold_foreign_item(*x)).collect(),
     }
 }
 
@@ -734,7 +735,7 @@ fn noop_fold_variant(v: &variant_, fld: @ast_fold) -> variant_ {
         struct_variant_kind(ref struct_def) => {
             kind = struct_variant_kind(@ast::struct_def {
                 fields: struct_def.fields.iter()
-                    .transform(|f| fld.fold_struct_field(*f)).collect(),
+                    .map(|f| fld.fold_struct_field(*f)).collect(),
                 ctor_id: struct_def.ctor_id.map(|c| fld.new_id(*c))
             })
         }
@@ -828,7 +829,7 @@ impl ast_fold for AstFoldFns {
     fn fold_view_item(@self, x: &view_item) -> view_item {
         ast::view_item {
             node: (self.fold_view_item)(&x.node, self as @ast_fold),
-            attrs: x.attrs.iter().transform(|a| fold_attribute_(*a, self as @ast_fold)).collect(),
+            attrs: x.attrs.iter().map(|a| fold_attribute_(*a, self as @ast_fold)).collect(),
             vis: x.vis,
             span: (self.new_span)(x.span),
         }

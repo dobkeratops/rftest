@@ -37,47 +37,47 @@ c20{color:#0f0ff}
 c21{color:#d0d0d0; font-weight:bold}
 c22{color:#c0ffd0; }
 c23{color:#d0f0ff; }
-</style><body style="background-color:#3a343a;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/unstable/">unstable</a><c1>/</c1><c0><a href="./../../libstd/unstable/simd.rs.html">simd.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c24>//!&nbsp;SIMD&nbsp;vectors
-</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>non_camel_case_types</c33><c25>)</c25><c4>];</c4><c33>
-</c33><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;i8x16</c27><c25>(</c25><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;i16x8</c27><c25>(</c25><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;i32x4</c27><c25>(</c25><c3>i32</c3><c4>,</c4><c23>&nbsp;</c23><c3>i32</c3><c4>,</c4><c23>&nbsp;</c23><c3>i32</c3><c4>,</c4><c23>&nbsp;</c23><c3>i32</c3><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;i64x2</c27><c25>(</c25><c3>i64</c3><c4>,</c4><c23>&nbsp;</c23><c3>i64</c3><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;u8x16</c27><c25>(</c25><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;u16x8</c27><c25>(</c25><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;u32x4</c27><c25>(</c25><c3>u32</c3><c4>,</c4><c23>&nbsp;</c23><c3>u32</c3><c4>,</c4><c23>&nbsp;</c23><c3>u32</c3><c4>,</c4><c23>&nbsp;</c23><c3>u32</c3><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;u64x2</c27><c25>(</c25><c3>u64</c3><c4>,</c4><c23>&nbsp;</c23><c3>u64</c3><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;f32x4</c27><c25>(</c25><c3>f32</c3><c4>,</c4><c23>&nbsp;</c23><c3>f32</c3><c4>,</c4><c23>&nbsp;</c23><c3>f32</c3><c4>,</c4><c23>&nbsp;</c23><c3>f32</c3><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;f64x2</c27><c25>(</c25><c3>f64</c3><c4>,</c4><c23>&nbsp;</c23><c3>f64</c3><c25>)</c25><c4>;</c4><c0>
+</style><body style="background-color:#3a343a;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/unstable/">unstable</a><c1>/</c1><c0><a href="./../../libstd/unstable/simd.rs.html">simd.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c24>//!&nbsp;SIMD&nbsp;vectors
+</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>non_camel_case_types</c33><c25>)</c25><c4>];</c4><c33>
+</c33><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n126933">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n126901"><a id="n126883"><a id="n126891"><a id="n126907"><a id="n126898"><a id="n126913"><a id="n126930"><a id="n126892"><a id="n126927"><a id="n126889"><a id="n126924"><a id="n126885"><a id="n126910"><a id="n126894"><a id="n126915"><a id="n126909"><a id="n126906"><a id="n126903"><a id="n126916"><a id="n126900"><a id="n126928"><a id="n126922"><a id="n126886"><a id="n126921"><a id="n126904"><a id="n126888"><a id="n126912"><a id="n126897"><a id="n126925"><a id="n126895"><a id="n126918"><a id="n126919">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;i8x16</c27><c25>(</c25><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c4>,</c4><c23>&nbsp;</c23><c3>i8</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n126960">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n126937"><a id="n126945"><a id="n126951"><a id="n126952"><a id="n126948"><a id="n126957"><a id="n126936"><a id="n126934"><a id="n126955"><a id="n126946"><a id="n126942"><a id="n126954"><a id="n126949"><a id="n126943"><a id="n126939"><a id="n126940">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;i16x8</c27><c25>(</c25><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c4>,</c4><c23>&nbsp;</c23><c3>i16</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n126975">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n126961"><a id="n126972"><a id="n126964"><a id="n126966"><a id="n126963"><a id="n126967"><a id="n126970"><a id="n126969">&nbsp;</a></a></a></a></a></a></a></a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;i32x4</c27><c25>(</c25><c3>i32</c3><c4>,</c4><c23>&nbsp;</c23><c3>i32</c3><c4>,</c4><c23>&nbsp;</c23><c3>i32</c3><c4>,</c4><c23>&nbsp;</c23><c3>i32</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n126984">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n126976"><a id="n126978"><a id="n126981"><a id="n126979">&nbsp;</a></a></a></a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;i64x2</c27><c25>(</c25><c3>i64</c3><c4>,</c4><c23>&nbsp;</c23><c3>i64</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n127035">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n127000"><a id="n127014"><a id="n126985"><a id="n126990"><a id="n126987"><a id="n127005"><a id="n127015"><a id="n126993"><a id="n127008"><a id="n127018"><a id="n127021"><a id="n127003"><a id="n127002"><a id="n126988"><a id="n127012"><a id="n126999"><a id="n127026"><a id="n127017"><a id="n127006"><a id="n127024"><a id="n127030"><a id="n126997"><a id="n126991"><a id="n127011"><a id="n127020"><a id="n127029"><a id="n126994"><a id="n127027"><a id="n127023"><a id="n127032"><a id="n127009"><a id="n126996">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;u8x16</c27><c25>(</c25><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c4>,</c4><c23>&nbsp;</c23><c3>u8</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n127062">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n127048"><a id="n127054"><a id="n127057"><a id="n127047"><a id="n127056"><a id="n127042"><a id="n127041"><a id="n127053"><a id="n127050"><a id="n127059"><a id="n127038"><a id="n127044"><a id="n127051"><a id="n127036"><a id="n127039"><a id="n127045">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;u16x8</c27><c25>(</c25><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c4>,</c4><c23>&nbsp;</c23><c3>u16</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n127077">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n127068"><a id="n127066"><a id="n127065"><a id="n127074"><a id="n127063"><a id="n127069"><a id="n127071"><a id="n127072">&nbsp;</a></a></a></a></a></a></a></a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;u32x4</c27><c25>(</c25><c3>u32</c3><c4>,</c4><c23>&nbsp;</c23><c3>u32</c3><c4>,</c4><c23>&nbsp;</c23><c3>u32</c3><c4>,</c4><c23>&nbsp;</c23><c3>u32</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n127086">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n127080"><a id="n127078"><a id="n127081"><a id="n127083">&nbsp;</a></a></a></a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;u64x2</c27><c25>(</c25><c3>u64</c3><c4>,</c4><c23>&nbsp;</c23><c3>u64</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n127101">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n127090"><a id="n127092"><a id="n127098"><a id="n127087"><a id="n127089"><a id="n127095"><a id="n127093"><a id="n127096">&nbsp;</a></a></a></a></a></a></a></a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;f32x4</c27><c25>(</c25><c3>f32</c3><c4>,</c4><c23>&nbsp;</c23><c3>f32</c3><c4>,</c4><c23>&nbsp;</c23><c3>f32</c3><c4>,</c4><c23>&nbsp;</c23><c3>f32</c3><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n127110">&nbsp;</a><c33>#</c33><c4>[</c4><c33>simd</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n127107"><a id="n127105"><a id="n127104"><a id="n127102">&nbsp;</a></a></a></a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;f64x2</c27><c25>(</c25><c3>f64</c3><c4>,</c4><c23>&nbsp;</c23><c3>f64</c3><c25>)</c25><c4>;</c4><c0>
 </c0><br/><div/></c0></c0>

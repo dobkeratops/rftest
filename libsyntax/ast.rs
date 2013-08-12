@@ -798,12 +798,15 @@ pub struct inline_asm {
     dialect: asm_dialect
 }
 
+pub type DefaultArg = Option<@expr>;
+
 #[deriving(Clone, Eq, Encodable, Decodable, IterBytes)]
 pub struct arg {
     is_mutbl: bool,
     ty: Ty,
     pat: @pat,
     id: NodeId,
+	default: DefaultArg
 }
 
 #[deriving(Clone, Eq, Encodable, Decodable, IterBytes)]

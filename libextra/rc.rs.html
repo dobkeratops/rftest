@@ -37,429 +37,429 @@ c20{color:#0f0ff}
 c21{color:#d0d0d0; font-weight:bold}
 c22{color:#c0ffd0; }
 c23{color:#d0f0ff; }
-</style><body style="background-color:#343838;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libextra/">libextra</a><c1>/</c1><c0><a href="./../libextra/rc.rs.html">rc.rs</a><br/><br/><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>missing_doc</c33><c25>)</c25><c4>];</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><c24>/**&nbsp;Task-local&nbsp;reference&nbsp;counted&nbsp;smart&nbsp;pointers
-</c24><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><c24>Task-local&nbsp;reference&nbsp;counted&nbsp;smart&nbsp;pointers&nbsp;are&nbsp;an&nbsp;alternative&nbsp;to&nbsp;managed&nbsp;boxes&nbsp;with&nbsp;deterministic
-</c24><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><c24>destruction.&nbsp;They&nbsp;are&nbsp;restricted&nbsp;to&nbsp;containing&nbsp;types&nbsp;that&nbsp;are&nbsp;either&nbsp;`Send`&nbsp;or&nbsp;`Freeze`&nbsp;(or&nbsp;both)&nbsp;to
-</c24><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><c24>prevent&nbsp;cycles.
-</c24><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><c24>Neither&nbsp;`Rc&lt;T&gt;`&nbsp;or&nbsp;`RcMut&lt;T&gt;`&nbsp;is&nbsp;ever&nbsp;`Send`&nbsp;and&nbsp;`RcMut&lt;T&gt;`&nbsp;is&nbsp;never&nbsp;`Freeze`.&nbsp;If&nbsp;`T`&nbsp;is&nbsp;`Freeze`,&nbsp;a
-</c24><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><c24>cycle&nbsp;cannot&nbsp;be&nbsp;created&nbsp;with&nbsp;`Rc&lt;T&gt;`&nbsp;because&nbsp;there&nbsp;is&nbsp;no&nbsp;way&nbsp;to&nbsp;modify&nbsp;it&nbsp;after&nbsp;creation.
-</c24><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><c24>*/
-</c24><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><c21>use</c21><c0>&nbsp;std::cast</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><c21>use</c21><c0>&nbsp;std::ptr</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><c21>use</c21><c0>&nbsp;std::unstable::intrinsics</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><c24>//&nbsp;Convert&nbsp;~T&nbsp;into&nbsp;*mut&nbsp;T&nbsp;without&nbsp;dropping&nbsp;it
-</c24><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><c33>#</c33><c4>[</c4><c33>inline</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;</c26><a href="#30_10_refs"><c26>owned_to_raw</c26></a><c5>&lt;</c5><a href="#30_10_refs"><c5>T</c5></a><c5>&gt;</c5><c25>(</c25><a href="#30_10_refs"><c1>mut</c1></a><c1>&nbsp;</c1><a href="#31_30_refs"><c20>box</c20></a><c1>:&nbsp;</c1><c3>~</c3><a href="#30_10_refs"><c3>T</c3></a><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>*</c3><a href="#30_10_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="#30_10_refs"><c3>T</c3></a><c1>&nbsp;</c1><c4>{</c4><a href="#30_10_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#32_8_refs"><c20>ptr</c20></a><c16>&nbsp;</c16><a href="#30_10_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="#30_10_refs"><c8>ptr</c8></a><c8>::</c8><a href="#30_10_refs"><c8>to_mut_unsafe_ptr</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#31"><c8>box</c8></a><c25>)</c25><c4>;</c4><a href="#30_10_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#30_10_refs"><c8>intrinsics</c8></a><c8>::</c8><a href="#30_10_refs"><c8>forget</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#31"><c8>box</c8></a><c25>)</c25><c4>;</c4><a href="#30_10_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#32"><c8>ptr</c8></a><a href="#30_10_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><c27>struct&nbsp;</c27><a href="#36_1_refs"><c27>RcBox</c27></a><c5>&lt;</c5><a href="#36_1_refs"><c5>T</c5></a><c5>&gt;</c5><c27>&nbsp;</c27><c4>{</c4><a href="#36_1_refs"><c23>
-</c23></a><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#38_4_refs"><c6>value</c6></a><c6>:&nbsp;</c6><a href="#38_4_refs"><c3>T</c3></a><c4>,</c4><a href="#36_1_refs"><c23>
-</c23></a><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#39_4_refs"><c6>count</c6></a><c6>:&nbsp;</c6><a href="#39_4_refs"><c3>uint</c3></a><a href="#36_1_refs"><c23>
-</c23></a><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><c32>///&nbsp;Immutable&nbsp;reference&nbsp;counted&nbsp;pointer&nbsp;type
-</c32><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><c33>#</c33><c4>[</c4><c33>unsafe_no_drop_flag</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><c33>#</c33><c4>[</c4><c33>no_send</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#44_11_refs"><c27>Rc</c27></a><c5>&lt;</c5><a href="#44_11_refs"><c5>T</c5></a><c5>&gt;</c5><c27>&nbsp;</c27><c4>{</c4><a href="#44_11_refs"><c23>
-</c23></a><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c21>priv</c21><c23>&nbsp;</c23><a href="#46_9_refs"><c6>ptr</c6></a><c6>:&nbsp;</c6><c3>*</c3><a href="#44_11_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="../libextra/rc.rs.html#36"><c3>RcBox</c3></a><c3>&lt;</c3><a href="#44_11_refs"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><a href="#44_11_refs"><c23>
-</c23></a><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>unsafe</c21><c18>&nbsp;</c18><c26>fn&nbsp;</c26><a href="#50_4_refs"><c26>new</c26></a><c25>(</c25><a href="#50_18_refs"><c20>value</c20></a><c18>:&nbsp;</c18><a href="#50_4_refs"><c3>T</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#44"><c3>Rc</c3></a><c3>&lt;</c3><a href="#50_4_refs"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><a href="#50_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#44"><c23>Rc</c23></a><c4>{</c4><a href="#50_4_refs"><c22>ptr</c22></a><c22>:&nbsp;</c22><a href="../libextra/rc.rs.html#30"><c8>owned_to_raw</c8></a><c25>(</c25><c2>~</c2><a href="../libextra/rc.rs.html#36"><c23>RcBox</c23></a><c4>{</c4><a href="#50_4_refs"><c9>value</c9></a><c9>:&nbsp;</c9><a href="../libextra/rc.rs.html#50"><c8>value</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="#50_4_refs"><c9>count</c9></a><c9>:&nbsp;</c9><a href="#50_4_refs"><c12>1</c12></a><c4>}</c4><c25>)</c25><c4>}</c4><a href="#50_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><c30>impl</c30><c5>&lt;T:&nbsp;Send&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;from_send</c26><c25>(</c25><a href="#56_21_refs"><c20>value</c20></a><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#44"><c3>Rc</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#44"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#50"><c8>Rc</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#50"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#56"><c8>value</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><c30>impl</c30><c5>&lt;T:&nbsp;Freeze&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;from_freeze</c26><c25>(</c25><a href="#62_23_refs"><c20>value</c20></a><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#44"><c3>Rc</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#44"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#50"><c8>Rc</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#50"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#62"><c8>value</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;</c26><a href="#69_4_refs"><c26>borrow</c26></a><c5>&lt;'</c5><a href="#69_4_refs"><c5>r</c5></a><c5>&gt;</c5><c25>(</c25><c18>&amp;'</c18><a href="#69_4_refs"><c18>r</c18></a><c18>&nbsp;</c18><a href="#69_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>&amp;'</c3><a href="#69_4_refs"><c3>r</c3></a><c3>&nbsp;</c3><a href="#69_4_refs"><c3>T</c3></a><c18>&nbsp;</c18><c4>{</c4><a href="#69_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="#69_4_refs"><c8>cast</c8></a><c8>::</c8><a href="#69_4_refs"><c8>copy_lifetime</c8></a><c25>(</c25><a href="#69_4_refs"><c0>self</c0></a><c4>,</c4><c9>&nbsp;</c9><c2>&amp;</c2><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#38"><c6>value</c6></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><a href="#69_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><c33>#</c33><c4>[</c4><c33>unsafe_destructor</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;Drop&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;drop</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c10>.</c10><a href="../libextra/treemap.rs.html#593"><c10>is_not_null</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#39"><c6>count</c6></a><c0>&nbsp;-=&nbsp;</c0><c12>1</c12><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#39"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#39"><c6>count</c6></a><c2>&nbsp;==&nbsp;</c2><c12>0</c12><c7>&nbsp;</c7><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>_</c20><c16>:&nbsp;</c16><c3>~T</c3><c16>&nbsp;=&nbsp;</c16><c8>cast::transmute</c8><c25>(</c25><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;Clone&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Return&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;the&nbsp;reference&nbsp;counted&nbsp;pointer.
-</c32><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;clone</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#44"><c3>Rc</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#44"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#39"><c6>count</c6></a><c0>&nbsp;+=&nbsp;</c0><c12>1</c12><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#44"><c23>Rc</c23></a><c4>{</c4><c22>ptr:&nbsp;</c22><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><c30>impl</c30><c5>&lt;T:&nbsp;DeepClone&gt;</c5><c30>&nbsp;DeepClone&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Return&nbsp;a&nbsp;deep&nbsp;copy&nbsp;of&nbsp;the&nbsp;reference&nbsp;counted&nbsp;pointer.
-</c32><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;deep_clone</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#44"><c3>Rc</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#44"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#50"><c8>Rc</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#50"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#69"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#69"><c10>borrow</c10></a><c25>()</c25><c10>.</c10><c10>d</c10><c10>e</c10><c10>e</c10><c10>p</c10><c10>_</c10><c10>c</c10><c10>l</c10><c10>o</c10><c10>n</c10><c10>e</c10><c25>())</c25><c9>&nbsp;</c9><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><c21>mod</c21><c0>&nbsp;test_rc&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;std::cell::Cell</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_clone</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Rc::from_send</c0><c25>(</c25><c0>Cell::new</c0><c25>(</c25><c0>5</c0><c25>))</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.borrow</c0><c25>()</c25><c0>.with_mut_ref&nbsp;|inner|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*inner&nbsp;=&nbsp;20</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>y.borrow</c0><c25>()</c25><c0>.take</c0><c25>()</c25><c4>,</c4><c0>&nbsp;20</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_deep_clone</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Rc::from_send</c0><c25>(</c25><c0>Cell::new</c0><c25>(</c25><c0>5</c0><c25>))</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.deep_clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.borrow</c0><c25>()</c25><c0>.with_mut_ref&nbsp;|inner|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*inner&nbsp;=&nbsp;20</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>y.borrow</c0><c25>()</c25><c0>.take</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_simple</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Rc::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*x.borrow</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_simple_clone</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Rc::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*x.borrow</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*y.borrow</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_destructor</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Rc::from_send</c0><c25>(</c25><c0>~5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>**x.borrow</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><c33>#</c33><c4>[</c4><c33>deriving</c33><c25>(</c25><a href="../libextra/rc.rs.html#153"><c33>Eq</c33></a><c25>)</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><c29>enum&nbsp;</c29><a href="#153_16_refs"><c29>Borrow</c29></a><c29>&nbsp;</c29><c4>{</c4><a href="#153_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#155_4_refs"><c0>Mutable</c0></a><c4>,</c4><a href="#153_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#156_4_refs"><c0>Immutable</c0></a><c4>,</c4><a href="#153_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#157_4_refs"><c0>Nothing</c0></a><a href="#153_16_refs"><c11>
-</c11></a><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><c27>struct&nbsp;</c27><a href="#159_1_refs"><c27>RcMutBox</c27></a><c5>&lt;</c5><a href="#159_1_refs"><c5>T</c5></a><c5>&gt;</c5><c27>&nbsp;</c27><c4>{</c4><a href="#159_1_refs"><c23>
-</c23></a><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#161_4_refs"><c6>value</c6></a><c6>:&nbsp;</c6><a href="#161_4_refs"><c3>T</c3></a><c4>,</c4><a href="#159_1_refs"><c23>
-</c23></a><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#162_4_refs"><c6>count</c6></a><c6>:&nbsp;</c6><a href="#162_4_refs"><c3>uint</c3></a><c4>,</c4><a href="#159_1_refs"><c23>
-</c23></a><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><a href="#163_4_refs"><c6>borrow</c6></a><c6>:&nbsp;</c6><a href="../libextra/rc.rs.html#153"><c3>Borrow</c3></a><a href="#159_1_refs"><c23>
-</c23></a><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><c32>///&nbsp;Mutable&nbsp;reference&nbsp;counted&nbsp;pointer&nbsp;type
-</c32><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><c33>#</c33><c4>[</c4><c33>no_send</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><c33>#</c33><c4>[</c4><c33>no_freeze</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><c33>#</c33><c4>[</c4><c33>unsafe_no_drop_flag</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#169_23_refs"><c27>RcMut</c27></a><c5>&lt;</c5><a href="#169_23_refs"><c5>T</c5></a><c5>&gt;</c5><c27>&nbsp;</c27><c4>{</c4><a href="#169_23_refs"><c23>
-</c23></a><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c21>priv</c21><c23>&nbsp;</c23><a href="#171_9_refs"><c6>ptr</c6></a><c6>:&nbsp;</c6><c3>*</c3><a href="#171_9_refs"><c3>mut</c3></a><c3>&nbsp;</c3><a href="../libextra/rc.rs.html#159"><c3>RcMutBox</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#159"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><a href="#169_23_refs"><c23>
-</c23></a><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>unsafe</c21><c18>&nbsp;</c18><c26>fn&nbsp;</c26><a href="#175_4_refs"><c26>new</c26></a><c25>(</c25><a href="#175_18_refs"><c20>value</c20></a><c18>:&nbsp;</c18><a href="#175_4_refs"><c3>T</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#169"><c3>RcMut</c3></a><c3>&lt;</c3><a href="#175_4_refs"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><a href="#175_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#169"><c23>RcMut</c23></a><c4>{</c4><a href="#175_4_refs"><c22>ptr</c22></a><c22>:&nbsp;</c22><a href="../libextra/rc.rs.html#30"><c8>owned_to_raw</c8></a><c25>(</c25><c2>~</c2><a href="../libextra/rc.rs.html#159"><c23>RcMutBox</c23></a><c4>{</c4><a href="#175_4_refs"><c9>value</c9></a><c9>:&nbsp;</c9><a href="../libextra/rc.rs.html#175"><c8>value</c8></a><c4>,</c4><c9>&nbsp;</c9><a href="#175_4_refs"><c9>count</c9></a><c9>:&nbsp;</c9><a href="#175_4_refs"><c12>1</c12></a><c4>,</c4><c9>&nbsp;</c9><a href="#175_4_refs"><c9>borrow</c9></a><c9>:&nbsp;</c9><a href="../libextra/rc.rs.html#157"><c8>Nothing</c8></a><c4>}</c4><c25>)</c25><c4>}</c4><a href="#175_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><c30>impl</c30><c5>&lt;T:&nbsp;Send&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;from_send</c26><c25>(</c25><a href="#181_21_refs"><c20>value</c20></a><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#169"><c3>RcMut</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#169"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#175"><c8>RcMut</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#175"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#181"><c8>value</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><c30>impl</c30><c5>&lt;T:&nbsp;Freeze&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;from_freeze</c26><c25>(</c25><a href="#187_23_refs"><c20>value</c20></a><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#169"><c3>RcMut</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#169"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#175"><c8>RcMut</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#175"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#187"><c8>value</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Fails&nbsp;if&nbsp;there&nbsp;is&nbsp;already&nbsp;a&nbsp;mutable&nbsp;borrow&nbsp;of&nbsp;the&nbsp;box
-</c32><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;</c26><a href="#195_4_refs"><c26>with_borrow</c26></a><c5>&lt;</c5><a href="#195_4_refs"><c5>U</c5></a><c5>&gt;</c5><c25>(</c25><c18>&amp;</c18><a href="#195_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#195_33_refs"><c20>f</c20></a><c18>:&nbsp;</c18><c3>&amp;</c3><c26>fn</c26><c25>(</c25><c3>&amp;</c3><a href="#195_4_refs"><c3>T</c3></a><c25>)</c25><c3>&nbsp;</c3><c4>-&gt;</c4><c3>&nbsp;</c3><a href="#195_4_refs"><c3>U</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#195_4_refs"><c3>U</c3></a><c18>&nbsp;</c18><c4>{</c4><a href="#195_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><a href="#195_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#195_4_refs"><c13>assert</c13></a><c13>!</c13><c25>((</c25><c2>*</c2><a href="#195_4_refs"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c2>&nbsp;!</c2><a href="#195_4_refs"><c2>=</c2></a><c2>&nbsp;</c2><a href="../libextra/rc.rs.html#155"><c8>Mutable</c8></a><c25>)</c25><c4>;</c4><a href="#195_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#198_16_refs"><c20>previous</c20></a><c16>&nbsp;</c16><a href="#195_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><c25>(</c25><c2>*</c2><a href="#195_4_refs"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c4>;</c4><a href="#195_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c2>&nbsp;</c2><a href="#195_4_refs"><c2>=</c2></a><c2>&nbsp;</c2><a href="../libextra/rc.rs.html#156"><c8>Immutable</c8></a><c4>;</c4><a href="#195_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#200_16_refs"><c20>res</c20></a><c16>&nbsp;</c16><a href="#195_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="../libextra/rc.rs.html#195"><c8>f</c8></a><c25>(</c25><c2>&amp;</c2><c25>(</c25><c2>*</c2><a href="#195_4_refs"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#161"><c6>value</c6></a><c25>)</c25><c4>;</c4><a href="#195_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c13>&nbsp;</c13><a href="#195_4_refs"><c13>=</c13></a><c13>&nbsp;</c13><a href="../libextra/rc.rs.html#198"><c8>previous</c8></a><c4>;</c4><a href="#195_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#200"><c8>res</c8></a><a href="#195_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#195_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Fails&nbsp;if&nbsp;there&nbsp;is&nbsp;already&nbsp;a&nbsp;mutable&nbsp;or&nbsp;immutable&nbsp;borrow&nbsp;of&nbsp;the&nbsp;box
-</c32><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;with_mut_borrow</c26><c5>&lt;U&gt;</c5><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><a href="#208_37_refs"><c20>f</c20></a><c18>:&nbsp;</c18><c3>&amp;</c3><c26>fn</c26><c25>(</c25><c3>&amp;mut&nbsp;T</c3><c25>)</c25><c3>&nbsp;</c3><c4>-&gt;</c4><c3>&nbsp;U</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>U</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert_eq!</c13><c25>((</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c4>,</c4><c13>&nbsp;</c13><a href="../libextra/rc.rs.html#157"><c8>Nothing</c8></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#163"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c13>&nbsp;=&nbsp;</c13><a href="../libextra/rc.rs.html#155"><c8>Mutable</c8></a><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#212_16_refs"><c20>res</c20></a><c16>&nbsp;=&nbsp;</c16><a href="../libextra/rc.rs.html#208"><c8>f</c8></a><c25>(</c25><c2>&amp;mut&nbsp;</c2><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#161"><c6>value</c6></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c2>&nbsp;=&nbsp;</c2><a href="../libextra/rc.rs.html#157"><c8>Nothing</c8></a><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#212"><c8>res</c8></a><c22>
-</c22><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a><c33>#</c33><c4>[</c4><c33>unsafe_destructor</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;Drop&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;drop</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c10>.</c10><a href="../libextra/treemap.rs.html#593"><c10>is_not_null</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#162"><c6>count</c6></a><c13>&nbsp;-=&nbsp;</c13><c12>1</c12><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#162"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#162"><c6>count</c6></a><c2>&nbsp;==&nbsp;</c2><c12>0</c12><c7>&nbsp;</c7><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>_</c20><c16>:&nbsp;</c16><c3>~T</c3><c16>&nbsp;=&nbsp;</c16><c8>cast::transmute</c8><c25>(</c25><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;Clone&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Return&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;the&nbsp;reference&nbsp;counted&nbsp;pointer.
-</c32><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;clone</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#169"><c3>RcMut</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#169"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#162"><c6>count</c6></a><c0>&nbsp;+=&nbsp;</c0><c12>1</c12><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#169"><c23>RcMut</c23></a><c4>{</c4><c22>ptr:&nbsp;</c22><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><c30>impl</c30><c5>&lt;T:&nbsp;DeepClone&gt;</c5><c30>&nbsp;DeepClone&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Return&nbsp;a&nbsp;deep&nbsp;copy&nbsp;of&nbsp;the&nbsp;reference&nbsp;counted&nbsp;pointer.
-</c32><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
-</c17><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;deep_clone</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#169"><c3>RcMut</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#169"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10>&nbsp;</c10><a href="../libextra/rc.rs.html#195"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#195"><c0>with_borrow</c0></a><c0>&nbsp;|</c0><a href="#248_29_refs"><c20>x</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><a href="../libextra/rc.rs.html#195"><c22>
-</c22></a><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;FIXME:&nbsp;#6497:&nbsp;should&nbsp;avoid&nbsp;freeze&nbsp;(slow)
-</c24><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#175"><c8>RcMut</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#175"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#248"><c8>x</c8></a><c10>.</c10><c10>d</c10><c10>e</c10><c10>e</c10><c10>p</c10><c10>_</c10><c10>c</c10><c10>l</c10><c10>o</c10><c10>n</c10><c10>e</c10><c25>())</c25><c9>&nbsp;</c9><c4>}</c4><a href="../libextra/rc.rs.html#195"><c22>
-</c22></a><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><c21>mod</c21><c0>&nbsp;test_rc_mut&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_clone</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_send</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|value|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*value&nbsp;=&nbsp;20</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_borrow&nbsp;|value|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*value</c0><c4>,</c4><c0>&nbsp;20</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_deep_clone</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.deep_clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|value|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*value&nbsp;=&nbsp;20</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_borrow&nbsp;|value|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*value</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;borrow_many</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_send</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|a|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*a</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_borrow&nbsp;|b|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*b</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|c|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*c</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;modify</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_mut_borrow&nbsp;|a|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*a</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*a&nbsp;=&nbsp;6</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|a|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*a</c0><c4>,</c4><c0>&nbsp;6</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;release_immutable</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_send</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
-</c0><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
-</c0><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;release_mutable</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
-</c0><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
-</c0><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;329</ln><a id="329">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;330</ln><a id="330">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;frozen</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;331</ln><a id="331">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_send</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;332</ln><a id="332">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;333</ln><a id="333">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;334</ln><a id="334">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;335</ln><a id="335">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;336</ln><a id="336">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;337</ln><a id="337">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;338</ln><a id="338">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;339</ln><a id="339">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;340</ln><a id="340">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;341</ln><a id="341">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;342</ln><a id="342">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;mutable_dupe</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;343</ln><a id="343">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;344</ln><a id="344">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;345</ln><a id="345">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;346</ln><a id="346">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;347</ln><a id="347">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;348</ln><a id="348">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;349</ln><a id="349">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;350</ln><a id="350">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;351</ln><a id="351">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;352</ln><a id="352">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;353</ln><a id="353">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;354</ln><a id="354">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;mutable_freeze</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;355</ln><a id="355">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_send</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;356</ln><a id="356">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;357</ln><a id="357">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;358</ln><a id="358">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;359</ln><a id="359">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;360</ln><a id="360">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;361</ln><a id="361">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;362</ln><a id="362">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;363</ln><a id="363">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;364</ln><a id="364">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;365</ln><a id="365">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;366</ln><a id="366">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;restore_freeze</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;367</ln><a id="367">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;368</ln><a id="368">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;369</ln><a id="369">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;370</ln><a id="370">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;371</ln><a id="371">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
-</c0><br/><ln>&nbsp;372</ln><a id="372">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
-</c0><br/><ln>&nbsp;373</ln><a id="373">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;374</ln><a id="374">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;375</ln><a id="375">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="44_11_refs"><a href="#44"><c24>libextra/rc.rs:44:11-44:11&nbsp;-struct-&nbsp;definition:<br/></c24><pr>#[no_send]
-<br/>pub&nbsp;struct&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libextra/rc.rs.html#91"><c24>91:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#94"><c24>94:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rc{ptr:&nbsp;self.ptr}
-<br/></a><a href="../libextra/rc.rs.html#102"><c24>102:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;deep_clone(&amp;self)&nbsp;-&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#67"><c24>67:&nbsp;</c24>impl&lt;T&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#61"><c24>61:&nbsp;</c24>impl&lt;T:&nbsp;Freeze&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#62"><c24>62:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;from_freeze(value:&nbsp;T)&nbsp;-&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#99"><c24>99:&nbsp;</c24>impl&lt;T:&nbsp;DeepClone&gt;&nbsp;DeepClone&nbsp;for&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#75"><c24>75:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#51"><c24>51:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rc{ptr:&nbsp;owned_to_raw(~RcBox{value:&nbsp;value,&nbsp;count:&nbsp;1})}
-<br/></a><a href="../libextra/rc.rs.html#49"><c24>49:&nbsp;</c24>impl&lt;T&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;from_send(value:&nbsp;T)&nbsp;-&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;fn&nbsp;new(value:&nbsp;T)&nbsp;-&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#55"><c24>55:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#88"><c24>88:&nbsp;</c24>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;Rc&lt;T&gt;&nbsp;{
-<br/></a><br/><br/><a id="36_1_refs"><a href="#36"><c24>libextra/rc.rs:36:1-36:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
-<br/>struct&nbsp;RcBox&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libextra/rc.rs.html#46"><c24>46:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;ptr:&nbsp;*mut&nbsp;RcBox&lt;T&gt;,
-<br/></a><a href="../libextra/rc.rs.html#51"><c24>51:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rc{ptr:&nbsp;owned_to_raw(~RcBox{value:&nbsp;value,&nbsp;count:&nbsp;1})}
-<br/></a><br/><br/><a id="169_23_refs"><a href="#169"><c24>libextra/rc.rs:169:23-169:23&nbsp;-struct-&nbsp;definition:<br/></c24><pr>#[unsafe_no_drop_flag]
-<br/>pub&nbsp;struct&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libextra/rc.rs.html#239"><c24>239:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RcMut{ptr:&nbsp;self.ptr}
-<br/></a><a href="../libextra/rc.rs.html#175"><c24>175:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;fn&nbsp;new(value:&nbsp;T)&nbsp;-&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#176"><c24>176:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RcMut{ptr:&nbsp;owned_to_raw(~RcMutBox{value:&nbsp;value,&nbsp;count:&nbsp;1,&nbsp;borrow:&nbsp;Nothing})}
-<br/></a><a href="../libextra/rc.rs.html#180"><c24>180:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#192"><c24>192:&nbsp;</c24>impl&lt;T&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#186"><c24>186:&nbsp;</c24>impl&lt;T:&nbsp;Freeze&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#187"><c24>187:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;from_freeze(value:&nbsp;T)&nbsp;-&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#174"><c24>174:&nbsp;</c24>impl&lt;T&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#220"><c24>220:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#233"><c24>233:&nbsp;</c24>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#244"><c24>244:&nbsp;</c24>impl&lt;T:&nbsp;DeepClone&gt;&nbsp;DeepClone&nbsp;for&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#181"><c24>181:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;from_send(value:&nbsp;T)&nbsp;-&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#247"><c24>247:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;deep_clone(&amp;self)&nbsp;-&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><a href="../libextra/rc.rs.html#236"><c24>236:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
-<br/></a><br/><br/><a id="30_10_refs"><a href="#30"><c24>libextra/rc.rs:30:10-30:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
+</style><body style="background-color:#343838;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libextra/">libextra</a><c1>/</c1><c0><a href="./../libextra/rc.rs.html">rc.rs</a><br/><br/><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>missing_doc</c33><c25>)</c25><c4>];</c4><c33>
+</c33><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c24>/**&nbsp;Task-local&nbsp;reference&nbsp;counted&nbsp;smart&nbsp;pointers
+</c24><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c24>Task-local&nbsp;reference&nbsp;counted&nbsp;smart&nbsp;pointers&nbsp;are&nbsp;an&nbsp;alternative&nbsp;to&nbsp;managed&nbsp;boxes&nbsp;with&nbsp;deterministic
+</c24><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c24>destruction.&nbsp;They&nbsp;are&nbsp;restricted&nbsp;to&nbsp;containing&nbsp;types&nbsp;that&nbsp;are&nbsp;either&nbsp;`Send`&nbsp;or&nbsp;`Freeze`&nbsp;(or&nbsp;both)&nbsp;to
+</c24><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c24>prevent&nbsp;cycles.
+</c24><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c24>Neither&nbsp;`Rc&lt;T&gt;`&nbsp;or&nbsp;`RcMut&lt;T&gt;`&nbsp;is&nbsp;ever&nbsp;`Send`&nbsp;and&nbsp;`RcMut&lt;T&gt;`&nbsp;is&nbsp;never&nbsp;`Freeze`.&nbsp;If&nbsp;`T`&nbsp;is&nbsp;`Freeze`,&nbsp;a
+</c24><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c24>cycle&nbsp;cannot&nbsp;be&nbsp;created&nbsp;with&nbsp;`Rc&lt;T&gt;`&nbsp;because&nbsp;there&nbsp;is&nbsp;no&nbsp;way&nbsp;to&nbsp;modify&nbsp;it&nbsp;after&nbsp;creation.
+</c24><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c24>*/
+</c24><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::cast</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::ptr</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::unstable::intrinsics</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c24>//&nbsp;Convert&nbsp;~T&nbsp;into&nbsp;*mut&nbsp;T&nbsp;without&nbsp;dropping&nbsp;it
+</c24><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a id="n621">&nbsp;</a><c33>#</c33><c4>[</c4><c33>inline</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a id="n601"><a id="n620"><a id="n599"><a id="n605"><a id="n602"><a id="n606">&nbsp;</a></a></a></a></a></a><c21>unsafe</c21><c1>&nbsp;</c1><c26>fn&nbsp;owned_to_raw</c26><c5>&lt;T&gt;</c5><c25>(</c25><c1>mut&nbsp;</c1><c20>box</c20><c1>:&nbsp;</c1><c3>~T</c3><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>*mut&nbsp;T</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a id="n607"><a id="n608"><a id="n613"><a id="n609"><a id="n610"><a id="n611"><a id="n612">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>ptr</c20><c16>&nbsp;=&nbsp;</c16><c8>ptr::to_mut_unsafe_ptr</c8><c25>(</c25><a href="../libextra/rc.rs.html#31"><c8>box</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n614"><a id="n615"><a id="n616"><a id="n617">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/getopts.rs.html#98"><c8>intrinsics</c8></a><c8>::</c8><a href="../libextra/getopts.rs.html#98"><c8>forget</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#31"><c8>box</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a id="n618">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#32"><c8>ptr</c8></a><c22>
+</c22><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a id="n631">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c27>struct&nbsp;RcBox</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c4>{</c4><c23>
+</c23><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n625"><a id="n624">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>value:&nbsp;</c6><c3>T</c3><c4>,</c4><c23>
+</c23><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a id="n628"><a id="n627">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>count:&nbsp;</c6><c3>uint</c3><c23>
+</c23><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c32>///&nbsp;Immutable&nbsp;reference&nbsp;counted&nbsp;pointer&nbsp;type
+</c32><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>unsafe_no_drop_flag</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a id="n641">&nbsp;</a><c33>#</c33><c4>[</c4><c33>no_send</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;Rc</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c4>{</c4><c23>
+</c23><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n634"><a id="n638"><a id="n637"><a id="n636">&nbsp;</a></a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c21>priv</c21><c23>&nbsp;</c23><c6>ptr:&nbsp;</c6><c3>*mut&nbsp;</c3><a href="../libextra/rc.rs.html#36"><c3>RcBox</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#36"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><c23>
+</c23><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n667">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a id="n646"><a id="n644">&nbsp;</a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n649"><a id="n665"><a id="n654"><a id="n664"><a id="n647"><a id="n652">&nbsp;</a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>unsafe</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>(</c25><c20>value</c20><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#44"><c3>Rc</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#44"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n655"><a id="n661"><a id="n662"><a id="n658"><a id="n657"><a id="n656"><a id="n660">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#44"><c23>Rc</c23></a><c4>{</c4><c22>ptr:&nbsp;</c22><a href="../libextra/rc.rs.html#30"><c8>owned_to_raw</c8></a><c25>(</c25><c2>~</c2><a href="../libextra/rc.rs.html#36"><c23>RcBox</c23></a><c4>{</c4><c9>value:&nbsp;</c9><a href="../libextra/rc.rs.html#50"><c8>value</c8></a><c4>,</c4><c9>&nbsp;count:&nbsp;</c9><c12>1</c12><c4>}</c4><c25>)</c25><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a id="n692">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a id="n671"><a id="n673"><a id="n668">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;T:&nbsp;Send&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n679"><a id="n681"><a id="n690"><a id="n674"><a id="n689"><a id="n676">&nbsp;</a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;from_send</c26><c25>(</c25><c20>value</c20><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#44"><c3>Rc</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#44"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n686"><a id="n687"><a id="n682"><a id="n683"><a id="n684">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#50"><c8>Rc</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#50"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#56"><c8>value</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a id="n717">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a id="n693"><a id="n698"><a id="n696">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;T:&nbsp;Freeze&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a id="n706"><a id="n714"><a id="n701"><a id="n715"><a id="n699"><a id="n704">&nbsp;</a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;from_freeze</c26><c25>(</c25><c20>value</c20><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#44"><c3>Rc</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#44"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a id="n709"><a id="n711"><a id="n707"><a id="n712"><a id="n708">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#50"><c8>Rc</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#50"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#62"><c8>value</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a id="n746">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a id="n720"><a id="n722">&nbsp;</a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a id="n727"><a id="n728"><a id="n744"><a id="n743">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;borrow</c26><c5>&lt;'r&gt;</c5><c25>(</c25><c18>&amp;'r&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>&amp;'r&nbsp;T</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a id="n731"><a id="n730"><a id="n736"><a id="n740"><a id="n738"><a id="n735"><a id="n737"><a id="n732"><a id="n741"><a id="n729"><a id="n734">&nbsp;</a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libstd/cast.rs.html#n112510"><c8>cast</c8></a><c8>::</c8><a href="../libstd/cast.rs.html#n112510"><c8>copy_lifetime</c8></a><c25>(</c25><c0>self</c0><c4>,</c4><c9>&nbsp;</c9><c2>&amp;</c2><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#38"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#38"><c6>value</c6></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n801">&nbsp;</a><c33>#</c33><c4>[</c4><c33>unsafe_destructor</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n748"><a id="n753"><a id="n751">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;Drop&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a id="n799"><a id="n754"><a id="n798">&nbsp;</a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;drop</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a id="n796"><a id="n795">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a id="n756"><a id="n792"><a id="n758"><a id="n755"><a id="n793">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c10>.</c10><a href="../libstd/ptr.rs.html#n38122"><c10>is_not_null</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a id="n767"><a id="n759"><a id="n764"><a id="n762"><a id="n760"><a id="n763"><a id="n768"><a id="n765">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#39"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#39"><c6>count</c6></a><c0>&nbsp;-=&nbsp;</c0><c12>1</c12><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a id="n777"><a id="n770"><a id="n774"><a id="n772"><a id="n769"><a id="n775"><a id="n773"><a id="n789"><a id="n790">&nbsp;</a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#39"><c6>count</c6></a><c2>&nbsp;==&nbsp;</c2><c12>0</c12><c7>&nbsp;</c7><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a id="n781"><a id="n778"><a id="n785"><a id="n784"><a id="n786"><a id="n788"><a id="n783"><a id="n782"><a id="n787">&nbsp;</a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>_</c20><c16>:&nbsp;</c16><c3>~T</c3><c16>&nbsp;=&nbsp;</c16><a href="../libstd/cast.rs.html#n112382"><c8>cast</c8></a><c8>::</c8><a href="../libstd/cast.rs.html#n112382"><c8>transmute</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a id="n833">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a id="n806"><a id="n803"><a id="n808">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../libstd/clone.rs.html#n53767"><c30>Clone</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Return&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;the&nbsp;reference&nbsp;counted&nbsp;pointer.
+</c32><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n830"><a id="n831"><a id="n812"><a id="n810">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;clone</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#44"><c3>Rc</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#44"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n827"><a id="n828">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a id="n813"><a id="n814"><a id="n821"><a id="n817"><a id="n819"><a id="n816"><a id="n822"><a id="n818">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#39"><c6>count</c6></a><c0>&nbsp;+=&nbsp;</c0><c12>1</c12><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a id="n825"><a id="n824"><a id="n823">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#44"><c23>Rc</c23></a><c4>{</c4><c22>ptr:&nbsp;</c22><a href="../libextra/rc.rs.html#46"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#46"><c6>ptr</c6></a><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a id="n860">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n834"><a id="n841"><a id="n836"><a id="n839">&nbsp;</a></a></a></a><c30>impl</c30><c5>&lt;T:&nbsp;DeepClone&gt;</c5><c30>&nbsp;DeepClone&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#44"><c30>Rc</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#44"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Return&nbsp;a&nbsp;deep&nbsp;copy&nbsp;of&nbsp;the&nbsp;reference&nbsp;counted&nbsp;pointer.
+</c32><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n843"><a id="n857"><a id="n858"><a id="n845">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;deep_clone</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#44"><c3>Rc</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#44"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a id="n851"><a id="n855"><a id="n846"><a id="n849"><a id="n847"><a id="n854"><a id="n852">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#50"><c8>Rc</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#50"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#69"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#69"><c10>borrow</c10></a><c25>()</c25><c10>.</c10><a href="../libstd/clone.rs.html#n53917"><c10>deep_clone</c10></a><c25>())</c25><c9>&nbsp;</c9><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a>&nbsp;<c21>mod</c21><c0>&nbsp;test_rc&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;std::cell::Cell</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_clone</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Rc::from_send</c0><c25>(</c25><c0>Cell::new</c0><c25>(</c25><c0>5</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.borrow</c0><c25>()</c25><c0>.with_mut_ref&nbsp;|inner|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*inner&nbsp;=&nbsp;20</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>y.borrow</c0><c25>()</c25><c0>.take</c0><c25>()</c25><c4>,</c4><c0>&nbsp;20</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_deep_clone</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Rc::from_send</c0><c25>(</c25><c0>Cell::new</c0><c25>(</c25><c0>5</c0><c25>))</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.deep_clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.borrow</c0><c25>()</c25><c0>.with_mut_ref&nbsp;|inner|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*inner&nbsp;=&nbsp;20</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>y.borrow</c0><c25>()</c25><c0>.take</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_simple</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Rc::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*x.borrow</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_simple_clone</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Rc::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*x.borrow</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*y.borrow</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_destructor</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Rc::from_send</c0><c25>(</c25><c0>~5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>**x.borrow</c0><c25>()</c25><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><a id="n112385"><a id="n112381"><a id="n112420"><a id="n112409"><a id="n112375"><a id="n112371"><a id="n112440"><a id="n112384"><a id="n112411"><a id="n112365"><a id="n112443"><a id="n112397"><a id="n112434"><a id="n112404"><a id="n112418"><a id="n112396"><a id="n112359"><a id="n112372"><a id="n112436"><a id="n112414"><a id="n112398"><a id="n112427"><a id="n112415"><a id="n112367"><a id="n112408"><a id="n112439"><a id="n112449"><a id="n112422"><a id="n112429"><a id="n112416"><a id="n112370"><a id="n112369"><a id="n112419"><a id="n112432"><a id="n112353"><a id="n112388"><a id="n112428"><a id="n112445"><a id="n112380"><a id="n112383"><a id="n112410"><a id="n112406"><a id="n112391"><a id="n112363"><a id="n112393"><a id="n112355"><a id="n112382"><a id="n112421"><a id="n112437"><a id="n112362"><a id="n112374"><a id="n112390"><a id="n112357"><a id="n112425"><a id="n112431"><a id="n112450"><a id="n112389"><a id="n112387"><a id="n112364"><a id="n988"><a id="n112379"><a id="n112417"><a id="n112438"><a id="n112373"><a id="n112426"><a id="n112361"><a id="n112424"><a id="n112358"><a id="n112447"><a id="n112405"><a id="n112402"><a id="n112368"><a id="n112377"><a id="n112378"><a id="n112430"><a id="n112400"><a id="n112392"><a id="n112435"><a id="n112412"><a id="n112444">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a><c33>#</c33><c4>[</c4><c33>deriving</c33><c25>(</c25><a href="../libextra/rc.rs.html#156"><c33>Eq</c33></a><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a>&nbsp;<c29>enum&nbsp;Borrow&nbsp;</c29><c4>{</c4><c11>
+</c11><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><a id="n985">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c0>Mutable</c0><c4>,</c4><c11>
+</c11><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><a id="n986">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c0>Immutable</c0><c4>,</c4><c11>
+</c11><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><a id="n987">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c0>Nothing</c0><c11>
+</c11><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><a id="n1001">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a>&nbsp;<c27>struct&nbsp;RcMutBox</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c4>{</c4><c23>
+</c23><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><a id="n991"><a id="n992">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>value:&nbsp;</c6><c3>T</c3><c4>,</c4><c23>
+</c23><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><a id="n995"><a id="n994">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>count:&nbsp;</c6><c3>uint</c3><c4>,</c4><c23>
+</c23><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><a id="n998"><a id="n997">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>borrow:&nbsp;</c6><a href="../libextra/rc.rs.html#153"><c3>Borrow</c3></a><c23>
+</c23><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a>&nbsp;<c32>///&nbsp;Mutable&nbsp;reference&nbsp;counted&nbsp;pointer&nbsp;type
+</c32><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>no_send</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>no_freeze</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><a id="n1011">&nbsp;</a><c33>#</c33><c4>[</c4><c33>unsafe_no_drop_flag</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;RcMut</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c4>{</c4><c23>
+</c23><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><a id="n1006"><a id="n1008"><a id="n1007"><a id="n1004">&nbsp;</a></a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c21>priv</c21><c23>&nbsp;</c23><c6>ptr:&nbsp;</c6><c3>*mut&nbsp;</c3><a href="../libextra/rc.rs.html#159"><c3>RcMutBox</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#159"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><c23>
+</c23><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><a id="n1038">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><a id="n1014"><a id="n1016">&nbsp;</a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><a id="n1017"><a id="n1036"><a id="n1024"><a id="n1019"><a id="n1035"><a id="n1022">&nbsp;</a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>unsafe</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>(</c25><c20>value</c20><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#169"><c3>RcMut</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#169"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><a id="n1028"><a id="n1031"><a id="n1032"><a id="n1025"><a id="n1029"><a id="n1033"><a id="n1027"><a id="n1026">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#169"><c23>RcMut</c23></a><c4>{</c4><c22>ptr:&nbsp;</c22><a href="../libextra/rc.rs.html#30"><c8>owned_to_raw</c8></a><c25>(</c25><c2>~</c2><a href="../libextra/rc.rs.html#159"><c23>RcMutBox</c23></a><c4>{</c4><c9>value:&nbsp;</c9><a href="../libextra/rc.rs.html#175"><c8>value</c8></a><c4>,</c4><c9>&nbsp;count:&nbsp;</c9><c12>1</c12><c4>,</c4><c9>&nbsp;borrow:&nbsp;</c9><a href="../libextra/rc.rs.html#157"><c8>Nothing</c8></a><c4>}</c4><c25>)</c25><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><a id="n1063">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><a id="n1039"><a id="n1042"><a id="n1044">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;T:&nbsp;Send&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><a id="n1060"><a id="n1045"><a id="n1061"><a id="n1050"><a id="n1047"><a id="n1052">&nbsp;</a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;from_send</c26><c25>(</c25><c20>value</c20><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#169"><c3>RcMut</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#169"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><a id="n1055"><a id="n1058"><a id="n1054"><a id="n1053"><a id="n1057">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#175"><c8>RcMut</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#175"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#181"><c8>value</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><a id="n1088">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><a id="n1067"><a id="n1064"><a id="n1069">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;T:&nbsp;Freeze&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><a id="n1085"><a id="n1077"><a id="n1086"><a id="n1072"><a id="n1075"><a id="n1070">&nbsp;</a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;from_freeze</c26><c25>(</c25><c20>value</c20><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#169"><c3>RcMut</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#169"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><a id="n1080"><a id="n1083"><a id="n1079"><a id="n1078"><a id="n1082">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#175"><c8>RcMut</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#175"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#187"><c8>value</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><a id="n1208">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><a id="n1091"><a id="n1093">&nbsp;</a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Fails&nbsp;if&nbsp;there&nbsp;is&nbsp;already&nbsp;a&nbsp;mutable&nbsp;borrow&nbsp;of&nbsp;the&nbsp;box
+</c32><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><a id="n1103"><a id="n1154"><a id="n1153"><a id="n1098"><a id="n1106"><a id="n1095"><a id="n1102"><a id="n1099">&nbsp;</a></a></a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;with_borrow</c26><c5>&lt;U&gt;</c5><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>f</c20><c18>:&nbsp;</c18><c3>&amp;</c3><c26>fn</c26><c25>(</c25><c3>&amp;T</c3><c25>)</c25><c3>&nbsp;</c3><c4>-&gt;</c4><c3>&nbsp;U</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>U</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><a id="n1150"><a id="n1151">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><a id="n112240"><a id="n112241"><a id="n112237"><a id="n112258"><a id="n112242"><a id="n112236"><a id="n112244"><a id="n112239">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert!</c13><c25>((</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c2>&nbsp;!=&nbsp;</c2><a href="../libextra/rc.rs.html#155"><c8>Mutable</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><a id="n1109"><a id="n1113"><a id="n1114"><a id="n1115"><a id="n1112"><a id="n1110"><a id="n1108"><a id="n1107"><a id="n1116">&nbsp;</a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>previous</c20><c16>&nbsp;=&nbsp;</c16><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#163"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><a id="n1120"><a id="n1125"><a id="n1123"><a id="n1117"><a id="n1121"><a id="n1124"><a id="n1122"><a id="n1118">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#163"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c13>&nbsp;=&nbsp;</c13><a href="../libextra/rc.rs.html#156"><c8>Immutable</c8></a><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><a id="n1133"><a id="n1130"><a id="n1136"><a id="n1132"><a id="n1126"><a id="n1129"><a id="n1137"><a id="n1134"><a id="n1135"><a id="n1138"><a id="n1128"><a id="n1127">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>res</c20><c16>&nbsp;=&nbsp;</c16><a href="../libextra/rc.rs.html#195"><c8>f</c8></a><c25>(</c25><c2>&amp;</c2><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#161"><c6>value</c6></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><a id="n1147"><a id="n1139"><a id="n1140"><a id="n1144"><a id="n1146"><a id="n1143"><a id="n1145"><a id="n1142">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c13>&nbsp;=&nbsp;</c13><a href="../libextra/rc.rs.html#198"><c8>previous</c8></a><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><a id="n1148">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#200"><c8>res</c8></a><c22>
+</c22><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a>&nbsp;<c17>
+</c17><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Fails&nbsp;if&nbsp;there&nbsp;is&nbsp;already&nbsp;a&nbsp;mutable&nbsp;or&nbsp;immutable&nbsp;borrow&nbsp;of&nbsp;the&nbsp;box
+</c32><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><a id="n1160"><a id="n1206"><a id="n1205"><a id="n1165"><a id="n1157"><a id="n1164"><a id="n1161"><a id="n1168">&nbsp;</a></a></a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;with_mut_borrow</c26><c5>&lt;U&gt;</c5><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>f</c20><c18>:&nbsp;</c18><c3>&amp;</c3><c26>fn</c26><c25>(</c25><c3>&amp;mut&nbsp;T</c3><c25>)</c25><c3>&nbsp;</c3><c4>-&gt;</c4><c3>&nbsp;U</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>U</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><a id="n1202"><a id="n1203">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><a id="n112297"><a id="n112268"><a id="n112265"><a id="n112267"><a id="n112262"><a id="n112266"><a id="n112263">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert_eq!</c13><c25>((</c25><c2>*</c2><a href="../libextra/rc.rs.html#163"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c4>,</c4><c13>&nbsp;</c13><a href="../libextra/rc.rs.html#157"><c8>Nothing</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><a id="n1177"><a id="n1176"><a id="n1175"><a id="n1169"><a id="n1173"><a id="n1174"><a id="n1170"><a id="n1172">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#163"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c13>&nbsp;=&nbsp;</c13><a href="../libextra/rc.rs.html#155"><c8>Mutable</c8></a><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><a id="n1189"><a id="n1186"><a id="n1182"><a id="n1190"><a id="n1179"><a id="n1184"><a id="n1178"><a id="n1181"><a id="n1185"><a id="n1187"><a id="n1180"><a id="n1188">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>res</c20><c16>&nbsp;=&nbsp;</c16><a href="../libextra/rc.rs.html#208"><c8>f</c8></a><c25>(</c25><c2>&amp;mut&nbsp;</c2><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#161"><c6>value</c6></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><a id="n1197"><a id="n1198"><a id="n1192"><a id="n1196"><a id="n1199"><a id="n1191"><a id="n1194"><a id="n1195">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#163"><c6>borrow</c6></a><c2>&nbsp;=&nbsp;</c2><a href="../libextra/rc.rs.html#157"><c8>Nothing</c8></a><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><a id="n1200">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#212"><c8>res</c8></a><c22>
+</c22><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a><a id="n1263">&nbsp;</a><c33>#</c33><c4>[</c4><c33>unsafe_destructor</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><a id="n1215"><a id="n1213"><a id="n1210">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;Drop&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><a id="n1216"><a id="n1261"><a id="n1260">&nbsp;</a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;drop</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><a id="n1257"><a id="n1258">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><a id="n1218"><a id="n1254"><a id="n1220"><a id="n1217"><a id="n1255">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c10>.</c10><a href="../libstd/ptr.rs.html#n38122"><c10>is_not_null</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><a id="n1230"><a id="n1227"><a id="n1222"><a id="n1224"><a id="n1226"><a id="n1225"><a id="n1229"><a id="n1221">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#162"><c6>count</c6></a><c13>&nbsp;-=&nbsp;</c13><c12>1</c12><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><a id="n1236"><a id="n1252"><a id="n1239"><a id="n1234"><a id="n1232"><a id="n1231"><a id="n1237"><a id="n1235"><a id="n1251">&nbsp;</a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#162"><c6>count</c6></a><c2>&nbsp;==&nbsp;</c2><c12>0</c12><c7>&nbsp;</c7><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><a id="n1244"><a id="n1250"><a id="n1243"><a id="n1246"><a id="n1249"><a id="n1245"><a id="n1240"><a id="n1247"><a id="n1248">&nbsp;</a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>_</c20><c16>:&nbsp;</c16><c3>~T</c3><c16>&nbsp;=&nbsp;</c16><a href="../libstd/cast.rs.html#n112382"><c8>cast</c8></a><c8>::</c8><a href="../libstd/cast.rs.html#n112382"><c8>transmute</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><a id="n1295">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><a id="n1265"><a id="n1268"><a id="n1270">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../libstd/clone.rs.html#n53767"><c30>Clone</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Return&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;the&nbsp;reference&nbsp;counted&nbsp;pointer.
+</c32><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><a id="n1293"><a id="n1274"><a id="n1272"><a id="n1292">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;clone</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#169"><c3>RcMut</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#169"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><a id="n1290"><a id="n1289">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><a id="n1276"><a id="n1275"><a id="n1281"><a id="n1280"><a id="n1279"><a id="n1283"><a id="n1278"><a id="n1284">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c25>(</c25><c2>*</c2><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c25>)</c25><c0>.</c0><a href="../libextra/rc.rs.html#162"><c6>count</c6></a><c0>&nbsp;+=&nbsp;</c0><c12>1</c12><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><a id="n1285"><a id="n1286"><a id="n1287">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../libextra/rc.rs.html#169"><c23>RcMut</c23></a><c4>{</c4><c22>ptr:&nbsp;</c22><a href="../libextra/rc.rs.html#171"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#171"><c6>ptr</c6></a><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><a id="n1334">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><a id="n1303"><a id="n1301"><a id="n1298"><a id="n1296">&nbsp;</a></a></a></a><c30>impl</c30><c5>&lt;T:&nbsp;DeepClone&gt;</c5><c30>&nbsp;DeepClone&nbsp;for&nbsp;</c30><a href="../libextra/rc.rs.html#169"><c30>RcMut</c30></a><c5>&lt;</c5><a href="../libextra/rc.rs.html#169"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c32>///&nbsp;Return&nbsp;a&nbsp;deep&nbsp;copy&nbsp;of&nbsp;the&nbsp;reference&nbsp;counted&nbsp;pointer.
+</c32><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a>&nbsp;<c17>&nbsp;&nbsp;&nbsp;&nbsp;#</c17><c4>[</c4><c17>inline</c17><c4>]</c4><c17>
+</c17><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><a id="n1332"><a id="n1331"><a id="n1307"><a id="n1305">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;deep_clone</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libextra/rc.rs.html#169"><c3>RcMut</c3></a><c3>&lt;</c3><a href="../libextra/rc.rs.html#169"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><a id="n1313"><a id="n1323"><a id="n1324"><a id="n1325"><a id="n1326"><a id="n1308"><a id="n1327"><a id="n1329"><a id="n1311"><a id="n1310">&nbsp;</a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10>&nbsp;</c10><a href="../libextra/rc.rs.html#195"><c0>self</c0></a><c0>.</c0><a href="../libextra/rc.rs.html#195"><c0>with_borrow</c0></a><c0>&nbsp;|</c0><a href="../libextra/rc.rs.html#195"><c20>x</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><a href="../libextra/rc.rs.html#195"><c22>
+</c22></a><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;FIXME:&nbsp;#6497:&nbsp;should&nbsp;avoid&nbsp;freeze&nbsp;(slow)
+</c24><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><a id="n1321"><a id="n1314"><a id="n1317"><a id="n1318"><a id="n1315"><a id="n1320">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../libextra/rc.rs.html#175"><c8>RcMut</c8></a><c8>::</c8><a href="../libextra/rc.rs.html#175"><c8>new</c8></a><c25>(</c25><a href="../libextra/rc.rs.html#248"><c8>x</c8></a><c10>.</c10><a href="../libstd/clone.rs.html#n53917"><c10>deep_clone</c10></a><c25>())</c25><c9>&nbsp;</c9><c4>}</c4><a href="../libextra/rc.rs.html#195"><c22>
+</c22></a><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a>&nbsp;<c21>mod</c21><c0>&nbsp;test_rc_mut&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_clone</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_send</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|value|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*value&nbsp;=&nbsp;20</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_borrow&nbsp;|value|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*value</c0><c4>,</c4><c0>&nbsp;20</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;test_deep_clone</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.deep_clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|value|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*value&nbsp;=&nbsp;20</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_borrow&nbsp;|value|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*value</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;borrow_many</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_send</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|a|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*a</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_borrow&nbsp;|b|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*b</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|c|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*c</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;modify</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_mut_borrow&nbsp;|a|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*a</c0><c4>,</c4><c0>&nbsp;5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*a&nbsp;=&nbsp;6</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|a|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>*a</c0><c4>,</c4><c0>&nbsp;6</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;release_immutable</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_send</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
+</c0><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
+</c0><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;release_mutable</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
+</c0><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
+</c0><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;329</ln><a id="329">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;330</ln><a id="330">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;frozen</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;331</ln><a id="331">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_send</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;332</ln><a id="332">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;333</ln><a id="333">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;334</ln><a id="334">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;335</ln><a id="335">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;336</ln><a id="336">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;337</ln><a id="337">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;338</ln><a id="338">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;339</ln><a id="339">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;340</ln><a id="340">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;341</ln><a id="341">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;342</ln><a id="342">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;mutable_dupe</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;343</ln><a id="343">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;344</ln><a id="344">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;345</ln><a id="345">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;346</ln><a id="346">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;347</ln><a id="347">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;348</ln><a id="348">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;349</ln><a id="349">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;350</ln><a id="350">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;351</ln><a id="351">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;352</ln><a id="352">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;353</ln><a id="353">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;354</ln><a id="354">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;mutable_freeze</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;355</ln><a id="355">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_send</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;356</ln><a id="356">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;357</ln><a id="357">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;358</ln><a id="358">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;359</ln><a id="359">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;360</ln><a id="360">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;361</ln><a id="361">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;362</ln><a id="362">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;363</ln><a id="363">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;364</ln><a id="364">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;365</ln><a id="365">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>should_fail</c0><c4>]</c4><c0>
+</c0><br/><ln>&nbsp;366</ln><a id="366">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;restore_freeze</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;367</ln><a id="367">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;RcMut::from_freeze</c0><c25>(</c25><c0>5</c0><c25>)</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;368</ln><a id="368">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c25>()</c25><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;369</ln><a id="369">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;370</ln><a id="370">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|_|&nbsp;</c0><c4>{</c4><c0>
+</c0><br/><ln>&nbsp;371</ln><a id="371">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;x.with_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
+</c0><br/><ln>&nbsp;372</ln><a id="372">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;y.with_mut_borrow&nbsp;|_|&nbsp;</c0><c4>{}</c4><c0>
+</c0><br/><ln>&nbsp;373</ln><a id="373">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;374</ln><a id="374">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;375</ln><a id="375">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><div/><br/><a id="30_10_refs"><a href="#30"><c24>libextra/rc.rs:30:10-30:10&nbsp;-fn-&nbsp;definition:<br/></c24><pr>#[inline]
 <br/>unsafe&nbsp;fn&nbsp;owned_to_raw&lt;T&gt;(mut&nbsp;box:&nbsp;~T)&nbsp;-&gt;&nbsp;*mut&nbsp;T&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../libextra/rc.rs.html#176"><c24>176:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RcMut{ptr:&nbsp;owned_to_raw(~RcMutBox{value:&nbsp;value,&nbsp;count:&nbsp;1,&nbsp;borrow:&nbsp;Nothing})}
 <br/></a><a href="../libextra/rc.rs.html#51"><c24>51:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rc{ptr:&nbsp;owned_to_raw(~RcBox{value:&nbsp;value,&nbsp;count:&nbsp;1})}
+<br/></a><br/><br/><a id="169_23_refs"><a href="#169"><c24>libextra/rc.rs:169:23-169:23&nbsp;-struct-&nbsp;definition:<br/></c24><pr>#[unsafe_no_drop_flag]
+<br/>pub&nbsp;struct&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libextra/rc.rs.html#236"><c24>236:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#187"><c24>187:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;from_freeze(value:&nbsp;T)&nbsp;-&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#181"><c24>181:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;from_send(value:&nbsp;T)&nbsp;-&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#233"><c24>233:&nbsp;</c24>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#176"><c24>176:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RcMut{ptr:&nbsp;owned_to_raw(~RcMutBox{value:&nbsp;value,&nbsp;count:&nbsp;1,&nbsp;borrow:&nbsp;Nothing})}
+<br/></a><a href="../libextra/rc.rs.html#239"><c24>239:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RcMut{ptr:&nbsp;self.ptr}
+<br/></a><a href="../libextra/rc.rs.html#180"><c24>180:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#244"><c24>244:&nbsp;</c24>impl&lt;T:&nbsp;DeepClone&gt;&nbsp;DeepClone&nbsp;for&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#186"><c24>186:&nbsp;</c24>impl&lt;T:&nbsp;Freeze&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#175"><c24>175:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;fn&nbsp;new(value:&nbsp;T)&nbsp;-&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#247"><c24>247:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;deep_clone(&amp;self)&nbsp;-&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#220"><c24>220:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#174"><c24>174:&nbsp;</c24>impl&lt;T&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#192"><c24>192:&nbsp;</c24>impl&lt;T&gt;&nbsp;RcMut&lt;T&gt;&nbsp;{
 <br/></a><br/><br/><a id="153_16_refs"><a href="#153"><c24>libextra/rc.rs:153:16-153:16&nbsp;-enum-&nbsp;definition:<br/></c24><pr>#[deriving(Eq)]
 <br/>enum&nbsp;Borrow&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../libextra/rc.rs.html#153"><c24>153:&nbsp;</c24>#[deriving(Eq)]
 <br/></a><a href="../libextra/rc.rs.html#163"><c24>163:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;borrow:&nbsp;Borrow
 <br/></a><a href="../libextra/rc.rs.html#153"><c24>153:&nbsp;</c24>#[deriving(Eq)]
 <br/></a><a href="../libextra/rc.rs.html#153"><c24>153:&nbsp;</c24>#[deriving(Eq)]
+<br/></a><br/><br/><a id="44_11_refs"><a href="#44"><c24>libextra/rc.rs:44:11-44:11&nbsp;-struct-&nbsp;definition:<br/></c24><pr>#[no_send]
+<br/>pub&nbsp;struct&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libextra/rc.rs.html#88"><c24>88:&nbsp;</c24>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#91"><c24>91:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#49"><c24>49:&nbsp;</c24>impl&lt;T&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#102"><c24>102:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;deep_clone(&amp;self)&nbsp;-&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#99"><c24>99:&nbsp;</c24>impl&lt;T:&nbsp;DeepClone&gt;&nbsp;DeepClone&nbsp;for&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#51"><c24>51:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rc{ptr:&nbsp;owned_to_raw(~RcBox{value:&nbsp;value,&nbsp;count:&nbsp;1})}
+<br/></a><a href="../libextra/rc.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;fn&nbsp;new(value:&nbsp;T)&nbsp;-&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#55"><c24>55:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;from_send(value:&nbsp;T)&nbsp;-&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#94"><c24>94:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rc{ptr:&nbsp;self.ptr}
+<br/></a><a href="../libextra/rc.rs.html#67"><c24>67:&nbsp;</c24>impl&lt;T&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#61"><c24>61:&nbsp;</c24>impl&lt;T:&nbsp;Freeze&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#75"><c24>75:&nbsp;</c24>impl&lt;T&gt;&nbsp;Drop&nbsp;for&nbsp;Rc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libextra/rc.rs.html#62"><c24>62:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;from_freeze(value:&nbsp;T)&nbsp;-&gt;&nbsp;Rc&lt;T&gt;&nbsp;{
 <br/></a><br/><br/><a id="159_1_refs"><a href="#159"><c24>libextra/rc.rs:159:1-159:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
 <br/>struct&nbsp;RcMutBox&lt;T&gt;&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../libextra/rc.rs.html#171"><c24>171:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;ptr:&nbsp;*mut&nbsp;RcMutBox&lt;T&gt;,
 <br/></a><a href="../libextra/rc.rs.html#176"><c24>176:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RcMut{ptr:&nbsp;owned_to_raw(~RcMutBox{value:&nbsp;value,&nbsp;count:&nbsp;1,&nbsp;borrow:&nbsp;Nothing})}
+<br/></a><br/><br/><a id="36_1_refs"><a href="#36"><c24>libextra/rc.rs:36:1-36:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>struct&nbsp;RcBox&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libextra/rc.rs.html#46"><c24>46:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;ptr:&nbsp;*mut&nbsp;RcBox&lt;T&gt;,
+<br/></a><a href="../libextra/rc.rs.html#51"><c24>51:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rc{ptr:&nbsp;owned_to_raw(~RcBox{value:&nbsp;value,&nbsp;count:&nbsp;1})}
 <br/></a><br/></c0></c0>

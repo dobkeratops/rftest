@@ -1154,12 +1154,20 @@ impl Parser {
         };
 
         let t = self.parse_ty(false);
+        // TODO: DefaultArg
+        let default_arg:ast::DefaultArg= if self.eat(&token::EQ) {
+        	self.warn("default arguments not implemented");
+        	Some(self.parse_expr())
+        } else {
+        	None
+        };
 
         ast::arg {
             is_mutbl: is_mutbl,
             ty: t,
             pat: pat,
             id: self.get_id(),
+            default: default_arg
         }
     }
 
@@ -1186,7 +1194,8 @@ impl Parser {
             is_mutbl: is_mutbl,
             ty: t,
             pat: pat,
-            id: self.get_id()
+            id: self.get_id(),
+            default: None	// lambda would never have default arg.
         })
     }
 
@@ -4310,7 +4319,7 @@ impl Parser {
                     seq_sep_trailing_disallowed(token::COMMA),
                     |p| p.parse_ty(false)
                 );
-                for ty in arg_tys.consume_iter() {
+                for ty in arg_tys.move_iter() {
                     args.push(ast::variant_arg {
                         ty: ty,
                         id: self.get_id(),

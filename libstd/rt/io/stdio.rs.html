@@ -37,73 +37,73 @@ c20{color:#0f0ff}
 c21{color:#d0d0d0; font-weight:bold}
 c22{color:#c0ffd0; }
 c23{color:#d0f0ff; }
-</style><body style="background-color:#36363a;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../../libstd/rt/io/">io</a><c1>/</c1><c0><a href="./../../../libstd/rt/io/stdio.rs.html">stdio.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c21>use</c21><c0>&nbsp;super::</c0><c4>{</c4><c0>Reader</c0><c4>,</c4><c0>&nbsp;Writer</c0><c4>};</c4><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;stdin</c26><c25>()</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../../libstd/rt/io/stdio.rs.html#29"><c3>StdReader</c3></a><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;stdout</c26><c25>()</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../../libstd/rt/io/stdio.rs.html#41"><c3>StdWriter</c3></a><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;stderr</c26><c25>()</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../../libstd/rt/io/stdio.rs.html#29"><c3>StdReader</c3></a><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;print</c26><c25>(</c25><c20>_s</c20><c1>:&nbsp;</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;println</c26><c25>(</c25><c20>_s</c20><c1>:&nbsp;</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c21>pub</c21><c11>&nbsp;</c11><c29>enum&nbsp;</c29><a href="#23_1_refs"><c29>StdStream</c29></a><c29>&nbsp;</c29><c4>{</c4><a href="#23_1_refs"><c11>
-</c11></a><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#23_1_refs"><c0>StdIn</c0></a><c4>,</c4><a href="#23_1_refs"><c11>
-</c11></a><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#23_1_refs"><c0>StdOut</c0></a><c4>,</c4><a href="#23_1_refs"><c11>
-</c11></a><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><a href="#23_1_refs"><c0>StdErr</c0><c11>
-</c11></a><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#29_1_refs"><c27>StdReader</c27></a><c27>;
-</c27><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/stdio.rs.html#29"><c30>StdReader</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>(</c25><c20>_stream</c20><c18>:&nbsp;</c18><a href="../../../libstd/rt/io/stdio.rs.html#23"><c3>StdStream</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/rt/io/stdio.rs.html#29"><c3>StdReader</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#398"><c30>Reader</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/stdio.rs.html#29"><c30>StdReader</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../libstd/option.rs.html#55"><c3>uint</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eof</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;</c27><a href="#41_1_refs"><c27>StdWriter</c27></a><c27>;
-</c27><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/stdio.rs.html#41"><c30>StdWriter</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>(</c25><c20>_stream</c20><c18>:&nbsp;</c18><a href="../../../libstd/rt/io/stdio.rs.html#23"><c3>StdStream</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/rt/io/stdio.rs.html#41"><c3>StdWriter</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#438"><c30>Writer</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/stdio.rs.html#41"><c30>StdWriter</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><c17>
-</c17><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="23_1_refs"><a href="#23"><c24>libstd/rt/io/stdio.rs:23:1-23:1&nbsp;-enum-&nbsp;definition:<br/></c24><pr>
+</style><body style="background-color:#36363a;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../../libstd/rt/io/">io</a><c1>/</c1><c0><a href="./../../../libstd/rt/io/stdio.rs.html">stdio.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;super::</c0><c4>{</c4><c0>Reader</c0><c4>,</c4><c0>&nbsp;Writer</c0><c4>};</c4><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><a id="n163742">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n163739"><a id="n163741"><a id="n163740">&nbsp;</a></a></a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;stdin</c26><c25>()</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../../libstd/rt/io/stdio.rs.html#29"><c3>StdReader</c3></a><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n163747">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n163746"><a id="n163744"><a id="n163745">&nbsp;</a></a></a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;stdout</c26><c25>()</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../../libstd/rt/io/stdio.rs.html#41"><c3>StdWriter</c3></a><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n163752">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n163751"><a id="n163749"><a id="n163750">&nbsp;</a></a></a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;stderr</c26><c25>()</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><a href="../../../libstd/rt/io/stdio.rs.html#29"><c3>StdReader</c3></a><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n163761">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n163758"><a id="n163760"><a id="n163753"><a id="n163755"><a id="n163756"><a id="n163759">&nbsp;</a></a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;print</c26><c25>(</c25><c20>_s</c20><c1>:&nbsp;</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n163770">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n163764"><a id="n163769"><a id="n163767"><a id="n163768"><a id="n163762"><a id="n163765">&nbsp;</a></a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;println</c26><c25>(</c25><c20>_s</c20><c1>:&nbsp;</c1><c3>&amp;str</c3><c25>)</c25><c1>&nbsp;</c1><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n163774">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c21>pub</c21><c11>&nbsp;</c11><c29>enum&nbsp;StdStream&nbsp;</c29><c4>{</c4><c11>
+</c11><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n163771">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c0>StdIn</c0><c4>,</c4><c11>
+</c11><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n163772">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c0>StdOut</c0><c4>,</c4><c11>
+</c11><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n163773">&nbsp;</a><c11>&nbsp;&nbsp;&nbsp;&nbsp;</c11><c0>StdErr</c0><c11>
+</c11><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n163777">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;StdReader;
+</c27><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n163790">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n163779">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/stdio.rs.html#29"><c30>StdReader</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n163786"><a id="n163782"><a id="n163785"><a id="n163780"><a id="n163787"><a id="n163788">&nbsp;</a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>(</c25><c20>_stream</c20><c18>:&nbsp;</c18><a href="../../../libstd/rt/io/stdio.rs.html#23"><c3>StdStream</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/rt/io/stdio.rs.html#29"><c3>StdReader</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n163815">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n163791"><a id="n163794">&nbsp;</a></a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#398"><c30>Reader</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/stdio.rs.html#29"><c30>StdReader</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n163807"><a id="n163799"><a id="n163805"><a id="n163802"><a id="n163795"><a id="n163804"><a id="n163797"><a id="n163806"><a id="n163798">&nbsp;</a></a></a></a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;read</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../../libstd/option.rs.html#55"><c3>uint</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c17>
+</c17><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n163812"><a id="n163810"><a id="n163811"><a id="n163813">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;eof</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>bool</c3><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n163818">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;StdWriter;
+</c27><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n163831">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n163820">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/stdio.rs.html#41"><c30>StdWriter</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n163827"><a id="n163823"><a id="n163821"><a id="n163829"><a id="n163828"><a id="n163826">&nbsp;</a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>(</c25><c20>_stream</c20><c18>:&nbsp;</c18><a href="../../../libstd/rt/io/stdio.rs.html#23"><c3>StdStream</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../../libstd/rt/io/stdio.rs.html#41"><c3>StdWriter</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n163852">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n163835"><a id="n163832">&nbsp;</a></a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/mod.rs.html#438"><c30>Writer</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/rt/io/stdio.rs.html#41"><c30>StdWriter</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
+</c17><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a id="n163843"><a id="n163836"><a id="n163839"><a id="n163845"><a id="n163844"><a id="n163840"><a id="n163838"><a id="n163842">&nbsp;</a></a></a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;write</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>_buf</c20><c18>:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c17>
+</c17><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><a id="n163849"><a id="n163848"><a id="n163847"><a id="n163850">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;flush</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>&nbsp;</c22><c9>fail!</c9><c25>()</c25><c9>&nbsp;</c9><c4>}</c4><c17>
+</c17><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><div/><br/><a id="29_1_refs"><a href="#29"><c24>libstd/rt/io/stdio.rs:29:1-29:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;struct&nbsp;StdReader;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/stdio.rs.html#18"><c24>18:&nbsp;</c24>pub&nbsp;fn&nbsp;stderr()&nbsp;-&gt;&nbsp;StdReader&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#32"><c24>32:&nbsp;</c24>impl&nbsp;StdReader&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#14"><c24>14:&nbsp;</c24>pub&nbsp;fn&nbsp;stdin()&nbsp;-&gt;&nbsp;StdReader&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#33"><c24>33:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_stream:&nbsp;StdStream)&nbsp;-&gt;&nbsp;StdReader&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#36"><c24>36:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;StdReader&nbsp;{
+<br/></a><br/><br/><a id="41_1_refs"><a href="#41"><c24>libstd/rt/io/stdio.rs:41:1-41:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<br/>pub&nbsp;struct&nbsp;StdWriter;
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/stdio.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_stream:&nbsp;StdStream)&nbsp;-&gt;&nbsp;StdWriter&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#48"><c24>48:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;StdWriter&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#44"><c24>44:&nbsp;</c24>impl&nbsp;StdWriter&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#16"><c24>16:&nbsp;</c24>pub&nbsp;fn&nbsp;stdout()&nbsp;-&gt;&nbsp;StdWriter&nbsp;{&nbsp;fail!()&nbsp;}
+<br/></a><br/><br/><a id="23_1_refs"><a href="#23"><c24>libstd/rt/io/stdio.rs:23:1-23:1&nbsp;-enum-&nbsp;definition:<br/></c24><pr>
 <br/>pub&nbsp;enum&nbsp;StdStream&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/stdio.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_stream:&nbsp;StdStream)&nbsp;-&gt;&nbsp;StdWriter&nbsp;{&nbsp;fail!()&nbsp;}
 <br/></a><a href="../../../libstd/rt/io/stdio.rs.html#33"><c24>33:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_stream:&nbsp;StdStream)&nbsp;-&gt;&nbsp;StdReader&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><br/><br/><a id="29_1_refs"><a href="#29"><c24>libstd/rt/io/stdio.rs:29:1-29:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
-<br/>pub&nbsp;struct&nbsp;StdReader;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/stdio.rs.html#36"><c24>36:&nbsp;</c24>impl&nbsp;Reader&nbsp;for&nbsp;StdReader&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#18"><c24>18:&nbsp;</c24>pub&nbsp;fn&nbsp;stderr()&nbsp;-&gt;&nbsp;StdReader&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#14"><c24>14:&nbsp;</c24>pub&nbsp;fn&nbsp;stdin()&nbsp;-&gt;&nbsp;StdReader&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#33"><c24>33:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_stream:&nbsp;StdStream)&nbsp;-&gt;&nbsp;StdReader&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#32"><c24>32:&nbsp;</c24>impl&nbsp;StdReader&nbsp;{
-<br/></a><br/><br/><a id="41_1_refs"><a href="#41"><c24>libstd/rt/io/stdio.rs:41:1-41:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
-<br/>pub&nbsp;struct&nbsp;StdWriter;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/stdio.rs.html#44"><c24>44:&nbsp;</c24>impl&nbsp;StdWriter&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#45"><c24>45:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(_stream:&nbsp;StdStream)&nbsp;-&gt;&nbsp;StdWriter&nbsp;{&nbsp;fail!()&nbsp;}
-<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#48"><c24>48:&nbsp;</c24>impl&nbsp;Writer&nbsp;for&nbsp;StdWriter&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/stdio.rs.html#16"><c24>16:&nbsp;</c24>pub&nbsp;fn&nbsp;stdout()&nbsp;-&gt;&nbsp;StdWriter&nbsp;{&nbsp;fail!()&nbsp;}
 <br/></a><br/></c0></c0>

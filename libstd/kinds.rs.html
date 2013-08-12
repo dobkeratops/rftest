@@ -37,85 +37,85 @@ c20{color:#0f0ff}
 c21{color:#d0d0d0; font-weight:bold}
 c22{color:#c0ffd0; }
 c23{color:#d0f0ff; }
-</style><body style="background-color:#3a333a;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/kinds.rs.html">kinds.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c24>/*!
-</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c24>The&nbsp;kind&nbsp;traits
-</c24><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c24>Rust&nbsp;types&nbsp;can&nbsp;be&nbsp;classified&nbsp;in&nbsp;various&nbsp;useful&nbsp;ways&nbsp;according&nbsp;to
-</c24><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c24>intrinsic&nbsp;properties&nbsp;of&nbsp;the&nbsp;type.&nbsp;These&nbsp;classifications,&nbsp;often&nbsp;called
-</c24><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c24>'kinds',&nbsp;are&nbsp;represented&nbsp;as&nbsp;traits.
-</c24><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c24>They&nbsp;cannot&nbsp;be&nbsp;implemented&nbsp;by&nbsp;user&nbsp;code,&nbsp;but&nbsp;are&nbsp;instead&nbsp;implemented
-</c24><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c24>by&nbsp;the&nbsp;compiler&nbsp;automatically&nbsp;for&nbsp;the&nbsp;types&nbsp;to&nbsp;which&nbsp;they&nbsp;apply.
-</c24><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c24>The&nbsp;2&nbsp;kinds&nbsp;are
-</c24><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c24>*&nbsp;Send&nbsp;-&nbsp;owned&nbsp;types&nbsp;and&nbsp;types&nbsp;containing&nbsp;owned&nbsp;types.&nbsp;&nbsp;These&nbsp;types
-</c24><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c24>&nbsp;&nbsp;may&nbsp;be&nbsp;transferred&nbsp;across&nbsp;task&nbsp;boundaries.
-</c24><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c24>*&nbsp;Freeze&nbsp;-&nbsp;types&nbsp;that&nbsp;are&nbsp;deeply&nbsp;immutable.
-</c24><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><c24>*/
-</c24><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>missing_doc</c33><c25>)</c25><c4>];</c4><c33>
-</c33><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c33>#</c33><c4>[</c4><c33>lang="send"</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#32_15_refs"><c28>Send</c28></a><c28>&nbsp;</c28><c4>{</c4><a href="#32_15_refs"><c28>
-</c28></a><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>//&nbsp;empty.
-</c24><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><c33>#</c33><c4>[</c4><c33>lang="freeze"</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#37_17_refs"><c28>Freeze</c28></a><c28>&nbsp;</c28><c4>{</c4><a href="#37_17_refs"><c28>
-</c28></a><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>//&nbsp;empty.
-</c24><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c33>#</c33><c4>[</c4><c33>lang="sized"</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;Sized&nbsp;</c28><c4>{</c4><c28>
-</c28><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>//&nbsp;Empty.
-</c24><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><div/><br/><a id="37_17_refs"><a href="#37"><c24>libstd/kinds.rs:37:17-37:17&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="freeze"]
-<br/>pub&nbsp;trait&nbsp;Freeze&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/clone.rs.html"><c24>libstd/clone.rs:<br/></c24><a href="../libstd/clone.rs.html#135"><c24>135:&nbsp;</c24>impl&lt;T:&nbsp;Freeze&nbsp;+&nbsp;DeepClone&nbsp;+&nbsp;'static&gt;&nbsp;DeepClone&nbsp;for&nbsp;@T&nbsp;{
-<br/></a><a href="../libstd/clone.rs.html#143"><c24>143:&nbsp;</c24>impl&lt;T:&nbsp;Freeze&nbsp;+&nbsp;DeepClone&nbsp;+&nbsp;'static&gt;&nbsp;DeepClone&nbsp;for&nbsp;@mut&nbsp;T&nbsp;{
-<br/></a><br/><br/><a id="32_15_refs"><a href="#32"><c24>libstd/kinds.rs:32:15-32:15&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="send"]
+</style><body style="background-color:#3a333a;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/kinds.rs.html">kinds.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c24>/*!
+</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c24>The&nbsp;kind&nbsp;traits
+</c24><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c24>Rust&nbsp;types&nbsp;can&nbsp;be&nbsp;classified&nbsp;in&nbsp;various&nbsp;useful&nbsp;ways&nbsp;according&nbsp;to
+</c24><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c24>intrinsic&nbsp;properties&nbsp;of&nbsp;the&nbsp;type.&nbsp;These&nbsp;classifications,&nbsp;often&nbsp;called
+</c24><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c24>'kinds',&nbsp;are&nbsp;represented&nbsp;as&nbsp;traits.
+</c24><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c24>They&nbsp;cannot&nbsp;be&nbsp;implemented&nbsp;by&nbsp;user&nbsp;code,&nbsp;but&nbsp;are&nbsp;instead&nbsp;implemented
+</c24><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c24>by&nbsp;the&nbsp;compiler&nbsp;automatically&nbsp;for&nbsp;the&nbsp;types&nbsp;to&nbsp;which&nbsp;they&nbsp;apply.
+</c24><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c24>The&nbsp;2&nbsp;kinds&nbsp;are
+</c24><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c24>*&nbsp;Send&nbsp;-&nbsp;owned&nbsp;types&nbsp;and&nbsp;types&nbsp;containing&nbsp;owned&nbsp;types.&nbsp;&nbsp;These&nbsp;types
+</c24><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;may&nbsp;be&nbsp;transferred&nbsp;across&nbsp;task&nbsp;boundaries.
+</c24><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c24>*&nbsp;Freeze&nbsp;-&nbsp;types&nbsp;that&nbsp;are&nbsp;deeply&nbsp;immutable.
+</c24><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c24>*/
+</c24><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>missing_doc</c33><c25>)</c25><c4>];</c4><c33>
+</c33><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n40538">&nbsp;</a><c33>#</c33><c4>[</c4><c33>lang="send"</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c21>pub</c21><c28>&nbsp;trait&nbsp;Send&nbsp;</c28><c4>{</c4><c28>
+</c28><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>//&nbsp;empty.
+</c24><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n40539">&nbsp;</a><c33>#</c33><c4>[</c4><c33>lang="freeze"</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c21>pub</c21><c28>&nbsp;trait&nbsp;Freeze&nbsp;</c28><c4>{</c4><c28>
+</c28><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>//&nbsp;empty.
+</c24><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n40540">&nbsp;</a><c33>#</c33><c4>[</c4><c33>lang="sized"</c33><c4>]</c4><c33>
+</c33><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c21>pub</c21><c28>&nbsp;trait&nbsp;Sized&nbsp;</c28><c4>{</c4><c28>
+</c28><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>//&nbsp;Empty.
+</c24><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><div/><br/><a id="32_15_refs"><a href="#32"><c24>libstd/kinds.rs:32:15-32:15&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="send"]
 <br/>pub&nbsp;trait&nbsp;Send&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/task/mod.rs.html"><c24>libstd/task/mod.rs:<br/></c24><a href="../libstd/task/mod.rs.html#390"><c24>390:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(&amp;mut&nbsp;self,&nbsp;f:&nbsp;~fn()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,()&gt;&nbsp;{
-<br/></a><a href="../libstd/task/mod.rs.html#476"><c24>476:&nbsp;</c24>pub&nbsp;fn&nbsp;spawn_with&lt;A:Send&gt;(arg:&nbsp;A,&nbsp;f:&nbsp;~fn(v:&nbsp;A))&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/task/mod.rs.html"><c24>libstd/task/mod.rs:<br/></c24><a href="../libstd/task/mod.rs.html#476"><c24>476:&nbsp;</c24>pub&nbsp;fn&nbsp;spawn_with&lt;A:Send&gt;(arg:&nbsp;A,&nbsp;f:&nbsp;~fn(v:&nbsp;A))&nbsp;{
+<br/></a><a href="../libstd/task/mod.rs.html#390"><c24>390:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(&amp;mut&nbsp;self,&nbsp;f:&nbsp;~fn()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,()&gt;&nbsp;{
 <br/></a><a href="../libstd/task/mod.rs.html#509"><c24>509:&nbsp;</c24>pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(f:&nbsp;~fn()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,()&gt;&nbsp;{
 <br/></a><a href="../libstd/task/mod.rs.html#370"><c24>370:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;spawn_with&lt;A:Send&gt;(&amp;mut&nbsp;self,&nbsp;arg:&nbsp;A,&nbsp;f:&nbsp;~fn(v:&nbsp;A))&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html"><c24>libstd/comm.rs:<br/></c24><a href="../libstd/comm.rs.html#164"><c24>164:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#100"><c24>100:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;PortOne&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#145"><c24>145:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericPort&lt;T&gt;&nbsp;for&nbsp;Port&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html"><c24>libstd/comm.rs:<br/></c24><a href="../libstd/comm.rs.html#64"><c24>64:&nbsp;</c24>pub&nbsp;fn&nbsp;stream&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(Port&lt;T&gt;,&nbsp;Chan&lt;T&gt;)&nbsp;{
 <br/></a><a href="../libstd/comm.rs.html#126"><c24>126:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/comm.rs.html#112"><c24>112:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;Peekable&lt;T&gt;&nbsp;&nbsp;for&nbsp;PortOne&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#178"><c24>178:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#171"><c24>171:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#100"><c24>100:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;PortOne&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/comm.rs.html#119"><c24>119:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/comm.rs.html#133"><c24>133:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/comm.rs.html#56"><c24>56:&nbsp;</c24>pub&nbsp;fn&nbsp;oneshot&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(PortOne&lt;T&gt;,&nbsp;ChanOne&lt;T&gt;)&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#71"><c24>71:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#78"><c24>78:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;ChanOne&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/comm.rs.html#157"><c24>157:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;Peekable&lt;T&gt;&nbsp;for&nbsp;Port&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#64"><c24>64:&nbsp;</c24>pub&nbsp;fn&nbsp;stream&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(Port&lt;T&gt;,&nbsp;Chan&lt;T&gt;)&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html"><c24>libstd/unstable/sync.rs:<br/></c24><a href="../libstd/unstable/sync.rs.html#356"><c24>356:&nbsp;</c24>impl&lt;T:Send&gt;&nbsp;Clone&nbsp;for&nbsp;Exclusive&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#164"><c24>164:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#78"><c24>78:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;ChanOne&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#145"><c24>145:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericPort&lt;T&gt;&nbsp;for&nbsp;Port&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#178"><c24>178:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#71"><c24>71:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;SharedChan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#171"><c24>171:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/unstable/sync.rs.html"><c24>libstd/unstable/sync.rs:<br/></c24><a href="../libstd/unstable/sync.rs.html#44"><c24>44:&nbsp;</c24>unsafe&nbsp;fn&nbsp;new_inner&lt;T:&nbsp;Send&gt;(data:&nbsp;T,&nbsp;refcount:&nbsp;uint)&nbsp;-&gt;&nbsp;*mut&nbsp;libc::c_void&nbsp;{
 <br/></a><a href="../libstd/unstable/sync.rs.html#51"><c24>51:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;UnsafeAtomicRcBox&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#363"><c24>363:&nbsp;</c24>impl&lt;T:Send&gt;&nbsp;Exclusive&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#44"><c24>44:&nbsp;</c24>unsafe&nbsp;fn&nbsp;new_inner&lt;T:&nbsp;Send&gt;(data:&nbsp;T,&nbsp;refcount:&nbsp;uint)&nbsp;-&gt;&nbsp;*mut&nbsp;libc::c_void&nbsp;{
 <br/></a><a href="../libstd/unstable/sync.rs.html#212"><c24>212:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;Clone&nbsp;for&nbsp;UnsafeAtomicRcBox&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/unstable/sync.rs.html#356"><c24>356:&nbsp;</c24>impl&lt;T:Send&gt;&nbsp;Clone&nbsp;for&nbsp;Exclusive&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/unstable/sync.rs.html#363"><c24>363:&nbsp;</c24>impl&lt;T:Send&gt;&nbsp;Exclusive&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/rt/work_queue.rs.html"><c24>libstd/rt/work_queue.rs:<br/></c24><a href="../libstd/rt/work_queue.rs.html#24"><c24>24:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;WorkQueue&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/rt/message_queue.rs.html"><c24>libstd/rt/message_queue.rs:<br/></c24><a href="../libstd/rt/message_queue.rs.html#27"><c24>27:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;MessageQueue&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html"><c24>libstd/rt/comm.rs:<br/></c24><a href="../libstd/rt/comm.rs.html#599"><c24>599:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#701"><c24>701:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;MegaPipe&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#632"><c24>632:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericPort&lt;T&gt;&nbsp;for&nbsp;SharedPort&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#60"><c24>60:&nbsp;</c24>pub&nbsp;fn&nbsp;oneshot&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(PortOne&lt;T&gt;,&nbsp;ChanOne&lt;T&gt;)&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#685"><c24>685:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;MegaPipe&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#691"><c24>(691)</c24></a><a href="../libstd/rt/comm.rs.html#469"><c24>(469)</c24></a><a href="../libstd/rt/comm.rs.html#447"><c24>(447)</c24></a><a href="../libstd/rt/comm.rs.html#475"><c24>(475)</c24></a><a href="../libstd/rt/comm.rs.html#674"><c24>(674)</c24></a><a href="../libstd/rt/comm.rs.html#454"><c24>(454)</c24></a><a href="../libstd/rt/comm.rs.html#576"><c24>(576)</c24></a><a href="../libstd/rt/comm.rs.html#593"><c24>(593)</c24></a><a href="../libstd/rt/comm.rs.html#463"><c24>(463)</c24></a><a href="../libstd/rt/comm.rs.html#587"><c24>(587)</c24></a><a href="../libstd/rt/comm.rs.html#679"><c24>(679)</c24></a><br/></a></a>
+<br/></a><a href="../libstd/rt/comm.rs.html"><c24>libstd/rt/comm.rs:<br/></c24><a href="../libstd/rt/comm.rs.html#701"><c24>701:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;MegaPipe&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/comm.rs.html#469"><c24>469:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/comm.rs.html#454"><c24>454:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;Chan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/comm.rs.html#679"><c24>679:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;MegaPipe&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/comm.rs.html#447"><c24>447:&nbsp;</c24>pub&nbsp;fn&nbsp;stream&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(Port&lt;T&gt;,&nbsp;Chan&lt;T&gt;)&nbsp;{
+<br/></a><a href="../libstd/rt/comm.rs.html#685"><c24>(685)</c24></a><a href="../libstd/rt/comm.rs.html#463"><c24>(463)</c24></a><a href="../libstd/rt/comm.rs.html#587"><c24>(587)</c24></a><a href="../libstd/rt/comm.rs.html#691"><c24>(691)</c24></a><a href="../libstd/rt/comm.rs.html#593"><c24>(593)</c24></a><a href="../libstd/rt/comm.rs.html#475"><c24>(475)</c24></a><a href="../libstd/rt/comm.rs.html#576"><c24>(576)</c24></a><a href="../libstd/rt/comm.rs.html#599"><c24>(599)</c24></a><a href="../libstd/rt/comm.rs.html#674"><c24>(674)</c24></a><a href="../libstd/rt/comm.rs.html#60"><c24>(60)</c24></a><a href="../libstd/rt/comm.rs.html#632"><c24>(632)</c24></a><br/><br/><a id="37_17_refs"><a href="#37"><c24>libstd/kinds.rs:37:17-37:17&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[lang="freeze"]
+<br/>pub&nbsp;trait&nbsp;Freeze&nbsp;{
+<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/clone.rs.html"><c24>libstd/clone.rs:<br/></c24><a href="../libstd/clone.rs.html#143"><c24>143:&nbsp;</c24>impl&lt;T:&nbsp;Freeze&nbsp;+&nbsp;DeepClone&nbsp;+&nbsp;'static&gt;&nbsp;DeepClone&nbsp;for&nbsp;@mut&nbsp;T&nbsp;{
+<br/></a><a href="../libstd/clone.rs.html#135"><c24>135:&nbsp;</c24>impl&lt;T:&nbsp;Freeze&nbsp;+&nbsp;DeepClone&nbsp;+&nbsp;'static&gt;&nbsp;DeepClone&nbsp;for&nbsp;@T&nbsp;{
+<br/></a><br/></a></a>

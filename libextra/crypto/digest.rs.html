@@ -37,96 +37,96 @@ c20{color:#0f0ff}
 c21{color:#d0d0d0; font-weight:bold}
 c22{color:#c0ffd0; }
 c23{color:#d0f0ff; }
-</style><body style="background-color:#343838;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libextra/">libextra</a><c1>/</c1><c0><a href="./../../libextra/crypto/">crypto</a><c1>/</c1><c0><a href="./../../libextra/crypto/digest.rs.html">digest.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><c24>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><c21>use</c21><c0>&nbsp;std::uint</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><c21>use</c21><c0>&nbsp;std::vec</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><c24>/**
-</c24><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><c24>&nbsp;*&nbsp;The&nbsp;Digest&nbsp;trait&nbsp;specifies&nbsp;an&nbsp;interface&nbsp;common&nbsp;to&nbsp;digest&nbsp;functions,&nbsp;such&nbsp;as&nbsp;SHA-1&nbsp;and&nbsp;the&nbsp;SHA-2
-</c24><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><c24>&nbsp;*&nbsp;family&nbsp;of&nbsp;digest&nbsp;functions.
-</c24><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><c32>&nbsp;*/
-</c32><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><c21>pub</c21><c28>&nbsp;trait&nbsp;</c28><a href="#18_4_refs"><c28>Digest</c28></a><c28>&nbsp;</c28><c4>{</c4><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
-</c24><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Provide&nbsp;message&nbsp;data.
-</c24><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
-</c24><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;#&nbsp;Arguments
-</c24><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
-</c24><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;*&nbsp;input&nbsp;-&nbsp;A&nbsp;vector&nbsp;of&nbsp;message&nbsp;data
-</c24><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
-</c24><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#27_4_refs"><c26>input</c26></a><c25>(</c25><c18>&amp;</c18><a href="#27_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#27_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#27_4_refs"><c18>input</c18></a><c18>:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><a href="#18_4_refs"><c3>u8</c3></a><c4>]</c4><c25>)</c25><c4>;</c4><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
-</c24><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Retrieve&nbsp;the&nbsp;digest&nbsp;result.&nbsp;This&nbsp;method&nbsp;may&nbsp;be&nbsp;called&nbsp;multiple&nbsp;times.
-</c24><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
-</c24><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;#&nbsp;Arguments
-</c24><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
-</c24><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;*&nbsp;out&nbsp;-&nbsp;the&nbsp;vector&nbsp;to&nbsp;hold&nbsp;the&nbsp;result.&nbsp;Must&nbsp;be&nbsp;large&nbsp;enough&nbsp;to&nbsp;contain&nbsp;output_bits().
-</c24><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
-</c24><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#36_4_refs"><c26>result</c26></a><c25>(</c25><c18>&amp;</c18><a href="#36_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#36_4_refs"><c18>self</c18></a><c4>,</c4><c18>&nbsp;</c18><a href="#36_4_refs"><c18>out</c18></a><c18>:&nbsp;</c18><c3>&amp;</c3><a href="#18_4_refs"><c3>mut</c3></a><c3>&nbsp;</c3><c4>[</c4><a href="#18_4_refs"><c3>u8</c3></a><c4>]</c4><c25>)</c25><c4>;</c4><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
-</c24><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Reset&nbsp;the&nbsp;digest.&nbsp;This&nbsp;method&nbsp;must&nbsp;be&nbsp;called&nbsp;after&nbsp;result()&nbsp;and&nbsp;before&nbsp;supplying&nbsp;more
-</c24><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;data.
-</c24><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
-</c24><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#18_4_refs"><c26>reset</c26></a><c25>(</c25><c18>&amp;</c18><a href="#18_4_refs"><c18>mut</c18></a><c18>&nbsp;</c18><a href="#18_4_refs"><c18>self</c18></a><c25>)</c25><c4>;</c4><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
-</c24><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Get&nbsp;the&nbsp;output&nbsp;size&nbsp;in&nbsp;bits.
-</c24><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
-</c24><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#47_4_refs"><c26>output_bits</c26></a><c25>(</c25><c18>&amp;</c18><a href="#47_4_refs"><c18>self</c18></a><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="#18_4_refs"><c3>uint</c3></a><c4>;</c4><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
-</c24><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Convenience&nbsp;functon&nbsp;that&nbsp;feeds&nbsp;a&nbsp;string&nbsp;into&nbsp;a&nbsp;digest
-</c24><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
-</c24><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;#&nbsp;Arguments
-</c24><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
-</c24><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;*&nbsp;in&nbsp;The&nbsp;string&nbsp;to&nbsp;feed&nbsp;into&nbsp;the&nbsp;digest
-</c24><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
-</c24><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#18_4_refs"><c26>input_str</c26></a><c25>(</c25><c28>&amp;</c28><a href="#18_4_refs"><c28>mut</c28></a><c28>&nbsp;</c28><a href="#18_4_refs"><c28>self</c28></a><c4>,</c4><c28>&nbsp;</c28><a href="#56_28_refs"><c20>input</c20></a><c28>:&nbsp;</c28><c3>&amp;</c3><a href="#18_4_refs"><c3>str</c3></a><c25>)</c25><c28>&nbsp;</c28><c4>{</c4><a href="#18_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="#18_4_refs"><c0>self</c0></a><c0>.</c0><a href="#18_4_refs"><c13>input</c13></a><c25>(</c25><a href="../../libextra/crypto/digest.rs.html#56"><c8>input</c8></a><c10>.</c10><c10>a</c10><c10>s</c10><c10>_</c10><c10>b</c10><c10>y</c10><c10>t</c10><c10>e</c10><c10>s</c10><c25>())</c25><c4>;</c4><a href="#18_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
-</c24><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Convenience&nbsp;functon&nbsp;that&nbsp;retrieves&nbsp;the&nbsp;result&nbsp;of&nbsp;a&nbsp;digest&nbsp;as&nbsp;a
-</c24><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;~str&nbsp;in&nbsp;hexadecimal&nbsp;format.
-</c24><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
-</c24><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;</c26><a href="#18_4_refs"><c26>result_str</c26></a><c25>(</c25><c28>&amp;</c28><a href="#18_4_refs"><c28>mut</c28></a><c28>&nbsp;</c28><a href="#18_4_refs"><c28>self</c28></a><c25>)</c25><c28>&nbsp;</c28><c4>-&gt;</c4><c28>&nbsp;</c28><c3>~</c3><a href="#18_4_refs"><c3>str</c3></a><c28>&nbsp;</c28><c4>{</c4><a href="#18_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#65_16_refs"><c20>buf</c20></a><c16>&nbsp;</c16><a href="#18_4_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="#18_4_refs"><c8>vec</c8></a><c8>::</c8><a href="#18_4_refs"><c8>from_elem</c8></a><c25>((</c25><a href="#18_4_refs"><c0>self</c0></a><c0>.</c0><a href="../../libextra/crypto/digest.rs.html#47"><c10>output_bits</c10></a><c25>()</c25><c10>+</c10><a href="#18_4_refs"><c12>7</c12></a><c25>)</c25><c0>/</c0><a href="#18_4_refs"><c12>8</c12></a><c4>,</c4><c9>&nbsp;</c9><a href="#18_4_refs"><c12>0u8</c12></a><c25>)</c25><c4>;</c4><a href="#18_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libextra/crypto/digest.rs.html#36"><c0>self</c0></a><c0>.</c0><a href="../../libextra/crypto/digest.rs.html#36"><c10>result</c10></a><c25>(</c25><a href="../../libextra/crypto/digest.rs.html#65"><c8>buf</c8></a><c25>)</c25><c4>;</c4><a href="#18_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c0>&nbsp;</c0><a href="../../libextra/crypto/digest.rs.html#70"><c8>to_hex</c8></a><c25>(</c25><a href="../../libextra/crypto/digest.rs.html#65"><c8>buf</c8></a><c25>)</c25><c4>;</c4><a href="#18_4_refs"><c22>
-</c22></a><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#18_4_refs"><c28>
-</c28></a><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;70</ln><a id="70">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a><c26>fn&nbsp;</c26><a href="#70_1_refs"><c26>to_hex</c26></a><c25>(</c25><a href="#71_10_refs"><c20>rr</c20></a><c1>:&nbsp;</c1><c3>&amp;</c3><c4>[</c4><a href="#70_1_refs"><c3>u8</c3></a><c4>]</c4><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>~</c3><a href="#70_1_refs"><c3>str</c3></a><c1>&nbsp;</c1><c4>{</c4><a href="#70_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;72</ln><a id="72">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><a href="#72_12_refs"><c20>s</c20></a><c16>&nbsp;</c16><a href="#70_1_refs"><c16>=</c16></a><c16>&nbsp;~</c16><a href="#70_1_refs"><c12>""</c12></a><c4>;</c4><a href="#70_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;73</ln><a id="73">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>for</c21><c22>&nbsp;</c22><a href="#70_1_refs"><c20>b</c20></a><c22>&nbsp;</c22><a href="#70_1_refs"><c22>in</c22></a><c22>&nbsp;</c22><a href="../../libextra/crypto/digest.rs.html#71"><c8>rr</c8></a><c2>.</c2><a href="#70_1_refs"><c2>iter</c2></a><c25>()</c25><c2>&nbsp;</c2><c4>{</c4><a href="#70_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;74</ln><a id="74">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="#74_12_refs"><c20>hex</c20></a><c16>&nbsp;</c16><a href="#70_1_refs"><c16>=</c16></a><c16>&nbsp;</c16><a href="#70_1_refs"><c8>uint</c8></a><c8>::</c8><a href="#70_1_refs"><c8>to_str_radix</c8></a><c25>(</c25><c2>*</c2><a href="../../libextra/crypto/digest.rs.html#73"><c8>b</c8></a><c7>&nbsp;</c7><a href="#70_1_refs"><c7>as</c7></a><c7>&nbsp;</c7><a href="#70_1_refs"><c3>uint</c3></a><c4>,</c4><c9>&nbsp;</c9><a href="#70_1_refs"><c12>16u</c12></a><c25>)</c25><c4>;</c4><a href="#70_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;75</ln><a id="75">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../../libextra/crypto/digest.rs.html#74"><c8>hex</c8></a><c10>.</c10><a href="../../libextra/sort.rs.html#530"><c10>len</c10></a><c25>()</c25><c10>&nbsp;</c10><a href="../../libextra/sort.rs.html#530"><c10>==</c10></a><c2>&nbsp;</c2><a href="#70_1_refs"><c12>1</c12></a><c7>&nbsp;</c7><c4>{</c4><a href="#70_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;76</ln><a id="76">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libextra/crypto/digest.rs.html#72"><c8>s</c8></a><c10>.</c10><a href="../../libextra/dlist.rs.html#84"><c10>push_char</c10></a><c25>(</c25><c12>'</c12><a href="../../libextra/dlist.rs.html#84"><c12>0</c12></a><c12>'</c12><c25>)</c25><c4>;</c4><a href="#70_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;77</ln><a id="77">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#70_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;78</ln><a id="78">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libextra/crypto/digest.rs.html#72"><c8>s</c8></a><c10>.</c10><c10>p</c10><c10>u</c10><c10>s</c10><c10>h</c10><c10>_</c10><c10>s</c10><c10>t</c10><c10>r</c10><c25>(</c25><a href="../../libextra/crypto/digest.rs.html#74"><c8>hex</c8></a><c25>)</c25><c4>;</c4><a href="#70_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;79</ln><a id="79">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="#70_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;80</ln><a id="80">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c0>&nbsp;</c0><a href="../../libextra/crypto/digest.rs.html#72"><c8>s</c8></a><c4>;</c4><a href="#70_1_refs"><c22>
-</c22></a><br/><ln>&nbsp;81</ln><a id="81">&nbsp;</a><c4>}</c4><c0>
+</style><body style="background-color:#343838;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libextra/">libextra</a><c1>/</c1><c0><a href="./../../libextra/crypto/">crypto</a><c1>/</c1><c0><a href="./../../libextra/crypto/digest.rs.html">digest.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
+</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::uint</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::vec</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c24>/**
+</c24><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c24>&nbsp;*&nbsp;The&nbsp;Digest&nbsp;trait&nbsp;specifies&nbsp;an&nbsp;interface&nbsp;common&nbsp;to&nbsp;digest&nbsp;functions,&nbsp;such&nbsp;as&nbsp;SHA-1&nbsp;and&nbsp;the&nbsp;SHA-2
+</c24><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c24>&nbsp;*&nbsp;family&nbsp;of&nbsp;digest&nbsp;functions.
+</c24><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n42664">&nbsp;</a><c32>&nbsp;*/
+</c32><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c21>pub</c21><c28>&nbsp;trait&nbsp;Digest&nbsp;</c28><c4>{</c4><c28>
+</c28><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
+</c24><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Provide&nbsp;message&nbsp;data.
+</c24><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c24><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;#&nbsp;Arguments
+</c24><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c24><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;*&nbsp;input&nbsp;-&nbsp;A&nbsp;vector&nbsp;of&nbsp;message&nbsp;data
+</c24><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c24><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n42597"><a id="n42596"><a id="n42600"><a id="n42598"><a id="n42601">&nbsp;</a></a></a></a></a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;input</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;input:&nbsp;</c18><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c4>;</c4><c28>
+</c28><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c28>
+</c28><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
+</c24><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Retrieve&nbsp;the&nbsp;digest&nbsp;result.&nbsp;This&nbsp;method&nbsp;may&nbsp;be&nbsp;called&nbsp;multiple&nbsp;times.
+</c24><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c24><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;#&nbsp;Arguments
+</c24><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c24><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;*&nbsp;out&nbsp;-&nbsp;the&nbsp;vector&nbsp;to&nbsp;hold&nbsp;the&nbsp;result.&nbsp;Must&nbsp;be&nbsp;large&nbsp;enough&nbsp;to&nbsp;contain&nbsp;output_bits().
+</c24><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c24><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n42605"><a id="n42606"><a id="n42604"><a id="n42608"><a id="n42609">&nbsp;</a></a></a></a></a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;result</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;out:&nbsp;</c18><c3>&amp;mut&nbsp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c4>;</c4><c28>
+</c28><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c28>
+</c28><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
+</c24><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Reset&nbsp;the&nbsp;digest.&nbsp;This&nbsp;method&nbsp;must&nbsp;be&nbsp;called&nbsp;after&nbsp;result()&nbsp;and&nbsp;before&nbsp;supplying&nbsp;more
+</c24><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;data.
+</c24><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c24><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n42611"><a id="n42610">&nbsp;</a></a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;reset</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c4>;</c4><c28>
+</c28><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c28>
+</c28><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
+</c24><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Get&nbsp;the&nbsp;output&nbsp;size&nbsp;in&nbsp;bits.
+</c24><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c24><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n42614"><a id="n42613">&nbsp;</a></a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;output_bits</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>uint</c3><c4>;</c4><c28>
+</c28><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c28>
+</c28><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
+</c24><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Convenience&nbsp;functon&nbsp;that&nbsp;feeds&nbsp;a&nbsp;string&nbsp;into&nbsp;a&nbsp;digest
+</c24><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c24><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;#&nbsp;Arguments
+</c24><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c24><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;*&nbsp;in&nbsp;The&nbsp;string&nbsp;to&nbsp;feed&nbsp;into&nbsp;the&nbsp;digest
+</c24><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c24><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n42618"><a id="n42617"><a id="n42615"><a id="n42628"><a id="n42620">&nbsp;</a></a></a></a></a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;input_str</c26><c25>(</c25><c28>&amp;mut&nbsp;self</c28><c4>,</c4><c28>&nbsp;</c28><c20>input</c20><c28>:&nbsp;</c28><c3>&amp;str</c3><c25>)</c25><c28>&nbsp;</c28><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n42624"><a id="n42626"><a id="n42627"><a id="n42622"><a id="n42621">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libextra/crypto/digest.rs.html#27"><c0>self</c0></a><c0>.</c0><a href="../../libextra/crypto/digest.rs.html#27"><c10>input</c10></a><c25>(</c25><a href="../../libextra/crypto/digest.rs.html#56"><c8>input</c8></a><c10>.</c10><a href="../../libstd/str.rs.html#n30611"><c10>as_bytes</c10></a><c25>())</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c28>
+</c28><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c28>
+</c28><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c24>/**
+</c24><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Convenience&nbsp;functon&nbsp;that&nbsp;retrieves&nbsp;the&nbsp;result&nbsp;of&nbsp;a&nbsp;digest&nbsp;as&nbsp;a
+</c24><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;~str&nbsp;in&nbsp;hexadecimal&nbsp;format.
+</c24><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c24><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><a id="n42661"><a id="n42633"><a id="n42632">&nbsp;</a></a></a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;result_str</c26><c25>(</c25><c28>&amp;mut&nbsp;self</c28><c25>)</c25><c28>&nbsp;</c28><c4>-&gt;</c4><c28>&nbsp;</c28><c3>~str</c3><c28>&nbsp;</c28><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><a id="n42634"><a id="n42648"><a id="n42637"><a id="n42640"><a id="n42643"><a id="n42650"><a id="n42639"><a id="n42649"><a id="n42646"><a id="n42644"><a id="n42636"><a id="n42635"><a id="n42647"><a id="n42642">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><c20>buf</c20><c16>&nbsp;=&nbsp;</c16><a href="../../libstd/vec.rs.html#n10467"><c8>vec</c8></a><c8>::</c8><a href="../../libstd/vec.rs.html#n10467"><c8>from_elem</c8></a><c25>((</c25><a href="../../libextra/crypto/digest.rs.html#47"><c0>self</c0></a><c0>.</c0><a href="../../libextra/crypto/digest.rs.html#47"><c10>output_bits</c10></a><c25>()</c25><c10>+</c10><c12>7</c12><c25>)</c25><c0>/</c0><c12>8</c12><c4>,</c4><c9>&nbsp;</c9><c12>0u8</c12><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><a id="n42655"><a id="n42651"><a id="n42652"><a id="n42654">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libextra/crypto/digest.rs.html#36"><c0>self</c0></a><c0>.</c0><a href="../../libextra/crypto/digest.rs.html#36"><c13>result</c13></a><c25>(</c25><a href="../../libextra/crypto/digest.rs.html#65"><c8>buf</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><a id="n42658"><a id="n42657"><a id="n42660"><a id="n42659"><a id="n42656">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c13>&nbsp;</c13><a href="../../libextra/crypto/digest.rs.html#70"><c8>to_hex</c8></a><c25>(</c25><a href="../../libextra/crypto/digest.rs.html#65"><c8>buf</c8></a><c25>)</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c28>
+</c28><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;70</ln><a id="70">&nbsp;</a><a id="n42723">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a><a id="n42722"><a id="n42665"><a id="n42668"><a id="n42669"><a id="n42672"><a id="n42673"><a id="n42667">&nbsp;</a></a></a></a></a></a></a><c26>fn&nbsp;to_hex</c26><c25>(</c25><c20>rr</c20><c1>:&nbsp;</c1><c3>&amp;</c3><c4>[</c4><c3>u8</c3><c4>]</c4><c25>)</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>~str</c3><c1>&nbsp;</c1><c4>{</c4><c22>
+</c22><br/><ln>&nbsp;72</ln><a id="72">&nbsp;</a><a id="n42676"><a id="n42674"><a id="n42677"><a id="n42679"><a id="n42678"><a id="n42675">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><c20>s</c20><c16>&nbsp;=&nbsp;~</c16><c12>""</c12><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;73</ln><a id="73">&nbsp;</a><a id="n42680"><a id="n117573"><a id="n42718"><a id="n117572"><a id="n117577"><a id="n117575"><a id="n42681"><a id="n42683"><a id="n117581"><a id="n117584"><a id="n117576"><a id="n117585"><a id="n117580"><a id="n42717"><a id="n117587"><a id="n117586"><a id="n117583"><a id="n117578"><a id="n117589"><a id="n117574"><a id="n117571"><a id="n42716"><a id="n117579"><a id="n117588">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>for</c21><c13>&nbsp;</c13><a href="../../libextra/crypto/digest.rs.html#73"><c20>b</c20></a><c13>&nbsp;</c13><a href="../../libextra/crypto/digest.rs.html#73"><c13>in</c13></a><c13>&nbsp;</c13><a href="../../libextra/crypto/digest.rs.html#71"><c8>rr</c8></a><c2>.</c2><a href="../../libstd/vec.rs.html#n13961"><c2>iter</c2></a><c25>()</c25><c2>&nbsp;</c2><c4>{</c4><a href="../../libextra/crypto/digest.rs.html#73"><c22>
+</c22></a><br/><ln>&nbsp;74</ln><a id="74">&nbsp;</a><a id="n42693"><a id="n42691"><a id="n42689"><a id="n42687"><a id="n42685"><a id="n42692"><a id="n42694"><a id="n42696"><a id="n42695"><a id="n42686"><a id="n42684">&nbsp;</a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="../../libextra/crypto/digest.rs.html#73"><c20>hex</c20></a><c16>&nbsp;</c16><a href="../../libextra/crypto/digest.rs.html#73"><c16>=</c16></a><c16>&nbsp;</c16><a href="../../libextra/crypto/digest.rs.html#73"><c8>uint</c8></a><c8>::</c8><a href="../../libextra/crypto/digest.rs.html#73"><c8>to_str_radix</c8></a><c25>(</c25><c2>*</c2><a href="../../libextra/crypto/digest.rs.html#73"><c8>b</c8></a><c7>&nbsp;</c7><a href="../../libextra/crypto/digest.rs.html#73"><c7>as</c7></a><c7>&nbsp;</c7><a href="../../libextra/crypto/digest.rs.html#73"><c3>uint</c3></a><c4>,</c4><c9>&nbsp;</c9><a href="../../libextra/crypto/digest.rs.html#73"><c12>16u</c12></a><c25>)</c25><c4>;</c4><a href="../../libextra/crypto/digest.rs.html#73"><c22>
+</c22></a><br/><ln>&nbsp;75</ln><a id="75">&nbsp;</a><a id="n42700"><a id="n42710"><a id="n42697"><a id="n42699"><a id="n42708"><a id="n42709"><a id="n42702">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c13>&nbsp;</c13><a href="../../libextra/crypto/digest.rs.html#74"><c8>hex</c8></a><c10>.</c10><a href="../../libstd/str.rs.html#n28503"><c10>len</c10></a><c25>()</c25><c10>&nbsp;</c10><a href="../../libstd/str.rs.html#n28503"><c10>==</c10></a><c2>&nbsp;</c2><a href="../../libextra/crypto/digest.rs.html#73"><c12>1</c12></a><c13>&nbsp;</c13><c4>{</c4><a href="../../libextra/crypto/digest.rs.html#73"><c22>
+</c22></a><br/><ln>&nbsp;76</ln><a id="76">&nbsp;</a><a id="n42706"><a id="n42707"><a id="n42704"><a id="n42703">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libextra/crypto/digest.rs.html#72"><c8>s</c8></a><c10>.</c10><a href="../../libstd/str.rs.html#n32061"><c10>push_char</c10></a><c25>(</c25><c12>'</c12><a href="../../libstd/str.rs.html#n32061"><c12>0</c12></a><c12>'</c12><c25>)</c25><c4>;</c4><a href="../../libextra/crypto/digest.rs.html#73"><c22>
+</c22></a><br/><ln>&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="../../libextra/crypto/digest.rs.html#73"><c22>
+</c22></a><br/><ln>&nbsp;78</ln><a id="78">&nbsp;</a><a id="n42712"><a id="n42711"><a id="n42715"><a id="n42714">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libextra/crypto/digest.rs.html#72"><c8>s</c8></a><c13>.</c13><a href="../../libextra/crypto/digest.rs.html#73"><c13>push_str</c13></a><c25>(</c25><a href="../../libextra/crypto/digest.rs.html#74"><c8>hex</c8></a><c25>)</c25><c4>;</c4><a href="../../libextra/crypto/digest.rs.html#73"><c22>
+</c22></a><br/><ln>&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="../../libextra/crypto/digest.rs.html#73"><c13>
+</c13></a><br/><ln>&nbsp;80</ln><a id="80">&nbsp;</a><a id="n42719"><a id="n42721"><a id="n42720">&nbsp;</a></a></a><c13>&nbsp;&nbsp;&nbsp;&nbsp;</c13><c21>return</c21><c13>&nbsp;</c13><a href="../../libextra/crypto/digest.rs.html#72"><c8>s</c8></a><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c4>}</c4><c0>
 </c0><br/><div/><br/><a id="18_4_refs"><a href="#18"><c24>libextra/crypto/digest.rs:18:4-18:4&nbsp;-trait-&nbsp;definition:<br/></c24><pr>&nbsp;*/
 <br/>pub&nbsp;trait&nbsp;Digest&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../libextra/crypto/sha1.rs.html"><c24>libextra/crypto/sha1.rs:<br/></c24><a href="../../libextra/crypto/sha1.rs.html#161"><c24>161:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha1&nbsp;{
-<br/></a><a href="../../libextra/crypto/sha2.rs.html"><c24>libextra/crypto/sha2.rs:<br/></c24><a href="../../libextra/crypto/sha2.rs.html#251"><c24>251:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha512&nbsp;{
-<br/></a><a href="../../libextra/crypto/sha2.rs.html#401"><c24>401:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha512Trunc224&nbsp;{
+<br/></a><a href="../../libextra/crypto/sha2.rs.html"><c24>libextra/crypto/sha2.rs:<br/></c24><a href="../../libextra/crypto/sha2.rs.html#401"><c24>401:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha512Trunc224&nbsp;{
+<br/></a><a href="../../libextra/crypto/sha2.rs.html#691"><c24>691:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha224&nbsp;{
+<br/></a><a href="../../libextra/crypto/sha2.rs.html#639"><c24>639:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha256&nbsp;{
 <br/></a><a href="../../libextra/crypto/sha2.rs.html#353"><c24>353:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha512Trunc256&nbsp;{
 <br/></a><a href="../../libextra/crypto/sha2.rs.html#303"><c24>303:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha384&nbsp;{
-<br/></a><a href="../../libextra/crypto/sha2.rs.html#639"><c24>639:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha256&nbsp;{
-<br/></a><a href="../../libextra/crypto/sha2.rs.html#691"><c24>691:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha224&nbsp;{
+<br/></a><a href="../../libextra/crypto/sha2.rs.html#251"><c24>251:&nbsp;</c24>impl&nbsp;Digest&nbsp;for&nbsp;Sha512&nbsp;{
 <br/></a><br/><br/><a id="70_1_refs"><a href="#70"><c24>libextra/crypto/digest.rs:70:1-70:1&nbsp;-fn-&nbsp;definition:<br/></c24><pr>
 <br/>fn&nbsp;to_hex(rr:&nbsp;&amp;[u8])&nbsp;-&gt;&nbsp;~str&nbsp;{
 <br/></pr></a></a><c24>references:-<br/></c24><a href="../../libextra/crypto/digest.rs.html#67"><c24>67:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;to_hex(buf);
