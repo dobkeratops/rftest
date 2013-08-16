@@ -1,189 +1,156 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
-a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
-pr{font-weight:bold}
-ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
-c24{color:#ffffff; font-style:italic; opacity:0.5}
-c25{color:#ffffff; opacity:0.92}
-c26{color:#ffffff; font-weight:bold; }
-c27{color:#b0ffff; font-weight:bold; }
-c28{color:#b0ffb0; font-weight:bold; }
-c29{color:#d0e0ff; font-weight:bold; }
-c30{color:#fff0e0; font-weight:bold; }
-c31{color:#d0b0ff; font-weight:bold; }
-c32{color:#ffffff; font-style:italic; opacity:0.6}
-c1{color:#ffffc0;   font-weight:bold; }
-c33{color:#e0a0d0;  }
-c2{color:#60f0c0}
-c3{color:#50e0ff; }
-c4{color:#f090f0}
-c5{color:#50ff80; }
-c6{color:#f0f0e0}
-c7{color:#fff0d0}
-c8{color:#e0d0f0}
-c9{color:#70f0f0}
-c10{color:#f0f070}
-c11{color:#c0f070}
-c12{color:#70c0f0}
-c13{color:#c0f070}
-c14{color:#f0ffc0}
-c15{color:#f0f0e0}
-c16{color:#c0ffe0}
-c17{color:#90d0f0}
-c18{color:#f0a0d0}
-c19{color:#d0f0a0}
-c20{color:#0f0ff}
-c21{color:#d0d0d0; font-weight:bold}
-c22{color:#c0ffd0; }
-c23{color:#d0f0ff; }
-</style><body style="background-color:#3a3a34;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/unstable/">unstable</a><c1>/</c1><c0><a href="./../../libstd/unstable/raw.rs.html">raw.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;cast</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;unstable::intrinsics::TyDesc</c0><c4>;</c4><c0>
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg11><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/unstable/">unstable</a><c1>/</c1><c0><a href="./../../libstd/unstable/raw.rs.html">raw.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;cast</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;unstable::intrinsics::TyDesc</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n133733">&nbsp;</a><c32>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;managed&nbsp;box
-</c32><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;Box</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c4>{</c4><c23>
-</c23><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n133710"><a id="n133711">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>ref_count:&nbsp;</c6><c3>uint</c3><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n133715"><a id="n133714"><a id="n133713">&nbsp;</a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>type_desc:&nbsp;</c6><c3>*</c3><a href="../../libstd/unstable/intrinsics.rs.html#43"><c3>TyDesc</c3></a><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n133717"><a id="n133720"><a id="n133719"><a id="n133721">&nbsp;</a></a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>prev:&nbsp;</c6><c3>*</c3><a href="../../libstd/unstable/raw.rs.html#14"><c3>Box</c3></a><c3>&lt;</c3><a href="../../libstd/unstable/raw.rs.html#14"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n133726"><a id="n133725"><a id="n133727"><a id="n133723">&nbsp;</a></a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>next:&nbsp;</c6><c3>*</c3><a href="../../libstd/unstable/raw.rs.html#14"><c3>Box</c3></a><c3>&lt;</c3><a href="../../libstd/unstable/raw.rs.html#14"><c3>T</c3></a><c3>&gt;</c3><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n133730"><a id="n133729">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>data:&nbsp;</c6><c3>T</c3><c23>
-</c23><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n136947">&nbsp;</a><c42>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;managed&nbsp;box
+</c42><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>pub</c21><c31>&nbsp;struct&nbsp;Box</c31><c5>&lt;T&gt;</c5><c31>&nbsp;</c31><c3>{</c3><c31>
+</c31><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n136924"><a id="n136925">&nbsp;</a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>ref_count:&nbsp;</c24><c8>uint</c8><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n136928"><a id="n136929"><a id="n136927">&nbsp;</a></a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>type_desc:&nbsp;</c24><c8>*</c8><c8><a href="../../libstd/unstable/intrinsics.rs.html#43">TyDesc</a></c8><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n136935"><a id="n136933"><a id="n136934"><a id="n136931">&nbsp;</a></a></a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>prev:&nbsp;</c24><c8>*</c8><c8><a href="../../libstd/unstable/raw.rs.html#14">Box&lt;T&gt;</a></c8><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n136937"><a id="n136939"><a id="n136940"><a id="n136941">&nbsp;</a></a></a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>next:&nbsp;</c24><c8>*</c8><c8><a href="../../libstd/unstable/raw.rs.html#14">Box&lt;T&gt;</a></c8><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n136943"><a id="n136944">&nbsp;</a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>data:&nbsp;</c24><c8>T</c8><c31>
+</c31><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n133746">&nbsp;</a><c32>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;vector
-</c32><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;Vec</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c4>{</c4><c23>
-</c23><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n133736"><a id="n133737">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>fill:&nbsp;</c6><c3>uint</c3><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n133740"><a id="n133739">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>alloc:&nbsp;</c6><c3>uint</c3><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n133742"><a id="n133743">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>data:&nbsp;</c6><c3>T</c3><c23>
-</c23><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n136960">&nbsp;</a><c42>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;vector
+</c42><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c21>pub</c21><c31>&nbsp;struct&nbsp;Vec</c31><c5>&lt;T&gt;</c5><c31>&nbsp;</c31><c3>{</c3><c31>
+</c31><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n136951"><a id="n136950">&nbsp;</a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>fill:&nbsp;</c24><c8>uint</c8><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n136954"><a id="n136953">&nbsp;</a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>alloc:&nbsp;</c24><c8>uint</c8><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n136957"><a id="n136956">&nbsp;</a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>data:&nbsp;</c24><c8>T</c8><c31>
+</c31><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n133751">&nbsp;</a><c32>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;string
-</c32><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n133750"><a id="n133748">&nbsp;</a></a><c21>pub</c21><c3>&nbsp;</c3><c31>type&nbsp;String&nbsp;=&nbsp;</c31><a href="../../libstd/unstable/raw.rs.html#23"><c31>Vec</c31></a><c5>&lt;</c5><a href="../../libstd/unstable/raw.rs.html#23"><c5>u8</c5></a><c5>&gt;</c5><c31>;
-</c31><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n133762">&nbsp;</a><c32>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;slice
-</c32><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;Slice</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c4>{</c4><c23>
-</c23><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n133754"><a id="n133755"><a id="n133756">&nbsp;</a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>data:&nbsp;</c6><c3>*T</c3><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n133759"><a id="n133758">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>len:&nbsp;</c6><c3>uint</c3><c23>
-</c23><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n136965">&nbsp;</a><c42>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;string
+</c42><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n136964"><a id="n136962">&nbsp;</a></a><c21>pub</c21><c8>&nbsp;</c8><c35>type&nbsp;String&nbsp;=&nbsp;</c35><c35><a href="../../libstd/unstable/raw.rs.html#23">Vec</a></c35><c5><a href="../../libstd/unstable/raw.rs.html#23">&lt;u8&gt;</a></c5><c35>;
+</c35><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n136976">&nbsp;</a><c42>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;slice
+</c42><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c21>pub</c21><c31>&nbsp;struct&nbsp;Slice</c31><c5>&lt;T&gt;</c5><c31>&nbsp;</c31><c3>{</c3><c31>
+</c31><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n136968"><a id="n136969"><a id="n136970">&nbsp;</a></a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>data:&nbsp;</c24><c8>*T</c8><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n136972"><a id="n136973">&nbsp;</a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>len:&nbsp;</c24><c8>uint</c8><c31>
+</c31><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n133771">&nbsp;</a><c32>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;closure
-</c32><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;Closure&nbsp;</c27><c4>{</c4><c23>
-</c23><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n133764"><a id="n133765"><a id="n133763">&nbsp;</a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>code:&nbsp;</c6><c3>*</c3><c25>()</c25><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n133766"><a id="n133768"><a id="n133767">&nbsp;</a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>env:&nbsp;</c6><c3>*</c3><c25>()</c25><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n136985">&nbsp;</a><c42>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;closure
+</c42><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c21>pub</c21><c31>&nbsp;struct&nbsp;Closure&nbsp;</c31><c3>{</c3><c31>
+</c31><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n136979"><a id="n136977"><a id="n136978">&nbsp;</a></a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>code:&nbsp;</c24><c8>*</c8><c4>()</c4><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n136980"><a id="n136981"><a id="n136982">&nbsp;</a></a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>env:&nbsp;</c24><c8>*</c8><c4>()</c4><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c32>///&nbsp;This&nbsp;trait&nbsp;is&nbsp;meant&nbsp;to&nbsp;map&nbsp;equivalences&nbsp;between&nbsp;raw&nbsp;structs&nbsp;and&nbsp;their
-</c32><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n133785">&nbsp;</a><c32>///&nbsp;corresponding&nbsp;rust&nbsp;values.
-</c32><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c21>pub</c21><c28>&nbsp;trait&nbsp;Repr</c28><c5>&lt;T&gt;</c5><c28>&nbsp;</c28><c4>{</c4><c28>
-</c28><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;This&nbsp;function&nbsp;"unwraps"&nbsp;a&nbsp;rust&nbsp;value&nbsp;(without&nbsp;consuming&nbsp;it)&nbsp;into&nbsp;its&nbsp;raw
-</c32><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;struct&nbsp;representation.&nbsp;This&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;read/write&nbsp;different&nbsp;values
-</c32><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;for&nbsp;the&nbsp;struct.&nbsp;This&nbsp;is&nbsp;a&nbsp;safe&nbsp;method&nbsp;because&nbsp;by&nbsp;default&nbsp;it&nbsp;does&nbsp;not
-</c32><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;give&nbsp;write-access&nbsp;to&nbsp;the&nbsp;struct&nbsp;returned.
-</c32><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n133774"><a id="n133776"><a id="n133782"><a id="n133775"><a id="n133779"><a id="n133777"><a id="n133780">&nbsp;</a></a></a></a></a></a></a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;repr</c26><c25>(</c25><c28>&amp;self</c28><c25>)</c25><c28>&nbsp;</c28><c4>-&gt;</c4><c28>&nbsp;</c28><c3>T</c3><c28>&nbsp;</c28><c4>{</c4><c22>&nbsp;unsafe&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><a href="../../libstd/cast.rs.html#29"><c8>cast</c8></a><c8>::</c8><a href="../../libstd/cast.rs.html#29"><c8>transmute_copy</c8></a><c25>(</c25><c0>self</c0><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>&nbsp;</c22><c4>}</c4><c28>
-</c28><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n133799">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n133791"><a id="n133797"><a id="n133796"><a id="n133811"><a id="n133789"><a id="n133792"><a id="n133798">&nbsp;</a></a></a></a></a></a></a><c30>impl</c30><c5>&lt;'self,&nbsp;T&gt;</c5><c30>&nbsp;</c30><a href="../../libstd/unstable/raw.rs.html#46"><c30>Repr</c30></a><c5>&lt;</c5><a href="../../libstd/unstable/raw.rs.html#33"><c5>Slice</c5></a><c5>&lt;</c5><a href="../../libstd/unstable/raw.rs.html#33"><c5>T</c5></a><c5>&gt;&gt;</c5><c30>&nbsp;for&nbsp;&amp;'self&nbsp;[T]&nbsp;</c30><c4>{}</c4><c0>
-</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n133805"><a id="n133809"><a id="n133804"><a id="n133810"><a id="n133802"><a id="n133823">&nbsp;</a></a></a></a></a></a><c30>impl</c30><c5>&lt;'self&gt;</c5><c30>&nbsp;</c30><a href="../../libstd/unstable/raw.rs.html#46"><c30>Repr</c30></a><c5>&lt;</c5><a href="../../libstd/unstable/raw.rs.html#33"><c5>Slice</c5></a><c5>&lt;</c5><a href="../../libstd/unstable/raw.rs.html#33"><c5>u8</c5></a><c5>&gt;&gt;</c5><c30>&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;</c30><c4>{}</c4><c0>
-</c0><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n133817"><a id="n133838"><a id="n133821"><a id="n133816"><a id="n133818"><a id="n133822"><a id="n133814">&nbsp;</a></a></a></a></a></a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../../libstd/unstable/raw.rs.html#46"><c30>Repr</c30></a><c5>&lt;*</c5><a href="../../libstd/unstable/raw.rs.html#14"><c5>Box</c5></a><c5>&lt;</c5><a href="../../libstd/unstable/raw.rs.html#14"><c5>T</c5></a><c5>&gt;&gt;</c5><c30>&nbsp;for&nbsp;@T&nbsp;</c30><c4>{}</c4><c0>
-</c0><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><a id="n133826"><a id="n133831"><a id="n133835"><a id="n133828"><a id="n133832"><a id="n133837"><a id="n133836"><a id="n133830">&nbsp;</a></a></a></a></a></a></a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../../libstd/unstable/raw.rs.html#46"><c30>Repr</c30></a><c5>&lt;*</c5><a href="../../libstd/unstable/raw.rs.html#14"><c5>Box</c5></a><c5>&lt;</c5><a href="../../libstd/unstable/raw.rs.html#23"><c5>Vec</c5></a><c5>&lt;</c5><a href="../../libstd/unstable/raw.rs.html#23"><c5>T</c5></a><c5>&gt;&gt;&gt;</c5><c30>&nbsp;for&nbsp;@[T]&nbsp;</c30><c4>{}</c4><c0>
-</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c24>//&nbsp;sure&nbsp;would&nbsp;be&nbsp;nice&nbsp;to&nbsp;have&nbsp;this
-</c24><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c24>//&nbsp;impl&lt;T&gt;&nbsp;Repr&lt;*Vec&lt;T&gt;&gt;&nbsp;for&nbsp;~[T]&nbsp;{}
-</c24><br/><div/><br/><a id="23_40_refs"><a href="#23"><c24>libstd/unstable/raw.rs:23:40-23:40&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;vector
-<br/>pub&nbsp;struct&nbsp;Vec&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/unstable/raw.rs.html#58"><c24>58:&nbsp;</c24>impl&lt;T&gt;&nbsp;Repr&lt;*Box&lt;Vec&lt;T&gt;&gt;&gt;&nbsp;for&nbsp;@[T]&nbsp;{}
-<br/></a><a href="../../libstd/unstable/raw.rs.html#31"><c24>31:&nbsp;</c24>pub&nbsp;type&nbsp;String&nbsp;=&nbsp;Vec&lt;u8&gt;;
-<br/></a><a href="../../libstd/vec.rs.html"><c24>libstd/vec.rs:<br/></c24><a href="../../libstd/vec.rs.html#1961"><c24>1961:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Vec&lt;()&gt;&nbsp;=&nbsp;cast::transmute(v);
-<br/></a><a href="../../libstd/vec.rs.html#1299"><c24>1299:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(&amp;mut&nbsp;*self);
-<br/></a><a href="../../libstd/vec.rs.html#1288"><c24>1288:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Vec&lt;()&gt;&nbsp;=&nbsp;cast::transmute(self);
-<br/></a><a href="../../libstd/vec.rs.html#1285"><c24>1285:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
-<br/></a><a href="../../libstd/vec.rs.html#1248"><c24>1248:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Vec&lt;()&gt;&nbsp;=&nbsp;cast::transmute(self);
-<br/></a><a href="../../libstd/vec.rs.html#143"><c24>143:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr&nbsp;=&nbsp;malloc_raw(alloc&nbsp;+&nbsp;sys::size_of::&lt;Vec&lt;()&gt;&gt;())&nbsp;as&nbsp;*mut&nbsp;Vec&lt;()&gt;;
-<br/></a><a href="../../libstd/vec.rs.html#1245"><c24>1245:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
-<br/></a><a href="../../libstd/vec.rs.html#1958"><c24>1958:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(v);
-<br/></a><a href="../../libstd/vec.rs.html#1250"><c24>1250:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;size&nbsp;=&nbsp;alloc&nbsp;+&nbsp;sys::size_of::&lt;Vec&lt;()&gt;&gt;();
-<br/></a><a href="../../libstd/vec.rs.html#143"><c24>143:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr&nbsp;=&nbsp;malloc_raw(alloc&nbsp;+&nbsp;sys::size_of::&lt;Vec&lt;()&gt;&gt;())&nbsp;as&nbsp;*mut&nbsp;Vec&lt;()&gt;;
-<br/></a><a href="../../libstd/vec.rs.html#1331"><c24>1331:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Vec&lt;u8&gt;&nbsp;=&nbsp;cast::transmute(self);
-<br/></a><a href="../../libstd/vec.rs.html#1308"><c24>1308:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Vec&lt;()&gt;&nbsp;=&nbsp;cast::transmute(&amp;mut&nbsp;*self);
-<br/></a><a href="../../libstd/vec.rs.html#1324"><c24>1324:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Box&lt;Vec&lt;u8&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
-<br/></a><a href="../../libstd/vec.rs.html#1255"><c24>1255:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;*mut&nbsp;Vec&lt;()&gt;;
-<br/></a><a href="../../libstd/at_vec.rs.html"><c24>libstd/at_vec.rs:<br/></c24><a href="../../libstd/at_vec.rs.html#208"><c24>208:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*mut&nbsp;Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
-<br/></a><a href="../../libstd/at_vec.rs.html#266"><c24>266:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;reserve_raw(ty:&nbsp;*TyDesc,&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;,&nbsp;n:&nbsp;uint)&nbsp;{
-<br/></a><a href="../../libstd/at_vec.rs.html#272"><c24>272:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*ptr)&nbsp;=&nbsp;local_realloc(*ptr&nbsp;as&nbsp;*(),&nbsp;total_size)&nbsp;as&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;;
-<br/></a><a href="../../libstd/at_vec.rs.html#218"><c24>218:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
-<br/></a><a href="../../libstd/at_vec.rs.html#271"><c24>271:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;total_size&nbsp;=&nbsp;size_in_bytes&nbsp;+&nbsp;sys::size_of::&lt;Vec&lt;()&gt;&gt;();
-<br/></a><a href="../../libstd/at_vec.rs.html#256"><c24>256:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;transmute(v);
-<br/></a><a href="../../libstd/at_vec.rs.html#230"><c24>230:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*mut&nbsp;Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
-<br/></a><a href="../../libstd/repr.rs.html"><c24>libstd/repr.rs:<br/></c24><a href="../../libstd/repr.rs.html#351"><c24>351:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Box&lt;raw::Vec&lt;()&gt;&gt;&gt;&nbsp;|b|&nbsp;{
-<br/></a><a href="../../libstd/repr.rs.html#225"><c24>225:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v:&nbsp;&amp;raw::Vec&lt;()&gt;,
-<br/></a><a href="../../libstd/repr.rs.html#344"><c24>344:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Vec&lt;()&gt;&gt;&nbsp;|b|&nbsp;{
-<br/></a><a href="../../libstd/repr.rs.html#336"><c24>336:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Box&lt;raw::Vec&lt;()&gt;&gt;&gt;&nbsp;|b|&nbsp;{
-<br/></a><a href="../../libstd/repr.rs.html#330"><c24>330:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;raw::Vec&lt;()&gt;&gt;&nbsp;|b|&nbsp;{
-<br/></a><a href="../../libstd/reflect.rs.html"><c24>libstd/reflect.rs:<br/></c24><a href="../../libstd/reflect.rs.html#263"><c24>263:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.align_to::&lt;raw::Vec&lt;()&gt;&gt;();
-<br/></a><br/><br/><a id="46_31_refs"><a href="#46"><c24>libstd/unstable/raw.rs:46:31-46:31&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;corresponding&nbsp;rust&nbsp;values.
+</c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;trait&nbsp;is&nbsp;meant&nbsp;to&nbsp;map&nbsp;equivalences&nbsp;between&nbsp;raw&nbsp;structs&nbsp;and&nbsp;their
+</c42><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n136999">&nbsp;</a><c42>///&nbsp;corresponding&nbsp;rust&nbsp;values.
+</c42><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c21>pub</c21><c32>&nbsp;trait&nbsp;Repr</c32><c5>&lt;T&gt;</c5><c32>&nbsp;</c32><c3>{</c3><c32>
+</c32><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c42>///&nbsp;This&nbsp;function&nbsp;"unwraps"&nbsp;a&nbsp;rust&nbsp;value&nbsp;(without&nbsp;consuming&nbsp;it)&nbsp;into&nbsp;its&nbsp;raw
+</c42><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c42>///&nbsp;struct&nbsp;representation.&nbsp;This&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;read/write&nbsp;different&nbsp;values
+</c42><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c42>///&nbsp;for&nbsp;the&nbsp;struct.&nbsp;This&nbsp;is&nbsp;a&nbsp;safe&nbsp;method&nbsp;because&nbsp;by&nbsp;default&nbsp;it&nbsp;does&nbsp;not
+</c42><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c42>///&nbsp;give&nbsp;write-access&nbsp;to&nbsp;the&nbsp;struct&nbsp;returned.
+</c42><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n136991"><a id="n136990"><a id="n136989"><a id="n136996"><a id="n136993"><a id="n136988"><a id="n136994">&nbsp;</a></a></a></a></a></a></a><c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c30>fn&nbsp;repr</c30><c4>(</c4><c32>&amp;self</c32><c4>)</c4><c32>&nbsp;</c32><c4>-&gt;</c4><c32>&nbsp;</c32><c8>T</c8><c32>&nbsp;</c32><c3>{</c3><c22>&nbsp;unsafe&nbsp;</c22><c3>{</c3><c22>&nbsp;</c22><c26><a href="../../libstd/cast.rs.html#29">cast::transmute_copy</a></c26><c4>(</c4><c1>self</c1><c4>)</c4><c27>&nbsp;</c27><c3>}</c3><c22>&nbsp;</c22><c3>}</c3><c32>
+</c32><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n137013">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n137010"><a id="n137011"><a id="n137006"><a id="n137003"><a id="n137012"><a id="n137025"><a id="n137005">&nbsp;</a></a></a></a></a></a></a><c33>impl</c33><c5>&lt;'self,&nbsp;T&gt;</c5><c33>&nbsp;</c33><c33><a href="../../libstd/unstable/raw.rs.html#46">Repr</a></c33><c5><a href="../../libstd/unstable/raw.rs.html#46">&lt;</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#33">Slice&lt;</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#46">T&gt;&gt;</a></c5><c33><a href="../../libstd/unstable/raw.rs.html#46">&nbsp;</a></c33><c33>for&nbsp;&amp;'self&nbsp;[T]&nbsp;</c33><c3>{}</c3><c0>
+</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n137016"><a id="n137024"><a id="n137037"><a id="n137023"><a id="n137019"><a id="n137018">&nbsp;</a></a></a></a></a></a><c33>impl</c33><c5>&lt;'self&gt;</c5><c33>&nbsp;</c33><c33><a href="../../libstd/unstable/raw.rs.html#46">Repr</a></c33><c5><a href="../../libstd/unstable/raw.rs.html#46">&lt;</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#33">Slice&lt;</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#46">u8&gt;&gt;</a></c5><c33><a href="../../libstd/unstable/raw.rs.html#46">&nbsp;</a></c33><c33>for&nbsp;&amp;'self&nbsp;str&nbsp;</c33><c3>{}</c3><c0>
+</c0><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n137028"><a id="n137032"><a id="n137036"><a id="n137031"><a id="n137030"><a id="n137052"><a id="n137035">&nbsp;</a></a></a></a></a></a></a><c33>impl</c33><c5>&lt;T&gt;</c5><c33>&nbsp;</c33><c33><a href="../../libstd/unstable/raw.rs.html#46">Repr</a></c33><c5><a href="../../libstd/unstable/raw.rs.html#46">&lt;*</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#14">Box&lt;</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#46">T&gt;&gt;</a></c5><c33><a href="../../libstd/unstable/raw.rs.html#46">&nbsp;</a></c33><c33>for&nbsp;@T&nbsp;</c33><c3>{}</c3><c0>
+</c0><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><a id="n137045"><a id="n137044"><a id="n137042"><a id="n137040"><a id="n137046"><a id="n137049"><a id="n137051"><a id="n137061"><a id="n137050">&nbsp;</a></a></a></a></a></a></a></a></a><c33>impl</c33><c5>&lt;T&gt;</c5><c33>&nbsp;</c33><c33><a href="../../libstd/unstable/raw.rs.html#46">Repr</a></c33><c5><a href="../../libstd/unstable/raw.rs.html#46">&lt;*</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#14">Box&lt;</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#23">Vec&lt;T</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#14">&gt;&gt;</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#46">&gt;</a></c5><c33><a href="../../libstd/unstable/raw.rs.html#46">&nbsp;</a></c33><c33>for&nbsp;@[T]&nbsp;</c33><c3>{}</c3><c0>
+</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><a id="n137056"><a id="n137055"><a id="n137059"><a id="n137054"><a id="n137060">&nbsp;</a></a></a></a></a><c33>impl&nbsp;</c33><c33><a href="../../libstd/unstable/raw.rs.html#46">Repr</a></c33><c5><a href="../../libstd/unstable/raw.rs.html#46">&lt;*</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#30">String</a></c5><c5><a href="../../libstd/unstable/raw.rs.html#46">&gt;</a></c5><c33><a href="../../libstd/unstable/raw.rs.html#46">&nbsp;</a></c33><c33>for&nbsp;~str&nbsp;</c33><c3>{}</c3><c0>
+</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c40>//&nbsp;sure&nbsp;would&nbsp;be&nbsp;nice&nbsp;to&nbsp;have&nbsp;this
+</c40><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c40>//&nbsp;impl&lt;T&gt;&nbsp;Repr&lt;*Vec&lt;T&gt;&gt;&nbsp;for&nbsp;~[T]&nbsp;{}
+</c40><br/><div class="refblock"><br/><a id="46_31_refs"><a href="#46"><c40>libstd/unstable/raw.rs:46:31-46:31&nbsp;-trait-&nbsp;definition:<br/></c40><pr>///&nbsp;corresponding&nbsp;rust&nbsp;values.
 <br/>pub&nbsp;trait&nbsp;Repr&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/unstable/raw.rs.html#57"><c24>57:&nbsp;</c24>impl&lt;T&gt;&nbsp;Repr&lt;*Box&lt;T&gt;&gt;&nbsp;for&nbsp;@T&nbsp;{}
-<br/></a><a href="../../libstd/unstable/raw.rs.html#58"><c24>58:&nbsp;</c24>impl&lt;T&gt;&nbsp;Repr&lt;*Box&lt;Vec&lt;T&gt;&gt;&gt;&nbsp;for&nbsp;@[T]&nbsp;{}
-<br/></a><a href="../../libstd/unstable/raw.rs.html#55"><c24>55:&nbsp;</c24>impl&lt;'self,&nbsp;T&gt;&nbsp;Repr&lt;Slice&lt;T&gt;&gt;&nbsp;for&nbsp;&amp;'self&nbsp;[T]&nbsp;{}
-<br/></a><a href="../../libstd/unstable/raw.rs.html#56"><c24>56:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Repr&lt;Slice&lt;u8&gt;&gt;&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;{}
-<br/></a><br/><br/><a id="33_39_refs"><a href="#33"><c24>libstd/unstable/raw.rs:33:39-33:39&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;slice
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/unstable/raw.rs.html#57"><c40>57:&nbsp;</c40>impl&lt;T&gt;&nbsp;Repr&lt;*Box&lt;T&gt;&gt;&nbsp;for&nbsp;@T&nbsp;{}
+<br/></a><a href="../../libstd/unstable/raw.rs.html#58"><c40>58:&nbsp;</c40>impl&lt;T&gt;&nbsp;Repr&lt;*Box&lt;Vec&lt;T&gt;&gt;&gt;&nbsp;for&nbsp;@[T]&nbsp;{}
+<br/></a><a href="../../libstd/unstable/raw.rs.html#59"><c40>59:&nbsp;</c40>impl&nbsp;Repr&lt;*String&gt;&nbsp;for&nbsp;~str&nbsp;{}
+<br/></a><a href="../../libstd/unstable/raw.rs.html#55"><c40>55:&nbsp;</c40>impl&lt;'self,&nbsp;T&gt;&nbsp;Repr&lt;Slice&lt;T&gt;&gt;&nbsp;for&nbsp;&amp;'self&nbsp;[T]&nbsp;{}
+<br/></a><a href="../../libstd/unstable/raw.rs.html#56"><c40>56:&nbsp;</c40>impl&lt;'self&gt;&nbsp;Repr&lt;Slice&lt;u8&gt;&gt;&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;{}
+<br/></a><br/><br/><a id="33_39_refs"><a href="#33"><c40>libstd/unstable/raw.rs:33:39-33:39&nbsp;-struct-&nbsp;definition:<br/></c40><pr>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;slice
 <br/>pub&nbsp;struct&nbsp;Slice&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/unstable/raw.rs.html#56"><c24>56:&nbsp;</c24>impl&lt;'self&gt;&nbsp;Repr&lt;Slice&lt;u8&gt;&gt;&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;{}
-<br/></a><a href="../../libstd/unstable/raw.rs.html#55"><c24>55:&nbsp;</c24>impl&lt;'self,&nbsp;T&gt;&nbsp;Repr&lt;Slice&lt;T&gt;&gt;&nbsp;for&nbsp;&amp;'self&nbsp;[T]&nbsp;{}
-<br/></a><a href="../../libstd/vec.rs.html"><c24>libstd/vec.rs:<br/></c24><a href="../../libstd/vec.rs.html#2008"><c24>2008:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f(cast::transmute(Slice&nbsp;{
-<br/></a><a href="../../libstd/vec.rs.html#1900"><c24>1900:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;Slice{&nbsp;data,&nbsp;len&nbsp;}&nbsp;=&nbsp;self.repr();
-<br/></a><a href="../../libstd/vec.rs.html#1792"><c24>1792:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cast::transmute(Slice&nbsp;{
-<br/></a><a href="../../libstd/vec.rs.html#1994"><c24>1994:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f(cast::transmute(Slice&nbsp;{
-<br/></a><a href="../../libstd/vec.rs.html#820"><c24>820:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cast::transmute(Slice&nbsp;{
-<br/></a><a href="../../libstd/str.rs.html"><c24>libstd/str.rs:<br/></c24><a href="../../libstd/str.rs.html#1059"><c24>1059:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cast::transmute(Slice&nbsp;{
-<br/></a><a href="../../libstd/str.rs.html#1017"><c24>1017:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;v&nbsp;=&nbsp;Slice&nbsp;{&nbsp;data:&nbsp;s,&nbsp;len:&nbsp;len&nbsp;};
-<br/></a><a href="../../libstd/repr.rs.html"><c24>libstd/repr.rs:<br/></c24><a href="../../libstd/repr.rs.html#358"><c24>358:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;raw::Slice&lt;()&gt;&gt;&nbsp;|s|&nbsp;{
-<br/></a><br/><br/><a id="39_41_refs"><a href="#39"><c24>libstd/unstable/raw.rs:39:41-39:41&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;closure
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/unstable/raw.rs.html#56"><c40>56:&nbsp;</c40>impl&lt;'self&gt;&nbsp;Repr&lt;Slice&lt;u8&gt;&gt;&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;{}
+<br/></a><a href="../../libstd/unstable/raw.rs.html#55"><c40>55:&nbsp;</c40>impl&lt;'self,&nbsp;T&gt;&nbsp;Repr&lt;Slice&lt;T&gt;&gt;&nbsp;for&nbsp;&amp;'self&nbsp;[T]&nbsp;{}
+<br/></a><a href="../../libstd/vec.rs.html"><c40>libstd/vec.rs:<br/></c40></a><a href="../../libstd/vec.rs.html#2006"><c40>2006:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f(cast::transmute(Slice&nbsp;{
+<br/></a><a href="../../libstd/vec.rs.html#1898"><c40>1898:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;Slice{&nbsp;data,&nbsp;len&nbsp;}&nbsp;=&nbsp;self.repr();
+<br/></a><a href="../../libstd/vec.rs.html#1992"><c40>1992:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f(cast::transmute(Slice&nbsp;{
+<br/></a><a href="../../libstd/vec.rs.html#818"><c40>818:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cast::transmute(Slice&nbsp;{
+<br/></a><a href="../../libstd/vec.rs.html#1790"><c40>1790:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cast::transmute(Slice&nbsp;{
+<br/></a><a href="../../libstd/str.rs.html"><c40>libstd/str.rs:<br/></c40></a><a href="../../libstd/str.rs.html#1991"><c40>1991:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;len&nbsp;=&nbsp;c.encode_utf8(cast::transmute(Slice&nbsp;{
+<br/></a><a href="../../libstd/str.rs.html#854"><c40>854:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cast::transmute(Slice&nbsp;{
+<br/></a><a href="../../libstd/str.rs.html#835"><c40>835:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;v&nbsp;=&nbsp;Slice&nbsp;{&nbsp;data:&nbsp;s,&nbsp;len:&nbsp;len&nbsp;};
+<br/></a><a href="../../libstd/repr.rs.html"><c40>libstd/repr.rs:<br/></c40></a><a href="../../libstd/repr.rs.html#358"><c40>358:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;raw::Slice&lt;()&gt;&gt;&nbsp;|s|&nbsp;{
+<br/></a><br/><br/><a id="23_40_refs"><a href="#23"><c40>libstd/unstable/raw.rs:23:40-23:40&nbsp;-struct-&nbsp;definition:<br/></c40><pr>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;vector
+<br/>pub&nbsp;struct&nbsp;Vec&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/unstable/raw.rs.html#31"><c40>31:&nbsp;</c40>pub&nbsp;type&nbsp;String&nbsp;=&nbsp;Vec&lt;u8&gt;;
+<br/></a><a href="../../libstd/unstable/raw.rs.html#58"><c40>58:&nbsp;</c40>impl&lt;T&gt;&nbsp;Repr&lt;*Box&lt;Vec&lt;T&gt;&gt;&gt;&nbsp;for&nbsp;@[T]&nbsp;{}
+<br/></a><a href="../../libstd/vec.rs.html"><c40>libstd/vec.rs:<br/></c40></a><a href="../../libstd/vec.rs.html#1283"><c40>1283:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
+<br/></a><a href="../../libstd/vec.rs.html#1306"><c40>1306:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Vec&lt;()&gt;&nbsp;=&nbsp;cast::transmute(&amp;mut&nbsp;*self);
+<br/></a><a href="../../libstd/vec.rs.html#1959"><c40>1959:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Vec&lt;()&gt;&nbsp;=&nbsp;cast::transmute(v);
+<br/></a><a href="../../libstd/vec.rs.html#1329"><c40>1329:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Vec&lt;u8&gt;&nbsp;=&nbsp;cast::transmute(self);
+<br/></a><a href="../../libstd/vec.rs.html#1253"><c40>1253:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;*mut&nbsp;Vec&lt;()&gt;;
+<br/></a><a href="../../libstd/vec.rs.html#1286"><c40>1286:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Vec&lt;()&gt;&nbsp;=&nbsp;cast::transmute(self);
+<br/></a><a href="../../libstd/vec.rs.html#1248"><c40>1248:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;size&nbsp;=&nbsp;alloc&nbsp;+&nbsp;sys::size_of::&lt;Vec&lt;()&gt;&gt;();
+<br/></a><a href="../../libstd/vec.rs.html#1297"><c40>1297:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(&amp;mut&nbsp;*self);
+<br/></a><a href="../../libstd/vec.rs.html#143"><c40>143:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr&nbsp;=&nbsp;malloc_raw(alloc&nbsp;+&nbsp;sys::size_of::&lt;Vec&lt;()&gt;&gt;())&nbsp;as&nbsp;*mut&nbsp;Vec&lt;()&gt;;
+<br/></a><a href="../../libstd/vec.rs.html#1322"><c40>1322:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Box&lt;Vec&lt;u8&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
+<br/></a><a href="../../libstd/vec.rs.html#1243"><c40>1243:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
+<br/></a><a href="../../libstd/vec.rs.html#1956"><c40>1956:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(v);
+<br/></a><a href="../../libstd/vec.rs.html#143"><c40>143:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr&nbsp;=&nbsp;malloc_raw(alloc&nbsp;+&nbsp;sys::size_of::&lt;Vec&lt;()&gt;&gt;())&nbsp;as&nbsp;*mut&nbsp;Vec&lt;()&gt;;
+<br/></a><a href="../../libstd/vec.rs.html#1246"><c40>1246:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Vec&lt;()&gt;&nbsp;=&nbsp;cast::transmute(self);
+<br/></a><a href="../../libstd/at_vec.rs.html"><c40>libstd/at_vec.rs:<br/></c40></a><a href="../../libstd/at_vec.rs.html#208"><c40>208:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*mut&nbsp;Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
+<br/></a><a href="../../libstd/at_vec.rs.html#266"><c40>266:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;reserve_raw(ty:&nbsp;*TyDesc,&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;,&nbsp;n:&nbsp;uint)&nbsp;{
+<br/></a><a href="../../libstd/at_vec.rs.html#218"><c40>218:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
+<br/></a><a href="../../libstd/at_vec.rs.html#271"><c40>271:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;total_size&nbsp;=&nbsp;size_in_bytes&nbsp;+&nbsp;sys::size_of::&lt;Vec&lt;()&gt;&gt;();
+<br/></a><a href="../../libstd/at_vec.rs.html#256"><c40>256:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;transmute(v);
+<br/></a><a href="../../libstd/at_vec.rs.html#230"><c40>230:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*mut&nbsp;Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
+<br/></a><a href="../../libstd/at_vec.rs.html#272"><c40>272:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*ptr)&nbsp;=&nbsp;local_realloc(*ptr&nbsp;as&nbsp;*(),&nbsp;total_size)&nbsp;as&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;;
+<br/></a><a href="../../libstd/repr.rs.html"><c40>libstd/repr.rs:<br/></c40></a><a href="../../libstd/repr.rs.html#351"><c40>351:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Box&lt;raw::Vec&lt;()&gt;&gt;&gt;&nbsp;|b|&nbsp;{
+<br/></a><a href="../../libstd/repr.rs.html#225"><c40>225:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v:&nbsp;&amp;raw::Vec&lt;()&gt;,
+<br/></a><a href="../../libstd/repr.rs.html#330"><c40>330:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;raw::Vec&lt;()&gt;&gt;&nbsp;|b|&nbsp;{
+<br/></a><a href="../../libstd/repr.rs.html#344"><c40>344:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Vec&lt;()&gt;&gt;&nbsp;|b|&nbsp;{
+<br/></a><a href="../../libstd/repr.rs.html#336"><c40>336:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Box&lt;raw::Vec&lt;()&gt;&gt;&gt;&nbsp;|b|&nbsp;{
+<br/></a><a href="../../libstd/reflect.rs.html"><c40>libstd/reflect.rs:<br/></c40></a><a href="../../libstd/reflect.rs.html#263"><c40>263:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.align_to::&lt;raw::Vec&lt;()&gt;&gt;();
+<br/></a><br/><br/><a id="39_41_refs"><a href="#39"><c40>libstd/unstable/raw.rs:39:41-39:41&nbsp;-struct-&nbsp;definition:<br/></c40><pr>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;closure
 <br/>pub&nbsp;struct&nbsp;Closure&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/task.rs.html"><c24>libstd/rt/task.rs:<br/></c24><a href="../../libstd/rt/task.rs.html#430"><c24>430:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;closure:&nbsp;Closure&nbsp;=&nbsp;Closure&nbsp;{
-<br/></a><a href="../../libstd/rt/task.rs.html#420"><c24>420:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;closure:&nbsp;Closure&nbsp;=&nbsp;transmute(f);
-<br/></a><a href="../../libstd/rt/task.rs.html#430"><c24>430:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;closure:&nbsp;Closure&nbsp;=&nbsp;Closure&nbsp;{
-<br/></a><a href="../../libstd/rt/sched.rs.html"><c24>libstd/rt/sched.rs:<br/></c24><a href="../../libstd/rt/sched.rs.html#797"><c24>797:&nbsp;</c24>type&nbsp;UnsafeTaskReceiver&nbsp;=&nbsp;raw::Closure;
-<br/></a><a href="../../libstd/task/local_data_priv.rs.html"><c24>libstd/task/local_data_priv.rs:<br/></c24><a href="../../libstd/task/local_data_priv.rs.html#129"><c24>129:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;pair:&nbsp;raw::Closure&nbsp;=&nbsp;cast::transmute_copy(&amp;key);
-<br/></a><br/><br/><a id="14_45_refs"><a href="#14"><c24>libstd/unstable/raw.rs:14:45-14:45&nbsp;-struct-&nbsp;definition:<br/></c24><pr>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;managed&nbsp;box
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/task.rs.html"><c40>libstd/rt/task.rs:<br/></c40></a><a href="../../libstd/rt/task.rs.html#418"><c40>418:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;closure:&nbsp;Closure&nbsp;=&nbsp;transmute(f);
+<br/></a><a href="../../libstd/rt/task.rs.html#428"><c40>428:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;closure:&nbsp;Closure&nbsp;=&nbsp;Closure&nbsp;{
+<br/></a><a href="../../libstd/rt/task.rs.html#428"><c40>428:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;closure:&nbsp;Closure&nbsp;=&nbsp;Closure&nbsp;{
+<br/></a><a href="../../libstd/rt/sched.rs.html"><c40>libstd/rt/sched.rs:<br/></c40></a><a href="../../libstd/rt/sched.rs.html#797"><c40>797:&nbsp;</c40>type&nbsp;UnsafeTaskReceiver&nbsp;=&nbsp;raw::Closure;
+<br/></a><a href="../../libstd/task/local_data_priv.rs.html"><c40>libstd/task/local_data_priv.rs:<br/></c40></a><a href="../../libstd/task/local_data_priv.rs.html#129"><c40>129:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;pair:&nbsp;raw::Closure&nbsp;=&nbsp;cast::transmute_copy(&amp;key);
+<br/></a><br/><br/><a id="30_40_refs"><a href="#30"><c40>libstd/unstable/raw.rs:30:40-30:40&nbsp;-ty-&nbsp;definition:<br/></c40><pr>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;string
+<br/>pub&nbsp;type&nbsp;String&nbsp;=&nbsp;Vec&lt;u8&gt;;
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/unstable/raw.rs.html#59"><c40>59:&nbsp;</c40>impl&nbsp;Repr&lt;*String&gt;&nbsp;for&nbsp;~str&nbsp;{}
+<br/></a><br/><br/><a id="14_45_refs"><a href="#14"><c40>libstd/unstable/raw.rs:14:45-14:45&nbsp;-struct-&nbsp;definition:<br/></c40><pr>///&nbsp;The&nbsp;representation&nbsp;of&nbsp;a&nbsp;Rust&nbsp;managed&nbsp;box
 <br/>pub&nbsp;struct&nbsp;Box&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/unstable/raw.rs.html#19"><c24>19:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;next:&nbsp;*Box&lt;T&gt;,
-<br/></a><a href="../../libstd/unstable/raw.rs.html#58"><c24>58:&nbsp;</c24>impl&lt;T&gt;&nbsp;Repr&lt;*Box&lt;Vec&lt;T&gt;&gt;&gt;&nbsp;for&nbsp;@[T]&nbsp;{}
-<br/></a><a href="../../libstd/unstable/raw.rs.html#57"><c24>57:&nbsp;</c24>impl&lt;T&gt;&nbsp;Repr&lt;*Box&lt;T&gt;&gt;&nbsp;for&nbsp;@T&nbsp;{}
-<br/></a><a href="../../libstd/unstable/raw.rs.html#18"><c24>18:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;prev:&nbsp;*Box&lt;T&gt;,
-<br/></a><a href="../../libstd/rt/global_heap.rs.html"><c24>libstd/rt/global_heap.rs:<br/></c24><a href="../../libstd/rt/global_heap.rs.html#23"><c24>23:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;header_size&nbsp;=&nbsp;size_of::&lt;raw::Box&lt;()&gt;&gt;();
-<br/></a><a href="../../libstd/rt/global_heap.rs.html#85"><c24>85:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;box&nbsp;=&nbsp;p&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
-<br/></a><a href="../../libstd/rt/local_heap.rs.html"><c24>libstd/rt/local_heap.rs:<br/></c24><a href="../../libstd/rt/local_heap.rs.html#92"><c24>92:&nbsp;</c24>pub&nbsp;fn&nbsp;live_allocs()&nbsp;-&gt;&nbsp;*raw::Box&lt;()&gt;&nbsp;{
-<br/></a><a href="../../libstd/rt/local_heap.rs.html#27"><c24>27:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;live_allocs:&nbsp;*raw::Box&lt;()&gt;,
-<br/></a><a href="../../libstd/rt/borrowck.rs.html"><c24>libstd/rt/borrowck.rs:<br/></c24><a href="../../libstd/rt/borrowck.rs.html#226"><c24>226:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
-<br/></a><a href="../../libstd/rt/borrowck.rs.html#30"><c24>30:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;box:&nbsp;*mut&nbsp;raw::Box&lt;()&gt;,
-<br/></a><a href="../../libstd/rt/borrowck.rs.html#188"><c24>188:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
-<br/></a><a href="../../libstd/rt/borrowck.rs.html#242"><c24>242:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
-<br/></a><a href="../../libstd/rt/borrowck.rs.html#152"><c24>152:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
-<br/></a><a href="../../libstd/rt/borrowck.rs.html#49"><c24>49:&nbsp;</c24>unsafe&nbsp;fn&nbsp;fail_borrowed(box:&nbsp;*mut&nbsp;raw::Box&lt;()&gt;,&nbsp;file:&nbsp;*c_char,&nbsp;line:&nbsp;size_t)&nbsp;{
-<br/></a><a href="../../libstd/rt/borrowck.rs.html#169"><c24>169:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
-<br/></a><a href="../../libstd/rt/borrowck.rs.html#203"><c24>203:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
-<br/></a><a href="../../libstd/vec.rs.html"><c24>libstd/vec.rs:<br/></c24><a href="../../libstd/vec.rs.html#1299"><c24>1299:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(&amp;mut&nbsp;*self);
-<br/></a><a href="../../libstd/vec.rs.html#1958"><c24>1958:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(v);
-<br/></a><a href="../../libstd/vec.rs.html#1285"><c24>1285:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
-<br/></a><a href="../../libstd/vec.rs.html#1324"><c24>1324:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Box&lt;Vec&lt;u8&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
-<br/></a><a href="../../libstd/vec.rs.html#1245"><c24>1245:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
-<br/></a><a href="../../libstd/at_vec.rs.html"><c24>libstd/at_vec.rs:<br/></c24><a href="../../libstd/at_vec.rs.html#218"><c24>218:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
-<br/></a><a href="../../libstd/at_vec.rs.html#272"><c24>272:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*ptr)&nbsp;=&nbsp;local_realloc(*ptr&nbsp;as&nbsp;*(),&nbsp;total_size)&nbsp;as&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;;
-<br/></a><a href="../../libstd/at_vec.rs.html#208"><c24>208:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*mut&nbsp;Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
-<br/></a><a href="../../libstd/at_vec.rs.html#266"><c24>266:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;reserve_raw(ty:&nbsp;*TyDesc,&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;,&nbsp;n:&nbsp;uint)&nbsp;{
-<br/></a><a href="../../libstd/at_vec.rs.html#256"><c24>256:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;transmute(v);
-<br/></a><a href="../../libstd/at_vec.rs.html#230"><c24>230:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*mut&nbsp;Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
-<br/></a><a href="../../libstd/repr.rs.html"><c24>libstd/repr.rs:<br/></c24><a href="../../libstd/repr.rs.html#289"><c24>289:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Box&lt;()&gt;&gt;&nbsp;|b|&nbsp;{
-<br/></a><a href="../../libstd/repr.rs.html#336"><c24>336:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Box&lt;raw::Vec&lt;()&gt;&gt;&gt;&nbsp;|b|&nbsp;{
-<br/></a><a href="../../libstd/repr.rs.html#304"><c24>304:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Box&lt;()&gt;&gt;&nbsp;|b|&nbsp;{
-<br/></a><a href="../../libstd/repr.rs.html#547"><c24>(547)</c24></a><a href="../../libstd/repr.rs.html#351"><c24>(351)</c24></a><br/><a href="../../libstd/cleanup.rs.html"><c24>libstd/cleanup.rs:<br/></c24><a href="../../libstd/cleanup.rs.html#33"><c24>(33)</c24></a><a href="../../libstd/cleanup.rs.html#44"><c24>(44)</c24></a><a href="../../libstd/cleanup.rs.html#126"><c24>(126)</c24></a><br/></a></a>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/unstable/raw.rs.html#58"><c40>58:&nbsp;</c40>impl&lt;T&gt;&nbsp;Repr&lt;*Box&lt;Vec&lt;T&gt;&gt;&gt;&nbsp;for&nbsp;@[T]&nbsp;{}
+<br/></a><a href="../../libstd/unstable/raw.rs.html#18"><c40>18:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;prev:&nbsp;*Box&lt;T&gt;,
+<br/></a><a href="../../libstd/unstable/raw.rs.html#19"><c40>19:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;next:&nbsp;*Box&lt;T&gt;,
+<br/></a><a href="../../libstd/unstable/raw.rs.html#57"><c40>57:&nbsp;</c40>impl&lt;T&gt;&nbsp;Repr&lt;*Box&lt;T&gt;&gt;&nbsp;for&nbsp;@T&nbsp;{}
+<br/></a><a href="../../libstd/rt/global_heap.rs.html"><c40>libstd/rt/global_heap.rs:<br/></c40></a><a href="../../libstd/rt/global_heap.rs.html#23"><c40>23:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;header_size&nbsp;=&nbsp;size_of::&lt;raw::Box&lt;()&gt;&gt;();
+<br/></a><a href="../../libstd/rt/global_heap.rs.html#85"><c40>85:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;box&nbsp;=&nbsp;p&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
+<br/></a><a href="../../libstd/rt/local_heap.rs.html"><c40>libstd/rt/local_heap.rs:<br/></c40></a><a href="../../libstd/rt/local_heap.rs.html#97"><c40>97:&nbsp;</c40>pub&nbsp;fn&nbsp;live_allocs()&nbsp;-&gt;&nbsp;*raw::Box&lt;()&gt;&nbsp;{
+<br/></a><a href="../../libstd/rt/local_heap.rs.html#28"><c40>28:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;live_allocs:&nbsp;*raw::Box&lt;()&gt;,
+<br/></a><a href="../../libstd/rt/borrowck.rs.html"><c40>libstd/rt/borrowck.rs:<br/></c40></a><a href="../../libstd/rt/borrowck.rs.html#169"><c40>169:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
+<br/></a><a href="../../libstd/rt/borrowck.rs.html#203"><c40>203:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
+<br/></a><a href="../../libstd/rt/borrowck.rs.html#49"><c40>49:&nbsp;</c40>unsafe&nbsp;fn&nbsp;fail_borrowed(box:&nbsp;*mut&nbsp;raw::Box&lt;()&gt;,&nbsp;file:&nbsp;*c_char,&nbsp;line:&nbsp;size_t)&nbsp;{
+<br/></a><a href="../../libstd/rt/borrowck.rs.html#30"><c40>30:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;box:&nbsp;*mut&nbsp;raw::Box&lt;()&gt;,
+<br/></a><a href="../../libstd/rt/borrowck.rs.html#226"><c40>226:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
+<br/></a><a href="../../libstd/rt/borrowck.rs.html#242"><c40>242:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
+<br/></a><a href="../../libstd/rt/borrowck.rs.html#188"><c40>188:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
+<br/></a><a href="../../libstd/rt/borrowck.rs.html#152"><c40>152:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;a&nbsp;=&nbsp;a&nbsp;as&nbsp;*mut&nbsp;raw::Box&lt;()&gt;;
+<br/></a><a href="../../libstd/vec.rs.html"><c40>libstd/vec.rs:<br/></c40></a><a href="../../libstd/vec.rs.html#1243"><c40>1243:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
+<br/></a><a href="../../libstd/vec.rs.html#1322"><c40>1322:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Box&lt;Vec&lt;u8&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
+<br/></a><a href="../../libstd/vec.rs.html#1956"><c40>1956:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(v);
+<br/></a><a href="../../libstd/vec.rs.html#1297"><c40>1297:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(&amp;mut&nbsp;*self);
+<br/></a><a href="../../libstd/vec.rs.html#1283"><c40>1283:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;**Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;cast::transmute(self);
+<br/></a><a href="../../libstd/at_vec.rs.html"><c40>libstd/at_vec.rs:<br/></c40></a><a href="../../libstd/at_vec.rs.html#218"><c40>218:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
+<br/></a><a href="../../libstd/at_vec.rs.html#272"><c40>272:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*ptr)&nbsp;=&nbsp;local_realloc(*ptr&nbsp;as&nbsp;*(),&nbsp;total_size)&nbsp;as&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;;
+<br/></a><a href="../../libstd/at_vec.rs.html#266"><c40>266:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;reserve_raw(ty:&nbsp;*TyDesc,&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;,&nbsp;n:&nbsp;uint)&nbsp;{
+<br/></a><a href="../../libstd/at_vec.rs.html#256"><c40>256:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ptr:&nbsp;*mut&nbsp;*mut&nbsp;Box&lt;Vec&lt;()&gt;&gt;&nbsp;=&nbsp;transmute(v);
+<br/></a><a href="../../libstd/at_vec.rs.html#208"><c40>208:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*mut&nbsp;Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
+<br/></a><a href="../../libstd/at_vec.rs.html#230"><c40>230:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;repr:&nbsp;*mut&nbsp;Box&lt;Vec&lt;T&gt;&gt;&nbsp;=&nbsp;cast::transmute_copy(v);
+<br/></a><a href="../../libstd/repr.rs.html"><c40>libstd/repr.rs:<br/></c40></a><a href="../../libstd/repr.rs.html#304"><c40>304:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Box&lt;()&gt;&gt;&nbsp;|b|&nbsp;{
+<br/></a><a href="../../libstd/repr.rs.html#336"><c40>336:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Box&lt;raw::Vec&lt;()&gt;&gt;&gt;&nbsp;|b|&nbsp;{
+<br/></a><a href="../../libstd/repr.rs.html#289"><c40>289:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;self.get::&lt;&amp;raw::Box&lt;()&gt;&gt;&nbsp;|b|&nbsp;{
+<br/></a><a href="../../libstd/repr.rs.html#547"><c40>(547)</c40></a><a href="../../libstd/repr.rs.html#351"><c40>(351)</c40></a><br/><a href="../../libstd/cleanup.rs.html"><c40>libstd/cleanup.rs:<br/></c40></a><a href="../../libstd/cleanup.rs.html#44"><c40>(44)</c40></a><a href="../../libstd/cleanup.rs.html#126"><c40>(126)</c40></a><a href="../../libstd/cleanup.rs.html#33"><c40>(33)</c40></a><br/></div></c0></fileblock></div></maintext>

@@ -309,15 +309,6 @@ impl<T> RawPtr<T> for *T {
     /// Calculates the offset from a pointer. The offset *must* be in-bounds of
     /// the object, or one-byte-past-the-end.
     #[inline]
-    #[cfg(stage0)]
-    unsafe fn offset_inbounds(self, count: int) -> *T {
-        intrinsics::offset(self, count)
-    }
-
-    /// Calculates the offset from a pointer. The offset *must* be in-bounds of
-    /// the object, or one-byte-past-the-end.
-    #[inline]
-    #[cfg(not(stage0))]
     unsafe fn offset_inbounds(self, count: int) -> *T {
         intrinsics::offset_inbounds(self, count)
     }
@@ -361,19 +352,6 @@ impl<T> RawPtr<T> for *mut T {
     /// This method should be preferred over `offset` when the guarantee can be
     /// satisfied, to enable better optimization.
     #[inline]
-    #[cfg(stage0)]
-    unsafe fn offset_inbounds(self, count: int) -> *mut T {
-        intrinsics::offset(self as *T, count) as *mut T
-    }
-
-    /// Calculates the offset from a pointer. The offset *must* be in-bounds of
-    /// the object, or one-byte-past-the-end. An arithmetic overflow is also
-    /// undefined behaviour.
-    ///
-    /// This method should be preferred over `offset` when the guarantee can be
-    /// satisfied, to enable better optimization.
-    #[inline]
-    #[cfg(not(stage0))]
     unsafe fn offset_inbounds(self, count: int) -> *mut T {
         intrinsics::offset_inbounds(self as *T, count) as *mut T
     }
@@ -416,7 +394,7 @@ impl<T, I: Int> Add<I, *T> for *T {
     /// Add an integer value to a pointer to get an offset pointer.
     /// Is calculated according to the size of the type pointed to.
     #[inline]
-    pub fn add(&self, rhs: &I) -> *T {
+    fn add(&self, rhs: &I) -> *T {
         self.offset(rhs.to_int() as int)
     }
 }
@@ -426,7 +404,7 @@ impl<T, I: Int> Sub<I, *T> for *T {
     /// Subtract an integer value from a pointer to get an offset pointer.
     /// Is calculated according to the size of the type pointed to.
     #[inline]
-    pub fn sub(&self, rhs: &I) -> *T {
+    fn sub(&self, rhs: &I) -> *T {
         self.offset(-rhs.to_int() as int)
     }
 }
@@ -436,7 +414,7 @@ impl<T, I: Int> Add<I, *mut T> for *mut T {
     /// Add an integer value to a pointer to get an offset pointer.
     /// Is calculated according to the size of the type pointed to.
     #[inline]
-    pub fn add(&self, rhs: &I) -> *mut T {
+    fn add(&self, rhs: &I) -> *mut T {
         self.offset(rhs.to_int() as int)
     }
 }
@@ -446,7 +424,7 @@ impl<T, I: Int> Sub<I, *mut T> for *mut T {
     /// Subtract an integer value from a pointer to get an offset pointer.
     /// Is calculated according to the size of the type pointed to.
     #[inline]
-    pub fn sub(&self, rhs: &I) -> *mut T {
+    fn sub(&self, rhs: &I) -> *mut T {
         self.offset(-rhs.to_int() as int)
     }
 }

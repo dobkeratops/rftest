@@ -38,16 +38,34 @@ pub use realstd::unstable::intrinsics::{TyDesc, Opaque, TyVisitor};
 
 pub type GlueFn = extern "Rust" fn(*i8);
 
-// NB: this has to be kept in sync with the Rust ABI.
+// NB: this has to be kept in sync with `type_desc` in `rt`
 #[lang="ty_desc"]
 #[cfg(not(test))]
 pub struct TyDesc {
+    // sizeof(T)
     size: uint,
+
+    // alignof(T)
     align: uint,
+
+    // Called on a copy of a value of type `T` *after* memcpy
     take_glue: GlueFn,
+
+    // Called when a value of type `T` is no longer needed
     drop_glue: GlueFn,
+
+    // Called by drop glue when a value of type `T` can be freed
     free_glue: GlueFn,
+
+    // Called by reflection visitor to visit a value of type `T`
     visit_glue: GlueFn,
+
+    // If T represents a box pointer (`@U` or `~U`), then
+    // `borrow_offset` is the amount that the pointer must be adjusted
+    // to find the payload.  This is always derivable from the type
+    // `U`, but in the case of `@Trait` or `~Trait` objects, the type
+    // `U` is unknown.
+    borrow_offset: uint,
 }
 
 #[lang="opaque"]
@@ -310,7 +328,7 @@ extern "rust-intrinsic" {
     /// Returns `true` if a type is managed (will be allocated on the local heap)
     pub fn contains_managed<T>() -> bool;
 
-    pub fn visit_tydesc(td: *TyDesc, tv: @TyVisitor);
+    pub fn visit_tydesc(td: *TyDesc, tv: &TyVisitor);
 
     pub fn frame_address(f: &once fn(*u8));
 
@@ -329,7 +347,6 @@ extern "rust-intrinsic" {
     ///
     /// This intrinsic should be preferred over `offset` when the guarantee can
     /// be satisfied, to enable better optimization.
-    #[cfg(not(stage0))]
     pub fn offset_inbounds<T>(dst: *T, offset: int) -> *T;
 
     /// Equivalent to the `llvm.memcpy.p0i8.0i8.i32` intrinsic, with a size of
@@ -428,6 +445,36 @@ extern "rust-intrinsic" {
     pub fn bswap16(x: i16) -> i16;
     pub fn bswap32(x: i32) -> i32;
     pub fn bswap64(x: i64) -> i64;
+
+    pub fn i8_add_with_overflow(x: i8, y: i8) -> (i8, bool);
+    pub fn i16_add_with_overflow(x: i16, y: i16) -> (i16, bool);
+    pub fn i32_add_with_overflow(x: i32, y: i32) -> (i32, bool);
+    pub fn i64_add_with_overflow(x: i64, y: i64) -> (i64, bool);
+
+    pub fn u8_add_with_overflow(x: u8, y: u8) -> (u8, bool);
+    pub fn u16_add_with_overflow(x: u16, y: u16) -> (u16, bool);
+    pub fn u32_add_with_overflow(x: u32, y: u32) -> (u32, bool);
+    pub fn u64_add_with_overflow(x: u64, y: u64) -> (u64, bool);
+
+    pub fn i8_sub_with_overflow(x: i8, y: i8) -> (i8, bool);
+    pub fn i16_sub_with_overflow(x: i16, y: i16) -> (i16, bool);
+    pub fn i32_sub_with_overflow(x: i32, y: i32) -> (i32, bool);
+    pub fn i64_sub_with_overflow(x: i64, y: i64) -> (i64, bool);
+
+    pub fn u8_sub_with_overflow(x: u8, y: u8) -> (u8, bool);
+    pub fn u16_sub_with_overflow(x: u16, y: u16) -> (u16, bool);
+    pub fn u32_sub_with_overflow(x: u32, y: u32) -> (u32, bool);
+    pub fn u64_sub_with_overflow(x: u64, y: u64) -> (u64, bool);
+
+    pub fn i8_mul_with_overflow(x: i8, y: i8) -> (i8, bool);
+    pub fn i16_mul_with_overflow(x: i16, y: i16) -> (i16, bool);
+    pub fn i32_mul_with_overflow(x: i32, y: i32) -> (i32, bool);
+    pub fn i64_mul_with_overflow(x: i64, y: i64) -> (i64, bool);
+
+    pub fn u8_mul_with_overflow(x: u8, y: u8) -> (u8, bool);
+    pub fn u16_mul_with_overflow(x: u16, y: u16) -> (u16, bool);
+    pub fn u32_mul_with_overflow(x: u32, y: u32) -> (u32, bool);
+    pub fn u64_mul_with_overflow(x: u64, y: u64) -> (u64, bool);
 }
 
 #[cfg(target_endian = "little")] pub fn to_le16(x: i16) -> i16 { x }

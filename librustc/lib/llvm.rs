@@ -1811,6 +1811,7 @@ pub mod llvm {
         pub fn LLVMRustWriteOutputFile(PM: PassManagerRef,
                                        M: ModuleRef,
                                        Triple: *c_char,
+                                       Cpu: *c_char,
                                        Feature: *c_char,
                                        Output: *c_char,
                                        // FIXME: When #2334 is fixed,
@@ -2082,6 +2083,9 @@ pub mod llvm {
                                             Elements: ValueRef,
                                             RunTimeLang: c_uint)
                                             -> ValueRef;
+
+        #[fast_ffi]
+        pub fn LLVMSetUnnamedAddr(GlobalVar: ValueRef, UnnamedAddr: Bool);
     }
 }
 
@@ -2098,6 +2102,12 @@ pub fn SetFunctionCallConv(Fn: ValueRef, CC: CallConv) {
 pub fn SetLinkage(Global: ValueRef, Link: Linkage) {
     unsafe {
         llvm::LLVMSetLinkage(Global, Link as c_uint);
+    }
+}
+
+pub fn SetUnnamedAddr(Global: ValueRef, Unnamed: bool) {
+    unsafe {
+        llvm::LLVMSetUnnamedAddr(Global, Unnamed as Bool);
     }
 }
 

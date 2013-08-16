@@ -1,163 +1,124 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
-a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
-pr{font-weight:bold}
-ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
-c24{color:#ffffff; font-style:italic; opacity:0.5}
-c25{color:#ffffff; opacity:0.92}
-c26{color:#ffffff; font-weight:bold; }
-c27{color:#b0ffff; font-weight:bold; }
-c28{color:#b0ffb0; font-weight:bold; }
-c29{color:#d0e0ff; font-weight:bold; }
-c30{color:#fff0e0; font-weight:bold; }
-c31{color:#d0b0ff; font-weight:bold; }
-c32{color:#ffffff; font-style:italic; opacity:0.6}
-c1{color:#ffffc0;   font-weight:bold; }
-c33{color:#e0a0d0;  }
-c2{color:#60f0c0}
-c3{color:#50e0ff; }
-c4{color:#f090f0}
-c5{color:#50ff80; }
-c6{color:#f0f0e0}
-c7{color:#fff0d0}
-c8{color:#e0d0f0}
-c9{color:#70f0f0}
-c10{color:#f0f070}
-c11{color:#c0f070}
-c12{color:#70c0f0}
-c13{color:#c0f070}
-c14{color:#f0ffc0}
-c15{color:#f0f0e0}
-c16{color:#c0ffe0}
-c17{color:#90d0f0}
-c18{color:#f0a0d0}
-c19{color:#d0f0a0}
-c20{color:#0f0ff}
-c21{color:#d0d0d0; font-weight:bold}
-c22{color:#c0ffd0; }
-c23{color:#d0f0ff; }
-</style><body style="background-color:#38343c;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/unstable/">unstable</a><c1>/</c1><c0><a href="./../../libstd/unstable/mod.rs.html">mod.rs</a><br/><br/><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>doc</c33><c25>(</c25><c33>hidden</c33><c25>)</c25><c4>];</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;comm::</c0><c4>{</c4><c0>GenericChan</c0><c4>,</c4><c0>&nbsp;GenericPort</c0><c4>};</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;comm</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;prelude::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;task</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><a id="n124467">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;dynamic_lib</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a id="n124729">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a id="n126882">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;finally</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a id="n127111">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;intrinsics</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a id="n129428">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;simd</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;extfmt</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a id="n129821">&nbsp;</a><c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>not</c33><c25>(</c25><c33>test</c33><c25>))</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a id="n131753">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;lang</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a id="n133705">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;sync</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a id="n133839">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;atomics</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;raw</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c24>/**
-</c24><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c24>Start&nbsp;a&nbsp;new&nbsp;thread&nbsp;outside&nbsp;of&nbsp;the&nbsp;current&nbsp;runtime&nbsp;context&nbsp;and&nbsp;wait
-</c24><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c24>for&nbsp;it&nbsp;to&nbsp;terminate.
-</c24><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c24>The&nbsp;executing&nbsp;thread&nbsp;has&nbsp;no&nbsp;access&nbsp;to&nbsp;a&nbsp;task&nbsp;pointer&nbsp;and&nbsp;will&nbsp;be&nbsp;using
-</c24><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c24>a&nbsp;normal&nbsp;large&nbsp;stack.
-</c24><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a id="n133891">&nbsp;</a><c24>*/
-</c24><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n133842"><a id="n133890"><a id="n133840"><a id="n133841"><a id="n133844">&nbsp;</a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;run_in_bare_thread</c26><c25>(</c25><c20>f</c20><c1>:&nbsp;</c1><c3>~</c3><c26>fn</c26><c25>())</c25><c1>&nbsp;</c1><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;cell::Cell</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;rt::thread::Thread</c22><c4>;</c4><c22>
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg5><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/unstable/">unstable</a><c1>/</c1><c0><a href="./../../libstd/unstable/mod.rs.html">mod.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>hidden</c50><c4>)</c4><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;comm::</c0><c3>{</c3><c0>GenericChan</c0><c3>,</c3><c0>&nbsp;GenericPort</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;comm</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;prelude::*</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;task</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><a id="n127349">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;dynamic_lib;
+</c38><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a id="n127611">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a id="n130103">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;finally;
+</c38><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a id="n130332">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;intrinsics;
+</c38><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a id="n132649">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;simd;
+</c38><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;extfmt;
+</c38><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a id="n133015">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a id="n134967">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;lang;
+</c38><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a id="n136919">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;sync;
+</c38><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a id="n137062">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;atomics;
+</c38><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;raw;
+</c38><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c41>/**
+</c41><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c41>Start&nbsp;a&nbsp;new&nbsp;thread&nbsp;outside&nbsp;of&nbsp;the&nbsp;current&nbsp;runtime&nbsp;context&nbsp;and&nbsp;wait
+</c41><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c41>for&nbsp;it&nbsp;to&nbsp;terminate.
+</c41><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c41>The&nbsp;executing&nbsp;thread&nbsp;has&nbsp;no&nbsp;access&nbsp;to&nbsp;a&nbsp;task&nbsp;pointer&nbsp;and&nbsp;will&nbsp;be&nbsp;using
+</c41><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c41>a&nbsp;normal&nbsp;large&nbsp;stack.
+</c41><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a id="n137114">&nbsp;</a><c41>*/
+</c41><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n137064"><a id="n137067"><a id="n137065"><a id="n137063"><a id="n137113">&nbsp;</a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;run_in_bare_thread</c30><c4>(</c4><c20><a href="../../libstd/unstable/mod.rs.html#38">f</a></c20><c1>:&nbsp;</c1><c8>~</c8><c30>fn</c30><c4>())</c4><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;cell::Cell</c22><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;rt::thread::Thread</c22><c3>;</c3><c22>
 </c22><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c22>
-</c22><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n133850"><a id="n133848"><a id="n133852"><a id="n133853"><a id="n133851"><a id="n133849"><a id="n133847">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>f_cell</c20><c16>&nbsp;=&nbsp;</c16><a href="../../libstd/cell.rs.html#33"><c8>Cell</c8></a><c8>::</c8><a href="../../libstd/cell.rs.html#33"><c8>new</c8></a><c25>(</c25><a href="../../libstd/unstable/mod.rs.html#38"><c8>f</c8></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a id="n133861"><a id="n133859"><a id="n133858"><a id="n133857"><a id="n133854"><a id="n133856"><a id="n133860"><a id="n133855">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c25>(</c25><c20>port</c20><c4>,</c4><c20>&nbsp;chan</c20><c25>)</c25><c16>&nbsp;=&nbsp;</c16><a href="../../libstd/comm.rs.html#63"><c8>comm</c8></a><c8>::</c8><a href="../../libstd/comm.rs.html#63"><c8>stream</c8></a><c25>()</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;FIXME&nbsp;#4525:&nbsp;Unfortunate&nbsp;that&nbsp;this&nbsp;creates&nbsp;an&nbsp;extra&nbsp;scheduler&nbsp;but&nbsp;it's
-</c24><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c24>//&nbsp;necessary&nbsp;since&nbsp;rust_raw_thread_join&nbsp;is&nbsp;blocking
-</c24><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n133863"><a id="n133880"><a id="n133865"><a id="n133862"><a id="n133881"><a id="n133882"><a id="n133884"><a id="n133883"><a id="n133879"><a id="n133885">&nbsp;</a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c9>&nbsp;</c9><a href="../../libstd/task/mod.rs.html#490"><c8>task</c8></a><c8>::</c8><a href="../../libstd/task/mod.rs.html#490"><c8>spawn_sched</c8></a><c25>(</c25><a href="../../libstd/task/mod.rs.html#82"><c8>task</c8></a><c8>::</c8><a href="../../libstd/task/mod.rs.html#82"><c8>SingleThreaded</c8></a><c25>)</c25><c0>&nbsp;</c0><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a id="n133873"><a id="n133872"><a id="n133870"><a id="n133866"><a id="n133867"><a id="n133869">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/rt/thread.rs.html#24"><c8>Thread</c8></a><c8>::</c8><a href="../../libstd/rt/thread.rs.html#24"><c8>start</c8></a><c25>(</c25><a href="../../libstd/unstable/mod.rs.html#42"><c8>f_cell</c8></a><c10>.</c10><a href="../../libstd/cell.rs.html#43"><c10>take</c10></a><c25>())</c25><c9>.</c9><a href="../../libstd/rt/thread.rs.html#36"><c13>join</c13></a><c25>()</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n133878"><a id="n133877"><a id="n133874"><a id="n133875">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/unstable/mod.rs.html#43"><c8>chan</c8></a><c13>.</c13><a href="../../libstd/comm.rs.html#120"><c13>send</c13></a><c25>(())</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n133889"><a id="n133888"><a id="n133886">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/unstable/mod.rs.html#43"><c8>port</c8></a><c13>.</c13><a href="../../libstd/comm.rs.html#146"><c13>recv</c13></a><c25>()</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c22><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n137073"><a id="n137075"><a id="n137076"><a id="n137074"><a id="n137071"><a id="n137070"><a id="n137072">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20><a href="../../libstd/unstable/mod.rs.html#42">f_cell</a></c20><c16>&nbsp;=&nbsp;</c16><c26><a href="../../libstd/cell.rs.html#34">Cell::new</a></c26><c4>(</c4><c26><a href="../../libstd/unstable/mod.rs.html#38">f</a></c26><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a id="n137083"><a id="n137081"><a id="n137078"><a id="n137080"><a id="n137082"><a id="n137079"><a id="n137084"><a id="n137077">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c4>(</c4><c20><a href="../../libstd/unstable/mod.rs.html#43">port</a></c20><c3>,</c3><c20>&nbsp;</c20><c20><a href="../../libstd/unstable/mod.rs.html#43">chan</a></c20><c4>)</c4><c16>&nbsp;=&nbsp;</c16><c26><a href="../../libstd/comm.rs.html#63">comm::stream</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;FIXME&nbsp;#4525:&nbsp;Unfortunate&nbsp;that&nbsp;this&nbsp;creates&nbsp;an&nbsp;extra&nbsp;scheduler&nbsp;but&nbsp;it's
+</c40><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;necessary&nbsp;since&nbsp;rust_raw_thread_join&nbsp;is&nbsp;blocking
+</c40><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n137105"><a id="n137106"><a id="n137108"><a id="n137102"><a id="n137104"><a id="n137103"><a id="n137085"><a id="n137088"><a id="n137086"><a id="n137107">&nbsp;</a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c27>&nbsp;</c27><c26><a href="../../libstd/task/mod.rs.html#489">task::spawn_sched</a></c26><c4>(</c4><c26><a href="../../libstd/task/mod.rs.html#81">task::SingleThreaded</a></c26><c4>)</c4><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a id="n137096"><a id="n137089"><a id="n137090"><a id="n137095"><a id="n137092"><a id="n137093">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/thread.rs.html#24">Thread::start</a></c26><c4>(</c4><c26><a href="../../libstd/unstable/mod.rs.html#42">f_cell</a></c26><c10><a href="../../libstd/cell.rs.html#44">.take</a></c10><c4>())</c4><c27><a href="../../libstd/rt/thread.rs.html#36">.</a></c27><c10><a href="../../libstd/rt/thread.rs.html#36">join</a></c10><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n137097"><a id="n137098"><a id="n137101"><a id="n137100">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/unstable/mod.rs.html#43">chan</a></c26><c10><a href="../../libstd/comm.rs.html#120">.send</a></c10><c4>(())</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n137111"><a id="n137112"><a id="n137109">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/unstable/mod.rs.html#43">port</a></c26><c13><a href="../../libstd/comm.rs.html#146">.recv</a></c13><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c26>fn&nbsp;test_run_in_bare_thread</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;i&nbsp;=&nbsp;100</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;run_in_bare_thread&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c25>(</c25><c0>i</c0><c4>,</c4><c0>&nbsp;100</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c30>fn&nbsp;test_run_in_bare_thread</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;i&nbsp;=&nbsp;100</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;run_in_bare_thread&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>i</c0><c3>,</c3><c0>&nbsp;100</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>test</c33><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c26>fn&nbsp;test_run_in_bare_thread_exchange</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c24>//&nbsp;Does&nbsp;the&nbsp;exchange&nbsp;heap&nbsp;work&nbsp;without&nbsp;the&nbsp;runtime?
-</c24><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;i&nbsp;=&nbsp;~100</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;run_in_bare_thread&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c25>(</c25><c0>i&nbsp;==&nbsp;~100</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c30>fn&nbsp;test_run_in_bare_thread_exchange</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c40>//&nbsp;Does&nbsp;the&nbsp;exchange&nbsp;heap&nbsp;work&nbsp;without&nbsp;the&nbsp;runtime?
+</c40><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;i&nbsp;=&nbsp;~100</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>do</c21><c0>&nbsp;run_in_bare_thread&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>i&nbsp;==&nbsp;~100</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c32>///&nbsp;Changes&nbsp;the&nbsp;current&nbsp;working&nbsp;directory&nbsp;to&nbsp;the&nbsp;specified
-</c32><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c32>///&nbsp;path&nbsp;while&nbsp;acquiring&nbsp;a&nbsp;global&nbsp;lock,&nbsp;then&nbsp;calls&nbsp;`action`.
-</c32><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c32>///&nbsp;If&nbsp;the&nbsp;change&nbsp;is&nbsp;successful,&nbsp;releases&nbsp;the&nbsp;lock&nbsp;and&nbsp;restores&nbsp;the
-</c32><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a>&nbsp;<c32>///&nbsp;CWD&nbsp;to&nbsp;what&nbsp;it&nbsp;was&nbsp;before,&nbsp;returning&nbsp;true.
-</c32><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a>&nbsp;<c32>///&nbsp;Returns&nbsp;false&nbsp;if&nbsp;the&nbsp;directory&nbsp;doesn't&nbsp;exist&nbsp;or&nbsp;if&nbsp;the&nbsp;directory&nbsp;change
-</c32><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c32>///&nbsp;is&nbsp;otherwise&nbsp;unsuccessful.
-</c32><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c32>///
-</c32><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c32>///&nbsp;This&nbsp;is&nbsp;used&nbsp;by&nbsp;test&nbsp;cases&nbsp;to&nbsp;avoid&nbsp;cwd&nbsp;races.
-</c32><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c32>///
-</c32><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c32>///&nbsp;#&nbsp;Safety&nbsp;Note
-</c32><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c32>///
-</c32><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c32>///&nbsp;This&nbsp;uses&nbsp;a&nbsp;pthread&nbsp;mutex&nbsp;so&nbsp;descheduling&nbsp;in&nbsp;the&nbsp;action&nbsp;callback
-</c32><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c32>///&nbsp;can&nbsp;lead&nbsp;to&nbsp;deadlock.&nbsp;Calling&nbsp;change_dir_locked&nbsp;recursively&nbsp;will
-</c32><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a id="n134009">&nbsp;</a><c32>///&nbsp;also&nbsp;deadlock.
-</c32><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a id="n133934"><a id="n133928"><a id="n133930"><a id="n134008"><a id="n133931"><a id="n133938"><a id="n133935"><a id="n133933">&nbsp;</a></a></a></a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c26>fn&nbsp;change_dir_locked</c26><c25>(</c25><c20>p</c20><c1>:&nbsp;</c1><c3>&amp;</c3><a href="../../libstd/path.rs.html#50"><c3>Path</c3></a><c4>,</c4><c1>&nbsp;</c1><c20>action</c20><c1>:&nbsp;</c1><c3>&amp;</c3><c26>fn</c26><c25>())</c25><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c3>bool</c3><c1>&nbsp;</c1><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;os</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;os::change_dir</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;unstable::sync::atomically</c22><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;unstable::finally::Finally</c22><c4>;</c4><c22>
+</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c42>///&nbsp;Changes&nbsp;the&nbsp;current&nbsp;working&nbsp;directory&nbsp;to&nbsp;the&nbsp;specified
+</c42><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c42>///&nbsp;path&nbsp;while&nbsp;acquiring&nbsp;a&nbsp;global&nbsp;lock,&nbsp;then&nbsp;calls&nbsp;`action`.
+</c42><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c42>///&nbsp;If&nbsp;the&nbsp;change&nbsp;is&nbsp;successful,&nbsp;releases&nbsp;the&nbsp;lock&nbsp;and&nbsp;restores&nbsp;the
+</c42><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a>&nbsp;<c42>///&nbsp;CWD&nbsp;to&nbsp;what&nbsp;it&nbsp;was&nbsp;before,&nbsp;returning&nbsp;true.
+</c42><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a>&nbsp;<c42>///&nbsp;Returns&nbsp;false&nbsp;if&nbsp;the&nbsp;directory&nbsp;doesn't&nbsp;exist&nbsp;or&nbsp;if&nbsp;the&nbsp;directory&nbsp;change
+</c42><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c42>///&nbsp;is&nbsp;otherwise&nbsp;unsuccessful.
+</c42><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;is&nbsp;used&nbsp;by&nbsp;test&nbsp;cases&nbsp;to&nbsp;avoid&nbsp;cwd&nbsp;races.
+</c42><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;Safety&nbsp;Note
+</c42><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;uses&nbsp;a&nbsp;pthread&nbsp;mutex&nbsp;so&nbsp;descheduling&nbsp;in&nbsp;the&nbsp;action&nbsp;callback
+</c42><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c42>///&nbsp;can&nbsp;lead&nbsp;to&nbsp;deadlock.&nbsp;Calling&nbsp;change_dir_locked&nbsp;recursively&nbsp;will
+</c42><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a id="n137232">&nbsp;</a><c42>///&nbsp;also&nbsp;deadlock.
+</c42><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a id="n137153"><a id="n137157"><a id="n137156"><a id="n137161"><a id="n137151"><a id="n137154"><a id="n137158"><a id="n137231">&nbsp;</a></a></a></a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;change_dir_locked</c30><c4>(</c4><c20><a href="../../libstd/unstable/mod.rs.html#85">p</a></c20><c1>:&nbsp;</c1><c8>&amp;</c8><c8><a href="../../libstd/path.rs.html#50">Path</a></c8><c3>,</c3><c1>&nbsp;</c1><c20><a href="../../libstd/unstable/mod.rs.html#85">action</a></c20><c1>:&nbsp;</c1><c8>&amp;</c8><c30>fn</c30><c4>())</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8>bool</c8><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;os</c22><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;os::change_dir</c22><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;unstable::sync::atomically</c22><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;unstable::finally::Finally</c22><c3>;</c3><c22>
 </c22><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c22>
-</c22><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n134001"><a id="n133999"><a id="n134000">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c13>&nbsp;</c13><c4>{</c4><c13>
-</c13><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a>&nbsp;<c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c24>//&nbsp;This&nbsp;is&nbsp;really&nbsp;sketchy.&nbsp;Using&nbsp;a&nbsp;pthread&nbsp;mutex&nbsp;so&nbsp;descheduling
-</c24><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a>&nbsp;<c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c24>//&nbsp;in&nbsp;the&nbsp;`action`&nbsp;callback&nbsp;can&nbsp;cause&nbsp;deadlock.&nbsp;Doing&nbsp;it&nbsp;in
-</c24><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a>&nbsp;<c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c24>//&nbsp;`task::atomically`&nbsp;to&nbsp;try&nbsp;to&nbsp;avoid&nbsp;that,&nbsp;but&nbsp;...&nbsp;I&nbsp;don't&nbsp;know
-</c24><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a>&nbsp;<c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c24>//&nbsp;this&nbsp;is&nbsp;all&nbsp;bogus.
-</c24><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n133943"><a id="n133992"><a id="n133996"><a id="n133994"><a id="n133991"><a id="n133944"><a id="n133995"><a id="n133993"><a id="n133997">&nbsp;</a></a></a></a></a></a></a></a></a><c13>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c13><c21>return</c21><c0>&nbsp;</c0><c21>do</c21><c9>&nbsp;</c9><a href="../../libstd/unstable/sync.rs.html#280"><c8>atomically</c8></a><c0>&nbsp;</c0><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a id="n133945"><a id="n133946"><a id="n133947">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c8>rust_take_change_dir_lock</c8><c25>()</c25><c4>;</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n137224"><a id="n137223"><a id="n137222">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;This&nbsp;is&nbsp;really&nbsp;sketchy.&nbsp;Using&nbsp;a&nbsp;pthread&nbsp;mutex&nbsp;so&nbsp;descheduling
+</c40><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;in&nbsp;the&nbsp;`action`&nbsp;callback&nbsp;can&nbsp;cause&nbsp;deadlock.&nbsp;Doing&nbsp;it&nbsp;in
+</c40><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;`task::atomically`&nbsp;to&nbsp;try&nbsp;to&nbsp;avoid&nbsp;that,&nbsp;but&nbsp;...&nbsp;I&nbsp;don't&nbsp;know
+</c40><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;this&nbsp;is&nbsp;all&nbsp;bogus.
+</c40><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n137220"><a id="n137218"><a id="n137219"><a id="n137216"><a id="n137166"><a id="n137214"><a id="n137217"><a id="n137167"><a id="n137215">&nbsp;</a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c1>&nbsp;</c1><c21>do</c21><c27>&nbsp;</c27><c26><a href="../../libstd/unstable/sync.rs.html#282">atomically</a></c26><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a id="n137169"><a id="n137168"><a id="n137170">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26>rust_take_change_dir_lock</c26><c4>()</c4><c3>;</c3><c22>
 </c22><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a>&nbsp;<c22>
-</c22><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n133976"><a id="n133948"><a id="n133975"><a id="n133973"><a id="n133989"><a id="n133974"><a id="n133977">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10>&nbsp;</c10><c25>(</c25><c0>||</c0><c4>{</c4><a href="../../libstd/unstable/finally.rs.html#48"><c22>
-</c22></a><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a id="n133950"><a id="n133951"><a id="n133954"><a id="n133953"><a id="n133952"><a id="n133949">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><a href="../../libstd/unstable/finally.rs.html#48"><c20>old_dir</c20></a><c16>&nbsp;</c16><a href="../../libstd/unstable/finally.rs.html#48"><c16>=</c16></a><c16>&nbsp;</c16><a href="../../libstd/os.rs.html#71"><c8>os</c8></a><c8>::</c8><a href="../../libstd/os.rs.html#71"><c8>getcwd</c8></a><c25>()</c25><c4>;</c4><a href="../../libstd/unstable/finally.rs.html#48"><c22>
-</c22></a><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a id="n133957"><a id="n133956"><a id="n133971"><a id="n133955"><a id="n133966">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><a href="../../libstd/os.rs.html#831"><c8>change_dir</c8></a><c25>(</c25><a href="../../libstd/unstable/mod.rs.html#85"><c8>p</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>{</c4><a href="../../libstd/unstable/finally.rs.html#48"><c22>
-</c22></a><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n133959"><a id="n133960"><a id="n133958">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/unstable/mod.rs.html#85"><c8>action</c8></a><c25>()</c25><c4>;</c4><a href="../../libstd/unstable/finally.rs.html#48"><c22>
-</c22></a><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a id="n133961"><a id="n133962"><a id="n133964"><a id="n133963">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/os.rs.html#831"><c8>change_dir</c8></a><c25>(</c25><c2>&amp;</c2><a href="../../libstd/unstable/mod.rs.html#100"><c8>old_dir</c8></a><c25>)</c25><a href="../../libstd/unstable/finally.rs.html#48"><c9>
-</c9></a><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a>&nbsp;<c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><a href="../../libstd/unstable/finally.rs.html#48"><c7>
-</c7></a><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n133969"><a id="n133970">&nbsp;</a></a><c7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><a href="../../libstd/unstable/finally.rs.html#48"><c22>
-</c22></a><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n133967">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/unstable/finally.rs.html#48"><c12>false</c12><c22>
-</c22></a><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="../../libstd/unstable/finally.rs.html#48"><c22>
-</c22></a><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n133979"><a id="n133984"><a id="n133986"><a id="n133985"><a id="n133983"><a id="n133987">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c25>)</c25><c0>.</c0><a href="../../libstd/unstable/finally.rs.html#48"><c0>finally</c0></a><c0>&nbsp;</c0><c4>{</c4><a href="../../libstd/unstable/finally.rs.html#48"><c22>
-</c22></a><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a id="n133982"><a id="n133981"><a id="n133980">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/unstable/finally.rs.html#48"><c8>rust_drop_change_dir_lock</c8></a><c25>()</c25><c4>;</c4><a href="../../libstd/unstable/finally.rs.html#48"><c22>
-</c22></a><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c13>
-</c13><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c13>&nbsp;&nbsp;&nbsp;&nbsp;</c13><c4>}</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n137212"><a id="n137199"><a id="n137197"><a id="n137200"><a id="n137196"><a id="n137198"><a id="n137171">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;</a></c10><c4>(</c4><c1><a href="../../libstd/unstable/finally.rs.html#48">||</a></c1><c3>{</c3><c22><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c22><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a id="n137172"><a id="n137173"><a id="n137177"><a id="n137174"><a id="n137175"><a id="n137176">&nbsp;</a></a></a></a></a></a><c22><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c13><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;</a></c13><c20><a href="../../libstd/unstable/mod.rs.html#100">old_dir</a></c20><c16><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;=&nbsp;</a></c16><c26><a href="../../libstd/os.rs.html#71">os::getcwd</a></c26><c4>()</c4><c3>;</c3><c22><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c22><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a id="n137194"><a id="n137178"><a id="n137179"><a id="n137180"><a id="n137189">&nbsp;</a></a></a></a></a><c22><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>if</c21><c21><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;</a></c21><c26><a href="../../libstd/os.rs.html#831">change_dir</a></c26><c4>(</c4><c26><a href="../../libstd/unstable/mod.rs.html#85">p</a></c26><c4>)</c4><c27><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;</a></c27><c3>{</c3><c22><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c22><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n137183"><a id="n137182"><a id="n137181">&nbsp;</a></a></a><c22><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../../libstd/unstable/mod.rs.html#85">action</a></c26><c4>()</c4><c3>;</c3><c22><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c22><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a id="n137187"><a id="n137184"><a id="n137185"><a id="n137186">&nbsp;</a></a></a></a><c22><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../../libstd/os.rs.html#831">change_dir</a></c26><c4>(</c4><c5><a href="../../libstd/unstable/finally.rs.html#48">&amp;</a></c5><c26><a href="../../libstd/unstable/mod.rs.html#100">old_dir</a></c26><c4>)</c4><c27><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c27><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a>&nbsp;<c27><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c27><c3>}</c3><c21><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c21><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n137192"><a id="n137193">&nbsp;</a></a><c21><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c21>else</c21><c21><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;</a></c21><c3>{</c3><c22><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c22><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n137190">&nbsp;</a><c22><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c12><a href="../../libstd/unstable/finally.rs.html#48">false</a></c12><c22><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c22><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a>&nbsp;<c22><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c22><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c22><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n137202"><a id="n137207"><a id="n137208"><a id="n137209"><a id="n137206"><a id="n137210">&nbsp;</a></a></a></a></a></a><c22><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c4>)</c4><c1><a href="../../libstd/unstable/finally.rs.html#48">.finally&nbsp;</a></c1><c3>{</c3><c22><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c22><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a id="n137204"><a id="n137203"><a id="n137205">&nbsp;</a></a></a><c22><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../../libstd/unstable/finally.rs.html#48">rust_drop_change_dir_lock</a></c26><c4>()</c4><c3>;</c3><c22><a href="../../libstd/unstable/finally.rs.html#48">
+</a></c22><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c22><a href="../../libstd/unstable/finally.rs.html#48">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
 </c22><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a>&nbsp;<c22>
-</c22><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a id="n134006"><a id="n134007">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>extern</c21><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a id="n134002">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_take_change_dir_lock</c26><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n134004">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;rust_drop_change_dir_lock</c26><c25>()</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><div/><br/><a id="37_3_refs"><a href="#37"><c24>libstd/unstable/mod.rs:37:3-37:3&nbsp;-fn-&nbsp;definition:<br/></c24><pr>*/
+</c22><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a id="n137230"><a id="n137229">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>extern</c21><c1>&nbsp;</c1><c3>{</c3><c1>
+</c1><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a id="n137225">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;rust_take_change_dir_lock</c30><c4>()</c4><c3>;</c3><c1>
+</c1><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n137227">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;rust_drop_change_dir_lock</c30><c4>()</c4><c3>;</c3><c1>
+</c1><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="37_3_refs"><a href="#37"><c40>libstd/unstable/mod.rs:37:3-37:3&nbsp;-fn-&nbsp;definition:<br/></c40><pr>*/
 <br/>pub&nbsp;fn&nbsp;run_in_bare_thread(f:&nbsp;~fn())&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/test.rs.html"><c24>libstd/rt/test.rs:<br/></c24><a href="../../libstd/rt/test.rs.html#48"><c24>48:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;run_in_bare_thread&nbsp;{
-<br/></a><a href="../../libstd/rt/test.rs.html#159"><c24>159:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;run_in_bare_thread&nbsp;{
-<br/></a><a href="../../libstd/rt/test.rs.html#295"><c24>295:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;run_in_bare_thread&nbsp;{
-<br/></a><br/></a></c0>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/test.rs.html"><c40>libstd/rt/test.rs:<br/></c40></a><a href="../../libstd/rt/test.rs.html#159"><c40>159:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;run_in_bare_thread&nbsp;{
+<br/></a><a href="../../libstd/rt/test.rs.html#295"><c40>295:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;run_in_bare_thread&nbsp;{
+<br/></a><a href="../../libstd/rt/test.rs.html#48"><c40>48:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;run_in_bare_thread&nbsp;{
+<br/></a><br/></div></c0></fileblock></div></maintext>

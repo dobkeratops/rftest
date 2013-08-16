@@ -117,16 +117,6 @@ mod std {
 }
 */
 
-#[cfg(stage0)]
-pub fn version(argv0: &str) {
-    let mut vers = ~"unknown version";
-    let env_vers = env!("CFG_VERSION");
-    if env_vers.len() != 0 { vers = env_vers.to_owned(); }
-    printfln!("%s %s", argv0, vers);
-    printfln!("host: %s", host_triple());
-}
-
-#[cfg(not(stage0))]
 pub fn version(argv0: &str) {
     let vers = match option_env!("CFG_VERSION") {
         Some(vers) => vers,
@@ -319,7 +309,13 @@ pub fn monitor(f: ~fn(diagnostic::Emitter)) {
     let ch_capture = ch.clone();
     let mut task_builder = task::task();
     task_builder.supervised();
-    task_builder.opts.stack_size = Some(STACK_SIZE);
+
+    // XXX: Hacks on hacks. If the env is trying to override the stack size
+    // then *don't* set it explicitly.
+    if os::getenv("RUST_MIN_STACK").is_none() {
+        task_builder.opts.stack_size = Some(STACK_SIZE);
+    }
+
     match do task_builder.try {
         let ch = ch_capture.clone();
         let ch_capture = ch.clone();

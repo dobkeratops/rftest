@@ -1,89 +1,50 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
-a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
-pr{font-weight:bold}
-ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
-c24{color:#ffffff; font-style:italic; opacity:0.5}
-c25{color:#ffffff; opacity:0.92}
-c26{color:#ffffff; font-weight:bold; }
-c27{color:#b0ffff; font-weight:bold; }
-c28{color:#b0ffb0; font-weight:bold; }
-c29{color:#d0e0ff; font-weight:bold; }
-c30{color:#fff0e0; font-weight:bold; }
-c31{color:#d0b0ff; font-weight:bold; }
-c32{color:#ffffff; font-style:italic; opacity:0.6}
-c1{color:#ffffc0;   font-weight:bold; }
-c33{color:#e0a0d0;  }
-c2{color:#60f0c0}
-c3{color:#50e0ff; }
-c4{color:#f090f0}
-c5{color:#50ff80; }
-c6{color:#f0f0e0}
-c7{color:#fff0d0}
-c8{color:#e0d0f0}
-c9{color:#70f0f0}
-c10{color:#f0f070}
-c11{color:#c0f070}
-c12{color:#70c0f0}
-c13{color:#c0f070}
-c14{color:#f0ffc0}
-c15{color:#f0f0e0}
-c16{color:#c0ffe0}
-c17{color:#90d0f0}
-c18{color:#f0a0d0}
-c19{color:#d0f0a0}
-c20{color:#0f0ff}
-c21{color:#d0d0d0; font-weight:bold}
-c22{color:#c0ffd0; }
-c23{color:#d0f0ff; }
-</style><body style="background-color:#3a333a;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../../libstd/rt/io/">io</a><c1>/</c1><c0><a href="./../../../libstd/rt/io/support.rs.html">support.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;path::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><a id="n167500">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>pub</c21><c28>&nbsp;trait&nbsp;PathLike&nbsp;</c28><c4>{</c4><c28>
-</c28><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n167499"><a id="n167491"><a id="n167490"><a id="n167495"><a id="n167498"><a id="n167494">&nbsp;</a></a></a></a></a></a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;path_as_str</c26><c5>&lt;T&gt;</c5><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;f:&nbsp;</c18><c3>&amp;</c3><c26>fn</c26><c25>(</c25><c3>&amp;str</c3><c25>)</c25><c3>&nbsp;</c3><c4>-&gt;</c4><c3>&nbsp;T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>T</c3><c4>;</c4><c28>
-</c28><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n167530">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n167502"><a id="n167506"><a id="n167507">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;'self&gt;</c5><c30>&nbsp;</c30><a href="../../../libstd/rt/io/support.rs.html#12"><c30>PathLike</c30></a><c30>&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n167527"><a id="n167509"><a id="n167517"><a id="n167516"><a id="n167513"><a id="n167520"><a id="n167528"><a id="n167512">&nbsp;</a></a></a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;path_as_str</c26><c5>&lt;T&gt;</c5><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>f</c20><c18>:&nbsp;</c18><c3>&amp;</c3><c26>fn</c26><c25>(</c25><c3>&amp;str</c3><c25>)</c25><c3>&nbsp;</c3><c4>-&gt;</c4><c3>&nbsp;T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>T</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n167525"><a id="n167521"><a id="n167524"><a id="n167522">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/support.rs.html#18"><c8>f</c8></a><c25>(</c25><c2>*</c2><c0>self</c0><c25>)</c25><c9>
-</c9><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n167562">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n167534"><a id="n167531">&nbsp;</a></a><c30>impl&nbsp;</c30><a href="../../../libstd/rt/io/support.rs.html#12"><c30>PathLike</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../../libstd/path.rs.html#50"><c30>Path</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n167547"><a id="n167544"><a id="n167539"><a id="n167536"><a id="n167560"><a id="n167543"><a id="n167540"><a id="n167559">&nbsp;</a></a></a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;path_as_str</c26><c5>&lt;T&gt;</c5><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>f</c20><c18>:&nbsp;</c18><c3>&amp;</c3><c26>fn</c26><c25>(</c25><c3>&amp;str</c3><c25>)</c25><c3>&nbsp;</c3><c4>-&gt;</c4><c3>&nbsp;T</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c3>T</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n167553"><a id="n167554"><a id="n167552"><a id="n167548"><a id="n167549"><a id="n167550">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>s</c20><c16>&nbsp;=&nbsp;</c16><a href="../../../libstd/path.rs.html#559"><c0>self</c0></a><c0>.</c0><a href="../../../libstd/path.rs.html#559"><c10>to_str</c10></a><c25>()</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n167557"><a id="n167556"><a id="n167555">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../../libstd/rt/io/support.rs.html#24"><c8>f</c8></a><c25>(</c25><a href="../../../libstd/rt/io/support.rs.html#25"><c8>s</c8></a><c25>)</c25><c9>
-</c9><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c9>&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg12><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../../libstd/rt/io/">io</a><c1>/</c1><c0><a href="./../../../libstd/rt/io/support.rs.html">support.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;path::*</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><a id="n170723">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>pub</c21><c32>&nbsp;trait&nbsp;PathLike&nbsp;</c32><c3>{</c3><c32>
+</c32><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n170717"><a id="n170722"><a id="n170713"><a id="n170714"><a id="n170718"><a id="n170721">&nbsp;</a></a></a></a></a></a><c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c30>fn&nbsp;path_as_str</c30><c5>&lt;T&gt;</c5><c4>(</c4><c18>&amp;self</c18><c3>,</c3><c18>&nbsp;f:&nbsp;</c18><c8>&amp;</c8><c30>fn</c30><c4>(</c4><c8>&amp;str</c8><c4>)</c4><c8>&nbsp;</c8><c4>-&gt;</c4><c8>&nbsp;T</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>T</c8><c3>;</c3><c32>
+</c32><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n170753">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n170729"><a id="n170730"><a id="n170725">&nbsp;</a></a></a><c33>impl</c33><c5>&lt;'self&gt;</c5><c33>&nbsp;</c33><c33><a href="../../../libstd/rt/io/support.rs.html#12">PathLike&nbsp;</a></c33><c33>for&nbsp;&amp;'self&nbsp;str&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n170750"><a id="n170740"><a id="n170739"><a id="n170735"><a id="n170751"><a id="n170736"><a id="n170732"><a id="n170743">&nbsp;</a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;path_as_str</c30><c5>&lt;T&gt;</c5><c4>(</c4><c18>&amp;self</c18><c3>,</c3><c18>&nbsp;</c18><c20><a href="../../../libstd/rt/io/support.rs.html#18">f</a></c20><c18>:&nbsp;</c18><c8>&amp;</c8><c30>fn</c30><c4>(</c4><c8>&amp;str</c8><c4>)</c4><c8>&nbsp;</c8><c4>-&gt;</c4><c8>&nbsp;T</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>T</c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n170744"><a id="n170748"><a id="n170747"><a id="n170745">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../../libstd/rt/io/support.rs.html#18">f</a></c26><c4>(</c4><c5>*</c5><c1>self</c1><c4>)</c4><c27>
+</c27><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c27>&nbsp;&nbsp;&nbsp;&nbsp;</c27><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n170785">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n170757"><a id="n170754">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../../../libstd/rt/io/support.rs.html#12">PathLike&nbsp;</a></c33><c33>for&nbsp;</c33><c33><a href="../../../libstd/path.rs.html#50">Path</a></c33><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n170767"><a id="n170783"><a id="n170782"><a id="n170762"><a id="n170766"><a id="n170759"><a id="n170770"><a id="n170763">&nbsp;</a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;path_as_str</c30><c5>&lt;T&gt;</c5><c4>(</c4><c18>&amp;self</c18><c3>,</c3><c18>&nbsp;</c18><c20><a href="../../../libstd/rt/io/support.rs.html#24">f</a></c20><c18>:&nbsp;</c18><c8>&amp;</c8><c30>fn</c30><c4>(</c4><c8>&amp;str</c8><c4>)</c4><c8>&nbsp;</c8><c4>-&gt;</c4><c8>&nbsp;T</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>T</c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n170776"><a id="n170771"><a id="n170772"><a id="n170777"><a id="n170773"><a id="n170775">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20><a href="../../../libstd/rt/io/support.rs.html#25">s</a></c20><c16>&nbsp;=&nbsp;</c16><c1><a href="../../../libstd/path.rs.html#559">self.</a></c1><c10><a href="../../../libstd/path.rs.html#559">to_str</a></c10><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n170778"><a id="n170780"><a id="n170779">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../../libstd/rt/io/support.rs.html#24">f</a></c26><c4>(</c4><c26><a href="../../../libstd/rt/io/support.rs.html#25">s</a></c26><c4>)</c4><c27>
+</c27><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c27>&nbsp;&nbsp;&nbsp;&nbsp;</c27><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>cfg</c33><c25>(</c25><c33>test</c33><c25>)</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c21>mod</c21><c0>&nbsp;test&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;path::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::PathLike</c0><c4>;</c4><c0>
+</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;test&nbsp;</c38><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;path::*</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::PathLike</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c4>[</c4><c0>test</c0><c4>]</c4><c0>
-</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;path_like_smoke_test</c26><c25>()</c25><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;expected&nbsp;=&nbsp;"/home"</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;path&nbsp;=&nbsp;Path</c0><c25>(</c25><c0>expected</c0><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path.path_as_str</c0><c25>(</c25><c0>|p|&nbsp;assert!</c0><c25>(</c25><c0>p&nbsp;==&nbsp;expected</c0><c25>))</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path.path_as_str</c0><c25>(</c25><c0>|p|&nbsp;assert!</c0><c25>(</c25><c0>p&nbsp;==&nbsp;expected</c0><c25>))</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><div/><br/><a id="12_1_refs"><a href="#12"><c24>libstd/rt/io/support.rs:12:1-12:1&nbsp;-trait-&nbsp;definition:<br/></c24><pr>
+</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;path_like_smoke_test</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;expected&nbsp;=&nbsp;"/home"</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;path&nbsp;=&nbsp;Path</c0><c4>(</c4><c0>expected</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path.path_as_str</c0><c4>(</c4><c0>|p|&nbsp;assert!</c0><c4>(</c4><c0>p&nbsp;==&nbsp;expected</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path.path_as_str</c0><c4>(</c4><c0>|p|&nbsp;assert!</c0><c4>(</c4><c0>p&nbsp;==&nbsp;expected</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="12_1_refs"><a href="#12"><c40>libstd/rt/io/support.rs:12:1-12:1&nbsp;-trait-&nbsp;definition:<br/></c40><pr>
 <br/>pub&nbsp;trait&nbsp;PathLike&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../../libstd/rt/io/support.rs.html#23"><c24>23:&nbsp;</c24>impl&nbsp;PathLike&nbsp;for&nbsp;Path&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/support.rs.html#17"><c24>17:&nbsp;</c24>impl&lt;'self&gt;&nbsp;PathLike&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/file.rs.html"><c24>libstd/rt/io/file.rs:<br/></c24><a href="../../../libstd/rt/io/file.rs.html#42"><c24>42:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;open&lt;P:&nbsp;PathLike&gt;(_path:&nbsp;&amp;P,
-<br/></a><a href="../../../libstd/rt/io/net/unix.rs.html"><c24>libstd/rt/io/net/unix.rs:<br/></c24><a href="../../../libstd/rt/io/net/unix.rs.html#18"><c24>18:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;connect&lt;P:&nbsp;PathLike&gt;(_path:&nbsp;&amp;P)&nbsp;-&gt;&nbsp;Option&lt;UnixStream&gt;&nbsp;{
-<br/></a><a href="../../../libstd/rt/io/net/unix.rs.html#38"><c24>38:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;bind&lt;P:&nbsp;PathLike&gt;(_path:&nbsp;&amp;P)&nbsp;-&gt;&nbsp;Option&lt;UnixListener&gt;&nbsp;{
-<br/></a><br/></a></a>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../../libstd/rt/io/support.rs.html#17"><c40>17:&nbsp;</c40>impl&lt;'self&gt;&nbsp;PathLike&nbsp;for&nbsp;&amp;'self&nbsp;str&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/support.rs.html#23"><c40>23:&nbsp;</c40>impl&nbsp;PathLike&nbsp;for&nbsp;Path&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/file.rs.html"><c40>libstd/rt/io/file.rs:<br/></c40></a><a href="../../../libstd/rt/io/file.rs.html#42"><c40>42:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;open&lt;P:&nbsp;PathLike&gt;(_path:&nbsp;&amp;P,
+<br/></a><a href="../../../libstd/rt/io/net/unix.rs.html"><c40>libstd/rt/io/net/unix.rs:<br/></c40></a><a href="../../../libstd/rt/io/net/unix.rs.html#38"><c40>38:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;bind&lt;P:&nbsp;PathLike&gt;(_path:&nbsp;&amp;P)&nbsp;-&gt;&nbsp;Option&lt;UnixListener&gt;&nbsp;{
+<br/></a><a href="../../../libstd/rt/io/net/unix.rs.html#18"><c40>18:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;connect&lt;P:&nbsp;PathLike&gt;(_path:&nbsp;&amp;P)&nbsp;-&gt;&nbsp;Option&lt;UnixStream&gt;&nbsp;{
+<br/></a><br/></div></c0></c0></fileblock></div>

@@ -391,7 +391,7 @@ fn visit_expr(expr: @ast::expr, (rcx, v): (@mut Rcx, rvt)) {
             let target_ty = rcx.resolve_node_type(expr.id);
             match ty::get(target_ty).sty {
                 ty::ty_trait(_, _, ty::RegionTraitStore(trait_region), _, _) => {
-                    let source_ty = rcx.fcx.expr_ty(source);
+                    let source_ty = rcx.resolve_expr_type_adjusted(source);
                     constrain_regions_in_type(
                         rcx,
                         trait_region,
@@ -863,7 +863,8 @@ pub mod guarantor {
 
             ty::AutoBorrowVec(r, _) |
             ty::AutoBorrowVecRef(r, _) |
-            ty::AutoBorrowFn(r) => {
+            ty::AutoBorrowFn(r) |
+            ty::AutoBorrowObj(r, _) => {
                 // In each of these cases, what is being borrowed is
                 // not the (autoderef'd) expr itself but rather the
                 // contents of the autoderef'd expression (i.e., what
@@ -1072,7 +1073,8 @@ pub mod guarantor {
                     Some(ty::AutoPtr(r, _)) |
                     Some(ty::AutoBorrowVec(r, _)) |
                     Some(ty::AutoBorrowVecRef(r, _)) |
-                    Some(ty::AutoBorrowFn(r)) => {
+                    Some(ty::AutoBorrowFn(r)) |
+                    Some(ty::AutoBorrowObj(r, _)) => {
                         // If there is an autoref, then the result of this
                         // expression will be some sort of borrowed pointer.
                         expr_ct.cat.guarantor = None;
@@ -1151,17 +1153,20 @@ pub mod guarantor {
         match ty::get(ty).sty {
             ty::ty_rptr(r, _) |
             ty::ty_evec(_, ty::vstore_slice(r)) |
+            ty::ty_trait(_, _, ty::RegionTraitStore(r), _, _) |
             ty::ty_estr(ty::vstore_slice(r)) => {
                 BorrowedPointer(r)
             }
             ty::ty_uniq(*) |
             ty::ty_estr(ty::vstore_uniq) |
+            ty::ty_trait(_, _, ty::UniqTraitStore, _, _) |
             ty::ty_evec(_, ty::vstore_uniq) => {
                 OwnedPointer
             }
             ty::ty_box(*) |
             ty::ty_ptr(*) |
             ty::ty_evec(_, ty::vstore_box) |
+            ty::ty_trait(_, _, ty::BoxTraitStore, _, _) |
             ty::ty_estr(ty::vstore_box) => {
                 OtherPointer
             }

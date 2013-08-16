@@ -7,6 +7,7 @@ update:
 	cd $(RUST_SRC);pwd;  ~/rustfind/rustfind libextra/extra.rs
 
 push: 
+	cp $(RUST_SRC)/*.rfx .
 	cp -r $(RUST_SRC)/libstd .
 	cp -r $(RUST_SRC)/libsyntax .
 	cp -r $(RUST_SRC)/librustc .

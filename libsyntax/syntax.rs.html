@@ -1,125 +1,86 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
-a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
-pr{font-weight:bold}
-ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
-c24{color:#ffffff; font-style:italic; opacity:0.5}
-c25{color:#ffffff; opacity:0.92}
-c26{color:#ffffff; font-weight:bold; }
-c27{color:#b0ffff; font-weight:bold; }
-c28{color:#b0ffb0; font-weight:bold; }
-c29{color:#d0e0ff; font-weight:bold; }
-c30{color:#fff0e0; font-weight:bold; }
-c31{color:#d0b0ff; font-weight:bold; }
-c32{color:#ffffff; font-style:italic; opacity:0.6}
-c1{color:#ffffc0;   font-weight:bold; }
-c33{color:#e0a0d0;  }
-c2{color:#60f0c0}
-c3{color:#50e0ff; }
-c4{color:#f090f0}
-c5{color:#50ff80; }
-c6{color:#f0f0e0}
-c7{color:#fff0d0}
-c8{color:#e0d0f0}
-c9{color:#70f0f0}
-c10{color:#f0f070}
-c11{color:#c0f070}
-c12{color:#70c0f0}
-c13{color:#c0f070}
-c14{color:#f0ffc0}
-c15{color:#f0f0e0}
-c16{color:#c0ffe0}
-c17{color:#90d0f0}
-c18{color:#f0a0d0}
-c19{color:#d0f0a0}
-c20{color:#0f0ff}
-c21{color:#d0d0d0; font-weight:bold}
-c22{color:#c0ffd0; }
-c23{color:#d0f0ff; }
-</style><body style="background-color:#383838;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libsyntax/">libsyntax</a><c1>/</c1><c0><a href="./../libsyntax/syntax.rs.html">syntax.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c24>/*!&nbsp;This&nbsp;module&nbsp;contains&nbsp;the&nbsp;Rust&nbsp;parser.&nbsp;It&nbsp;maps&nbsp;source&nbsp;text
-</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c24>&nbsp;*&nbsp;&nbsp;to&nbsp;token&nbsp;trees&nbsp;and&nbsp;to&nbsp;ASTs.&nbsp;It&nbsp;contains&nbsp;code&nbsp;for&nbsp;expanding
-</c24><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c24>&nbsp;*&nbsp;&nbsp;macros.
-</c24><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c32>&nbsp;*/
-</c32><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>link</c33><c25>(</c25><c33>name&nbsp;=&nbsp;"syntax"</c33><c4>,</c4><c33>
-</c33><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vers&nbsp;=&nbsp;"0.8-pre"</c0><c4>,</c4><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uuid&nbsp;=&nbsp;"9311401b-d6ea-4cd9-a1d9-61f89499c645"</c0><c25>)</c25><c4>];</c4><c0>
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg0><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libsyntax/">libsyntax</a><c1>/</c1><c0><a href="./../libsyntax/syntax.rs.html">syntax.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c41>/*!&nbsp;This&nbsp;module&nbsp;contains&nbsp;the&nbsp;Rust&nbsp;parser.&nbsp;It&nbsp;maps&nbsp;source&nbsp;text
+</c41><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;&nbsp;to&nbsp;token&nbsp;trees&nbsp;and&nbsp;to&nbsp;ASTs.&nbsp;It&nbsp;contains&nbsp;code&nbsp;for&nbsp;expanding
+</c41><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;&nbsp;macros.
+</c41><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c42>&nbsp;*/
+</c42><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>link</c50><c4>(</c4><c50>name&nbsp;=&nbsp;"syntax"</c50><c3>,</c3><c50>
+</c50><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vers&nbsp;=&nbsp;"0.8-pre"</c0><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uuid&nbsp;=&nbsp;"9311401b-d6ea-4cd9-a1d9-61f89499c645"</c0><c4>)</c4><c3>];</c3><c0>
 </c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>license&nbsp;=&nbsp;"MIT/ASL2"</c33><c4>];</c4><c33>
-</c33><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c33>#</c33><c4>[</c4><c33>crate_type&nbsp;=&nbsp;"lib"</c33><c4>];</c4><c33>
-</c33><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c21>extern</c21><c0>&nbsp;</c0><c21>mod</c21><c0>&nbsp;extra</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n1134">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;util&nbsp;</c14><c4>{</c4><c14>
-</c14><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n533">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;interner</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c14>&nbsp;&nbsp;&nbsp;&nbsp;#</c14><c4>[</c4><c14>cfg</c14><c25>(</c25><c14>test</c14><c25>)</c25><c4>]</c4><c14>
-</c14><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;parser_testing</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>license&nbsp;=&nbsp;"MIT/ASL2"</c50><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>crate_type&nbsp;=&nbsp;"lib"</c50><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c21>extern</c21><c0>&nbsp;</c0><c21>mod</c21><c38>&nbsp;extra;
+</c38><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n1134">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;util&nbsp;</c38><c3>{</c3><c38>
+</c38><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n533">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;interner;
+</c38><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>cfg</c38><c4>(</c4><c38>test</c38><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;parser_testing;
+</c38><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n1137">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;syntax&nbsp;</c14><c4>{</c4><c14>
-</c14><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>use</c21><c14>&nbsp;ext</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>use</c21><c14>&nbsp;parse</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+</c0><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;syntax&nbsp;</c38><c3>{</c3><c38>
+</c38><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>use</c21><c38>&nbsp;ext</c38><c3>;</c3><c38>
+</c38><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>use</c21><c38>&nbsp;parse</c38><c3>;</c3><c38>
+</c38><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n1720">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n2916">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;opt_vec</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n4524">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;attr</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n6412">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;diagnostic</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n7641">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;codemap</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n10070">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;abi</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n14550">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;ast</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n16423">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;ast_util</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n20161">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;ast_map</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n25462">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;visit</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n30810">&nbsp;</a><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;fold</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;oldvisit</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n59359">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;parse</c14><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n71754">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;print&nbsp;</c14><c4>{</c4><c14>
-</c14><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n61155">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;pp</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n71753">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;pprust</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n103170">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;ext&nbsp;</c14><c4>{</c4><c14>
-</c14><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n72369">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;asm</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><a id="n74239">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;base</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><a id="n77552">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;expand</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c14>
-</c14><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><a id="n80215">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;quote</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c14>
-</c14><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><a id="n89249">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;deriving</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c14>
-</c14><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><a id="n93917">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;build</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c14>
-</c14><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><a id="n96921">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;tt&nbsp;</c14><c4>{</c4><c14>
-</c14><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><a id="n94896">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;transcribe</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a><a id="n96321">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;macro_parser</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;70</ln><a id="70">&nbsp;</a><a id="n96920">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;macro_rules</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c4>}</c4><c14>
-</c14><br/><ln>&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c14>
-</c14><br/><ln>&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c14>
-</c14><br/><ln>&nbsp;74</ln><a id="74">&nbsp;</a><a id="n97053">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;cfg</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;75</ln><a id="75">&nbsp;</a><a id="n98398">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;fmt</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;76</ln><a id="76">&nbsp;</a><a id="n101729">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;ifmt</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;77</ln><a id="77">&nbsp;</a><a id="n101900">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;env</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;78</ln><a id="78">&nbsp;</a><a id="n102118">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;bytes</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;79</ln><a id="79">&nbsp;</a><a id="n102249">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;concat_idents</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;80</ln><a id="80">&nbsp;</a><a id="n102315">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;log_syntax</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;81</ln><a id="81">&nbsp;</a><a id="n102391">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;auto_encode</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;82</ln><a id="82">&nbsp;</a><a id="n103033">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;source_util</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c14>
-</c14><br/><ln>&nbsp;84</ln><a id="84">&nbsp;</a><a id="n103169">&nbsp;</a><c14>&nbsp;&nbsp;&nbsp;&nbsp;</c14><c21>pub</c21><c14>&nbsp;</c14><c21>mod</c21><c14>&nbsp;trace_macros</c14><c4>;</c4><c14>
-</c14><br/><ln>&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><div/></c0></c0>
+</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n2916">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;opt_vec;
+</c38><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n4524">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;attr;
+</c38><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n6412">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;diagnostic;
+</c38><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n7641">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;codemap;
+</c38><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n10073">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;abi;
+</c38><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n14553">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;ast;
+</c38><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n16426">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;ast_util;
+</c38><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n20164">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;ast_map;
+</c38><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n25487">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;visit;
+</c38><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n30835">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;fold;
+</c38><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;oldvisit;
+</c38><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n59950">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;parse;
+</c38><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n72345">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;print&nbsp;</c38><c3>{</c3><c38>
+</c38><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n61746">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;pp;
+</c38><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n72344">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;pprust;
+</c38><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n103898">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;ext&nbsp;</c38><c3>{</c3><c38>
+</c38><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n72960">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;asm;
+</c38><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><a id="n74830">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;base;
+</c38><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><a id="n78143">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;expand;
+</c38><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c38>
+</c38><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><a id="n80806">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;quote;
+</c38><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c38>
+</c38><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><a id="n89840">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;deriving;
+</c38><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c38>
+</c38><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><a id="n94508">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;build;
+</c38><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c38>
+</c38><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><a id="n97533">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;tt&nbsp;</c38><c3>{</c3><c38>
+</c38><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><a id="n95488">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;transcribe;
+</c38><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a><a id="n96933">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;macro_parser;
+</c38><br/><ln>&nbsp;70</ln><a id="70">&nbsp;</a><a id="n97532">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;macro_rules;
+</c38><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c3>}</c3><c38>
+</c38><br/><ln>&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c38>
+</c38><br/><ln>&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c38>
+</c38><br/><ln>&nbsp;74</ln><a id="74">&nbsp;</a><a id="n97665">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;cfg;
+</c38><br/><ln>&nbsp;75</ln><a id="75">&nbsp;</a><a id="n99010">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;fmt;
+</c38><br/><ln>&nbsp;76</ln><a id="76">&nbsp;</a><a id="n102457">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;ifmt;
+</c38><br/><ln>&nbsp;77</ln><a id="77">&nbsp;</a><a id="n102628">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;env;
+</c38><br/><ln>&nbsp;78</ln><a id="78">&nbsp;</a><a id="n102846">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;bytes;
+</c38><br/><ln>&nbsp;79</ln><a id="79">&nbsp;</a><a id="n102977">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;concat_idents;
+</c38><br/><ln>&nbsp;80</ln><a id="80">&nbsp;</a><a id="n103043">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;log_syntax;
+</c38><br/><ln>&nbsp;81</ln><a id="81">&nbsp;</a><a id="n103119">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;auto_encode;
+</c38><br/><ln>&nbsp;82</ln><a id="82">&nbsp;</a><a id="n103761">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;source_util;
+</c38><br/><ln>&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c38>
+</c38><br/><ln>&nbsp;84</ln><a id="84">&nbsp;</a><a id="n103897">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;trace_macros;
+</c38><br/><ln>&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"></div></fileblock></div></maintext></bg0>

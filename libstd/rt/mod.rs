@@ -112,7 +112,7 @@ mod message_queue;
 mod sleeper_list;
 
 /// Stack segments and caching.
-mod stack;
+pub mod stack;
 
 /// CPU context swapping.
 mod context;
@@ -142,8 +142,7 @@ pub mod tube;
 /// Simple reimplementation of core::comm
 pub mod comm;
 
-/// Routines for select()ing on pipes.
-pub mod select;
+mod select;
 
 // FIXME #5248 shouldn't be pub
 /// The runtime needs to be able to put a pointer into thread-local storage.

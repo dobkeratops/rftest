@@ -1,80 +1,41 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
-a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
-pr{font-weight:bold}
-ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
-c24{color:#ffffff; font-style:italic; opacity:0.5}
-c25{color:#ffffff; opacity:0.92}
-c26{color:#ffffff; font-weight:bold; }
-c27{color:#b0ffff; font-weight:bold; }
-c28{color:#b0ffb0; font-weight:bold; }
-c29{color:#d0e0ff; font-weight:bold; }
-c30{color:#fff0e0; font-weight:bold; }
-c31{color:#d0b0ff; font-weight:bold; }
-c32{color:#ffffff; font-style:italic; opacity:0.6}
-c1{color:#ffffc0;   font-weight:bold; }
-c33{color:#e0a0d0;  }
-c2{color:#60f0c0}
-c3{color:#50e0ff; }
-c4{color:#f090f0}
-c5{color:#50ff80; }
-c6{color:#f0f0e0}
-c7{color:#fff0d0}
-c8{color:#e0d0f0}
-c9{color:#70f0f0}
-c10{color:#f0f070}
-c11{color:#c0f070}
-c12{color:#70c0f0}
-c13{color:#c0f070}
-c14{color:#f0ffc0}
-c15{color:#f0f0e0}
-c16{color:#c0ffe0}
-c17{color:#90d0f0}
-c18{color:#f0a0d0}
-c19{color:#d0f0a0}
-c20{color:#0f0ff}
-c21{color:#d0d0d0; font-weight:bold}
-c22{color:#c0ffd0; }
-c23{color:#d0f0ff; }
-</style><body style="background-color:#3c3834;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/from_str.rs.html">from_str.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c24>//!&nbsp;The&nbsp;trait&nbsp;for&nbsp;types&nbsp;that&nbsp;can&nbsp;be&nbsp;created&nbsp;from&nbsp;strings
-</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::Option</c0><c4>;</c4><c0>
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg2><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/from_str.rs.html">from_str.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c40>//!&nbsp;The&nbsp;trait&nbsp;for&nbsp;types&nbsp;that&nbsp;can&nbsp;be&nbsp;created&nbsp;from&nbsp;strings
+</c40><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::Option</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c32>///&nbsp;A&nbsp;trait&nbsp;to&nbsp;abstract&nbsp;the&nbsp;idea&nbsp;of&nbsp;creating&nbsp;a&nbsp;new&nbsp;instance&nbsp;of&nbsp;a&nbsp;type&nbsp;from&nbsp;a
-</c32><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n41179">&nbsp;</a><c32>///&nbsp;string.
-</c32><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>pub</c21><c28>&nbsp;trait&nbsp;FromStr&nbsp;</c28><c4>{</c4><c28>
-</c28><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;Parses&nbsp;a&nbsp;string&nbsp;`s`&nbsp;to&nbsp;return&nbsp;an&nbsp;optional&nbsp;value&nbsp;of&nbsp;this&nbsp;type.&nbsp;If&nbsp;the
-</c32><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c32>///&nbsp;string&nbsp;is&nbsp;ill-formatted,&nbsp;the&nbsp;None&nbsp;is&nbsp;returned.
-</c32><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n41175"><a id="n41171"><a id="n41178"><a id="n41177"><a id="n41172">&nbsp;</a></a></a></a></a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;from_str</c26><c25>(</c25><c18>s:&nbsp;</c18><c3>&amp;str</c3><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../libstd/from_str.rs.html#16"><c3>Self</c3></a><c3>&gt;</c3><c4>;</c4><c28>
-</c28><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><div/><br/><a id="16_12_refs"><a href="#16"><c24>libstd/from_str.rs:16:12-16:12&nbsp;-trait-&nbsp;definition:<br/></c24><pr>///&nbsp;string.
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c42>///&nbsp;A&nbsp;trait&nbsp;to&nbsp;abstract&nbsp;the&nbsp;idea&nbsp;of&nbsp;creating&nbsp;a&nbsp;new&nbsp;instance&nbsp;of&nbsp;a&nbsp;type&nbsp;from&nbsp;a
+</c42><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n39621">&nbsp;</a><c42>///&nbsp;string.
+</c42><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>pub</c21><c32>&nbsp;trait&nbsp;FromStr&nbsp;</c32><c3>{</c3><c32>
+</c32><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c42>///&nbsp;Parses&nbsp;a&nbsp;string&nbsp;`s`&nbsp;to&nbsp;return&nbsp;an&nbsp;optional&nbsp;value&nbsp;of&nbsp;this&nbsp;type.&nbsp;If&nbsp;the
+</c42><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c42>///&nbsp;string&nbsp;is&nbsp;ill-formatted,&nbsp;the&nbsp;None&nbsp;is&nbsp;returned.
+</c42><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n39614"><a id="n39613"><a id="n39617"><a id="n39620"><a id="n39619">&nbsp;</a></a></a></a></a><c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c30>fn&nbsp;from_str</c30><c4>(</c4><c18>s:&nbsp;</c18><c8>&amp;str</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/option.rs.html#56">Option&lt;</a></c8><c8><a href="../libstd/from_str.rs.html#16">Self</a></c8><c8><a href="../libstd/option.rs.html#56">&gt;</a></c8><c3>;</c3><c32>
+</c32><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="16_12_refs"><a href="#16"><c40>libstd/from_str.rs:16:12-16:12&nbsp;-trait-&nbsp;definition:<br/></c40><pr>///&nbsp;string.
 <br/>pub&nbsp;trait&nbsp;FromStr&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/from_str.rs.html#20"><c24>20:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;from_str(s:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;Option&lt;Self&gt;;
-<br/></a><a href="../libstd/rt/io/net/ip.rs.html"><c24>libstd/rt/io/net/ip.rs:<br/></c24><a href="../libstd/rt/io/net/ip.rs.html#341"><c24>341:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;IpAddr&nbsp;{
-<br/></a><a href="../libstd/rt/io/net/ip.rs.html#349"><c24>349:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;SocketAddr&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html"><c24>libstd/num/int_macros.rs:<br/></c24><a href="../libstd/num/int_macros.rs.html#487"><c24>487:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#487"><c24>487:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#487"><c24>487:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#487"><c24>487:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/int_macros.rs.html#487"><c24>487:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html"><c24>libstd/num/uint_macros.rs:<br/></c24><a href="../libstd/num/uint_macros.rs.html#342"><c24>342:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#342"><c24>342:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#342"><c24>342:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#342"><c24>342:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/uint_macros.rs.html#342"><c24>342:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
-<br/></a><a href="../libstd/num/float.rs.html"><c24>libstd/num/float.rs:<br/></c24><a href="../libstd/num/float.rs.html#287"><c24>287:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;float&nbsp;{
-<br/></a><a href="../libstd/num/f32.rs.html"><c24>libstd/num/f32.rs:<br/></c24><a href="../libstd/num/f32.rs.html#916"><c24>916:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;f32&nbsp;{
-<br/></a><a href="../libstd/num/f64.rs.html"><c24>libstd/num/f64.rs:<br/></c24><a href="../libstd/num/f64.rs.html#963"><c24>963:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;f64&nbsp;{
-<br/></a><a href="../libstd/bool.rs.html"><c24>libstd/bool.rs:<br/></c24><a href="../libstd/bool.rs.html#195"><c24>195:&nbsp;</c24>impl&nbsp;FromStr&nbsp;for&nbsp;bool&nbsp;{
-<br/></a><br/></a></a>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/from_str.rs.html#20"><c40>20:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;from_str(s:&nbsp;&amp;str)&nbsp;-&gt;&nbsp;Option&lt;Self&gt;;
+<br/></a><a href="../libstd/rt/io/net/ip.rs.html"><c40>libstd/rt/io/net/ip.rs:<br/></c40></a><a href="../libstd/rt/io/net/ip.rs.html#341"><c40>341:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;IpAddr&nbsp;{
+<br/></a><a href="../libstd/rt/io/net/ip.rs.html#349"><c40>349:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;SocketAddr&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html"><c40>libstd/num/int_macros.rs:<br/></c40></a><a href="../libstd/num/int_macros.rs.html#487"><c40>487:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#487"><c40>487:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#487"><c40>487:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#487"><c40>487:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/int_macros.rs.html#487"><c40>487:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html"><c40>libstd/num/uint_macros.rs:<br/></c40></a><a href="../libstd/num/uint_macros.rs.html#342"><c40>342:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#342"><c40>342:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#342"><c40>342:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#342"><c40>342:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/uint_macros.rs.html#342"><c40>342:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;$T&nbsp;{
+<br/></a><a href="../libstd/num/float.rs.html"><c40>libstd/num/float.rs:<br/></c40></a><a href="../libstd/num/float.rs.html#287"><c40>287:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;float&nbsp;{
+<br/></a><a href="../libstd/num/f32.rs.html"><c40>libstd/num/f32.rs:<br/></c40></a><a href="../libstd/num/f32.rs.html#916"><c40>916:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;f32&nbsp;{
+<br/></a><a href="../libstd/num/f64.rs.html"><c40>libstd/num/f64.rs:<br/></c40></a><a href="../libstd/num/f64.rs.html#963"><c40>963:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;f64&nbsp;{
+<br/></a><a href="../libstd/bool.rs.html"><c40>libstd/bool.rs:<br/></c40></a><a href="../libstd/bool.rs.html#195"><c40>195:&nbsp;</c40>impl&nbsp;FromStr&nbsp;for&nbsp;bool&nbsp;{
+<br/></a><br/></div></fileblock></div></maintext></bg2>

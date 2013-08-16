@@ -638,6 +638,7 @@ pub struct TypeField {
     span: span,
 }
 
+
 #[deriving(Clone, Eq, Encodable, Decodable, IterBytes)]
 pub struct TypeMethod {
     ident: ident,
@@ -798,7 +799,6 @@ pub struct inline_asm {
     dialect: asm_dialect
 }
 
-pub type DefaultArg = Option<@expr>;
 
 #[deriving(Clone, Eq, Encodable, Decodable, IterBytes)]
 pub struct arg {
@@ -806,7 +806,7 @@ pub struct arg {
     ty: Ty,
     pat: @pat,
     id: NodeId,
-	default: DefaultArg
+	default: DefaultVal
 }
 
 #[deriving(Clone, Eq, Encodable, Decodable, IterBytes)]
@@ -1011,12 +1011,15 @@ impl visibility {
     }
 }
 
+pub type DefaultVal = Option<@expr>;
+
 #[deriving(Eq, Encodable, Decodable,IterBytes)]
 pub struct struct_field_ {
     kind: struct_field_kind,
     id: NodeId,
     ty: Ty,
     attrs: ~[Attribute],
+    default:DefaultVal
 }
 
 pub type struct_field = spanned<struct_field_>;

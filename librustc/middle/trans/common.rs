@@ -23,6 +23,7 @@ use middle::trans::build;
 use middle::trans::datum;
 use middle::trans::glue;
 use middle::trans::write_guard;
+use middle::trans::debuginfo;
 use middle::ty::substs;
 use middle::ty;
 use middle::typeck;
@@ -54,6 +55,7 @@ pub struct tydesc_info {
     tydesc: ValueRef,
     size: ValueRef,
     align: ValueRef,
+    borrow_offset: ValueRef,
     take_glue: Option<ValueRef>,
     drop_glue: Option<ValueRef>,
     free_glue: Option<ValueRef>,
@@ -225,7 +227,10 @@ pub struct FunctionContext {
     path: path,
 
     // This function's enclosing crate context.
-    ccx: @mut CrateContext
+    ccx: @mut CrateContext,
+
+    // Used and maintained by the debuginfo module.
+    debug_context: Option<~debuginfo::FunctionDebugContext>
 }
 
 impl FunctionContext {
@@ -238,7 +243,7 @@ impl FunctionContext {
     }
 
     pub fn out_arg_pos(&self) -> uint {
-        assert!(self.has_immediate_return_value);
+        assert!(!self.has_immediate_return_value);
         0u
     }
 
@@ -685,7 +690,6 @@ pub fn tuplify_box_ty(tcx: ty::ctxt, t: ty::t) -> ty::t {
                          ptr, ptr,
                          t]);
 }
-
 
 // LLVM constant constructors.
 pub fn C_null(t: Type) -> ValueRef {

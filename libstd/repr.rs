@@ -162,7 +162,7 @@ impl ReprVisitor {
         unsafe {
             let u = ReprVisitor(ptr, self.writer);
             let v = reflect::MovePtrAdaptor(u);
-            visit_tydesc(inner, @v as @TyVisitor);
+            visit_tydesc(inner, &v as &TyVisitor);
             true
         }
     }
@@ -562,7 +562,7 @@ pub fn write_repr<T>(writer: @Writer, object: &T) {
         let tydesc = get_tydesc::<T>();
         let u = ReprVisitor(ptr, writer);
         let v = reflect::MovePtrAdaptor(u);
-        visit_tydesc(tydesc, @v as @TyVisitor)
+        visit_tydesc(tydesc, &v as &TyVisitor)
     }
 }
 

@@ -1,113 +1,74 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
-a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
-pr{font-weight:bold}
-ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
-c24{color:#ffffff; font-style:italic; opacity:0.5}
-c25{color:#ffffff; opacity:0.92}
-c26{color:#ffffff; font-weight:bold; }
-c27{color:#b0ffff; font-weight:bold; }
-c28{color:#b0ffb0; font-weight:bold; }
-c29{color:#d0e0ff; font-weight:bold; }
-c30{color:#fff0e0; font-weight:bold; }
-c31{color:#d0b0ff; font-weight:bold; }
-c32{color:#ffffff; font-style:italic; opacity:0.6}
-c1{color:#ffffc0;   font-weight:bold; }
-c33{color:#e0a0d0;  }
-c2{color:#60f0c0}
-c3{color:#50e0ff; }
-c4{color:#f090f0}
-c5{color:#50ff80; }
-c6{color:#f0f0e0}
-c7{color:#fff0d0}
-c8{color:#e0d0f0}
-c9{color:#70f0f0}
-c10{color:#f0f070}
-c11{color:#c0f070}
-c12{color:#70c0f0}
-c13{color:#c0f070}
-c14{color:#f0ffc0}
-c15{color:#f0f0e0}
-c16{color:#c0ffe0}
-c17{color:#90d0f0}
-c18{color:#f0a0d0}
-c19{color:#d0f0a0}
-c20{color:#0f0ff}
-c21{color:#d0d0d0; font-weight:bold}
-c22{color:#c0ffd0; }
-c23{color:#d0f0ff; }
-</style><body style="background-color:#363a36;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../libstd/rt/thread.rs.html">thread.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;libc</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;ops::Drop</c0><c4>;</c4><c0>
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg9><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../libstd/rt/thread.rs.html">thread.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;libc</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;ops::Drop</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n184635">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>non_camel_case_types</c33><c25>)</c25><c4>]</c4><c33>&nbsp;</c33><c24>//&nbsp;runtime&nbsp;type
-</c24><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n184634">&nbsp;</a><c31>type&nbsp;raw_thread&nbsp;=&nbsp;</c31><a href="../../libstd/libc.rs.html#196"><c31>libc</c31></a><c31>::</c31><a href="../../libstd/libc.rs.html#196"><c31>c_void</c31></a><c31>;
-</c31><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n184648">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;Thread&nbsp;</c27><c4>{</c4><c23>
-</c23><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n184638"><a id="n184637"><a id="n184636">&nbsp;</a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>main:&nbsp;</c6><c3>~</c3><c26>fn</c26><c25>()</c25><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n184642"><a id="n184640"><a id="n184641">&nbsp;</a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>raw_thread:&nbsp;</c6><c3>*</c3><a href="../../libstd/rt/thread.rs.html#14"><c3>raw_thread</c3></a><c4>,</c4><c23>
-</c23><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n184645"><a id="n184644">&nbsp;</a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c6>joined:&nbsp;</c6><c3>bool</c3><c23>
-</c23><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n184713">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n184650">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../libstd/rt/thread.rs.html#16"><c30>Thread</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n184688"><a id="n184651"><a id="n184652"><a id="n184656"><a id="n184653"><a id="n184689">&nbsp;</a></a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;start</c26><c25>(</c25><c20>main</c20><c18>:&nbsp;</c18><c3>~</c3><c26>fn</c26><c25>())</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../libstd/rt/thread.rs.html#16"><c3>Thread</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n184664"><a id="n184663"><a id="n184674"><a id="n184660"><a id="n184673"><a id="n184659"><a id="n184657"><a id="n184672"><a id="n184658">&nbsp;</a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26>fn&nbsp;substart</c26><c25>(</c25><c20>main</c20><c13>:&nbsp;</c13><c3>&amp;~</c3><c26>fn</c26><c25>())</c25><c13>&nbsp;</c13><c4>-&gt;</c4><c13>&nbsp;</c13><c3>*</c3><a href="../../libstd/rt/thread.rs.html#14"><c3>raw_thread</c3></a><c13>&nbsp;</c13><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n184665"><a id="n184670"><a id="n184667"><a id="n184666"><a id="n184669">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><c8>rust_raw_thread_start</c8><c25>(</c25><a href="../../libstd/rt/thread.rs.html#25"><c8>main</c8></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n184678"><a id="n184675"><a id="n184676"><a id="n184682"><a id="n184680"><a id="n184681"><a id="n184679"><a id="n184677">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>raw</c20><c16>&nbsp;=&nbsp;</c16><a href="../../libstd/rt/thread.rs.html#25"><c8>substart</c8></a><c25>(</c25><c2>&amp;</c2><a href="../../libstd/rt/thread.rs.html#24"><c8>main</c8></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n184686">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/rt/thread.rs.html#16"><c23>Thread</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n184683">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;main:&nbsp;</c22><a href="../../libstd/rt/thread.rs.html#24"><c8>main</c8></a><c4>,</c4><c22>
-</c22><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n184684">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raw_thread:&nbsp;</c22><a href="../../libstd/rt/thread.rs.html#28"><c8>raw</c8></a><c4>,</c4><c22>
-</c22><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n184685">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;joined:&nbsp;</c22><c12>false</c12><c22>
-</c22><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c17>
-</c17><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n184710"><a id="n184711"><a id="n184691">&nbsp;</a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;join</c26><c25>(</c25><c18>self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n367805"><a id="n367802"><a id="n367819"><a id="n367803">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert!</c13><c25>(</c25><c2>!</c2><a href="../../libstd/rt/thread.rs.html#20"><c0>self</c0></a><c0>.</c0><a href="../../libstd/rt/thread.rs.html#20"><c6>joined</c6></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n184692"><a id="n184696"><a id="n184694"><a id="n184693"><a id="n184695">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><c20>this</c20><c16>&nbsp;=&nbsp;</c16><c0>self</c0><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n184702"><a id="n184701"><a id="n184700"><a id="n184697"><a id="n184703"><a id="n184704"><a id="n184698"><a id="n184699">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><c8>rust_raw_thread_join</c8><c25>(</c25><a href="../../libstd/rt/thread.rs.html#38"><c8>this</c8></a><c6>.</c6><a href="../../libstd/rt/thread.rs.html#19"><c6>raw_thread</c6></a><c25>)</c25><c4>;</c4><c22>&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n184708"><a id="n184709"><a id="n184707"><a id="n184705"><a id="n184706">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/rt/thread.rs.html#38"><c8>this</c8></a><c6>.</c6><a href="../../libstd/rt/thread.rs.html#20"><c6>joined</c6></a><c2>&nbsp;=&nbsp;</c2><c12>true</c12><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n184730">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n184717"><a id="n184714">&nbsp;</a></a><c30>impl&nbsp;</c30><a href="../../libstd/ops.rs.html#15"><c30>Drop</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../libstd/rt/thread.rs.html#16"><c30>Thread</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n184718"><a id="n184727"><a id="n184728">&nbsp;</a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;drop</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n367824"><a id="n367838"><a id="n367823">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert!</c13><c25>(</c25><a href="../../libstd/rt/thread.rs.html#20"><c0>self</c0></a><c0>.</c0><a href="../../libstd/rt/thread.rs.html#20"><c6>joined</c6></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n184722"><a id="n184725"><a id="n184720"><a id="n184721"><a id="n184719"><a id="n184724">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>&nbsp;</c22><c8>rust_raw_thread_delete</c8><c25>(</c25><a href="../../libstd/rt/thread.rs.html#19"><c0>self</c0></a><c0>.</c0><a href="../../libstd/rt/thread.rs.html#19"><c6>raw_thread</c6></a><c25>)</c25><c9>&nbsp;</c9><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n184754">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c21>extern</c21><c0>&nbsp;</c0><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n184731"><a id="n184738"><a id="n184737"><a id="n184732"><a id="n184734"><a id="n184733">&nbsp;</a></a></a></a></a></a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_raw_thread_start</c26><c25>(</c25><c20>f</c20><c0>:&nbsp;</c0><c3>&amp;</c3><c25>(</c25><c3>~</c3><c26>fn</c26><c25>()))</c25><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;</c0><c3>*</c3><a href="../../libstd/rt/thread.rs.html#14"><c3>raw_thread</c3></a><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n184740"><a id="n184742"><a id="n184745"><a id="n184743">&nbsp;</a></a></a></a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_raw_thread_join</c26><c25>(</c25><c20>thread</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../../libstd/rt/thread.rs.html#14"><c3>raw_thread</c3></a><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n184749"><a id="n184750"><a id="n184752"><a id="n184747">&nbsp;</a></a></a></a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c26>fn&nbsp;rust_raw_thread_delete</c26><c25>(</c25><c20>thread</c20><c0>:&nbsp;</c0><c3>*</c3><a href="../../libstd/rt/thread.rs.html#14"><c3>raw_thread</c3></a><c25>)</c25><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><div/><br/><a id="16_1_refs"><a href="#16"><c24>libstd/rt/thread.rs:16:1-16:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n187845">&nbsp;</a><c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>non_camel_case_types</c50><c4>)</c4><c3>]</c3><c50>&nbsp;</c50><c40>//&nbsp;runtime&nbsp;type
+</c40><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n187844">&nbsp;</a><c35>type&nbsp;raw_thread&nbsp;=&nbsp;</c35><c35><a href="../../libstd/libc.rs.html#196">libc::c_void</a></c35><c35>;
+</c35><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n187858">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>pub</c21><c31>&nbsp;struct&nbsp;Thread&nbsp;</c31><c3>{</c3><c31>
+</c31><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n187848"><a id="n187846"><a id="n187847">&nbsp;</a></a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>main:&nbsp;</c24><c8>~</c8><c30>fn</c30><c4>()</c4><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n187852"><a id="n187850"><a id="n187851">&nbsp;</a></a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>raw_thread:&nbsp;</c24><c8>*</c8><c8><a href="../../libstd/rt/thread.rs.html#14">raw_thread</a></c8><c3>,</c3><c31>
+</c31><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n187855"><a id="n187854">&nbsp;</a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c24>joined:&nbsp;</c24><c8>bool</c8><c31>
+</c31><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n187923">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n187860">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../../libstd/rt/thread.rs.html#16">Thread</a></c33><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n187899"><a id="n187863"><a id="n187861"><a id="n187898"><a id="n187862"><a id="n187866">&nbsp;</a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;start</c30><c4>(</c4><c20><a href="../../libstd/rt/thread.rs.html#24">main</a></c20><c18>:&nbsp;</c18><c8>~</c8><c30>fn</c30><c4>())</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../../libstd/rt/thread.rs.html#16">Thread</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n187868"><a id="n187873"><a id="n187867"><a id="n187884"><a id="n187882"><a id="n187870"><a id="n187874"><a id="n187883"><a id="n187869">&nbsp;</a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c30>fn&nbsp;substart</c30><c4>(</c4><c20><a href="../../libstd/rt/thread.rs.html#25">main</a></c20><c1>:&nbsp;</c1><c8>&amp;~</c8><c30>fn</c30><c4>())</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8>*</c8><c8><a href="../../libstd/rt/thread.rs.html#14">raw_thread</a></c8><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n187876"><a id="n187877"><a id="n187879"><a id="n187875"><a id="n187880">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c3>{</c3><c22>&nbsp;</c22><c26>rust_raw_thread_start</c26><c4>(</c4><c26><a href="../../libstd/rt/thread.rs.html#25">main</a></c26><c4>)</c4><c27>&nbsp;</c27><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n187887"><a id="n187885"><a id="n187886"><a id="n187888"><a id="n187890"><a id="n187892"><a id="n187891"><a id="n187889">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20><a href="../../libstd/rt/thread.rs.html#28">raw</a></c20><c16>&nbsp;=&nbsp;</c16><c26><a href="../../libstd/rt/thread.rs.html#25">substart</a></c26><c4>(</c4><c5>&amp;</c5><c26><a href="../../libstd/rt/thread.rs.html#24">main</a></c26><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n187896">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c31><a href="../../libstd/rt/thread.rs.html#16">Thread</a></c31><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n187893">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;main:&nbsp;</c22><c26><a href="../../libstd/rt/thread.rs.html#24">main</a></c26><c3>,</c3><c22>
+</c22><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n187894">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raw_thread:&nbsp;</c22><c26><a href="../../libstd/rt/thread.rs.html#28">raw</a></c26><c3>,</c3><c22>
+</c22><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n187895">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;joined:&nbsp;</c22><c12>false</c12><c22>
+</c22><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c33>
+</c33><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n187921"><a id="n187901"><a id="n187920">&nbsp;</a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;join</c30><c4>(</c4><c18>self</c18><c4>)</c4><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n379099"><a id="n379097"><a id="n379096"><a id="n379113">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert!</c13><c4>(</c4><c5>!</c5><c1><a href="../../libstd/rt/thread.rs.html#20">self.</a></c1><c24><a href="../../libstd/rt/thread.rs.html#20">joined</a></c24><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n187905"><a id="n187904"><a id="n187902"><a id="n187903"><a id="n187906">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c21>mut</c21><c13>&nbsp;</c13><c20><a href="../../libstd/rt/thread.rs.html#38">this</a></c20><c16>&nbsp;=&nbsp;</c16><c1>self</c1><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n187910"><a id="n187908"><a id="n187909"><a id="n187911"><a id="n187907"><a id="n187914"><a id="n187913"><a id="n187912">&nbsp;</a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c3>{</c3><c22>&nbsp;</c22><c26>rust_raw_thread_join</c26><c4>(</c4><c26><a href="../../libstd/rt/thread.rs.html#38">this</a></c26><c24><a href="../../libstd/rt/thread.rs.html#19">.raw_thread</a></c24><c4>)</c4><c3>;</c3><c22>&nbsp;</c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n187915"><a id="n187918"><a id="n187919"><a id="n187916"><a id="n187917">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/thread.rs.html#38">this</a></c26><c24><a href="../../libstd/rt/thread.rs.html#20">.joined</a></c24><c13>&nbsp;=&nbsp;</c13><c12>true</c12><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n187940">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n187924"><a id="n187927">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../../libstd/ops.rs.html#15">Drop&nbsp;</a></c33><c33>for&nbsp;</c33><c33><a href="../../libstd/rt/thread.rs.html#16">Thread</a></c33><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n187928"><a id="n187937"><a id="n187938">&nbsp;</a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;drop</c30><c4>(</c4><c18>&amp;self</c18><c4>)</c4><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n379117"><a id="n379118"><a id="n379132">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c13>assert!</c13><c4>(</c4><c1><a href="../../libstd/rt/thread.rs.html#20">self.</a></c1><c24><a href="../../libstd/rt/thread.rs.html#20">joined</a></c24><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n187929"><a id="n187931"><a id="n187930"><a id="n187934"><a id="n187932"><a id="n187935">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c3>{</c3><c22>&nbsp;</c22><c26>rust_raw_thread_delete</c26><c4>(</c4><c1><a href="../../libstd/rt/thread.rs.html#19">self.</a></c1><c24><a href="../../libstd/rt/thread.rs.html#19">raw_thread</a></c24><c4>)</c4><c27>&nbsp;</c27><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n187964">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c21>extern</c21><c1>&nbsp;</c1><c3>{</c3><c1>
+</c1><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n187941"><a id="n187943"><a id="n187944"><a id="n187947"><a id="n187948"><a id="n187942">&nbsp;</a></a></a></a></a></a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;rust_raw_thread_start</c30><c4>(</c4><c20>f</c20><c1>:&nbsp;</c1><c8>&amp;</c8><c4>(</c4><c8>~</c8><c30>fn</c30><c4>()))</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8>*</c8><c8><a href="../../libstd/rt/thread.rs.html#14">raw_thread</a></c8><c3>;</c3><c1>
+</c1><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n187952"><a id="n187950"><a id="n187955"><a id="n187953">&nbsp;</a></a></a></a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;rust_raw_thread_join</c30><c4>(</c4><c20>thread</c20><c1>:&nbsp;</c1><c8>*</c8><c8><a href="../../libstd/rt/thread.rs.html#14">raw_thread</a></c8><c4>)</c4><c3>;</c3><c1>
+</c1><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n187960"><a id="n187962"><a id="n187957"><a id="n187959">&nbsp;</a></a></a></a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;rust_raw_thread_delete</c30><c4>(</c4><c20>thread</c20><c1>:&nbsp;</c1><c8>*</c8><c8><a href="../../libstd/rt/thread.rs.html#14">raw_thread</a></c8><c4>)</c4><c3>;</c3><c1>
+</c1><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="16_1_refs"><a href="#16"><c40>libstd/rt/thread.rs:16:1-16:1&nbsp;-struct-&nbsp;definition:<br/></c40><pr>
 <br/>pub&nbsp;struct&nbsp;Thread&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/thread.rs.html#24"><c24>24:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;start(main:&nbsp;~fn())&nbsp;-&gt;&nbsp;Thread&nbsp;{
-<br/></a><a href="../../libstd/rt/thread.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;{
-<br/></a><a href="../../libstd/rt/thread.rs.html#44"><c24>44:&nbsp;</c24>impl&nbsp;Drop&nbsp;for&nbsp;Thread&nbsp;{
-<br/></a><a href="../../libstd/rt/thread.rs.html#23"><c24>23:&nbsp;</c24>impl&nbsp;Thread&nbsp;{
-<br/></a><a href="../../libstd/rt/test.rs.html"><c24>libstd/rt/test.rs:<br/></c24><a href="../../libstd/rt/test.rs.html#282"><c24>282:&nbsp;</c24>pub&nbsp;fn&nbsp;spawntask_thread(f:&nbsp;~fn())&nbsp;-&gt;&nbsp;Thread&nbsp;{
-<br/></a><a href="../../libstd/task/spawn.rs.html"><c24>libstd/task/spawn.rs:<br/></c24><a href="../../libstd/task/spawn.rs.html#725"><c24>725:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;thread:&nbsp;Thread&nbsp;=&nbsp;thread_port.recv();
-<br/></a><br/><br/><a id="14_47_refs"><a href="#14"><c24>libstd/rt/thread.rs:14:47-14:47&nbsp;-ty-&nbsp;definition:<br/></c24><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
-<br/>type&nbsp;raw_thread&nbsp;=&nbsp;libc::c_void;
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/thread.rs.html#19"><c24>19:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;raw_thread:&nbsp;*raw_thread,
-<br/></a><a href="../../libstd/rt/thread.rs.html#53"><c24>53:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_raw_thread_join(thread:&nbsp;*raw_thread);
-<br/></a><a href="../../libstd/rt/thread.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_raw_thread_delete(thread:&nbsp;*raw_thread);
-<br/></a><a href="../../libstd/rt/thread.rs.html#52"><c24>52:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_raw_thread_start(f:&nbsp;&amp;(~fn()))&nbsp;-&gt;&nbsp;*raw_thread;
-<br/></a><a href="../../libstd/rt/thread.rs.html#25"><c24>25:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;substart(main:&nbsp;&amp;~fn())&nbsp;-&gt;&nbsp;*raw_thread&nbsp;{
-<br/></a><br/><br/><a id="25_8_refs"><a href="#25"><c24>libstd/rt/thread.rs:25:8-25:8&nbsp;-fn-&nbsp;definition:<br/></c24><pr>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;substart(main:&nbsp;&amp;~fn())&nbsp;-&gt;&nbsp;*raw_thread&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/thread.rs.html#29"><c40>29:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;{
+<br/></a><a href="../../libstd/rt/thread.rs.html#24"><c40>24:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;start(main:&nbsp;~fn())&nbsp;-&gt;&nbsp;Thread&nbsp;{
+<br/></a><a href="../../libstd/rt/thread.rs.html#44"><c40>44:&nbsp;</c40>impl&nbsp;Drop&nbsp;for&nbsp;Thread&nbsp;{
+<br/></a><a href="../../libstd/rt/thread.rs.html#23"><c40>23:&nbsp;</c40>impl&nbsp;Thread&nbsp;{
+<br/></a><a href="../../libstd/rt/test.rs.html"><c40>libstd/rt/test.rs:<br/></c40></a><a href="../../libstd/rt/test.rs.html#282"><c40>282:&nbsp;</c40>pub&nbsp;fn&nbsp;spawntask_thread(f:&nbsp;~fn())&nbsp;-&gt;&nbsp;Thread&nbsp;{
+<br/></a><a href="../../libstd/task/spawn.rs.html"><c40>libstd/task/spawn.rs:<br/></c40></a><a href="../../libstd/task/spawn.rs.html#659"><c40>659:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;thread:&nbsp;Thread&nbsp;=&nbsp;thread_port.recv();
+<br/></a><br/><br/><a id="25_8_refs"><a href="#25"><c40>libstd/rt/thread.rs:25:8-25:8&nbsp;-fn-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;substart(main:&nbsp;&amp;~fn())&nbsp;-&gt;&nbsp;*raw_thread&nbsp;{
 <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;{&nbsp;rust_raw_thread_start(main)&nbsp;}
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/thread.rs.html#28"><c24>28:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;raw&nbsp;=&nbsp;substart(&amp;main);
-<br/></a><br/></a></a>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/thread.rs.html#28"><c40>28:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;raw&nbsp;=&nbsp;substart(&amp;main);
+<br/></a><br/><br/><a id="14_47_refs"><a href="#14"><c40>libstd/rt/thread.rs:14:47-14:47&nbsp;-ty-&nbsp;definition:<br/></c40><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;runtime&nbsp;type
+<br/>type&nbsp;raw_thread&nbsp;=&nbsp;libc::c_void;
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/thread.rs.html#19"><c40>19:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;raw_thread:&nbsp;*raw_thread,
+<br/></a><a href="../../libstd/rt/thread.rs.html#54"><c40>54:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_raw_thread_delete(thread:&nbsp;*raw_thread);
+<br/></a><a href="../../libstd/rt/thread.rs.html#52"><c40>52:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_raw_thread_start(f:&nbsp;&amp;(~fn()))&nbsp;-&gt;&nbsp;*raw_thread;
+<br/></a><a href="../../libstd/rt/thread.rs.html#53"><c40>53:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;rust_raw_thread_join(thread:&nbsp;*raw_thread);
+<br/></a><a href="../../libstd/rt/thread.rs.html#25"><c40>25:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;substart(main:&nbsp;&amp;~fn())&nbsp;-&gt;&nbsp;*raw_thread&nbsp;{
+<br/></a><br/></div></c0></fileblock></div></maintext>

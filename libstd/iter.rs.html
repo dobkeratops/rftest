@@ -1,69 +1,30 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
-a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
-pr{font-weight:bold}
-ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
-c24{color:#ffffff; font-style:italic; opacity:0.5}
-c25{color:#ffffff; opacity:0.92}
-c26{color:#ffffff; font-weight:bold; }
-c27{color:#b0ffff; font-weight:bold; }
-c28{color:#b0ffb0; font-weight:bold; }
-c29{color:#d0e0ff; font-weight:bold; }
-c30{color:#fff0e0; font-weight:bold; }
-c31{color:#d0b0ff; font-weight:bold; }
-c32{color:#ffffff; font-style:italic; opacity:0.6}
-c1{color:#ffffc0;   font-weight:bold; }
-c33{color:#e0a0d0;  }
-c2{color:#60f0c0}
-c3{color:#50e0ff; }
-c4{color:#f090f0}
-c5{color:#50ff80; }
-c6{color:#f0f0e0}
-c7{color:#fff0d0}
-c8{color:#e0d0f0}
-c9{color:#70f0f0}
-c10{color:#f0f070}
-c11{color:#c0f070}
-c12{color:#70c0f0}
-c13{color:#c0f070}
-c14{color:#f0ffc0}
-c15{color:#f0f0e0}
-c16{color:#c0ffe0}
-c17{color:#90d0f0}
-c18{color:#f0a0d0}
-c19{color:#d0f0a0}
-c20{color:#0f0ff}
-c21{color:#d0d0d0; font-weight:bold}
-c22{color:#c0ffd0; }
-c23{color:#d0f0ff; }
-</style><body style="background-color:#3c3834;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/iter.rs.html">iter.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c24>/*!&nbsp;Times&nbsp;trait
-</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c24>~~~&nbsp;{.rust}
-</c24><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c24>use&nbsp;iter::Times;
-</c24><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c24>let&nbsp;ten&nbsp;=&nbsp;10&nbsp;as&nbsp;uint;
-</c24><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c24>let&nbsp;mut&nbsp;accum&nbsp;=&nbsp;0;
-</c24><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c24>do&nbsp;ten.times&nbsp;{&nbsp;accum&nbsp;+=&nbsp;1;&nbsp;}
-</c24><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c24>~~~
-</c24><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c24>*/
-</c24><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n45346">&nbsp;</a><c33>#</c33><c4>[</c4><c33>allow</c33><c25>(</c25><c33>missing_doc</c33><c25>)</c25><c4>]</c4><c33>
-</c33><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c21>pub</c21><c28>&nbsp;trait&nbsp;Times&nbsp;</c28><c4>{</c4><c28>
-</c28><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n45342"><a id="n45341"><a id="n45345"><a id="n45344">&nbsp;</a></a></a></a><c28>&nbsp;&nbsp;&nbsp;&nbsp;</c28><c26>fn&nbsp;times</c26><c25>(</c25><c18>&amp;self</c18><c4>,</c4><c18>&nbsp;it:&nbsp;</c18><c3>&amp;</c3><c26>fn</c26><c25>())</c25><c4>;</c4><c28>
-</c28><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg2><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/iter.rs.html">iter.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c41>/*!&nbsp;Times&nbsp;trait
+</c41><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c41>~~~&nbsp;{.rust}
+</c41><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c41>use&nbsp;iter::Times;
+</c41><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c41>let&nbsp;ten&nbsp;=&nbsp;10&nbsp;as&nbsp;uint;
+</c41><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c41>let&nbsp;mut&nbsp;accum&nbsp;=&nbsp;0;
+</c41><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c41>do&nbsp;ten.times&nbsp;{&nbsp;accum&nbsp;+=&nbsp;1;&nbsp;}
+</c41><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c41>~~~
+</c41><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c41>*/
+</c41><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n45631">&nbsp;</a><c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>missing_doc</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c21>pub</c21><c32>&nbsp;trait&nbsp;Times&nbsp;</c32><c3>{</c3><c32>
+</c32><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n45627"><a id="n45630"><a id="n45629"><a id="n45626">&nbsp;</a></a></a></a><c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c30>fn&nbsp;times</c30><c4>(</c4><c18>&amp;self</c18><c3>,</c3><c18>&nbsp;it:&nbsp;</c18><c8>&amp;</c8><c30>fn</c30><c4>())</c4><c3>;</c3><c32>
+</c32><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c0>
-</c0><br/><div/><br/><a id="22_22_refs"><a href="#22"><c24>libstd/iter.rs:22:22-22:22&nbsp;-trait-&nbsp;definition:<br/></c24><pr>#[allow(missing_doc)]
+</c0><br/><div class="refblock"><br/><a id="22_22_refs"><a href="#22"><c40>libstd/iter.rs:22:22-22:22&nbsp;-trait-&nbsp;definition:<br/></c40><pr>#[allow(missing_doc)]
 <br/>pub&nbsp;trait&nbsp;Times&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../libstd/num/uint.rs.html"><c24>libstd/num/uint.rs:<br/></c24><a href="../libstd/num/uint.rs.html#73"><c24>73:&nbsp;</c24>impl&nbsp;iter::Times&nbsp;for&nbsp;uint&nbsp;{
-<br/></a><br/></a></c0>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/num/uint.rs.html"><c40>libstd/num/uint.rs:<br/></c40></a><a href="../libstd/num/uint.rs.html#73"><c40>73:&nbsp;</c40>impl&nbsp;iter::Times&nbsp;for&nbsp;uint&nbsp;{
+<br/></a><br/></div></fileblock></div></maintext></bg2>

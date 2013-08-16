@@ -1,110 +1,71 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
-a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
-pr{font-weight:bold}
-ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
-c24{color:#ffffff; font-style:italic; opacity:0.5}
-c25{color:#ffffff; opacity:0.92}
-c26{color:#ffffff; font-weight:bold; }
-c27{color:#b0ffff; font-weight:bold; }
-c28{color:#b0ffb0; font-weight:bold; }
-c29{color:#d0e0ff; font-weight:bold; }
-c30{color:#fff0e0; font-weight:bold; }
-c31{color:#d0b0ff; font-weight:bold; }
-c32{color:#ffffff; font-style:italic; opacity:0.6}
-c1{color:#ffffc0;   font-weight:bold; }
-c33{color:#e0a0d0;  }
-c2{color:#60f0c0}
-c3{color:#50e0ff; }
-c4{color:#f090f0}
-c5{color:#50ff80; }
-c6{color:#f0f0e0}
-c7{color:#fff0d0}
-c8{color:#e0d0f0}
-c9{color:#70f0f0}
-c10{color:#f0f070}
-c11{color:#c0f070}
-c12{color:#70c0f0}
-c13{color:#c0f070}
-c14{color:#f0ffc0}
-c15{color:#f0f0e0}
-c16{color:#c0ffe0}
-c17{color:#90d0f0}
-c18{color:#f0a0d0}
-c19{color:#d0f0a0}
-c20{color:#0f0ff}
-c21{color:#d0d0d0; font-weight:bold}
-c22{color:#c0ffd0; }
-c23{color:#d0f0ff; }
-</style><body style="background-color:#3a3636;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../libstd/rt/message_queue.rs.html">message_queue.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c24>//!&nbsp;A&nbsp;concurrent&nbsp;queue&nbsp;that&nbsp;supports&nbsp;multiple&nbsp;producers&nbsp;and&nbsp;a
-</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c24>//!&nbsp;single&nbsp;consumer.
-</c24><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;container::Container</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;kinds::Send</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;vec::OwnedVector</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;cell::Cell</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::*</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;unstable::sync::Exclusive</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;clone::Clone</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n183382">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;MessageQueue</c27><c5>&lt;T&gt;</c5><c27>&nbsp;</c27><c4>{</c4><c23>
-</c23><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c24>//&nbsp;XXX:&nbsp;Another&nbsp;mystery&nbsp;bug&nbsp;fixed&nbsp;by&nbsp;boxing&nbsp;this&nbsp;lock
-</c24><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n183373"><a id="n183378"><a id="n183374"><a id="n183377"><a id="n183375"><a id="n183379">&nbsp;</a></a></a></a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c21>priv</c21><c23>&nbsp;</c23><c6>queue:&nbsp;</c6><c3>~</c3><a href="../../libstd/unstable/sync.rs.html#351"><c3>Exclusive</c3></a><c3>&lt;~</c3><c4>[</c4><a href="../../libstd/unstable/sync.rs.html#351"><c3>T</c3></a><c4>]</c4><c3>&gt;</c3><c23>
-</c23><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n183482">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n183388"><a id="n183383"><a id="n183386">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;T:&nbsp;</c5><a href="../../libstd/kinds.rs.html#32"><c5>Send</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><a href="../../libstd/rt/message_queue.rs.html#21"><c30>MessageQueue</c30></a><c5>&lt;</c5><a href="../../libstd/rt/message_queue.rs.html#21"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n183390"><a id="n183402"><a id="n183392"><a id="n183401">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>()</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../libstd/rt/message_queue.rs.html#21"><c3>MessageQueue</c3></a><c3>&lt;</c3><a href="../../libstd/rt/message_queue.rs.html#21"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n183399">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/rt/message_queue.rs.html#21"><c23>MessageQueue</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n183396"><a id="n183393"><a id="n183398"><a id="n183394"><a id="n183395">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue:&nbsp;</c22><c2>~</c2><a href="../../libstd/unstable/sync.rs.html#364"><c8>Exclusive</c8></a><c8>::</c8><a href="../../libstd/unstable/sync.rs.html#364"><c8>new</c8></a><c25>(</c25><c16>~</c16><c4>[]</c4><c25>)</c25><c9>
-</c9><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c17>
-</c17><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n183437"><a id="n183408"><a id="n183406"><a id="n183436"><a id="n183404">&nbsp;</a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;push</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>value</c20><c18>:&nbsp;</c18><c3>T</c3><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n183434"><a id="n183433">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n183414"><a id="n183409"><a id="n183412"><a id="n183415"><a id="n183410"><a id="n183413"><a id="n183411">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>value</c20><c16>&nbsp;=&nbsp;</c16><a href="../../libstd/cell.rs.html#33"><c8>Cell</c8></a><c8>::</c8><a href="../../libstd/cell.rs.html#33"><c8>new</c8></a><c25>(</c25><a href="../../libstd/rt/message_queue.rs.html#34"><c8>value</c8></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n183423"><a id="n183422"><a id="n183427"><a id="n183425"><a id="n183417"><a id="n183428"><a id="n183431"><a id="n183429"><a id="n183421"><a id="n183416"><a id="n183418"><a id="n183432"><a id="n183419">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/rt/message_queue.rs.html#24"><c0>self</c0></a><c0>.</c0><a href="../../libstd/rt/message_queue.rs.html#24"><c6>queue</c6></a><c10>.</c10><a href="../../libstd/unstable/sync.rs.html#382"><c10>with</c10></a><c25>(</c25><c0>|</c0><a href="../../libstd/unstable/sync.rs.html#382"><c20>q</c20></a><c3>|</c3><c0>&nbsp;</c0><a href="../../libstd/rt/message_queue.rs.html#37"><c8>q</c8></a><c10>.</c10><a href="../../libstd/vec.rs.html#1296"><c10>push</c10></a><c25>(</c25><a href="../../libstd/rt/message_queue.rs.html#36"><c8>value</c8></a><c10>.</c10><a href="../../libstd/cell.rs.html#43"><c10>take</c10></a><c25>())</c25><c10>&nbsp;</c10><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c17>
-</c17><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n183480"><a id="n183442"><a id="n183440"><a id="n183479">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;pop</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../libstd/option.rs.html#55"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n183477"><a id="n183476">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n183444"><a id="n183443"><a id="n183468"><a id="n183472"><a id="n183474"><a id="n183469"><a id="n183471"><a id="n183446"><a id="n183447"><a id="n183449"><a id="n183470">&nbsp;</a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10>&nbsp;</c10><a href="../../libstd/rt/message_queue.rs.html#24"><c0>self</c0></a><c0>.</c0><a href="../../libstd/rt/message_queue.rs.html#24"><c6>queue</c6></a><c10>.</c10><a href="../../libstd/unstable/sync.rs.html#382"><c0>with</c0></a><c0>&nbsp;|</c0><a href="../../libstd/unstable/sync.rs.html#382"><c20>q</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><a href="../../libstd/unstable/sync.rs.html#382"><c22>
-</c22></a><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n183461"><a id="n183466"><a id="n183452"><a id="n183450"><a id="n183454">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><c2>!</c2><a href="../../libstd/rt/message_queue.rs.html#43"><c8>q</c8></a><c10>.</c10><a href="../../libstd/vec.rs.html#742"><c10>is_empty</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><a href="../../libstd/unstable/sync.rs.html#382"><c22>
-</c22></a><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n183458"><a id="n183455"><a id="n183459"><a id="n183456">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/option.rs.html#58"><c8>Some</c8></a><c25>(</c25><a href="../../libstd/rt/message_queue.rs.html#43"><c8>q</c8></a><c10>.</c10><a href="../../libstd/vec.rs.html#1390"><c10>shift</c10></a><c25>())</c25><a href="../../libstd/unstable/sync.rs.html#382"><c9>
-</c9></a><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n183465"><a id="n183464">&nbsp;</a></a><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><a href="../../libstd/unstable/sync.rs.html#382"><c22>
-</c22></a><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n183462">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/option.rs.html#57"><c8>None</c8></a><a href="../../libstd/unstable/sync.rs.html#382"><c22>
-</c22></a><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="../../libstd/unstable/sync.rs.html#382"><c22>
-</c22></a><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n183503">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n183487"><a id="n183484"><a id="n183489">&nbsp;</a></a></a><c30>impl</c30><c5>&lt;T&gt;</c5><c30>&nbsp;</c30><a href="../../libstd/clone.rs.html#26"><c30>Clone</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../libstd/rt/message_queue.rs.html#21"><c30>MessageQueue</c30></a><c5>&lt;</c5><a href="../../libstd/rt/message_queue.rs.html#21"><c5>T</c5></a><c5>&gt;</c5><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n183493"><a id="n183500"><a id="n183501"><a id="n183491">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c26>fn&nbsp;clone</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../libstd/rt/message_queue.rs.html#21"><c3>MessageQueue</c3></a><c3>&lt;</c3><a href="../../libstd/rt/message_queue.rs.html#21"><c3>T</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n183498">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/rt/message_queue.rs.html#21"><c23>MessageQueue</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n183494"><a id="n183495"><a id="n183497">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue:&nbsp;</c22><a href="../../libstd/rt/message_queue.rs.html#24"><c0>self</c0></a><c0>.</c0><a href="../../libstd/rt/message_queue.rs.html#24"><c6>queue</c6></a><c10>.</c10><a href="../../libstd/clone.rs.html#37"><c10>clone</c10></a><c25>()</c25><a href="../../libstd/clone.rs.html#37"><c10>
-</c10></a><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><div/><br/><a id="21_1_refs"><a href="#21"><c24>libstd/rt/message_queue.rs:21:1-21:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg10><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../libstd/rt/message_queue.rs.html">message_queue.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c40>//!&nbsp;A&nbsp;concurrent&nbsp;queue&nbsp;that&nbsp;supports&nbsp;multiple&nbsp;producers&nbsp;and&nbsp;a
+</c40><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c40>//!&nbsp;single&nbsp;consumer.
+</c40><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;container::Container</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;kinds::Send</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;vec::OwnedVector</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;cell::Cell</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::*</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;unstable::sync::Exclusive</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;clone::Clone</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n186592">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c21>pub</c21><c31>&nbsp;struct&nbsp;MessageQueue</c31><c5>&lt;T&gt;</c5><c31>&nbsp;</c31><c3>{</c3><c31>
+</c31><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c40>//&nbsp;XXX:&nbsp;Another&nbsp;mystery&nbsp;bug&nbsp;fixed&nbsp;by&nbsp;boxing&nbsp;this&nbsp;lock
+</c40><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n186584"><a id="n186585"><a id="n186583"><a id="n186588"><a id="n186589"><a id="n186587">&nbsp;</a></a></a></a></a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c21>priv</c21><c31>&nbsp;</c31><c24>queue:&nbsp;</c24><c8>~</c8><c8><a href="../../libstd/unstable/sync.rs.html#353">Exclusive&lt;~</a></c8><c3>[</c3><c8><a href="../../libstd/unstable/sync.rs.html#353">T</a></c8><c3>]</c3><c8><a href="../../libstd/unstable/sync.rs.html#353">&gt;</a></c8><c31>
+</c31><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n186692">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n186598"><a id="n186593"><a id="n186596">&nbsp;</a></a></a><c33>impl</c33><c5>&lt;T:&nbsp;</c5><c5><a href="../../libstd/kinds.rs.html#32">Send</a></c5><c5>&gt;</c5><c33>&nbsp;</c33><c33><a href="../../libstd/rt/message_queue.rs.html#21">MessageQueue</a></c33><c5><a href="../../libstd/rt/message_queue.rs.html#21">&lt;T&gt;</a></c5><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n186612"><a id="n186600"><a id="n186611"><a id="n186602">&nbsp;</a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;new</c30><c4>()</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../../libstd/rt/message_queue.rs.html#21">MessageQueue&lt;T&gt;</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n186609">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c31><a href="../../libstd/rt/message_queue.rs.html#21">MessageQueue</a></c31><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n186603"><a id="n186608"><a id="n186604"><a id="n186605"><a id="n186606">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue:&nbsp;</c22><c5>~</c5><c26><a href="../../libstd/unstable/sync.rs.html#366">Exclusive::new</a></c26><c4>(</c4><c16>~</c16><c3>[]</c3><c4>)</c4><c27>
+</c27><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c27>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c27><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c33>
+</c33><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n186647"><a id="n186616"><a id="n186614"><a id="n186618"><a id="n186646">&nbsp;</a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;push</c30><c4>(</c4><c18>&amp;mut&nbsp;self</c18><c3>,</c3><c18>&nbsp;</c18><c20><a href="../../libstd/rt/message_queue.rs.html#34">value</a></c20><c18>:&nbsp;</c18><c8>T</c8><c4>)</c4><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n186643"><a id="n186644">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n186620"><a id="n186624"><a id="n186621"><a id="n186619"><a id="n186625"><a id="n186623"><a id="n186622">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20><a href="../../libstd/rt/message_queue.rs.html#36">value</a></c20><c16>&nbsp;=&nbsp;</c16><c26><a href="../../libstd/cell.rs.html#34">Cell::new</a></c26><c4>(</c4><c26><a href="../../libstd/rt/message_queue.rs.html#34">value</a></c26><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n186628"><a id="n186631"><a id="n186626"><a id="n186639"><a id="n186633"><a id="n186638"><a id="n186642"><a id="n186627"><a id="n186637"><a id="n186632"><a id="n186629"><a id="n186641"><a id="n186635">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c1><a href="../../libstd/rt/message_queue.rs.html#24">self.</a></c1><c24><a href="../../libstd/rt/message_queue.rs.html#24">queue</a></c24><c10><a href="../../libstd/unstable/sync.rs.html#384">.with</a></c10><c4>(</c4><c1><a href="../../libstd/unstable/sync.rs.html#384">|</a></c1><c20><a href="../../libstd/rt/message_queue.rs.html#37">q</a></c20><c8><a href="../../libstd/unstable/sync.rs.html#384">|</a></c8><c1><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c1><c26><a href="../../libstd/rt/message_queue.rs.html#37">q</a></c26><c10><a href="../../libstd/vec.rs.html#1294">.push</a></c10><c4>(</c4><c26><a href="../../libstd/rt/message_queue.rs.html#36">value</a></c26><c10><a href="../../libstd/cell.rs.html#44">.take</a></c10><c4>())</c4><c10><a href="../../libstd/vec.rs.html#1294">&nbsp;</a></c10><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c33>
+</c33><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n186650"><a id="n186689"><a id="n186690"><a id="n186652">&nbsp;</a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;pop</c30><c4>(</c4><c18>&amp;mut&nbsp;self</c18><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../../libstd/option.rs.html#56">Option&lt;T&gt;</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n186687"><a id="n186686">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n186654"><a id="n186684"><a id="n186656"><a id="n186679"><a id="n186680"><a id="n186682"><a id="n186653"><a id="n186678"><a id="n186657"><a id="n186681"><a id="n186659">&nbsp;</a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c10><c1><a href="../../libstd/rt/message_queue.rs.html#24">self.</a></c1><c24><a href="../../libstd/rt/message_queue.rs.html#24">queue</a></c24><c10><a href="../../libstd/unstable/sync.rs.html#384">.</a></c10><c1><a href="../../libstd/unstable/sync.rs.html#384">with&nbsp;|</a></c1><c20><a href="../../libstd/rt/message_queue.rs.html#43">q</a></c20><c8><a href="../../libstd/unstable/sync.rs.html#384">|</a></c8><c1><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c1><c3>{</c3><c22><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c22><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n186676"><a id="n186671"><a id="n186660"><a id="n186662"><a id="n186664">&nbsp;</a></a></a></a></a><c22><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>if</c21><c21><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c21><c5><a href="../../libstd/unstable/sync.rs.html#384">!</a></c5><c26><a href="../../libstd/rt/message_queue.rs.html#43">q</a></c26><c10><a href="../../libstd/vec.rs.html#740">.is_empty</a></c10><c4>()</c4><c10><a href="../../libstd/vec.rs.html#740">&nbsp;</a></c10><c3>{</c3><c22><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c22><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n186668"><a id="n186669"><a id="n186666"><a id="n186665">&nbsp;</a></a></a></a><c22><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../../libstd/option.rs.html#59">Some</a></c26><c4>(</c4><c26><a href="../../libstd/rt/message_queue.rs.html#43">q</a></c26><c10><a href="../../libstd/vec.rs.html#1388">.shift</a></c10><c4>())</c4><c27><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c27><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n186674"><a id="n186675">&nbsp;</a></a><c27><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c27><c3>}</c3><c21><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c21><c21>else</c21><c21><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c21><c3>{</c3><c22><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c22><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n186672">&nbsp;</a><c22><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../../libstd/option.rs.html#58">None</a></c26><c22><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c22><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c22><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c22><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c22><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c22><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n186713">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n186694"><a id="n186699"><a id="n186697">&nbsp;</a></a></a><c33>impl</c33><c5>&lt;T&gt;</c5><c33>&nbsp;</c33><c33><a href="../../libstd/clone.rs.html#26">Clone&nbsp;</a></c33><c33>for&nbsp;</c33><c33><a href="../../libstd/rt/message_queue.rs.html#21">MessageQueue</a></c33><c5><a href="../../libstd/rt/message_queue.rs.html#21">&lt;T&gt;</a></c5><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n186701"><a id="n186711"><a id="n186710"><a id="n186703">&nbsp;</a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;clone</c30><c4>(</c4><c18>&amp;self</c18><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../../libstd/rt/message_queue.rs.html#21">MessageQueue&lt;T&gt;</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n186708">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c31><a href="../../libstd/rt/message_queue.rs.html#21">MessageQueue</a></c31><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n186704"><a id="n186707"><a id="n186705">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue:&nbsp;</c22><c1><a href="../../libstd/clone.rs.html#37">self.</a></c1><c24><a href="../../libstd/rt/message_queue.rs.html#24">queue</a></c24><c10><a href="../../libstd/clone.rs.html#37">.clone</a></c10><c4>()</c4><c10><a href="../../libstd/clone.rs.html#37">
+</a></c10><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c10><a href="../../libstd/clone.rs.html#37">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c10><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="21_1_refs"><a href="#21"><c40>libstd/rt/message_queue.rs:21:1-21:1&nbsp;-struct-&nbsp;definition:<br/></c40><pr>
 <br/>pub&nbsp;struct&nbsp;MessageQueue&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/message_queue.rs.html#54"><c24>54:&nbsp;</c24>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;MessageQueue&lt;T&gt;&nbsp;{
-<br/></a><a href="../../libstd/rt/message_queue.rs.html#56"><c24>56:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MessageQueue&nbsp;{
-<br/></a><a href="../../libstd/rt/message_queue.rs.html#55"><c24>55:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;MessageQueue&lt;T&gt;&nbsp;{
-<br/></a><a href="../../libstd/rt/message_queue.rs.html#29"><c24>29:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MessageQueue&nbsp;{
-<br/></a><a href="../../libstd/rt/message_queue.rs.html#28"><c24>28:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;MessageQueue&lt;T&gt;&nbsp;{
-<br/></a><a href="../../libstd/rt/message_queue.rs.html#27"><c24>27:&nbsp;</c24>impl&lt;T:&nbsp;Send&gt;&nbsp;MessageQueue&lt;T&gt;&nbsp;{
-<br/></a><a href="../../libstd/rt/sched.rs.html"><c24>libstd/rt/sched.rs:<br/></c24><a href="../../libstd/rt/sched.rs.html#85"><c24>85:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;queue:&nbsp;MessageQueue&lt;SchedMessage&gt;,
-<br/></a><a href="../../libstd/rt/sched.rs.html#50"><c24>50:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;message_queue:&nbsp;MessageQueue&lt;SchedMessage&gt;,
-<br/></a><br/></a></c0>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/message_queue.rs.html#54"><c40>54:&nbsp;</c40>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;MessageQueue&lt;T&gt;&nbsp;{
+<br/></a><a href="../../libstd/rt/message_queue.rs.html#28"><c40>28:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;MessageQueue&lt;T&gt;&nbsp;{
+<br/></a><a href="../../libstd/rt/message_queue.rs.html#55"><c40>55:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;MessageQueue&lt;T&gt;&nbsp;{
+<br/></a><a href="../../libstd/rt/message_queue.rs.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MessageQueue&nbsp;{
+<br/></a><a href="../../libstd/rt/message_queue.rs.html#29"><c40>29:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MessageQueue&nbsp;{
+<br/></a><a href="../../libstd/rt/message_queue.rs.html#27"><c40>27:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;MessageQueue&lt;T&gt;&nbsp;{
+<br/></a><a href="../../libstd/rt/sched.rs.html"><c40>libstd/rt/sched.rs:<br/></c40></a><a href="../../libstd/rt/sched.rs.html#85"><c40>85:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;queue:&nbsp;MessageQueue&lt;SchedMessage&gt;,
+<br/></a><a href="../../libstd/rt/sched.rs.html#50"><c40>50:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;message_queue:&nbsp;MessageQueue&lt;SchedMessage&gt;,
+<br/></a><br/></div></c0></fileblock></div></maintext>

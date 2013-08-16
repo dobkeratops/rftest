@@ -264,7 +264,8 @@ fn noop_fold_struct_field(sf: @struct_field, fld: @ast_fold)
             kind: sf.node.kind,
             id: sf.node.id,
             ty: fld.fold_ty(&sf.node.ty),
-            attrs: sf.node.attrs.map(|e| fold_attribute(*e))
+            attrs: sf.node.attrs.map(|e| fold_attribute(*e)),
+            default: match sf.node.default { Some(e)=>Some(fld.fold_expr(e)),None=>None }
         },
         span: sf.span
     }
@@ -355,6 +356,7 @@ fn fold_struct_field(f: @struct_field, fld: @ast_fold) -> @struct_field {
             id: fld.new_id(f.node.id),
             ty: fld.fold_ty(&f.node.ty),
             attrs: /* FIXME (#2543) */ f.node.attrs.clone(),
+            default: f.node.default /* does this need folding? */
         },
         span: fld.new_span(f.span),
     }
@@ -847,6 +849,7 @@ impl ast_fold for AstFoldFns {
                 id: sf.node.id,
                 ty: self.fold_ty(&sf.node.ty),
                 attrs: sf.node.attrs.clone(),
+                default: sf.node.default
             },
             span: (self.new_span)(sf.span),
         }

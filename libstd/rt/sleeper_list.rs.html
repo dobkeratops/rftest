@@ -1,109 +1,70 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/></head><style type="text/css">maintext {color:#f0f0f0; font-size:12px; font-family:"Courier New"}
-a:link{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:visited{ color:#f0f0f0; font-style:normal;   text-decoration:none;}
-a:link:hover{ color:#f0f0f0; font-style:normal; background-color:#606060; }
-pr{font-weight:bold}
-ln{color:#606060; -moz-user-select:-moz-none; -khtml-user-select:none; -webkit-user-select:none; -ms-user-select:none; user-select:none;}
-c24{color:#ffffff; font-style:italic; opacity:0.5}
-c25{color:#ffffff; opacity:0.92}
-c26{color:#ffffff; font-weight:bold; }
-c27{color:#b0ffff; font-weight:bold; }
-c28{color:#b0ffb0; font-weight:bold; }
-c29{color:#d0e0ff; font-weight:bold; }
-c30{color:#fff0e0; font-weight:bold; }
-c31{color:#d0b0ff; font-weight:bold; }
-c32{color:#ffffff; font-style:italic; opacity:0.6}
-c1{color:#ffffc0;   font-weight:bold; }
-c33{color:#e0a0d0;  }
-c2{color:#60f0c0}
-c3{color:#50e0ff; }
-c4{color:#f090f0}
-c5{color:#50ff80; }
-c6{color:#f0f0e0}
-c7{color:#fff0d0}
-c8{color:#e0d0f0}
-c9{color:#70f0f0}
-c10{color:#f0f070}
-c11{color:#c0f070}
-c12{color:#70c0f0}
-c13{color:#c0f070}
-c14{color:#f0ffc0}
-c15{color:#f0f0e0}
-c16{color:#c0ffe0}
-c17{color:#90d0f0}
-c18{color:#f0a0d0}
-c19{color:#d0f0a0}
-c20{color:#0f0ff}
-c21{color:#d0d0d0; font-weight:bold}
-c22{color:#c0ffd0; }
-c23{color:#d0f0ff; }
-</style><body style="background-color:#34383c;"><maintext><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../libstd/rt/sleeper_list.rs.html">sleeper_list.rs</a><br/><br/><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c24>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c24><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c24>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c24><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c24>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c24><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c24>//
-</c24><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c24>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c24><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c24>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c24><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c24>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c24><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c24>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c24><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c24>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c24><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c24>//!&nbsp;Maintains&nbsp;a&nbsp;shared&nbsp;list&nbsp;of&nbsp;sleeping&nbsp;schedulers.&nbsp;Schedulers
-</c24><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c24>//!&nbsp;use&nbsp;this&nbsp;to&nbsp;wake&nbsp;each&nbsp;other&nbsp;up.
-</c24><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;container::Container</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;vec::OwnedVector</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::</c0><c4>{</c4><c0>Option</c0><c4>,</c4><c0>&nbsp;Some</c0><c4>,</c4><c0>&nbsp;None</c0><c4>};</c4><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;cell::Cell</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;unstable::sync::Exclusive</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt::sched::SchedHandle</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;clone::Clone</c0><c4>;</c4><c0>
-</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n183525">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c21>pub</c21><c23>&nbsp;</c23><c27>struct&nbsp;SleeperList&nbsp;</c27><c4>{</c4><c23>
-</c23><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n183517"><a id="n183520"><a id="n183516"><a id="n183518"><a id="n183522"><a id="n183521">&nbsp;</a></a></a></a></a></a><c23>&nbsp;&nbsp;&nbsp;&nbsp;</c23><c21>priv</c21><c23>&nbsp;</c23><c6>stack:&nbsp;</c6><c3>~</c3><a href="../../libstd/unstable/sync.rs.html#351"><c3>Exclusive</c3></a><c3>&lt;~</c3><c4>[</c4><a href="../../libstd/rt/sched.rs.html#82"><c3>SchedHandle</c3></a><c4>]</c4><c3>&gt;</c3><c23>
-</c23><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c4>}</c4><c0>
-</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n183619">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n183527">&nbsp;</a><c30>impl&nbsp;</c30><a href="../../libstd/rt/sleeper_list.rs.html#21"><c30>SleeperList</c30></a><c30>&nbsp;</c30><c4>{</c4><c17>
-</c17><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n183539"><a id="n183538"><a id="n183529">&nbsp;</a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;new</c26><c25>()</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../libstd/rt/sleeper_list.rs.html#21"><c3>SleeperList</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n183536">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/rt/sleeper_list.rs.html#21"><c23>SleeperList</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n183531"><a id="n183535"><a id="n183533"><a id="n183530"><a id="n183532">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stack:&nbsp;</c22><c2>~</c2><a href="../../libstd/unstable/sync.rs.html#364"><c8>Exclusive</c8></a><c8>::</c8><a href="../../libstd/unstable/sync.rs.html#364"><c8>new</c8></a><c25>(</c25><c16>~</c16><c4>[]</c4><c25>)</c25><c9>
-</c9><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c17>
-</c17><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n183545"><a id="n183543"><a id="n183574"><a id="n183573"><a id="n183541">&nbsp;</a></a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;push</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c4>,</c4><c18>&nbsp;</c18><c20>handle</c20><c18>:&nbsp;</c18><a href="../../libstd/rt/sched.rs.html#82"><c3>SchedHandle</c3></a><c25>)</c25><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n183548"><a id="n183552"><a id="n183546"><a id="n183551"><a id="n183547"><a id="n183550"><a id="n183549">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20>handle</c20><c16>&nbsp;=&nbsp;</c16><a href="../../libstd/cell.rs.html#33"><c8>Cell</c8></a><c8>::</c8><a href="../../libstd/cell.rs.html#33"><c8>new</c8></a><c25>(</c25><a href="../../libstd/rt/sleeper_list.rs.html#33"><c8>handle</c8></a><c25>)</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n183570"><a id="n183571">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n183566"><a id="n183559"><a id="n183564"><a id="n183556"><a id="n183560"><a id="n183558"><a id="n183555"><a id="n183553"><a id="n183562"><a id="n183569"><a id="n183565"><a id="n183554"><a id="n183568">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/rt/sleeper_list.rs.html#23"><c0>self</c0></a><c0>.</c0><a href="../../libstd/rt/sleeper_list.rs.html#23"><c6>stack</c6></a><c13>.</c13><a href="../../libstd/unstable/sync.rs.html#382"><c13>with</c13></a><c25>(</c25><c0>|</c0><a href="../../libstd/unstable/sync.rs.html#382"><c20>s</c20></a><c3>|</c3><c0>&nbsp;</c0><a href="../../libstd/rt/sleeper_list.rs.html#36"><c8>s</c8></a><c10>.</c10><a href="../../libstd/vec.rs.html#1296"><c10>push</c10></a><c25>(</c25><a href="../../libstd/rt/sleeper_list.rs.html#34"><c8>handle</c8></a><c10>.</c10><a href="../../libstd/cell.rs.html#43"><c10>take</c10></a><c25>()))</c25><c4>;</c4><c22>
-</c22><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c17>
-</c17><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n183577"><a id="n183616"><a id="n183617"><a id="n183579">&nbsp;</a></a></a></a><c17>&nbsp;&nbsp;&nbsp;&nbsp;</c17><c21>pub</c21><c18>&nbsp;</c18><c26>fn&nbsp;pop</c26><c25>(</c25><c18>&amp;mut&nbsp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../libstd/option.rs.html#55"><c3>Option</c3></a><c3>&lt;</c3><a href="../../libstd/rt/sched.rs.html#82"><c3>SchedHandle</c3></a><c3>&gt;</c3><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n183613"><a id="n183614">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n183607"><a id="n183609"><a id="n183583"><a id="n183580"><a id="n183606"><a id="n183586"><a id="n183608"><a id="n183611"><a id="n183584"><a id="n183581"><a id="n183605">&nbsp;</a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10>&nbsp;</c10><a href="../../libstd/unstable/sync.rs.html#382"><c0>self</c0></a><c0>.</c0><a href="../../libstd/rt/sleeper_list.rs.html#23"><c6>stack</c6></a><c10>.</c10><a href="../../libstd/unstable/sync.rs.html#382"><c0>with</c0></a><c0>&nbsp;|</c0><a href="../../libstd/unstable/sync.rs.html#382"><c20>s</c20></a><c3>|</c3><c0>&nbsp;</c0><c4>{</c4><a href="../../libstd/unstable/sync.rs.html#382"><c22>
-</c22></a><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n183591"><a id="n183598"><a id="n183589"><a id="n183587"><a id="n183603">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c7>&nbsp;</c7><c2>!</c2><a href="../../libstd/rt/sleeper_list.rs.html#42"><c8>s</c8></a><c10>.</c10><a href="../../libstd/vec.rs.html#742"><c10>is_empty</c10></a><c25>()</c25><c10>&nbsp;</c10><c4>{</c4><a href="../../libstd/unstable/sync.rs.html#382"><c22>
-</c22></a><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n183596"><a id="n183592"><a id="n183595"><a id="n183593">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/option.rs.html#58"><c8>Some</c8></a><c25>(</c25><a href="../../libstd/rt/sleeper_list.rs.html#42"><c8>s</c8></a><c10>.</c10><a href="../../libstd/vec.rs.html#1384"><c10>pop</c10></a><c25>())</c25><a href="../../libstd/unstable/sync.rs.html#382"><c9>
-</c9></a><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n183601"><a id="n183602">&nbsp;</a></a><c9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c9><c4>}</c4><c7>&nbsp;</c7><c21>else</c21><c7>&nbsp;</c7><c4>{</c4><a href="../../libstd/unstable/sync.rs.html#382"><c22>
-</c22></a><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n183599">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/option.rs.html#57"><c8>None</c8></a><a href="../../libstd/unstable/sync.rs.html#382"><c22>
-</c22></a><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><a href="../../libstd/unstable/sync.rs.html#382"><c22>
-</c22></a><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c17>
-</c17><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c4>}</c4><c0>
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg1><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../libstd/rt/sleeper_list.rs.html">sleeper_list.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c40>//!&nbsp;Maintains&nbsp;a&nbsp;shared&nbsp;list&nbsp;of&nbsp;sleeping&nbsp;schedulers.&nbsp;Schedulers
+</c40><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c40>//!&nbsp;use&nbsp;this&nbsp;to&nbsp;wake&nbsp;each&nbsp;other&nbsp;up.
+</c40><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;container::Container</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;vec::OwnedVector</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::</c0><c3>{</c3><c0>Option</c0><c3>,</c3><c0>&nbsp;Some</c0><c3>,</c3><c0>&nbsp;None</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;cell::Cell</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;unstable::sync::Exclusive</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt::sched::SchedHandle</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;clone::Clone</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n186735">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c21>pub</c21><c31>&nbsp;struct&nbsp;SleeperList&nbsp;</c31><c3>{</c3><c31>
+</c31><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n186726"><a id="n186728"><a id="n186731"><a id="n186727"><a id="n186732"><a id="n186730">&nbsp;</a></a></a></a></a></a><c31>&nbsp;&nbsp;&nbsp;&nbsp;</c31><c21>priv</c21><c31>&nbsp;</c31><c24>stack:&nbsp;</c24><c8>~</c8><c8><a href="../../libstd/unstable/sync.rs.html#353">Exclusive&lt;~</a></c8><c3>[</c3><c8><a href="../../libstd/rt/sched.rs.html#82">SchedHandle</a></c8><c3>]</c3><c8><a href="../../libstd/unstable/sync.rs.html#353">&gt;</a></c8><c31>
+</c31><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n186829">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n186737">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../../libstd/rt/sleeper_list.rs.html#21">SleeperList</a></c33><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n186739"><a id="n186748"><a id="n186749">&nbsp;</a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;new</c30><c4>()</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../../libstd/rt/sleeper_list.rs.html#21">SleeperList</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n186746">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c31><a href="../../libstd/rt/sleeper_list.rs.html#21">SleeperList</a></c31><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n186740"><a id="n186743"><a id="n186745"><a id="n186742"><a id="n186741">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stack:&nbsp;</c22><c5>~</c5><c26><a href="../../libstd/unstable/sync.rs.html#366">Exclusive::new</a></c26><c4>(</c4><c16>~</c16><c3>[]</c3><c4>)</c4><c27>
+</c27><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c27>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c27><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c33>
+</c33><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n186783"><a id="n186751"><a id="n186755"><a id="n186753"><a id="n186784">&nbsp;</a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;push</c30><c4>(</c4><c18>&amp;mut&nbsp;self</c18><c3>,</c3><c18>&nbsp;</c18><c20><a href="../../libstd/rt/sleeper_list.rs.html#33">handle</a></c20><c18>:&nbsp;</c18><c8><a href="../../libstd/rt/sched.rs.html#82">SchedHandle</a></c8><c4>)</c4><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n186759"><a id="n186757"><a id="n186762"><a id="n186756"><a id="n186760"><a id="n186761"><a id="n186758">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c13>&nbsp;</c13><c20><a href="../../libstd/rt/sleeper_list.rs.html#34">handle</a></c20><c16>&nbsp;=&nbsp;</c16><c26><a href="../../libstd/cell.rs.html#34">Cell::new</a></c26><c4>(</c4><c26><a href="../../libstd/rt/sleeper_list.rs.html#33">handle</a></c26><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n186781"><a id="n186780">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n186779"><a id="n186763"><a id="n186778"><a id="n186772"><a id="n186774"><a id="n186766"><a id="n186764"><a id="n186768"><a id="n186775"><a id="n186769"><a id="n186770"><a id="n186765"><a id="n186776">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c1><a href="../../libstd/unstable/sync.rs.html#384">self.</a></c1><c24><a href="../../libstd/rt/sleeper_list.rs.html#23">stack</a></c24><c10><a href="../../libstd/unstable/sync.rs.html#384">.with</a></c10><c4>(</c4><c1><a href="../../libstd/unstable/sync.rs.html#384">|</a></c1><c20><a href="../../libstd/rt/sleeper_list.rs.html#36">s</a></c20><c8><a href="../../libstd/unstable/sync.rs.html#384">|</a></c8><c1><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c1><c26><a href="../../libstd/rt/sleeper_list.rs.html#36">s</a></c26><c22><a href="../../libstd/vec.rs.html#1294">.push</a></c22><c4>(</c4><c26><a href="../../libstd/rt/sleeper_list.rs.html#34">handle</a></c26><c10><a href="../../libstd/cell.rs.html#44">.take</a></c10><c4>()))</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c33>
+</c33><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n186827"><a id="n186826"><a id="n186789"><a id="n186787">&nbsp;</a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;pop</c30><c4>(</c4><c18>&amp;mut&nbsp;self</c18><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../../libstd/option.rs.html#56">Option&lt;</a></c8><c8><a href="../../libstd/rt/sched.rs.html#82">SchedHandle</a></c8><c8><a href="../../libstd/option.rs.html#56">&gt;</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n186824"><a id="n186823">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n186793"><a id="n186796"><a id="n186821"><a id="n186819"><a id="n186817"><a id="n186790"><a id="n186815"><a id="n186794"><a id="n186818"><a id="n186816"><a id="n186791">&nbsp;</a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>do</c21><c10><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c10><c1><a href="../../libstd/unstable/sync.rs.html#384">self.</a></c1><c24><a href="../../libstd/rt/sleeper_list.rs.html#23">stack</a></c24><c10><a href="../../libstd/unstable/sync.rs.html#384">.</a></c10><c1><a href="../../libstd/unstable/sync.rs.html#384">with&nbsp;|</a></c1><c20><a href="../../libstd/rt/sleeper_list.rs.html#42">s</a></c20><c8><a href="../../libstd/unstable/sync.rs.html#384">|</a></c8><c1><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c1><c3>{</c3><c22><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c22><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n186808"><a id="n186801"><a id="n186797"><a id="n186813"><a id="n186799">&nbsp;</a></a></a></a></a><c22><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>if</c21><c21><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c21><c5><a href="../../libstd/unstable/sync.rs.html#384">!</a></c5><c26><a href="../../libstd/rt/sleeper_list.rs.html#42">s</a></c26><c10><a href="../../libstd/vec.rs.html#740">.is_empty</a></c10><c4>()</c4><c10><a href="../../libstd/vec.rs.html#740">&nbsp;</a></c10><c3>{</c3><c22><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c22><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n186805"><a id="n186802"><a id="n186806"><a id="n186803">&nbsp;</a></a></a></a><c22><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../../libstd/option.rs.html#59">Some</a></c26><c4>(</c4><c26><a href="../../libstd/rt/sleeper_list.rs.html#42">s</a></c26><c10><a href="../../libstd/vec.rs.html#1382">.pop</a></c10><c4>())</c4><c27><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c27><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n186811"><a id="n186812">&nbsp;</a></a><c27><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c27><c3>}</c3><c21><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c21><c21>else</c21><c21><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;</a></c21><c3>{</c3><c22><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c22><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n186809">&nbsp;</a><c22><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../../libstd/option.rs.html#58">None</a></c26><c22><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c22><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c22><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c22><a href="../../libstd/unstable/sync.rs.html#384">
+</a></c22><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c22><a href="../../libstd/unstable/sync.rs.html#384">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n183623"><a id="n183620">&nbsp;</a></a><c30>impl&nbsp;</c30><a href="../../libstd/clone.rs.html#26"><c30>Clone</c30></a><c30>&nbsp;for&nbsp;</c30><a href="../../libstd/rt/sleeper_list.rs.html#21"><c30>SleeperList</c30></a><c30>&nbsp;</c30><c4>{</c4><c0>
-</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n183633"><a id="n183625"><a id="n183632">&nbsp;</a></a></a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c26>fn&nbsp;clone</c26><c25>(</c25><c18>&amp;self</c18><c25>)</c25><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><a href="../../libstd/rt/sleeper_list.rs.html#21"><c3>SleeperList</c3></a><c18>&nbsp;</c18><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n183630">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><a href="../../libstd/rt/sleeper_list.rs.html#21"><c23>SleeperList</c23></a><c22>&nbsp;</c22><c4>{</c4><c22>
-</c22><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n183629"><a id="n183626"><a id="n183627">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stack:&nbsp;</c22><a href="../../libstd/clone.rs.html#37"><c0>self</c0></a><c0>.</c0><a href="../../libstd/rt/sleeper_list.rs.html#23"><c6>stack</c6></a><c10>.</c10><a href="../../libstd/clone.rs.html#37"><c10>clone</c10></a><c25>()</c25><a href="../../libstd/clone.rs.html#37"><c10>
-</c10></a><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>}</c4><c22>
-</c22><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>}</c4><c0>
-</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c4>}</c4><br/><div/><br/><a id="21_1_refs"><a href="#21"><c24>libstd/rt/sleeper_list.rs:21:1-21:1&nbsp;-struct-&nbsp;definition:<br/></c24><pr>
+</c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n186833"><a id="n186830">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../../libstd/clone.rs.html#26">Clone&nbsp;</a></c33><c33>for&nbsp;</c33><c33><a href="../../libstd/rt/sleeper_list.rs.html#21">SleeperList</a></c33><c33>&nbsp;</c33><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n186843"><a id="n186835"><a id="n186842">&nbsp;</a></a></a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;clone</c30><c4>(</c4><c18>&amp;self</c18><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../../libstd/rt/sleeper_list.rs.html#21">SleeperList</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n186840">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c31><a href="../../libstd/rt/sleeper_list.rs.html#21">SleeperList</a></c31><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n186837"><a id="n186839"><a id="n186836">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stack:&nbsp;</c22><c1><a href="../../libstd/rt/sleeper_list.rs.html#23">self.</a></c1><c24><a href="../../libstd/rt/sleeper_list.rs.html#23">stack</a></c24><c10><a href="../../libstd/clone.rs.html#37">.clone</a></c10><c4>()</c4><c10><a href="../../libstd/clone.rs.html#37">
+</a></c10><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c10><a href="../../libstd/clone.rs.html#37">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c10><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c3>}</c3><br/><div class="refblock"><br/><a id="21_1_refs"><a href="#21"><c40>libstd/rt/sleeper_list.rs:21:1-21:1&nbsp;-struct-&nbsp;definition:<br/></c40><pr>
 <br/>pub&nbsp;struct&nbsp;SleeperList&nbsp;{
-<br/></pr></a></a><c24>references:-<br/></c24><a href="../../libstd/rt/sleeper_list.rs.html#55"><c24>55:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SleeperList&nbsp;{
-<br/></a><a href="../../libstd/rt/sleeper_list.rs.html#54"><c24>54:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;SleeperList&nbsp;{
-<br/></a><a href="../../libstd/rt/sleeper_list.rs.html#53"><c24>53:&nbsp;</c24>impl&nbsp;Clone&nbsp;for&nbsp;SleeperList&nbsp;{
-<br/></a><a href="../../libstd/rt/sleeper_list.rs.html#28"><c24>28:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SleeperList&nbsp;{
-<br/></a><a href="../../libstd/rt/sleeper_list.rs.html#27"><c24>27:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;SleeperList&nbsp;{
-<br/></a><a href="../../libstd/rt/sleeper_list.rs.html#26"><c24>26:&nbsp;</c24>impl&nbsp;SleeperList&nbsp;{
-<br/></a><a href="../../libstd/rt/sched.rs.html"><c24>libstd/rt/sched.rs:<br/></c24><a href="../../libstd/rt/sched.rs.html#53"><c24>53:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;sleeper_list:&nbsp;SleeperList,
-<br/></a><a href="../../libstd/rt/sched.rs.html#122"><c24>122:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleeper_list:&nbsp;SleeperList,
-<br/></a><a href="../../libstd/rt/sched.rs.html#108"><c24>108:&nbsp;</c24>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleeper_list:&nbsp;SleeperList)
-<br/></a><br/></a></c0>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/sleeper_list.rs.html#28"><c40>28:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SleeperList&nbsp;{
+<br/></a><a href="../../libstd/rt/sleeper_list.rs.html#53"><c40>53:&nbsp;</c40>impl&nbsp;Clone&nbsp;for&nbsp;SleeperList&nbsp;{
+<br/></a><a href="../../libstd/rt/sleeper_list.rs.html#26"><c40>26:&nbsp;</c40>impl&nbsp;SleeperList&nbsp;{
+<br/></a><a href="../../libstd/rt/sleeper_list.rs.html#55"><c40>55:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SleeperList&nbsp;{
+<br/></a><a href="../../libstd/rt/sleeper_list.rs.html#27"><c40>27:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;SleeperList&nbsp;{
+<br/></a><a href="../../libstd/rt/sleeper_list.rs.html#54"><c40>54:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;SleeperList&nbsp;{
+<br/></a><a href="../../libstd/rt/sched.rs.html"><c40>libstd/rt/sched.rs:<br/></c40></a><a href="../../libstd/rt/sched.rs.html#53"><c40>53:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;sleeper_list:&nbsp;SleeperList,
+<br/></a><a href="../../libstd/rt/sched.rs.html#108"><c40>108:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleeper_list:&nbsp;SleeperList)
+<br/></a><a href="../../libstd/rt/sched.rs.html#122"><c40>122:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleeper_list:&nbsp;SleeperList,
+<br/></a><br/></div></c0></fileblock></div></maintext>

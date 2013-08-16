@@ -12,8 +12,8 @@
 
 use c_str::ToCStr;
 use cast::transmute;
-use libc::{c_char, c_uchar, c_void, size_t, uintptr_t};
-use str;
+use libc::{c_char, c_void, size_t, uintptr_t};
+use option::{Some, None};
 use sys;
 use rt::task::Task;
 use rt::local::Local;
@@ -36,14 +36,13 @@ pub fn fail_bounds_check(file: *c_char, line: size_t,
 
 #[lang="malloc"]
 pub unsafe fn local_malloc(td: *c_char, size: uintptr_t) -> *c_char {
-    let mut alloc = ::ptr::null();
-    do Local::borrow::<Task,()> |task| {
-        rtdebug!("task pointer: %x, heap pointer: %x",
-                 ::borrow::to_uint(task),
-                 ::borrow::to_uint(&task.heap));
-        alloc = task.heap.alloc(td as *c_void, size as uint) as *c_char;
+    // XXX: Unsafe borrow for speed. Lame.
+    match Local::try_unsafe_borrow::<Task>() {
+        Some(task) => {
+            (*task).heap.alloc(td as *c_void, size as uint) as *c_char
+        }
+        None => rtabort!("local malloc outside of task")
     }
-    return alloc;
 }
 
 // NB: Calls to free CANNOT be allowed to fail, as throwing an exception from
@@ -91,12 +90,6 @@ pub unsafe fn check_not_borrowed(a: *u8,
                                  file: *c_char,
                                  line: size_t) {
     borrowck::check_not_borrowed(a, file, line)
-}
-
-#[lang="strdup_uniq"]
-#[inline]
-pub unsafe fn strdup_uniq(ptr: *c_uchar, len: uint) -> ~str {
-    str::raw::from_buf_len(ptr, len)
 }
 
 #[lang="annihilate"]

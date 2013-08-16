@@ -17,6 +17,7 @@ use codemap;
 use parse::lexer::*; //resolve bug?
 use parse::ParseSess;
 use parse::parser::Parser;
+use parse::attr::parser_attr;
 use parse::token::{Token, EOF, to_str, nonterminal, get_ident_interner, ident_to_str};
 use parse::token;
 
@@ -223,7 +224,7 @@ pub enum parse_result {
 pub fn parse_or_else(
     sess: @mut ParseSess,
     cfg: ast::CrateConfig,
-    rdr: @reader,
+    rdr: @mut reader,
     ms: ~[matcher]
 ) -> HashMap<ident, @named_match> {
     match parse(sess, cfg, rdr, ms) {
@@ -236,7 +237,7 @@ pub fn parse_or_else(
 pub fn parse(
     sess: @mut ParseSess,
     cfg: ast::CrateConfig,
-    rdr: @reader,
+    rdr: @mut reader,
     ms: &[matcher]
 ) -> parse_result {
     let mut cur_eis = ~[];
@@ -418,18 +419,19 @@ pub fn parse_nt(p: &Parser, name: &str) -> nonterminal {
         Some(i) => token::nt_item(i),
         None => p.fatal("expected an item keyword")
       },
-      "block" => token::nt_block(p.parse_block()),
+      "block" => token::nt_block(~p.parse_block()),
       "stmt" => token::nt_stmt(p.parse_stmt(~[])),
       "pat" => token::nt_pat(p.parse_pat()),
       "expr" => token::nt_expr(p.parse_expr()),
-      "ty" => token::nt_ty(p.parse_ty(false /* no need to disambiguate*/)),
+      "ty" => token::nt_ty(~p.parse_ty(false /* no need to disambiguate*/)),
       // this could be handled like a token, since it is one
       "ident" => match *p.token {
-        token::IDENT(sn,b) => { p.bump(); token::nt_ident(sn,b) }
+        token::IDENT(sn,b) => { p.bump(); token::nt_ident(~sn,b) }
         _ => p.fatal(~"expected ident, found "
                      + token::to_str(get_ident_interner(), p.token))
       },
-      "path" => token::nt_path(p.parse_path_with_tps(false)),
+      "path" => token::nt_path(~p.parse_path_with_tps(false)),
+      "attr" => token::nt_attr(@p.parse_attribute(false)),
       "tt" => {
         *p.quote_depth += 1u; //but in theory, non-quoted tts might be useful
         let res = token::nt_tt(@p.parse_token_tree());

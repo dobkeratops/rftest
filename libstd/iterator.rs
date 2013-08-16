@@ -156,6 +156,28 @@ pub trait Iterator<A> {
         Enumerate{iter: self, count: 0}
     }
 
+
+    /// Creates an iterator that has a `.peek()` method
+    /// that returns a optional reference to the next element.
+    ///
+    /// # Example
+    ///
+    /// ~~~ {.rust}
+    /// let a = [100, 200, 300];
+    /// let mut it = xs.iter().map(|&x|x).peekable();
+    /// assert_eq!(it.peek().unwrap(), &100);
+    /// assert_eq!(it.next().unwrap(), 100);
+    /// assert_eq!(it.next().unwrap(), 200);
+    /// assert_eq!(it.peek().unwrap(), &300);
+    /// assert_eq!(it.peek().unwrap(), &300);
+    /// assert_eq!(it.next().unwrap(), 300);
+    /// assert!(it.peek().is_none());
+    /// assert!(it.next().is_none());
+    /// ~~~
+    fn peekable(self) -> Peekable<A, Self> {
+        Peekable{iter: self, peeked: None}
+    }
+
     /// Creates an iterator which invokes the predicate on elements until it
     /// returns false. Once the predicate returns false, all further elements are
     /// yielded.
@@ -286,15 +308,15 @@ pub trait Iterator<A> {
     ///let xs = [1u, 4, 2, 3, 8, 9, 6];
     ///let sum = xs.iter()
     ///            .map(|&x| x)
-    ///            .peek(|&x| debug!("filtering %u", x))
+    ///            .inspect(|&x| debug!("filtering %u", x))
     ///            .filter(|&x| x % 2 == 0)
-    ///            .peek(|&x| debug!("%u made it through", x))
+    ///            .inspect(|&x| debug!("%u made it through", x))
     ///            .sum();
     ///println(sum.to_str());
     /// ~~~
     #[inline]
-    fn peek<'r>(self, f: &'r fn(&A)) -> Peek<'r, A, Self> {
-        Peek{iter: self, f: f}
+    fn inspect<'r>(self, f: &'r fn(&A)) -> Inspect<'r, A, Self> {
+        Inspect{iter: self, f: f}
     }
 
     /// An adaptation of an external iterator to the for-loop protocol of rust.
@@ -1059,6 +1081,38 @@ impl<A, T: RandomAccessIterator<A>> RandomAccessIterator<(uint, A)> for Enumerat
     }
 }
 
+/// An iterator with a `peek()` that returns an optional reference to the next element.
+pub struct Peekable<A, T> {
+    priv iter: T,
+    priv peeked: Option<A>,
+}
+
+impl<A, T: Iterator<A>> Iterator<A> for Peekable<A, T> {
+    #[inline]
+    fn next(&mut self) -> Option<A> {
+        if self.peeked.is_some() { self.peeked.take() }
+        else { self.iter.next() }
+    }
+}
+
+impl<'self, A, T: Iterator<A>> Peekable<A, T> {
+    /// Return a reference to the next element of the iterator with out advancing it,
+    /// or None if the iterator is exhausted.
+    #[inline]
+    pub fn peek(&'self mut self) -> Option<&'self A> {
+        match self.peeked {
+            Some(ref value) => Some(value),
+            None => {
+                self.peeked = self.iter.next();
+                match self.peeked {
+                    Some(ref value) => Some(value),
+                    None => None,
+                }
+            },
+        }
+    }
+}
+
 /// An iterator which rejects elements while `predicate` is true
 pub struct SkipWhile<'self, A, T> {
     priv iter: T,
@@ -1329,14 +1383,14 @@ impl<'self,
 
 /// An iterator that calls a function with a reference to each
 /// element before yielding it.
-pub struct Peek<'self, A, T> {
+pub struct Inspect<'self, A, T> {
     priv iter: T,
     priv f: &'self fn(&A)
 }
 
-impl<'self, A, T> Peek<'self, A, T> {
+impl<'self, A, T> Inspect<'self, A, T> {
     #[inline]
-    fn do_peek(&self, elt: Option<A>) -> Option<A> {
+    fn do_inspect(&self, elt: Option<A>) -> Option<A> {
         match elt {
             Some(ref a) => (self.f)(a),
             None => ()
@@ -1346,11 +1400,11 @@ impl<'self, A, T> Peek<'self, A, T> {
     }
 }
 
-impl<'self, A, T: Iterator<A>> Iterator<A> for Peek<'self, A, T> {
+impl<'self, A, T: Iterator<A>> Iterator<A> for Inspect<'self, A, T> {
     #[inline]
     fn next(&mut self) -> Option<A> {
         let next = self.iter.next();
-        self.do_peek(next)
+        self.do_inspect(next)
     }
 
     #[inline]
@@ -1359,15 +1413,17 @@ impl<'self, A, T: Iterator<A>> Iterator<A> for Peek<'self, A, T> {
     }
 }
 
-impl<'self, A, T: DoubleEndedIterator<A>> DoubleEndedIterator<A> for Peek<'self, A, T> {
+impl<'self, A, T: DoubleEndedIterator<A>> DoubleEndedIterator<A>
+for Inspect<'self, A, T> {
     #[inline]
     fn next_back(&mut self) -> Option<A> {
         let next = self.iter.next_back();
-        self.do_peek(next)
+        self.do_inspect(next)
     }
 }
 
-impl<'self, A, T: RandomAccessIterator<A>> RandomAccessIterator<A> for Peek<'self, A, T> {
+impl<'self, A, T: RandomAccessIterator<A>> RandomAccessIterator<A>
+for Inspect<'self, A, T> {
     #[inline]
     fn indexable(&self) -> uint {
         self.iter.indexable()
@@ -1375,7 +1431,7 @@ impl<'self, A, T: RandomAccessIterator<A>> RandomAccessIterator<A> for Peek<'sel
 
     #[inline]
     fn idx(&self, index: uint) -> Option<A> {
-        self.do_peek(self.iter.idx(index))
+        self.do_inspect(self.iter.idx(index))
     }
 }
 
@@ -1512,6 +1568,163 @@ impl<A: Clone> RandomAccessIterator<A> for Repeat<A> {
     fn idx(&self, _: uint) -> Option<A> { Some(self.element.clone()) }
 }
 
+/// Functions for lexicographical ordering of sequences.
+///
+/// Lexicographical ordering through `<`, `<=`, `>=`, `>` requires
+/// that the elements implement both `Eq` and `Ord`.
+///
+/// If two sequences are equal up until the point where one ends,
+/// the shorter sequence compares less.
+pub mod order {
+    use cmp;
+    use cmp::{TotalEq, TotalOrd, Ord, Eq};
+    use option::{Some, None};
+    use super::Iterator;
+
+    /// Compare `a` and `b` for equality using `TotalOrd`
+    pub fn equals<A: TotalEq, T: Iterator<A>>(mut a: T, mut b: T) -> bool {
+        loop {
+            match (a.next(), b.next()) {
+                (None, None) => return true,
+                (None, _) | (_, None) => return false,
+                (Some(x), Some(y)) => if !x.equals(&y) { return false },
+            }
+        }
+    }
+
+    /// Order `a` and `b` lexicographically using `TotalOrd`
+    pub fn cmp<A: TotalOrd, T: Iterator<A>>(mut a: T, mut b: T) -> cmp::Ordering {
+        loop {
+            match (a.next(), b.next()) {
+                (None, None) => return cmp::Equal,
+                (None, _   ) => return cmp::Less,
+                (_   , None) => return cmp::Greater,
+                (Some(x), Some(y)) => match x.cmp(&y) {
+                    cmp::Equal => (),
+                    non_eq => return non_eq,
+                },
+            }
+        }
+    }
+
+    /// Compare `a` and `b` for equality (Using partial equality, `Eq`)
+    pub fn eq<A: Eq, T: Iterator<A>>(mut a: T, mut b: T) -> bool {
+        loop {
+            match (a.next(), b.next()) {
+                (None, None) => return true,
+                (None, _) | (_, None) => return false,
+                (Some(x), Some(y)) => if !x.eq(&y) { return false },
+            }
+        }
+    }
+
+    /// Compare `a` and `b` for nonequality (Using partial equality, `Eq`)
+    pub fn ne<A: Eq, T: Iterator<A>>(mut a: T, mut b: T) -> bool {
+        loop {
+            match (a.next(), b.next()) {
+                (None, None) => return false,
+                (None, _) | (_, None) => return true,
+                (Some(x), Some(y)) => if x.ne(&y) { return true },
+            }
+        }
+    }
+
+    /// Return `a` < `b` lexicographically (Using partial order, `Ord`)
+    pub fn lt<A: Eq + Ord, T: Iterator<A>>(mut a: T, mut b: T) -> bool {
+        loop {
+            match (a.next(), b.next()) {
+                (None, None) => return false,
+                (None, _   ) => return true,
+                (_   , None) => return false,
+                (Some(x), Some(y)) => if x.ne(&y) { return x.lt(&y) },
+            }
+        }
+    }
+
+    /// Return `a` <= `b` lexicographically (Using partial order, `Ord`)
+    pub fn le<A: Eq + Ord, T: Iterator<A>>(mut a: T, mut b: T) -> bool {
+        loop {
+            match (a.next(), b.next()) {
+                (None, None) => return true,
+                (None, _   ) => return true,
+                (_   , None) => return false,
+                (Some(x), Some(y)) => if x.ne(&y) { return x.le(&y) },
+            }
+        }
+    }
+
+    /// Return `a` > `b` lexicographically (Using partial order, `Ord`)
+    pub fn gt<A: Eq + Ord, T: Iterator<A>>(mut a: T, mut b: T) -> bool {
+        loop {
+            match (a.next(), b.next()) {
+                (None, None) => return false,
+                (None, _   ) => return false,
+                (_   , None) => return true,
+                (Some(x), Some(y)) => if x.ne(&y) { return x.gt(&y) },
+            }
+        }
+    }
+
+    /// Return `a` >= `b` lexicographically (Using partial order, `Ord`)
+    pub fn ge<A: Eq + Ord, T: Iterator<A>>(mut a: T, mut b: T) -> bool {
+        loop {
+            match (a.next(), b.next()) {
+                (None, None) => return true,
+                (None, _   ) => return false,
+                (_   , None) => return true,
+                (Some(x), Some(y)) => if x.ne(&y) { return x.ge(&y) },
+            }
+        }
+    }
+
+    #[test]
+    fn test_lt() {
+        use vec::ImmutableVector;
+
+        let empty: [int, ..0] = [];
+        let xs = [1,2,3];
+        let ys = [1,2,0];
+
+        assert!(!lt(xs.iter(), ys.iter()));
+        assert!(!le(xs.iter(), ys.iter()));
+        assert!( gt(xs.iter(), ys.iter()));
+        assert!( ge(xs.iter(), ys.iter()));
+
+        assert!( lt(ys.iter(), xs.iter()));
+        assert!( le(ys.iter(), xs.iter()));
+        assert!(!gt(ys.iter(), xs.iter()));
+        assert!(!ge(ys.iter(), xs.iter()));
+
+        assert!( lt(empty.iter(), xs.iter()));
+        assert!( le(empty.iter(), xs.iter()));
+        assert!(!gt(empty.iter(), xs.iter()));
+        assert!(!ge(empty.iter(), xs.iter()));
+
+        // Sequence with NaN
+        let u = [1.0, 2.0];
+        let v = [0.0/0.0, 3.0];
+
+        assert!(!lt(u.iter(), v.iter()));
+        assert!(!le(u.iter(), v.iter()));
+        assert!(!gt(u.iter(), v.iter()));
+        assert!(!ge(u.iter(), v.iter()));
+
+        let a = [0.0/0.0];
+        let b = [1.0];
+        let c = [2.0];
+
+        assert!(lt(a.iter(), b.iter()) == (a[0] <  b[0]));
+        assert!(le(a.iter(), b.iter()) == (a[0] <= b[0]));
+        assert!(gt(a.iter(), b.iter()) == (a[0] >  b[0]));
+        assert!(ge(a.iter(), b.iter()) == (a[0] >= b[0]));
+
+        assert!(lt(c.iter(), b.iter()) == (c[0] <  b[0]));
+        assert!(le(c.iter(), b.iter()) == (c[0] <= b[0]));
+        assert!(gt(c.iter(), b.iter()) == (c[0] >  b[0]));
+        assert!(ge(c.iter(), b.iter()) == (c[0] >= b[0]));
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1564,6 +1777,24 @@ mod tests {
         for (i, &x) in it {
             assert_eq!(i, x);
         }
+    }
+
+    #[test]
+    fn test_iterator_peekable() {
+        let xs = ~[0u, 1, 2, 3, 4, 5];
+        let mut it = xs.iter().map(|&x|x).peekable();
+        assert_eq!(it.peek().unwrap(), &0);
+        assert_eq!(it.next().unwrap(), 0);
+        assert_eq!(it.next().unwrap(), 1);
+        assert_eq!(it.next().unwrap(), 2);
+        assert_eq!(it.peek().unwrap(), &3);
+        assert_eq!(it.peek().unwrap(), &3);
+        assert_eq!(it.next().unwrap(), 3);
+        assert_eq!(it.next().unwrap(), 4);
+        assert_eq!(it.peek().unwrap(), &5);
+        assert_eq!(it.next().unwrap(), 5);
+        assert!(it.peek().is_none());
+        assert!(it.next().is_none());
     }
 
     #[test]
@@ -1651,13 +1882,13 @@ mod tests {
     }
 
     #[test]
-    fn test_peek() {
+    fn test_inspect() {
         let xs = [1u, 2, 3, 4];
         let mut n = 0;
 
         let ys = xs.iter()
                    .map(|&x| x)
-                   .peek(|_| n += 1)
+                   .inspect(|_| n += 1)
                    .collect::<~[uint]>();
 
         assert_eq!(n, xs.len());
@@ -2011,11 +2242,11 @@ mod tests {
     }
 
     #[test]
-    fn test_random_access_peek() {
+    fn test_random_access_inspect() {
         let xs = [1, 2, 3, 4, 5];
 
-        // test .map and .peek that don't implement Clone
-        let it = xs.iter().peek(|_| {});
+        // test .map and .inspect that don't implement Clone
+        let it = xs.iter().inspect(|_| {});
         assert_eq!(xs.len(), it.indexable());
         for (i, elt) in xs.iter().enumerate() {
             assert_eq!(Some(elt), it.idx(i));
@@ -2027,7 +2258,6 @@ mod tests {
     fn test_random_access_map() {
         let xs = [1, 2, 3, 4, 5];
 
-        // test .map and .peek that don't implement Clone
         let it = xs.iter().map(|x| *x);
         assert_eq!(xs.len(), it.indexable());
         for (i, elt) in xs.iter().enumerate() {
