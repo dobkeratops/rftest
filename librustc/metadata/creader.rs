@@ -21,11 +21,11 @@ use syntax::ast;
 use std::vec;
 use syntax::attr;
 use syntax::attr::AttrMetaMethods;
-use syntax::codemap::{span, dummy_sp};
+use syntax::codemap::{Span, dummy_sp};
 use syntax::diagnostic::span_handler;
 use syntax::parse::token;
 use syntax::parse::token::ident_interner;
-use syntax::oldvisit;
+use syntax::visit;
 
 // Traverses an AST, reading all the information about use'd crates and extern
 // libraries necessary for later resolving, typechecking, linking, etc.
@@ -33,7 +33,7 @@ pub fn read_crates(diag: @mut span_handler,
                    crate: &ast::Crate,
                    cstore: @mut cstore::CStore,
                    filesearch: @FileSearch,
-                   os: loader::os,
+                   os: loader::Os,
                    statik: bool,
                    intr: @ident_interner) {
     let e = @mut Env {
@@ -46,20 +46,29 @@ pub fn read_crates(diag: @mut span_handler,
         next_crate_num: 1,
         intr: intr
     };
-    let v =
-        oldvisit::mk_simple_visitor(@oldvisit::SimpleVisitor {
-            visit_view_item: |a| visit_view_item(e, a),
-            visit_item: |a| visit_item(e, a),
-            .. *oldvisit::default_simple_visitor()});
+    let mut v = ReadCrateVisitor{ e:e };
     visit_crate(e, crate);
-    oldvisit::visit_crate(crate, ((), v));
+    visit::walk_crate(&mut v, crate, ());
     dump_crates(*e.crate_cache);
     warn_if_multiple_versions(e, diag, *e.crate_cache);
 }
 
+struct ReadCrateVisitor { e:@mut Env }
+impl visit::Visitor<()> for ReadCrateVisitor {
+    fn visit_view_item(&mut self, a:&ast::view_item, _:()) {
+        visit_view_item(self.e, a);
+        visit::walk_view_item(self, a, ());
+    }
+    fn visit_item(&mut self, a:@ast::item, _:()) {
+        visit_item(self.e, a);
+        visit::walk_item(self, a, ());
+    }
+}
+
+#[deriving(Clone)]
 struct cache_entry {
     cnum: int,
-    span: span,
+    span: Span,
     hash: @str,
     metas: @~[@ast::MetaItem]
 }
@@ -76,22 +85,13 @@ fn dump_crates(crate_cache: &[cache_entry]) {
 fn warn_if_multiple_versions(e: @mut Env,
                              diag: @mut span_handler,
                              crate_cache: &[cache_entry]) {
-    use std::either::*;
-
     if crate_cache.len() != 0u {
         let name = loader::crate_name_from_metas(
             *crate_cache[crate_cache.len() - 1].metas
         );
 
-        let vec: ~[Either<cache_entry, cache_entry>] = crate_cache.iter().map(|&entry| {
-            let othername = loader::crate_name_from_metas(*entry.metas);
-            if name == othername {
-                Left(entry)
-            } else {
-                Right(entry)
-            }
-        }).collect();
-        let (matches, non_matches) = partition(vec);
+        let (matches, non_matches) = crate_cache.partitioned(|entry|
+            name == loader::crate_name_from_metas(*entry.metas));
 
         assert!(!matches.is_empty());
 
@@ -116,7 +116,7 @@ struct Env {
     diag: @mut span_handler,
     filesearch: @FileSearch,
     cstore: @mut cstore::CStore,
-    os: loader::os,
+    os: loader::Os,
     statik: bool,
     crate_cache: @mut ~[cache_entry],
     next_crate_num: ast::CrateNum,
@@ -184,7 +184,7 @@ fn visit_item(e: &Env, i: @ast::item) {
             ast::named => {
                 let link_name = i.attrs.iter()
                     .find(|at| "link_name" == at.name())
-                    .chain(|at| at.value_str());
+                    .and_then(|at| at.value_str());
 
                 let foreign_name = match link_name {
                         Some(nn) => {
@@ -252,7 +252,7 @@ fn resolve_crate(e: @mut Env,
                  ident: @str,
                  metas: ~[@ast::MetaItem],
                  hash: @str,
-                 span: span)
+                 span: Span)
               -> ast::CrateNum {
     let metas = metas_with_ident(ident, metas);
 

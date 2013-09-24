@@ -25,13 +25,13 @@ pub mod rustrt {
 
     #[link_name = "rustrt"]
     extern {
-        pub fn tdefl_compress_mem_to_heap(psrc_buf: *const c_void,
+        pub fn tdefl_compress_mem_to_heap(psrc_buf: *c_void,
                                           src_buf_len: size_t,
                                           pout_len: *mut size_t,
                                           flags: c_int)
                                           -> *c_void;
 
-        pub fn tinfl_decompress_mem_to_heap(psrc_buf: *const c_void,
+        pub fn tinfl_decompress_mem_to_heap(psrc_buf: *c_void,
                                             src_buf_len: size_t,
                                             pout_len: *mut size_t,
                                             flags: c_int)
@@ -47,6 +47,8 @@ static TINFL_FLAG_PARSE_ZLIB_HEADER : c_int = 0x1; // parse zlib header and adle
 static TDEFL_WRITE_ZLIB_HEADER : c_int = 0x01000; // write zlib header and adler32 checksum
 
 fn deflate_bytes_internal(bytes: &[u8], flags: c_int) -> ~[u8] {
+    #[fixed_stack_segment]; #[inline(never)];
+
     do bytes.as_imm_buf |b, len| {
         unsafe {
             let mut outsz : size_t = 0;
@@ -73,6 +75,8 @@ pub fn deflate_bytes_zlib(bytes: &[u8]) -> ~[u8] {
 }
 
 fn inflate_bytes_internal(bytes: &[u8], flags: c_int) -> ~[u8] {
+    #[fixed_stack_segment]; #[inline(never)];
+
     do bytes.as_imm_buf |b, len| {
         unsafe {
             let mut outsz : size_t = 0;
@@ -102,15 +106,15 @@ pub fn inflate_bytes_zlib(bytes: &[u8]) -> ~[u8] {
 mod tests {
     use super::*;
     use std::rand;
-    use std::rand::RngUtil;
+    use std::rand::Rng;
 
     #[test]
     fn test_flate_round_trip() {
         let mut r = rand::rng();
         let mut words = ~[];
         do 20.times {
-            let range = r.gen_uint_range(1, 10);
-            words.push(r.gen_bytes(range));
+            let range = r.gen_integer_range(1u, 10);
+            words.push(r.gen_vec::<u8>(range));
         }
         do 20.times {
             let mut input = ~[];

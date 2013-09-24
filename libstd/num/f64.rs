@@ -13,6 +13,7 @@
 #[allow(missing_doc)];
 #[allow(non_uppercase_statics)];
 
+use default::Default;
 use libc::c_int;
 use num::{Zero, One, strconv};
 use num::{FPCategory, FPNaN, FPInfinite , FPZero, FPSubnormal, FPNormal};
@@ -43,7 +44,7 @@ macro_rules! delegate(
             use unstable::intrinsics;
 
             $(
-                #[inline]
+                #[inline] #[fixed_stack_segment] #[inline(never)]
                 pub fn $name($( $arg : $arg_ty ),*) -> $rv {
                     unsafe {
                         $bound_name($( $arg ),*)
@@ -194,8 +195,6 @@ impl Num for f64 {}
 impl Eq for f64 {
     #[inline]
     fn eq(&self, other: &f64) -> bool { (*self) == (*other) }
-    #[inline]
-    fn ne(&self, other: &f64) -> bool { (*self) != (*other) }
 }
 
 #[cfg(not(test))]
@@ -205,7 +204,7 @@ impl ApproxEq<f64> for f64 {
 
     #[inline]
     fn approx_eq(&self, other: &f64) -> bool {
-        self.approx_eq_eps(other, &ApproxEq::approx_epsilon::<f64, f64>())
+        self.approx_eq_eps(other, &1.0e-6)
     }
 
     #[inline]
@@ -230,36 +229,41 @@ impl Orderable for f64 {
     /// Returns `NaN` if either of the numbers are `NaN`.
     #[inline]
     fn min(&self, other: &f64) -> f64 {
-        cond!(
-            (self.is_NaN())  { *self  }
-            (other.is_NaN()) { *other }
-            (*self < *other) { *self  }
-            _                { *other }
-        )
+        match () {
+            _ if self.is_nan()  => *self,
+            _ if other.is_nan() => *other,
+            _ if *self < *other => *self,
+            _                   => *other,
+        }
     }
 
     /// Returns `NaN` if either of the numbers are `NaN`.
     #[inline]
     fn max(&self, other: &f64) -> f64 {
-        cond!(
-            (self.is_NaN())  { *self  }
-            (other.is_NaN()) { *other }
-            (*self > *other) { *self  }
-            _                { *other }
-        )
+        match () {
+            _ if self.is_nan()  => *self,
+            _ if other.is_nan() => *other,
+            _ if *self > *other => *self,
+            _                   => *other,
+        }
     }
 
     /// Returns the number constrained within the range `mn <= self <= mx`.
     /// If any of the numbers are `NaN` then `NaN` is returned.
     #[inline]
     fn clamp(&self, mn: &f64, mx: &f64) -> f64 {
-        cond!(
-            (self.is_NaN())   { *self }
-            (!(*self <= *mx)) { *mx   }
-            (!(*self >= *mn)) { *mn   }
-            _                 { *self }
-        )
+        match () {
+            _ if self.is_nan()   => *self,
+            _ if !(*self <= *mx) => *mx,
+            _ if !(*self >= *mn) => *mn,
+            _                    => *self,
+        }
     }
+}
+
+impl Default for f64 {
+    #[inline]
+    fn default() -> f64 { 0.0 }
 }
 
 impl Zero for f64 {
@@ -303,6 +307,7 @@ impl Rem<f64,f64> for f64 {
 }
 #[cfg(not(test))]
 impl Neg<f64> for f64 {
+    #[inline]
     fn neg(&self) -> f64 { -*self }
 }
 
@@ -327,7 +332,7 @@ impl Signed for f64 {
     ///
     #[inline]
     fn signum(&self) -> f64 {
-        if self.is_NaN() { NaN } else { copysign(1.0, *self) }
+        if self.is_nan() { NaN } else { copysign(1.0, *self) }
     }
 
     /// Returns `true` if the number is positive, including `+0.0` and `infinity`
@@ -484,7 +489,7 @@ impl Hyperbolic for f64 {
     #[inline]
     fn acosh(&self) -> f64 {
         match *self {
-            x if x < 1.0 => Float::NaN(),
+            x if x < 1.0 => Float::nan(),
             x => (x + ((x * x) - 1.0).sqrt()).ln(),
         }
     }
@@ -578,11 +583,14 @@ impl Real for f64 {
 
     /// Converts to degrees, assuming the number is in radians
     #[inline]
-    fn to_degrees(&self) -> f64 { *self * (180.0 / Real::pi::<f64>()) }
+    fn to_degrees(&self) -> f64 { *self * (180.0f64 / Real::pi()) }
 
     /// Converts to radians, assuming the number is in degrees
     #[inline]
-    fn to_radians(&self) -> f64 { *self * (Real::pi::<f64>() / 180.0) }
+    fn to_radians(&self) -> f64 {
+        let value: f64 = Real::pi();
+        *self * (value / 180.0)
+    }
 }
 
 impl RealExt for f64 {
@@ -625,15 +633,15 @@ impl Bounded for f64 {
 
 impl Primitive for f64 {
     #[inline]
-    fn bits() -> uint { 64 }
+    fn bits(_: Option<f64>) -> uint { 64 }
 
     #[inline]
-    fn bytes() -> uint { Primitive::bits::<f64>() / 8 }
+    fn bytes(_: Option<f64>) -> uint { Primitive::bits(Some(0f64)) / 8 }
 }
 
 impl Float for f64 {
     #[inline]
-    fn NaN() -> f64 { 0.0 / 0.0 }
+    fn nan() -> f64 { 0.0 / 0.0 }
 
     #[inline]
     fn infinity() -> f64 { 1.0 / 0.0 }
@@ -646,7 +654,7 @@ impl Float for f64 {
 
     /// Returns `true` if the number is NaN
     #[inline]
-    fn is_NaN(&self) -> bool { *self != *self }
+    fn is_nan(&self) -> bool { *self != *self }
 
     /// Returns `true` if the number is infinite
     #[inline]
@@ -657,7 +665,7 @@ impl Float for f64 {
     /// Returns `true` if the number is neither infinite or NaN
     #[inline]
     fn is_finite(&self) -> bool {
-        !(self.is_NaN() || self.is_infinite())
+        !(self.is_nan() || self.is_infinite())
     }
 
     /// Returns `true` if the number is neither zero, infinite, subnormal or NaN
@@ -685,25 +693,25 @@ impl Float for f64 {
     }
 
     #[inline]
-    fn mantissa_digits() -> uint { 53 }
+    fn mantissa_digits(_: Option<f64>) -> uint { 53 }
 
     #[inline]
-    fn digits() -> uint { 15 }
+    fn digits(_: Option<f64>) -> uint { 15 }
 
     #[inline]
     fn epsilon() -> f64 { 2.2204460492503131e-16 }
 
     #[inline]
-    fn min_exp() -> int { -1021 }
+    fn min_exp(_: Option<f64>) -> int { -1021 }
 
     #[inline]
-    fn max_exp() -> int { 1024 }
+    fn max_exp(_: Option<f64>) -> int { 1024 }
 
     #[inline]
-    fn min_10_exp() -> int { -307 }
+    fn min_10_exp(_: Option<f64>) -> int { -307 }
 
     #[inline]
-    fn max_10_exp() -> int { 308 }
+    fn max_10_exp(_: Option<f64>) -> int { 308 }
 
     /// Constructs a floating point number by multiplying `x` by 2 raised to the power of `exp`
     #[inline]
@@ -788,29 +796,6 @@ pub fn to_str_hex(num: f64) -> ~str {
 }
 
 ///
-/// Converts a float to a string in a given radix
-///
-/// # Arguments
-///
-/// * num - The float value
-/// * radix - The base to use
-///
-/// # Failure
-///
-/// Fails if called on a special value like `inf`, `-inf` or `NaN` due to
-/// possible misinterpretation of the result at higher bases. If those values
-/// are expected, use `to_str_radix_special()` instead.
-///
-#[inline]
-pub fn to_str_radix(num: f64, rdx: uint) -> ~str {
-    let (r, special) = strconv::float_to_str_common(
-        num, rdx, true, strconv::SignNeg, strconv::DigAll);
-    if special { fail!("number has a special value, \
-                      try to_str_radix_special() if those are expected") }
-    r
-}
-
-///
 /// Converts a float to a string in a given radix, and a flag indicating
 /// whether it's a special value
 ///
@@ -863,43 +848,26 @@ impl to_str::ToStr for f64 {
 }
 
 impl num::ToStrRadix for f64 {
+    /// Converts a float to a string in a given radix
+    ///
+    /// # Arguments
+    ///
+    /// * num - The float value
+    /// * radix - The base to use
+    ///
+    /// # Failure
+    ///
+    /// Fails if called on a special value like `inf`, `-inf` or `NaN` due to
+    /// possible misinterpretation of the result at higher bases. If those values
+    /// are expected, use `to_str_radix_special()` instead.
     #[inline]
     fn to_str_radix(&self, rdx: uint) -> ~str {
-        to_str_radix(*self, rdx)
+        let (r, special) = strconv::float_to_str_common(
+            *self, rdx, true, strconv::SignNeg, strconv::DigAll);
+        if special { fail!("number has a special value, \
+                          try to_str_radix_special() if those are expected") }
+        r
     }
-}
-
-///
-/// Convert a string in base 10 to a float.
-/// Accepts a optional decimal exponent.
-///
-/// This function accepts strings such as
-///
-/// * '3.14'
-/// * '+3.14', equivalent to '3.14'
-/// * '-3.14'
-/// * '2.5E10', or equivalently, '2.5e10'
-/// * '2.5E-10'
-/// * '.' (understood as 0)
-/// * '5.'
-/// * '.5', or, equivalently,  '0.5'
-/// * '+inf', 'inf', '-inf', 'NaN'
-///
-/// Leading and trailing whitespace represent an error.
-///
-/// # Arguments
-///
-/// * num - A string
-///
-/// # Return value
-///
-/// `none` if the string did not represent a valid number.  Otherwise,
-/// `Some(n)` where `n` is the floating-point number represented by `num`.
-///
-#[inline]
-pub fn from_str(num: &str) -> Option<f64> {
-    strconv::from_str_common(num, 10u, true, true, true,
-                             strconv::ExpDec, false, false)
 }
 
 ///
@@ -935,40 +903,65 @@ pub fn from_str_hex(num: &str) -> Option<f64> {
                              strconv::ExpBin, false, false)
 }
 
-///
-/// Convert a string in an given base to a float.
-///
-/// Due to possible conflicts, this function does **not** accept
-/// the special values `inf`, `-inf`, `+inf` and `NaN`, **nor**
-/// does it recognize exponents of any kind.
-///
-/// Leading and trailing whitespace represent an error.
-///
-/// # Arguments
-///
-/// * num - A string
-/// * radix - The base to use. Must lie in the range [2 .. 36]
-///
-/// # Return value
-///
-/// `none` if the string did not represent a valid number. Otherwise,
-/// `Some(n)` where `n` is the floating-point number represented by `num`.
-///
-#[inline]
-pub fn from_str_radix(num: &str, rdx: uint) -> Option<f64> {
-    strconv::from_str_common(num, rdx, true, true, false,
-                             strconv::ExpNone, false, false)
-}
-
 impl FromStr for f64 {
+    ///
+    /// Convert a string in base 10 to a float.
+    /// Accepts a optional decimal exponent.
+    ///
+    /// This function accepts strings such as
+    ///
+    /// * '3.14'
+    /// * '+3.14', equivalent to '3.14'
+    /// * '-3.14'
+    /// * '2.5E10', or equivalently, '2.5e10'
+    /// * '2.5E-10'
+    /// * '.' (understood as 0)
+    /// * '5.'
+    /// * '.5', or, equivalently,  '0.5'
+    /// * '+inf', 'inf', '-inf', 'NaN'
+    ///
+    /// Leading and trailing whitespace represent an error.
+    ///
+    /// # Arguments
+    ///
+    /// * num - A string
+    ///
+    /// # Return value
+    ///
+    /// `none` if the string did not represent a valid number.  Otherwise,
+    /// `Some(n)` where `n` is the floating-point number represented by `num`.
+    ///
     #[inline]
-    fn from_str(val: &str) -> Option<f64> { from_str(val) }
+    fn from_str(val: &str) -> Option<f64> {
+        strconv::from_str_common(val, 10u, true, true, true,
+                                 strconv::ExpDec, false, false)
+    }
 }
 
 impl num::FromStrRadix for f64 {
+    ///
+    /// Convert a string in an given base to a float.
+    ///
+    /// Due to possible conflicts, this function does **not** accept
+    /// the special values `inf`, `-inf`, `+inf` and `NaN`, **nor**
+    /// does it recognize exponents of any kind.
+    ///
+    /// Leading and trailing whitespace represent an error.
+    ///
+    /// # Arguments
+    ///
+    /// * num - A string
+    /// * radix - The base to use. Must lie in the range [2 .. 36]
+    ///
+    /// # Return value
+    ///
+    /// `none` if the string did not represent a valid number. Otherwise,
+    /// `Some(n)` where `n` is the floating-point number represented by `num`.
+    ///
     #[inline]
     fn from_str_radix(val: &str, rdx: uint) -> Option<f64> {
-        from_str_radix(val, rdx)
+        strconv::from_str_common(val, rdx, true, true, false,
+                                 strconv::ExpNone, false, false)
     }
 }
 
@@ -990,16 +983,20 @@ mod tests {
     fn test_min() {
         assert_eq!(1f64.min(&2f64), 1f64);
         assert_eq!(2f64.min(&1f64), 1f64);
-        assert!(1f64.min(&Float::NaN::<f64>()).is_NaN());
-        assert!(Float::NaN::<f64>().min(&1f64).is_NaN());
+
+        let nan: f64 = Float::nan();
+        assert!(1f64.min(&nan).is_nan());
+        assert!(nan.min(&1f64).is_nan());
     }
 
     #[test]
     fn test_max() {
         assert_eq!(1f64.max(&2f64), 2f64);
         assert_eq!(2f64.max(&1f64), 2f64);
-        assert!(1f64.max(&Float::NaN::<f64>()).is_NaN());
-        assert!(Float::NaN::<f64>().max(&1f64).is_NaN());
+
+        let nan: f64 = Float::nan();
+        assert!(1f64.max(&nan).is_nan());
+        assert!(nan.max(&1f64).is_nan());
     }
 
     #[test]
@@ -1007,9 +1004,11 @@ mod tests {
         assert_eq!(1f64.clamp(&2f64, &4f64), 2f64);
         assert_eq!(8f64.clamp(&2f64, &4f64), 4f64);
         assert_eq!(3f64.clamp(&2f64, &4f64), 3f64);
-        assert!(3f64.clamp(&Float::NaN::<f64>(), &4f64).is_NaN());
-        assert!(3f64.clamp(&2f64, &Float::NaN::<f64>()).is_NaN());
-        assert!(Float::NaN::<f64>().clamp(&2f64, &4f64).is_NaN());
+
+        let nan: f64 = Float::nan();
+        assert!(3f64.clamp(&nan, &4f64).is_nan());
+        assert!(3f64.clamp(&2f64, &nan).is_nan());
+        assert!(nan.clamp(&2f64, &4f64).is_nan());
     }
 
     #[test]
@@ -1086,9 +1085,13 @@ mod tests {
     fn test_asinh() {
         assert_eq!(0.0f64.asinh(), 0.0f64);
         assert_eq!((-0.0f64).asinh(), -0.0f64);
-        assert_eq!(Float::infinity::<f64>().asinh(), Float::infinity::<f64>());
-        assert_eq!(Float::neg_infinity::<f64>().asinh(), Float::neg_infinity::<f64>());
-        assert!(Float::NaN::<f64>().asinh().is_NaN());
+
+        let inf: f64 = Float::infinity();
+        let neg_inf: f64 = Float::neg_infinity();
+        let nan: f64 = Float::nan();
+        assert_eq!(inf.asinh(), inf);
+        assert_eq!(neg_inf.asinh(), neg_inf);
+        assert!(nan.asinh().is_nan());
         assert_approx_eq!(2.0f64.asinh(), 1.443635475178810342493276740273105f64);
         assert_approx_eq!((-2.0f64).asinh(), -1.443635475178810342493276740273105f64);
     }
@@ -1096,10 +1099,14 @@ mod tests {
     #[test]
     fn test_acosh() {
         assert_eq!(1.0f64.acosh(), 0.0f64);
-        assert!(0.999f64.acosh().is_NaN());
-        assert_eq!(Float::infinity::<f64>().acosh(), Float::infinity::<f64>());
-        assert!(Float::neg_infinity::<f64>().acosh().is_NaN());
-        assert!(Float::NaN::<f64>().acosh().is_NaN());
+        assert!(0.999f64.acosh().is_nan());
+
+        let inf: f64 = Float::infinity();
+        let neg_inf: f64 = Float::neg_infinity();
+        let nan: f64 = Float::nan();
+        assert_eq!(inf.acosh(), inf);
+        assert!(neg_inf.acosh().is_nan());
+        assert!(nan.acosh().is_nan());
         assert_approx_eq!(2.0f64.acosh(), 1.31695789692481670862504634730796844f64);
         assert_approx_eq!(3.0f64.acosh(), 1.76274717403908605046521864995958461f64);
     }
@@ -1108,34 +1115,56 @@ mod tests {
     fn test_atanh() {
         assert_eq!(0.0f64.atanh(), 0.0f64);
         assert_eq!((-0.0f64).atanh(), -0.0f64);
-        assert_eq!(1.0f64.atanh(), Float::infinity::<f64>());
-        assert_eq!((-1.0f64).atanh(), Float::neg_infinity::<f64>());
-        assert!(2f64.atanh().atanh().is_NaN());
-        assert!((-2f64).atanh().atanh().is_NaN());
-        assert!(Float::infinity::<f64>().atanh().is_NaN());
-        assert!(Float::neg_infinity::<f64>().atanh().is_NaN());
-        assert!(Float::NaN::<f64>().atanh().is_NaN());
+
+        let inf: f64 = Float::infinity();
+        let neg_inf: f64 = Float::neg_infinity();
+        let nan: f64 = Float::nan();
+        assert_eq!(1.0f64.atanh(), inf);
+        assert_eq!((-1.0f64).atanh(), neg_inf);
+        assert!(2f64.atanh().atanh().is_nan());
+        assert!((-2f64).atanh().atanh().is_nan());
+        assert!(inf.atanh().is_nan());
+        assert!(neg_inf.atanh().is_nan());
+        assert!(nan.atanh().is_nan());
         assert_approx_eq!(0.5f64.atanh(), 0.54930614433405484569762261846126285f64);
         assert_approx_eq!((-0.5f64).atanh(), -0.54930614433405484569762261846126285f64);
     }
 
     #[test]
     fn test_real_consts() {
-        assert_approx_eq!(Real::two_pi::<f64>(), 2.0 * Real::pi::<f64>());
-        assert_approx_eq!(Real::frac_pi_2::<f64>(), Real::pi::<f64>() / 2f64);
-        assert_approx_eq!(Real::frac_pi_3::<f64>(), Real::pi::<f64>() / 3f64);
-        assert_approx_eq!(Real::frac_pi_4::<f64>(), Real::pi::<f64>() / 4f64);
-        assert_approx_eq!(Real::frac_pi_6::<f64>(), Real::pi::<f64>() / 6f64);
-        assert_approx_eq!(Real::frac_pi_8::<f64>(), Real::pi::<f64>() / 8f64);
-        assert_approx_eq!(Real::frac_1_pi::<f64>(), 1f64 / Real::pi::<f64>());
-        assert_approx_eq!(Real::frac_2_pi::<f64>(), 2f64 / Real::pi::<f64>());
-        assert_approx_eq!(Real::frac_2_sqrtpi::<f64>(), 2f64 / Real::pi::<f64>().sqrt());
-        assert_approx_eq!(Real::sqrt2::<f64>(), 2f64.sqrt());
-        assert_approx_eq!(Real::frac_1_sqrt2::<f64>(), 1f64 / 2f64.sqrt());
-        assert_approx_eq!(Real::log2_e::<f64>(), Real::e::<f64>().log2());
-        assert_approx_eq!(Real::log10_e::<f64>(), Real::e::<f64>().log10());
-        assert_approx_eq!(Real::ln_2::<f64>(), 2f64.ln());
-        assert_approx_eq!(Real::ln_10::<f64>(), 10f64.ln());
+        let pi: f64 = Real::pi();
+        let two_pi: f64 = Real::two_pi();
+        let frac_pi_2: f64 = Real::frac_pi_2();
+        let frac_pi_3: f64 = Real::frac_pi_3();
+        let frac_pi_4: f64 = Real::frac_pi_4();
+        let frac_pi_6: f64 = Real::frac_pi_6();
+        let frac_pi_8: f64 = Real::frac_pi_8();
+        let frac_1_pi: f64 = Real::frac_1_pi();
+        let frac_2_pi: f64 = Real::frac_2_pi();
+        let frac_2_sqrtpi: f64 = Real::frac_2_sqrtpi();
+        let sqrt2: f64 = Real::sqrt2();
+        let frac_1_sqrt2: f64 = Real::frac_1_sqrt2();
+        let e: f64 = Real::e();
+        let log2_e: f64 = Real::log2_e();
+        let log10_e: f64 = Real::log10_e();
+        let ln_2: f64 = Real::ln_2();
+        let ln_10: f64 = Real::ln_10();
+
+        assert_approx_eq!(two_pi, 2.0 * pi);
+        assert_approx_eq!(frac_pi_2, pi / 2f64);
+        assert_approx_eq!(frac_pi_3, pi / 3f64);
+        assert_approx_eq!(frac_pi_4, pi / 4f64);
+        assert_approx_eq!(frac_pi_6, pi / 6f64);
+        assert_approx_eq!(frac_pi_8, pi / 8f64);
+        assert_approx_eq!(frac_1_pi, 1f64 / pi);
+        assert_approx_eq!(frac_2_pi, 2f64 / pi);
+        assert_approx_eq!(frac_2_sqrtpi, 2f64 / pi.sqrt());
+        assert_approx_eq!(sqrt2, 2f64.sqrt());
+        assert_approx_eq!(frac_1_sqrt2, 1f64 / 2f64.sqrt());
+        assert_approx_eq!(log2_e, e.log2());
+        assert_approx_eq!(log10_e, e.log10());
+        assert_approx_eq!(ln_2, 2f64.ln());
+        assert_approx_eq!(ln_10, 10f64.ln());
     }
 
     #[test]
@@ -1147,7 +1176,7 @@ mod tests {
         assert_eq!((-1f64).abs(), 1f64);
         assert_eq!(neg_infinity.abs(), infinity);
         assert_eq!((1f64/neg_infinity).abs(), 0f64);
-        assert!(NaN.abs().is_NaN());
+        assert!(NaN.abs().is_nan());
     }
 
     #[test]
@@ -1160,8 +1189,12 @@ mod tests {
         assert_eq!(infinity.abs_sub(&1f64), infinity);
         assert_eq!(0f64.abs_sub(&neg_infinity), infinity);
         assert_eq!(0f64.abs_sub(&infinity), 0f64);
-        assert!(NaN.abs_sub(&-1f64).is_NaN());
-        assert!(1f64.abs_sub(&NaN).is_NaN());
+    }
+
+    #[test] #[ignore(cfg(windows))] // FIXME #8663
+    fn test_abs_sub_nowin() {
+        assert!(NaN.abs_sub(&-1f64).is_nan());
+        assert!(1f64.abs_sub(&NaN).is_nan());
     }
 
     #[test]
@@ -1173,7 +1206,7 @@ mod tests {
         assert_eq!((-1f64).signum(), -1f64);
         assert_eq!(neg_infinity.signum(), -1f64);
         assert_eq!((1f64/neg_infinity).signum(), -1f64);
-        assert!(NaN.signum().is_NaN());
+        assert!(NaN.signum().is_nan());
     }
 
     #[test]
@@ -1211,17 +1244,23 @@ mod tests {
 
     #[test]
     fn test_primitive() {
-        assert_eq!(Primitive::bits::<f64>(), sys::size_of::<f64>() * 8);
-        assert_eq!(Primitive::bytes::<f64>(), sys::size_of::<f64>());
+        let none: Option<f64> = None;
+        assert_eq!(Primitive::bits(none), sys::size_of::<f64>() * 8);
+        assert_eq!(Primitive::bytes(none), sys::size_of::<f64>());
     }
 
     #[test]
     fn test_is_normal() {
-        assert!(!Float::NaN::<f64>().is_normal());
-        assert!(!Float::infinity::<f64>().is_normal());
-        assert!(!Float::neg_infinity::<f64>().is_normal());
-        assert!(!Zero::zero::<f64>().is_normal());
-        assert!(!Float::neg_zero::<f64>().is_normal());
+        let nan: f64 = Float::nan();
+        let inf: f64 = Float::infinity();
+        let neg_inf: f64 = Float::neg_infinity();
+        let zero: f64 = Zero::zero();
+        let neg_zero: f64 = Float::neg_zero();
+        assert!(!nan.is_normal());
+        assert!(!inf.is_normal());
+        assert!(!neg_inf.is_normal());
+        assert!(!zero.is_normal());
+        assert!(!neg_zero.is_normal());
         assert!(1f64.is_normal());
         assert!(1e-307f64.is_normal());
         assert!(!1e-308f64.is_normal());
@@ -1229,11 +1268,16 @@ mod tests {
 
     #[test]
     fn test_classify() {
-        assert_eq!(Float::NaN::<f64>().classify(), FPNaN);
-        assert_eq!(Float::infinity::<f64>().classify(), FPInfinite);
-        assert_eq!(Float::neg_infinity::<f64>().classify(), FPInfinite);
-        assert_eq!(Zero::zero::<f64>().classify(), FPZero);
-        assert_eq!(Float::neg_zero::<f64>().classify(), FPZero);
+        let nan: f64 = Float::nan();
+        let inf: f64 = Float::infinity();
+        let neg_inf: f64 = Float::neg_infinity();
+        let zero: f64 = Zero::zero();
+        let neg_zero: f64 = Float::neg_zero();
+        assert_eq!(nan.classify(), FPNaN);
+        assert_eq!(inf.classify(), FPInfinite);
+        assert_eq!(neg_inf.classify(), FPInfinite);
+        assert_eq!(zero.classify(), FPZero);
+        assert_eq!(neg_zero.classify(), FPZero);
         assert_eq!(1e-307f64.classify(), FPNormal);
         assert_eq!(1e-308f64.classify(), FPSubnormal);
     }
@@ -1249,11 +1293,13 @@ mod tests {
 
         assert_eq!(Float::ldexp(0f64, -123), 0f64);
         assert_eq!(Float::ldexp(-0f64, -123), -0f64);
-        assert_eq!(Float::ldexp(Float::infinity::<f64>(), -123),
-                   Float::infinity::<f64>());
-        assert_eq!(Float::ldexp(Float::neg_infinity::<f64>(), -123),
-                   Float::neg_infinity::<f64>());
-        assert!(Float::ldexp(Float::NaN::<f64>(), -123).is_NaN());
+
+        let inf: f64 = Float::infinity();
+        let neg_inf: f64 = Float::neg_infinity();
+        let nan: f64 = Float::nan();
+        assert_eq!(Float::ldexp(inf, -123), inf);
+        assert_eq!(Float::ldexp(neg_inf, -123), neg_inf);
+        assert!(Float::ldexp(nan, -123).is_nan());
     }
 
     #[test]
@@ -1271,10 +1317,15 @@ mod tests {
 
         assert_eq!(0f64.frexp(), (0f64, 0));
         assert_eq!((-0f64).frexp(), (-0f64, 0));
-        assert_eq!(match Float::infinity::<f64>().frexp() { (x, _) => x },
-                   Float::infinity::<f64>())
-        assert_eq!(match Float::neg_infinity::<f64>().frexp() { (x, _) => x },
-                   Float::neg_infinity::<f64>())
-        assert!(match Float::NaN::<f64>().frexp() { (x, _) => x.is_NaN() })
+    }
+
+    #[test] #[ignore(cfg(windows))] // FIXME #8755
+    fn test_frexp_nowin() {
+        let inf: f64 = Float::infinity();
+        let neg_inf: f64 = Float::neg_infinity();
+        let nan: f64 = Float::nan();
+        assert_eq!(match inf.frexp() { (x, _) => x }, inf)
+        assert_eq!(match neg_inf.frexp() { (x, _) => x }, neg_inf)
+        assert!(match nan.frexp() { (x, _) => x.is_nan() })
     }
 }

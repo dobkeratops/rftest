@@ -68,7 +68,7 @@ pub struct ProcessOptions<'self> {
      * If this is Some(vec-of-names-and-values) then the new process will
      * have an environment containing the given named values only.
      */
-    env: Option<&'self [(~str, ~str)]>,
+    env: Option<~[(~str, ~str)]>,
 
     /**
      * If this is None then the new process will use the same initial working
@@ -90,7 +90,7 @@ pub struct ProcessOptions<'self> {
     in_fd: Option<c_int>,
 
     /**
-     * If this is None then a new pipe will be created for the new progam's
+     * If this is None then a new pipe will be created for the new program's
      * output and Process.output() will provide a Reader to read from this pipe.
      *
      * If this is Some(file-descriptor) then the new process will write its output
@@ -100,7 +100,7 @@ pub struct ProcessOptions<'self> {
     out_fd: Option<c_int>,
 
     /**
-     * If this is None then a new pipe will be created for the new progam's
+     * If this is None then a new pipe will be created for the new program's
      * error stream and Process.error() will provide a Reader to read from this pipe.
      *
      * If this is Some(file-descriptor) then the new process will write its error output
@@ -147,8 +147,11 @@ impl Process {
      * * options - Options to configure the environment of the process,
      *             the working directory and the standard IO streams.
      */
-    pub fn new(prog: &str, args: &[~str], options: ProcessOptions)
+    pub fn new(prog: &str, args: &[~str],
+               options: ProcessOptions)
                -> Process {
+        #[fixed_stack_segment]; #[inline(never)];
+
         let (in_pipe, in_fd) = match options.in_fd {
             None => {
                 let pipe = os::pipe();
@@ -171,7 +174,7 @@ impl Process {
             Some(fd) => (None, fd)
         };
 
-        let res = spawn_process_os(prog, args, options.env, options.dir,
+        let res = spawn_process_os(prog, args, options.env.clone(), options.dir,
                                    in_fd, out_fd, err_fd);
 
         unsafe {
@@ -287,6 +290,7 @@ impl Process {
      * method does nothing.
      */
     pub fn close_input(&mut self) {
+        #[fixed_stack_segment]; #[inline(never)];
         match self.input {
             Some(-1) | None => (),
             Some(fd) => {
@@ -299,10 +303,12 @@ impl Process {
     }
 
     fn close_outputs(&mut self) {
+        #[fixed_stack_segment]; #[inline(never)];
         fclose_and_null(&mut self.output);
         fclose_and_null(&mut self.error);
 
         fn fclose_and_null(f_opt: &mut Option<*libc::FILE>) {
+            #[allow(cstack)]; // fixed_stack_segment declared on enclosing fn
             match *f_opt {
                 Some(f) if !f.is_null() => {
                     unsafe {
@@ -387,6 +393,7 @@ impl Process {
 
         #[cfg(windows)]
         fn killpid(pid: pid_t, _force: bool) {
+            #[fixed_stack_segment]; #[inline(never)];
             unsafe {
                 libc::funcs::extra::kernel32::TerminateProcess(
                     cast::transmute(pid), 1);
@@ -395,6 +402,8 @@ impl Process {
 
         #[cfg(unix)]
         fn killpid(pid: pid_t, force: bool) {
+            #[fixed_stack_segment]; #[inline(never)];
+
             let signal = if force {
                 libc::consts::os::posix88::SIGKILL
             } else {
@@ -427,12 +436,9 @@ impl Process {
 }
 
 impl Drop for Process {
-    fn drop(&self) {
-        // FIXME(#4330) Need self by value to get mutability.
-        let mut_self: &mut Process = unsafe { cast::transmute(self) };
-
-        mut_self.finish();
-        mut_self.close_outputs();
+    fn drop(&mut self) {
+        self.finish();
+        self.close_outputs();
         free_handle(self.handle);
     }
 }
@@ -444,9 +450,10 @@ struct SpawnProcessResult {
 
 #[cfg(windows)]
 fn spawn_process_os(prog: &str, args: &[~str],
-                    env: Option<&[(~str, ~str)]>,
+                    env: Option<~[(~str, ~str)]>,
                     dir: Option<&Path>,
                     in_fd: c_int, out_fd: c_int, err_fd: c_int) -> SpawnProcessResult {
+    #[fixed_stack_segment]; #[inline(never)];
 
     use libc::types::os::arch::extra::{DWORD, HANDLE, STARTUPINFO};
     use libc::consts::os::extra::{
@@ -506,7 +513,7 @@ fn spawn_process_os(prog: &str, args: &[~str],
 
         do with_envp(env) |envp| {
             do with_dirp(dir) |dirp| {
-                do cmd.to_c_str().with_ref |cmdp| {
+                do cmd.with_c_str |cmdp| {
                     let created = CreateProcessA(ptr::null(), cast::transmute(cmdp),
                                                  ptr::mut_null(), ptr::mut_null(), TRUE,
                                                  0, envp, dirp, &mut si, &mut pi);
@@ -627,21 +634,35 @@ pub fn make_command_line(prog: &str, args: &[~str]) -> ~str {
 
 #[cfg(unix)]
 fn spawn_process_os(prog: &str, args: &[~str],
-                    env: Option<&[(~str, ~str)]>,
+                    env: Option<~[(~str, ~str)]>,
                     dir: Option<&Path>,
                     in_fd: c_int, out_fd: c_int, err_fd: c_int) -> SpawnProcessResult {
+    #[fixed_stack_segment]; #[inline(never)];
 
     use libc::funcs::posix88::unistd::{fork, dup2, close, chdir, execvp};
     use libc::funcs::bsd44::getdtablesize;
 
     mod rustrt {
-        use libc::c_void;
-
         #[abi = "cdecl"]
         extern {
             pub fn rust_unset_sigprocmask();
-            pub fn rust_set_environ(envp: *c_void);
         }
+    }
+
+    #[cfg(windows)]
+    unsafe fn set_environ(_envp: *c_void) {}
+    #[cfg(target_os = "macos")]
+    unsafe fn set_environ(envp: *c_void) {
+        externfn!(fn _NSGetEnviron() -> *mut *c_void);
+
+        *_NSGetEnviron() = envp;
+    }
+    #[cfg(not(target_os = "macos"), not(windows))]
+    unsafe fn set_environ(envp: *c_void) {
+        extern {
+            static mut environ: *c_void;
+        }
+        environ = envp;
     }
 
     unsafe {
@@ -677,7 +698,7 @@ fn spawn_process_os(prog: &str, args: &[~str],
 
         do with_envp(env) |envp| {
             if !envp.is_null() {
-                rustrt::rust_set_environ(envp);
+                set_environ(envp);
             }
             do with_argv(prog, args) |argv| {
                 execvp(*argv, argv);
@@ -717,7 +738,7 @@ fn with_argv<T>(prog: &str, args: &[~str], cb: &fn(**libc::c_char) -> T) -> T {
 }
 
 #[cfg(unix)]
-fn with_envp<T>(env: Option<&[(~str, ~str)]>, cb: &fn(*c_void) -> T) -> T {
+fn with_envp<T>(env: Option<~[(~str, ~str)]>, cb: &fn(*c_void) -> T) -> T {
     use vec;
 
     // On posixy systems we can pass a char** for envp, which is a
@@ -728,8 +749,6 @@ fn with_envp<T>(env: Option<&[(~str, ~str)]>, cb: &fn(*c_void) -> T) -> T {
             let mut tmps = vec::with_capacity(env.len());
 
             for pair in env.iter() {
-                // Use of match here is just to workaround limitations
-                // in the stage0 irrefutable pattern impl.
                 let kv = fmt!("%s=%s", pair.first(), pair.second());
                 tmps.push(kv.to_c_str());
             }
@@ -749,7 +768,7 @@ fn with_envp<T>(env: Option<&[(~str, ~str)]>, cb: &fn(*c_void) -> T) -> T {
 }
 
 #[cfg(windows)]
-fn with_envp<T>(env: Option<&[(~str, ~str)]>, cb: &fn(*mut c_void) -> T) -> T {
+fn with_envp<T>(env: Option<~[(~str, ~str)]>, cb: &fn(*mut c_void) -> T) -> T {
     // On win32 we pass an "environment block" which is not a char**, but
     // rather a concatenation of null-terminated k=v\0 sequences, with a final
     // \0 to terminate.
@@ -775,13 +794,14 @@ fn with_envp<T>(env: Option<&[(~str, ~str)]>, cb: &fn(*mut c_void) -> T) -> T {
 
 fn with_dirp<T>(d: Option<&Path>, cb: &fn(*libc::c_char) -> T) -> T {
     match d {
-      Some(dir) => dir.to_c_str().with_ref(|buf| cb(buf)),
+      Some(dir) => dir.with_c_str(|buf| cb(buf)),
       None => cb(ptr::null())
     }
 }
 
 #[cfg(windows)]
 fn free_handle(handle: *()) {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
         libc::funcs::extra::kernel32::CloseHandle(cast::transmute(handle));
     }
@@ -840,7 +860,7 @@ pub fn process_output(prog: &str, args: &[~str]) -> ProcessOutput {
  * Note that this is private to avoid race conditions on unix where if
  * a user calls waitpid(some_process.get_id()) then some_process.finish()
  * and some_process.destroy() and some_process.finalize() will then either
- * operate on a none-existant process or, even worse, on a newer process
+ * operate on a none-existent process or, even worse, on a newer process
  * with the same id.
  */
 fn waitpid(pid: pid_t) -> int {
@@ -848,6 +868,7 @@ fn waitpid(pid: pid_t) -> int {
 
     #[cfg(windows)]
     fn waitpid_os(pid: pid_t) -> int {
+        #[fixed_stack_segment]; #[inline(never)];
 
         use libc::types::os::arch::extra::DWORD;
         use libc::consts::os::extra::{
@@ -892,6 +913,7 @@ fn waitpid(pid: pid_t) -> int {
 
     #[cfg(unix)]
     fn waitpid_os(pid: pid_t) -> int {
+        #[fixed_stack_segment]; #[inline(never)];
 
         use libc::funcs::posix01::wait::*;
 
@@ -935,12 +957,13 @@ fn waitpid(pid: pid_t) -> int {
 #[cfg(test)]
 mod tests {
     use io;
-    use libc::{c_int, uintptr_t};
+    use libc::c_int;
     use option::{Option, None, Some};
     use os;
     use path::Path;
     use run;
     use str;
+    use unstable::running_on_valgrind;
 
     #[test]
     #[cfg(windows)]
@@ -982,7 +1005,7 @@ mod tests {
 
         let run::ProcessOutput {status, output, error}
              = run::process_output("echo", [~"hello"]);
-        let output_str = str::from_bytes(output);
+        let output_str = str::from_utf8(output);
 
         assert_eq!(status, 0);
         assert_eq!(output_str.trim().to_owned(), ~"hello");
@@ -997,7 +1020,7 @@ mod tests {
 
         let run::ProcessOutput {status, output, error}
              = run::process_output("/system/bin/sh", [~"-c",~"echo hello"]);
-        let output_str = str::from_bytes(output);
+        let output_str = str::from_utf8(output);
 
         assert_eq!(status, 0);
         assert_eq!(output_str.trim().to_owned(), ~"hello");
@@ -1069,12 +1092,14 @@ mod tests {
     }
 
     fn readclose(fd: c_int) -> ~str {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             let file = os::fdopen(fd);
             let reader = io::FILE_reader(file, false);
             let buf = reader.read_whole_stream();
             os::fclose(file);
-            str::from_bytes(buf)
+            str::from_utf8(buf)
         }
     }
 
@@ -1115,7 +1140,7 @@ mod tests {
         let mut prog = run::Process::new("echo", [~"hello"], run::ProcessOptions::new());
         let run::ProcessOutput {status, output, error}
             = prog.finish_with_output();
-        let output_str = str::from_bytes(output);
+        let output_str = str::from_utf8(output);
 
         assert_eq!(status, 0);
         assert_eq!(output_str.trim().to_owned(), ~"hello");
@@ -1132,7 +1157,7 @@ mod tests {
                                          run::ProcessOptions::new());
         let run::ProcessOutput {status, output, error}
             = prog.finish_with_output();
-        let output_str = str::from_bytes(output);
+        let output_str = str::from_utf8(output);
 
         assert_eq!(status, 0);
         assert_eq!(output_str.trim().to_owned(), ~"hello");
@@ -1150,7 +1175,7 @@ mod tests {
         let run::ProcessOutput {status, output, error}
             = prog.finish_with_output();
 
-        let output_str = str::from_bytes(output);
+        let output_str = str::from_utf8(output);
 
         assert_eq!(status, 0);
         assert_eq!(output_str.trim().to_owned(), ~"hello");
@@ -1178,7 +1203,7 @@ mod tests {
         let run::ProcessOutput {status, output, error}
             = prog.finish_with_output();
 
-        let output_str = str::from_bytes(output);
+        let output_str = str::from_utf8(output);
 
         assert_eq!(status, 0);
         assert_eq!(output_str.trim().to_owned(), ~"hello");
@@ -1255,7 +1280,7 @@ mod tests {
     fn test_keep_current_working_dir() {
         let mut prog = run_pwd(None);
 
-        let output = str::from_bytes(prog.finish_with_output().output);
+        let output = str::from_utf8(prog.finish_with_output().output);
         let parent_dir = os::getcwd().normalize();
         let child_dir = Path(output.trim()).normalize();
 
@@ -1273,7 +1298,7 @@ mod tests {
         let parent_dir = os::getcwd().dir_path().normalize();
         let mut prog = run_pwd(Some(&parent_dir));
 
-        let output = str::from_bytes(prog.finish_with_output().output);
+        let output = str::from_utf8(prog.finish_with_output().output);
         let child_dir = Path(output.trim()).normalize();
 
         let parent_stat = parent_dir.stat().unwrap();
@@ -1284,14 +1309,14 @@ mod tests {
     }
 
     #[cfg(unix,not(target_os="android"))]
-    fn run_env(env: Option<&[(~str, ~str)]>) -> run::Process {
+    fn run_env(env: Option<~[(~str, ~str)]>) -> run::Process {
         run::Process::new("env", [], run::ProcessOptions {
             env: env,
             .. run::ProcessOptions::new()
         })
     }
     #[cfg(unix,target_os="android")]
-    fn run_env(env: Option<&[(~str, ~str)]>) -> run::Process {
+    fn run_env(env: Option<~[(~str, ~str)]>) -> run::Process {
         run::Process::new("/system/bin/sh", [~"-c",~"set"], run::ProcessOptions {
             env: env,
             .. run::ProcessOptions::new()
@@ -1299,7 +1324,7 @@ mod tests {
     }
 
     #[cfg(windows)]
-    fn run_env(env: Option<&[(~str, ~str)]>) -> run::Process {
+    fn run_env(env: Option<~[(~str, ~str)]>) -> run::Process {
         run::Process::new("cmd", [~"/c", ~"set"], run::ProcessOptions {
             env: env,
             .. run::ProcessOptions::new()
@@ -1312,7 +1337,7 @@ mod tests {
         if running_on_valgrind() { return; }
 
         let mut prog = run_env(None);
-        let output = str::from_bytes(prog.finish_with_output().output);
+        let output = str::from_utf8(prog.finish_with_output().output);
 
         let r = os::env();
         for &(ref k, ref v) in r.iter() {
@@ -1326,7 +1351,7 @@ mod tests {
         if running_on_valgrind() { return; }
 
         let mut prog = run_env(None);
-        let output = str::from_bytes(prog.finish_with_output().output);
+        let output = str::from_utf8(prog.finish_with_output().output);
 
         let r = os::env();
         for &(ref k, ref v) in r.iter() {
@@ -1344,17 +1369,9 @@ mod tests {
         let mut new_env = os::env();
         new_env.push((~"RUN_TEST_NEW_ENV", ~"123"));
 
-        let mut prog = run_env(Some(new_env.slice(0, new_env.len())));
-        let output = str::from_bytes(prog.finish_with_output().output);
+        let mut prog = run_env(Some(new_env));
+        let output = str::from_utf8(prog.finish_with_output().output);
 
         assert!(output.contains("RUN_TEST_NEW_ENV=123"));
-    }
-
-    fn running_on_valgrind() -> bool {
-        unsafe { rust_running_on_valgrind() != 0 }
-    }
-
-    extern {
-        fn rust_running_on_valgrind() -> uintptr_t;
     }
 }

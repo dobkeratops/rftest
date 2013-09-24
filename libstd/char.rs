@@ -10,14 +10,18 @@
 
 //! Utilities for manipulating the char type
 
+use cast::transmute;
 use option::{None, Option, Some};
-use int;
+use iter::{Iterator, range_step};
 use str::StrSlice;
-use unicode::{derived_property, general_category};
+use unicode::{derived_property, general_category, decompose};
+use to_str::ToStr;
+use str;
 
 #[cfg(test)] use str::OwnedStr;
 
 #[cfg(not(test))] use cmp::{Eq, Ord};
+#[cfg(not(test))] use default::Default;
 #[cfg(not(test))] use num::Zero;
 
 // UTF-8 ranges and tags for encoding characters
@@ -61,6 +65,19 @@ static TAG_FOUR_B: uint = 240u;
     Co  Private_Use             a private-use character
     Cn  Unassigned              a reserved unassigned code point or a noncharacter
 */
+
+/// The highest valid code point
+pub static MAX: char = '\U0010ffff';
+
+/// Convert from `u32` to a character.
+pub fn from_u32(i: u32) -> Option<char> {
+    // catch out-of-bounds and surrogates
+    if (i > MAX as u32) || (i >= 0xD800 && i <= 0xDFFF) {
+        None
+    } else {
+        Some(unsafe { transmute(i) })
+    }
+}
 
 /// Returns whether the specified character is considered a unicode alphabetic
 /// character
@@ -192,13 +209,62 @@ pub fn from_digit(num: uint, radix: uint) -> Option<char> {
         fail!("from_digit: radix %? is to high (maximum 36)", num);
     }
     if num < radix {
-        if num < 10 {
-            Some(('0' as uint + num) as char)
-        } else {
-            Some(('a' as uint + num - 10u) as char)
+        unsafe {
+            if num < 10 {
+                Some(transmute(('0' as uint + num) as u32))
+            } else {
+                Some(transmute(('a' as uint + num - 10u) as u32))
+            }
         }
     } else {
         None
+    }
+}
+
+// Constants from Unicode 6.2.0 Section 3.12 Conjoining Jamo Behavior
+static S_BASE: uint = 0xAC00;
+static L_BASE: uint = 0x1100;
+static V_BASE: uint = 0x1161;
+static T_BASE: uint = 0x11A7;
+static L_COUNT: uint = 19;
+static V_COUNT: uint = 21;
+static T_COUNT: uint = 28;
+static N_COUNT: uint = (V_COUNT * T_COUNT);
+static S_COUNT: uint = (L_COUNT * N_COUNT);
+
+// Decompose a precomposed Hangul syllable
+fn decompose_hangul(s: char, f: &fn(char)) {
+    let si = s as uint - S_BASE;
+
+    let li = si / N_COUNT;
+    unsafe {
+        f(transmute((L_BASE + li) as u32));
+
+        let vi = (si % N_COUNT) / T_COUNT;
+        f(transmute((V_BASE + vi) as u32));
+
+        let ti = si % T_COUNT;
+        if ti > 0 {
+            f(transmute((T_BASE + ti) as u32));
+        }
+    }
+}
+
+/// Returns the canonical decompostion of a character
+pub fn decompose_canonical(c: char, f: &fn(char)) {
+    if (c as uint) < S_BASE || (c as uint) >= (S_BASE + S_COUNT) {
+        decompose::canonical(c, f);
+    } else {
+        decompose_hangul(c, f);
+    }
+}
+
+/// Returns the compatibility decompostion of a character
+pub fn decompose_compatible(c: char, f: &fn(char)) {
+    if (c as uint) < S_BASE || (c as uint) >= (S_BASE + S_COUNT) {
+        decompose::compatibility(c, f);
+    } else {
+        decompose_hangul(c, f);
     }
 }
 
@@ -215,18 +281,19 @@ pub fn escape_unicode(c: char, f: &fn(char)) {
     // avoid calling str::to_str_radix because we don't really need to allocate
     // here.
     f('\\');
-    let pad = cond!(
-        (c <= '\xff')   { f('x'); 2 }
-        (c <= '\uffff') { f('u'); 4 }
-        _               { f('U'); 8 }
-    );
-    do int::range_step(4 * (pad - 1), -1, -4) |offset| {
-        match ((c as u32) >> offset) & 0xf {
-            i @ 0 .. 9 => { f('0' + i as char); }
-            i => { f('a' + (i - 10) as char); }
-        }
-        true
+    let pad = match () {
+        _ if c <= '\xff'    => { f('x'); 2 }
+        _ if c <= '\uffff'  => { f('u'); 4 }
+        _                   => { f('U'); 8 }
     };
+    for offset in range_step::<i32>(4 * (pad - 1), -1, -4) {
+        unsafe {
+            match ((c as i32) >> offset) & 0xf {
+                i @ 0 .. 9 => { f(transmute('0' as i32 + i)); }
+                i => { f(transmute('a' as i32 + (i - 10))); }
+            }
+        }
+    }
 }
 
 ///
@@ -262,13 +329,20 @@ pub fn len_utf8_bytes(c: char) -> uint {
     static MAX_FOUR_B:  uint = 2097152u;
 
     let code = c as uint;
-    cond!(
-        (code < MAX_ONE_B)   { 1u }
-        (code < MAX_TWO_B)   { 2u }
-        (code < MAX_THREE_B) { 3u }
-        (code < MAX_FOUR_B)  { 4u }
-        _ { fail!("invalid character!") }
-    )
+    match () {
+        _ if code < MAX_ONE_B   => 1u,
+        _ if code < MAX_TWO_B   => 2u,
+        _ if code < MAX_THREE_B => 3u,
+        _ if code < MAX_FOUR_B  => 4u,
+        _                       => fail!("invalid character!"),
+    }
+}
+
+impl ToStr for char {
+    #[inline]
+    fn to_str(&self) -> ~str {
+        str::from_char(*self)
+    }
 }
 
 #[allow(missing_doc)]
@@ -352,8 +426,6 @@ impl Char for char {
 impl Eq for char {
     #[inline]
     fn eq(&self, other: &char) -> bool { (*self) == (*other) }
-    #[inline]
-    fn ne(&self, other: &char) -> bool { (*self) != (*other) }
 }
 
 #[cfg(not(test))]
@@ -363,9 +435,18 @@ impl Ord for char {
 }
 
 #[cfg(not(test))]
+impl Default for char {
+    #[inline]
+    fn default() -> char { '\x00' }
+}
+
+#[cfg(not(test))]
 impl Zero for char {
-    fn zero() -> char { 0 as char }
-    fn is_zero(&self) -> bool { *self == 0 as char }
+    #[inline]
+    fn zero() -> char { '\x00' }
+
+    #[inline]
+    fn is_zero(&self) -> bool { *self == '\x00' }
 }
 
 #[test]
@@ -458,4 +539,10 @@ fn test_escape_unicode() {
     assert_eq!(string('a'), ~"\\x61");
     assert_eq!(string('\u011b'), ~"\\u011b");
     assert_eq!(string('\U0001d4b6'), ~"\\U0001d4b6");
+}
+
+#[test]
+fn test_to_str() {
+    let s = 't'.to_str();
+    assert_eq!(s, ~"t");
 }

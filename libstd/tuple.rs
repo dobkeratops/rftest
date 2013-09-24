@@ -13,9 +13,6 @@
 #[allow(missing_doc)];
 
 use clone::Clone;
-use vec;
-use vec::ImmutableVector;
-use iterator::Iterator;
 
 pub use self::inner::*;
 
@@ -79,55 +76,6 @@ impl<T, U> ImmutableTuple<T, U> for (T, U) {
     }
 }
 
-pub trait ExtendedTupleOps<A,B> {
-    fn zip(&self) -> ~[(A, B)];
-    fn map<C>(&self, f: &fn(a: &A, b: &B) -> C) -> ~[C];
-}
-
-impl<'self,
-     A:Clone,
-     B:Clone>
-     ExtendedTupleOps<A,B> for
-     (&'self [A], &'self [B]) {
-    #[inline]
-    fn zip(&self) -> ~[(A, B)] {
-        match *self {
-            (ref a, ref b) => {
-                vec::zip_slice(*a, *b)
-            }
-        }
-    }
-
-    #[inline]
-    fn map<C>(&self, f: &fn(a: &A, b: &B) -> C) -> ~[C] {
-        match *self {
-            (ref a, ref b) => {
-                a.iter().zip(b.iter()).map(|(aa, bb)| f(aa, bb)).collect()
-            }
-        }
-    }
-}
-
-impl<A:Clone, B:Clone> ExtendedTupleOps<A,B> for (~[A], ~[B]) {
-    #[inline]
-    fn zip(&self) -> ~[(A, B)] {
-        match *self {
-            (ref a, ref b) => {
-                vec::zip_slice(*a, *b)
-            }
-        }
-    }
-
-    #[inline]
-    fn map<C>(&self, f: &fn(a: &A, b: &B) -> C) -> ~[C] {
-        match *self {
-            (ref a, ref b) => {
-                a.iter().zip(b.iter()).map(|(aa, bb)| f(aa, bb)).collect()
-            }
-        }
-    }
-}
-
 // macro for implementing n-ary tuple functions and operations
 
 macro_rules! tuple_impls {
@@ -141,6 +89,7 @@ macro_rules! tuple_impls {
         pub mod inner {
             use clone::Clone;
             #[cfg(not(test))] use cmp::*;
+            #[cfg(not(test))] use default::Default;
             #[cfg(not(test))] use num::Zero;
 
             $(
@@ -225,10 +174,18 @@ macro_rules! tuple_impls {
                 }
 
                 #[cfg(not(test))]
+                impl<$($T:Default),+> Default for ($($T,)+) {
+                    #[inline]
+                    fn default() -> ($($T,)+) {
+                        ($({ let x: $T = Default::default(); x},)+)
+                    }
+                }
+
+                #[cfg(not(test))]
                 impl<$($T:Zero),+> Zero for ($($T,)+) {
                     #[inline]
                     fn zero() -> ($($T,)+) {
-                        ($(Zero::zero::<$T>(),)+)
+                        ($({ let x: $T = Zero::zero(); x},)+)
                     }
                     #[inline]
                     fn is_zero(&self) -> bool {

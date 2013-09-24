@@ -145,7 +145,7 @@ impl<'self> ToBase64 for &'self [u8] {
         }
 
         unsafe {
-            str::raw::from_bytes_owned(v)
+            str::raw::from_utf8_owned(v)
         }
     }
 }
@@ -162,7 +162,7 @@ impl<'self> FromBase64 for &'self str {
      * Convert any base64 encoded string (literal, `@`, `&`, or `~`)
      * to the byte values it encodes.
      *
-     * You can use the `from_bytes` function in `std::str`
+     * You can use the `from_utf8` function in `std::str`
      * to turn a `[u8]` into a string with characters corresponding to those
      * values.
      *
@@ -180,7 +180,7 @@ impl<'self> FromBase64 for &'self str {
      *     printfln!("%s", hello_str);
      *     let bytes = hello_str.from_base64();
      *     printfln!("%?", bytes);
-     *     let result_str = str::from_bytes(bytes);
+     *     let result_str = str::from_utf8(bytes);
      *     printfln!("%s", result_str);
      * }
      * ~~~
@@ -311,15 +311,12 @@ mod test {
 
     #[test]
     fn test_base64_random() {
-        use std::rand::{task_rng, random, RngUtil};
+        use std::rand::{task_rng, random, Rng};
         use std::vec;
 
         do 1000.times {
-            let v: ~[u8] = do vec::build |push| {
-                do task_rng().gen_uint_range(1, 100).times {
-                    push(random());
-                }
-            };
+            let times = task_rng().gen_integer_range(1u, 100);
+            let v = vec::from_fn(times, |_| random::<u8>());
             assert_eq!(v.to_base64(STANDARD).from_base64().unwrap(), v);
         }
     }

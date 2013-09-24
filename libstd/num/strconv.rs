@@ -42,7 +42,7 @@ pub enum SignFormat {
 }
 
 pub trait NumStrConv {
-    fn NaN()      -> Option<Self>;
+    fn nan()      -> Option<Self>;
     fn inf()      -> Option<Self>;
     fn neg_inf()  -> Option<Self>;
     fn neg_zero() -> Option<Self>;
@@ -54,7 +54,7 @@ pub trait NumStrConv {
 macro_rules! impl_NumStrConv_Floating (($t:ty) => (
     impl NumStrConv for $t {
         #[inline]
-        fn NaN()      -> Option<$t> { Some( 0.0 / 0.0) }
+        fn nan()      -> Option<$t> { Some( 0.0 / 0.0) }
         #[inline]
         fn inf()      -> Option<$t> { Some( 1.0 / 0.0) }
         #[inline]
@@ -71,7 +71,7 @@ macro_rules! impl_NumStrConv_Floating (($t:ty) => (
 
 macro_rules! impl_NumStrConv_Integer (($t:ty) => (
     impl NumStrConv for $t {
-        #[inline] fn NaN()      -> Option<$t> { None }
+        #[inline] fn nan()      -> Option<$t> { None }
         #[inline] fn inf()      -> Option<$t> { None }
         #[inline] fn neg_inf()  -> Option<$t> { None }
         #[inline] fn neg_zero() -> Option<$t> { None }
@@ -417,7 +417,7 @@ pub fn float_to_str_common<T:NumCast+Zero+One+Eq+Ord+NumStrConv+Float+Round+
         sign: SignFormat, digits: SignificantDigits) -> (~str, bool) {
     let (bytes, special) = float_to_str_bytes_common(num, radix,
                                negative_zero, sign, digits);
-    (str::from_bytes(bytes), special)
+    (str::from_utf8(bytes), special)
 }
 
 // Some constants for from_str_bytes_common's input validation,
@@ -515,7 +515,7 @@ pub fn from_str_bytes_common<T:NumCast+Zero+One+Eq+Ord+Div<T,T>+
                 return None;
             }
         } else if buf == NAN_BUF {
-            return NumStrConv::NaN();
+            return NumStrConv::nan();
         }
     }
 
@@ -552,8 +552,18 @@ pub fn from_str_bytes_common<T:NumCast+Zero+One+Eq+Ord+Div<T,T>+
                 // Detect overflow by comparing to last value, except
                 // if we've not seen any non-zero digits.
                 if last_accum != _0 {
-                    if accum_positive && accum <= last_accum { return None; }
-                    if !accum_positive && accum >= last_accum { return None; }
+                    if accum_positive && accum <= last_accum { return NumStrConv::inf(); }
+                    if !accum_positive && accum >= last_accum { return NumStrConv::neg_inf(); }
+
+                    // Detect overflow by reversing the shift-and-add proccess
+                    if accum_positive &&
+                        (last_accum != ((accum - cast(digit as int))/radix_gen.clone())) {
+                        return NumStrConv::inf();
+                    }
+                    if !accum_positive &&
+                        (last_accum != ((accum + cast(digit as int))/radix_gen.clone())) {
+                        return NumStrConv::neg_inf();
+                    }
                 }
                 last_accum = accum.clone();
             }
@@ -597,8 +607,8 @@ pub fn from_str_bytes_common<T:NumCast+Zero+One+Eq+Ord+Div<T,T>+
                     }
 
                     // Detect overflow by comparing to last value
-                    if accum_positive && accum < last_accum { return None; }
-                    if !accum_positive && accum > last_accum { return None; }
+                    if accum_positive && accum < last_accum { return NumStrConv::inf(); }
+                    if !accum_positive && accum > last_accum { return NumStrConv::neg_inf(); }
                     last_accum = accum.clone();
                 }
                 None => match c {
@@ -702,20 +712,37 @@ mod test {
                                              ExpNone, false, false);
         assert_eq!(n, None);
     }
+
+    #[test]
+    fn from_str_issue7588() {
+        let u : Option<u8> = from_str_common("1000", 10, false, false, false,
+                                            ExpNone, false, false);
+        assert_eq!(u, None);
+        let s : Option<i16> = from_str_common("80000", 10, false, false, false,
+                                             ExpNone, false, false);
+        assert_eq!(s, None);
+        let f : Option<f32> = from_str_common(
+            "10000000000000000000000000000000000000000", 10, false, false, false,
+            ExpNone, false, false);
+        assert_eq!(f, NumStrConv::inf())
+        let fe : Option<f32> = from_str_common("1e40", 10, false, false, false,
+                                            ExpDec, false, false);
+        assert_eq!(fe, NumStrConv::inf())
+    }
 }
 
 #[cfg(test)]
 mod bench {
     use extra::test::BenchHarness;
-    use rand::{XorShiftRng,RngUtil};
-    use uint;
+    use rand::{XorShiftRng, Rng};
     use float;
+    use to_str::ToStr;
 
     #[bench]
     fn uint_to_str_rand(bh: &mut BenchHarness) {
         let mut rng = XorShiftRng::new();
         do bh.iter {
-            uint::to_str(rng.gen());
+            rng.gen::<uint>().to_str();
         }
     }
 

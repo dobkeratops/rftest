@@ -9,16 +9,15 @@
 // except according to those terms.
 
 use libc;
-use uint;
 use option::{Some, None};
 use cell::Cell;
 use clone::Clone;
 use container::Container;
-use iterator::{Iterator, range};
+use iter::{Iterator, range};
 use super::io::net::ip::{SocketAddr, Ipv4Addr, Ipv6Addr};
 use vec::{OwnedVector, MutableVector, ImmutableVector};
 use rt::sched::Scheduler;
-use unstable::run_in_bare_thread;
+use unstable::{run_in_bare_thread};
 use rt::thread::Thread;
 use rt::task::Task;
 use rt::uv::uvio::UvEventLoop;
@@ -98,6 +97,8 @@ mod darwin_fd_limit {
     static RLIMIT_NOFILE: libc::c_int = 8;
 
     pub unsafe fn raise_fd_limit() {
+        #[fixed_stack_segment]; #[inline(never)];
+
         // The strategy here is to fetch the current resource limits, read the kern.maxfilesperproc
         // sysctl value, and bump the soft resource limit for maxfiles up to the sysctl value.
         use ptr::{to_unsafe_ptr, to_mut_unsafe_ptr, mut_null};
@@ -142,6 +143,12 @@ mod darwin_fd_limit {
     pub unsafe fn raise_fd_limit() {}
 }
 
+#[doc(hidden)]
+pub fn prepare_for_lots_of_tests() {
+    // Bump the fd limit on OS X. See darwin_fd_limit for an explanation.
+    unsafe { darwin_fd_limit::raise_fd_limit() }
+}
+
 /// Create more than one scheduler and run a function in a task
 /// in one of the schedulers. The schedulers will stay alive
 /// until the function `f` returns.
@@ -151,8 +158,8 @@ pub fn run_in_mt_newsched_task(f: ~fn()) {
     use rt::sched::Shutdown;
     use rt::util;
 
-    // Bump the fd limit on OS X. See darwin_fd_limit for an explanation.
-    unsafe { darwin_fd_limit::raise_fd_limit() }
+    // see comment in other function (raising fd limits)
+    prepare_for_lots_of_tests();
 
     let f = Cell::new(f);
 
@@ -160,10 +167,14 @@ pub fn run_in_mt_newsched_task(f: ~fn()) {
         let nthreads = match os::getenv("RUST_RT_TEST_THREADS") {
             Some(nstr) => FromStr::from_str(nstr).unwrap(),
             None => {
-                // Using more threads than cores in test code
-                // to force the OS to preempt them frequently.
-                // Assuming that this help stress test concurrent types.
-                util::num_cpus() * 2
+                if util::limit_thread_creation_due_to_osx_and_valgrind() {
+                    1
+                } else {
+                    // Using more threads than cores in test code
+                    // to force the OS to preempt them frequently.
+                    // Assuming that this help stress test concurrent types.
+                    util::num_cpus() * 2
+                }
             }
         };
 
@@ -305,6 +316,7 @@ pub fn cleanup_task(mut task: ~Task) {
 }
 
 /// Get a port number, starting at 9600, for use in tests
+#[fixed_stack_segment] #[inline(never)]
 pub fn next_test_port() -> u16 {
     unsafe {
         return rust_dbg_next_port(base_port() as libc::uintptr_t) as u16;
@@ -369,9 +381,10 @@ fn base_port() -> uint {
 /// stress tests. Default 1.
 pub fn stress_factor() -> uint {
     use os::getenv;
+    use from_str::from_str;
 
     match getenv("RUST_RT_STRESS") {
-        Some(val) => uint::from_str(val).unwrap(),
+        Some(val) => from_str::<uint>(val).unwrap(),
         None => 1
     }
 }

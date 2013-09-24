@@ -14,10 +14,10 @@ use libc::c_void;
 use cast::{transmute, transmute_mut_unsafe,
            transmute_region, transmute_mut_region};
 
-// XXX: Registers is boxed so that it is 16-byte aligned, for storing
+// FIXME #7761: Registers is boxed so that it is 16-byte aligned, for storing
 // SSE regs.  It would be marginally better not to do this. In C++ we
 // use an attribute on a struct.
-// XXX: It would be nice to define regs as `~Option<Registers>` since
+// FIXME #7761: It would be nice to define regs as `~Option<Registers>` since
 // the registers are sometimes empty, but the discriminant would
 // then misalign the regs again.
 pub struct Context {
@@ -37,7 +37,7 @@ impl Context {
 
     /// Create a new context that will resume execution by running ~fn()
     pub fn new(start: ~fn(), stack: &mut StackSegment) -> Context {
-        // XXX: Putting main into a ~ so it's a thin pointer and can
+        // FIXME #7767: Putting main into a ~ so it's a thin pointer and can
         // be passed to the spawn function.  Another unfortunate
         // allocation
         let start = ~start;
@@ -47,6 +47,7 @@ impl Context {
 
         let fp: *c_void = task_start_wrapper as *c_void;
         let argp: *c_void = unsafe { transmute::<&~fn(), *c_void>(&*start) };
+        let stack_base: *uint = stack.start();
         let sp: *uint = stack.end();
         let sp: *mut uint = unsafe { transmute_mut_unsafe(sp) };
         // Save and then immediately load the current context,
@@ -56,7 +57,7 @@ impl Context {
             swap_registers(transmute_mut_region(&mut *regs), transmute_region(&*regs));
         };
 
-        initialize_call_frame(&mut *regs, fp, argp, sp);
+        initialize_call_frame(&mut *regs, fp, argp, sp, stack_base);
 
         return Context {
             start: Some(start),
@@ -107,7 +108,8 @@ fn new_regs() -> ~Registers {
 }
 
 #[cfg(target_arch = "x86")]
-fn initialize_call_frame(regs: &mut Registers, fptr: *c_void, arg: *c_void, sp: *mut uint) {
+fn initialize_call_frame(regs: &mut Registers, fptr: *c_void, arg: *c_void,
+                         sp: *mut uint, _stack_base: *uint) {
 
     let sp = align_down(sp);
     let sp = mut_offset(sp, -4);
@@ -123,20 +125,40 @@ fn initialize_call_frame(regs: &mut Registers, fptr: *c_void, arg: *c_void, sp: 
     regs.ebp = 0;
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(windows, target_arch = "x86_64")]
+type Registers = [uint, ..34];
+#[cfg(not(windows), target_arch = "x86_64")]
 type Registers = [uint, ..22];
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(windows, target_arch = "x86_64")]
+fn new_regs() -> ~Registers { ~([0, .. 34]) }
+#[cfg(not(windows), target_arch = "x86_64")]
 fn new_regs() -> ~Registers { ~([0, .. 22]) }
 
 #[cfg(target_arch = "x86_64")]
-fn initialize_call_frame(regs: &mut Registers, fptr: *c_void, arg: *c_void, sp: *mut uint) {
+fn initialize_call_frame(regs: &mut Registers, fptr: *c_void, arg: *c_void,
+                         sp: *mut uint, stack_base: *uint) {
 
     // Redefinitions from regs.h
     static RUSTRT_ARG0: uint = 3;
     static RUSTRT_RSP: uint = 1;
     static RUSTRT_IP: uint = 8;
     static RUSTRT_RBP: uint = 2;
+
+    #[cfg(windows)]
+    fn initialize_tib(regs: &mut Registers, sp: *mut uint, stack_base: *uint) {
+        // Redefinitions from regs.h
+        static RUSTRT_ST1: uint = 11; // stack bottom
+        static RUSTRT_ST2: uint = 12; // stack top
+        regs[RUSTRT_ST1] = sp as uint;
+        regs[RUSTRT_ST2] = stack_base as uint;
+    }
+    #[cfg(not(windows))]
+    fn initialize_tib(_: &mut Registers, _: *mut uint, _: *uint) {
+    }
+
+    // Win64 manages stack range at TIB: %gs:0x08 (top) and %gs:0x10 (bottom)
+    initialize_tib(regs, sp, stack_base);
 
     let sp = align_down(sp);
     let sp = mut_offset(sp, -1);
@@ -164,7 +186,8 @@ type Registers = [uint, ..32];
 fn new_regs() -> ~Registers { ~([0, .. 32]) }
 
 #[cfg(target_arch = "arm")]
-fn initialize_call_frame(regs: &mut Registers, fptr: *c_void, arg: *c_void, sp: *mut uint) {
+fn initialize_call_frame(regs: &mut Registers, fptr: *c_void, arg: *c_void,
+                         sp: *mut uint, _stack_base: *uint) {
     let sp = align_down(sp);
     // sp of arm eabi is 8-byte aligned
     let sp = mut_offset(sp, -2);
@@ -184,7 +207,8 @@ type Registers = [uint, ..32];
 fn new_regs() -> ~Registers { ~([0, .. 32]) }
 
 #[cfg(target_arch = "mips")]
-fn initialize_call_frame(regs: &mut Registers, fptr: *c_void, arg: *c_void, sp: *mut uint) {
+fn initialize_call_frame(regs: &mut Registers, fptr: *c_void, arg: *c_void,
+                         sp: *mut uint, _stack_base: *uint) {
     let sp = align_down(sp);
     // sp of mips o32 is 8-byte aligned
     let sp = mut_offset(sp, -2);
@@ -206,7 +230,7 @@ fn align_down(sp: *mut uint) -> *mut uint {
     }
 }
 
-// XXX: ptr::offset is positive ints only
+// ptr::mut_offset is positive ints only
 #[inline]
 pub fn mut_offset<T>(ptr: *mut T, count: int) -> *mut T {
     use std::sys::size_of;

@@ -16,10 +16,12 @@
 use borrow;
 use cast::transmute;
 use cleanup;
+use local_data;
 use libc::{c_void, uintptr_t};
-use ptr;
 use prelude::*;
 use option::{Option, Some, None};
+use rt::borrowck;
+use rt::borrowck::BorrowRecord;
 use rt::env;
 use rt::kill::Death;
 use rt::local::Local;
@@ -51,11 +53,13 @@ pub struct Task {
     name: Option<~str>,
     coroutine: Option<Coroutine>,
     sched: Option<~Scheduler>,
-    task_type: TaskType
+    task_type: TaskType,
+    // Dynamic borrowck debugging info
+    borrow_list: Option<~[BorrowRecord]>
 }
 
 pub enum TaskType {
-    GreenTask(Option<~SchedHome>),
+    GreenTask(Option<SchedHome>),
     SchedTask
 }
 
@@ -69,14 +73,14 @@ pub struct Coroutine {
     saved_context: Context
 }
 
-/// Some tasks have a deciated home scheduler that they must run on.
+/// Some tasks have a dedicated home scheduler that they must run on.
 pub enum SchedHome {
     AnySched,
     Sched(SchedHandle)
 }
 
 pub struct GarbageCollector;
-pub struct LocalStorage(*c_void, Option<extern "Rust" fn(*c_void)>);
+pub struct LocalStorage(Option<local_data::Map>);
 
 pub struct Unwinder {
     unwinding: bool,
@@ -89,7 +93,7 @@ impl Task {
     pub fn build_homed_child(stack_size: Option<uint>, f: ~fn(), home: SchedHome) -> ~Task {
         let f = Cell::new(f);
         let home = Cell::new(home);
-        do Local::borrow::<Task, ~Task> |running_task| {
+        do Local::borrow |running_task: &mut Task| {
             let mut sched = running_task.sched.take_unwrap();
             let new_task = ~running_task.new_child_homed(&mut sched.stack_pool,
                                                          stack_size,
@@ -107,7 +111,7 @@ impl Task {
     pub fn build_homed_root(stack_size: Option<uint>, f: ~fn(), home: SchedHome) -> ~Task {
         let f = Cell::new(f);
         let home = Cell::new(home);
-        do Local::borrow::<Task, ~Task> |running_task| {
+        do Local::borrow |running_task: &mut Task| {
             let mut sched = running_task.sched.take_unwrap();
             let new_task = ~Task::new_root_homed(&mut sched.stack_pool,
                                                  stack_size,
@@ -126,7 +130,7 @@ impl Task {
         Task {
             heap: LocalHeap::new(),
             gc: GarbageCollector,
-            storage: LocalStorage(ptr::null(), None),
+            storage: LocalStorage(None),
             logger: StdErrLogger,
             unwinder: Unwinder { unwinding: false },
             taskgroup: None,
@@ -135,7 +139,8 @@ impl Task {
             coroutine: Some(Coroutine::empty()),
             name: None,
             sched: None,
-            task_type: SchedTask
+            task_type: SchedTask,
+            borrow_list: None
         }
     }
 
@@ -159,7 +164,7 @@ impl Task {
         Task {
             heap: LocalHeap::new(),
             gc: GarbageCollector,
-            storage: LocalStorage(ptr::null(), None),
+            storage: LocalStorage(None),
             logger: StdErrLogger,
             unwinder: Unwinder { unwinding: false },
             taskgroup: None,
@@ -168,7 +173,8 @@ impl Task {
             name: None,
             coroutine: Some(Coroutine::new(stack_pool, stack_size, start)),
             sched: None,
-            task_type: GreenTask(Some(~home))
+            task_type: GreenTask(Some(home)),
+            borrow_list: None
         }
     }
 
@@ -180,7 +186,7 @@ impl Task {
         Task {
             heap: LocalHeap::new(),
             gc: GarbageCollector,
-            storage: LocalStorage(ptr::null(), None),
+            storage: LocalStorage(None),
             logger: StdErrLogger,
             unwinder: Unwinder { unwinding: false },
             taskgroup: None,
@@ -190,14 +196,15 @@ impl Task {
             name: None,
             coroutine: Some(Coroutine::new(stack_pool, stack_size, start)),
             sched: None,
-            task_type: GreenTask(Some(~home))
+            task_type: GreenTask(Some(home)),
+            borrow_list: None
         }
     }
 
     pub fn give_home(&mut self, new_home: SchedHome) {
         match self.task_type {
             GreenTask(ref mut home) => {
-                *home = Some(~new_home);
+                *home = Some(new_home);
             }
             SchedTask => {
                 rtabort!("type error: used SchedTask as GreenTask");
@@ -209,7 +216,7 @@ impl Task {
         match self.task_type {
             GreenTask(ref mut home) => {
                 let out = home.take_unwrap();
-                return *out;
+                return out;
             }
             SchedTask => {
                 rtabort!("type error: used SchedTask as GreenTask");
@@ -226,15 +233,8 @@ impl Task {
 
             // Run the task main function, then do some cleanup.
             do f.finally {
-
-                // Destroy task-local storage. This may run user dtors.
-                match self.storage {
-                    LocalStorage(ptr, Some(ref dtor)) => {
-                        (*dtor)(ptr)
-                    }
-                    _ => ()
-                }
-
+                // First, destroy task-local storage. This may run user dtors.
+                //
                 // FIXME #8302: Dear diary. I'm so tired and confused.
                 // There's some interaction in rustc between the box
                 // annihilator and the TLS dtor by which TLS is
@@ -246,12 +246,21 @@ impl Task {
                 // TLS would be reinitialized but never destroyed,
                 // but somehow this works. I have no idea what's going
                 // on but this seems to make things magically work. FML.
-                self.storage = LocalStorage(ptr::null(), None);
+                //
+                // (added after initial comment) A possible interaction here is
+                // that the destructors for the objects in TLS themselves invoke
+                // TLS, or possibly some destructors for those objects being
+                // annihilated invoke TLS. Sadly these two operations seemed to
+                // be intertwined, and miraculously work for now...
+                self.storage.take();
 
                 // Destroy remaining boxes. Also may run user dtors.
                 unsafe { cleanup::annihilate(); }
             }
         }
+
+        // Cleanup the dynamic borrowck debugging info
+        borrowck::clear_task_borrow_list();
 
         // NB. We pass the taskgroup into death so that it can be dropped while
         // the unkillable counter is set. This is necessary for when the
@@ -265,8 +274,8 @@ impl Task {
 
     pub fn is_home_no_tls(&self, sched: &~Scheduler) -> bool {
         match self.task_type {
-            GreenTask(Some(~AnySched)) => { false }
-            GreenTask(Some(~Sched(SchedHandle { sched_id: ref id, _}))) => {
+            GreenTask(Some(AnySched)) => { false }
+            GreenTask(Some(Sched(SchedHandle { sched_id: ref id, _}))) => {
                 *id == sched.sched_id()
             }
             GreenTask(None) => {
@@ -281,8 +290,8 @@ impl Task {
 
     pub fn homed(&self) -> bool {
         match self.task_type {
-            GreenTask(Some(~AnySched)) => { false }
-            GreenTask(Some(~Sched(SchedHandle { _ }))) => { true }
+            GreenTask(Some(AnySched)) => { false }
+            GreenTask(Some(Sched(SchedHandle { _ }))) => { true }
             GreenTask(None) => {
                 rtabort!("task without home");
             }
@@ -295,15 +304,15 @@ impl Task {
     // Grab both the scheduler and the task from TLS and check if the
     // task is executing on an appropriate scheduler.
     pub fn on_appropriate_sched() -> bool {
-        do Local::borrow::<Task,bool> |task| {
+        do Local::borrow |task: &mut Task| {
             let sched_id = task.sched.get_ref().sched_id();
             let sched_run_anything = task.sched.get_ref().run_anything;
             match task.task_type {
-                GreenTask(Some(~AnySched)) => {
+                GreenTask(Some(AnySched)) => {
                     rtdebug!("anysched task in sched check ****");
                     sched_run_anything
                 }
-                GreenTask(Some(~Sched(SchedHandle { sched_id: ref id, _ }))) => {
+                GreenTask(Some(Sched(SchedHandle { sched_id: ref id, _ }))) => {
                     rtdebug!("homed task in sched check ****");
                     *id == sched_id
                 }
@@ -319,7 +328,7 @@ impl Task {
 }
 
 impl Drop for Task {
-    fn drop(&self) {
+    fn drop(&mut self) {
         rtdebug!("called drop for a task: %u", borrow::to_uint(self));
         rtassert!(self.destroyed)
     }
@@ -359,8 +368,8 @@ impl Coroutine {
             unsafe {
 
                 // Again - might work while safe, or it might not.
-                do Local::borrow::<Scheduler,()> |sched| {
-                    (sched).run_cleanup_job();
+                do Local::borrow |sched: &mut Scheduler| {
+                    sched.run_cleanup_job();
                 }
 
                 // To call the run method on a task we need a direct
@@ -368,7 +377,7 @@ impl Coroutine {
                 // simply unsafe_borrow it to get this reference. We
                 // need to still have the task in TLS though, so we
                 // need to unsafe_borrow.
-                let task = Local::unsafe_borrow::<Task>();
+                let task: *mut Task = Local::unsafe_borrow();
 
                 do (*task).run {
                     // N.B. Removing `start` from the start wrapper
@@ -387,7 +396,7 @@ impl Coroutine {
             }
 
             // We remove the sched from the Task in TLS right now.
-            let sched = Local::take::<Scheduler>();
+            let sched: ~Scheduler = Local::take();
             // ... allowing us to give it away when performing a
             // scheduling operation.
             sched.terminate_current_task()
@@ -436,11 +445,15 @@ impl Unwinder {
 
         extern {
             #[rust_stack]
-            fn rust_try(f: *u8, code: *c_void, data: *c_void) -> uintptr_t;
+            fn rust_try(f: extern "C" fn(*c_void, *c_void),
+                        code: *c_void,
+                        data: *c_void) -> uintptr_t;
         }
     }
 
     pub fn begin_unwind(&mut self) -> ! {
+        #[fixed_stack_segment]; #[inline(never)];
+
         self.unwinding = true;
         unsafe {
             rust_begin_unwind(UNWIND_TOKEN);
@@ -470,10 +483,10 @@ mod test {
     fn tls() {
         use local_data;
         do run_in_newsched_task() {
-            static key: local_data::Key<@~str> = &local_data::Key;
+            local_data_key!(key: @~str)
             local_data::set(key, @~"data");
             assert!(*local_data::get(key, |k| k.map_move(|k| *k)).unwrap() == ~"data");
-            static key2: local_data::Key<@~str> = &local_data::Key;
+            local_data_key!(key2: @~str)
             local_data::set(key2, @~"data");
             assert!(*local_data::get(key2, |k| k.map_move(|k| *k)).unwrap() == ~"data");
         }
@@ -592,4 +605,3 @@ mod test {
         }
     }
 }
-

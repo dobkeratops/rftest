@@ -22,13 +22,13 @@
 #[allow(missing_doc)];
 
 use container::Container;
-use iterator::Iterator;
+use iter::Iterator;
 use option::{Some, None};
 use rt::io::Writer;
 use str::OwnedStr;
 use to_bytes::IterBytes;
-use uint;
 use vec::ImmutableVector;
+use num::ToStrRadix;
 
 // Alias `SipState` to `State`.
 pub use State = hash::SipState;
@@ -59,14 +59,7 @@ pub trait Hash {
      * IterBytes trait, that feeds SipHash.
      */
     fn hash_keyed(&self, k0: u64, k1: u64) -> u64;
-}
 
-// When we have default methods, won't need this.
-pub trait HashUtil {
-    fn hash(&self) -> u64;
-}
-
-impl<A:Hash> HashUtil for A {
     #[inline]
     fn hash(&self) -> u64 { self.hash_keyed(0,0) }
 }
@@ -386,7 +379,7 @@ impl Streaming for SipState {
         let r = self.result_bytes();
         let mut s = ~"";
         for b in r.iter() {
-            s.push_str(uint::to_str_radix(*b as uint, 16u));
+            s.push_str((*b as uint).to_str_radix(16u));
         }
         s
     }
@@ -407,7 +400,13 @@ mod tests {
     use super::*;
     use prelude::*;
 
-    use uint;
+    // Hash just the bytes of the slice, without length prefix
+    struct Bytes<'self>(&'self [u8]);
+    impl<'self> IterBytes for Bytes<'self> {
+        fn iter_bytes(&self, _lsb0: bool, f: &fn(&[u8]) -> bool) -> bool {
+            f(**self)
+        }
+    }
 
     #[test]
     fn test_siphash() {
@@ -488,7 +487,7 @@ mod tests {
         fn to_hex_str(r: &[u8, ..8]) -> ~str {
             let mut s = ~"";
             for b in r.iter() {
-                s.push_str(uint::to_str_radix(*b as uint, 16u));
+                s.push_str((*b as uint).to_str_radix(16u));
             }
             s
         }
@@ -496,7 +495,7 @@ mod tests {
         while t < 64 {
             debug!("siphash test %?", t);
             let vec = u8to64_le!(vecs[t], 0);
-            let out = buf.hash_keyed(k0, k1);
+            let out = Bytes(buf.as_slice()).hash_keyed(k0, k1);
             debug!("got %?, expected %?", out, vec);
             assert_eq!(vec, out);
 
@@ -586,5 +585,19 @@ mod tests {
     #[test]
     fn test_float_hashes_of_zero() {
         assert_eq!(0.0.hash(), (-0.0).hash());
+    }
+
+    #[test]
+    fn test_hash_no_concat_alias() {
+        let s = ("aa", "bb");
+        let t = ("aabb", "");
+        let u = ("a", "abb");
+
+        let v = (&[1u8], &[0u8, 0], &[0u8]);
+        let w = (&[1u8, 0, 0, 0], &[], &[]);
+
+        assert!(v != w);
+        assert!(s.hash() != t.hash() && s.hash() != u.hash());
+        assert!(v.hash() != w.hash());
     }
 }

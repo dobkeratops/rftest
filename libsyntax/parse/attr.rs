@@ -9,8 +9,7 @@
 // except according to those terms.
 
 use ast;
-use codemap::{spanned, mk_sp};
-use codemap::BytePos;
+use codemap::{spanned, Spanned, mk_sp};
 use parse::common::*; //resolve bug?
 use parse::token;
 use parse::parser::Parser;
@@ -96,7 +95,7 @@ impl parser_attr for Parser {
         } else {
             ast::AttrOuter
         };
-        return spanned {
+        return Spanned {
             span: span,
             node: ast::Attribute_ {
                 style: style,

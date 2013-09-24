@@ -17,8 +17,8 @@
 //! Only valid to call on linux. Mac and Windows use syscalls to
 //! discover the command line arguments.
 //!
-//! XXX: Would be nice for this to not exist.
-//! XXX: This has a lot of C glue for lack of globals.
+//! FIXME #7756: Would be nice for this to not exist.
+//! FIXME #7756: This has a lot of C glue for lack of globals.
 
 use option::Option;
 
@@ -55,10 +55,11 @@ pub fn clone() -> Option<~[~str]> {
 mod imp {
     use libc;
     use option::{Option, Some, None};
-    use iterator::{Iterator, range};
+    use iter::Iterator;
     use str;
     use unstable::finally::Finally;
     use util;
+    use vec;
 
     pub unsafe fn init(argc: int, argv: **u8) {
         let args = load_argc_and_argv(argc, argv);
@@ -111,18 +112,14 @@ mod imp {
 
     // Copied from `os`.
     unsafe fn load_argc_and_argv(argc: int, argv: **u8) -> ~[~str] {
-        let mut args = ~[];
-        for i in range(0u, argc as uint) {
-            args.push(str::raw::from_c_str(*(argv as **libc::c_char).offset(i as int)));
+        do vec::from_fn(argc as uint) |i| {
+            str::raw::from_c_str(*(argv as **libc::c_char).offset(i as int))
         }
-        args
     }
 
-    extern {
-        fn rust_take_global_args_lock();
-        fn rust_drop_global_args_lock();
-        fn rust_get_global_args_ptr() -> *mut Option<~~[~str]>;
-    }
+    externfn!(fn rust_take_global_args_lock())
+    externfn!(fn rust_drop_global_args_lock())
+    externfn!(fn rust_get_global_args_ptr() -> *mut Option<~~[~str]>)
 
     #[cfg(test)]
     mod tests {

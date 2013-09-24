@@ -16,7 +16,7 @@ use middle::ty::{br_fresh, ctxt, field};
 use middle::ty::{mt, t, param_ty};
 use middle::ty::{re_bound, re_free, re_scope, re_infer, re_static, Region,
                  re_empty};
-use middle::ty::{ty_bool, ty_bot, ty_box, ty_struct, ty_enum};
+use middle::ty::{ty_bool, ty_char, ty_bot, ty_box, ty_struct, ty_enum};
 use middle::ty::{ty_err, ty_estr, ty_evec, ty_float, ty_bare_fn, ty_closure};
 use middle::ty::{ty_nil, ty_opaque_box, ty_opaque_closure_ptr, ty_param};
 use middle::ty::{ty_ptr, ty_rptr, ty_self, ty_tup, ty_type, ty_uniq};
@@ -26,7 +26,7 @@ use middle::ty;
 use middle::typeck;
 use syntax::abi::AbiSet;
 use syntax::ast_map;
-use syntax::codemap::span;
+use syntax::codemap::Span;
 use syntax::parse::token;
 use syntax::print::pprust;
 use syntax::{ast, ast_util};
@@ -69,7 +69,7 @@ pub fn explain_region(cx: ctxt, region: ty::Region) -> ~str {
 
 
 pub fn explain_region_and_span(cx: ctxt, region: ty::Region)
-                            -> (~str, Option<span>) {
+                            -> (~str, Option<Span>) {
     return match region {
       re_scope(node_id) => {
         match cx.items.find(&node_id) {
@@ -81,11 +81,11 @@ pub fn explain_region_and_span(cx: ctxt, region: ty::Region)
           }
           Some(&ast_map::node_expr(expr)) => {
             match expr.node {
-              ast::expr_call(*) => explain_span(cx, "call", expr.span),
-              ast::expr_method_call(*) => {
+              ast::ExprCall(*) => explain_span(cx, "call", expr.span),
+              ast::ExprMethodCall(*) => {
                 explain_span(cx, "method call", expr.span)
               },
-              ast::expr_match(*) => explain_span(cx, "match", expr.span),
+              ast::ExprMatch(*) => explain_span(cx, "match", expr.span),
               _ => explain_span(cx, "expression", expr.span)
             }
           }
@@ -136,8 +136,8 @@ pub fn explain_region_and_span(cx: ctxt, region: ty::Region)
       }
     };
 
-    fn explain_span(cx: ctxt, heading: &str, span: span)
-        -> (~str, Option<span>)
+    fn explain_span(cx: ctxt, heading: &str, span: Span)
+        -> (~str, Option<Span>)
     {
         let lo = cx.sess.codemap.lookup_char_pos_adj(span.lo);
         (fmt!("the %s at %u:%u", heading,
@@ -173,18 +173,18 @@ pub fn re_scope_id_to_str(cx: ctxt, node_id: ast::NodeId) -> ~str {
       }
       Some(&ast_map::node_expr(expr)) => {
         match expr.node {
-          ast::expr_call(*) => {
+          ast::ExprCall(*) => {
             fmt!("<call at %s>",
                  cx.sess.codemap.span_to_str(expr.span))
           }
-          ast::expr_match(*) => {
+          ast::ExprMatch(*) => {
             fmt!("<match at %s>",
                  cx.sess.codemap.span_to_str(expr.span))
           }
-          ast::expr_assign_op(*) |
-          ast::expr_unary(*) |
-          ast::expr_binary(*) |
-          ast::expr_index(*) => {
+          ast::ExprAssignOp(*) |
+          ast::ExprUnary(*) |
+          ast::ExprBinary(*) |
+          ast::ExprIndex(*) => {
             fmt!("<method at %s>",
                  cx.sess.codemap.span_to_str(expr.span))
           }
@@ -235,11 +235,10 @@ pub fn region_to_str(cx: ctxt, prefix: &str, space: bool, region: Region) -> ~st
     }
 }
 
-fn mutability_to_str(m: ast::mutability) -> ~str {
+pub fn mutability_to_str(m: ast::Mutability) -> ~str {
     match m {
-        ast::m_mutbl => ~"mut ",
-        ast::m_imm => ~"",
-        ast::m_const => ~"const "
+        ast::MutMutable => ~"mut ",
+        ast::MutImmutable => ~"",
     }
 }
 
@@ -306,7 +305,7 @@ pub fn ty_to_str(cx: ctxt, typ: t) -> ~str {
     fn bare_fn_to_str(cx: ctxt,
                       purity: ast::purity,
                       abis: AbiSet,
-                      ident: Option<ast::ident>,
+                      ident: Option<ast::Ident>,
                       sig: &ty::FnSig)
                       -> ~str {
         let mut s = ~"extern ";
@@ -413,8 +412,8 @@ pub fn ty_to_str(cx: ctxt, typ: t) -> ~str {
       ty_nil => ~"()",
       ty_bot => ~"!",
       ty_bool => ~"bool",
+      ty_char => ~"char",
       ty_int(ast::ty_i) => ~"int",
-      ty_int(ast::ty_char) => ~"char",
       ty_int(t) => ast_util::int_ty_to_str(t),
       ty_uint(ast::ty_u) => ~"uint",
       ty_uint(t) => ast_util::uint_ty_to_str(t),
@@ -614,7 +613,7 @@ impl Repr for ty::TraitRef {
     }
 }
 
-impl Repr for ast::expr {
+impl Repr for ast::Expr {
     fn repr(&self, tcx: ctxt) -> ~str {
         fmt!("expr(%d: %s)",
              self.id,
@@ -622,7 +621,7 @@ impl Repr for ast::expr {
     }
 }
 
-impl Repr for ast::pat {
+impl Repr for ast::Pat {
     fn repr(&self, tcx: ctxt) -> ~str {
         fmt!("pat(%d: %s)",
              self.id,
@@ -642,7 +641,7 @@ impl Repr for ty::Region {
     }
 }
 
-impl Repr for ast::def_id {
+impl Repr for ast::DefId {
     fn repr(&self, tcx: ctxt) -> ~str {
         // Unfortunately, there seems to be no way to attempt to print
         // a path for a def-id, so I'll just make a best effort for now
@@ -694,7 +693,7 @@ impl Repr for ty::Method {
     }
 }
 
-impl Repr for ast::ident {
+impl Repr for ast::Ident {
     fn repr(&self, _tcx: ctxt) -> ~str {
         token::ident_to_str(self).to_owned()
     }
@@ -747,8 +746,8 @@ impl Repr for typeck::method_origin {
             &typeck::method_param(ref p) => {
                 p.repr(tcx)
             }
-            &typeck::method_trait(def_id, n) => {
-                fmt!("method_trait(%s, %?)", def_id.repr(tcx), n)
+            &typeck::method_object(ref p) => {
+                p.repr(tcx)
             }
         }
     }
@@ -763,6 +762,16 @@ impl Repr for typeck::method_param {
              self.bound_num)
     }
 }
+
+impl Repr for typeck::method_object {
+    fn repr(&self, tcx: ctxt) -> ~str {
+        fmt!("method_object(%s,%?,%?)",
+             self.trait_id.repr(tcx),
+             self.method_num,
+             self.real_index)
+    }
+}
+
 
 impl Repr for ty::RegionVid {
     fn repr(&self, _tcx: ctxt) -> ~str {
@@ -790,7 +799,8 @@ impl Repr for ast_map::path_elt {
     fn repr(&self, tcx: ctxt) -> ~str {
         match *self {
             ast_map::path_mod(id) => id.repr(tcx),
-            ast_map::path_name(id) => id.repr(tcx)
+            ast_map::path_name(id) => id.repr(tcx),
+            ast_map::path_pretty_name(id, _) => id.repr(tcx),
         }
     }
 }
@@ -818,7 +828,7 @@ impl Repr for ty::BuiltinBounds {
     }
 }
 
-impl Repr for span {
+impl Repr for Span {
     fn repr(&self, tcx: ctxt) -> ~str {
         tcx.sess.codemap.span_to_str(*self)
     }
@@ -860,5 +870,17 @@ impl UserString for ty::TraitRef {
 impl UserString for ty::t {
     fn user_string(&self, tcx: ctxt) -> ~str {
         ty_to_str(tcx, *self)
+    }
+}
+
+impl Repr for AbiSet {
+    fn repr(&self, _tcx: ctxt) -> ~str {
+        self.to_str()
+    }
+}
+
+impl UserString for AbiSet {
+    fn user_string(&self, _tcx: ctxt) -> ~str {
+        self.to_str()
     }
 }

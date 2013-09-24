@@ -8,19 +8,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use std::c_str::ToCStr;
-
-use back::link;
-use lib;
 use lib::llvm::*;
 use middle::lang_items::{FailFnLangItem, FailBoundsCheckFnLangItem};
-use middle::lang_items::LogTypeFnLangItem;
 use middle::trans::base::*;
 use middle::trans::build::*;
 use middle::trans::callee;
 use middle::trans::common::*;
 use middle::trans::expr;
-use middle::trans::type_of::*;
 use middle::ty;
 use util::common::indenter;
 use util::ppaux;
@@ -28,10 +22,9 @@ use util::ppaux;
 use middle::trans::type_::Type;
 
 use syntax::ast;
-use syntax::ast::ident;
-use syntax::ast_map::path_mod;
+use syntax::ast::Name;
 use syntax::ast_util;
-use syntax::codemap::span;
+use syntax::codemap::Span;
 
 pub fn trans_block(bcx: @mut Block, b: &ast::Block, dest: expr::Dest) -> @mut Block {
     let _icx = push_ctxt("trans_block");
@@ -51,9 +44,9 @@ pub fn trans_block(bcx: @mut Block, b: &ast::Block, dest: expr::Dest) -> @mut Bl
 }
 
 pub fn trans_if(bcx: @mut Block,
-            cond: @ast::expr,
+            cond: @ast::Expr,
             thn: &ast::Block,
-            els: Option<@ast::expr>,
+            els: Option<@ast::Expr>,
             dest: expr::Dest)
          -> @mut Block {
     debug!("trans_if(bcx=%s, cond=%s, thn=%?, dest=%s)",
@@ -122,14 +115,14 @@ pub fn trans_if(bcx: @mut Block,
     return next_bcx;
 
     // trans `else [ if { .. } ... | { .. } ]`
-    fn trans_if_else(else_bcx_in: @mut Block, elexpr: @ast::expr,
+    fn trans_if_else(else_bcx_in: @mut Block, elexpr: @ast::Expr,
                      dest: expr::Dest) -> @mut Block {
         let else_bcx_out = match elexpr.node {
-            ast::expr_if(_, _, _) => {
+            ast::ExprIf(_, _, _) => {
                 let elseif_blk = ast_util::block_from_expr(elexpr);
                 trans_block(else_bcx_in, &elseif_blk, dest)
             }
-            ast::expr_block(ref blk) => {
+            ast::ExprBlock(ref blk) => {
                 trans_block(else_bcx_in, blk, dest)
             }
             // would be nice to have a constraint on ifs
@@ -154,7 +147,7 @@ pub fn join_blocks(parent_bcx: @mut Block, in_cxs: &[@mut Block]) -> @mut Block 
     return out;
 }
 
-pub fn trans_while(bcx: @mut Block, cond: @ast::expr, body: &ast::Block) -> @mut Block {
+pub fn trans_while(bcx: @mut Block, cond: @ast::Expr, body: &ast::Block) -> @mut Block {
     let _icx = push_ctxt("trans_while");
     let next_bcx = sub_block(bcx, "while next");
 
@@ -195,7 +188,7 @@ pub fn trans_while(bcx: @mut Block, cond: @ast::expr, body: &ast::Block) -> @mut
 
 pub fn trans_loop(bcx:@mut Block,
                   body: &ast::Block,
-                  opt_label: Option<ident>)
+                  opt_label: Option<Name>)
                -> @mut Block {
     let _icx = push_ctxt("trans_loop");
     let next_bcx = sub_block(bcx, "next");
@@ -207,74 +200,8 @@ pub fn trans_loop(bcx:@mut Block,
     return next_bcx;
 }
 
-pub fn trans_log(log_ex: &ast::expr,
-                 lvl: @ast::expr,
-                 bcx: @mut Block,
-                 e: @ast::expr) -> @mut Block {
-    let _icx = push_ctxt("trans_log");
-    let ccx = bcx.ccx();
-    let mut bcx = bcx;
-    if ty::type_is_bot(expr_ty(bcx, lvl)) {
-       return expr::trans_into(bcx, lvl, expr::Ignore);
-    }
-
-    let (modpath, modname) = {
-        let path = &mut bcx.fcx.path;
-        let mut modpath = ~[path_mod(ccx.sess.ident_of(ccx.link_meta.name))];
-        for e in path.iter() {
-            match *e {
-                path_mod(_) => { modpath.push(*e) }
-                _ => {}
-            }
-        }
-        let modname = path_str(ccx.sess, modpath);
-        (modpath, modname)
-    };
-
-    let global = if ccx.module_data.contains_key(&modname) {
-        ccx.module_data.get_copy(&modname)
-    } else {
-        let s = link::mangle_internal_name_by_path_and_seq(
-            ccx, modpath, "loglevel");
-        let global;
-        unsafe {
-            global = do s.to_c_str().with_ref |buf| {
-                llvm::LLVMAddGlobal(ccx.llmod, Type::i32().to_ref(), buf)
-            };
-            llvm::LLVMSetGlobalConstant(global, False);
-            llvm::LLVMSetInitializer(global, C_null(Type::i32()));
-            lib::llvm::SetLinkage(global, lib::llvm::InternalLinkage);
-        }
-        ccx.module_data.insert(modname, global);
-        global
-    };
-    let current_level = Load(bcx, global);
-    let level = unpack_result!(bcx, {
-        do with_scope_result(bcx, lvl.info(), "level") |bcx| {
-            expr::trans_to_datum(bcx, lvl).to_result()
-        }
-    });
-
-    let llenabled = ICmp(bcx, lib::llvm::IntUGE, current_level, level);
-    do with_cond(bcx, llenabled) |bcx| {
-        do with_scope(bcx, log_ex.info(), "log") |bcx| {
-            let mut bcx = bcx;
-
-            // Translate the value to be logged
-            let val_datum = unpack_datum!(bcx, expr::trans_to_datum(bcx, e));
-
-            // Call the polymorphic log function
-            let val = val_datum.to_ref_llval(bcx);
-            let did = langcall(bcx, Some(e.span), "", LogTypeFnLangItem);
-            let bcx = callee::trans_lang_call_with_type_params(
-                bcx, did, [level, val], [val_datum.ty], expr::Ignore);
-            bcx
-        }
-    }
-}
-
 pub fn trans_break_cont(bcx: @mut Block,
-                        opt_label: Option<ident>,
+                        opt_label: Option<Name>,
                         to_end: bool)
                      -> @mut Block {
     let _icx = push_ctxt("trans_break_cont");
@@ -327,40 +254,26 @@ pub fn trans_break_cont(bcx: @mut Block,
     return bcx;
 }
 
-pub fn trans_break(bcx: @mut Block, label_opt: Option<ident>) -> @mut Block {
+pub fn trans_break(bcx: @mut Block, label_opt: Option<Name>) -> @mut Block {
     return trans_break_cont(bcx, label_opt, true);
 }
 
-pub fn trans_cont(bcx: @mut Block, label_opt: Option<ident>) -> @mut Block {
+pub fn trans_cont(bcx: @mut Block, label_opt: Option<Name>) -> @mut Block {
     return trans_break_cont(bcx, label_opt, false);
 }
 
-pub fn trans_ret(bcx: @mut Block, e: Option<@ast::expr>) -> @mut Block {
+pub fn trans_ret(bcx: @mut Block, e: Option<@ast::Expr>) -> @mut Block {
     let _icx = push_ctxt("trans_ret");
     let mut bcx = bcx;
-    let dest = match bcx.fcx.loop_ret {
-      Some((flagptr, retptr)) => {
-        // This is a loop body return. Must set continue flag (our retptr)
-        // to false, return flag to true, and then store the value in the
-        // parent's retptr.
-        Store(bcx, C_bool(true), flagptr);
-        Store(bcx, C_bool(false), bcx.fcx.llretptr.unwrap());
-        expr::SaveIn(match e {
-          Some(x) => PointerCast(bcx, retptr,
-                                 type_of(bcx.ccx(), expr_ty(bcx, x)).ptr_to()),
-          None => retptr
-        })
-      }
-      None => match bcx.fcx.llretptr {
+    let dest = match bcx.fcx.llretptr {
         None => expr::Ignore,
         Some(retptr) => expr::SaveIn(retptr),
-      }
     };
     match e {
-      Some(x) => {
-        bcx = expr::trans_into(bcx, x, dest);
-      }
-      _ => ()
+        Some(x) => {
+            bcx = expr::trans_into(bcx, x, dest);
+        }
+        _ => ()
     }
     cleanup_and_leave(bcx, None, Some(bcx.fcx.get_llreturn()));
     Unreachable(bcx);
@@ -368,8 +281,8 @@ pub fn trans_ret(bcx: @mut Block, e: Option<@ast::expr>) -> @mut Block {
 }
 
 pub fn trans_fail_expr(bcx: @mut Block,
-                       sp_opt: Option<span>,
-                       fail_expr: Option<@ast::expr>)
+                       sp_opt: Option<Span>,
+                       fail_expr: Option<@ast::Expr>)
                     -> @mut Block {
     let _icx = push_ctxt("trans_fail_expr");
     let mut bcx = bcx;
@@ -396,7 +309,7 @@ pub fn trans_fail_expr(bcx: @mut Block,
 }
 
 pub fn trans_fail(bcx: @mut Block,
-                  sp_opt: Option<span>,
+                  sp_opt: Option<Span>,
                   fail_str: @str)
                -> @mut Block {
     let _icx = push_ctxt("trans_fail");
@@ -405,7 +318,7 @@ pub fn trans_fail(bcx: @mut Block,
 }
 
 fn trans_fail_value(bcx: @mut Block,
-                    sp_opt: Option<span>,
+                    sp_opt: Option<Span>,
                     V_fail_str: ValueRef)
                  -> @mut Block {
     let _icx = push_ctxt("trans_fail_value");
@@ -430,7 +343,7 @@ fn trans_fail_value(bcx: @mut Block,
     return bcx;
 }
 
-pub fn trans_fail_bounds_check(bcx: @mut Block, sp: span,
+pub fn trans_fail_bounds_check(bcx: @mut Block, sp: Span,
                                index: ValueRef, len: ValueRef) -> @mut Block {
     let _icx = push_ctxt("trans_fail_bounds_check");
     let (filename, line) = filename_and_line_num_from_span(bcx, sp);

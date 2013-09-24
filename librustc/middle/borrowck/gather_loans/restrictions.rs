@@ -15,16 +15,16 @@ use std::vec;
 use middle::borrowck::*;
 use mc = middle::mem_categorization;
 use middle::ty;
-use syntax::ast::{m_const, m_imm, m_mutbl};
-use syntax::codemap::span;
+use syntax::ast::{MutImmutable, MutMutable};
+use syntax::codemap::Span;
 
 pub enum RestrictionResult {
     Safe,
     SafeIf(@LoanPath, ~[Restriction])
 }
 
-pub fn compute_restrictions(bccx: @BorrowckCtxt,
-                            span: span,
+pub fn compute_restrictions(bccx: &BorrowckCtxt,
+                            span: Span,
                             cmt: mc::cmt,
                             restr: RestrictionSet) -> RestrictionResult {
     let ctxt = RestrictionsContext {
@@ -39,13 +39,13 @@ pub fn compute_restrictions(bccx: @BorrowckCtxt,
 ///////////////////////////////////////////////////////////////////////////
 // Private
 
-struct RestrictionsContext {
-    bccx: @BorrowckCtxt,
-    span: span,
+struct RestrictionsContext<'self> {
+    bccx: &'self BorrowckCtxt,
+    span: Span,
     cmt_original: mc::cmt
 }
 
-impl RestrictionsContext {
+impl<'self> RestrictionsContext<'self> {
     fn tcx(&self) -> ty::ctxt {
         self.bccx.tcx
     }
@@ -101,7 +101,7 @@ impl RestrictionsContext {
                 self.extend(result, cmt.mutbl, LpInterior(i), restrictions)
             }
 
-            mc::cat_deref(cmt_base, _, mc::uniq_ptr) => {
+            mc::cat_deref(cmt_base, _, pk @ mc::uniq_ptr) => {
                 // R-Deref-Send-Pointer
                 //
                 // When we borrow the interior of an owned pointer, we
@@ -110,26 +110,18 @@ impl RestrictionsContext {
                 let result = self.restrict(
                     cmt_base,
                     restrictions | RESTR_MUTATE | RESTR_CLAIM);
-                self.extend(result, cmt.mutbl, LpDeref, restrictions)
+                self.extend(result, cmt.mutbl, LpDeref(pk), restrictions)
             }
 
             mc::cat_copied_upvar(*) | // FIXME(#2152) allow mutation of upvars
             mc::cat_static_item(*) |
-            mc::cat_implicit_self(*) |
-            mc::cat_deref(_, _, mc::region_ptr(m_imm, _)) |
-            mc::cat_deref(_, _, mc::gc_ptr(m_imm)) => {
+            mc::cat_deref(_, _, mc::region_ptr(MutImmutable, _)) |
+            mc::cat_deref(_, _, mc::gc_ptr(MutImmutable)) => {
                 // R-Deref-Imm-Borrowed
                 Safe
             }
 
-            mc::cat_deref(_, _, mc::region_ptr(m_const, _)) |
-            mc::cat_deref(_, _, mc::gc_ptr(m_const)) => {
-                // R-Deref-Freeze-Borrowed
-                self.check_no_mutability_control(cmt, restrictions);
-                Safe
-            }
-
-            mc::cat_deref(cmt_base, _, mc::gc_ptr(m_mutbl)) => {
+            mc::cat_deref(cmt_base, _, pk @ mc::gc_ptr(MutMutable)) => {
                 // R-Deref-Managed-Borrowed
                 //
                 // Technically, no restrictions are *necessary* here.
@@ -170,14 +162,14 @@ impl RestrictionsContext {
                 match opt_loan_path(cmt_base) {
                     None => Safe,
                     Some(lp_base) => {
-                        let lp = @LpExtend(lp_base, cmt.mutbl, LpDeref);
+                        let lp = @LpExtend(lp_base, cmt.mutbl, LpDeref(pk));
                         SafeIf(lp, ~[Restriction {loan_path: lp,
                                                   set: restrictions}])
                     }
                 }
             }
 
-            mc::cat_deref(cmt_base, _, mc::region_ptr(m_mutbl, _)) => {
+            mc::cat_deref(cmt_base, _, pk @ mc::region_ptr(MutMutable, _)) => {
                 // Because an `&mut` pointer does not inherit its
                 // mutability, we can only prevent mutation or prevent
                 // freezing if it is not aliased. Therefore, in such
@@ -187,7 +179,7 @@ impl RestrictionsContext {
                     let result = self.restrict(
                         cmt_base,
                         RESTR_ALIAS | RESTR_MUTATE | RESTR_CLAIM);
-                    self.extend(result, cmt.mutbl, LpDeref, restrictions)
+                    self.extend(result, cmt.mutbl, LpDeref(pk), restrictions)
                 } else {
                     // R-Deref-Mut-Borrowed-2
                     Safe

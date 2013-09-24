@@ -50,6 +50,12 @@ impl<T> Cell<T> {
         this.value.take_unwrap()
     }
 
+    /// Yields the value if the cell is full, or `None` if it is empty.
+    pub fn take_opt(&self) -> Option<T> {
+        let this = unsafe { transmute_mut(self) };
+        this.value.take()
+    }
+
     /// Returns the value, failing if the cell is full.
     pub fn put_back(&self, value: T) {
         let this = unsafe { transmute_mut(self) };
@@ -93,15 +99,13 @@ fn test_basic() {
 
 #[test]
 #[should_fail]
-#[ignore(cfg(windows))]
 fn test_take_empty() {
-    let value_cell = Cell::new_empty::<~int>();
+    let value_cell: Cell<~int> = Cell::new_empty();
     value_cell.take();
 }
 
 #[test]
 #[should_fail]
-#[ignore(cfg(windows))]
 fn test_put_back_non_empty() {
     let value_cell = Cell::new(~10);
     value_cell.put_back(~20);

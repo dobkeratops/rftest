@@ -13,7 +13,7 @@ use middle::ty;
 
 use std::result;
 use syntax::ast;
-use syntax::codemap::span;
+use syntax::codemap::Span;
 use syntax::opt_vec::OptVec;
 use syntax::opt_vec;
 use syntax::parse::token::special_idents;
@@ -24,26 +24,26 @@ pub struct RegionError {
     replacement: ty::Region
 }
 
-pub trait region_scope {
-    fn anon_region(&self, span: span) -> Result<ty::Region, RegionError>;
-    fn self_region(&self, span: span) -> Result<ty::Region, RegionError>;
-    fn named_region(&self, span: span, id: ast::ident)
+pub trait RegionScope {
+    fn anon_region(&self, span: Span) -> Result<ty::Region, RegionError>;
+    fn self_region(&self, span: Span) -> Result<ty::Region, RegionError>;
+    fn named_region(&self, span: Span, id: ast::Ident)
                       -> Result<ty::Region, RegionError>;
 }
 
 #[deriving(Clone)]
-pub enum empty_rscope { empty_rscope }
-impl region_scope for empty_rscope {
-    fn anon_region(&self, _span: span) -> Result<ty::Region, RegionError> {
+pub struct EmptyRscope;
+impl RegionScope for EmptyRscope {
+    fn anon_region(&self, _span: Span) -> Result<ty::Region, RegionError> {
         result::Err(RegionError {
             msg: ~"only 'static is allowed here",
             replacement: ty::re_static
         })
     }
-    fn self_region(&self, _span: span) -> Result<ty::Region, RegionError> {
+    fn self_region(&self, _span: Span) -> Result<ty::Region, RegionError> {
         self.anon_region(_span)
     }
-    fn named_region(&self, _span: span, _id: ast::ident)
+    fn named_region(&self, _span: Span, _id: ast::Ident)
         -> Result<ty::Region, RegionError>
     {
         self.anon_region(_span)
@@ -51,14 +51,14 @@ impl region_scope for empty_rscope {
 }
 
 #[deriving(Clone)]
-pub struct RegionParamNames(OptVec<ast::ident>);
+pub struct RegionParamNames(OptVec<ast::Ident>);
 
 impl RegionParamNames {
     fn has_self(&self) -> bool {
         self.has_ident(special_idents::self_)
     }
 
-    fn has_ident(&self, ident: ast::ident) -> bool {
+    fn has_ident(&self, ident: ast::Ident) -> bool {
         for region_param_name in self.iter() {
             if *region_param_name == ident {
                 return true;
@@ -175,14 +175,14 @@ impl MethodRscope {
     }
 }
 
-impl region_scope for MethodRscope {
-    fn anon_region(&self, _span: span) -> Result<ty::Region, RegionError> {
+impl RegionScope for MethodRscope {
+    fn anon_region(&self, _span: Span) -> Result<ty::Region, RegionError> {
         result::Err(RegionError {
             msg: ~"anonymous lifetimes are not permitted here",
             replacement: ty::re_bound(ty::br_self)
         })
     }
-    fn self_region(&self, _span: span) -> Result<ty::Region, RegionError> {
+    fn self_region(&self, _span: Span) -> Result<ty::Region, RegionError> {
         assert!(self.variance.is_some());
         match self.variance {
             None => {}  // must be borrowed self, so this is OK
@@ -197,12 +197,12 @@ impl region_scope for MethodRscope {
         }
         result::Ok(ty::re_bound(ty::br_self))
     }
-    fn named_region(&self, span: span, id: ast::ident)
+    fn named_region(&self, span: Span, id: ast::Ident)
                       -> Result<ty::Region, RegionError> {
         if !self.region_param_names.has_ident(id) {
             return RegionParamNames::undeclared_name(None);
         }
-        do empty_rscope.named_region(span, id).chain_err |_e| {
+        do EmptyRscope.named_region(span, id).or_else |_e| {
             result::Err(RegionError {
                 msg: ~"lifetime is not in scope",
                 replacement: ty::re_bound(ty::br_self)
@@ -212,9 +212,9 @@ impl region_scope for MethodRscope {
 }
 
 #[deriving(Clone)]
-pub struct type_rscope(Option<RegionParameterization>);
+pub struct TypeRscope(Option<RegionParameterization>);
 
-impl type_rscope {
+impl TypeRscope {
     fn replacement(&self) -> ty::Region {
         if self.is_some() {
             ty::re_bound(ty::br_self)
@@ -223,14 +223,14 @@ impl type_rscope {
         }
     }
 }
-impl region_scope for type_rscope {
-    fn anon_region(&self, _span: span) -> Result<ty::Region, RegionError> {
+impl RegionScope for TypeRscope {
+    fn anon_region(&self, _span: Span) -> Result<ty::Region, RegionError> {
         result::Err(RegionError {
             msg: ~"anonymous lifetimes are not permitted here",
             replacement: self.replacement()
         })
     }
-    fn self_region(&self, _span: span) -> Result<ty::Region, RegionError> {
+    fn self_region(&self, _span: Span) -> Result<ty::Region, RegionError> {
         match **self {
             None => {
                 // if the self region is used, region parameterization should
@@ -249,9 +249,9 @@ impl region_scope for type_rscope {
         }
         result::Ok(ty::re_bound(ty::br_self))
     }
-    fn named_region(&self, span: span, id: ast::ident)
+    fn named_region(&self, span: Span, id: ast::Ident)
                       -> Result<ty::Region, RegionError> {
-        do empty_rscope.named_region(span, id).chain_err |_e| {
+        do EmptyRscope.named_region(span, id).or_else |_e| {
             result::Err(RegionError {
                 msg: ~"only 'self is allowed as part of a type declaration",
                 replacement: self.replacement()
@@ -268,15 +268,15 @@ pub fn bound_self_region(rp: Option<ty::region_variance>)
     }
 }
 
-pub struct binding_rscope {
-    base: @region_scope,
+pub struct BindingRscope {
+    base: @RegionScope,
     anon_bindings: @mut uint,
     region_param_names: RegionParamNames,
 }
 
-impl Clone for binding_rscope {
-    fn clone(&self) -> binding_rscope {
-        binding_rscope {
+impl Clone for BindingRscope {
+    fn clone(&self) -> BindingRscope {
+        BindingRscope {
             base: self.base,
             anon_bindings: self.anon_bindings,
             region_param_names: self.region_param_names.clone(),
@@ -284,33 +284,33 @@ impl Clone for binding_rscope {
     }
 }
 
-pub fn in_binding_rscope<RS:region_scope + Clone + 'static>(
+pub fn in_binding_rscope<RS:RegionScope + Clone + 'static>(
         this: &RS,
         region_param_names: RegionParamNames)
-     -> binding_rscope {
+     -> BindingRscope {
     let base = @(*this).clone();
-    let base = base as @region_scope;
-    binding_rscope {
+    let base = base as @RegionScope;
+    BindingRscope {
         base: base,
         anon_bindings: @mut 0,
         region_param_names: region_param_names,
     }
 }
 
-impl region_scope for binding_rscope {
-    fn anon_region(&self, _span: span) -> Result<ty::Region, RegionError> {
+impl RegionScope for BindingRscope {
+    fn anon_region(&self, _span: Span) -> Result<ty::Region, RegionError> {
         let idx = *self.anon_bindings;
         *self.anon_bindings += 1;
         result::Ok(ty::re_bound(ty::br_anon(idx)))
     }
-    fn self_region(&self, span: span) -> Result<ty::Region, RegionError> {
+    fn self_region(&self, span: Span) -> Result<ty::Region, RegionError> {
         self.base.self_region(span)
     }
     fn named_region(&self,
-                    span: span,
-                    id: ast::ident) -> Result<ty::Region, RegionError>
+                    span: Span,
+                    id: ast::Ident) -> Result<ty::Region, RegionError>
     {
-        do self.base.named_region(span, id).chain_err |_e| {
+        do self.base.named_region(span, id).or_else |_e| {
             let result = ty::re_bound(ty::br_named(id));
             if self.region_param_names.has_ident(id) {
                 result::Ok(result)

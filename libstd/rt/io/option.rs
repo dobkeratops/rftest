@@ -17,7 +17,7 @@
 //! # XXX Seek and Close
 
 use option::*;
-use super::{Reader, Writer, Listener};
+use super::{Reader, Writer, Listener, Acceptor};
 use super::{standard_error, PreviousIoError, io_error, read_error, IoError};
 
 fn prev_io_error() -> IoError {
@@ -62,10 +62,22 @@ impl<R: Reader> Reader for Option<R> {
     }
 }
 
-impl<L: Listener<S>, S> Listener<S> for Option<L> {
-    fn accept(&mut self) -> Option<S> {
+impl<T, A: Acceptor<T>, L: Listener<T, A>> Listener<T, A> for Option<L> {
+    fn listen(self) -> Option<A> {
+        match self {
+            Some(listener) => listener.listen(),
+            None => {
+                io_error::cond.raise(prev_io_error());
+                None
+            }
+        }
+    }
+}
+
+impl<T, A: Acceptor<T>> Acceptor<T> for Option<A> {
+    fn accept(&mut self) -> Option<T> {
         match *self {
-            Some(ref mut listener) => listener.accept(),
+            Some(ref mut acceptor) => acceptor.accept(),
             None => {
                 io_error::cond.raise(prev_io_error());
                 None
@@ -83,7 +95,7 @@ mod test {
 
     #[test]
     fn test_option_writer() {
-        do run_in_newsched_task {
+        do run_in_mt_newsched_task {
             let mut writer: Option<MemWriter> = Some(MemWriter::new());
             writer.write([0, 1, 2]);
             writer.flush();
@@ -93,7 +105,7 @@ mod test {
 
     #[test]
     fn test_option_writer_error() {
-        do run_in_newsched_task {
+        do run_in_mt_newsched_task {
             let mut writer: Option<MemWriter> = None;
 
             let mut called = false;
@@ -118,7 +130,7 @@ mod test {
 
     #[test]
     fn test_option_reader() {
-        do run_in_newsched_task {
+        do run_in_mt_newsched_task {
             let mut reader: Option<MemReader> = Some(MemReader::new(~[0, 1, 2, 3]));
             let mut buf = [0, 0];
             reader.read(buf);

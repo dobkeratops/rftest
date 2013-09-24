@@ -18,64 +18,58 @@
 </c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c41>They&nbsp;cannot&nbsp;be&nbsp;implemented&nbsp;by&nbsp;user&nbsp;code,&nbsp;but&nbsp;are&nbsp;instead&nbsp;implemented
 </c41><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c41>by&nbsp;the&nbsp;compiler&nbsp;automatically&nbsp;for&nbsp;the&nbsp;types&nbsp;to&nbsp;which&nbsp;they&nbsp;apply.
 </c41><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c41>The&nbsp;2&nbsp;kinds&nbsp;are
+</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c41>*/
 </c41><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c41>*&nbsp;Send&nbsp;-&nbsp;owned&nbsp;types&nbsp;and&nbsp;types&nbsp;containing&nbsp;owned&nbsp;types.&nbsp;&nbsp;These&nbsp;types
-</c41><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;may&nbsp;be&nbsp;transferred&nbsp;across&nbsp;task&nbsp;boundaries.
-</c41><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c41>*&nbsp;Freeze&nbsp;-&nbsp;types&nbsp;that&nbsp;are&nbsp;deeply&nbsp;immutable.
-</c41><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c41>*/
-</c41><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>missing_doc</c50><c4>)</c4><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n38980">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="send"</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c21>pub</c21><c32>&nbsp;trait&nbsp;Send&nbsp;</c32><c3>{</c3><c32>
-</c32><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c40>//&nbsp;empty.
-</c40><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n38981">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="freeze"</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c21>pub</c21><c32>&nbsp;trait&nbsp;Freeze&nbsp;</c32><c3>{</c3><c32>
-</c32><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c40>//&nbsp;empty.
-</c40><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n38982">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="sized"</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c21>pub</c21><c32>&nbsp;trait&nbsp;Sized&nbsp;</c32><c3>{</c3><c32>
-</c32><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c40>//&nbsp;Empty.
-</c40><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><div class="refblock"><br/><a id="32_15_refs"><a href="#32"><c40>libstd/kinds.rs:32:15-32:15&nbsp;-trait-&nbsp;definition:<br/></c40><pr>#[lang="send"]
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c42>///&nbsp;Types&nbsp;able&nbsp;to&nbsp;be&nbsp;transferred&nbsp;across&nbsp;task&nbsp;boundaries.
+</c42><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n72620">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="send"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c21>pub</c21><c32><a href="#24_15_refs">&nbsp;</a></c32><c32>trait</c32><c32><a href="#24_15_refs">&nbsp;Send&nbsp;</a></c32><c3>{</c3><c32><a href="#24_15_refs">
+</a></c32><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c32><a href="#24_15_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;empty.
+</c40><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c42>///&nbsp;Types&nbsp;that&nbsp;are&nbsp;either&nbsp;immutable&nbsp;or&nbsp;have&nbsp;inherited&nbsp;mutability.
+</c42><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n72621">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="freeze"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c21>pub</c21><c32><a href="#30_17_refs">&nbsp;</a></c32><c32>trait</c32><c32><a href="#30_17_refs">&nbsp;Freeze&nbsp;</a></c32><c3>{</c3><c32><a href="#30_17_refs">
+</a></c32><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c32><a href="#30_17_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;empty.
+</c40><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c42>///&nbsp;Types&nbsp;with&nbsp;a&nbsp;constant&nbsp;size&nbsp;known&nbsp;at&nbsp;compile-time.
+</c42><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n72622">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="sized"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c21>pub</c21><c32>&nbsp;trait&nbsp;Sized&nbsp;</c32><c3>{</c3><c32>
+</c32><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c40>//&nbsp;Empty.
+</c40><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="24_15_refs"><a href="#24"><c40>libstd/kinds.rs:24:15-24:15&nbsp;-trait-&nbsp;definition:<br/></c40><pr>#[lang="send"]
 <br/>pub&nbsp;trait&nbsp;Send&nbsp;{
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/task/mod.rs.html"><c40>libstd/task/mod.rs:<br/></c40></a><a href="../libstd/task/mod.rs.html#475"><c40>475:&nbsp;</c40>pub&nbsp;fn&nbsp;spawn_with&lt;A:Send&gt;(arg:&nbsp;A,&nbsp;f:&nbsp;~fn(v:&nbsp;A))&nbsp;{
-<br/></a><a href="../libstd/task/mod.rs.html#369"><c40>369:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;spawn_with&lt;A:Send&gt;(&amp;mut&nbsp;self,&nbsp;arg:&nbsp;A,&nbsp;f:&nbsp;~fn(v:&nbsp;A))&nbsp;{
-<br/></a><a href="../libstd/task/mod.rs.html#389"><c40>389:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(&amp;mut&nbsp;self,&nbsp;f:&nbsp;~fn()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,()&gt;&nbsp;{
-<br/></a><a href="../libstd/task/mod.rs.html#508"><c40>508:&nbsp;</c40>pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(f:&nbsp;~fn()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,()&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html"><c40>libstd/comm.rs:<br/></c40></a><a href="../libstd/comm.rs.html#126"><c40>126:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#78"><c40>78:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;ChanOne&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#112"><c40>112:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Peekable&lt;T&gt;&nbsp;&nbsp;for&nbsp;PortOne&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#100"><c40>100:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;PortOne&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/task/mod.rs.html"><c40>libstd/task/mod.rs:<br/></c40></a><a href="../libstd/task/mod.rs.html#474"><c40>474:&nbsp;</c40>pub&nbsp;fn&nbsp;spawn_with&lt;A:Send&gt;(arg:&nbsp;A,&nbsp;f:&nbsp;~fn(v:&nbsp;A))&nbsp;{
+<br/></a><a href="../libstd/task/mod.rs.html#388"><c40>388:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(&amp;mut&nbsp;self,&nbsp;f:&nbsp;~fn()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,()&gt;&nbsp;{
+<br/></a><a href="../libstd/task/mod.rs.html#368"><c40>368:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;spawn_with&lt;A:Send&gt;(&amp;mut&nbsp;self,&nbsp;arg:&nbsp;A,&nbsp;f:&nbsp;~fn(v:&nbsp;A))&nbsp;{
+<br/></a><a href="../libstd/task/mod.rs.html#507"><c40>507:&nbsp;</c40>pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(f:&nbsp;~fn()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,()&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html"><c40>libstd/comm.rs:<br/></c40></a><a href="../libstd/comm.rs.html#158"><c40>158:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SharedChan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#136"><c40>136:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericPort&lt;T&gt;&nbsp;for&nbsp;Port&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#207"><c40>207:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericPort&lt;T&gt;&nbsp;for&nbsp;SharedPort&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/comm.rs.html#64"><c40>64:&nbsp;</c40>pub&nbsp;fn&nbsp;stream&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(Port&lt;T&gt;,&nbsp;Chan&lt;T&gt;)&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#164"><c40>164:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#71"><c40>71:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#171"><c40>171:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#133"><c40>133:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#157"><c40>157:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Peekable&lt;T&gt;&nbsp;for&nbsp;Port&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#165"><c40>165:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#117"><c40>117:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#69"><c40>69:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;ChanOne&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#124"><c40>124:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#91"><c40>91:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;PortOne&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#103"><c40>103:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Peekable&lt;T&gt;&nbsp;&nbsp;for&nbsp;PortOne&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#200"><c40>200:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SharedPort&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#172"><c40>172:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/comm.rs.html#56"><c40>56:&nbsp;</c40>pub&nbsp;fn&nbsp;oneshot&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(PortOne&lt;T&gt;,&nbsp;ChanOne&lt;T&gt;)&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#119"><c40>119:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#178"><c40>178:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#145"><c40>145:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericPort&lt;T&gt;&nbsp;for&nbsp;Port&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html"><c40>libstd/unstable/sync.rs:<br/></c40></a><a href="../libstd/unstable/sync.rs.html#44"><c40>44:&nbsp;</c40>unsafe&nbsp;fn&nbsp;new_inner&lt;T:&nbsp;Send&gt;(data:&nbsp;T,&nbsp;refcount:&nbsp;uint)&nbsp;-&gt;&nbsp;*mut&nbsp;libc::c_void&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#358"><c40>358:&nbsp;</c40>impl&lt;T:Send&gt;&nbsp;Clone&nbsp;for&nbsp;Exclusive&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#51"><c40>51:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;UnsafeAtomicRcBox&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#365"><c40>365:&nbsp;</c40>impl&lt;T:Send&gt;&nbsp;Exclusive&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#212"><c40>212:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Clone&nbsp;for&nbsp;UnsafeAtomicRcBox&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#110"><c40>110:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#148"><c40>148:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Peekable&lt;T&gt;&nbsp;for&nbsp;Port&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm.rs.html#179"><c40>179:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/unstable/sync.rs.html"><c40>libstd/unstable/sync.rs:<br/></c40></a><a href="../libstd/unstable/sync.rs.html#52"><c40>52:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;UnsafeArc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/unstable/sync.rs.html#210"><c40>210:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Clone&nbsp;for&nbsp;UnsafeArc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/unstable/sync.rs.html#366"><c40>366:&nbsp;</c40>impl&lt;T:Send&gt;&nbsp;Exclusive&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/unstable/sync.rs.html#359"><c40>359:&nbsp;</c40>impl&lt;T:Send&gt;&nbsp;Clone&nbsp;for&nbsp;Exclusive&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/unstable/sync.rs.html#45"><c40>45:&nbsp;</c40>unsafe&nbsp;fn&nbsp;new_inner&lt;T:&nbsp;Send&gt;(data:&nbsp;T,&nbsp;refcount:&nbsp;uint)&nbsp;-&gt;&nbsp;*mut&nbsp;ArcData&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/rt/work_queue.rs.html"><c40>libstd/rt/work_queue.rs:<br/></c40></a><a href="../libstd/rt/work_queue.rs.html#24"><c40>24:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;WorkQueue&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/message_queue.rs.html"><c40>libstd/rt/message_queue.rs:<br/></c40></a><a href="../libstd/rt/message_queue.rs.html#27"><c40>27:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;MessageQueue&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html"><c40>libstd/rt/comm.rs:<br/></c40></a><a href="../libstd/rt/comm.rs.html#704"><c40>704:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericPort&lt;T&gt;&nbsp;for&nbsp;MegaPipe&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#476"><c40>476:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#461"><c40>461:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Chan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#692"><c40>692:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;MegaPipe&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#698"><c40>698:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;MegaPipe&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#612"><c40>(612)</c40></a><a href="../libstd/rt/comm.rs.html#606"><c40>(606)</c40></a><a href="../libstd/rt/comm.rs.html#600"><c40>(600)</c40></a><a href="../libstd/rt/comm.rs.html#589"><c40>(589)</c40></a><a href="../libstd/rt/comm.rs.html#714"><c40>(714)</c40></a><a href="../libstd/rt/comm.rs.html#645"><c40>(645)</c40></a><a href="../libstd/rt/comm.rs.html#454"><c40>(454)</c40></a><a href="../libstd/rt/comm.rs.html#470"><c40>(470)</c40></a><a href="../libstd/rt/comm.rs.html#61"><c40>(61)</c40></a><a href="../libstd/rt/comm.rs.html#687"><c40>(687)</c40></a><a href="../libstd/rt/comm.rs.html#482"><c40>(482)</c40></a><br/><br/><a id="37_17_refs"><a href="#37"><c40>libstd/kinds.rs:37:17-37:17&nbsp;-trait-&nbsp;definition:<br/></c40><pr>#[lang="freeze"]
+<br/></a><a href="../libstd/rt/message_queue.rs.html"><c40>libstd/rt/message_queue.rs:<br/></c40></a><a href="../libstd/rt/message_queue.rs.html#32"><c40>32:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;MessageQueue&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/message_queue.rs.html#87"><c40>87:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Clone&nbsp;for&nbsp;MessageQueue&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/comm.rs.html"><c40>libstd/rt/comm.rs:<br/></c40></a><a href="../libstd/rt/comm.rs.html#445"><c40>445:&nbsp;</c40>pub&nbsp;fn&nbsp;stream&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(Port&lt;T&gt;,&nbsp;Chan&lt;T&gt;)&nbsp;{
+<br/></a><a href="../libstd/rt/comm.rs.html#473"><c40>473:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/comm.rs.html#467"><c40>(467)</c40></a><a href="../libstd/rt/comm.rs.html#684"><c40>(684)</c40></a><a href="../libstd/rt/comm.rs.html#452"><c40>(452)</c40></a><a href="../libstd/rt/comm.rs.html#461"><c40>(461)</c40></a><a href="../libstd/rt/comm.rs.html#637"><c40>(637)</c40></a><a href="../libstd/rt/comm.rs.html#61"><c40>(61)</c40></a><a href="../libstd/rt/comm.rs.html#581"><c40>(581)</c40></a><a href="../libstd/rt/comm.rs.html#706"><c40>(706)</c40></a><a href="../libstd/rt/comm.rs.html#598"><c40>(598)</c40></a><a href="../libstd/rt/comm.rs.html#696"><c40>(696)</c40></a><a href="../libstd/rt/comm.rs.html#592"><c40>(592)</c40></a><a href="../libstd/rt/comm.rs.html#679"><c40>(679)</c40></a><a href="../libstd/rt/comm.rs.html#690"><c40>(690)</c40></a><a href="../libstd/rt/comm.rs.html#604"><c40>(604)</c40></a><br/><br/><a id="30_17_refs"><a href="#30"><c40>libstd/kinds.rs:30:17-30:17&nbsp;-trait-&nbsp;definition:<br/></c40><pr>#[lang="freeze"]
 <br/>pub&nbsp;trait&nbsp;Freeze&nbsp;{
 <br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/clone.rs.html"><c40>libstd/clone.rs:<br/></c40></a><a href="../libstd/clone.rs.html#135"><c40>135:&nbsp;</c40>impl&lt;T:&nbsp;Freeze&nbsp;+&nbsp;DeepClone&nbsp;+&nbsp;'static&gt;&nbsp;DeepClone&nbsp;for&nbsp;@T&nbsp;{
 <br/></a><a href="../libstd/clone.rs.html#143"><c40>143:&nbsp;</c40>impl&lt;T:&nbsp;Freeze&nbsp;+&nbsp;DeepClone&nbsp;+&nbsp;'static&gt;&nbsp;DeepClone&nbsp;for&nbsp;@mut&nbsp;T&nbsp;{

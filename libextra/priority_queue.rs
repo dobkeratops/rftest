@@ -16,7 +16,6 @@ use std::clone::Clone;
 use std::unstable::intrinsics::{move_val_init, init};
 use std::util::{replace, swap};
 use std::vec;
-use std::iterator::{FromIterator, Extendable};
 
 /// A priority queue implemented with a binary heap
 #[deriving(Clone)]
@@ -190,8 +189,8 @@ impl<'self, T> Iterator<&'self T> for PriorityQueueIterator<'self, T> {
     fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
 }
 
-impl<T: Ord, Iter: Iterator<T>> FromIterator<T, Iter> for PriorityQueue<T> {
-    fn from_iterator(iter: &mut Iter) -> PriorityQueue<T> {
+impl<T: Ord> FromIterator<T> for PriorityQueue<T> {
+    fn from_iterator<Iter: Iterator<T>>(iter: &mut Iter) -> PriorityQueue<T> {
         let mut q = PriorityQueue::new();
         q.extend(iter);
 
@@ -199,8 +198,8 @@ impl<T: Ord, Iter: Iterator<T>> FromIterator<T, Iter> for PriorityQueue<T> {
     }
 }
 
-impl<T: Ord, Iter: Iterator<T>> Extendable<T, Iter> for PriorityQueue<T> {
-    fn extend(&mut self, iter: &mut Iter) {
+impl<T: Ord> Extendable<T> for PriorityQueue<T> {
+    fn extend<Iter: Iterator<T>>(&mut self, iter: &mut Iter) {
         let (lower, _) = iter.size_hint();
 
         let len = self.capacity();
@@ -338,30 +337,36 @@ mod tests {
 
     #[test]
     #[should_fail]
-    #[ignore(cfg(windows))]
-    fn test_empty_pop() { let mut heap = PriorityQueue::new::<int>(); heap.pop(); }
+    fn test_empty_pop() {
+        let mut heap: PriorityQueue<int> = PriorityQueue::new();
+        heap.pop();
+    }
 
     #[test]
     fn test_empty_maybe_pop() {
-        let mut heap = PriorityQueue::new::<int>();
+        let mut heap: PriorityQueue<int> = PriorityQueue::new();
         assert!(heap.maybe_pop().is_none());
     }
 
     #[test]
     #[should_fail]
-    #[ignore(cfg(windows))]
-    fn test_empty_top() { let empty = PriorityQueue::new::<int>(); empty.top(); }
+    fn test_empty_top() {
+        let empty: PriorityQueue<int> = PriorityQueue::new();
+        empty.top();
+    }
 
     #[test]
     fn test_empty_maybe_top() {
-        let empty = PriorityQueue::new::<int>();
+        let empty: PriorityQueue<int> = PriorityQueue::new();
         assert!(empty.maybe_top().is_none());
     }
 
     #[test]
     #[should_fail]
-    #[ignore(cfg(windows))]
-    fn test_empty_replace() { let mut heap = PriorityQueue::new(); heap.replace(5); }
+    fn test_empty_replace() {
+        let mut heap: PriorityQueue<int> = PriorityQueue::new();
+        heap.replace(5);
+    }
 
     #[test]
     fn test_from_iter() {

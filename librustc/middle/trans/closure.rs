@@ -16,14 +16,13 @@ use middle::moves;
 use middle::trans::base::*;
 use middle::trans::build::*;
 use middle::trans::common::*;
-use middle::trans::datum::{Datum, INIT, ByRef, ZeroMem};
+use middle::trans::datum::{Datum, INIT};
+use middle::trans::debuginfo;
 use middle::trans::expr;
 use middle::trans::glue;
 use middle::trans::type_of::*;
 use middle::ty;
 use util::ppaux::ty_to_str;
-
-use middle::trans::type_::Type;
 
 use std::vec;
 use syntax::ast;
@@ -173,7 +172,7 @@ pub fn allocate_cbox(bcx: @mut Block, sigil: ast::Sigil, cdata_ty: ty::t)
     // Allocate and initialize the box:
     match sigil {
         ast::ManagedSigil => {
-            malloc_raw(bcx, cdata_ty, heap_managed)
+            tcx.sess.bug("trying to trans allocation of @fn")
         }
         ast::OwnedSigil => {
             malloc_raw(bcx, cdata_ty, heap_for_unique_closure(bcx, cdata_ty))
@@ -198,7 +197,8 @@ pub struct ClosureResult {
 // Otherwise, it is stack allocated and copies pointers to the upvars.
 pub fn store_environment(bcx: @mut Block,
                          bound_values: ~[EnvValue],
-                         sigil: ast::Sigil) -> ClosureResult {
+                         sigil: ast::Sigil)
+                         -> ClosureResult {
     let _icx = push_ctxt("closure::store_environment");
     let ccx = bcx.ccx();
     let tcx = ccx.tcx;
@@ -210,7 +210,7 @@ pub fn store_environment(bcx: @mut Block,
     // tuple.  This could be a ptr in uniq or a box or on stack,
     // whatever.
     let cbox_ty = tuplify_box_ty(tcx, cdata_ty);
-    let cboxptr_ty = ty::mk_ptr(tcx, ty::mt {ty:cbox_ty, mutbl:ast::m_imm});
+    let cboxptr_ty = ty::mk_ptr(tcx, ty::mt {ty:cbox_ty, mutbl:ast::MutImmutable});
     let llboxptr_ty = type_of(ccx, cboxptr_ty);
 
     // If there are no bound values, no point in allocating anything.
@@ -259,8 +259,7 @@ pub fn store_environment(bcx: @mut Block,
 // collects the upvars and packages them up for store_environment.
 pub fn build_closure(bcx0: @mut Block,
                      cap_vars: &[moves::CaptureVar],
-                     sigil: ast::Sigil,
-                     include_ret_handle: Option<ValueRef>) -> ClosureResult {
+                     sigil: ast::Sigil) -> ClosureResult {
     let _icx = push_ctxt("closure::build_closure");
 
     // If we need to, package up the iterator body to call
@@ -288,30 +287,6 @@ pub fn build_closure(bcx0: @mut Block,
         }
     }
 
-    // If this is a `for` loop body, add two special environment
-    // variables:
-    for flagptr in include_ret_handle.iter() {
-        // Flag indicating we have returned (a by-ref bool):
-        let flag_datum = Datum {val: *flagptr, ty: ty::mk_bool(),
-                                mode: ByRef(ZeroMem)};
-        env_vals.push(EnvValue {action: EnvRef,
-                                datum: flag_datum});
-
-        // Return value (we just pass a by-ref () and cast it later to
-        // the right thing):
-        let ret_true = match bcx.fcx.loop_ret {
-            Some((_, retptr)) => retptr,
-            None => match bcx.fcx.llretptr {
-                None => C_null(Type::nil().ptr_to()),
-                Some(retptr) => PointerCast(bcx, retptr, Type::nil().ptr_to()),
-            }
-        };
-        let ret_datum = Datum {val: ret_true, ty: ty::mk_nil(),
-                               mode: ByRef(ZeroMem)};
-        env_vals.push(EnvValue {action: EnvRef,
-                                datum: ret_datum});
-    }
-
     return store_environment(bcx, env_vals, sigil);
 }
 
@@ -321,12 +296,11 @@ pub fn build_closure(bcx0: @mut Block,
 pub fn load_environment(fcx: @mut FunctionContext,
                         cdata_ty: ty::t,
                         cap_vars: &[moves::CaptureVar],
-                        load_ret_handle: bool,
                         sigil: ast::Sigil) {
     let _icx = push_ctxt("closure::load_environment");
 
     // Don't bother to create the block if there's nothing to load
-    if cap_vars.len() == 0 && !load_ret_handle {
+    if cap_vars.len() == 0 {
         return;
     }
 
@@ -335,7 +309,17 @@ pub fn load_environment(fcx: @mut FunctionContext,
     // Load a pointer to the closure data, skipping over the box header:
     let llcdata = opaque_box_body(bcx, cdata_ty, fcx.llenv);
 
-    // Populate the upvars from the environment.
+    // Store the pointer to closure data in an alloca for debug info because that's what the
+    // llvm.dbg.declare intrinsic expects
+    let env_pointer_alloca = if fcx.ccx.sess.opts.extra_debuginfo {
+        let alloc = alloc_ty(bcx, ty::mk_mut_ptr(bcx.tcx(), cdata_ty), "__debuginfo_env_ptr");
+        Store(bcx, llcdata, alloc);
+        Some(alloc)
+    } else {
+        None
+    };
+
+    // Populate the upvars from the environment
     let mut i = 0u;
     for cap_var in cap_vars.iter() {
         let mut upvarptr = GEPi(bcx, llcdata, [0u, i]);
@@ -345,13 +329,19 @@ pub fn load_environment(fcx: @mut FunctionContext,
         }
         let def_id = ast_util::def_id_of_def(cap_var.def);
         fcx.llupvars.insert(def_id.node, upvarptr);
+
+        for &env_pointer_alloca in env_pointer_alloca.iter() {
+            debuginfo::create_captured_var_metadata(
+                bcx,
+                def_id.node,
+                cdata_ty,
+                env_pointer_alloca,
+                i,
+                sigil,
+                cap_var.span);
+        }
+
         i += 1u;
-    }
-    if load_ret_handle {
-        let flagptr = Load(bcx, GEPi(bcx, llcdata, [0u, i]));
-        let retptr = Load(bcx,
-                          GEPi(bcx, llcdata, [0u, i+1u]));
-        fcx.loop_ret = Some((flagptr, retptr));
     }
 }
 
@@ -361,7 +351,6 @@ pub fn trans_expr_fn(bcx: @mut Block,
                      body: &ast::Block,
                      outer_id: ast::NodeId,
                      user_id: ast::NodeId,
-                     is_loop_body: Option<Option<ValueRef>>,
                      dest: expr::Dest) -> @mut Block {
     /*!
      *
@@ -378,7 +367,6 @@ pub fn trans_expr_fn(bcx: @mut Block,
      * - `user_id`: The id of the closure as the user expressed it.
          Generally the same as `outer_id`
      * - `cap_clause`: information about captured variables, if any.
-     * - `is_loop_body`: `Some()` if this is part of a `for` loop.
      * - `dest`: where to write the closure value, which must be a
          (fn ptr, env) pair
      */
@@ -394,8 +382,10 @@ pub fn trans_expr_fn(bcx: @mut Block,
 
     let ccx = bcx.ccx();
     let fty = node_id_type(bcx, outer_id);
-
-    let llfnty = type_of_fn_from_ty(ccx, fty);
+    let f = match ty::get(fty).sty {
+        ty::ty_closure(ref f) => f,
+        _ => fail!("expected closure")
+    };
 
     let sub_path = vec::append_one(bcx.fcx.path.clone(),
                                    path_name(special_idents::anon));
@@ -403,30 +393,16 @@ pub fn trans_expr_fn(bcx: @mut Block,
     let s = mangle_internal_name_by_path_and_seq(ccx,
                                                  sub_path.clone(),
                                                  "expr_fn");
-    let llfn = decl_internal_cdecl_fn(ccx.llmod, s, llfnty);
+    let llfn = decl_internal_rust_fn(ccx, f.sig.inputs, f.sig.output, s);
 
-    // Always mark inline if this is a loop body. This is important for
-    // performance on many programs with tight loops.
-    if is_loop_body.is_some() {
-        set_always_inline(llfn);
-    } else {
-        // Can't hurt.
-        set_inline_hint(llfn);
-    }
-
-    let real_return_type = if is_loop_body.is_some() {
-        ty::mk_bool()
-    } else {
-        ty::ty_fn_ret(fty)
-    };
+    // set an inline hint for all closures
+    set_inline_hint(llfn);
 
     let Result {bcx: bcx, val: closure} = match sigil {
         ast::BorrowedSigil | ast::ManagedSigil | ast::OwnedSigil => {
             let cap_vars = ccx.maps.capture_map.get_copy(&user_id);
-            let ret_handle = match is_loop_body {Some(x) => x,
-                                                 None => None};
             let ClosureResult {llbox, cdata_ty, bcx}
-                = build_closure(bcx, cap_vars, sigil, ret_handle);
+                = build_closure(bcx, cap_vars, sigil);
             trans_closure(ccx,
                           sub_path,
                           decl,
@@ -436,16 +412,8 @@ pub fn trans_expr_fn(bcx: @mut Block,
                           bcx.fcx.param_substs,
                           user_id,
                           [],
-                          real_return_type,
-                          |fcx| load_environment(fcx, cdata_ty, cap_vars,
-                                                 ret_handle.is_some(), sigil),
-                          |bcx| {
-                              if is_loop_body.is_some() {
-                                  Store(bcx,
-                                        C_bool(true),
-                                        bcx.fcx.llretptr.unwrap());
-                              }
-                          });
+                          ty::ty_fn_ret(fty),
+                          |fcx| load_environment(fcx, cdata_ty, cap_vars, sigil));
             rslt(bcx, llbox)
         }
     };
@@ -477,27 +445,6 @@ pub fn make_closure_glue(
     }
 }
 
-pub fn make_opaque_cbox_take_glue(
-    bcx: @mut Block,
-    sigil: ast::Sigil,
-    cboxptr: ValueRef)     // ptr to ptr to the opaque closure
-    -> @mut Block {
-    // Easy cases:
-    let _icx = push_ctxt("closure::make_opaque_cbox_take_glue");
-    match sigil {
-        ast::BorrowedSigil => {
-            return bcx;
-        }
-        ast::ManagedSigil => {
-            glue::incr_refcnt_of_boxed(bcx, Load(bcx, cboxptr));
-            return bcx;
-        }
-        ast::OwnedSigil => {
-            fail!("unique closures are not copyable")
-        }
-    }
-}
-
 pub fn make_opaque_cbox_drop_glue(
     bcx: @mut Block,
     sigil: ast::Sigil,
@@ -507,9 +454,7 @@ pub fn make_opaque_cbox_drop_glue(
     match sigil {
         ast::BorrowedSigil => bcx,
         ast::ManagedSigil => {
-            glue::decr_refcnt_maybe_free(
-                bcx, Load(bcx, cboxptr), Some(cboxptr),
-                ty::mk_opaque_closure_ptr(bcx.tcx(), sigil))
+            bcx.tcx().sess.bug("trying to trans drop glue of @fn")
         }
         ast::OwnedSigil => {
             glue::free_ty(
@@ -549,12 +494,8 @@ pub fn make_opaque_cbox_free_glue(
                                     abi::tydesc_field_drop_glue, None);
 
         // Free the ty descr (if necc) and the box itself
-        match sigil {
-            ast::ManagedSigil => glue::trans_free(bcx, cbox),
-            ast::OwnedSigil => glue::trans_exchange_free(bcx, cbox),
-            ast::BorrowedSigil => {
-                bcx.sess().bug("impossible")
-            }
-        }
+        glue::trans_exchange_free(bcx, cbox);
+
+        bcx
     }
 }

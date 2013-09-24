@@ -25,8 +25,8 @@
 use std::cast;
 use std::ptr;
 use std::util;
-use std::iterator::{FromIterator, Extendable, Invert};
-use std::iterator;
+use std::iter::Invert;
+use std::iter;
 
 use container::Deque;
 
@@ -415,14 +415,11 @@ impl<T: Ord> DList<T> {
 
 #[unsafe_destructor]
 impl<T> Drop for DList<T> {
-    fn drop(&self) {
-        let mut_self = unsafe {
-            cast::transmute_mut(self)
-        };
+    fn drop(&mut self) {
         // Dissolve the dlist in backwards direction
         // Just dropping the list_head can lead to stack exhaustion
         // when length is >> 1_000_000
-        let mut tail = mut_self.list_tail;
+        let mut tail = self.list_tail;
         loop {
             match tail.resolve() {
                 None => break,
@@ -432,9 +429,9 @@ impl<T> Drop for DList<T> {
                 }
             }
         }
-        mut_self.length = 0;
-        mut_self.list_head = None;
-        mut_self.list_tail = Rawlink::none();
+        self.length = 0;
+        self.list_head = None;
+        self.list_tail = Rawlink::none();
     }
 }
 
@@ -472,6 +469,8 @@ impl<'self, A> DoubleEndedIterator<&'self A> for DListIterator<'self, A> {
     }
 }
 
+impl<'self, A> ExactSize<&'self A> for DListIterator<'self, A> {}
+
 impl<'self, A> Iterator<&'self mut A> for MutDListIterator<'self, A> {
     #[inline]
     fn next(&mut self) -> Option<&'self mut A> {
@@ -508,6 +507,7 @@ impl<'self, A> DoubleEndedIterator<&'self mut A> for MutDListIterator<'self, A> 
     }
 }
 
+impl<'self, A> ExactSize<&'self mut A> for MutDListIterator<'self, A> {}
 
 /// Allow mutating the DList while iterating
 pub trait ListInsertion<A> {
@@ -573,16 +573,16 @@ impl<A> DoubleEndedIterator<A> for MoveIterator<A> {
     fn next_back(&mut self) -> Option<A> { self.list.pop_back() }
 }
 
-impl<A, T: Iterator<A>> FromIterator<A, T> for DList<A> {
-    fn from_iterator(iterator: &mut T) -> DList<A> {
+impl<A> FromIterator<A> for DList<A> {
+    fn from_iterator<T: Iterator<A>>(iterator: &mut T) -> DList<A> {
         let mut ret = DList::new();
         ret.extend(iterator);
         ret
     }
 }
 
-impl<A, T: Iterator<A>> Extendable<A, T> for DList<A> {
-    fn extend(&mut self, iterator: &mut T) {
+impl<A> Extendable<A> for DList<A> {
+    fn extend<T: Iterator<A>>(&mut self, iterator: &mut T) {
         for elt in *iterator { self.push_back(elt); }
     }
 }
@@ -590,27 +590,27 @@ impl<A, T: Iterator<A>> Extendable<A, T> for DList<A> {
 impl<A: Eq> Eq for DList<A> {
     fn eq(&self, other: &DList<A>) -> bool {
         self.len() == other.len() &&
-            iterator::order::eq(self.iter(), other.iter())
+            iter::order::eq(self.iter(), other.iter())
     }
 
     fn ne(&self, other: &DList<A>) -> bool {
-        self.len() != other.len() &&
-            iterator::order::ne(self.iter(), other.iter())
+        self.len() != other.len() ||
+            iter::order::ne(self.iter(), other.iter())
     }
 }
 
 impl<A: Eq + Ord> Ord for DList<A> {
     fn lt(&self, other: &DList<A>) -> bool {
-        iterator::order::lt(self.iter(), other.iter())
+        iter::order::lt(self.iter(), other.iter())
     }
     fn le(&self, other: &DList<A>) -> bool {
-        iterator::order::le(self.iter(), other.iter())
+        iter::order::le(self.iter(), other.iter())
     }
     fn gt(&self, other: &DList<A>) -> bool {
-        iterator::order::gt(self.iter(), other.iter())
+        iter::order::gt(self.iter(), other.iter())
     }
     fn ge(&self, other: &DList<A>) -> bool {
-        iterator::order::ge(self.iter(), other.iter())
+        iter::order::ge(self.iter(), other.iter())
     }
 }
 
@@ -661,7 +661,7 @@ mod tests {
 
     #[test]
     fn test_basic() {
-        let mut m = DList::new::<~int>();
+        let mut m: DList<~int> = DList::new();
         assert_eq!(m.pop_front(), None);
         assert_eq!(m.pop_back(), None);
         assert_eq!(m.pop_front(), None);
@@ -768,7 +768,7 @@ mod tests {
 
     #[test]
     fn test_rotate() {
-        let mut n = DList::new::<int>();
+        let mut n: DList<int> = DList::new();
         n.rotate_backward(); check_links(&n);
         assert_eq!(n.len(), 0);
         n.rotate_forward(); check_links(&n);
@@ -978,6 +978,10 @@ mod tests {
         assert!(n != m);
         m.push_back(1);
         assert_eq!(&n, &m);
+
+        let n = list_from([2,3,4]);
+        let m = list_from([1,2,3]);
+        assert!(n != m);
     }
 
     #[test]
@@ -1033,7 +1037,7 @@ mod tests {
 
     #[cfg(test)]
     fn fuzz_test(sz: int) {
-        let mut m = DList::new::<int>();
+        let mut m: DList<int> = DList::new();
         let mut v = ~[];
         for i in range(0, sz) {
             check_links(&m);
@@ -1078,7 +1082,7 @@ mod tests {
 
     #[bench]
     fn bench_push_front(b: &mut test::BenchHarness) {
-        let mut m = DList::new::<int>();
+        let mut m: DList<int> = DList::new();
         do b.iter {
             m.push_front(0);
         }
@@ -1086,7 +1090,7 @@ mod tests {
 
     #[bench]
     fn bench_push_back(b: &mut test::BenchHarness) {
-        let mut m = DList::new::<int>();
+        let mut m: DList<int> = DList::new();
         do b.iter {
             m.push_back(0);
         }
@@ -1094,7 +1098,7 @@ mod tests {
 
     #[bench]
     fn bench_push_back_pop_back(b: &mut test::BenchHarness) {
-        let mut m = DList::new::<int>();
+        let mut m: DList<int> = DList::new();
         do b.iter {
             m.push_back(0);
             m.pop_back();
@@ -1103,7 +1107,7 @@ mod tests {
 
     #[bench]
     fn bench_push_front_pop_front(b: &mut test::BenchHarness) {
-        let mut m = DList::new::<int>();
+        let mut m: DList<int> = DList::new();
         do b.iter {
             m.push_front(0);
             m.pop_front();
@@ -1112,7 +1116,7 @@ mod tests {
 
     #[bench]
     fn bench_rotate_forward(b: &mut test::BenchHarness) {
-        let mut m = DList::new::<int>();
+        let mut m: DList<int> = DList::new();
         m.push_front(0);
         m.push_front(1);
         do b.iter {
@@ -1122,7 +1126,7 @@ mod tests {
 
     #[bench]
     fn bench_rotate_backward(b: &mut test::BenchHarness) {
-        let mut m = DList::new::<int>();
+        let mut m: DList<int> = DList::new();
         m.push_front(0);
         m.push_front(1);
         do b.iter {
@@ -1163,4 +1167,3 @@ mod tests {
         }
     }
 }
-

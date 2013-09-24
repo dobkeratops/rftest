@@ -13,7 +13,7 @@ use back::{upcall};
 use driver::session;
 use lib::llvm::{ContextRef, ModuleRef, ValueRef};
 use lib::llvm::{llvm, TargetData, TypeNames};
-use lib::llvm::{mk_target_data, False};
+use lib::llvm::mk_target_data;
 use metadata::common::LinkMeta;
 use middle::astencode;
 use middle::resolve;
@@ -53,21 +53,28 @@ pub struct CrateContext {
      item_symbols: HashMap<ast::NodeId, ~str>,
      link_meta: LinkMeta,
      enum_sizes: HashMap<ty::t, uint>,
-     discrims: HashMap<ast::def_id, ValueRef>,
+     discrims: HashMap<ast::DefId, ValueRef>,
      discrim_symbols: HashMap<ast::NodeId, @str>,
      tydescs: HashMap<ty::t, @mut tydesc_info>,
      // Set when running emit_tydescs to enforce that no more tydescs are
      // created.
      finished_tydescs: bool,
      // Track mapping of external ids to local items imported for inlining
-     external: HashMap<ast::def_id, Option<ast::NodeId>>,
+     external: HashMap<ast::DefId, Option<ast::NodeId>>,
+     // Backwards version of the `external` map (inlined items to where they
+     // came from)
+     external_srcs: HashMap<ast::NodeId, ast::DefId>,
+     // A set of static items which cannot be inlined into other crates. This
+     // will pevent in ii_item() structures from being encoded into the metadata
+     // that is generated
+     non_inlineable_statics: HashSet<ast::NodeId>,
      // Cache instances of monomorphized functions
      monomorphized: HashMap<mono_id, ValueRef>,
-     monomorphizing: HashMap<ast::def_id, uint>,
+     monomorphizing: HashMap<ast::DefId, uint>,
      // Cache computed type parameter uses (see type_use.rs)
-     type_use_cache: HashMap<ast::def_id, @~[type_use::type_uses]>,
+     type_use_cache: HashMap<ast::DefId, @~[type_use::type_uses]>,
      // Cache generated vtables
-     vtables: HashMap<mono_id, ValueRef>,
+     vtables: HashMap<(ty::t, mono_id), ValueRef>,
      // Cache of constant strings,
      const_cstr_cache: HashMap<@str, ValueRef>,
 
@@ -85,9 +92,9 @@ pub struct CrateContext {
      const_values: HashMap<ast::NodeId, ValueRef>,
 
      // Cache of external const values
-     extern_const_values: HashMap<ast::def_id, ValueRef>,
+     extern_const_values: HashMap<ast::DefId, ValueRef>,
 
-     impl_method_cache: HashMap<(ast::def_id, ast::ident), ast::def_id>,
+     impl_method_cache: HashMap<(ast::DefId, ast::Name), ast::DefId>,
 
      module_data: HashMap<~str, ValueRef>,
      lltypes: HashMap<ty::t, Type>,
@@ -111,7 +118,7 @@ pub struct CrateContext {
      // decl_gc_metadata knows whether to link to the module metadata, which
      // is not emitted by LLVM's GC pass when no functions use GC.
      uses_gc: bool,
-     dbg_cx: Option<debuginfo::DebugContext>,
+     dbg_cx: Option<debuginfo::CrateDebugContext>,
      do_not_commit_warning_issued: bool
 }
 
@@ -128,16 +135,16 @@ impl CrateContext {
         unsafe {
             let llcx = llvm::LLVMContextCreate();
             set_task_llcx(llcx);
-            let llmod = do name.to_c_str().with_ref |buf| {
+            let llmod = do name.with_c_str |buf| {
                 llvm::LLVMModuleCreateWithNameInContext(buf, llcx)
             };
             let data_layout: &str = sess.targ_cfg.target_strs.data_layout;
             let targ_triple: &str = sess.targ_cfg.target_strs.target_triple;
-            do data_layout.to_c_str().with_ref |buf| {
+            do data_layout.with_c_str |buf| {
                 llvm::LLVMSetDataLayout(llmod, buf)
             };
-            do targ_triple.to_c_str().with_ref |buf| {
-                llvm::LLVMSetTarget(llmod, buf)
+            do targ_triple.with_c_str |buf| {
+                llvm::LLVMRustSetNormalizedTarget(llmod, buf)
             };
             let targ_cfg = sess.targ_cfg;
 
@@ -161,7 +168,7 @@ impl CrateContext {
 
             let crate_map = decl_crate_map(sess, link_meta, llmod);
             let dbg_cx = if sess.opts.debuginfo {
-                Some(debuginfo::DebugContext::new(llmod, name.to_owned()))
+                Some(debuginfo::CrateDebugContext::new(llmod, name.to_owned()))
             } else {
                 None
             };
@@ -189,6 +196,8 @@ impl CrateContext {
                   tydescs: HashMap::new(),
                   finished_tydescs: false,
                   external: HashMap::new(),
+                  external_srcs: HashMap::new(),
+                  non_inlineable_statics: HashSet::new(),
                   monomorphized: HashMap::new(),
                   monomorphizing: HashMap::new(),
                   type_use_cache: HashMap::new(),
@@ -273,12 +282,12 @@ impl CrateContext {
 
 #[unsafe_destructor]
 impl Drop for CrateContext {
-    fn drop(&self) {
+    fn drop(&mut self) {
         unset_task_llcx();
     }
 }
 
-static task_local_llcx_key: local_data::Key<@ContextRef> = &local_data::Key;
+local_data_key!(task_local_llcx_key: @ContextRef)
 
 pub fn task_llcx() -> ContextRef {
     let opt = local_data::get(task_local_llcx_key, |k| k.map_move(|k| *k));

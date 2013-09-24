@@ -319,40 +319,35 @@ pub struct Taskgroup {
 
 impl Drop for Taskgroup {
     // Runs on task exit.
-    fn drop(&self) {
-        unsafe {
-            // FIXME(#4330) Need self by value to get mutability.
-            let this: &mut Taskgroup = transmute(self);
-
-            // If we are failing, the whole taskgroup needs to die.
-            do RuntimeGlue::with_task_handle_and_failing |me, failing| {
-                if failing {
-                    for x in this.notifier.mut_iter() {
-                        x.failed = true;
-                    }
-                    // Take everybody down with us. After this point, every
-                    // other task in the group will see 'tg' as none, which
-                    // indicates the whole taskgroup is failing (and forbids
-                    // new spawns from succeeding).
-                    let tg = do access_group(&self.tasks) |tg| { tg.take() };
-                    // It's safe to send kill signals outside the lock, because
-                    // we have a refcount on all kill-handles in the group.
-                    kill_taskgroup(tg, me);
-                } else {
-                    // Remove ourselves from the group(s).
-                    do access_group(&self.tasks) |tg| {
-                        leave_taskgroup(tg, me, true);
-                    }
+    fn drop(&mut self) {
+        // If we are failing, the whole taskgroup needs to die.
+        do RuntimeGlue::with_task_handle_and_failing |me, failing| {
+            if failing {
+                for x in self.notifier.mut_iter() {
+                    x.failed = true;
                 }
-                // It doesn't matter whether this happens before or after dealing
-                // with our own taskgroup, so long as both happen before we die.
-                // We remove ourself from every ancestor we can, so no cleanup; no
-                // break.
-                do each_ancestor(&mut this.ancestors, |_| {}) |ancestor_group| {
-                    leave_taskgroup(ancestor_group, me, false);
-                    true
-                };
+                // Take everybody down with us. After this point, every
+                // other task in the group will see 'tg' as none, which
+                // indicates the whole taskgroup is failing (and forbids
+                // new spawns from succeeding).
+                let tg = do access_group(&self.tasks) |tg| { tg.take() };
+                // It's safe to send kill signals outside the lock, because
+                // we have a refcount on all kill-handles in the group.
+                kill_taskgroup(tg, me);
+            } else {
+                // Remove ourselves from the group(s).
+                do access_group(&self.tasks) |tg| {
+                    leave_taskgroup(tg, me, true);
+                }
             }
+            // It doesn't matter whether this happens before or after dealing
+            // with our own taskgroup, so long as both happen before we die.
+            // We remove ourself from every ancestor we can, so no cleanup; no
+            // break.
+            do each_ancestor(&mut self.ancestors, |_| {}) |ancestor_group| {
+                leave_taskgroup(ancestor_group, me, false);
+                true
+            };
         }
     }
 }
@@ -377,7 +372,7 @@ struct AutoNotify {
 }
 
 impl Drop for AutoNotify {
-    fn drop(&self) {
+    fn drop(&mut self) {
         let result = if self.failed { Failure } else { Success };
         self.notify_chan.send(result);
     }
@@ -446,55 +441,48 @@ fn taskgroup_key() -> local_data::Key<@@mut Taskgroup> {
 // Transitionary.
 struct RuntimeGlue;
 impl RuntimeGlue {
-    fn kill_task(handle: KillHandle) {
-        let mut handle = handle;
+    fn kill_task(mut handle: KillHandle) {
         do handle.kill().map_move |killed_task| {
             let killed_task = Cell::new(killed_task);
-            do Local::borrow::<Scheduler, ()> |sched| {
+            do Local::borrow |sched: &mut Scheduler| {
                 sched.enqueue_task(killed_task.take());
             }
         };
     }
 
     fn with_task_handle_and_failing(blk: &fn(&KillHandle, bool)) {
-        if in_green_task_context() {
-            unsafe {
-                // Can't use safe borrow, because the taskgroup destructor needs to
-                // access the scheduler again to send kill signals to other tasks.
-                let me = Local::unsafe_borrow::<Task>();
-                blk((*me).death.kill_handle.get_ref(), (*me).unwinder.unwinding)
-            }
-        } else {
-            rtabort!("task dying in bad context")
+        rtassert!(in_green_task_context());
+        unsafe {
+            // Can't use safe borrow, because the taskgroup destructor needs to
+            // access the scheduler again to send kill signals to other tasks.
+            let me: *mut Task = Local::unsafe_borrow();
+            blk((*me).death.kill_handle.get_ref(), (*me).unwinder.unwinding)
         }
     }
 
     fn with_my_taskgroup<U>(blk: &fn(&Taskgroup) -> U) -> U {
-        if in_green_task_context() {
-            unsafe {
-                // Can't use safe borrow, because creating new hashmaps for the
-                // tasksets requires an rng, which needs to borrow the sched.
-                let me = Local::unsafe_borrow::<Task>();
-                blk(match (*me).taskgroup {
-                    None => {
-                        // First task in its (unlinked/unsupervised) taskgroup.
-                        // Lazily initialize.
-                        let mut members = TaskSet::new();
-                        let my_handle = (*me).death.kill_handle.get_ref().clone();
-                        members.insert(my_handle);
-                        let tasks = Exclusive::new(Some(TaskGroupData {
-                            members: members,
-                            descendants: TaskSet::new(),
-                        }));
-                        let group = Taskgroup(tasks, AncestorList(None), None);
-                        (*me).taskgroup = Some(group);
-                        (*me).taskgroup.get_ref()
-                    }
-                    Some(ref group) => group,
-                })
-            }
-        } else {
-            rtabort!("spawning in bad context")
+        rtassert!(in_green_task_context());
+        unsafe {
+            // Can't use safe borrow, because creating new hashmaps for the
+            // tasksets requires an rng, which needs to borrow the sched.
+            let me: *mut Task = Local::unsafe_borrow();
+            blk(match (*me).taskgroup {
+                None => {
+                    // First task in its (unlinked/unsupervised) taskgroup.
+                    // Lazily initialize.
+                    let mut members = TaskSet::new();
+                    let my_handle = (*me).death.kill_handle.get_ref().clone();
+                    members.insert(my_handle);
+                    let tasks = Exclusive::new(Some(TaskGroupData {
+                        members: members,
+                        descendants: TaskSet::new(),
+                    }));
+                    let group = Taskgroup(tasks, AncestorList(None), None);
+                    (*me).taskgroup = Some(group);
+                    (*me).taskgroup.get_ref()
+                }
+                Some(ref group) => group,
+            })
         }
     }
 }
@@ -567,16 +555,10 @@ fn enlist_many(child: &KillHandle, child_arc: &TaskGroupArc,
     result
 }
 
-pub fn spawn_raw(opts: TaskOpts, f: ~fn()) {
-    if in_green_task_context() {
-        spawn_raw_newsched(opts, f)
-    } else {
-        fail!("can't spawn from this context")
-    }
-}
-
-fn spawn_raw_newsched(mut opts: TaskOpts, f: ~fn()) {
+pub fn spawn_raw(mut opts: TaskOpts, f: ~fn()) {
     use rt::sched::*;
+
+    rtassert!(in_green_task_context());
 
     let child_data = Cell::new(gen_child_taskgroup(opts.linked, opts.supervised));
     let indestructible = opts.indestructible;
@@ -587,7 +569,7 @@ fn spawn_raw_newsched(mut opts: TaskOpts, f: ~fn()) {
         // If child data is 'None', the enlist is vacuously successful.
         let enlist_success = do child_data.take().map_move_default(true) |child_data| {
             let child_data = Cell::new(child_data); // :(
-            do Local::borrow::<Task, bool> |me| {
+            do Local::borrow |me: &mut Task| {
                 let (child_tg, ancestors) = child_data.take();
                 let mut ancestors = ancestors;
                 let handle = me.death.kill_handle.get_ref();
@@ -621,7 +603,7 @@ fn spawn_raw_newsched(mut opts: TaskOpts, f: ~fn()) {
     } else {
         unsafe {
             // Creating a 1:1 task:thread ...
-            let sched = Local::unsafe_borrow::<Scheduler>();
+            let sched: *mut Scheduler = Local::unsafe_borrow();
             let sched_handle = (*sched).make_handle();
 
             // Since this is a 1:1 scheduler we create a queue not in
@@ -722,7 +704,6 @@ fn test_spawn_raw_simple() {
 }
 
 #[test]
-#[ignore(cfg(windows))]
 fn test_spawn_raw_unsupervise() {
     let opts = task::TaskOpts {
         linked: false,
@@ -736,7 +717,6 @@ fn test_spawn_raw_unsupervise() {
 }
 
 #[test]
-#[ignore(cfg(windows))]
 fn test_spawn_raw_notify_success() {
     let (notify_po, notify_ch) = comm::stream();
 
@@ -750,7 +730,6 @@ fn test_spawn_raw_notify_success() {
 }
 
 #[test]
-#[ignore(cfg(windows))]
 fn test_spawn_raw_notify_failure() {
     // New bindings for these
     let (notify_po, notify_ch) = comm::stream();

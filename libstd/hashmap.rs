@@ -18,15 +18,16 @@
 use container::{Container, Mutable, Map, MutableMap, Set, MutableSet};
 use clone::Clone;
 use cmp::{Eq, Equiv};
+use default::Default;
 use hash::Hash;
-use iterator::{Iterator, FromIterator, Extendable};
-use iterator::{FilterMap, Chain, Repeat, Zip};
+use iter::{Iterator, FromIterator, Extendable};
+use iter::{FilterMap, Chain, Repeat, Zip};
 use num;
 use option::{None, Option, Some};
-use rand::RngUtil;
+use rand::Rng;
 use rand;
 use uint;
-use util::{replace, unreachable};
+use util::replace;
 use vec::{ImmutableVector, MutableVector, OwnedVector};
 use vec;
 
@@ -186,7 +187,7 @@ impl<K:Hash + Eq,V> HashMap<K, V> {
     fn mut_value_for_bucket<'a>(&'a mut self, idx: uint) -> &'a mut V {
         match self.buckets[idx] {
             Some(ref mut bkt) => &mut bkt.value,
-            None => unreachable()
+            None => unreachable!()
         }
     }
 
@@ -605,8 +606,8 @@ impl<K> Iterator<K> for HashSetMoveIterator<K> {
     }
 }
 
-impl<K: Eq + Hash, V, T: Iterator<(K, V)>> FromIterator<(K, V), T> for HashMap<K, V> {
-    fn from_iterator(iter: &mut T) -> HashMap<K, V> {
+impl<K: Eq + Hash, V> FromIterator<(K, V)> for HashMap<K, V> {
+    fn from_iterator<T: Iterator<(K, V)>>(iter: &mut T) -> HashMap<K, V> {
         let (lower, _) = iter.size_hint();
         let mut map = HashMap::with_capacity(lower);
         map.extend(iter);
@@ -614,12 +615,16 @@ impl<K: Eq + Hash, V, T: Iterator<(K, V)>> FromIterator<(K, V), T> for HashMap<K
     }
 }
 
-impl<K: Eq + Hash, V, T: Iterator<(K, V)>> Extendable<(K, V), T> for HashMap<K, V> {
-    fn extend(&mut self, iter: &mut T) {
+impl<K: Eq + Hash, V> Extendable<(K, V)> for HashMap<K, V> {
+    fn extend<T: Iterator<(K, V)>>(&mut self, iter: &mut T) {
         for (k, v) in *iter {
             self.insert(k, v);
         }
     }
+}
+
+impl<K: Eq + Hash, V> Default for HashMap<K, V> {
+    fn default() -> HashMap<K, V> { HashMap::new() }
 }
 
 /// An implementation of a hash set using the underlying representation of a
@@ -687,6 +692,17 @@ impl<T:Hash + Eq> HashSet<T> {
         HashSet { map: HashMap::with_capacity(capacity) }
     }
 
+    /// Create an empty HashSet with space for at least `capacity`
+    /// elements in the hash table, using `k0` and `k1` as the keys.
+    ///
+    /// Warning: `k0` and `k1` are normally randomly generated, and
+    /// are designed to allow HashSets to be resistant to attacks that
+    /// cause many collisions and very poor performance. Setting them
+    /// manually using this function can expose a DoS attack vector.
+    pub fn with_capacity_and_keys(k0: u64, k1: u64, capacity: uint) -> HashSet<T> {
+        HashSet { map: HashMap::with_capacity_and_keys(k0, k1, capacity) }
+    }
+
     /// Reserve space for at least `n` elements in the hash table.
     pub fn reserve_at_least(&mut self, n: uint) {
         self.map.reserve_at_least(n)
@@ -745,8 +761,16 @@ impl<T:Hash + Eq> HashSet<T> {
 
 }
 
-impl<K: Eq + Hash, T: Iterator<K>> FromIterator<K, T> for HashSet<K> {
-    fn from_iterator(iter: &mut T) -> HashSet<K> {
+impl<T:Hash + Eq + Clone> Clone for HashSet<T> {
+    fn clone(&self) -> HashSet<T> {
+        HashSet {
+            map: self.map.clone()
+        }
+    }
+}
+
+impl<K: Eq + Hash> FromIterator<K> for HashSet<K> {
+    fn from_iterator<T: Iterator<K>>(iter: &mut T) -> HashSet<K> {
         let (lower, _) = iter.size_hint();
         let mut set = HashSet::with_capacity(lower);
         set.extend(iter);
@@ -754,12 +778,16 @@ impl<K: Eq + Hash, T: Iterator<K>> FromIterator<K, T> for HashSet<K> {
     }
 }
 
-impl<K: Eq + Hash, T: Iterator<K>> Extendable<K, T> for HashSet<K> {
-    fn extend(&mut self, iter: &mut T) {
+impl<K: Eq + Hash> Extendable<K> for HashSet<K> {
+    fn extend<T: Iterator<K>>(&mut self, iter: &mut T) {
         for k in *iter {
             self.insert(k);
         }
     }
+}
+
+impl<K: Eq + Hash> Default for HashSet<K> {
+    fn default() -> HashSet<K> { HashSet::new() }
 }
 
 // `Repeat` is used to feed the filter closure an explicit capture
@@ -861,21 +889,21 @@ mod test_map {
 
     #[test]
     fn test_find_or_insert() {
-        let mut m = HashMap::new::<int, int>();
+        let mut m: HashMap<int,int> = HashMap::new();
         assert_eq!(*m.find_or_insert(1, 2), 2);
         assert_eq!(*m.find_or_insert(1, 3), 2);
     }
 
     #[test]
     fn test_find_or_insert_with() {
-        let mut m = HashMap::new::<int, int>();
+        let mut m: HashMap<int,int> = HashMap::new();
         assert_eq!(*m.find_or_insert_with(1, |_| 2), 2);
         assert_eq!(*m.find_or_insert_with(1, |_| 3), 2);
     }
 
     #[test]
     fn test_insert_or_update_with() {
-        let mut m = HashMap::new::<int, int>();
+        let mut m: HashMap<int,int> = HashMap::new();
         assert_eq!(*m.insert_or_update_with(1, 2, |_,x| *x+=1), 2);
         assert_eq!(*m.insert_or_update_with(1, 2, |_,x| *x+=1), 3);
     }
@@ -1189,5 +1217,23 @@ mod test_set {
 
         let v = hs.move_iter().collect::<~[char]>();
         assert!(['a', 'b'] == v || ['b', 'a'] == v);
+    }
+
+    #[test]
+    fn test_eq() {
+        let mut s1 = HashSet::new();
+        s1.insert(1);
+        s1.insert(2);
+        s1.insert(3);
+
+        let mut s2 = HashSet::new();
+        s2.insert(1);
+        s2.insert(2);
+
+        assert!(s1 != s2);
+
+        s2.insert(3);
+
+        assert_eq!(s1, s2);
     }
 }

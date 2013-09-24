@@ -43,7 +43,21 @@ impl IdleWatcher {
             let mut idle_watcher: IdleWatcher = NativeHandle::from_native_handle(handle);
             let data = idle_watcher.get_watcher_data();
             let cb: &IdleCallback = data.idle_cb.get_ref();
-            let status = status_to_maybe_uv_error(idle_watcher, status);
+            let status = status_to_maybe_uv_error(status);
+            (*cb)(idle_watcher, status);
+        }
+    }
+
+    pub fn restart(&mut self) {
+        unsafe {
+            assert!(0 == uvll::idle_start(self.native_handle(), idle_cb))
+        };
+
+        extern fn idle_cb(handle: *uvll::uv_idle_t, status: c_int) {
+            let mut idle_watcher: IdleWatcher = NativeHandle::from_native_handle(handle);
+            let data = idle_watcher.get_watcher_data();
+            let cb: &IdleCallback = data.idle_cb.get_ref();
+            let status = status_to_maybe_uv_error(status);
             (*cb)(idle_watcher, status);
         }
     }

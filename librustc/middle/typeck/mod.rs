@@ -61,7 +61,7 @@ use std::hashmap::HashMap;
 use std::result;
 use extra::list::List;
 use extra::list;
-use syntax::codemap::span;
+use syntax::codemap::Span;
 use syntax::print::pprust::*;
 use syntax::{ast, ast_map, abi};
 use syntax::opt_vec;
@@ -82,13 +82,13 @@ pub enum param_index {
 #[deriving(Clone, Encodable, Decodable)]
 pub enum method_origin {
     // fully statically resolved method
-    method_static(ast::def_id),
+    method_static(ast::DefId),
 
     // method invoked on a type parameter with a bounded trait
     method_param(method_param),
 
     // method invoked on a trait instance
-    method_trait(ast::def_id, uint),
+    method_object(method_object),
 
 }
 
@@ -97,7 +97,7 @@ pub enum method_origin {
 #[deriving(Clone, Encodable, Decodable)]
 pub struct method_param {
     // the trait containing the method to be invoked
-    trait_id: ast::def_id,
+    trait_id: ast::DefId,
 
     // index of the method to be invoked amongst the trait's methods
     method_num: uint,
@@ -109,6 +109,26 @@ pub struct method_param {
     // index of the bound for this type parameter which specifies the trait
     bound_num: uint,
 }
+
+// details for a method invoked with a receiver whose type is an object
+#[deriving(Clone, Encodable, Decodable)]
+pub struct method_object {
+    // the (super)trait containing the method to be invoked
+    trait_id: ast::DefId,
+
+    // the actual base trait id of the object
+    object_trait_id: ast::DefId,
+
+    // index of the method to be invoked amongst the trait's methods
+    method_num: uint,
+
+    // index into the actual runtime vtable.
+    // the vtable is formed by concatenating together the method lists of
+    // the base object trait and all supertraits;  this is the index into
+    // that vtable
+    real_index: uint,
+}
+
 
 #[deriving(Clone)]
 pub struct method_map_entry {
@@ -141,7 +161,7 @@ pub enum vtable_origin {
       from whence comes the vtable, and tys are the type substs.
       vtable_res is the vtable itself
      */
-    vtable_static(ast::def_id, ~[ty::t], vtable_res),
+    vtable_static(ast::DefId, ~[ty::t], vtable_res),
 
     /*
       Dynamic vtable, comes from a parameter that has a bound on it:
@@ -194,7 +214,7 @@ impl Repr for impl_res {
     }
 }
 
-pub type impl_vtable_map = @mut HashMap<ast::def_id, impl_res>;
+pub type impl_vtable_map = @mut HashMap<ast::DefId, impl_res>;
 
 pub struct CrateCtxt {
     // A mapping from method call sites to traits that have that method.
@@ -229,7 +249,7 @@ pub fn write_tpt_to_tcx(tcx: ty::ctxt,
     }
 }
 
-pub fn lookup_def_tcx(tcx: ty::ctxt, sp: span, id: ast::NodeId) -> ast::def {
+pub fn lookup_def_tcx(tcx: ty::ctxt, sp: Span, id: ast::NodeId) -> ast::Def {
     match tcx.def_map.find(&id) {
       Some(&x) => x,
       _ => {
@@ -238,8 +258,8 @@ pub fn lookup_def_tcx(tcx: ty::ctxt, sp: span, id: ast::NodeId) -> ast::def {
     }
 }
 
-pub fn lookup_def_ccx(ccx: &CrateCtxt, sp: span, id: ast::NodeId)
-                   -> ast::def {
+pub fn lookup_def_ccx(ccx: &CrateCtxt, sp: Span, id: ast::NodeId)
+                   -> ast::Def {
     lookup_def_tcx(ccx.tcx, sp, id)
 }
 
@@ -255,7 +275,7 @@ pub fn require_same_types(
     tcx: ty::ctxt,
     maybe_infcx: Option<@mut infer::InferCtxt>,
     t1_is_expected: bool,
-    span: span,
+    span: Span,
     t1: ty::t,
     t2: ty::t,
     msg: &fn() -> ~str) -> bool {
@@ -310,7 +330,7 @@ impl get_and_find_region for isr_alist {
 
 fn check_main_fn_ty(ccx: &CrateCtxt,
                     main_id: ast::NodeId,
-                    main_span: span) {
+                    main_span: Span) {
     let tcx = ccx.tcx;
     let main_t = ty::node_id_to_type(tcx, main_id);
     match ty::get(main_t).sty {
@@ -354,7 +374,7 @@ fn check_main_fn_ty(ccx: &CrateCtxt,
 
 fn check_start_fn_ty(ccx: &CrateCtxt,
                      start_id: ast::NodeId,
-                     start_span: span) {
+                     start_span: Span) {
     let tcx = ccx.tcx;
     let start_t = ty::node_id_to_type(tcx, start_id);
     match ty::get(start_t).sty {
@@ -382,8 +402,7 @@ fn check_start_fn_ty(ccx: &CrateCtxt,
                     bound_lifetime_names: opt_vec::Empty,
                     inputs: ~[
                         ty::mk_int(),
-                        ty::mk_imm_ptr(tcx, ty::mk_imm_ptr(tcx, ty::mk_u8())),
-                        ty::mk_imm_ptr(tcx, ty::mk_u8())
+                        ty::mk_imm_ptr(tcx, ty::mk_imm_ptr(tcx, ty::mk_u8()))
                     ],
                     output: ty::mk_int()
                 }

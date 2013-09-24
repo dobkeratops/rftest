@@ -40,7 +40,8 @@ pub use result::{Result, Ok, Err};
 
 // Reexported functions
 pub use io::{print, println};
-pub use iterator::range;
+pub use iter::range;
+pub use from_str::from_str;
 
 // Reexported types and traits
 pub use c_str::ToCStr;
@@ -49,27 +50,28 @@ pub use cmp::{Eq, ApproxEq, Ord, TotalEq, TotalOrd, Ordering, Less, Equal, Great
 pub use char::Char;
 pub use container::{Container, Mutable, Map, MutableMap, Set, MutableSet};
 pub use hash::Hash;
-pub use iter::Times;
-pub use iterator::Extendable;
-pub use iterator::{Iterator, DoubleEndedIterator};
-pub use iterator::{ClonableIterator, OrdIterator};
+pub use num::Times;
+pub use iter::{FromIterator, Extendable};
+pub use iter::{Iterator, DoubleEndedIterator, RandomAccessIterator, ClonableIterator};
+pub use iter::{OrdIterator, MutableDoubleEndedIterator, ExactSize};
 pub use num::{Num, NumCast, CheckedAdd, CheckedSub, CheckedMul};
 pub use num::{Orderable, Signed, Unsigned, Round};
 pub use num::{Algebraic, Trigonometric, Exponential, Hyperbolic};
 pub use num::{Integer, Fractional, Real, RealExt};
 pub use num::{Bitwise, BitCount, Bounded};
-pub use num::{Primitive, Int, Float};
+pub use num::{Primitive, Int, Float, ToStrRadix};
 pub use path::GenericPath;
 pub use path::Path;
 pub use path::PosixPath;
 pub use path::WindowsPath;
 pub use ptr::RawPtr;
 pub use ascii::{Ascii, AsciiCast, OwnedAsciiCast, AsciiStr, ToBytesConsume};
+pub use send_str::{SendStr, SendStrOwned, SendStrStatic, IntoSendStr};
 pub use str::{Str, StrVector, StrSlice, OwnedStr};
 pub use from_str::FromStr;
 pub use to_bytes::IterBytes;
 pub use to_str::{ToStr, ToStrConsume};
-pub use tuple::{CopyableTuple, ImmutableTuple, ExtendedTupleOps};
+pub use tuple::{CopyableTuple, ImmutableTuple};
 pub use tuple::{CloneableTuple1, ImmutableTuple1};
 pub use tuple::{CloneableTuple2, CloneableTuple3, CloneableTuple4, CloneableTuple5};
 pub use tuple::{CloneableTuple6, CloneableTuple7, CloneableTuple8, CloneableTuple9};
@@ -81,6 +83,7 @@ pub use vec::{Vector, VectorVector, CopyableVector, ImmutableVector};
 pub use vec::{ImmutableEqVector, ImmutableTotalOrdVector, ImmutableCopyableVector};
 pub use vec::{OwnedVector, OwnedCopyableVector,OwnedEqVector, MutableVector};
 pub use io::{Reader, ReaderUtil, Writer, WriterUtil};
+pub use default::Default;
 
 // Reexported runtime types
 pub use comm::{stream, Port, Chan, GenericChan, GenericSmartChan, GenericPort, Peekable};

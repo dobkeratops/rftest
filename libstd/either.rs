@@ -13,10 +13,11 @@
 #[allow(missing_doc)];
 
 use option::{Some, None};
+use option;
 use clone::Clone;
 use container::Container;
 use cmp::Eq;
-use iterator::Iterator;
+use iter::{Iterator, FilterMap};
 use result::Result;
 use result;
 use str::StrSlice;
@@ -50,18 +51,6 @@ impl<L, R> Either<L, R> {
         match self {
             Right(r) => Left(r),
             Left(l) => Right(l)
-        }
-    }
-
-    /// Converts a `Either` to a `Result`
-    ///
-    /// Converts an `Either` type to a `Result` type, making the "right" choice
-    /// an `Ok` result, and the "left" choice a `Err`
-    #[inline]
-    pub fn to_result(self) -> Result<R, L> {
-        match self {
-            Right(r) => result::Ok(r),
-            Left(l) => result::Err(l)
         }
     }
 
@@ -116,31 +105,129 @@ impl<L, R> Either<L, R> {
     }
 }
 
-// FIXME: #8228 Replaceable by an external iterator?
-/// Extracts from a vector of either all the left values
-pub fn lefts<L: Clone, R>(eithers: &[Either<L, R>]) -> ~[L] {
-    do vec::build_sized(eithers.len()) |push| {
-        for elt in eithers.iter() {
-            match *elt {
-                Left(ref l) => { push((*l).clone()); }
-                _ => { /* fallthrough */ }
-            }
+/// A generic trait for converting a value to a `Either`
+pub trait ToEither<L, R> {
+    /// Convert to the `either` type
+    fn to_either(&self) -> Either<L, R>;
+}
+
+/// A generic trait for converting a value to a `Either`
+pub trait IntoEither<L, R> {
+    /// Convert to the `either` type
+    fn into_either(self) -> Either<L, R>;
+}
+
+/// A generic trait for converting a value to a `Either`
+pub trait AsEither<L, R> {
+    /// Convert to the `either` type
+    fn as_either<'a>(&'a self) -> Either<&'a L, &'a R>;
+}
+
+impl<L, R: Clone> option::ToOption<R> for Either<L, R> {
+    #[inline]
+    fn to_option(&self)-> option::Option<R> {
+        match *self {
+            Left(_) => None,
+            Right(ref r) => Some(r.clone()),
         }
     }
 }
 
-// FIXME: #8228 Replaceable by an external iterator?
-/// Extracts from a vector of either all the right values
-pub fn rights<L, R: Clone>(eithers: &[Either<L, R>]) -> ~[R] {
-    do vec::build_sized(eithers.len()) |push| {
-        for elt in eithers.iter() {
-            match *elt {
-                Right(ref r) => { push((*r).clone()); }
-                _ => { /* fallthrough */ }
-            }
+impl<L, R> option::IntoOption<R> for Either<L, R> {
+    #[inline]
+    fn into_option(self)-> option::Option<R> {
+        match self {
+            Left(_) => None,
+            Right(r) => Some(r),
         }
     }
 }
+
+impl<L, R> option::AsOption<R> for Either<L, R> {
+    #[inline]
+    fn as_option<'a>(&'a self) -> option::Option<&'a R> {
+        match *self {
+            Left(_) => None,
+            Right(ref r) => Some(r),
+        }
+    }
+}
+
+impl<L: Clone, R: Clone> result::ToResult<R, L> for Either<L, R> {
+    #[inline]
+    fn to_result(&self)-> result::Result<R, L> {
+        match *self {
+            Left(ref l) => result::Err(l.clone()),
+            Right(ref r) => result::Ok(r.clone()),
+        }
+    }
+}
+
+impl<L, R> result::IntoResult<R, L> for Either<L, R> {
+    #[inline]
+    fn into_result(self)-> result::Result<R, L> {
+        match self {
+            Left(l) => result::Err(l),
+            Right(r) => result::Ok(r),
+        }
+    }
+}
+
+impl<L, R> result::AsResult<R, L> for Either<L, R> {
+    #[inline]
+    fn as_result<'a>(&'a self) -> result::Result<&'a R, &'a L> {
+        match *self {
+            Left(ref l) => result::Err(l),
+            Right(ref r) => result::Ok(r),
+        }
+    }
+}
+
+impl<L: Clone, R: Clone> ToEither<L, R> for Either<L, R> {
+    fn to_either(&self) -> Either<L, R> { self.clone() }
+}
+
+impl<L, R> IntoEither<L, R> for Either<L, R> {
+    fn into_either(self) -> Either<L, R> { self }
+}
+
+impl<L, R> AsEither<L, R> for Either<L, R> {
+    fn as_either<'a>(&'a self) -> Either<&'a L, &'a R> {
+        match *self {
+            Left(ref l) => Left(l),
+            Right(ref r) => Right(r),
+        }
+    }
+}
+
+/// An iterator yielding the `Left` values of its source
+pub type Lefts<L, R, Iter> = FilterMap<'static, Either<L, R>, L, Iter>;
+
+/// An iterator yielding the `Right` values of its source
+pub type Rights<L, R, Iter> = FilterMap<'static, Either<L, R>, R, Iter>;
+
+/// Extracts all the left values
+pub fn lefts<L, R, Iter: Iterator<Either<L, R>>>(eithers: Iter)
+    -> Lefts<L, R, Iter> {
+    do eithers.filter_map |elt| {
+        match elt {
+            Left(x) => Some(x),
+            _ => None,
+        }
+    }
+}
+
+/// Extracts all the right values
+pub fn rights<L, R, Iter: Iterator<Either<L, R>>>(eithers: Iter)
+    -> Rights<L, R, Iter> {
+    do eithers.filter_map |elt| {
+        match elt {
+            Right(x) => Some(x),
+            _ => None,
+        }
+    }
+}
+
 
 // FIXME: #8228 Replaceable by an external iterator?
 /// Extracts from a vector of either all the left values and right values
@@ -148,8 +235,9 @@ pub fn rights<L, R: Clone>(eithers: &[Either<L, R>]) -> ~[R] {
 /// Returns a structure containing a vector of left values and a vector of
 /// right values.
 pub fn partition<L, R>(eithers: ~[Either<L, R>]) -> (~[L], ~[R]) {
-    let mut lefts: ~[L] = ~[];
-    let mut rights: ~[R] = ~[];
+    let n_lefts = eithers.iter().count(|elt| elt.is_left());
+    let mut lefts = vec::with_capacity(n_lefts);
+    let mut rights = vec::with_capacity(eithers.len() - n_lefts);
     for elt in eithers.move_iter() {
         match elt {
             Left(l) => lefts.push(l),
@@ -162,6 +250,11 @@ pub fn partition<L, R>(eithers: ~[Either<L, R>]) -> (~[L], ~[R]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    use option::{IntoOption, ToOption, AsOption};
+    use option;
+    use result::{IntoResult, ToResult, AsResult};
+    use result;
 
     #[test]
     fn test_either_left() {
@@ -182,42 +275,42 @@ mod tests {
     #[test]
     fn test_lefts() {
         let input = ~[Left(10), Right(11), Left(12), Right(13), Left(14)];
-        let result = lefts(input);
+        let result = lefts(input.move_iter()).to_owned_vec();
         assert_eq!(result, ~[10, 12, 14]);
     }
 
     #[test]
     fn test_lefts_none() {
         let input: ~[Either<int, int>] = ~[Right(10), Right(10)];
-        let result = lefts(input);
+        let result = lefts(input.move_iter()).to_owned_vec();
         assert_eq!(result.len(), 0u);
     }
 
     #[test]
     fn test_lefts_empty() {
         let input: ~[Either<int, int>] = ~[];
-        let result = lefts(input);
+        let result = lefts(input.move_iter()).to_owned_vec();
         assert_eq!(result.len(), 0u);
     }
 
     #[test]
     fn test_rights() {
         let input = ~[Left(10), Right(11), Left(12), Right(13), Left(14)];
-        let result = rights(input);
+        let result = rights(input.move_iter()).to_owned_vec();
         assert_eq!(result, ~[11, 13]);
     }
 
     #[test]
     fn test_rights_none() {
         let input: ~[Either<int, int>] = ~[Left(10), Left(10)];
-        let result = rights(input);
+        let result = rights(input.move_iter()).to_owned_vec();
         assert_eq!(result.len(), 0u);
     }
 
     #[test]
     fn test_rights_empty() {
         let input: ~[Either<int, int>] = ~[];
-        let result = rights(input);
+        let result = rights(input.move_iter()).to_owned_vec();
         assert_eq!(result.len(), 0u);
     }
 
@@ -256,4 +349,87 @@ mod tests {
         assert_eq!(rights.len(), 0u);
     }
 
+    #[test]
+    pub fn test_to_option() {
+        let right: Either<int, int> = Right(100);
+        let left: Either<int, int> = Left(404);
+
+        assert_eq!(right.to_option(), option::Some(100));
+        assert_eq!(left.to_option(), option::None);
+    }
+
+    #[test]
+    pub fn test_into_option() {
+        let right: Either<int, int> = Right(100);
+        let left: Either<int, int> = Left(404);
+
+        assert_eq!(right.into_option(), option::Some(100));
+        assert_eq!(left.into_option(), option::None);
+    }
+
+    #[test]
+    pub fn test_as_option() {
+        let right: Either<int, int> = Right(100);
+        let left: Either<int, int> = Left(404);
+
+        assert_eq!(right.as_option().unwrap(), &100);
+        assert_eq!(left.as_option(), option::None);
+    }
+
+    #[test]
+    pub fn test_to_result() {
+        let right: Either<int, int> = Right(100);
+        let left: Either<int, int> = Left(404);
+
+        assert_eq!(right.to_result(), result::Ok(100));
+        assert_eq!(left.to_result(), result::Err(404));
+    }
+
+    #[test]
+    pub fn test_into_result() {
+        let right: Either<int, int> = Right(100);
+        let left: Either<int, int> = Left(404);
+
+        assert_eq!(right.into_result(), result::Ok(100));
+        assert_eq!(left.into_result(), result::Err(404));
+    }
+
+    #[test]
+    pub fn test_as_result() {
+        let right: Either<int, int> = Right(100);
+        let left: Either<int, int> = Left(404);
+
+        let x = 100;
+        assert_eq!(right.as_result(), result::Ok(&x));
+
+        let x = 404;
+        assert_eq!(left.as_result(), result::Err(&x));
+    }
+
+    #[test]
+    pub fn test_to_either() {
+        let right: Either<int, int> = Right(100);
+        let left: Either<int, int> = Left(404);
+
+        assert_eq!(right.to_either(), Right(100));
+        assert_eq!(left.to_either(), Left(404));
+    }
+
+    #[test]
+    pub fn test_into_either() {
+        let right: Either<int, int> = Right(100);
+        let left: Either<int, int> = Left(404);
+
+        assert_eq!(right.into_either(), Right(100));
+        assert_eq!(left.into_either(), Left(404));
+    }
+
+    #[test]
+    pub fn test_as_either() {
+        let right: Either<int, int> = Right(100);
+        let left: Either<int, int> = Left(404);
+
+        assert_eq!(right.as_either().unwrap_right(), &100);
+        assert_eq!(left.as_either().unwrap_left(), &404);
+    }
 }

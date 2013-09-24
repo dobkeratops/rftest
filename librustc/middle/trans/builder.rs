@@ -21,7 +21,8 @@ use std::cast;
 use std::hashmap::HashMap;
 use std::libc::{c_uint, c_ulonglong, c_char};
 use std::vec;
-use syntax::codemap::span;
+use syntax::codemap::Span;
+use std::ptr::is_not_null;
 
 pub struct Builder {
     llbuilder: BuilderRef,
@@ -153,28 +154,23 @@ impl Builder {
                   llfn: ValueRef,
                   args: &[ValueRef],
                   then: BasicBlockRef,
-                  catch: BasicBlockRef)
+                  catch: BasicBlockRef,
+                  attributes: &[(uint, lib::llvm::Attribute)])
                   -> ValueRef {
         self.count_insn("invoke");
         unsafe {
-            llvm::LLVMBuildInvoke(self.llbuilder,
-                                  llfn,
-                                  vec::raw::to_ptr(args),
-                                  args.len() as c_uint,
-                                  then,
-                                  catch,
-                                  noname())
+            let v = llvm::LLVMBuildInvoke(self.llbuilder,
+                                          llfn,
+                                          vec::raw::to_ptr(args),
+                                          args.len() as c_uint,
+                                          then,
+                                          catch,
+                                          noname());
+            for &(idx, attr) in attributes.iter() {
+                llvm::LLVMAddInstrAttribute(v, idx as c_uint, attr as c_uint);
+            }
+            v
         }
-    }
-
-    pub fn fast_invoke(&self,
-                       llfn: ValueRef,
-                       args: &[ValueRef],
-                       then: BasicBlockRef,
-                       catch: BasicBlockRef) {
-        self.count_insn("fastinvoke");
-        let v = self.invoke(llfn, args, then, catch);
-        lib::llvm::SetInstructionCallConv(v, lib::llvm::FastCallConv);
     }
 
     pub fn unreachable(&self) {
@@ -423,7 +419,7 @@ impl Builder {
             if name.is_empty() {
                 llvm::LLVMBuildAlloca(self.llbuilder, ty.to_ref(), noname())
             } else {
-                do name.to_c_str().with_ref |c| {
+                do name.with_c_str |c| {
                     llvm::LLVMBuildAlloca(self.llbuilder, ty.to_ref(), c)
                 }
             }
@@ -483,6 +479,7 @@ impl Builder {
         debug!("Store %s -> %s",
                self.ccx.tn.val_to_str(val),
                self.ccx.tn.val_to_str(ptr));
+        assert!(is_not_null(self.llbuilder));
         self.count_insn("store");
         unsafe {
             llvm::LLVMBuildStore(self.llbuilder, val, ptr);
@@ -726,7 +723,7 @@ impl Builder {
         }
     }
 
-    pub fn add_span_comment(&self, sp: span, text: &str) {
+    pub fn add_span_comment(&self, sp: Span, text: &str) {
         if self.ccx.sess.asm_comments() {
             let s = fmt!("%s (%s)", text, self.ccx.sess.codemap.span_to_str(sp));
             debug!("%s", s);
@@ -739,13 +736,13 @@ impl Builder {
             let sanitized = text.replace("$", "");
             let comment_text = fmt!("# %s", sanitized.replace("\n", "\n\t# "));
             self.count_insn("inlineasm");
-            let asm = do comment_text.to_c_str().with_ref |c| {
+            let asm = do comment_text.with_c_str |c| {
                 unsafe {
                     llvm::LLVMConstInlineAsm(Type::func([], &Type::void()).to_ref(),
                                              c, noname(), False, False)
                 }
             };
-            self.call(asm, []);
+            self.call(asm, [], []);
         }
     }
 
@@ -770,43 +767,29 @@ impl Builder {
         unsafe {
             let v = llvm::LLVMInlineAsm(
                 fty.to_ref(), asm, cons, volatile, alignstack, dia as c_uint);
-            self.call(v, inputs)
+            self.call(v, inputs, [])
         }
     }
 
-    pub fn call(&self, llfn: ValueRef, args: &[ValueRef]) -> ValueRef {
+    pub fn call(&self, llfn: ValueRef, args: &[ValueRef],
+                attributes: &[(uint, lib::llvm::Attribute)]) -> ValueRef {
         self.count_insn("call");
-
-        debug!("Call(llfn=%s, args=%?)",
-               self.ccx.tn.val_to_str(llfn),
-               args.map(|arg| self.ccx.tn.val_to_str(*arg)));
-
-        do args.as_imm_buf |ptr, len| {
-            unsafe {
-            llvm::LLVMBuildCall(self.llbuilder, llfn, ptr, len as c_uint, noname())
-            }
-        }
-    }
-
-    pub fn fastcall(&self, llfn: ValueRef, args: &[ValueRef]) -> ValueRef {
-        self.count_insn("fastcall");
         unsafe {
             let v = llvm::LLVMBuildCall(self.llbuilder, llfn, vec::raw::to_ptr(args),
                                         args.len() as c_uint, noname());
-            lib::llvm::SetInstructionCallConv(v, lib::llvm::FastCallConv);
+            for &(idx, attr) in attributes.iter() {
+                llvm::LLVMAddInstrAttribute(v, idx as c_uint, attr as c_uint);
+            }
             v
         }
     }
 
     pub fn call_with_conv(&self, llfn: ValueRef, args: &[ValueRef],
-                        conv: CallConv) -> ValueRef {
+                          conv: CallConv, attributes: &[(uint, lib::llvm::Attribute)]) -> ValueRef {
         self.count_insn("callwithconv");
-        unsafe {
-            let v = llvm::LLVMBuildCall(self.llbuilder, llfn, vec::raw::to_ptr(args),
-                                        args.len() as c_uint, noname());
-            lib::llvm::SetInstructionCallConv(v, conv);
-            v
-        }
+        let v = self.call(llfn, args, attributes);
+        lib::llvm::SetInstructionCallConv(v, conv);
+        v
     }
 
     pub fn select(&self, cond: ValueRef, then_val: ValueRef, else_val: ValueRef) -> ValueRef {
@@ -895,7 +878,7 @@ impl Builder {
             let BB: BasicBlockRef = llvm::LLVMGetInsertBlock(self.llbuilder);
             let FN: ValueRef = llvm::LLVMGetBasicBlockParent(BB);
             let M: ModuleRef = llvm::LLVMGetGlobalParent(FN);
-            let T: ValueRef = do "llvm.trap".to_c_str().with_ref |buf| {
+            let T: ValueRef = do "llvm.trap".with_c_str |buf| {
                 llvm::LLVMGetNamedFunction(M, buf)
             };
             assert!((T as int != 0));

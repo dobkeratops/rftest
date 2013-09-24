@@ -22,7 +22,7 @@ semantics as C++11. See the LLVM documentation on [[atomics]].
 
 A quick refresher on memory ordering:
 
-* Acquire - a barrier for aquiring a lock. Subsequent reads and writes
+* Acquire - a barrier for acquiring a lock. Subsequent reads and writes
   take place after the barrier.
 * Release - a barrier for releasing a lock. Preceding reads and writes
   take place before the barrier.
@@ -66,6 +66,9 @@ pub struct TyDesc {
     // `U`, but in the case of `@Trait` or `~Trait` objects, the type
     // `U` is unknown.
     borrow_offset: uint,
+
+    // Name corresponding to the type
+    name: &'static str
 }
 
 #[lang="opaque"]
@@ -75,100 +78,97 @@ pub enum Opaque { }
 #[lang="ty_visitor"]
 #[cfg(not(test))]
 pub trait TyVisitor {
-    fn visit_bot(&self) -> bool;
-    fn visit_nil(&self) -> bool;
-    fn visit_bool(&self) -> bool;
+    fn visit_bot(&mut self) -> bool;
+    fn visit_nil(&mut self) -> bool;
+    fn visit_bool(&mut self) -> bool;
 
-    fn visit_int(&self) -> bool;
-    fn visit_i8(&self) -> bool;
-    fn visit_i16(&self) -> bool;
-    fn visit_i32(&self) -> bool;
-    fn visit_i64(&self) -> bool;
+    fn visit_int(&mut self) -> bool;
+    fn visit_i8(&mut self) -> bool;
+    fn visit_i16(&mut self) -> bool;
+    fn visit_i32(&mut self) -> bool;
+    fn visit_i64(&mut self) -> bool;
 
-    fn visit_uint(&self) -> bool;
-    fn visit_u8(&self) -> bool;
-    fn visit_u16(&self) -> bool;
-    fn visit_u32(&self) -> bool;
-    fn visit_u64(&self) -> bool;
+    fn visit_uint(&mut self) -> bool;
+    fn visit_u8(&mut self) -> bool;
+    fn visit_u16(&mut self) -> bool;
+    fn visit_u32(&mut self) -> bool;
+    fn visit_u64(&mut self) -> bool;
 
-    fn visit_float(&self) -> bool;
-    fn visit_f32(&self) -> bool;
-    fn visit_f64(&self) -> bool;
+    fn visit_float(&mut self) -> bool;
+    fn visit_f32(&mut self) -> bool;
+    fn visit_f64(&mut self) -> bool;
 
-    fn visit_char(&self) -> bool;
+    fn visit_char(&mut self) -> bool;
 
-    fn visit_estr_box(&self) -> bool;
-    fn visit_estr_uniq(&self) -> bool;
-    fn visit_estr_slice(&self) -> bool;
-    fn visit_estr_fixed(&self, n: uint, sz: uint, align: uint) -> bool;
+    fn visit_estr_box(&mut self) -> bool;
+    fn visit_estr_uniq(&mut self) -> bool;
+    fn visit_estr_slice(&mut self) -> bool;
+    fn visit_estr_fixed(&mut self, n: uint, sz: uint, align: uint) -> bool;
 
-    fn visit_box(&self, mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_uniq(&self, mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_uniq_managed(&self, mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_ptr(&self, mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_rptr(&self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_box(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_uniq(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_uniq_managed(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_ptr(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_rptr(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
 
-    fn visit_vec(&self, mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_unboxed_vec(&self, mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_evec_box(&self, mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_evec_uniq(&self, mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_evec_uniq_managed(&self, mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_evec_slice(&self, mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_evec_fixed(&self, n: uint, sz: uint, align: uint,
+    fn visit_vec(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_unboxed_vec(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_evec_box(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_evec_uniq(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_evec_uniq_managed(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_evec_slice(&mut self, mtbl: uint, inner: *TyDesc) -> bool;
+    fn visit_evec_fixed(&mut self, n: uint, sz: uint, align: uint,
                         mtbl: uint, inner: *TyDesc) -> bool;
 
-    fn visit_enter_rec(&self, n_fields: uint,
+    fn visit_enter_rec(&mut self, n_fields: uint,
                        sz: uint, align: uint) -> bool;
-    fn visit_rec_field(&self, i: uint, name: &str,
+    fn visit_rec_field(&mut self, i: uint, name: &str,
                        mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_leave_rec(&self, n_fields: uint,
+    fn visit_leave_rec(&mut self, n_fields: uint,
                        sz: uint, align: uint) -> bool;
 
-    fn visit_enter_class(&self, n_fields: uint,
+    fn visit_enter_class(&mut self, name: &str, named_fields: bool, n_fields: uint,
                          sz: uint, align: uint) -> bool;
-    fn visit_class_field(&self, i: uint, name: &str,
+    fn visit_class_field(&mut self, i: uint, name: &str, named: bool,
                          mtbl: uint, inner: *TyDesc) -> bool;
-    fn visit_leave_class(&self, n_fields: uint,
+    fn visit_leave_class(&mut self, name: &str, named_fields: bool, n_fields: uint,
                          sz: uint, align: uint) -> bool;
 
-    fn visit_enter_tup(&self, n_fields: uint,
+    fn visit_enter_tup(&mut self, n_fields: uint,
                        sz: uint, align: uint) -> bool;
-    fn visit_tup_field(&self, i: uint, inner: *TyDesc) -> bool;
-    fn visit_leave_tup(&self, n_fields: uint,
+    fn visit_tup_field(&mut self, i: uint, inner: *TyDesc) -> bool;
+    fn visit_leave_tup(&mut self, n_fields: uint,
                        sz: uint, align: uint) -> bool;
 
-    fn visit_enter_enum(&self, n_variants: uint,
+    fn visit_enter_enum(&mut self, n_variants: uint,
                         get_disr: extern unsafe fn(ptr: *Opaque) -> int,
                         sz: uint, align: uint) -> bool;
-    fn visit_enter_enum_variant(&self, variant: uint,
+    fn visit_enter_enum_variant(&mut self, variant: uint,
                                 disr_val: int,
                                 n_fields: uint,
                                 name: &str) -> bool;
-    fn visit_enum_variant_field(&self, i: uint, offset: uint, inner: *TyDesc) -> bool;
-    fn visit_leave_enum_variant(&self, variant: uint,
+    fn visit_enum_variant_field(&mut self, i: uint, offset: uint, inner: *TyDesc) -> bool;
+    fn visit_leave_enum_variant(&mut self, variant: uint,
                                 disr_val: int,
                                 n_fields: uint,
                                 name: &str) -> bool;
-    fn visit_leave_enum(&self, n_variants: uint,
+    fn visit_leave_enum(&mut self, n_variants: uint,
                         get_disr: extern unsafe fn(ptr: *Opaque) -> int,
                         sz: uint, align: uint) -> bool;
 
-    fn visit_enter_fn(&self, purity: uint, proto: uint,
+    fn visit_enter_fn(&mut self, purity: uint, proto: uint,
                       n_inputs: uint, retstyle: uint) -> bool;
-    fn visit_fn_input(&self, i: uint, mode: uint, inner: *TyDesc) -> bool;
-    fn visit_fn_output(&self, retstyle: uint, inner: *TyDesc) -> bool;
-    fn visit_leave_fn(&self, purity: uint, proto: uint,
+    fn visit_fn_input(&mut self, i: uint, mode: uint, inner: *TyDesc) -> bool;
+    fn visit_fn_output(&mut self, retstyle: uint, inner: *TyDesc) -> bool;
+    fn visit_leave_fn(&mut self, purity: uint, proto: uint,
                       n_inputs: uint, retstyle: uint) -> bool;
 
-    fn visit_trait(&self) -> bool;
-    fn visit_var(&self) -> bool;
-    fn visit_var_integral(&self) -> bool;
-    fn visit_param(&self, i: uint) -> bool;
-    fn visit_self(&self) -> bool;
-    fn visit_type(&self) -> bool;
-    fn visit_opaque_box(&self) -> bool;
-    fn visit_constr(&self, inner: *TyDesc) -> bool;
-    fn visit_closure_ptr(&self, ck: uint) -> bool;
+    fn visit_trait(&mut self, name: &str) -> bool;
+    fn visit_param(&mut self, i: uint) -> bool;
+    fn visit_self(&mut self) -> bool;
+    fn visit_type(&mut self) -> bool;
+    fn visit_opaque_box(&mut self) -> bool;
+    fn visit_closure_ptr(&mut self, ck: uint) -> bool;
 }
 
 #[abi = "rust-intrinsic"]
@@ -328,26 +328,20 @@ extern "rust-intrinsic" {
     /// Returns `true` if a type is managed (will be allocated on the local heap)
     pub fn contains_managed<T>() -> bool;
 
-    pub fn visit_tydesc(td: *TyDesc, tv: &TyVisitor);
+    pub fn visit_tydesc(td: *TyDesc, tv: &mut TyVisitor);
 
     pub fn frame_address(f: &once fn(*u8));
 
     /// Get the address of the `__morestack` stack growth function.
     pub fn morestack_addr() -> *();
 
-    /// Calculates the offset from a pointer.
-    ///
-    /// This is implemented as an intrinsic to avoid converting to and from an
-    /// integer, since the conversion would throw away aliasing information.
-    pub fn offset<T>(dst: *T, offset: int) -> *T;
-
     /// Calculates the offset from a pointer. The offset *must* be in-bounds of
     /// the object, or one-byte-past-the-end. An arithmetic overflow is also
     /// undefined behaviour.
     ///
-    /// This intrinsic should be preferred over `offset` when the guarantee can
-    /// be satisfied, to enable better optimization.
-    pub fn offset_inbounds<T>(dst: *T, offset: int) -> *T;
+    /// This is implemented as an intrinsic to avoid converting to and from an
+    /// integer, since the conversion would throw away aliasing information.
+    pub fn offset<T>(dst: *T, offset: int) -> *T;
 
     /// Equivalent to the `llvm.memcpy.p0i8.0i8.i32` intrinsic, with a size of
     /// `count` * `size_of::<T>()` and an alignment of `min_align_of::<T>()`

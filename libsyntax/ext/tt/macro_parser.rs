@@ -11,13 +11,13 @@
 // Earley-like parser for macros.
 
 use ast;
-use ast::{matcher, match_tok, match_seq, match_nonterminal, ident};
+use ast::{matcher, match_tok, match_seq, match_nonterminal, Ident};
 use codemap::{BytePos, mk_sp};
 use codemap;
 use parse::lexer::*; //resolve bug?
 use parse::ParseSess;
-use parse::parser::Parser;
 use parse::attr::parser_attr;
+use parse::parser::{LifetimeAndTypesWithoutColons, Parser};
 use parse::token::{Token, EOF, to_str, nonterminal, get_ident_interner, ident_to_str};
 use parse::token;
 
@@ -182,24 +182,24 @@ pub fn initial_matcher_pos(ms: ~[matcher], sep: Option<Token>, lo: BytePos)
 // ast::matcher it was derived from.
 
 pub enum named_match {
-    matched_seq(~[@named_match], codemap::span),
+    matched_seq(~[@named_match], codemap::Span),
     matched_nonterminal(nonterminal)
 }
 
 pub type earley_item = ~MatcherPos;
 
 pub fn nameize(p_s: @mut ParseSess, ms: &[matcher], res: &[@named_match])
-            -> HashMap<ident,@named_match> {
+            -> HashMap<Ident,@named_match> {
     fn n_rec(p_s: @mut ParseSess, m: &matcher, res: &[@named_match],
-             ret_val: &mut HashMap<ident, @named_match>) {
+             ret_val: &mut HashMap<Ident, @named_match>) {
         match *m {
-          codemap::spanned {node: match_tok(_), _} => (),
-          codemap::spanned {node: match_seq(ref more_ms, _, _, _, _), _} => {
+          codemap::Spanned {node: match_tok(_), _} => (),
+          codemap::Spanned {node: match_seq(ref more_ms, _, _, _, _), _} => {
             for next_m in more_ms.iter() {
                 n_rec(p_s, next_m, res, ret_val)
             };
           }
-          codemap::spanned {
+          codemap::Spanned {
                 node: match_nonterminal(ref bind_name, _, idx), span: sp
           } => {
             if ret_val.contains_key(bind_name) {
@@ -216,9 +216,9 @@ pub fn nameize(p_s: @mut ParseSess, ms: &[matcher], res: &[@named_match])
 }
 
 pub enum parse_result {
-    success(HashMap<ident, @named_match>),
-    failure(codemap::span, ~str),
-    error(codemap::span, ~str)
+    success(HashMap<Ident, @named_match>),
+    failure(codemap::Span, ~str),
+    error(codemap::Span, ~str)
 }
 
 pub fn parse_or_else(
@@ -226,11 +226,20 @@ pub fn parse_or_else(
     cfg: ast::CrateConfig,
     rdr: @mut reader,
     ms: ~[matcher]
-) -> HashMap<ident, @named_match> {
+) -> HashMap<Ident, @named_match> {
     match parse(sess, cfg, rdr, ms) {
       success(m) => m,
       failure(sp, str) => sess.span_diagnostic.span_fatal(sp, str),
       error(sp, str) => sess.span_diagnostic.span_fatal(sp, str)
+    }
+}
+
+// perform a token equality check, ignoring syntax context (that is, an unhygienic comparison)
+pub fn token_name_eq(t1 : &Token, t2 : &Token) -> bool {
+    match (t1,t2) {
+        (&token::IDENT(id1,_),&token::IDENT(id2,_)) =>
+        id1.name == id2.name,
+        _ => *t1 == *t2
     }
 }
 
@@ -297,7 +306,10 @@ pub fn parse(
                     // the *_t vars are workarounds for the lack of unary move
                     match ei.sep {
                       Some(ref t) if idx == len => { // we need a separator
-                        if tok == (*t) { //pass the separator
+                        // i'm conflicted about whether this should be hygienic....
+                        // though in this case, if the separators are never legal
+                        // idents, it shouldn't matter.
+                        if token_name_eq(&tok, t) { //pass the separator
                             let mut ei_t = ei.clone();
                             ei_t.idx += 1;
                             next_eis.push(ei_t);
@@ -343,7 +355,8 @@ pub fn parse(
                   match_nonterminal(_,_,_) => { bb_eis.push(ei) }
                   match_tok(ref t) => {
                     let mut ei_t = ei.clone();
-                    if (*t) == tok {
+                    //if (token_name_eq(t,&tok)) {
+                    if (token::mtwt_token_eq(t,&tok)) {
                         ei_t.idx += 1;
                         next_eis.push(ei_t);
                     }
@@ -353,7 +366,7 @@ pub fn parse(
         }
 
         /* error messages here could be improved with links to orig. rules */
-        if tok == EOF {
+        if token_name_eq(&tok, &EOF) {
             if eof_eis.len() == 1u {
                 let mut v = ~[];
                 for dv in eof_eis[0u].matches.mut_iter() {
@@ -430,7 +443,9 @@ pub fn parse_nt(p: &Parser, name: &str) -> nonterminal {
         _ => p.fatal(~"expected ident, found "
                      + token::to_str(get_ident_interner(), p.token))
       },
-      "path" => token::nt_path(~p.parse_path_with_tps(false)),
+      "path" => {
+        token::nt_path(~p.parse_path(LifetimeAndTypesWithoutColons).path)
+      }
       "attr" => token::nt_attr(@p.parse_attribute(false)),
       "tt" => {
         *p.quote_depth += 1u; //but in theory, non-quoted tts might be useful

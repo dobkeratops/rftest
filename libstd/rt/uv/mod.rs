@@ -10,7 +10,7 @@
 
 /*!
 
-Bindings to libuv, along with the default implementation of `core::rt::rtio`.
+Bindings to libuv, along with the default implementation of `std::rt::rtio`.
 
 UV types consist of the event loop (Loop), Watchers, Requests and
 Callbacks.
@@ -53,11 +53,13 @@ use rt::io::IoError;
 
 //#[cfg(test)] use unstable::run_in_bare_thread;
 
-pub use self::file::FsRequest;
+pub use self::file::{FsRequest};
 pub use self::net::{StreamWatcher, TcpWatcher, UdpWatcher};
 pub use self::idle::IdleWatcher;
 pub use self::timer::TimerWatcher;
 pub use self::async::AsyncWatcher;
+pub use self::process::Process;
+pub use self::pipe::Pipe;
 
 /// The implementation of `rtio` for libuv
 pub mod uvio;
@@ -70,6 +72,9 @@ pub mod net;
 pub mod idle;
 pub mod timer;
 pub mod async;
+pub mod addrinfo;
+pub mod process;
+pub mod pipe;
 
 /// XXX: Loop(*handle) is buggy with destructors. Normal structs
 /// with dtors may not be destructured, but tuple structs can,
@@ -125,14 +130,17 @@ pub type ReadCallback = ~fn(StreamWatcher, int, Buf, Option<UvError>);
 pub type NullCallback = ~fn();
 pub type IdleCallback = ~fn(IdleWatcher, Option<UvError>);
 pub type ConnectionCallback = ~fn(StreamWatcher, Option<UvError>);
-pub type FsCallback = ~fn(FsRequest, Option<UvError>);
+pub type FsCallback = ~fn(&mut FsRequest, Option<UvError>);
+// first int is exit_status, second is term_signal
+pub type ExitCallback = ~fn(Process, int, int, Option<UvError>);
 pub type TimerCallback = ~fn(TimerWatcher, Option<UvError>);
 pub type AsyncCallback = ~fn(AsyncWatcher, Option<UvError>);
 pub type UdpReceiveCallback = ~fn(UdpWatcher, int, Buf, SocketAddr, uint, Option<UvError>);
 pub type UdpSendCallback = ~fn(UdpWatcher, Option<UvError>);
 
 
-/// Callbacks used by StreamWatchers, set as custom data on the foreign handle
+/// Callbacks used by StreamWatchers, set as custom data on the foreign handle.
+/// XXX: Would be better not to have all watchers allocate room for all callback types.
 struct WatcherData {
     read_cb: Option<ReadCallback>,
     write_cb: Option<ConnectionCallback>,
@@ -143,7 +151,8 @@ struct WatcherData {
     timer_cb: Option<TimerCallback>,
     async_cb: Option<AsyncCallback>,
     udp_recv_cb: Option<UdpReceiveCallback>,
-    udp_send_cb: Option<UdpSendCallback>
+    udp_send_cb: Option<UdpSendCallback>,
+    exit_cb: Option<ExitCallback>,
 }
 
 pub trait WatcherInterop {
@@ -175,7 +184,8 @@ impl<H, W: Watcher + NativeHandle<*H>> WatcherInterop for W {
                 timer_cb: None,
                 async_cb: None,
                 udp_recv_cb: None,
-                udp_send_cb: None
+                udp_send_cb: None,
+                exit_cb: None,
             };
             let data = transmute::<~WatcherData, *c_void>(data);
             uvll::set_data_for_uv_handle(self.native_handle(), data);
@@ -202,12 +212,12 @@ impl<H, W: Watcher + NativeHandle<*H>> WatcherInterop for W {
 // XXX: Need to define the error constants like EOF so they can be
 // compared to the UvError type
 
-pub struct UvError(uvll::uv_err_t);
+pub struct UvError(c_int);
 
 impl UvError {
     pub fn name(&self) -> ~str {
         unsafe {
-            let inner = match self { &UvError(ref a) => a };
+            let inner = match self { &UvError(a) => a };
             let name_str = uvll::err_name(inner);
             assert!(name_str.is_not_null());
             from_c_str(name_str)
@@ -216,7 +226,7 @@ impl UvError {
 
     pub fn desc(&self) -> ~str {
         unsafe {
-            let inner = match self { &UvError(ref a) => a };
+            let inner = match self { &UvError(a) => a };
             let desc_str = uvll::strerror(inner);
             assert!(desc_str.is_not_null());
             from_c_str(desc_str)
@@ -224,7 +234,7 @@ impl UvError {
     }
 
     pub fn is_eof(&self) -> bool {
-        self.code == uvll::EOF
+        **self == uvll::EOF
     }
 }
 
@@ -236,16 +246,8 @@ impl ToStr for UvError {
 
 #[test]
 fn error_smoke_test() {
-    let err = uvll::uv_err_t { code: 1, sys_errno_: 1 };
-    let err: UvError = UvError(err);
+    let err: UvError = UvError(uvll::EOF);
     assert_eq!(err.to_str(), ~"EOF: end of file");
-}
-
-pub fn last_uv_error<H, W: Watcher + NativeHandle<*H>>(watcher: &W) -> UvError {
-    unsafe {
-        let loop_ = watcher.event_loop();
-        UvError(uvll::last_error(loop_.native_handle()))
-    }
 }
 
 pub fn uv_error_to_io_error(uverr: UvError) -> IoError {
@@ -255,10 +257,10 @@ pub fn uv_error_to_io_error(uverr: UvError) -> IoError {
         use rt::io::*;
 
         // uv error descriptions are static
-        let c_desc = uvll::strerror(&*uverr);
+        let c_desc = uvll::strerror(*uverr);
         let desc = str::raw::c_str_to_static_slice(c_desc);
 
-        let kind = match uverr.code {
+        let kind = match *uverr {
             UNKNOWN => OtherIoError,
             OK => OtherIoError,
             EOF => EndOfFile,
@@ -266,8 +268,8 @@ pub fn uv_error_to_io_error(uverr: UvError) -> IoError {
             ECONNREFUSED => ConnectionRefused,
             ECONNRESET => ConnectionReset,
             EPIPE => BrokenPipe,
-            _ => {
-                rtdebug!("uverr.code %u", uverr.code as uint);
+            err => {
+                rtdebug!("uverr.code %d", err as int);
                 // XXX: Need to map remaining uv error types
                 OtherIoError
             }
@@ -282,18 +284,12 @@ pub fn uv_error_to_io_error(uverr: UvError) -> IoError {
 }
 
 /// Given a uv handle, convert a callback status to a UvError
-pub fn status_to_maybe_uv_error<T, U: Watcher + NativeHandle<*T>>(handle: U,
-                                                                 status: c_int) -> Option<UvError> {
-    if status != -1 {
+pub fn status_to_maybe_uv_error(status: c_int) -> Option<UvError>
+{
+    if status >= 0 {
         None
     } else {
-        unsafe {
-            rtdebug!("handle: %x", handle.native_handle() as uint);
-            let loop_ = uvll::get_loop_for_uv_handle(handle.native_handle());
-            rtdebug!("loop: %x", loop_ as uint);
-            let err = uvll::last_error(loop_);
-            Some(UvError(err))
-        }
+        Some(UvError(status))
     }
 }
 
@@ -310,6 +306,8 @@ pub fn slice_to_uv_buf(v: &[u8]) -> Buf {
 
 /// Transmute an owned vector to a Buf
 pub fn vec_to_uv_buf(v: ~[u8]) -> Buf {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         let data = malloc(v.len() as size_t) as *u8;
         assert!(data.is_not_null());
@@ -323,6 +321,8 @@ pub fn vec_to_uv_buf(v: ~[u8]) -> Buf {
 
 /// Transmute a Buf that was once a ~[u8] back to ~[u8]
 pub fn vec_from_uv_buf(buf: Buf) -> Option<~[u8]> {
+    #[fixed_stack_segment]; #[inline(never)];
+
     if !(buf.len == 0 && buf.base.is_null()) {
         let v = unsafe { vec::from_buf(buf.base, buf.len as uint) };
         unsafe { free(buf.base as *c_void) };

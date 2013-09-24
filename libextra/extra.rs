@@ -21,9 +21,13 @@ Rust extras are part of the standard Rust distribution.
 */
 
 #[link(name = "extra",
-       vers = "0.8-pre",
+       vers = "0.8",
        uuid = "122bed0b-c19b-4b82-b0b7-7ae8aead7297",
        url = "https://github.com/mozilla/rust/tree/master/src/libextra")];
+
+#[doc(html_logo_url = "http://www.rust-lang.org/logos/rust-logo-128x128-blk.png",
+      html_favicon_url = "http://www.rust-lang.org/favicon.ico",
+      passes = "strip-hidden")];
 
 #[comment = "Rust extras"];
 #[license = "MIT/ASL2"];
@@ -55,7 +59,6 @@ pub mod flatpipes;
 
 pub mod container;
 pub mod bitv;
-pub mod fun_treemap;
 pub mod list;
 pub mod ringbuf;
 pub mod priority_queue;
@@ -71,6 +74,8 @@ pub mod treemap;
 mod cryptoutil;
 #[path="crypto/digest.rs"]
 pub mod digest;
+#[path="crypto/md5.rs"]
+pub mod md5;
 #[path="crypto/sha1.rs"]
 pub mod sha1;
 #[path="crypto/sha2.rs"]
@@ -84,10 +89,10 @@ pub mod getopts;
 pub mod json;
 pub mod md4;
 pub mod tempfile;
+pub mod glob;
 pub mod term;
 pub mod time;
 pub mod arena;
-pub mod par;
 pub mod base64;
 pub mod rl;
 pub mod workcache;
@@ -103,6 +108,8 @@ pub mod semver;
 pub mod fileinput;
 pub mod flate;
 pub mod hex;
+pub mod uuid;
+
 
 #[cfg(unicode)]
 mod unicode;

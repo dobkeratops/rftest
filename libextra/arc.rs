@@ -44,7 +44,7 @@ use sync;
 use sync::{Mutex, RWLock};
 
 use std::cast;
-use std::unstable::sync::UnsafeAtomicRcBox;
+use std::unstable::sync::UnsafeArc;
 use std::task;
 use std::borrow;
 
@@ -108,7 +108,7 @@ impl<'self> Condvar<'self> {
  ****************************************************************************/
 
 /// An atomically reference counted wrapper for shared immutable state.
-pub struct Arc<T> { priv x: UnsafeAtomicRcBox<T> }
+pub struct Arc<T> { priv x: UnsafeArc<T> }
 
 
 /**
@@ -118,7 +118,7 @@ pub struct Arc<T> { priv x: UnsafeAtomicRcBox<T> }
 impl<T:Freeze+Send> Arc<T> {
     /// Create an atomically reference counted wrapper.
     pub fn new(data: T) -> Arc<T> {
-        Arc { x: UnsafeAtomicRcBox::new(data) }
+        Arc { x: UnsafeArc::new(data) }
     }
 
     pub fn get<'a>(&'a self) -> &'a T {
@@ -159,8 +159,10 @@ impl<T:Freeze + Send> Clone for Arc<T> {
 
 #[doc(hidden)]
 struct MutexArcInner<T> { priv lock: Mutex, priv failed: bool, priv data: T }
+
 /// An Arc with mutable data protected by a blocking mutex.
-struct MutexArc<T> { priv x: UnsafeAtomicRcBox<MutexArcInner<T>> }
+#[no_freeze]
+struct MutexArc<T> { priv x: UnsafeArc<MutexArcInner<T>> }
 
 
 impl<T:Send> Clone for MutexArc<T> {
@@ -187,7 +189,7 @@ impl<T:Send> MutexArc<T> {
             lock: Mutex::new_with_condvars(num_condvars),
             failed: false, data: user_data
         };
-        MutexArc { x: UnsafeAtomicRcBox::new(data) }
+        MutexArc { x: UnsafeArc::new(data) }
     }
 
     /**
@@ -199,10 +201,10 @@ impl<T:Send> MutexArc<T> {
      * The reason this function is 'unsafe' is because it is possible to
      * construct a circular reference among multiple Arcs by mutating the
      * underlying data. This creates potential for deadlock, but worse, this
-     * will guarantee a memory leak of all involved Arcs. Using mutex Arcs
+     * will guarantee a memory leak of all involved Arcs. Using MutexArcs
      * inside of other Arcs is safe in absence of circular references.
      *
-     * If you wish to nest mutex_arcs, one strategy for ensuring safety at
+     * If you wish to nest MutexArcs, one strategy for ensuring safety at
      * runtime is to add a "nesting level counter" inside the stored data, and
      * when traversing the arcs, assert that they monotonically decrease.
      *
@@ -214,7 +216,7 @@ impl<T:Send> MutexArc<T> {
      * blocked on the mutex) will also fail immediately.
      */
     #[inline]
-    pub unsafe fn access<U>(&self, blk: &fn(x: &mut T) -> U) -> U {
+    pub unsafe fn unsafe_access<U>(&self, blk: &fn(x: &mut T) -> U) -> U {
         let state = self.x.get();
         // Borrowck would complain about this if the function were
         // not already unsafe. See borrow_rwlock, far below.
@@ -225,9 +227,9 @@ impl<T:Send> MutexArc<T> {
         }
     }
 
-    /// As access(), but with a condvar, as sync::mutex.lock_cond().
+    /// As unsafe_access(), but with a condvar, as sync::mutex.lock_cond().
     #[inline]
-    pub unsafe fn access_cond<'x, 'c, U>(&self,
+    pub unsafe fn unsafe_access_cond<'x, 'c, U>(&self,
                                          blk: &fn(x: &'x mut T,
                                                   c: &'c Condvar) -> U)
                                          -> U {
@@ -259,6 +261,39 @@ impl<T:Send> MutexArc<T> {
     }
 }
 
+impl<T:Freeze + Send> MutexArc<T> {
+
+    /**
+     * As unsafe_access.
+     *
+     * The difference between access and unsafe_access is that the former
+     * forbids mutexes to be nested. While unsafe_access can be used on
+     * MutexArcs without freezable interiors, this safe version of access
+     * requires the Freeze bound, which prohibits access on MutexArcs which
+     * might contain nested MutexArcs inside.
+     *
+     * The purpose of this is to offer a safe implementation of MutexArc to be
+     * used instead of RWArc in cases where no readers are needed and sightly
+     * better performance is required.
+     *
+     * Both methods have the same failure behaviour as unsafe_access and
+     * unsafe_access_cond.
+     */
+    #[inline]
+    pub fn access<U>(&self, blk: &fn(x: &mut T) -> U) -> U {
+        unsafe { self.unsafe_access(blk) }
+    }
+
+    /// As unsafe_access_cond but safe and Freeze.
+    #[inline]
+    pub fn access_cond<'x, 'c, U>(&self,
+                                  blk: &fn(x: &'x mut T,
+                                           c: &'c Condvar) -> U)
+                                  -> U {
+        unsafe { self.unsafe_access_cond(blk) }
+    }
+}
+
 // Common code for {mutex.access,rwlock.write}{,_cond}.
 #[inline]
 #[doc(hidden)]
@@ -278,7 +313,7 @@ struct PoisonOnFail {
 }
 
 impl Drop for PoisonOnFail {
-    fn drop(&self) {
+    fn drop(&mut self) {
         unsafe {
             /* assert!(!*self.failed);
                -- might be false in case of cond.wait() */
@@ -309,7 +344,7 @@ struct RWArcInner<T> { priv lock: RWLock, priv failed: bool, priv data: T }
  */
 #[no_freeze]
 struct RWArc<T> {
-    priv x: UnsafeAtomicRcBox<RWArcInner<T>>,
+    priv x: UnsafeArc<RWArcInner<T>>,
 }
 
 impl<T:Freeze + Send> Clone for RWArc<T> {
@@ -335,7 +370,7 @@ impl<T:Freeze + Send> RWArc<T> {
             lock: RWLock::new_with_condvars(num_condvars),
             failed: false, data: user_data
         };
-        RWArc { x: UnsafeAtomicRcBox::new(data), }
+        RWArc { x: UnsafeArc::new(data), }
     }
 
     /**
@@ -572,10 +607,10 @@ mod tests {
 
         let (p, c) = comm::stream();
 
-        do task::spawn() || {
-            let arc_v : Arc<~[int]> = p.recv();
+        do task::spawn {
+            let arc_v: Arc<~[int]> = p.recv();
 
-            let v = (*arc_v.get()).clone();
+            let v = arc_v.get().clone();
             assert_eq!(v[3], 4);
         };
 
@@ -589,90 +624,103 @@ mod tests {
 
     #[test]
     fn test_mutex_arc_condvar() {
-        unsafe {
-            let arc = ~MutexArc::new(false);
-            let arc2 = ~arc.clone();
-            let (p,c) = comm::oneshot();
-            let (c,p) = (Cell::new(c), Cell::new(p));
-            do task::spawn || {
-                // wait until parent gets in
-                p.take().recv();
-                do arc2.access_cond |state, cond| {
-                    *state = true;
-                    cond.signal();
-                }
+        let arc = ~MutexArc::new(false);
+        let arc2 = ~arc.clone();
+        let (p,c) = comm::oneshot();
+        let (c,p) = (Cell::new(c), Cell::new(p));
+        do task::spawn || {
+            // wait until parent gets in
+            p.take().recv();
+            do arc2.access_cond |state, cond| {
+                *state = true;
+                cond.signal();
             }
-            do arc.access_cond |state, cond| {
-                c.take().send(());
-                assert!(!*state);
-                while !*state {
-                    cond.wait();
-                }
+        }
+
+        do arc.access_cond |state, cond| {
+            c.take().send(());
+            assert!(!*state);
+            while !*state {
+                cond.wait();
             }
         }
     }
 
-    #[test] #[should_fail] #[ignore(cfg(windows))]
+    #[test] #[should_fail]
     fn test_arc_condvar_poison() {
-        unsafe {
-            let arc = ~MutexArc::new(1);
-            let arc2 = ~arc.clone();
-            let (p, c) = comm::stream();
+        let arc = ~MutexArc::new(1);
+        let arc2 = ~arc.clone();
+        let (p, c) = comm::stream();
 
-            do task::spawn_unlinked || {
-                let _ = p.recv();
-                do arc2.access_cond |one, cond| {
-                    cond.signal();
-                    // Parent should fail when it wakes up.
-                    assert_eq!(*one, 0);
-                }
+        do task::spawn_unlinked || {
+            let _ = p.recv();
+            do arc2.access_cond |one, cond| {
+                cond.signal();
+                // Parent should fail when it wakes up.
+                assert_eq!(*one, 0);
             }
+        }
 
-            do arc.access_cond |one, cond| {
-                c.send(());
-                while *one == 1 {
-                    cond.wait();
-                }
+        do arc.access_cond |one, cond| {
+            c.send(());
+            while *one == 1 {
+                cond.wait();
             }
         }
     }
-    #[test] #[should_fail] #[ignore(cfg(windows))]
+
+    #[test] #[should_fail]
     fn test_mutex_arc_poison() {
-        unsafe {
-            let arc = ~MutexArc::new(1);
-            let arc2 = ~arc.clone();
-            do task::try || {
-                do arc2.access |one| {
-                    assert_eq!(*one, 2);
-                }
-            };
-            do arc.access |one| {
-                assert_eq!(*one, 1);
+        let arc = ~MutexArc::new(1);
+        let arc2 = ~arc.clone();
+        do task::try || {
+            do arc2.access |one| {
+                assert_eq!(*one, 2);
             }
+        };
+        do arc.access |one| {
+            assert_eq!(*one, 1);
         }
     }
-    #[test] #[should_fail] #[ignore(cfg(windows))]
+
+    #[test] #[should_fail]
     pub fn test_mutex_arc_unwrap_poison() {
         let arc = MutexArc::new(1);
         let arc2 = ~(&arc).clone();
         let (p, c) = comm::stream();
         do task::spawn {
-            unsafe {
-                do arc2.access |one| {
-                    c.send(());
-                    assert!(*one == 2);
-                }
+            do arc2.access |one| {
+                c.send(());
+                assert!(*one == 2);
             }
         }
         let _ = p.recv();
         let one = arc.unwrap();
         assert!(one == 1);
     }
-    #[test] #[should_fail] #[ignore(cfg(windows))]
+
+    #[test]
+    fn test_unsafe_mutex_arc_nested() {
+        unsafe {
+            // Tests nested mutexes and access
+            // to underlaying data.
+            let arc = ~MutexArc::new(1);
+            let arc2 = ~MutexArc::new(*arc);
+            do task::spawn || {
+                do (*arc2).unsafe_access |mutex| {
+                    do (*mutex).access |one| {
+                        assert!(*one == 1);
+                    }
+                }
+            };
+        }
+    }
+
+    #[test] #[should_fail]
     fn test_rw_arc_poison_wr() {
-        let arc = ~RWArc::new(1);
-        let arc2 = (*arc).clone();
-        do task::try || {
+        let arc = RWArc::new(1);
+        let arc2 = arc.clone();
+        do task::try {
             do arc2.write |one| {
                 assert_eq!(*one, 2);
             }
@@ -681,11 +729,12 @@ mod tests {
             assert_eq!(*one, 1);
         }
     }
-    #[test] #[should_fail] #[ignore(cfg(windows))]
+
+    #[test] #[should_fail]
     fn test_rw_arc_poison_ww() {
-        let arc = ~RWArc::new(1);
-        let arc2 = (*arc).clone();
-        do task::try || {
+        let arc = RWArc::new(1);
+        let arc2 = arc.clone();
+        do task::try {
             do arc2.write |one| {
                 assert_eq!(*one, 2);
             }
@@ -694,11 +743,11 @@ mod tests {
             assert_eq!(*one, 1);
         }
     }
-    #[test] #[should_fail] #[ignore(cfg(windows))]
+    #[test] #[should_fail]
     fn test_rw_arc_poison_dw() {
-        let arc = ~RWArc::new(1);
-        let arc2 = (*arc).clone();
-        do task::try || {
+        let arc = RWArc::new(1);
+        let arc2 = arc.clone();
+        do task::try {
             do arc2.write_downgrade |mut write_mode| {
                 do write_mode.write |one| {
                     assert_eq!(*one, 2);
@@ -709,11 +758,11 @@ mod tests {
             assert_eq!(*one, 1);
         }
     }
-    #[test] #[ignore(cfg(windows))]
+    #[test]
     fn test_rw_arc_no_poison_rr() {
-        let arc = ~RWArc::new(1);
-        let arc2 = (*arc).clone();
-        do task::try || {
+        let arc = RWArc::new(1);
+        let arc2 = arc.clone();
+        do task::try {
             do arc2.read |one| {
                 assert_eq!(*one, 2);
             }
@@ -722,11 +771,11 @@ mod tests {
             assert_eq!(*one, 1);
         }
     }
-    #[test] #[ignore(cfg(windows))]
+    #[test]
     fn test_rw_arc_no_poison_rw() {
-        let arc = ~RWArc::new(1);
-        let arc2 = (*arc).clone();
-        do task::try || {
+        let arc = RWArc::new(1);
+        let arc2 = arc.clone();
+        do task::try {
             do arc2.read |one| {
                 assert_eq!(*one, 2);
             }
@@ -735,14 +784,14 @@ mod tests {
             assert_eq!(*one, 1);
         }
     }
-    #[test] #[ignore(cfg(windows))]
+    #[test]
     fn test_rw_arc_no_poison_dr() {
-        let arc = ~RWArc::new(1);
-        let arc2 = (*arc).clone();
-        do task::try || {
+        let arc = RWArc::new(1);
+        let arc2 = arc.clone();
+        do task::try {
             do arc2.write_downgrade |write_mode| {
                 let read_mode = arc2.downgrade(write_mode);
-                do (&read_mode).read |one| {
+                do read_mode.read |one| {
                     assert_eq!(*one, 2);
                 }
             }
@@ -753,16 +802,16 @@ mod tests {
     }
     #[test]
     fn test_rw_arc() {
-        let arc = ~RWArc::new(0);
-        let arc2 = (*arc).clone();
-        let (p,c) = comm::stream();
+        let arc = RWArc::new(0);
+        let arc2 = arc.clone();
+        let (p, c) = comm::stream();
 
-        do task::spawn || {
+        do task::spawn {
             do arc2.write |num| {
                 do 10.times {
                     let tmp = *num;
                     *num = -1;
-                    task::yield();
+                    task::deschedule();
                     *num = tmp + 1;
                 }
                 c.send(());
@@ -772,7 +821,7 @@ mod tests {
         // Readers try to catch the writer in the act
         let mut children = ~[];
         do 5.times {
-            let arc3 = (*arc).clone();
+            let arc3 = arc.clone();
             let mut builder = task::task();
             builder.future_result(|r| children.push(r));
             do builder.spawn {
@@ -801,15 +850,15 @@ mod tests {
         // (4) tells writer and all other readers to contend as it downgrades.
         // (5) Writer attempts to set state back to 42, while downgraded task
         //     and all reader tasks assert that it's 31337.
-        let arc = ~RWArc::new(0);
+        let arc = RWArc::new(0);
 
         // Reader tasks
         let mut reader_convos = ~[];
         do 10.times {
-            let ((rp1,rc1),(rp2,rc2)) = (comm::stream(),comm::stream());
+            let ((rp1, rc1), (rp2, rc2)) = (comm::stream(), comm::stream());
             reader_convos.push((rc1, rp2));
-            let arcn = (*arc).clone();
-            do task::spawn || {
+            let arcn = arc.clone();
+            do task::spawn {
                 rp1.recv(); // wait for downgrader to give go-ahead
                 do arcn.read |state| {
                     assert_eq!(*state, 31337);
@@ -819,8 +868,8 @@ mod tests {
         }
 
         // Writer task
-        let arc2 = (*arc).clone();
-        let ((wp1,wc1),(wp2,wc2)) = (comm::stream(),comm::stream());
+        let arc2 = arc.clone();
+        let ((wp1, wc1), (wp2, wc2)) = (comm::stream(), comm::stream());
         do task::spawn || {
             wp1.recv();
             do arc2.write_cond |state, cond| {
@@ -853,7 +902,7 @@ mod tests {
                 }
             }
             let read_mode = arc.downgrade(write_mode);
-            do (&read_mode).read |state| {
+            do read_mode.read |state| {
                 // complete handshake with other readers
                 for &(_, ref rp) in reader_convos.iter() {
                     rp.recv()
@@ -876,11 +925,11 @@ mod tests {
         // line in RWLock::write_cond() that looks like:
         //     "blk(&Condvar { order: opt_lock, ..*cond })"
         // with just "blk(cond)".
-        let x = ~RWArc::new(true);
+        let x = RWArc::new(true);
         let (wp, wc) = comm::stream();
 
         // writer task
-        let xw = (*x).clone();
+        let xw = x.clone();
         do task::spawn {
             do xw.write_cond |state, c| {
                 wc.send(()); // tell downgrader it's ok to go
@@ -901,7 +950,7 @@ mod tests {
                 c.signal();
             }
             // make a reader task to trigger the "reader cloud lock" handoff
-            let xr = (*x).clone();
+            let xr = x.clone();
             let (rp, rc) = comm::stream();
             do task::spawn {
                 rc.send(());
@@ -913,7 +962,7 @@ mod tests {
             do read_mode.read |state| {
                 // if writer mistakenly got in, make sure it mutates state
                 // before we assert on it
-                do 5.times { task::yield(); }
+                do 5.times { task::deschedule(); }
                 // make sure writer didn't get in.
                 assert!(*state);
             }
@@ -921,9 +970,9 @@ mod tests {
     }
     #[test]
     fn test_rw_write_cond_downgrade_read_race() {
-        // Ideally the above test case would have yield statements in it that
+        // Ideally the above test case would have deschedule statements in it that
         // helped to expose the race nearly 100% of the time... but adding
-        // yields in the intuitively-right locations made it even less likely,
+        // deschedules in the intuitively-right locations made it even less likely,
         // and I wasn't sure why :( . This is a mediocre "next best" option.
         do 8.times { test_rw_write_cond_downgrade_read_race_helper() }
     }

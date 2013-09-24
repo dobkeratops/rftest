@@ -18,11 +18,11 @@ library.
 
 */
 
-use ast::{enum_def, ident, item, Generics, struct_def};
+use ast::{enum_def, Ident, item, Generics, struct_def};
 use ast::{MetaItem, MetaList, MetaNameValue, MetaWord};
 use ext::base::ExtCtxt;
 use ext::build::AstBuilder;
-use codemap::span;
+use codemap::Span;
 
 pub mod clone;
 pub mod iter_bytes;
@@ -31,6 +31,7 @@ pub mod decodable;
 pub mod rand;
 pub mod to_str;
 pub mod zero;
+pub mod default;
 
 #[path="cmp/eq.rs"]
 pub mod eq;
@@ -45,20 +46,20 @@ pub mod totalord;
 pub mod generic;
 
 pub type ExpandDerivingStructDefFn<'self> = &'self fn(@ExtCtxt,
-                                                       span,
+                                                       Span,
                                                        x: &struct_def,
-                                                       ident,
+                                                       Ident,
                                                        y: &Generics)
                                                  -> @item;
 pub type ExpandDerivingEnumDefFn<'self> = &'self fn(@ExtCtxt,
-                                                    span,
+                                                    Span,
                                                     x: &enum_def,
-                                                    ident,
+                                                    Ident,
                                                     y: &Generics)
                                                  -> @item;
 
 pub fn expand_meta_deriving(cx: @ExtCtxt,
-                            _span: span,
+                            _span: Span,
                             mitem: @MetaItem,
                             in_items: ~[@item])
                          -> ~[@item] {
@@ -97,6 +98,7 @@ pub fn expand_meta_deriving(cx: @ExtCtxt,
 
                             "ToStr" => expand!(to_str::expand_deriving_to_str),
                             "Zero" => expand!(zero::expand_deriving_zero),
+                            "Default" => expand!(default::expand_deriving_default),
 
                             ref tname => {
                                 cx.span_err(titem.span, fmt!("unknown \

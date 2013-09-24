@@ -14,7 +14,7 @@
  */
 
 #[link(name = "syntax",
-       vers = "0.8-pre",
+       vers = "0.8",
        uuid = "9311401b-d6ea-4cd9-a1d9-61f89499c645")];
 
 #[license = "MIT/ASL2"];
@@ -43,7 +43,6 @@ pub mod ast_util;
 pub mod ast_map;
 pub mod visit;
 pub mod fold;
-pub mod oldvisit;
 
 
 pub mod parse;
@@ -73,7 +72,7 @@ pub mod ext {
 
     pub mod cfg;
     pub mod fmt;
-    pub mod ifmt;
+    pub mod format;
     pub mod env;
     pub mod bytes;
     pub mod concat_idents;

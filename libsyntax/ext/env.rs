@@ -15,42 +15,42 @@
  */
 
 use ast;
-use codemap::span;
+use codemap::Span;
 use ext::base::*;
 use ext::base;
 use ext::build::AstBuilder;
 
 use std::os;
 
-pub fn expand_option_env(ext_cx: @ExtCtxt, sp: span, tts: &[ast::token_tree])
+pub fn expand_option_env(cx: @ExtCtxt, sp: Span, tts: &[ast::token_tree])
     -> base::MacResult {
-    let var = get_single_str_from_tts(ext_cx, sp, tts, "option_env!");
+    let var = get_single_str_from_tts(cx, sp, tts, "option_env!");
 
     let e = match os::getenv(var) {
-      None => quote_expr!(::std::option::None),
-      Some(s) => quote_expr!(::std::option::Some($s))
+      None => quote_expr!(cx, ::std::option::None::<&'static str>),
+      Some(s) => quote_expr!(cx, ::std::option::Some($s))
     };
     MRExpr(e)
 }
 
-pub fn expand_env(ext_cx: @ExtCtxt, sp: span, tts: &[ast::token_tree])
+pub fn expand_env(cx: @ExtCtxt, sp: Span, tts: &[ast::token_tree])
     -> base::MacResult {
-    let exprs = get_exprs_from_tts(ext_cx, sp, tts);
+    let exprs = get_exprs_from_tts(cx, sp, tts);
 
     if exprs.len() == 0 {
-        ext_cx.span_fatal(sp, "env! takes 1 or 2 arguments");
+        cx.span_fatal(sp, "env! takes 1 or 2 arguments");
     }
 
-    let var = expr_to_str(ext_cx, exprs[0], "expected string literal");
+    let var = expr_to_str(cx, exprs[0], "expected string literal");
     let msg = match exprs.len() {
         1 => fmt!("Environment variable %s not defined", var).to_managed(),
-        2 => expr_to_str(ext_cx, exprs[1], "expected string literal"),
-        _ => ext_cx.span_fatal(sp, "env! takes 1 or 2 arguments")
+        2 => expr_to_str(cx, exprs[1], "expected string literal"),
+        _ => cx.span_fatal(sp, "env! takes 1 or 2 arguments")
     };
 
     let e = match os::getenv(var) {
-        None => ext_cx.span_fatal(sp, msg),
-        Some(s) => ext_cx.expr_str(sp, s.to_managed())
+        None => cx.span_fatal(sp, msg),
+        Some(s) => cx.expr_str(sp, s.to_managed())
     };
     MRExpr(e)
 }

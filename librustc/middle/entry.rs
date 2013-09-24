@@ -14,11 +14,10 @@ use driver::session::Session;
 use syntax::ast::{Crate, NodeId, item, item_fn};
 use syntax::ast_map;
 use syntax::attr;
-use syntax::codemap::span;
-use syntax::oldvisit::{default_visitor, mk_vt, vt, Visitor, visit_crate};
-use syntax::oldvisit::{visit_item};
+use syntax::codemap::Span;
 use syntax::parse::token::special_idents;
-use std::util;
+use syntax::visit;
+use syntax::visit::Visitor;
 
 struct EntryContext {
     session: Session,
@@ -26,26 +25,30 @@ struct EntryContext {
     ast_map: ast_map::map,
 
     // The top-level function called 'main'
-    main_fn: Option<(NodeId, span)>,
+    main_fn: Option<(NodeId, Span)>,
 
     // The function that has attribute named 'main'
-    attr_main_fn: Option<(NodeId, span)>,
+    attr_main_fn: Option<(NodeId, Span)>,
 
     // The function that has the attribute 'start' on it
-    start_fn: Option<(NodeId, span)>,
+    start_fn: Option<(NodeId, Span)>,
 
     // The functions that one might think are 'main' but aren't, e.g.
     // main functions not defined at the top level. For diagnostics.
-    non_main_fns: ~[(NodeId, span)],
+    non_main_fns: ~[(NodeId, Span)],
 }
 
-type EntryVisitor = vt<@mut EntryContext>;
+impl Visitor<()> for EntryContext {
+    fn visit_item(&mut self, item:@item, _:()) {
+        find_item(item, self);
+    }
+}
 
 pub fn find_entry_point(session: Session, crate: &Crate, ast_map: ast_map::map) {
 
     // FIXME #4404 android JNI hacks
     if *session.building_library &&
-        session.targ_cfg.os != session::os_android {
+        session.targ_cfg.os != session::OsAndroid {
         // No need to find a main function
         return;
     }
@@ -56,7 +59,7 @@ pub fn find_entry_point(session: Session, crate: &Crate, ast_map: ast_map::map) 
         return
     }
 
-    let ctxt = @mut EntryContext {
+    let mut ctxt = EntryContext {
         session: session,
         ast_map: ast_map,
         main_fn: None,
@@ -65,18 +68,15 @@ pub fn find_entry_point(session: Session, crate: &Crate, ast_map: ast_map::map) 
         non_main_fns: ~[],
     };
 
-    visit_crate(crate, (ctxt, mk_vt(@Visitor {
-        visit_item: |item, (ctxt, visitor)| find_item(item, ctxt, visitor),
-        .. *default_visitor()
-    })));
+    visit::walk_crate(&mut ctxt, crate, ());
 
-    configure_main(ctxt);
+    configure_main(&mut ctxt);
 }
 
-fn find_item(item: @item, ctxt: @mut EntryContext, visitor: EntryVisitor) {
+fn find_item(item: @item, ctxt: &mut EntryContext) {
     match item.node {
         item_fn(*) => {
-            if item.ident == special_idents::main {
+            if item.ident.name == special_idents::main.name {
                 match ctxt.ast_map.find(&item.id) {
                     Some(&ast_map::node_item(_, path)) => {
                         if path.len() == 0 {
@@ -93,7 +93,7 @@ fn find_item(item: @item, ctxt: @mut EntryContext, visitor: EntryVisitor) {
                             ctxt.non_main_fns.push((item.id, item.span));
                         }
                     }
-                    _ => util::unreachable()
+                    _ => unreachable!()
                 }
             }
 
@@ -120,11 +120,10 @@ fn find_item(item: @item, ctxt: @mut EntryContext, visitor: EntryVisitor) {
         _ => ()
     }
 
-    visit_item(item, (ctxt, visitor));
+    visit::walk_item(ctxt, item, ());
 }
 
-fn configure_main(ctxt: @mut EntryContext) {
-    let this = &mut *ctxt;
+fn configure_main(this: &mut EntryContext) {
     if this.start_fn.is_some() {
         *this.session.entry_fn = this.start_fn;
         *this.session.entry_type = Some(session::EntryStart);
@@ -152,7 +151,7 @@ fn configure_main(ctxt: @mut EntryContext) {
         } else {
             // If we *are* building a library, then we're on android where we still might
             // optionally want to translate main $4404
-            assert_eq!(this.session.targ_cfg.os, session::os_android);
+            assert_eq!(this.session.targ_cfg.os, session::OsAndroid);
         }
     }
 }

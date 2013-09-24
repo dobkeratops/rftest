@@ -15,18 +15,18 @@
 use middle::borrowck::*;
 use mc = middle::mem_categorization;
 use middle::ty;
-use syntax::ast::{m_const, m_imm, m_mutbl};
+use syntax::ast::{MutImmutable, MutMutable};
 use syntax::ast;
-use syntax::codemap::span;
+use syntax::codemap::Span;
 use util::ppaux::{note_and_explain_region};
 
-pub fn guarantee_lifetime(bccx: @BorrowckCtxt,
+pub fn guarantee_lifetime(bccx: &BorrowckCtxt,
                           item_scope_id: ast::NodeId,
                           root_scope_id: ast::NodeId,
-                          span: span,
+                          span: Span,
                           cmt: mc::cmt,
                           loan_region: ty::Region,
-                          loan_mutbl: ast::mutability) {
+                          loan_mutbl: LoanMutability) {
     debug!("guarantee_lifetime(cmt=%s, loan_region=%s)",
            cmt.repr(bccx.tcx), loan_region.repr(bccx.tcx));
     let ctxt = GuaranteeLifetimeContext {bccx: bccx,
@@ -42,8 +42,8 @@ pub fn guarantee_lifetime(bccx: @BorrowckCtxt,
 ///////////////////////////////////////////////////////////////////////////
 // Private
 
-struct GuaranteeLifetimeContext {
-    bccx: @BorrowckCtxt,
+struct GuaranteeLifetimeContext<'self> {
+    bccx: &'self BorrowckCtxt,
 
     // the node id of the function body for the enclosing item
     item_scope_id: ast::NodeId,
@@ -52,13 +52,13 @@ struct GuaranteeLifetimeContext {
     // longest scope for which we can root managed boxes
     root_scope_id: ast::NodeId,
 
-    span: span,
+    span: Span,
     loan_region: ty::Region,
-    loan_mutbl: ast::mutability,
+    loan_mutbl: LoanMutability,
     cmt_original: mc::cmt
 }
 
-impl GuaranteeLifetimeContext {
+impl<'self> GuaranteeLifetimeContext<'self> {
     fn tcx(&self) -> ty::ctxt {
         self.bccx.tcx
     }
@@ -68,7 +68,6 @@ impl GuaranteeLifetimeContext {
 
         match cmt.cat {
             mc::cat_rvalue(*) |
-            mc::cat_implicit_self |
             mc::cat_copied_upvar(*) |                  // L-Local
             mc::cat_local(*) |                         // L-Local
             mc::cat_arg(*) |                           // L-Local
@@ -91,7 +90,7 @@ impl GuaranteeLifetimeContext {
 
                 // L-Deref-Managed-Imm-User-Root
                 let omit_root = (
-                    ptr_mutbl == m_imm &&
+                    ptr_mutbl == MutImmutable &&
                     self.bccx.is_subregion_of(self.loan_region, base_scope) &&
                     self.is_rvalue_or_immutable(base) &&
                     !self.is_moved(base)
@@ -188,7 +187,7 @@ impl GuaranteeLifetimeContext {
                   cmt_deref: mc::cmt,
                   cmt_base: mc::cmt,
                   derefs: uint,
-                  ptr_mutbl: ast::mutability,
+                  ptr_mutbl: ast::Mutability,
                   discr_scope: Option<ast::NodeId>) {
         debug!("check_root(cmt_deref=%s, cmt_base=%s, derefs=%?, ptr_mutbl=%?, \
                 discr_scope=%?)",
@@ -236,11 +235,11 @@ impl GuaranteeLifetimeContext {
         // we need to dynamically mark it to prevent incompatible
         // borrows from happening later.
         let opt_dyna = match ptr_mutbl {
-            m_imm | m_const => None,
-            m_mutbl => {
+            MutImmutable => None,
+            MutMutable => {
                 match self.loan_mutbl {
-                    m_mutbl => Some(DynaMut),
-                    m_imm | m_const => Some(DynaImm)
+                    MutableMutability => Some(DynaMut),
+                    ImmutableMutability | ConstMutability => Some(DynaImm)
                 }
             }
         };
@@ -301,7 +300,6 @@ impl GuaranteeLifetimeContext {
             }
             mc::cat_rvalue(*) |
             mc::cat_static_item |
-            mc::cat_implicit_self |
             mc::cat_copied_upvar(*) |
             mc::cat_deref(*) => {
                 false
@@ -328,7 +326,6 @@ impl GuaranteeLifetimeContext {
             mc::cat_rvalue(cleanup_scope_id) => {
                 ty::re_scope(cleanup_scope_id)
             }
-            mc::cat_implicit_self |
             mc::cat_copied_upvar(_) => {
                 ty::re_scope(self.item_scope_id)
             }

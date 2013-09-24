@@ -17,20 +17,24 @@ use rt::local::Local;
 
 pub struct Timer(~RtioTimerObject);
 
+/// Sleep the current task for `msecs` milliseconds.
+pub fn sleep(msecs: u64) {
+    let mut timer = Timer::new().expect("timer::sleep: could not create a Timer");
+
+    timer.sleep(msecs)
+}
+
 impl Timer {
-    fn new_on_rt(i: ~RtioTimerObject) -> Timer {
-        Timer(i)
-    }
 
     pub fn new() -> Option<Timer> {
         let timer = unsafe {
             rtdebug!("Timer::init: borrowing io to init timer");
-            let io = Local::unsafe_borrow::<IoFactoryObject>();
+            let io: *mut IoFactoryObject = Local::unsafe_borrow();
             rtdebug!("about to init timer");
             (*io).timer_init()
         };
         match timer {
-            Ok(t) => Some(Timer::new_on_rt(t)),
+            Ok(t) => Some(Timer(t)),
             Err(ioerr) => {
                 rtdebug!("Timer::init: failed to init: %?", ioerr);
                 io_error::cond.raise(ioerr);
@@ -38,10 +42,8 @@ impl Timer {
             }
         }
     }
-}
 
-impl RtioTimer for Timer {
-    fn sleep(&self, msecs: u64) {
+    pub fn sleep(&mut self, msecs: u64) {
         (**self).sleep(msecs);
     }
 }
@@ -50,15 +52,18 @@ impl RtioTimer for Timer {
 mod test {
     use super::*;
     use rt::test::*;
-    use option::{Some, None};
     #[test]
     fn test_io_timer_sleep_simple() {
-        do run_in_newsched_task {
+        do run_in_mt_newsched_task {
             let timer = Timer::new();
-            match timer {
-                Some(t) => t.sleep(1),
-                None => assert!(false)
-            }
+            do timer.map_move |mut t| { t.sleep(1) };
+        }
+    }
+
+    #[test]
+    fn test_io_timer_sleep_standalone() {
+        do run_in_mt_newsched_task {
+            sleep(1)
         }
     }
 }

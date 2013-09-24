@@ -47,13 +47,14 @@ implement `Reader` and `Writer`, where appropriate.
 #[allow(missing_doc)];
 
 use cast;
+use cast::transmute;
 use clone::Clone;
 use c_str::ToCStr;
 use container::Container;
 use int;
-use iterator::Iterator;
+use iter::Iterator;
 use libc::consts::os::posix88::*;
-use libc::{c_int, c_long, c_void, size_t, ssize_t};
+use libc::{c_int, c_void, size_t};
 use libc;
 use num;
 use ops::Drop;
@@ -619,7 +620,7 @@ pub trait ReaderUtil {
 
 impl<T:Reader> ReaderUtil for T {
 
-    fn read_bytes(&self,len: uint) -> ~[u8] {
+    fn read_bytes(&self, len: uint) -> ~[u8] {
         let mut bytes = vec::with_capacity(len);
         unsafe { vec::raw::set_len(&mut bytes, len); }
 
@@ -641,7 +642,7 @@ impl<T:Reader> ReaderUtil for T {
             }
             bytes.push(ch as u8);
         }
-        str::from_bytes(bytes)
+        str::from_utf8(bytes)
     }
 
     fn read_line(&self) -> ~str {
@@ -650,7 +651,7 @@ impl<T:Reader> ReaderUtil for T {
 
     fn read_chars(&self, n: uint) -> ~[char] {
         // returns the (consumed offset, n_req), appends characters to &chars
-        fn chars_from_bytes<T:Reader>(bytes: &~[u8], chars: &mut ~[char])
+        fn chars_from_utf8<T:Reader>(bytes: &~[u8], chars: &mut ~[char])
             -> (uint, uint) {
             let mut i = 0;
             let bytes_len = bytes.len();
@@ -661,7 +662,9 @@ impl<T:Reader> ReaderUtil for T {
                 i += 1;
                 assert!((w > 0));
                 if w == 1 {
-                    chars.push(b0 as char);
+                    unsafe {
+                        chars.push(transmute(b0 as u32));
+                    }
                     loop;
                 }
                 // can't satisfy this char with the existing data
@@ -680,7 +683,9 @@ impl<T:Reader> ReaderUtil for T {
                 // See str::StrSlice::char_at
                 val += ((b0 << ((w + 1) as u8)) as uint)
                     << (w - 1) * 6 - w - 1u;
-                chars.push(val as char);
+                unsafe {
+                    chars.push(transmute(val as u32));
+                }
             }
             return (i, 0);
         }
@@ -696,7 +701,7 @@ impl<T:Reader> ReaderUtil for T {
                 break;
             }
             bytes.push_all(data);
-            let (offset, nbreq) = chars_from_bytes::<T>(&bytes, &mut chars);
+            let (offset, nbreq) = chars_from_utf8::<T>(&bytes, &mut chars);
             let ncreq = n - chars.len();
             // again we either know we need a certain number of bytes
             // to complete a character, or we make sure we don't
@@ -712,7 +717,7 @@ impl<T:Reader> ReaderUtil for T {
     fn read_char(&self) -> char {
         let c = self.read_chars(1);
         if c.len() == 0 {
-            return -1 as char; // FIXME will this stay valid? // #2004
+            return unsafe { transmute(-1u32) }; // FIXME: #8971: unsound
         }
         assert_eq!(c.len(), 1);
         return c[0];
@@ -739,9 +744,11 @@ impl<T:Reader> ReaderUtil for T {
     }
 
     fn each_char(&self, it: &fn(char) -> bool) -> bool {
+        // FIXME: #8971: unsound
+        let eof: char = unsafe { transmute(-1u32) };
         loop {
             match self.read_char() {
-                eof if eof == (-1 as char) => break,
+                c if c == eof => break,
                 ch => if !it(ch) { return false; }
             }
         }
@@ -770,7 +777,7 @@ impl<T:Reader> ReaderUtil for T {
     }
 
     fn read_lines(&self) -> ~[~str] {
-        do vec::build |push| {
+        do vec::build(None) |push| {
             do self.each_line |line| {
                 push(line.to_owned());
                 true
@@ -928,6 +935,8 @@ fn convert_whence(whence: SeekStyle) -> i32 {
 
 impl Reader for *libc::FILE {
     fn read(&self, bytes: &mut [u8], len: uint) -> uint {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             do bytes.as_mut_buf |buf_p, buf_len| {
                 assert!(buf_len >= len);
@@ -950,23 +959,31 @@ impl Reader for *libc::FILE {
         }
     }
     fn read_byte(&self) -> int {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             libc::fgetc(*self) as int
         }
     }
     fn eof(&self) -> bool {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             return libc::feof(*self) != 0 as c_int;
         }
     }
     fn seek(&self, offset: int, whence: SeekStyle) {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             assert!(libc::fseek(*self,
-                                     offset as c_long,
+                                     offset as libc::c_long,
                                      convert_whence(whence)) == 0 as c_int);
         }
     }
     fn tell(&self) -> uint {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             return libc::ftell(*self) as uint;
         }
@@ -1004,7 +1021,9 @@ impl FILERes {
 }
 
 impl Drop for FILERes {
-    fn drop(&self) {
+    fn drop(&mut self) {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             libc::fclose(self.f);
         }
@@ -1029,20 +1048,24 @@ pub fn FILE_reader(f: *libc::FILE, cleanup: bool) -> @Reader {
 * # Example
 *
 * ~~~ {.rust}
-* let stdin = core::io::stdin();
+* let stdin = std::io::stdin();
 * let line = stdin.read_line();
-* core::io::print(line);
+* std::io::print(line);
 * ~~~
 */
 pub fn stdin() -> @Reader {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         @rustrt::rust_get_stdin() as @Reader
     }
 }
 
 pub fn file_reader(path: &Path) -> Result<@Reader, ~str> {
-    let f = do path.to_c_str().with_ref |pathbuf| {
-        do "rb".to_c_str().with_ref |modebuf| {
+    #[fixed_stack_segment]; #[inline(never)];
+
+    let f = do path.with_c_str |pathbuf| {
+        do "rb".with_c_str |modebuf| {
             unsafe { libc::fopen(pathbuf, modebuf as *libc::c_char) }
         }
     };
@@ -1162,6 +1185,8 @@ impl<W:Writer,C> Writer for Wrapper<W, C> {
 
 impl Writer for *libc::FILE {
     fn write(&self, v: &[u8]) {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             do v.as_imm_buf |vbuf, len| {
                 let nout = libc::fwrite(vbuf as *c_void,
@@ -1177,23 +1202,31 @@ impl Writer for *libc::FILE {
         }
     }
     fn seek(&self, offset: int, whence: SeekStyle) {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             assert!(libc::fseek(*self,
-                                     offset as c_long,
+                                     offset as libc::c_long,
                                      convert_whence(whence)) == 0 as c_int);
         }
     }
     fn tell(&self) -> uint {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             libc::ftell(*self) as uint
         }
     }
     fn flush(&self) -> int {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             libc::fflush(*self) as int
         }
     }
     fn get_type(&self) -> WriterType {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             let fd = libc::fileno(*self);
             if libc::isatty(fd) == 0 { File   }
@@ -1212,13 +1245,25 @@ pub fn FILE_writer(f: *libc::FILE, cleanup: bool) -> @Writer {
 
 impl Writer for fd_t {
     fn write(&self, v: &[u8]) {
+        #[fixed_stack_segment]; #[inline(never)];
+
+        #[cfg(windows)]
+        type IoSize = libc::c_uint;
+        #[cfg(windows)]
+        type IoRet = c_int;
+
+        #[cfg(unix)]
+        type IoSize = size_t;
+        #[cfg(unix)]
+        type IoRet = libc::ssize_t;
+
         unsafe {
             let mut count = 0u;
             do v.as_imm_buf |vbuf, len| {
                 while count < len {
                     let vb = ptr::offset(vbuf, count as int) as *c_void;
-                    let nout = libc::write(*self, vb, len as size_t);
-                    if nout < 0 as ssize_t {
+                    let nout = libc::write(*self, vb, len as IoSize);
+                    if nout < 0 as IoRet {
                         error!("error writing buffer");
                         error!("%s", os::last_os_error());
                         fail!();
@@ -1238,6 +1283,8 @@ impl Writer for fd_t {
     }
     fn flush(&self) -> int { 0 }
     fn get_type(&self) -> WriterType {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             if libc::isatty(*self) == 0 { File } else { Screen }
         }
@@ -1255,7 +1302,9 @@ impl FdRes {
 }
 
 impl Drop for FdRes {
-    fn drop(&self) {
+    fn drop(&mut self) {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             libc::close(self.fd);
         }
@@ -1273,6 +1322,8 @@ pub fn fd_writer(fd: fd_t, cleanup: bool) -> @Writer {
 
 pub fn mk_file_writer(path: &Path, flags: &[FileFlag])
                    -> Result<@Writer, ~str> {
+    #[fixed_stack_segment]; #[inline(never)];
+
     #[cfg(windows)]
     fn wb() -> c_int {
       (O_WRONLY | libc::consts::os::extra::O_BINARY) as c_int
@@ -1291,7 +1342,7 @@ pub fn mk_file_writer(path: &Path, flags: &[FileFlag])
         }
     }
     let fd = unsafe {
-        do path.to_c_str().with_ref |pathbuf| {
+        do path.with_c_str |pathbuf| {
             libc::open(pathbuf, fflags, (S_IRUSR | S_IWUSR) as c_int)
         }
     };
@@ -1462,7 +1513,7 @@ pub trait WriterUtil {
     /// (8 bytes).
     fn write_le_f64(&self, f: f64);
 
-    /// Write a litten-endian IEEE754 single-precision floating-point
+    /// Write a little-endian IEEE754 single-precision floating-point
     /// (4 bytes).
     fn write_le_f32(&self, f: f32);
 
@@ -1567,15 +1618,17 @@ impl<T:Writer> WriterUtil for T {
 }
 
 pub fn file_writer(path: &Path, flags: &[FileFlag]) -> Result<@Writer, ~str> {
-    mk_file_writer(path, flags).chain(|w| Ok(w))
+    mk_file_writer(path, flags).and_then(|w| Ok(w))
 }
 
 
 // FIXME: fileflags // #2004
 pub fn buffered_file_writer(path: &Path) -> Result<@Writer, ~str> {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
-        let f = do path.to_c_str().with_ref |pathbuf| {
-            do "w".to_c_str().with_ref |modebuf| {
+        let f = do path.with_c_str |pathbuf| {
+            do "w".with_c_str |modebuf| {
                 libc::fopen(pathbuf, modebuf)
             }
         };
@@ -1598,7 +1651,7 @@ pub fn buffered_file_writer(path: &Path) -> Result<@Writer, ~str> {
 * # Example
 *
 * ~~~ {.rust}
-* let stdout = core::io::stdout();
+* let stdout = std::io::stdout();
 * stdout.write_str("hello\n");
 * ~~~
 */
@@ -1610,7 +1663,7 @@ pub fn stdout() -> @Writer { fd_writer(libc::STDOUT_FILENO as c_int, false) }
 * # Example
 *
 * ~~~ {.rust}
-* let stderr = core::io::stderr();
+* let stderr = std::io::stderr();
 * stderr.write_str("hello\n");
 * ~~~
 */
@@ -1708,7 +1761,7 @@ pub fn with_bytes_writer(f: &fn(@Writer)) -> ~[u8] {
 }
 
 pub fn with_str_writer(f: &fn(@Writer)) -> ~str {
-    str::from_bytes(with_bytes_writer(f))
+    str::from_utf8(with_bytes_writer(f))
 }
 
 // Utility functions
@@ -1726,9 +1779,9 @@ pub fn seek_in_buf(offset: int, pos: uint, len: uint, whence: SeekStyle) ->
 }
 
 pub fn read_whole_file_str(file: &Path) -> Result<~str, ~str> {
-    do read_whole_file(file).chain |bytes| {
+    do read_whole_file(file).and_then |bytes| {
         if str::is_utf8(bytes) {
-            Ok(str::from_bytes(bytes))
+            Ok(str::from_utf8(bytes))
         } else {
             Err(file.to_str() + " is not UTF-8")
         }
@@ -1738,7 +1791,7 @@ pub fn read_whole_file_str(file: &Path) -> Result<~str, ~str> {
 // FIXME (#2004): implement this in a low-level way. Going through the
 // abstractions is pointless.
 pub fn read_whole_file(file: &Path) -> Result<~[u8], ~str> {
-    do file_reader(file).chain |rdr| {
+    do file_reader(file).and_then |rdr| {
         Ok(rdr.read_whole_stream())
     }
 }
@@ -1779,7 +1832,7 @@ pub mod fsync {
 
     #[unsafe_destructor]
     impl<T> Drop for Res<T> {
-        fn drop(&self) {
+        fn drop(&mut self) {
             match self.arg.opt_level {
                 None => (),
                 Some(level) => {
@@ -1793,31 +1846,49 @@ pub mod fsync {
     pub struct Arg<t> {
         val: t,
         opt_level: Option<Level>,
-        fsync_fn: @fn(f: &t, Level) -> int,
+        fsync_fn: extern "Rust" fn(f: &t, Level) -> int,
     }
 
     // fsync file after executing blk
     // FIXME (#2004) find better way to create resources within lifetime of
     // outer res
-    pub fn FILE_res_sync(file: &FILERes, opt_level: Option<Level>,
+    pub fn FILE_res_sync(file: &FILERes,
+                         opt_level: Option<Level>,
                          blk: &fn(v: Res<*libc::FILE>)) {
         blk(Res::new(Arg {
-            val: file.f, opt_level: opt_level,
-            fsync_fn: |file, l| {
-                unsafe {
-                    os::fsync_fd(libc::fileno(*file), l) as int
-                }
-            }
+            val: file.f,
+            opt_level: opt_level,
+            fsync_fn: fsync_FILE,
         }));
+
+        fn fileno(stream: *libc::FILE) -> libc::c_int {
+            #[fixed_stack_segment]; #[inline(never)];
+            unsafe { libc::fileno(stream) }
+        }
+
+        fn fsync_FILE(stream: &*libc::FILE, level: Level) -> int {
+            fsync_fd(fileno(*stream), level)
+        }
     }
 
     // fsync fd after executing blk
     pub fn fd_res_sync(fd: &FdRes, opt_level: Option<Level>,
                        blk: &fn(v: Res<fd_t>)) {
         blk(Res::new(Arg {
-            val: fd.fd, opt_level: opt_level,
-            fsync_fn: |fd, l| os::fsync_fd(*fd, l) as int
+            val: fd.fd,
+            opt_level: opt_level,
+            fsync_fn: fsync_fd_helper,
         }));
+    }
+
+    fn fsync_fd(fd: libc::c_int, level: Level) -> int {
+        #[fixed_stack_segment]; #[inline(never)];
+
+        os::fsync_fd(fd, level) as int
+    }
+
+    fn fsync_fd_helper(fd_ptr: &libc::c_int, level: Level) -> int {
+        fsync_fd(*fd_ptr, level)
     }
 
     // Type of objects that may want to fsync
@@ -1827,9 +1898,14 @@ pub mod fsync {
     pub fn obj_sync(o: @FSyncable, opt_level: Option<Level>,
                     blk: &fn(v: Res<@FSyncable>)) {
         blk(Res::new(Arg {
-            val: o, opt_level: opt_level,
-            fsync_fn: |o, l| (*o).fsync(l)
+            val: o,
+            opt_level: opt_level,
+            fsync_fn: obj_fsync_fn,
         }));
+    }
+
+    fn obj_fsync_fn(o: &@FSyncable, level: Level) -> int {
+        (*o).fsync(level)
     }
 }
 
@@ -1843,6 +1919,7 @@ mod tests {
     use result::{Ok, Err};
     use u64;
     use vec;
+    use cast::transmute;
 
     #[test]
     fn test_simple() {
@@ -1949,7 +2026,7 @@ mod tests {
     #[test]
     fn test_readchar() {
         do io::with_str_reader("生") |inp| {
-            let res : char = inp.read_char();
+            let res = inp.read_char();
             assert_eq!(res as int, 29983);
         }
     }
@@ -1957,8 +2034,8 @@ mod tests {
     #[test]
     fn test_readchar_empty() {
         do io::with_str_reader("") |inp| {
-            let res : char = inp.read_char();
-            assert_eq!(res as int, -1);
+            let res = inp.read_char();
+            assert_eq!(res, unsafe { transmute(-1u32) }); // FIXME: #8971: unsound
         }
     }
 
@@ -1974,7 +2051,6 @@ mod tests {
 
     #[test]
     #[should_fail]
-    #[ignore(cfg(windows))]
     fn test_read_buffer_too_small() {
         let path = &Path("tmp/lib-io-test-read-buffer-too-small.tmp");
         // ensure the file exists

@@ -40,31 +40,28 @@ out of `rt` as development proceeds.
 
 Several modules in `core` are clients of `rt`:
 
-* `core::task` - The user-facing interface to the Rust task model.
-* `core::task::local_data` - The interface to local data.
-* `core::gc` - The garbage collector.
-* `core::unstable::lang` - Miscellaneous lang items, some of which rely on `core::rt`.
-* `core::condition` - Uses local data.
-* `core::cleanup` - Local heap destruction.
-* `core::io` - In the future `core::io` will use an `rt` implementation.
-* `core::logging`
-* `core::pipes`
-* `core::comm`
-* `core::stackwalk`
+* `std::task` - The user-facing interface to the Rust task model.
+* `std::task::local_data` - The interface to local data.
+* `std::gc` - The garbage collector.
+* `std::unstable::lang` - Miscellaneous lang items, some of which rely on `std::rt`.
+* `std::condition` - Uses local data.
+* `std::cleanup` - Local heap destruction.
+* `std::io` - In the future `std::io` will use an `rt` implementation.
+* `std::logging`
+* `std::pipes`
+* `std::comm`
+* `std::stackwalk`
 
 */
 
-#[doc(hidden)];
-#[deny(unused_imports)];
-#[deny(unused_mut)];
-#[deny(unused_variable)];
-#[deny(unused_unsafe)];
+// XXX: this should not be here.
+#[allow(missing_doc)];
 
 use cell::Cell;
 use clone::Clone;
 use container::Container;
-use iterator::{Iterator, range};
-use option::{Some, None};
+use iter::Iterator;
+use option::{Option, None, Some};
 use ptr::RawPtr;
 use rt::local::Local;
 use rt::sched::{Scheduler, Shutdown};
@@ -74,8 +71,9 @@ use rt::thread::Thread;
 use rt::work_queue::WorkQueue;
 use rt::uv::uvio::UvEventLoop;
 use unstable::atomics::{AtomicInt, SeqCst};
-use unstable::sync::UnsafeAtomicRcBox;
-use vec::{OwnedVector, MutableVector};
+use unstable::sync::UnsafeArc;
+use vec;
+use vec::{OwnedVector, MutableVector, ImmutableVector};
 
 /// The global (exchange) heap.
 pub mod global_heap;
@@ -129,6 +127,9 @@ pub mod local_heap;
 /// The Logger trait and implementations
 pub mod logging;
 
+/// Crate map
+pub mod crate_map;
+
 /// Tools for testing the runtime
 pub mod test;
 
@@ -139,7 +140,7 @@ pub mod rc;
 /// scheduler and task context
 pub mod tube;
 
-/// Simple reimplementation of core::comm
+/// Simple reimplementation of std::comm
 pub mod comm;
 
 mod select;
@@ -151,8 +152,6 @@ pub mod local_ptr;
 // FIXME #5248: The import in `sched` doesn't resolve unless this is pub!
 /// Bindings to pthread/windows thread-local storage.
 pub mod thread_local_storage;
-
-pub mod metrics;
 
 // FIXME #5248 shouldn't be pub
 /// Just stuff
@@ -173,14 +172,13 @@ pub mod borrowck;
 ///
 /// * `argc` & `argv` - The argument vector. On Unix this information is used
 ///   by os::args.
-/// * `crate_map` - Runtime information about the executing crate, mostly for logging
 ///
 /// # Return value
 ///
 /// The return value is used as the process return code. 0 on success, 101 on error.
-pub fn start(argc: int, argv: **u8, crate_map: *u8, main: ~fn()) -> int {
+pub fn start(argc: int, argv: **u8, main: ~fn()) -> int {
 
-    init(argc, argv, crate_map);
+    init(argc, argv);
     let exit_code = run(main);
     cleanup();
 
@@ -192,8 +190,8 @@ pub fn start(argc: int, argv: **u8, crate_map: *u8, main: ~fn()) -> int {
 ///
 /// This is appropriate for running code that must execute on the main thread,
 /// such as the platform event loop and GUI.
-pub fn start_on_main_thread(argc: int, argv: **u8, crate_map: *u8, main: ~fn()) -> int {
-    init(argc, argv, crate_map);
+pub fn start_on_main_thread(argc: int, argv: **u8, main: ~fn()) -> int {
+    init(argc, argv);
     let exit_code = run_on_main_thread(main);
     cleanup();
 
@@ -205,18 +203,13 @@ pub fn start_on_main_thread(argc: int, argv: **u8, crate_map: *u8, main: ~fn()) 
 /// Initializes global state, including frobbing
 /// the crate's logging flags, registering GC
 /// metadata, and storing the process arguments.
-pub fn init(argc: int, argv: **u8, crate_map: *u8) {
+pub fn init(argc: int, argv: **u8) {
     // XXX: Derefing these pointers is not safe.
     // Need to propagate the unsafety to `start`.
     unsafe {
         args::init(argc, argv);
         env::init();
-        logging::init(crate_map);
-        rust_update_gc_metadata(crate_map);
-    }
-
-    extern {
-        fn rust_update_gc_metadata(crate_map: *u8);
+        logging::init();
     }
 }
 
@@ -250,11 +243,7 @@ fn run_(main: ~fn(), use_main_sched: bool) -> int {
 
     // Create a work queue for each scheduler, ntimes. Create an extra
     // for the main thread if that flag is set. We won't steal from it.
-    let mut work_queues = ~[];
-    for _ in range(0u, nscheds) {
-        let work_queue: WorkQueue<~Task> = WorkQueue::new();
-        work_queues.push(work_queue);
-    }
+    let work_queues: ~[WorkQueue<~Task>] = vec::from_fn(nscheds, |_| WorkQueue::new());
 
     // The schedulers.
     let mut scheds = ~[];
@@ -262,13 +251,13 @@ fn run_(main: ~fn(), use_main_sched: bool) -> int {
     // sent the Shutdown message to terminate the schedulers.
     let mut handles = ~[];
 
-    for i in range(0u, nscheds) {
+    for work_queue in work_queues.iter() {
         rtdebug!("inserting a regular scheduler");
 
         // Every scheduler is driven by an I/O event loop.
         let loop_ = ~UvEventLoop::new();
         let mut sched = ~Scheduler::new(loop_,
-                                        work_queues[i].clone(),
+                                        work_queue.clone(),
                                         work_queues.clone(),
                                         sleepers.clone());
         let handle = sched.make_handle();
@@ -306,13 +295,14 @@ fn run_(main: ~fn(), use_main_sched: bool) -> int {
 
     // Create a shared cell for transmitting the process exit
     // code from the main task to this function.
-    let exit_code = UnsafeAtomicRcBox::new(AtomicInt::new(0));
+    let exit_code = UnsafeArc::new(AtomicInt::new(0));
     let exit_code_clone = exit_code.clone();
 
     // When the main task exits, after all the tasks in the main
     // task tree, shut down the schedulers and set the exit code.
     let handles = Cell::new(handles);
     let on_exit: ~fn(bool) = |exit_success| {
+        assert_once_ever!("last task exiting");
 
         let mut handles = handles.take();
         for handle in handles.mut_iter() {
@@ -356,9 +346,8 @@ fn run_(main: ~fn(), use_main_sched: bool) -> int {
     }
 
     // Run each remaining scheduler in a thread.
-    while !scheds.is_empty() {
+    for sched in scheds.move_rev_iter() {
         rtdebug!("creating regular schedulers");
-        let sched = scheds.pop();
         let sched_cell = Cell::new(sched);
         let thread = do Thread::start {
             let mut sched = sched_cell.take();
@@ -402,7 +391,8 @@ fn run_(main: ~fn(), use_main_sched: bool) -> int {
 
 pub fn in_sched_context() -> bool {
     unsafe {
-        match Local::try_unsafe_borrow::<Task>() {
+        let task_ptr: Option<*mut Task> = Local::try_unsafe_borrow();
+        match task_ptr {
             Some(task) => {
                 match (*task).task_type {
                     SchedTask => true,
@@ -416,7 +406,8 @@ pub fn in_sched_context() -> bool {
 
 pub fn in_green_task_context() -> bool {
     unsafe {
-        match Local::try_unsafe_borrow::<Task>() {
+        let task: Option<*mut Task> = Local::try_unsafe_borrow();
+        match task {
             Some(task) => {
                 match (*task).task_type {
                     GreenTask(_) => true,

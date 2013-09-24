@@ -44,7 +44,7 @@ Other interesting scenarios are whe the item has type parameters or
 references other non-built-in types.  A type definition like:
 
     #[deriving(Encodable, Decodable)]
-    struct spanned<T> {node: T, span: span}
+    struct spanned<T> {node: T, span: Span}
 
 would yield functions like:
 
@@ -75,14 +75,14 @@ would yield functions like:
     }
 */
 
-use ast::{MetaItem, item, expr, m_imm, m_mutbl};
-use codemap::span;
+use ast::{MetaItem, item, Expr, MutImmutable, MutMutable};
+use codemap::Span;
 use ext::base::ExtCtxt;
 use ext::build::AstBuilder;
 use ext::deriving::generic::*;
 
 pub fn expand_deriving_encodable(cx: @ExtCtxt,
-                                 span: span,
+                                 span: Span,
                                  mitem: @MetaItem,
                                  in_items: ~[@item]) -> ~[@item] {
     let trait_def = TraitDef {
@@ -97,9 +97,9 @@ pub fn expand_deriving_encodable(cx: @ExtCtxt,
             MethodDef {
                 name: "encode",
                 generics: LifetimeBounds::empty(),
-                explicit_self: Some(Some(Borrowed(None, m_imm))),
+                explicit_self: Some(Some(Borrowed(None, MutImmutable))),
                 args: ~[Ptr(~Literal(Path::new_local("__E")),
-                            Borrowed(None, m_mutbl))],
+                            Borrowed(None, MutMutable))],
                 ret_ty: nil_ty(),
                 const_nonmatching: true,
                 combine_substructure: encodable_substructure,
@@ -110,8 +110,8 @@ pub fn expand_deriving_encodable(cx: @ExtCtxt,
     trait_def.expand(cx, span, mitem, in_items)
 }
 
-fn encodable_substructure(cx: @ExtCtxt, span: span,
-                          substr: &Substructure) -> @expr {
+fn encodable_substructure(cx: @ExtCtxt, span: Span,
+                          substr: &Substructure) -> @Expr {
     let encoder = substr.nonself_args[0];
     // throw an underscore in front to suppress unused variable warnings
     let blkarg = cx.ident_of("_e");

@@ -16,10 +16,11 @@ use rt::uv::{AllocCallback, ConnectionCallback, ReadCallback, UdpReceiveCallback
 use rt::uv::{Loop, Watcher, Request, UvError, Buf, NativeHandle, NullCallback,
              status_to_maybe_uv_error};
 use rt::io::net::ip::{SocketAddr, Ipv4Addr, Ipv6Addr};
-use rt::uv::last_uv_error;
 use vec;
 use str;
 use from_str::{FromStr};
+
+pub struct UvAddrInfo(*uvll::addrinfo);
 
 pub enum UvSocketAddr {
     UvIpv4SocketAddr(*sockaddr_in),
@@ -83,7 +84,7 @@ fn uv_socket_addr_as_socket_addr<T>(addr: UvSocketAddr, f: &fn(SocketAddr) -> T)
         };
         port as u16
     };
-    let ip_str = str::from_bytes_slice(ip_name).trim_right_chars(&'\x00');
+    let ip_str = str::from_utf8_slice(ip_name).trim_right_chars(&'\x00');
     let ip_addr = FromStr::from_str(ip_str).unwrap();
 
     // finally run the closure
@@ -93,6 +94,28 @@ fn uv_socket_addr_as_socket_addr<T>(addr: UvSocketAddr, f: &fn(SocketAddr) -> T)
 pub fn uv_socket_addr_to_socket_addr(addr: UvSocketAddr) -> SocketAddr {
     use util;
     uv_socket_addr_as_socket_addr(addr, util::id)
+}
+
+// Traverse the addrinfo linked list, producing a vector of Rust socket addresses
+pub fn accum_sockaddrs(addr: &UvAddrInfo) -> ~[SocketAddr] {
+    unsafe {
+        let &UvAddrInfo(addr) = addr;
+        let mut addr = addr;
+
+        let mut addrs = ~[];
+        loop {
+            let uvaddr = sockaddr_to_UvSocketAddr((*addr).ai_addr);
+            let rustaddr = uv_socket_addr_to_socket_addr(uvaddr);
+            addrs.push(rustaddr);
+            if (*addr).ai_next.is_not_null() {
+                addr = (*addr).ai_next;
+            } else {
+                break;
+            }
+        }
+
+        return addrs;
+    }
 }
 
 #[cfg(test)]
@@ -137,7 +160,7 @@ impl StreamWatcher {
             rtdebug!("buf len: %d", buf.len as int);
             let mut stream_watcher: StreamWatcher = NativeHandle::from_native_handle(stream);
             let cb = stream_watcher.get_watcher_data().read_cb.get_ref();
-            let status = status_to_maybe_uv_error(stream_watcher, nread as c_int);
+            let status = status_to_maybe_uv_error(nread as c_int);
             (*cb)(stream_watcher, nread as int, buf, status);
         }
     }
@@ -167,7 +190,7 @@ impl StreamWatcher {
             let mut stream_watcher = write_request.stream();
             write_request.delete();
             let cb = stream_watcher.get_watcher_data().write_cb.take_unwrap();
-            let status = status_to_maybe_uv_error(stream_watcher, status);
+            let status = status_to_maybe_uv_error(status);
             cb(stream_watcher, status);
         }
     }
@@ -190,9 +213,10 @@ impl StreamWatcher {
 
         extern fn close_cb(handle: *uvll::uv_stream_t) {
             let mut stream_watcher: StreamWatcher = NativeHandle::from_native_handle(handle);
-            stream_watcher.get_watcher_data().close_cb.take_unwrap()();
+            let cb = stream_watcher.get_watcher_data().close_cb.take_unwrap();
             stream_watcher.drop_watcher_data();
             unsafe { free_handle(handle as *c_void) }
+            cb();
         }
     }
 }
@@ -231,7 +255,7 @@ impl TcpWatcher {
             };
             match result {
                 0 => Ok(()),
-                _ => Err(last_uv_error(self)),
+                _ => Err(UvError(result)),
             }
         }
     }
@@ -259,7 +283,7 @@ impl TcpWatcher {
                 let mut stream_watcher = connect_request.stream();
                 connect_request.delete();
                 let cb = stream_watcher.get_watcher_data().connect_cb.take_unwrap();
-                let status = status_to_maybe_uv_error(stream_watcher, status);
+                let status = status_to_maybe_uv_error(status);
                 cb(stream_watcher, status);
             }
         }
@@ -282,7 +306,7 @@ impl TcpWatcher {
             rtdebug!("connection_cb");
             let mut stream_watcher: StreamWatcher = NativeHandle::from_native_handle(handle);
             let cb = stream_watcher.get_watcher_data().connect_cb.get_ref();
-            let status = status_to_maybe_uv_error(stream_watcher, status);
+            let status = status_to_maybe_uv_error(status);
             (*cb)(stream_watcher, status);
         }
     }
@@ -326,7 +350,7 @@ impl UdpWatcher {
             };
             match result {
                 0 => Ok(()),
-                _ => Err(last_uv_error(self)),
+                _ => Err(UvError(result)),
             }
         }
     }
@@ -359,7 +383,7 @@ impl UdpWatcher {
             rtdebug!("buf len: %d", buf.len as int);
             let mut udp_watcher: UdpWatcher = NativeHandle::from_native_handle(handle);
             let cb = udp_watcher.get_watcher_data().udp_recv_cb.get_ref();
-            let status = status_to_maybe_uv_error(udp_watcher, nread as c_int);
+            let status = status_to_maybe_uv_error(nread as c_int);
             let addr = uv_socket_addr_to_socket_addr(sockaddr_to_UvSocketAddr(addr));
             (*cb)(udp_watcher, nread as int, buf, addr, flags as uint, status);
         }
@@ -394,7 +418,7 @@ impl UdpWatcher {
             let mut udp_watcher = send_request.handle();
             send_request.delete();
             let cb = udp_watcher.get_watcher_data().udp_send_cb.take_unwrap();
-            let status = status_to_maybe_uv_error(udp_watcher, status);
+            let status = status_to_maybe_uv_error(status);
             cb(udp_watcher, status);
         }
     }
@@ -411,9 +435,10 @@ impl UdpWatcher {
 
         extern fn close_cb(handle: *uvll::uv_udp_t) {
             let mut udp_watcher: UdpWatcher = NativeHandle::from_native_handle(handle);
-            udp_watcher.get_watcher_data().close_cb.take_unwrap()();
+            let cb = udp_watcher.get_watcher_data().close_cb.take_unwrap();
             udp_watcher.drop_watcher_data();
             unsafe { free_handle(handle as *c_void) }
+            cb();
         }
     }
 }
@@ -599,6 +624,7 @@ mod test {
     }
 
     #[test]
+    #[ignore(cfg(windows))] // FIXME #8815
     fn listen_ip4() {
         do run_in_bare_thread() {
             static MAX: int = 10;
@@ -673,6 +699,7 @@ mod test {
     }
 
     #[test]
+    #[ignore(cfg(windows))] // FIXME #8815
     fn listen_ip6() {
         do run_in_bare_thread() {
             static MAX: int = 10;
@@ -749,6 +776,7 @@ mod test {
     }
 
     #[test]
+    #[ignore(cfg(windows))] // FIXME #8815
     fn udp_recv_ip4() {
         do run_in_bare_thread() {
             static MAX: int = 10;
@@ -809,6 +837,7 @@ mod test {
     }
 
     #[test]
+    #[ignore(cfg(windows))] // FIXME #8815
     fn udp_recv_ip6() {
         do run_in_bare_thread() {
             static MAX: int = 10;

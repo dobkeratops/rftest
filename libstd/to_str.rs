@@ -19,7 +19,7 @@ use str::OwnedStr;
 use hashmap::HashMap;
 use hashmap::HashSet;
 use hash::Hash;
-use iterator::Iterator;
+use iter::Iterator;
 use cmp::Eq;
 use vec::ImmutableVector;
 
@@ -31,7 +31,7 @@ pub trait ToStr {
 
 /// Trait for converting a type to a string, consuming it in the process.
 pub trait ToStrConsume {
-    /// Cosume and convert to a string.
+    /// Consume and convert to a string.
     fn into_str(self) -> ~str;
 }
 

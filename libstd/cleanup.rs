@@ -11,7 +11,7 @@
 #[doc(hidden)];
 
 use libc::c_void;
-use ptr::{mut_null};
+use ptr::null;
 use unstable::intrinsics::TyDesc;
 use unstable::raw;
 
@@ -37,7 +37,7 @@ unsafe fn each_live_alloc(read_next_before: bool,
     use rt::local_heap;
 
     let mut box = local_heap::live_allocs();
-    while box != mut_null() {
+    while box != null() {
         let next_before = (*box).next;
         let uniq = (*box).ref_count == managed::RC_MANAGED_UNIQUE;
 
@@ -71,7 +71,6 @@ pub unsafe fn annihilate() {
     use io::WriterUtil;
     use io;
     use libc;
-    use rt::borrowck;
     use sys;
     use managed;
 
@@ -80,10 +79,6 @@ pub unsafe fn annihilate() {
         n_unique_boxes: 0,
         n_bytes_freed: 0
     };
-
-    // Quick hack: we need to free this list upon task exit, and this
-    // is a convenient place to do it.
-    borrowck::clear_task_borrow_list();
 
     // Pass 1: Make all boxes immortal.
     //

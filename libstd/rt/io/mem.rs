@@ -171,15 +171,37 @@ impl<'self> BufReader<'self> {
 }
 
 impl<'self> Reader for BufReader<'self> {
-    fn read(&mut self, _buf: &mut [u8]) -> Option<uint> { fail!() }
+    fn read(&mut self, buf: &mut [u8]) -> Option<uint> {
+        { if self.eof() { return None; } }
 
-    fn eof(&mut self) -> bool { fail!() }
+        let write_len = min(buf.len(), self.buf.len() - self.pos);
+        {
+            let input = self.buf.slice(self.pos, self.pos + write_len);
+            let output = buf.mut_slice(0, write_len);
+            assert_eq!(input.len(), output.len());
+            vec::bytes::copy_memory(output, input, write_len);
+        }
+        self.pos += write_len;
+        assert!(self.pos <= self.buf.len());
+
+        return Some(write_len);
+     }
+
+    fn eof(&mut self) -> bool { self.pos == self.buf.len() }
 }
 
 impl<'self> Seek for BufReader<'self> {
-    fn tell(&self) -> u64 { fail!() }
+    fn tell(&self) -> u64 { self.pos as u64 }
 
     fn seek(&mut self, _pos: i64, _style: SeekStyle) { fail!() }
+}
+
+///Calls a function with a MemWriter and returns
+///the writer's stored vector.
+pub fn with_mem_writer(writeFn:&fn(&mut MemWriter)) -> ~[u8] {
+  let mut writer = MemWriter::new();
+  writeFn(&mut writer);
+  writer.inner()
 }
 
 #[cfg(test)]
@@ -218,5 +240,33 @@ mod test {
         assert!(reader.eof());
         assert_eq!(reader.read(buf), None);
         assert!(reader.eof());
+    }
+
+    #[test]
+    fn test_buf_reader() {
+        let in_buf = ~[0, 1, 2, 3, 4, 5, 6, 7];
+        let mut reader = BufReader::new(in_buf);
+        let mut buf = [];
+        assert_eq!(reader.read(buf), Some(0));
+        assert_eq!(reader.tell(), 0);
+        let mut buf = [0];
+        assert_eq!(reader.read(buf), Some(1));
+        assert_eq!(reader.tell(), 1);
+        assert_eq!(buf, [0]);
+        let mut buf = [0, ..4];
+        assert_eq!(reader.read(buf), Some(4));
+        assert_eq!(reader.tell(), 5);
+        assert_eq!(buf, [1, 2, 3, 4]);
+        assert_eq!(reader.read(buf), Some(3));
+        assert_eq!(buf.slice(0, 3), [5, 6, 7]);
+        assert!(reader.eof());
+        assert_eq!(reader.read(buf), None);
+        assert!(reader.eof());
+    }
+
+    #[test]
+    fn test_with_mem_writer() {
+        let buf = with_mem_writer(|wr| wr.write([1,2,3,4,5,6,7]));
+        assert_eq!(buf, ~[1,2,3,4,5,6,7]);
     }
 }

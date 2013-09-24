@@ -49,6 +49,7 @@ pub trait Repr<T> {
     /// struct representation. This can be used to read/write different values
     /// for the struct. This is a safe method because by default it does not
     /// give write-access to the struct returned.
+    #[inline]
     fn repr(&self) -> T { unsafe { cast::transmute_copy(self) } }
 }
 
@@ -57,6 +58,7 @@ impl<'self> Repr<Slice<u8>> for &'self str {}
 impl<T> Repr<*Box<T>> for @T {}
 impl<T> Repr<*Box<Vec<T>>> for @[T] {}
 impl Repr<*String> for ~str {}
+impl Repr<*Box<String>> for @str {}
 
 // sure would be nice to have this
 // impl<T> Repr<*Vec<T>> for ~[T] {}

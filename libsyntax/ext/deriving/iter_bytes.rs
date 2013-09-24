@@ -8,15 +8,15 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use ast::{MetaItem, item, expr, and};
-use codemap::span;
+use ast::{MetaItem, item, Expr, BiAnd};
+use codemap::Span;
 use ext::base::ExtCtxt;
 use ext::build::AstBuilder;
 use ext::deriving::generic::*;
 
 
 pub fn expand_deriving_iter_bytes(cx: @ExtCtxt,
-                                  span: span,
+                                  span: Span,
                                   mitem: @MetaItem,
                                   in_items: ~[@item]) -> ~[@item] {
     let trait_def = TraitDef {
@@ -42,7 +42,7 @@ pub fn expand_deriving_iter_bytes(cx: @ExtCtxt,
     trait_def.expand(cx, span, mitem, in_items)
 }
 
-fn iter_bytes_substructure(cx: @ExtCtxt, span: span, substr: &Substructure) -> @expr {
+fn iter_bytes_substructure(cx: @ExtCtxt, span: Span, substr: &Substructure) -> @Expr {
     let (lsb0, f)= match substr.nonself_args {
         [l, f] => (l, f),
         _ => cx.span_bug(span, "Incorrect number of arguments in `deriving(IterBytes)`")
@@ -90,6 +90,6 @@ fn iter_bytes_substructure(cx: @ExtCtxt, span: span, substr: &Substructure) -> @
     }
 
     do exprs.slice(1, exprs.len()).iter().fold(exprs[0]) |prev, me| {
-        cx.expr_binary(span, and, prev, *me)
+        cx.expr_binary(span, BiAnd, prev, *me)
     }
 }

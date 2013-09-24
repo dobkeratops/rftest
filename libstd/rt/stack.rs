@@ -21,6 +21,8 @@ pub struct StackSegment {
 
 impl StackSegment {
     pub fn new(size: uint) -> StackSegment {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             // Crate a block of uninitialized values
             let mut stack = vec::with_capacity(size);
@@ -44,12 +46,16 @@ impl StackSegment {
 
     /// Point one word beyond the high end of the allocated stack
     pub fn end(&self) -> *uint {
-        vec::raw::to_ptr(self.buf).offset(self.buf.len() as int) as *uint
+        unsafe {
+            vec::raw::to_ptr(self.buf).offset(self.buf.len() as int) as *uint
+        }
     }
 }
 
 impl Drop for StackSegment {
-    fn drop(&self) {
+    fn drop(&mut self) {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             // XXX: Using the FFI to call a C macro. Slow
             rust_valgrind_stack_deregister(self.valgrind_id);

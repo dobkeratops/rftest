@@ -15,7 +15,7 @@ use lib::llvm::{Opcode, IntPredicate, RealPredicate};
 use lib::llvm::{ValueRef, BasicBlockRef};
 use lib;
 use middle::trans::common::*;
-use syntax::codemap::span;
+use syntax::codemap::Span;
 
 use middle::trans::builder::Builder;
 use middle::trans::type_::Type;
@@ -109,7 +109,8 @@ pub fn Invoke(cx: @mut Block,
               Fn: ValueRef,
               Args: &[ValueRef],
               Then: BasicBlockRef,
-              Catch: BasicBlockRef)
+              Catch: BasicBlockRef,
+              attributes: &[(uint, lib::llvm::Attribute)])
            -> ValueRef {
     if cx.unreachable {
         return C_null(Type::i8());
@@ -119,15 +120,7 @@ pub fn Invoke(cx: @mut Block,
     debug!("Invoke(%s with arguments (%s))",
            cx.val_to_str(Fn),
            Args.map(|a| cx.val_to_str(*a)).connect(", "));
-    B(cx).invoke(Fn, Args, Then, Catch)
-}
-
-pub fn FastInvoke(cx: @mut Block, Fn: ValueRef, Args: &[ValueRef],
-                  Then: BasicBlockRef, Catch: BasicBlockRef) {
-    if cx.unreachable { return; }
-    check_not_terminated(cx);
-    terminate(cx, "FastInvoke");
-    B(cx).fast_invoke(Fn, Args, Then, Catch);
+    B(cx).invoke(Fn, Args, Then, Catch, attributes)
 }
 
 pub fn Unreachable(cx: @mut Block) {
@@ -629,7 +622,7 @@ pub fn _UndefReturn(cx: @mut Block, Fn: ValueRef) -> ValueRef {
     }
 }
 
-pub fn add_span_comment(cx: @mut Block, sp: span, text: &str) {
+pub fn add_span_comment(cx: @mut Block, sp: Span, text: &str) {
     B(cx).add_span_comment(sp, text)
 }
 
@@ -644,20 +637,16 @@ pub fn InlineAsmCall(cx: @mut Block, asm: *c_char, cons: *c_char,
     B(cx).inline_asm_call(asm, cons, inputs, output, volatile, alignstack, dia)
 }
 
-pub fn Call(cx: @mut Block, Fn: ValueRef, Args: &[ValueRef]) -> ValueRef {
+pub fn Call(cx: @mut Block, Fn: ValueRef, Args: &[ValueRef],
+            attributes: &[(uint, lib::llvm::Attribute)]) -> ValueRef {
     if cx.unreachable { return _UndefReturn(cx, Fn); }
-    B(cx).call(Fn, Args)
+    B(cx).call(Fn, Args, attributes)
 }
 
-pub fn FastCall(cx: @mut Block, Fn: ValueRef, Args: &[ValueRef]) -> ValueRef {
+pub fn CallWithConv(cx: @mut Block, Fn: ValueRef, Args: &[ValueRef], Conv: CallConv,
+                    attributes: &[(uint, lib::llvm::Attribute)]) -> ValueRef {
     if cx.unreachable { return _UndefReturn(cx, Fn); }
-    B(cx).call(Fn, Args)
-}
-
-pub fn CallWithConv(cx: @mut Block, Fn: ValueRef, Args: &[ValueRef],
-                    Conv: CallConv) -> ValueRef {
-    if cx.unreachable { return _UndefReturn(cx, Fn); }
-    B(cx).call_with_conv(Fn, Args, Conv)
+    B(cx).call_with_conv(Fn, Args, Conv, attributes)
 }
 
 pub fn AtomicFence(cx: @mut Block, order: AtomicOrdering) {

@@ -14,7 +14,7 @@ use extra;
 
 use ast;
 use ast::{Attribute, Attribute_, MetaItem, MetaWord, MetaNameValue, MetaList};
-use codemap::{spanned, dummy_spanned};
+use codemap::{Spanned, spanned, dummy_spanned};
 use codemap::BytePos;
 use diagnostic::span_handler;
 use parse::comments::{doc_comment_style, strip_doc_comment_decoration};
@@ -187,12 +187,12 @@ pub fn first_attr_value_str_by_name(attrs: &[Attribute], name: &str)
                                  -> Option<@str> {
     attrs.iter()
         .find(|at| name == at.name())
-        .chain(|at| at.value_str())
+        .and_then(|at| at.value_str())
 }
 
 pub fn last_meta_item_value_str_by_name(items: &[@MetaItem], name: &str)
                                      -> Option<@str> {
-    items.rev_iter().find(|mi| name == mi.name()).chain(|i| i.value_str())
+    items.rev_iter().find(|mi| name == mi.name()).and_then(|i| i.value_str())
 }
 
 /* Higher-level applications */
@@ -212,7 +212,7 @@ pub fn sort_meta_items(items: &[@MetaItem]) -> ~[@MetaItem] {
     do v.move_iter().map |(_, m)| {
         match m.node {
             MetaList(n, ref mis) => {
-                @spanned {
+                @Spanned {
                     node: MetaList(n, sort_meta_items(*mis)),
                     .. /*bad*/ (*m).clone()
                 }
@@ -313,13 +313,50 @@ pub fn test_cfg<AM: AttrMetaMethods, It: Iterator<AM>>
     no_cfgs || some_cfg_matches
 }
 
+/// Represents the #[deprecated="foo"] (etc) attributes.
+pub struct Stability {
+    level: StabilityLevel,
+    text: Option<@str>
+}
+
+/// The available stability levels.
+#[deriving(Eq,Ord,Clone)]
+pub enum StabilityLevel {
+    Deprecated,
+    Experimental,
+    Unstable,
+    Stable,
+    Frozen,
+    Locked
+}
+
+/// Find the first stability attribute. `None` if none exists.
+pub fn find_stability<AM: AttrMetaMethods, It: Iterator<AM>>(mut metas: It) -> Option<Stability> {
+    for m in metas {
+        let level = match m.name().as_slice() {
+            "deprecated" => Deprecated,
+            "experimental" => Experimental,
+            "unstable" => Unstable,
+            "stable" => Stable,
+            "frozen" => Frozen,
+            "locked" => Locked,
+            _ => loop // not a stability level
+        };
+
+        return Some(Stability {
+                level: level,
+                text: m.value_str()
+            });
+    }
+    None
+}
+
 pub fn require_unique_names(diagnostic: @mut span_handler,
                             metas: &[@MetaItem]) {
     let mut set = HashSet::new();
     for meta in metas.iter() {
         let name = meta.name();
 
-        // FIXME: How do I silence the warnings? --pcw (#2619)
         if !set.insert(name) {
             diagnostic.span_fatal(meta.span,
                                   fmt!("duplicate meta item `%s`", name));

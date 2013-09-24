@@ -8,34 +8,14 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use std::uint;
+use std::iter::range_step;
 
-use cryptoutil::{write_u64_be, write_u32_be, read_u64v_be, read_u32v_be, shift_add_check_overflow,
-    shift_add_check_overflow_tuple, FixedBuffer, FixedBuffer128, FixedBuffer64, StandardPadding};
+use cryptoutil::{write_u64_be, write_u32_be, read_u64v_be, read_u32v_be, add_bytes_to_bits,
+    add_bytes_to_bits_tuple, FixedBuffer, FixedBuffer128, FixedBuffer64, StandardPadding};
 use digest::Digest;
 
-
-// Sha-512 and Sha-256 use basically the same calculations which are implemented by these macros.
-// Inlining the calculations seems to result in better generated code.
-macro_rules! schedule_round( ($t:expr) => (
-        W[$t] = sigma1(W[$t - 2]) + W[$t - 7] + sigma0(W[$t - 15]) + W[$t - 16];
-    )
-)
-
-macro_rules! sha2_round(
-    ($A:ident, $B:ident, $C:ident, $D:ident,
-     $E:ident, $F:ident, $G:ident, $H:ident, $K:ident, $t:expr) => (
-        {
-            $H += sum1($E) + ch($E, $F, $G) + $K[$t] + W[$t];
-            $D += $H;
-            $H += sum0($A) + maj($A, $B, $C);
-        }
-    )
-)
-
-
-// A structure that represents that state of a digest computation for the SHA-2 512 family of digest
-// functions
+// A structure that represents that state of a digest computation for the SHA-2 512 family
+// of digest functions
 struct Engine512State {
     H0: u64,
     H1: u64,
@@ -108,11 +88,30 @@ impl Engine512State {
 
         let mut W = [0u64, ..80];
 
+        // Sha-512 and Sha-256 use basically the same calculations which are implemented by
+        // these macros. Inlining the calculations seems to result in better generated code.
+        macro_rules! schedule_round( ($t:expr) => (
+                W[$t] = sigma1(W[$t - 2]) + W[$t - 7] + sigma0(W[$t - 15]) + W[$t - 16];
+                )
+        )
+
+        macro_rules! sha2_round(
+            ($A:ident, $B:ident, $C:ident, $D:ident,
+             $E:ident, $F:ident, $G:ident, $H:ident, $K:ident, $t:expr) => (
+                {
+                    $H += sum1($E) + ch($E, $F, $G) + $K[$t] + W[$t];
+                    $D += $H;
+                    $H += sum0($A) + maj($A, $B, $C);
+                }
+             )
+        )
+
+
         read_u64v_be(W.mut_slice(0, 16), data);
 
         // Putting the message schedule inside the same loop as the round calculations allows for
         // the compiler to generate better code.
-        do uint::range_step(0, 64, 8) |t| {
+        for t in range_step(0u, 64, 8) {
             schedule_round!(t + 16);
             schedule_round!(t + 17);
             schedule_round!(t + 18);
@@ -130,10 +129,9 @@ impl Engine512State {
             sha2_round!(d, e, f, g, h, a, b, c, K64, t + 5);
             sha2_round!(c, d, e, f, g, h, a, b, K64, t + 6);
             sha2_round!(b, c, d, e, f, g, h, a, K64, t + 7);
-            true
-        };
+        }
 
-        do uint::range_step(64, 80, 8) |t| {
+        for t in range_step(64u, 80, 8) {
             sha2_round!(a, b, c, d, e, f, g, h, K64, t);
             sha2_round!(h, a, b, c, d, e, f, g, K64, t + 1);
             sha2_round!(g, h, a, b, c, d, e, f, K64, t + 2);
@@ -142,8 +140,7 @@ impl Engine512State {
             sha2_round!(d, e, f, g, h, a, b, c, K64, t + 5);
             sha2_round!(c, d, e, f, g, h, a, b, K64, t + 6);
             sha2_round!(b, c, d, e, f, g, h, a, K64, t + 7);
-            true
-        };
+        }
 
         self.H0 += a;
         self.H1 += b;
@@ -210,7 +207,7 @@ impl Engine512 {
     fn input(&mut self, input: &[u8]) {
         assert!(!self.finished)
         // Assumes that input.len() can be converted to u64 without overflow
-        self.length_bits = shift_add_check_overflow_tuple(self.length_bits, input.len() as u64, 3);
+        self.length_bits = add_bytes_to_bits_tuple(self.length_bits, input.len() as u64);
         self.buffer.input(input, |input: &[u8]| { self.state.process_block(input) });
     }
 
@@ -505,11 +502,30 @@ impl Engine256State {
 
         let mut W = [0u32, ..64];
 
+        // Sha-512 and Sha-256 use basically the same calculations which are implemented
+        // by these macros. Inlining the calculations seems to result in better generated code.
+        macro_rules! schedule_round( ($t:expr) => (
+                W[$t] = sigma1(W[$t - 2]) + W[$t - 7] + sigma0(W[$t - 15]) + W[$t - 16];
+                )
+        )
+
+        macro_rules! sha2_round(
+            ($A:ident, $B:ident, $C:ident, $D:ident,
+             $E:ident, $F:ident, $G:ident, $H:ident, $K:ident, $t:expr) => (
+                {
+                    $H += sum1($E) + ch($E, $F, $G) + $K[$t] + W[$t];
+                    $D += $H;
+                    $H += sum0($A) + maj($A, $B, $C);
+                }
+             )
+        )
+
+
         read_u32v_be(W.mut_slice(0, 16), data);
 
         // Putting the message schedule inside the same loop as the round calculations allows for
         // the compiler to generate better code.
-        do uint::range_step(0, 48, 8) |t| {
+        for t in range_step(0u, 48, 8) {
             schedule_round!(t + 16);
             schedule_round!(t + 17);
             schedule_round!(t + 18);
@@ -527,10 +543,9 @@ impl Engine256State {
             sha2_round!(d, e, f, g, h, a, b, c, K32, t + 5);
             sha2_round!(c, d, e, f, g, h, a, b, K32, t + 6);
             sha2_round!(b, c, d, e, f, g, h, a, K32, t + 7);
-            true
-        };
+        }
 
-        do uint::range_step(48, 64, 8) |t| {
+        for t in range_step(48u, 64, 8) {
             sha2_round!(a, b, c, d, e, f, g, h, K32, t);
             sha2_round!(h, a, b, c, d, e, f, g, K32, t + 1);
             sha2_round!(g, h, a, b, c, d, e, f, K32, t + 2);
@@ -539,8 +554,7 @@ impl Engine256State {
             sha2_round!(d, e, f, g, h, a, b, c, K32, t + 5);
             sha2_round!(c, d, e, f, g, h, a, b, K32, t + 6);
             sha2_round!(b, c, d, e, f, g, h, a, K32, t + 7);
-            true
-        };
+        }
 
         self.H0 += a;
         self.H1 += b;
@@ -602,7 +616,7 @@ impl Engine256 {
     fn input(&mut self, input: &[u8]) {
         assert!(!self.finished)
         // Assumes that input.len() can be converted to u64 without overflow
-        self.length_bits = shift_add_check_overflow(self.length_bits, input.len() as u64, 3);
+        self.length_bits = add_bytes_to_bits(self.length_bits, input.len() as u64);
         self.buffer.input(input, |input: &[u8]| { self.state.process_block(input) });
     }
 

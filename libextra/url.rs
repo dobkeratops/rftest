@@ -61,6 +61,7 @@ impl Url {
 }
 
 impl UserInfo {
+    #[inline]
     pub fn new(user: ~str, pass: Option<~str>) -> UserInfo {
         UserInfo { user: user, pass: pass }
     }
@@ -71,7 +72,7 @@ fn encode_inner(s: &str, full_url: bool) -> ~str {
         let mut out = ~"";
 
         while !rdr.eof() {
-            let ch = rdr.read_byte() as char;
+            let ch = rdr.read_byte() as u8 as char;
             match ch {
               // unreserved:
               'A' .. 'Z' |
@@ -134,7 +135,7 @@ fn decode_inner(s: &str, full_url: bool) -> ~str {
             match rdr.read_char() {
               '%' => {
                 let bytes = rdr.read_bytes(2u);
-                let ch = uint::parse_bytes(bytes, 16u).unwrap() as char;
+                let ch = uint::parse_bytes(bytes, 16u).unwrap() as u8 as char;
 
                 if full_url {
                     // Only decode some characters:
@@ -185,7 +186,7 @@ fn encode_plus(s: &str) -> ~str {
         let mut out = ~"";
 
         while !rdr.eof() {
-            let ch = rdr.read_byte() as char;
+            let ch = rdr.read_byte() as u8 as char;
             match ch {
               'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '.' | '-' => {
                 out.push_char(ch);
@@ -257,7 +258,7 @@ pub fn decode_form_urlencoded(s: &[u8]) -> HashMap<~str, ~[~str]> {
                     let ch = match ch {
                         '%' => {
                             let bytes = rdr.read_bytes(2u);
-                            uint::parse_bytes(bytes, 16u).unwrap() as char
+                            uint::parse_bytes(bytes, 16u).unwrap() as u8 as char
                         }
                         '+' => ' ',
                         ch => ch
@@ -294,7 +295,7 @@ fn split_char_first(s: &str, c: char) -> (~str, ~str) {
     do io::with_str_reader(s) |rdr| {
         let mut ch;
         while !rdr.eof() {
-            ch = rdr.read_byte() as char;
+            ch = rdr.read_byte() as u8 as char;
             if ch == c {
                 // found a match, adjust markers
                 index = rdr.tell()-1;
@@ -460,11 +461,14 @@ fn get_authority(rawurl: &str) ->
               }
               InHost => {
                 pos = i;
-                // can't be sure whether this is an ipv6 address or a port
                 if input == Unreserved {
-                    return Err(~"Illegal characters in authority.");
+                    // must be port
+                    host = rawurl.slice(begin, i).to_owned();
+                    st = InPort;
+                } else {
+                    // can't be sure whether this is an ipv6 address or a port
+                    st = Ip6Port;
                 }
-                st = Ip6Port;
               }
               Ip6Port => {
                 if input == Unreserved {
@@ -514,25 +518,12 @@ fn get_authority(rawurl: &str) ->
           }
           _ => ()
         }
-        end = i;
     }
-
-    let end = end; // make end immutable so it can be captured
-
-    let host_is_end_plus_one: &fn() -> bool = || {
-        let xs = ['?', '#', '/'];
-        end+1 == len
-            && !xs.iter().any(|x| *x == (rawurl[end] as char))
-    };
 
     // finish up
     match st {
       Start => {
-        if host_is_end_plus_one() {
-            host = rawurl.slice(begin, end+1).to_owned();
-        } else {
-            host = rawurl.slice(begin, end).to_owned();
-        }
+        host = rawurl.slice(begin, end).to_owned();
       }
       PassHostPort | Ip6Port => {
         if input != Digit {
@@ -552,8 +543,7 @@ fn get_authority(rawurl: &str) ->
       }
     }
 
-    let rest = if host_is_end_plus_one() { ~"" }
-    else { rawurl.slice(end, len).to_owned() };
+    let rest = rawurl.slice(end, len).to_owned();
     return Ok((userinfo, host, port, rest));
 }
 
@@ -806,18 +796,17 @@ mod tests {
 
     #[test]
     fn test_url_parse() {
-        let url = ~"http://user:pass@rust-lang.org/doc?s=v#something";
+        let url = ~"http://user:pass@rust-lang.org:8080/doc?s=v#something";
 
         let up = from_str(url);
         let u = up.unwrap();
-        assert!(u.scheme == ~"http");
-        let userinfo = u.user.get_ref();
-        assert!(userinfo.user == ~"user");
-        assert!(userinfo.pass.get_ref() == &~"pass");
-        assert!(u.host == ~"rust-lang.org");
-        assert!(u.path == ~"/doc");
-        assert!(u.query == ~[(~"s", ~"v")]);
-        assert!(u.fragment.get_ref() == &~"something");
+        assert_eq!(&u.scheme, &~"http");
+        assert_eq!(&u.user, &Some(UserInfo::new(~"user", Some(~"pass"))));
+        assert_eq!(&u.host, &~"rust-lang.org");
+        assert_eq!(&u.port, &Some(~"8080"));
+        assert_eq!(&u.path, &~"/doc");
+        assert_eq!(&u.query, &~[(~"s", ~"v")]);
+        assert_eq!(&u.fragment, &Some(~"something"));
     }
 
     #[test]
@@ -826,6 +815,22 @@ mod tests {
         let url = from_str(urlstr).unwrap();
         assert!(url.host == ~"0.42.42.42");
         assert!(url.path == ~"/");
+    }
+
+    #[test]
+    fn test_url_host_with_port() {
+        let urlstr = ~"scheme://host:1234";
+        let url = from_str(urlstr).unwrap();
+        assert_eq!(&url.scheme, &~"scheme");
+        assert_eq!(&url.host, &~"host");
+        assert_eq!(&url.port, &Some(~"1234"));
+        assert_eq!(&url.path, &~""); // is empty path really correct? Other tests think so
+        let urlstr = ~"scheme://host:1234/";
+        let url = from_str(urlstr).unwrap();
+        assert_eq!(&url.scheme, &~"scheme");
+        assert_eq!(&url.host, &~"host");
+        assert_eq!(&url.port, &Some(~"1234"));
+        assert_eq!(&url.path, &~"/");
     }
 
     #[test]
@@ -1056,16 +1061,12 @@ mod tests {
 
     #[test]
     fn test_decode_form_urlencoded() {
-        // FIXME #4449: Commented out because this causes an ICE, but only
-        // on FreeBSD
-        /*
         assert_eq!(decode_form_urlencoded([]).len(), 0);
 
         let s = "a=1&foo+bar=abc&foo+bar=12+%3D+34".as_bytes();
         let form = decode_form_urlencoded(s);
         assert_eq!(form.len(), 2);
-        assert_eq!(form.get_ref(&~"a"), &~[~"1"]);
-        assert_eq!(form.get_ref(&~"foo bar"), &~[~"abc", ~"12 = 34"]);
-        */
+        assert_eq!(form.get(&~"a"), &~[~"1"]);
+        assert_eq!(form.get(&~"foo bar"), &~[~"abc", ~"12 = 34"]);
     }
 }

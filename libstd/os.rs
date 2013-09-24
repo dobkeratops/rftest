@@ -32,11 +32,10 @@ use c_str::ToCStr;
 use clone::Clone;
 use container::Container;
 use io;
-use iterator::range;
+use iter::range;
 use libc;
 use libc::{c_char, c_void, c_int, size_t};
 use libc::FILE;
-use local_data;
 use option::{Some, None};
 use os;
 use prelude::*;
@@ -51,6 +50,7 @@ pub use os::consts::*;
 
 /// Delegates to the libc close() function, returning the same return value.
 pub fn close(fd: c_int) -> c_int {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
         libc::close(fd)
     }
@@ -70,6 +70,7 @@ pub static TMPBUF_SZ : uint = 1000u;
 static BUF_BYTES : uint = 2048u;
 
 pub fn getcwd() -> Path {
+    #[fixed_stack_segment]; #[inline(never)];
     let mut buf = [0 as libc::c_char, ..BUF_BYTES];
     do buf.as_mut_buf |buf, len| {
         unsafe {
@@ -109,6 +110,8 @@ pub mod win32 {
 
     pub fn fill_utf16_buf_and_decode(f: &fn(*mut u16, DWORD) -> DWORD)
         -> Option<~str> {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             let mut n = TMPBUF_SZ as DWORD;
             let mut res = None;
@@ -161,12 +164,8 @@ fn with_env_lock<T>(f: &fn() -> T) -> T {
         };
     }
 
-    extern {
-        #[fast_ffi]
-        fn rust_take_env_lock();
-        #[fast_ffi]
-        fn rust_drop_env_lock();
-    }
+    externfn!(fn rust_take_env_lock());
+    externfn!(fn rust_drop_env_lock());
 }
 
 /// Returns a vector of (variable, value) pairs for all the environment
@@ -175,6 +174,8 @@ pub fn env() -> ~[(~str,~str)] {
     unsafe {
         #[cfg(windows)]
         unsafe fn get_env_pairs() -> ~[~str] {
+            #[fixed_stack_segment]; #[inline(never)];
+
             use libc::funcs::extra::kernel32::{
                 GetEnvironmentStringsA,
                 FreeEnvironmentStringsA
@@ -183,21 +184,14 @@ pub fn env() -> ~[(~str,~str)] {
             if (ch as uint == 0) {
                 fail!("os::env() failure getting env string from OS: %s", os::last_os_error());
             }
-            let mut curr_ptr: uint = ch as uint;
-            let mut result = ~[];
-            while(*(curr_ptr as *libc::c_char) != 0 as libc::c_char) {
-                let env_pair = str::raw::from_c_str(
-                    curr_ptr as *libc::c_char);
-                result.push(env_pair);
-                curr_ptr +=
-                    libc::strlen(curr_ptr as *libc::c_char) as uint
-                    + 1;
-            }
+            let result = str::raw::from_c_multistring(ch as *libc::c_char, None);
             FreeEnvironmentStringsA(ch);
             result
         }
         #[cfg(unix)]
         unsafe fn get_env_pairs() -> ~[~str] {
+            #[fixed_stack_segment]; #[inline(never)];
+
             extern {
                 fn rust_env_pairs() -> **libc::c_char;
             }
@@ -237,9 +231,10 @@ pub fn env() -> ~[(~str,~str)] {
 /// Fetches the environment variable `n` from the current process, returning
 /// None if the variable isn't set.
 pub fn getenv(n: &str) -> Option<~str> {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
         do with_env_lock {
-            let s = do n.to_c_str().with_ref |buf| {
+            let s = do n.with_c_str |buf| {
                 libc::getenv(buf)
             };
             if s.is_null() {
@@ -255,6 +250,8 @@ pub fn getenv(n: &str) -> Option<~str> {
 /// Fetches the environment variable `n` from the current process, returning
 /// None if the variable isn't set.
 pub fn getenv(n: &str) -> Option<~str> {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         do with_env_lock {
             use os::win32::{as_utf16_p, fill_utf16_buf_and_decode};
@@ -272,10 +269,11 @@ pub fn getenv(n: &str) -> Option<~str> {
 /// Sets the environment variable `n` to the value `v` for the currently running
 /// process
 pub fn setenv(n: &str, v: &str) {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
         do with_env_lock {
-            do n.to_c_str().with_ref |nbuf| {
-                do v.to_c_str().with_ref |vbuf| {
+            do n.with_c_str |nbuf| {
+                do v.with_c_str |vbuf| {
                     libc::funcs::posix01::unistd::setenv(nbuf, vbuf, 1);
                 }
             }
@@ -288,6 +286,8 @@ pub fn setenv(n: &str, v: &str) {
 /// Sets the environment variable `n` to the value `v` for the currently running
 /// process
 pub fn setenv(n: &str, v: &str) {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         do with_env_lock {
             use os::win32::as_utf16_p;
@@ -304,9 +304,10 @@ pub fn setenv(n: &str, v: &str) {
 pub fn unsetenv(n: &str) {
     #[cfg(unix)]
     fn _unsetenv(n: &str) {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             do with_env_lock {
-                do n.to_c_str().with_ref |nbuf| {
+                do n.with_c_str |nbuf| {
                     libc::funcs::posix01::unistd::unsetenv(nbuf);
                 }
             }
@@ -314,6 +315,7 @@ pub fn unsetenv(n: &str) {
     }
     #[cfg(windows)]
     fn _unsetenv(n: &str) {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             do with_env_lock {
                 use os::win32::as_utf16_p;
@@ -328,7 +330,8 @@ pub fn unsetenv(n: &str) {
 }
 
 pub fn fdopen(fd: c_int) -> *FILE {
-    do "r".to_c_str().with_ref |modebuf| {
+    #[fixed_stack_segment]; #[inline(never)];
+    do "r".with_c_str |modebuf| {
         unsafe {
             libc::fdopen(fd, modebuf)
         }
@@ -340,6 +343,7 @@ pub fn fdopen(fd: c_int) -> *FILE {
 
 #[cfg(windows)]
 pub fn fsync_fd(fd: c_int, _level: io::fsync::Level) -> c_int {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
         use libc::funcs::extra::msvcrt::*;
         return commit(fd);
@@ -349,6 +353,7 @@ pub fn fsync_fd(fd: c_int, _level: io::fsync::Level) -> c_int {
 #[cfg(target_os = "linux")]
 #[cfg(target_os = "android")]
 pub fn fsync_fd(fd: c_int, level: io::fsync::Level) -> c_int {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
         use libc::funcs::posix01::unistd::*;
         match level {
@@ -361,6 +366,8 @@ pub fn fsync_fd(fd: c_int, level: io::fsync::Level) -> c_int {
 
 #[cfg(target_os = "macos")]
 pub fn fsync_fd(fd: c_int, level: io::fsync::Level) -> c_int {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         use libc::consts::os::extra::*;
         use libc::funcs::posix88::fcntl::*;
@@ -381,6 +388,8 @@ pub fn fsync_fd(fd: c_int, level: io::fsync::Level) -> c_int {
 
 #[cfg(target_os = "freebsd")]
 pub fn fsync_fd(fd: c_int, _l: io::fsync::Level) -> c_int {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         use libc::funcs::posix01::unistd::*;
         return fsync(fd);
@@ -394,6 +403,7 @@ pub struct Pipe {
 
 #[cfg(unix)]
 pub fn pipe() -> Pipe {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
         let mut fds = Pipe {input: 0 as c_int,
                             out: 0 as c_int };
@@ -406,12 +416,13 @@ pub fn pipe() -> Pipe {
 
 #[cfg(windows)]
 pub fn pipe() -> Pipe {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
         // Windows pipes work subtly differently than unix pipes, and their
         // inheritance has to be handled in a different way that I do not
         // fully understand. Here we explicitly make the pipe non-inheritable,
         // which means to pass it to a subprocess they need to be duplicated
-        // first, as in core::run.
+        // first, as in std::run.
         let mut fds = Pipe {input: 0 as c_int,
                     out: 0 as c_int };
         let res = libc::pipe(&mut fds.input, 1024 as ::libc::c_uint,
@@ -424,6 +435,7 @@ pub fn pipe() -> Pipe {
 }
 
 fn dup2(src: c_int, dst: c_int) -> c_int {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
         libc::dup2(src, dst)
     }
@@ -440,6 +452,7 @@ pub fn self_exe_path() -> Option<Path> {
 
     #[cfg(target_os = "freebsd")]
     fn load_self() -> Option<~str> {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             use libc::funcs::bsd44::*;
             use libc::consts::os::extra::*;
@@ -458,13 +471,14 @@ pub fn self_exe_path() -> Option<Path> {
     #[cfg(target_os = "linux")]
     #[cfg(target_os = "android")]
     fn load_self() -> Option<~str> {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             use libc::funcs::posix01::unistd::readlink;
 
             let mut path = [0 as c_char, .. TMPBUF_SZ];
 
             do path.as_mut_buf |buf, len| {
-                let len = do "/proc/self/exe".to_c_str().with_ref |proc_self_buf| {
+                let len = do "/proc/self/exe".with_c_str |proc_self_buf| {
                     readlink(proc_self_buf, buf, len as size_t) as uint
                 };
 
@@ -479,6 +493,7 @@ pub fn self_exe_path() -> Option<Path> {
 
     #[cfg(target_os = "macos")]
     fn load_self() -> Option<~str> {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             do fill_charp_buf() |buf, sz| {
                 let mut sz = sz as u32;
@@ -490,6 +505,7 @@ pub fn self_exe_path() -> Option<Path> {
 
     #[cfg(windows)]
     fn load_self() -> Option<~str> {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             use os::win32::fill_utf16_buf_and_decode;
             do fill_utf16_buf_and_decode() |buf, sz| {
@@ -532,7 +548,7 @@ pub fn homedir() -> Option<Path> {
 
     #[cfg(windows)]
     fn secondary() -> Option<Path> {
-        do getenv("USERPROFILE").chain |p| {
+        do getenv("USERPROFILE").and_then |p| {
             if !p.is_empty() {
                 Some(Path(p))
             } else {
@@ -547,6 +563,8 @@ pub fn homedir() -> Option<Path> {
  *
  * On Unix, returns the value of the 'TMPDIR' environment variable if it is
  * set and non-empty and '/tmp' otherwise.
+ * On Android, there is no global temporary folder (it is usually allocated
+ * per-app), hence returns '/data/tmp' which is commonly used.
  *
  * On Windows, returns the value of, in order, the 'TMP', 'TEMP',
  * 'USERPROFILE' environment variable  if any are set and not the empty
@@ -569,7 +587,11 @@ pub fn tmpdir() -> Path {
 
     #[cfg(unix)]
     fn lookup() -> Path {
-        getenv_nonempty("TMPDIR").unwrap_or_default(Path("/tmp"))
+        if cfg!(target_os = "android") {
+            Path("/data/tmp")
+        } else {
+            getenv_nonempty("TMPDIR").unwrap_or(Path("/tmp"))
+        }
     }
 
     #[cfg(windows)]
@@ -577,7 +599,7 @@ pub fn tmpdir() -> Path {
         getenv_nonempty("TMP").or(
             getenv_nonempty("TEMP").or(
                 getenv_nonempty("USERPROFILE").or(
-                   getenv_nonempty("WINDIR")))).unwrap_or_default(Path("C:\\Windows"))
+                   getenv_nonempty("WINDIR")))).unwrap_or(Path("C:\\Windows"))
     }
 }
 
@@ -592,8 +614,9 @@ pub fn walk_dir(p: &Path, f: &fn(&Path) -> bool) -> bool {
 
 /// Indicates whether a path represents a directory
 pub fn path_is_dir(p: &Path) -> bool {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
-        do p.to_c_str().with_ref |buf| {
+        do p.with_c_str |buf| {
             rustrt::rust_path_is_dir(buf) != 0 as c_int
         }
     }
@@ -601,8 +624,9 @@ pub fn path_is_dir(p: &Path) -> bool {
 
 /// Indicates whether a path exists
 pub fn path_exists(p: &Path) -> bool {
+    #[fixed_stack_segment]; #[inline(never)];
     unsafe {
-        do p.to_c_str().with_ref |buf| {
+        do p.with_c_str |buf| {
             rustrt::rust_path_exists(buf) != 0 as c_int
         }
     }
@@ -633,6 +657,7 @@ pub fn make_dir(p: &Path, mode: c_int) -> bool {
 
     #[cfg(windows)]
     fn mkdir(p: &Path, _mode: c_int) -> bool {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             use os::win32::as_utf16_p;
             // FIXME: turn mode into something useful? #2623
@@ -645,7 +670,8 @@ pub fn make_dir(p: &Path, mode: c_int) -> bool {
 
     #[cfg(unix)]
     fn mkdir(p: &Path, mode: c_int) -> bool {
-        do p.to_c_str().with_ref |buf| {
+        #[fixed_stack_segment]; #[inline(never)];
+        do p.with_c_str |buf| {
             unsafe {
                 libc::mkdir(buf, mode as libc::mode_t) == (0 as c_int)
             }
@@ -689,6 +715,7 @@ pub fn list_dir(p: &Path) -> ~[~str] {
         #[cfg(target_os = "freebsd")]
         #[cfg(target_os = "macos")]
         unsafe fn get_list(p: &Path) -> ~[~str] {
+            #[fixed_stack_segment]; #[inline(never)];
             use libc::{dirent_t};
             use libc::{opendir, readdir, closedir};
             extern {
@@ -697,7 +724,7 @@ pub fn list_dir(p: &Path) -> ~[~str] {
             let mut strings = ~[];
             debug!("os::list_dir -- BEFORE OPENDIR");
 
-            let dir_ptr = do p.to_c_str().with_ref |buf| {
+            let dir_ptr = do p.with_c_str |buf| {
                 opendir(buf)
             };
 
@@ -721,6 +748,7 @@ pub fn list_dir(p: &Path) -> ~[~str] {
         }
         #[cfg(windows)]
         unsafe fn get_list(p: &Path) -> ~[~str] {
+            #[fixed_stack_segment]; #[inline(never)];
             use libc::consts::os::extra::INVALID_HANDLE_VALUE;
             use libc::{wcslen, free};
             use libc::funcs::extra::kernel32::{
@@ -809,6 +837,7 @@ pub fn remove_dir(p: &Path) -> bool {
 
     #[cfg(windows)]
     fn rmdir(p: &Path) -> bool {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             use os::win32::as_utf16_p;
             return do as_utf16_p(p.to_str()) |buf| {
@@ -819,7 +848,8 @@ pub fn remove_dir(p: &Path) -> bool {
 
     #[cfg(unix)]
     fn rmdir(p: &Path) -> bool {
-        do p.to_c_str().with_ref |buf| {
+        #[fixed_stack_segment]; #[inline(never)];
+        do p.with_c_str |buf| {
             unsafe {
                 libc::rmdir(buf) == (0 as c_int)
             }
@@ -834,6 +864,7 @@ pub fn change_dir(p: &Path) -> bool {
 
     #[cfg(windows)]
     fn chdir(p: &Path) -> bool {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             use os::win32::as_utf16_p;
             return do as_utf16_p(p.to_str()) |buf| {
@@ -844,7 +875,8 @@ pub fn change_dir(p: &Path) -> bool {
 
     #[cfg(unix)]
     fn chdir(p: &Path) -> bool {
-        do p.to_c_str().with_ref |buf| {
+        #[fixed_stack_segment]; #[inline(never)];
+        do p.with_c_str |buf| {
             unsafe {
                 libc::chdir(buf) == (0 as c_int)
             }
@@ -858,6 +890,7 @@ pub fn copy_file(from: &Path, to: &Path) -> bool {
 
     #[cfg(windows)]
     fn do_copy_file(from: &Path, to: &Path) -> bool {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             use os::win32::as_utf16_p;
             return do as_utf16_p(from.to_str()) |fromp| {
@@ -871,9 +904,10 @@ pub fn copy_file(from: &Path, to: &Path) -> bool {
 
     #[cfg(unix)]
     fn do_copy_file(from: &Path, to: &Path) -> bool {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
-            let istream = do from.to_c_str().with_ref |fromp| {
-                do "rb".to_c_str().with_ref |modebuf| {
+            let istream = do from.with_c_str |fromp| {
+                do "rb".with_c_str |modebuf| {
                     libc::fopen(fromp, modebuf)
                 }
             };
@@ -884,8 +918,8 @@ pub fn copy_file(from: &Path, to: &Path) -> bool {
             let from_mode = from.get_mode().expect("copy_file: couldn't get permissions \
                                                     for source file");
 
-            let ostream = do to.to_c_str().with_ref |top| {
-                do "w+b".to_c_str().with_ref |modebuf| {
+            let ostream = do to.with_c_str |top| {
+                do "w+b".with_c_str |modebuf| {
                     libc::fopen(top, modebuf)
                 }
             };
@@ -917,7 +951,7 @@ pub fn copy_file(from: &Path, to: &Path) -> bool {
             fclose(ostream);
 
             // Give the new file the old file's permissions
-            if do to.to_c_str().with_ref |to_buf| {
+            if do to.with_c_str |to_buf| {
                 libc::chmod(to_buf, from_mode as libc::mode_t)
             } != 0 {
                 return false; // should be a condition...
@@ -933,6 +967,7 @@ pub fn remove_file(p: &Path) -> bool {
 
     #[cfg(windows)]
     fn unlink(p: &Path) -> bool {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             use os::win32::as_utf16_p;
             return do as_utf16_p(p.to_str()) |buf| {
@@ -943,11 +978,24 @@ pub fn remove_file(p: &Path) -> bool {
 
     #[cfg(unix)]
     fn unlink(p: &Path) -> bool {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
-            do p.to_c_str().with_ref |buf| {
+            do p.with_c_str |buf| {
                 libc::unlink(buf) == (0 as c_int)
             }
         }
+    }
+}
+
+/// Renames an existing file or directory
+pub fn rename_file(old: &Path, new: &Path) -> bool {
+    #[fixed_stack_segment]; #[inline(never)];
+    unsafe {
+       do old.with_c_str |old_buf| {
+            do new.with_c_str |new_buf| {
+                libc::rename(old_buf, new_buf) == (0 as c_int)
+            }
+       }
     }
 }
 
@@ -957,6 +1005,7 @@ pub fn errno() -> int {
     #[cfg(target_os = "macos")]
     #[cfg(target_os = "freebsd")]
     fn errno_location() -> *c_int {
+        #[fixed_stack_segment]; #[inline(never)];
         #[nolink]
         extern {
             fn __error() -> *c_int;
@@ -969,6 +1018,7 @@ pub fn errno() -> int {
     #[cfg(target_os = "linux")]
     #[cfg(target_os = "android")]
     fn errno_location() -> *c_int {
+        #[fixed_stack_segment]; #[inline(never)];
         #[nolink]
         extern {
             fn __errno_location() -> *c_int;
@@ -986,11 +1036,19 @@ pub fn errno() -> int {
 #[cfg(windows)]
 /// Returns the platform-specific value of errno
 pub fn errno() -> uint {
+    #[fixed_stack_segment]; #[inline(never)];
     use libc::types::os::arch::extra::DWORD;
 
+    #[cfg(target_arch = "x86")]
     #[link_name = "kernel32"]
     #[abi = "stdcall"]
     extern "stdcall" {
+        fn GetLastError() -> DWORD;
+    }
+
+    #[cfg(target_arch = "x86_64")]
+    #[link_name = "kernel32"]
+    extern {
         fn GetLastError() -> DWORD;
     }
 
@@ -1008,6 +1066,8 @@ pub fn last_os_error() -> ~str {
         #[cfg(target_os = "freebsd")]
         fn strerror_r(errnum: c_int, buf: *mut c_char, buflen: size_t)
                       -> c_int {
+            #[fixed_stack_segment]; #[inline(never)];
+
             #[nolink]
             extern {
                 fn strerror_r(errnum: c_int, buf: *mut c_char, buflen: size_t)
@@ -1023,6 +1083,7 @@ pub fn last_os_error() -> ~str {
         // So we just use __xpg_strerror_r which is always POSIX compliant
         #[cfg(target_os = "linux")]
         fn strerror_r(errnum: c_int, buf: *mut c_char, buflen: size_t) -> c_int {
+            #[fixed_stack_segment]; #[inline(never)];
             #[nolink]
             extern {
                 fn __xpg_strerror_r(errnum: c_int,
@@ -1050,18 +1111,35 @@ pub fn last_os_error() -> ~str {
 
     #[cfg(windows)]
     fn strerror() -> ~str {
-        use libc::types::os::arch::extra::DWORD;
-        use libc::types::os::arch::extra::LPSTR;
-        use libc::types::os::arch::extra::LPVOID;
+        #[fixed_stack_segment]; #[inline(never)];
 
+        use libc::types::os::arch::extra::DWORD;
+        use libc::types::os::arch::extra::LPWSTR;
+        use libc::types::os::arch::extra::LPVOID;
+        use libc::types::os::arch::extra::WCHAR;
+
+        #[cfg(target_arch = "x86")]
         #[link_name = "kernel32"]
         #[abi = "stdcall"]
         extern "stdcall" {
-            fn FormatMessageA(flags: DWORD,
+            fn FormatMessageW(flags: DWORD,
                               lpSrc: LPVOID,
                               msgId: DWORD,
                               langId: DWORD,
-                              buf: LPSTR,
+                              buf: LPWSTR,
+                              nsize: DWORD,
+                              args: *c_void)
+                              -> DWORD;
+        }
+
+        #[cfg(target_arch = "x86_64")]
+        #[link_name = "kernel32"]
+        extern {
+            fn FormatMessageW(flags: DWORD,
+                              lpSrc: LPVOID,
+                              msgId: DWORD,
+                              langId: DWORD,
+                              buf: LPWSTR,
                               nsize: DWORD,
                               args: *c_void)
                               -> DWORD;
@@ -1075,11 +1153,11 @@ pub fn last_os_error() -> ~str {
         let langId = 0x0800 as DWORD;
         let err = errno() as DWORD;
 
-        let mut buf = [0 as c_char, ..TMPBUF_SZ];
+        let mut buf = [0 as WCHAR, ..TMPBUF_SZ];
 
         unsafe {
             do buf.as_mut_buf |buf, len| {
-                let res = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM |
+                let res = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM |
                                          FORMAT_MESSAGE_IGNORE_INSERTS,
                                          ptr::mut_null(),
                                          err,
@@ -1092,9 +1170,7 @@ pub fn last_os_error() -> ~str {
                 }
             }
 
-            do buf.as_imm_buf |buf, _len| {
-                str::raw::from_c_str(buf)
-            }
+            str::from_utf16(buf)
         }
     }
 
@@ -1128,7 +1204,9 @@ unsafe fn load_argc_and_argv(argc: c_int, argv: **c_char) -> ~[~str] {
  * Returns a list of the command line arguments.
  */
 #[cfg(target_os = "macos")]
-pub fn real_args() -> ~[~str] {
+fn real_args() -> ~[~str] {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         let (argc, argv) = (*_NSGetArgc() as c_int,
                             *_NSGetArgv() as **c_char);
@@ -1139,7 +1217,7 @@ pub fn real_args() -> ~[~str] {
 #[cfg(target_os = "linux")]
 #[cfg(target_os = "android")]
 #[cfg(target_os = "freebsd")]
-pub fn real_args() -> ~[~str] {
+fn real_args() -> ~[~str] {
     use rt;
 
     match rt::args::clone() {
@@ -1149,7 +1227,9 @@ pub fn real_args() -> ~[~str] {
 }
 
 #[cfg(windows)]
-pub fn real_args() -> ~[~str] {
+fn real_args() -> ~[~str] {
+    #[fixed_stack_segment]; #[inline(never)];
+
     let mut nArgs: c_int = 0;
     let lpArgCount: *mut c_int = &mut nArgs;
     let lpCmdLine = unsafe { GetCommandLineW() };
@@ -1178,7 +1258,7 @@ pub fn real_args() -> ~[~str] {
 
 type LPCWSTR = *u16;
 
-#[cfg(windows)]
+#[cfg(windows, target_arch = "x86")]
 #[link_name="kernel32"]
 #[abi="stdcall"]
 extern "stdcall" {
@@ -1186,10 +1266,23 @@ extern "stdcall" {
     fn LocalFree(ptr: *c_void);
 }
 
-#[cfg(windows)]
+#[cfg(windows, target_arch = "x86_64")]
+#[link_name="kernel32"]
+extern {
+    fn GetCommandLineW() -> LPCWSTR;
+    fn LocalFree(ptr: *c_void);
+}
+
+#[cfg(windows, target_arch = "x86")]
 #[link_name="shell32"]
 #[abi="stdcall"]
 extern "stdcall" {
+    fn CommandLineToArgvW(lpCmdLine: LPCWSTR, pNumArgs: *mut c_int) -> **u16;
+}
+
+#[cfg(windows, target_arch = "x86_64")]
+#[link_name="shell32"]
+extern {
     fn CommandLineToArgvW(lpCmdLine: LPCWSTR, pNumArgs: *mut c_int) -> **u16;
 }
 
@@ -1197,110 +1290,10 @@ struct OverriddenArgs {
     val: ~[~str]
 }
 
-static overridden_arg_key: local_data::Key<@OverriddenArgs> = &local_data::Key;
-
 /// Returns the arguments which this program was started with (normally passed
 /// via the command line).
-///
-/// The return value of the function can be changed by invoking the
-/// `os::set_args` function.
 pub fn args() -> ~[~str] {
-    match local_data::get(overridden_arg_key, |k| k.map(|&k| *k)) {
-        None => real_args(),
-        Some(args) => args.val.clone()
-    }
-}
-
-/// For the current task, overrides the task-local cache of the arguments this
-/// program had when it started. These new arguments are only available to the
-/// current task via the `os::args` method.
-pub fn set_args(new_args: ~[~str]) {
-    let overridden_args = @OverriddenArgs {
-        val: new_args.clone()
-    };
-    local_data::set(overridden_arg_key, overridden_args);
-}
-
-// FIXME #6100 we should really use an internal implementation of this - using
-// the POSIX glob functions isn't portable to windows, probably has slight
-// inconsistencies even where it is implemented, and makes extending
-// functionality a lot more difficult
-// FIXME #6101 also provide a non-allocating version - each_glob or so?
-/// Returns a vector of Path objects that match the given glob pattern
-#[cfg(target_os = "linux")]
-#[cfg(target_os = "android")]
-#[cfg(target_os = "freebsd")]
-#[cfg(target_os = "macos")]
-pub fn glob(pattern: &str) -> ~[Path] {
-    #[cfg(target_os = "linux")]
-    #[cfg(target_os = "android")]
-    fn default_glob_t () -> libc::glob_t {
-        libc::glob_t {
-            gl_pathc: 0,
-            gl_pathv: ptr::null(),
-            gl_offs: 0,
-            __unused1: ptr::null(),
-            __unused2: ptr::null(),
-            __unused3: ptr::null(),
-            __unused4: ptr::null(),
-            __unused5: ptr::null(),
-        }
-    }
-
-    #[cfg(target_os = "freebsd")]
-    fn default_glob_t () -> libc::glob_t {
-        libc::glob_t {
-            gl_pathc: 0,
-            __unused1: 0,
-            gl_offs: 0,
-            __unused2: 0,
-            gl_pathv: ptr::null(),
-            __unused3: ptr::null(),
-            __unused4: ptr::null(),
-            __unused5: ptr::null(),
-            __unused6: ptr::null(),
-            __unused7: ptr::null(),
-            __unused8: ptr::null(),
-        }
-    }
-
-    #[cfg(target_os = "macos")]
-    fn default_glob_t () -> libc::glob_t {
-        libc::glob_t {
-            gl_pathc: 0,
-            __unused1: 0,
-            gl_offs: 0,
-            __unused2: 0,
-            gl_pathv: ptr::null(),
-            __unused3: ptr::null(),
-            __unused4: ptr::null(),
-            __unused5: ptr::null(),
-            __unused6: ptr::null(),
-            __unused7: ptr::null(),
-            __unused8: ptr::null(),
-        }
-    }
-
-    let mut g = default_glob_t();
-    do pattern.to_c_str().with_ref |c_pattern| {
-        unsafe { libc::glob(c_pattern, 0, ptr::null(), &mut g) }
-    };
-    do(|| {
-        let paths = unsafe {
-            vec::raw::from_buf_raw(g.gl_pathv, g.gl_pathc as uint)
-        };
-        do paths.map |&c_str| {
-            Path(unsafe { str::raw::from_c_str(c_str) })
-        }
-    }).finally {
-        unsafe { libc::globfree(&mut g) };
-    }
-}
-
-/// Returns a vector of Path objects that match the given glob pattern
-#[cfg(target_os = "win32")]
-pub fn glob(_pattern: &str) -> ~[Path] {
-    fail!("glob() is unimplemented on Windows")
+    real_args()
 }
 
 #[cfg(target_os = "macos")]
@@ -1326,6 +1319,8 @@ fn round_up(from: uint, to: uint) -> uint {
 
 #[cfg(unix)]
 pub fn page_size() -> uint {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         libc::sysconf(libc::_SC_PAGESIZE) as uint
     }
@@ -1333,12 +1328,14 @@ pub fn page_size() -> uint {
 
 #[cfg(windows)]
 pub fn page_size() -> uint {
-  unsafe {
-    let mut info = libc::SYSTEM_INFO::new();
-    libc::GetSystemInfo(&mut info);
+    #[fixed_stack_segment]; #[inline(never)];
 
-    return info.dwPageSize as uint;
-  }
+    unsafe {
+        let mut info = libc::SYSTEM_INFO::new();
+        libc::GetSystemInfo(&mut info);
+
+        return info.dwPageSize as uint;
+    }
 }
 
 pub struct MemoryMap {
@@ -1373,7 +1370,6 @@ pub enum MapError {
     // Windows-specific errors
     ErrUnsupProt,
     ErrUnsupOffset,
-    ErrNeedRW,
     ErrAlreadyExists,
     ErrVirtualAlloc(uint),
     ErrCreateFileMappingW(uint),
@@ -1392,7 +1388,6 @@ impl to_str::ToStr for MapError {
             ErrUnknown(code) => fmt!("Unknown error=%?", code),
             ErrUnsupProt => ~"Protection mode unsupported",
             ErrUnsupOffset => ~"Offset in virtual memory mode is unsupported",
-            ErrNeedRW => ~"File mapping should be at least readable/writable",
             ErrAlreadyExists => ~"File mapping for specified file already exists",
             ErrVirtualAlloc(code) => fmt!("VirtualAlloc failure=%?", code),
             ErrCreateFileMappingW(code) => fmt!("CreateFileMappingW failure=%?", code),
@@ -1404,6 +1399,8 @@ impl to_str::ToStr for MapError {
 #[cfg(unix)]
 impl MemoryMap {
     pub fn new(min_len: uint, options: ~[MapOption]) -> Result<~MemoryMap, MapError> {
+        #[fixed_stack_segment]; #[inline(never)];
+
         use libc::off_t;
 
         let mut addr: *c_void = ptr::null();
@@ -1434,7 +1431,7 @@ impl MemoryMap {
         let r = unsafe {
             libc::mmap(addr, len, prot, flags, fd, offset)
         };
-        if r == libc::MAP_FAILED {
+        if r.equiv(&libc::MAP_FAILED) {
             Err(match errno() as c_int {
                 libc::EACCES => ErrFdNotAvail,
                 libc::EBADF => ErrInvalidFd,
@@ -1455,11 +1452,17 @@ impl MemoryMap {
             })
         }
     }
+
+    pub fn granularity() -> uint {
+        page_size()
+    }
 }
 
 #[cfg(unix)]
 impl Drop for MemoryMap {
-    fn drop(&self) {
+    fn drop(&mut self) {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             match libc::munmap(self.data as *c_void, self.len) {
                 0 => (),
@@ -1476,6 +1479,8 @@ impl Drop for MemoryMap {
 #[cfg(windows)]
 impl MemoryMap {
     pub fn new(min_len: uint, options: ~[MapOption]) -> Result<~MemoryMap, MapError> {
+        #[fixed_stack_segment]; #[inline(never)];
+
         use libc::types::os::arch::extra::{LPVOID, DWORD, SIZE_T, HANDLE};
 
         let mut lpAddress: LPVOID = ptr::mut_null();
@@ -1526,21 +1531,21 @@ impl MemoryMap {
                 })
             }
         } else {
-            let dwDesiredAccess = match (readable, writable) {
-                (true, true) => libc::FILE_MAP_ALL_ACCESS,
-                (true, false) => libc::FILE_MAP_READ,
-                (false, true) => libc::FILE_MAP_WRITE,
-                _ => {
-                    return Err(ErrNeedRW);
-                }
+            let dwDesiredAccess = match (executable, readable, writable) {
+                (false, true, false) => libc::FILE_MAP_READ,
+                (false, true, true) => libc::FILE_MAP_WRITE,
+                (true, true, false) => libc::FILE_MAP_READ | libc::FILE_MAP_EXECUTE,
+                (true, true, true) => libc::FILE_MAP_WRITE | libc::FILE_MAP_EXECUTE,
+                _ => return Err(ErrUnsupProt) // Actually, because of the check above,
+                                              // we should never get here.
             };
             unsafe {
                 let hFile = libc::get_osfhandle(fd) as HANDLE;
                 let mapping = libc::CreateFileMappingW(hFile,
                                                        ptr::mut_null(),
                                                        flProtect,
-                                                       (len >> 32) as DWORD,
-                                                       (len & 0xffff_ffff) as DWORD,
+                                                       0,
+                                                       0,
                                                        ptr::null());
                 if mapping == ptr::mut_null() {
                     return Err(ErrCreateFileMappingW(errno()));
@@ -1550,7 +1555,7 @@ impl MemoryMap {
                 }
                 let r = libc::MapViewOfFile(mapping,
                                             dwDesiredAccess,
-                                            (offset >> 32) as DWORD,
+                                            ((len as u64) >> 32) as DWORD,
                                             (offset & 0xffff_ffff) as DWORD,
                                             0);
                 match r as uint {
@@ -1564,26 +1569,43 @@ impl MemoryMap {
             }
         }
     }
+
+    /// Granularity of MapAddr() and MapOffset() parameter values.
+    /// This may be greater than the value returned by page_size().
+    pub fn granularity() -> uint {
+        #[fixed_stack_segment]; #[inline(never)];
+
+        unsafe {
+            let mut info = libc::SYSTEM_INFO::new();
+            libc::GetSystemInfo(&mut info);
+
+            return info.dwAllocationGranularity as uint;
+        }
+    }
 }
 
 #[cfg(windows)]
 impl Drop for MemoryMap {
-    fn drop(&self) {
+    fn drop(&mut self) {
+        #[fixed_stack_segment]; #[inline(never)];
+
         use libc::types::os::arch::extra::{LPCVOID, HANDLE};
+        use libc::consts::os::extra::FALSE;
 
         unsafe {
             match self.kind {
-                MapVirtual => match libc::VirtualFree(self.data as *mut c_void,
-                                                      self.len,
-                                                      libc::MEM_RELEASE) {
-                    0 => error!(fmt!("VirtualFree failed: %?", errno())),
-                    _ => ()
+                MapVirtual => {
+                    if libc::VirtualFree(self.data as *mut c_void,
+                                         self.len,
+                                         libc::MEM_RELEASE) == FALSE {
+                        error!(fmt!("VirtualFree failed: %?", errno()));
+                    }
                 },
                 MapFile(mapping) => {
-                    if libc::UnmapViewOfFile(self.data as LPCVOID) != 0 {
+                    if libc::UnmapViewOfFile(self.data as LPCVOID) == FALSE {
                         error!(fmt!("UnmapViewOfFile failed: %?", errno()));
                     }
-                    if libc::CloseHandle(mapping as HANDLE) != 0 {
+                    if libc::CloseHandle(mapping as HANDLE) == FALSE {
                         error!(fmt!("CloseHandle failed: %?", errno()));
                     }
                 }
@@ -1625,7 +1647,7 @@ pub mod consts {
     pub use os::consts::arm::*;
 
     #[cfg(target_arch = "mips")]
-    use os::consts::mips::*;
+    pub use os::consts::mips::*;
 
     pub mod unix {
         pub static FAMILY: &'static str = "unix";
@@ -1692,11 +1714,11 @@ mod tests {
     use libc;
     use option::Some;
     use option;
-    use os::{env, getcwd, getenv, make_absolute, real_args};
+    use os::{env, getcwd, getenv, make_absolute, args};
     use os::{remove_file, setenv, unsetenv};
     use os;
     use path::Path;
-    use rand::RngUtil;
+    use rand::Rng;
     use rand;
     use run;
     use str::StrSlice;
@@ -1710,13 +1732,13 @@ mod tests {
 
     #[test]
     pub fn test_args() {
-        let a = real_args();
+        let a = args();
         assert!(a.len() >= 1);
     }
 
     fn make_rand_name() -> ~str {
         let mut rng = rand::rng();
-        let n = ~"TEST" + rng.gen_str(10u);
+        let n = ~"TEST" + rng.gen_ascii_str(10u);
         assert!(getenv(n).is_none());
         n
     }
@@ -1737,7 +1759,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore(cfg(windows))]
     #[ignore]
     fn test_setenv_overwrite() {
         let n = make_rand_name();
@@ -1751,7 +1772,6 @@ mod tests {
     // Windows GetEnvironmentVariable requires some extra work to make sure
     // the buffer the variable is copied into is the right size
     #[test]
-    #[ignore(cfg(windows))]
     #[ignore]
     fn test_getenv_big() {
         let mut s = ~"";
@@ -1853,8 +1873,8 @@ mod tests {
         setenv("USERPROFILE", "/home/PaloAlto");
         assert_eq!(os::homedir(), Some(Path("/home/MountainView")));
 
-        oldhome.iter().advance(|s| { setenv("HOME", *s); true });
-        olduserprofile.iter().advance(|s| { setenv("USERPROFILE", *s); true });
+        for s in oldhome.iter() { setenv("HOME", *s) }
+        for s in olduserprofile.iter() { setenv("USERPROFILE", *s) }
     }
 
     #[test]
@@ -1921,6 +1941,8 @@ mod tests {
 
     #[test]
     fn copy_file_ok() {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             let tempdir = getcwd(); // would like to use $TMPDIR,
                                     // doesn't seem to work on Linux
@@ -1929,14 +1951,14 @@ mod tests {
             let out = tempdir.push("out.txt");
 
             /* Write the temp input file */
-            let ostream = do input.to_c_str().with_ref |fromp| {
-                do "w+b".to_c_str().with_ref |modebuf| {
+            let ostream = do input.with_c_str |fromp| {
+                do "w+b".with_c_str |modebuf| {
                     libc::fopen(fromp, modebuf)
                 }
             };
             assert!((ostream as uint != 0u));
             let s = ~"hello";
-            do "hello".to_c_str().with_ref |buf| {
+            do "hello".with_c_str |buf| {
                 let write_len = libc::fwrite(buf as *c_void,
                                              1u as size_t,
                                              (s.len() + 1u) as size_t,
@@ -1991,17 +2013,23 @@ mod tests {
 
     #[test]
     fn memory_map_file() {
+        #[fixed_stack_segment]; #[inline(never)];
+
         use result::{Ok, Err};
         use os::*;
         use libc::*;
 
         #[cfg(unix)]
+        #[fixed_stack_segment]
+        #[inline(never)]
         fn lseek_(fd: c_int, size: uint) {
             unsafe {
                 assert!(lseek(fd, size as off_t, SEEK_SET) == size as off_t);
             }
         }
         #[cfg(windows)]
+        #[fixed_stack_segment]
+        #[inline(never)]
         fn lseek_(fd: c_int, size: uint) {
            unsafe {
                assert!(lseek(fd, size as c_long, SEEK_SET) == size as c_long);
@@ -2009,15 +2037,15 @@ mod tests {
         }
 
         let path = tmpdir().push("mmap_file.tmp");
-        let size = page_size() * 2;
+        let size = MemoryMap::granularity() * 2;
         remove_file(&path);
 
         let fd = unsafe {
-            let fd = do path.to_c_str().with_ref |path| {
+            let fd = do path.with_c_str |path| {
                 open(path, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR)
             };
             lseek_(fd, size);
-            do "x".to_c_str().with_ref |x| {
+            do "x".with_c_str |x| {
                 assert!(write(fd, x as *c_void, 1) == 1);
             }
             fd

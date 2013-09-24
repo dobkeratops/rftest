@@ -23,25 +23,6 @@ pub fn id<T>(x: T) -> T { x }
 #[inline]
 pub fn ignore<T>(_x: T) { }
 
-/// Sets `*ptr` to `new_value`, invokes `op()`, and then restores the
-/// original value of `*ptr`.
-///
-/// NB: This function accepts `@mut T` and not `&mut T` to avoid
-/// an obvious borrowck hazard. Typically passing in `&mut T` will
-/// cause borrow check errors because it freezes whatever location
-/// that `&mut T` is stored in (either statically or dynamically).
-#[inline]
-pub fn with<T,R>(
-    ptr: @mut T,
-    value: T,
-    op: &fn() -> R) -> R
-{
-    let prev = replace(ptr, value);
-    let result = op();
-    *ptr = prev;
-    return result;
-}
-
 /**
  * Swap the values at two mutable locations of the same type, without
  * deinitialising or copying either one.
@@ -54,8 +35,10 @@ pub fn swap<T>(x: &mut T, y: &mut T) {
         let t: *mut T = &mut tmp;
 
         // Perform the swap, `&mut` pointers never alias
-        ptr::copy_nonoverlapping_memory(t, x, 1);
-        ptr::copy_nonoverlapping_memory(x, y, 1);
+        let x_raw: *mut T = x;
+        let y_raw: *mut T = y;
+        ptr::copy_nonoverlapping_memory(t, x_raw, 1);
+        ptr::copy_nonoverlapping_memory(x, y_raw, 1);
         ptr::copy_nonoverlapping_memory(y, t, 1);
 
         // y and t now point to the same thing, but we need to completely forget `tmp`
@@ -86,7 +69,7 @@ impl NonCopyable {
 }
 
 impl Drop for NonCopyable {
-    fn drop(&self) { }
+    fn drop(&mut self) { }
 }
 
 /// A type with no inhabitants
@@ -101,34 +84,6 @@ impl Void {
     }
 }
 
-
-/**
-A utility function for indicating unreachable code. It will fail if
-executed. This is occasionally useful to put after loops that never
-terminate normally, but instead directly return from a function.
-
-# Example
-
-~~~ {.rust}
-fn choose_weighted_item(v: &[Item]) -> Item {
-    assert!(!v.is_empty());
-    let mut so_far = 0u;
-    for v.each |item| {
-        so_far += item.weight;
-        if so_far > 100 {
-            return item;
-        }
-    }
-    // The above loop always returns, so we must hint to the
-    // type checker that it isn't possible to get down here
-    util::unreachable();
-}
-~~~
-
-*/
-pub fn unreachable() -> ! {
-    fail!("internal error: entered unreachable code");
-}
 
 #[cfg(test)]
 mod tests {
@@ -186,7 +141,7 @@ mod tests {
         struct Foo { five: int }
 
         impl Drop for Foo {
-            fn drop(&self) {
+            fn drop(&mut self) {
                 assert_eq!(self.five, 5);
                 unsafe {
                     did_run = true;

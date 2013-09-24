@@ -27,7 +27,7 @@ use util::ppaux::ty_to_str;
 use std::libc::c_uint;
 use std::option::None;
 use std::vec;
-use syntax::ast::def_id;
+use syntax::ast::DefId;
 use syntax::ast;
 use syntax::ast_map::path_name;
 use syntax::parse::token::special_idents;
@@ -49,6 +49,10 @@ impl Reflector {
 
     pub fn c_int(&mut self, i: int) -> ValueRef {
         C_int(self.bcx.ccx(), i)
+    }
+
+    pub fn c_bool(&mut self, b: bool) -> ValueRef {
+        C_bool(b)
     }
 
     pub fn c_slice(&mut self, s: @str) -> ValueRef {
@@ -146,14 +150,15 @@ impl Reflector {
     // Entrypoint
     pub fn visit_ty(&mut self, t: ty::t) {
         let bcx = self.bcx;
+        let tcx = bcx.ccx().tcx;
         debug!("reflect::visit_ty %s", ty_to_str(bcx.ccx().tcx, t));
 
         match ty::get(t).sty {
           ty::ty_bot => self.leaf("bot"),
           ty::ty_nil => self.leaf("nil"),
           ty::ty_bool => self.leaf("bool"),
+          ty::ty_char => self.leaf("char"),
           ty::ty_int(ast::ty_i) => self.leaf("int"),
-          ty::ty_int(ast::ty_char) => self.leaf("char"),
           ty::ty_int(ast::ty_i8) => self.leaf("i8"),
           ty::ty_int(ast::ty_i16) => self.leaf("i16"),
           ty::ty_int(ast::ty_i32) => self.leaf("i32"),
@@ -248,17 +253,21 @@ impl Reflector {
           }
 
           ty::ty_struct(did, ref substs) => {
-              let bcx = self.bcx;
-              let tcx = bcx.ccx().tcx;
               let fields = ty::struct_fields(tcx, did, substs);
+              let mut named_fields = false;
+              if !fields.is_empty() {
+                  named_fields =
+                        fields[0].ident.name != special_idents::unnamed_field.name;
+              }
 
-              let extra = ~[self.c_uint(fields.len())]
-                  + self.c_size_and_align(t);
+              let extra = ~[self.c_slice(ty_to_str(tcx, t).to_managed()),
+                            self.c_bool(named_fields),
+                            self.c_uint(fields.len())] + self.c_size_and_align(t);
               do self.bracketed("class", extra) |this| {
                   for (i, field) in fields.iter().enumerate() {
                       let extra = ~[this.c_uint(i),
-                                    this.c_slice(
-                                        bcx.ccx().sess.str_of(field.ident))]
+                                    this.c_slice(bcx.ccx().sess.str_of(field.ident)),
+                                    this.c_bool(named_fields)]
                           + this.c_mt(&field.mt);
                       this.visit("class_field", extra);
                   }
@@ -270,13 +279,13 @@ impl Reflector {
           // let the visitor tell us if it wants to visit only a particular
           // variant?
           ty::ty_enum(did, ref substs) => {
-            let bcx = self.bcx;
             let ccx = bcx.ccx();
             let repr = adt::represent_type(bcx.ccx(), t);
             let variants = ty::substd_enum_variants(ccx.tcx, did, substs);
             let llptrty = type_of(ccx, t).ptr_to();
             let opaquety = ty::get_opaque_ty(ccx.tcx).unwrap();
-            let opaqueptrty = ty::mk_ptr(ccx.tcx, ty::mt { ty: opaquety, mutbl: ast::m_imm });
+            let opaqueptrty = ty::mk_ptr(ccx.tcx, ty::mt { ty: opaquety,
+                                                           mutbl: ast::MutImmutable });
 
             let make_get_disr = || {
                 let sub_path = bcx.fcx.path + &[path_name(special_idents::anon)];
@@ -284,8 +293,7 @@ impl Reflector {
                                                                sub_path,
                                                                "get_disr");
 
-                let llfty = type_of_fn(ccx, [opaqueptrty], ty::mk_int());
-                let llfdecl = decl_internal_cdecl_fn(ccx.llmod, sym, llfty);
+                let llfdecl = decl_internal_rust_fn(ccx, [opaqueptrty], ty::mk_int(), sym);
                 let fcx = new_fn_ctxt(ccx,
                                       ~[],
                                       llfdecl,
@@ -317,7 +325,7 @@ impl Reflector {
                 for (i, v) in variants.iter().enumerate() {
                     let name = ccx.sess.str_of(v.name);
                     let variant_args = ~[this.c_uint(i),
-                                         this.c_uint(v.disr_val),
+                                         C_integral(self.bcx.ccx().int_type, v.disr_val, false),
                                          this.c_uint(v.args.len()),
                                          this.c_slice(name)];
                     do this.bracketed("enum_variant", variant_args) |this| {
@@ -336,8 +344,12 @@ impl Reflector {
             }
           }
 
-          // Miscallaneous extra types
-          ty::ty_trait(_, _, _, _, _) => self.leaf("trait"),
+          ty::ty_trait(_, _, _, _, _) => {
+              let extra = [self.c_slice(ty_to_str(tcx, t).to_managed())];
+              self.visit("trait", extra);
+          }
+
+          // Miscellaneous extra types
           ty::ty_infer(_) => self.leaf("infer"),
           ty::ty_err => self.leaf("err"),
           ty::ty_param(ref p) => {
@@ -373,7 +385,7 @@ impl Reflector {
 pub fn emit_calls_to_trait_visit_ty(bcx: @mut Block,
                                     t: ty::t,
                                     visitor_val: ValueRef,
-                                    visitor_trait_id: def_id)
+                                    visitor_trait_id: DefId)
                                  -> @mut Block {
     let final = sub_block(bcx, "final");
     let tydesc_ty = ty::get_tydesc_ty(bcx.ccx().tcx).unwrap();

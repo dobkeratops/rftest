@@ -9,7 +9,7 @@
 // except according to those terms.
 
 #[link(name = "rustc",
-       vers = "0.8-pre",
+       vers = "0.8",
        uuid = "0ce89b41-2f92-459e-bbc1-8f5fe32f16cf",
        url = "https://github.com/mozilla/rust/tree/master/src/rustc")];
 
@@ -17,17 +17,23 @@
 #[license = "MIT/ASL2"];
 #[crate_type = "lib"];
 
+// Rustc tasks always run on a fixed_stack_segment, so code in this
+// module can call C functions (in particular, LLVM functions) with
+// impunity.
+#[allow(cstack)];
+
 extern mod extra;
 extern mod syntax;
 
 use driver::driver::{host_triple, optgroups, early_error};
 use driver::driver::{str_input, file_input, build_session_options};
 use driver::driver::{build_session, build_configuration, parse_pretty};
-use driver::driver::{pp_mode, pretty_print_input, list_metadata};
+use driver::driver::{PpMode, pretty_print_input, list_metadata};
 use driver::driver::{compile_input};
 use driver::session;
 use middle::lint;
 
+use std::comm;
 use std::io;
 use std::num;
 use std::os;
@@ -35,9 +41,10 @@ use std::result;
 use std::str;
 use std::task;
 use std::vec;
-use extra::getopts::{groups, opt_present};
+use extra::getopts::groups;
 use extra::getopts;
 use syntax::codemap;
+use syntax::diagnostic::Emitter;
 use syntax::diagnostic;
 
 pub mod middle {
@@ -68,12 +75,14 @@ pub mod middle {
     pub mod reachable;
     pub mod graph;
     pub mod cfg;
+    pub mod stack_check;
 }
 
 pub mod front {
     pub mod config;
     pub mod test;
     pub mod std_inject;
+    pub mod assign_node_ids;
 }
 
 pub mod back {
@@ -86,7 +95,6 @@ pub mod back {
     pub mod x86_64;
     pub mod rpath;
     pub mod target_strs;
-    pub mod passes;
 }
 
 pub mod metadata;
@@ -128,7 +136,7 @@ pub fn version(argv0: &str) {
 
 pub fn usage(argv0: &str) {
     let message = fmt!("Usage: %s [OPTIONS] INPUT", argv0);
-    printfln!("%s\
+    printfln!("%s\n\
 Additional help:
     -W help             Print 'lint' options and default settings
     -Z help             Print internal options for debugging rustc\n",
@@ -156,7 +164,7 @@ Available lint options:
         max_key = num::max(name.len(), max_key);
     }
     fn padded(max: uint, s: &str) -> ~str {
-        str::from_bytes(vec::from_elem(max - s.len(), ' ' as u8)) + s
+        str::from_utf8(vec::from_elem(max - s.len(), ' ' as u8)) + s
     }
     println("\nAvailable lint checks:\n");
     printfln!("    %s  %7.7s  %s",
@@ -185,11 +193,11 @@ pub fn describe_debug_flags() {
     }
 }
 
-pub fn run_compiler(args: &~[~str], demitter: diagnostic::Emitter) {
+pub fn run_compiler(args: &[~str], demitter: @diagnostic::Emitter) {
     // Don't display log spew by default. Can override with RUST_LOG.
     ::std::logging::console_off();
 
-    let mut args = (*args).clone();
+    let mut args = args.to_owned();
     let binary = args.shift().to_managed();
 
     if args.is_empty() { usage(binary); return; }
@@ -198,39 +206,39 @@ pub fn run_compiler(args: &~[~str], demitter: diagnostic::Emitter) {
         &match getopts::groups::getopts(args, optgroups()) {
           Ok(m) => m,
           Err(f) => {
-            early_error(demitter, getopts::fail_str(f));
+            early_error(demitter, f.to_err_msg());
           }
         };
 
-    if opt_present(matches, "h") || opt_present(matches, "help") {
+    if matches.opt_present("h") || matches.opt_present("help") {
         usage(binary);
         return;
     }
 
     // Display the available lint options if "-W help" or only "-W" is given.
-    let lint_flags = vec::append(getopts::opt_strs(matches, "W"),
-                                 getopts::opt_strs(matches, "warn"));
+    let lint_flags = vec::append(matches.opt_strs("W"),
+                                 matches.opt_strs("warn"));
 
     let show_lint_options = lint_flags.iter().any(|x| x == &~"help") ||
-        (opt_present(matches, "W") && lint_flags.is_empty());
+        (matches.opt_present("W") && lint_flags.is_empty());
 
     if show_lint_options {
         describe_warnings();
         return;
     }
 
-    let r = getopts::opt_strs(matches, "Z");
+    let r = matches.opt_strs("Z");
     if r.iter().any(|x| x == &~"help") {
         describe_debug_flags();
         return;
     }
 
-    if getopts::opt_maybe_str(matches, "passes") == Some(~"list") {
-        back::passes::list_passes();
+    if matches.opt_str("passes") == Some(~"list") {
+        unsafe { lib::llvm::llvm::LLVMRustPrintPasses(); }
         return;
     }
 
-    if opt_present(matches, "v") || opt_present(matches, "version") {
+    if matches.opt_present("v") || matches.opt_present("version") {
         version(binary);
         return;
     }
@@ -239,7 +247,7 @@ pub fn run_compiler(args: &~[~str], demitter: diagnostic::Emitter) {
       1u => {
         let ifile = matches.free[0].as_slice();
         if "-" == ifile {
-            let src = str::from_bytes(io::stdin().read_whole_stream());
+            let src = str::from_utf8(io::stdin().read_whole_stream());
             str_input(src.to_managed())
         } else {
             file_input(Path(ifile))
@@ -250,20 +258,20 @@ pub fn run_compiler(args: &~[~str], demitter: diagnostic::Emitter) {
 
     let sopts = build_session_options(binary, matches, demitter);
     let sess = build_session(sopts, demitter);
-    let odir = getopts::opt_maybe_str(matches, "out-dir").map_move(|o| Path(o));
-    let ofile = getopts::opt_maybe_str(matches, "o").map_move(|o| Path(o));
-    let cfg = build_configuration(sess, binary, &input);
-    let pretty = do getopts::opt_default(matches, "pretty", "normal").map_move |a| {
+    let odir = matches.opt_str("out-dir").map_move(|o| Path(o));
+    let ofile = matches.opt_str("o").map_move(|o| Path(o));
+    let cfg = build_configuration(sess);
+    let pretty = do matches.opt_default("pretty", "normal").map_move |a| {
         parse_pretty(sess, a)
     };
     match pretty {
-      Some::<pp_mode>(ppm) => {
+      Some::<PpMode>(ppm) => {
         pretty_print_input(sess, cfg, &input, ppm);
         return;
       }
-      None::<pp_mode> => {/* continue */ }
+      None::<PpMode> => {/* continue */ }
     }
-    let ls = opt_present(matches, "ls");
+    let ls = matches.opt_present("ls");
     if ls {
         match input {
           file_input(ref ifile) => {
@@ -285,6 +293,23 @@ pub enum monitor_msg {
     done,
 }
 
+struct RustcEmitter {
+    ch_capture: comm::SharedChan<monitor_msg>
+}
+
+impl diagnostic::Emitter for RustcEmitter {
+    fn emit(&self,
+            cmsp: Option<(@codemap::CodeMap, codemap::Span)>,
+            msg: &str,
+            lvl: diagnostic::level) {
+        if lvl == diagnostic::fatal {
+            self.ch_capture.send(fatal)
+        }
+
+        diagnostic::DefaultEmitter.emit(cmsp, msg, lvl)
+    }
+}
+
 /*
 This is a sanity check that any failure of the compiler is performed
 through the diagnostic module and reported properly - we shouldn't be calling
@@ -297,7 +322,7 @@ diagnostic emitter which records when we hit a fatal error. If the task
 fails without recording a fatal error then we've encountered a compiler
 bug and need to present an error.
 */
-pub fn monitor(f: ~fn(diagnostic::Emitter)) {
+pub fn monitor(f: ~fn(@diagnostic::Emitter)) {
     use std::comm::*;
 
     // XXX: This is a hack for newsched since it doesn't support split stacks.
@@ -318,25 +343,18 @@ pub fn monitor(f: ~fn(diagnostic::Emitter)) {
 
     match do task_builder.try {
         let ch = ch_capture.clone();
-        let ch_capture = ch.clone();
         // The 'diagnostics emitter'. Every error, warning, etc. should
         // go through this function.
-        let demitter: @fn(Option<(@codemap::CodeMap, codemap::span)>,
-                          &str,
-                          diagnostic::level) =
-                          |cmsp, msg, lvl| {
-            if lvl == diagnostic::fatal {
-                ch_capture.send(fatal);
-            }
-            diagnostic::emit(cmsp, msg, lvl);
-        };
+        let demitter = @RustcEmitter {
+            ch_capture: ch.clone(),
+        } as @diagnostic::Emitter;
 
         struct finally {
             ch: SharedChan<monitor_msg>,
         }
 
         impl Drop for finally {
-            fn drop(&self) { self.ch.send(done); }
+            fn drop(&mut self) { self.ch.send(done); }
         }
 
         let _finally = finally { ch: ch };
@@ -351,7 +369,7 @@ pub fn monitor(f: ~fn(diagnostic::Emitter)) {
         result::Err(_) => {
             // Task failed without emitting a fatal diagnostic
             if p.recv() == done {
-                diagnostic::emit(
+                diagnostic::DefaultEmitter.emit(
                     None,
                     diagnostic::ice_msg("unexpected failure"),
                     diagnostic::error);
@@ -359,12 +377,14 @@ pub fn monitor(f: ~fn(diagnostic::Emitter)) {
                 let xs = [
                     ~"the compiler hit an unexpected failure path. \
                      this is a bug",
-                    ~"try running with RUST_LOG=rustc=1,::rt::backtrace \
+                    ~"try running with RUST_LOG=rustc=1 \
                      to get further details and report the results \
                      to github.com/mozilla/rust/issues"
                 ];
                 for note in xs.iter() {
-                    diagnostic::emit(None, *note, diagnostic::note)
+                    diagnostic::DefaultEmitter.emit(None,
+                                                    *note,
+                                                    diagnostic::note)
                 }
             }
             // Fail so the process returns a failure code
@@ -375,7 +395,12 @@ pub fn monitor(f: ~fn(diagnostic::Emitter)) {
 
 pub fn main() {
     let args = os::args();
+    main_args(args);
+}
+
+pub fn main_args(args: &[~str]) {
+    let owned_args = args.to_owned();
     do monitor |demitter| {
-        run_compiler(&args, demitter);
+        run_compiler(owned_args, demitter);
     }
 }

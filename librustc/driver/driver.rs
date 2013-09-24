@@ -26,12 +26,10 @@ use util::common::time;
 use util::ppaux;
 
 use std::hashmap::{HashMap,HashSet};
-use std::int;
 use std::io;
 use std::os;
 use std::vec;
 use extra::getopts::groups::{optopt, optmulti, optflag, optflagopt};
-use extra::getopts::{opt_present};
 use extra::getopts;
 use syntax::ast;
 use syntax::abi;
@@ -44,12 +42,12 @@ use syntax::parse::token;
 use syntax::print::{pp, pprust};
 use syntax;
 
-pub enum pp_mode {
-    ppm_normal,
-    ppm_expanded,
-    ppm_typed,
-    ppm_identified,
-    ppm_expanded_identified
+pub enum PpMode {
+    PpmNormal,
+    PpmExpanded,
+    PpmTyped,
+    PpmIdentified,
+    PpmExpandedIdentified
 }
 
 /**
@@ -65,14 +63,14 @@ pub fn source_name(input: &input) -> @str {
     }
 }
 
-pub fn default_configuration(sess: Session, argv0: @str, input: &input) ->
+pub fn default_configuration(sess: Session) ->
    ast::CrateConfig {
-    let (libc, tos) = match sess.targ_cfg.os {
-        session::os_win32 =>   (@"msvcrt.dll", @"win32"),
-        session::os_macos =>   (@"libc.dylib", @"macos"),
-        session::os_linux =>   (@"libc.so.6",  @"linux"),
-        session::os_android => (@"libc.so",    @"android"),
-        session::os_freebsd => (@"libc.so.7",  @"freebsd")
+    let tos = match sess.targ_cfg.os {
+        session::OsWin32 =>   @"win32",
+        session::OsMacos =>   @"macos",
+        session::OsLinux =>   @"linux",
+        session::OsAndroid => @"android",
+        session::OsFreebsd => @"freebsd"
     };
 
     // ARM is bi-endian, however using NDK seems to default
@@ -92,10 +90,7 @@ pub fn default_configuration(sess: Session, argv0: @str, input: &input) ->
          mk(@"target_arch", arch),
          mk(@"target_endian", end),
          mk(@"target_word_size", wordsz),
-         mk(@"target_libc", libc),
-         // Build bindings.
-         mk(@"build_compiler", argv0),
-         mk(@"build_input", source_name(input))];
+    ];
 }
 
 pub fn append_configuration(cfg: &mut ast::CrateConfig, name: @str) {
@@ -104,11 +99,11 @@ pub fn append_configuration(cfg: &mut ast::CrateConfig, name: @str) {
     }
 }
 
-pub fn build_configuration(sess: Session, argv0: @str, input: &input) ->
+pub fn build_configuration(sess: Session) ->
    ast::CrateConfig {
     // Combine the configuration requested by the session (command line) with
     // some default and generated configuration items
-    let default_cfg = default_configuration(sess, argv0, input);
+    let default_cfg = default_configuration(sess);
     let mut user_cfg = sess.opts.cfg.clone();
     // If the user wants a test runner, then add the test cfg
     if sess.opts.test { append_configuration(&mut user_cfg, @"test") }
@@ -118,8 +113,8 @@ pub fn build_configuration(sess: Session, argv0: @str, input: &input) ->
 }
 
 // Convert strings provided as --cfg [cfgspec] into a crate_cfg
-fn parse_cfgspecs(cfgspecs: ~[~str],
-                  demitter: diagnostic::Emitter) -> ast::CrateConfig {
+fn parse_cfgspecs(cfgspecs: ~[~str], demitter: @diagnostic::Emitter)
+                  -> ast::CrateConfig {
     do cfgspecs.move_iter().map |s| {
         let sess = parse::new_parse_sess(Some(demitter));
         parse::parse_meta_from_source_str(@"cfgspec", s.to_managed(), ~[], sess)
@@ -194,6 +189,9 @@ pub fn phase_2_configure_and_expand(sess: Session,
     crate = time(time_passes, ~"std injection", ||
                  front::std_inject::maybe_inject_libstd_ref(sess, crate));
 
+    crate = time(time_passes, ~"assigning node ids", ||
+                 front::assign_node_ids::assign_node_ids(sess, crate));
+
     return crate;
 }
 
@@ -211,6 +209,7 @@ pub fn phase_3_run_analysis_passes(sess: Session,
                                    crate: @ast::Crate) -> CrateAnalysis {
 
     let time_passes = sess.time_passes();
+
     let ast_map = time(time_passes, ~"ast indexing", ||
                        syntax::ast_map::map_crate(sess.diagnostic(), crate));
 
@@ -267,6 +266,9 @@ pub fn phase_3_run_analysis_passes(sess: Session,
 
     time(time_passes, ~"loop checking", ||
          middle::check_loop::check_crate(ty_cx, crate));
+
+    time(time_passes, ~"stack checking", ||
+         middle::stack_check::stack_check_crate(ty_cx, crate));
 
     let middle::moves::MoveMaps {moves_map, moved_variables_set,
                                  capture_map} =
@@ -334,21 +336,29 @@ pub fn phase_5_run_llvm_passes(sess: Session,
                                trans: &CrateTranslation,
                                outputs: &OutputFilenames) {
 
-    // NB: Android hack
-    if sess.targ_cfg.os == session::os_android &&
+    // On Windows, LLVM integrated assembler emits bad stack unwind tables when
+    // segmented stacks are enabled.  However, unwind info directives in assembly
+    // output are OK, so we generate assembly first and then run it through
+    // an external assembler.
+    if sess.targ_cfg.os == session::OsWin32 &&
         (sess.opts.output_type == link::output_type_object ||
          sess.opts.output_type == link::output_type_exe) {
         let output_type = link::output_type_assembly;
-        let obj_filename = outputs.obj_filename.with_filetype("s");
+        let asm_filename = outputs.obj_filename.with_filetype("s");
 
         time(sess.time_passes(), ~"LLVM passes", ||
             link::write::run_passes(sess,
                                     trans.context,
                                     trans.module,
                                     output_type,
-                                    &obj_filename));
+                                    &asm_filename));
 
-        link::write::run_ndk(sess, &obj_filename, &outputs.obj_filename);
+        link::write::run_assembler(sess, &asm_filename, &outputs.obj_filename);
+
+        // Remove assembly source unless --save-temps was specified
+        if !sess.opts.save_temps {
+            os::remove_file(&asm_filename);
+        }
     } else {
         time(sess.time_passes(), ~"LLVM passes", ||
             link::write::run_passes(sess,
@@ -429,15 +439,70 @@ pub fn compile_input(sess: Session, cfg: ast::CrateConfig, input: &input,
     phase_6_link_output(sess, &trans, outputs);
 }
 
-pub fn pretty_print_input(sess: Session, cfg: ast::CrateConfig, input: &input,
-                          ppm: pp_mode) {
+struct IdentifiedAnnotation {
+    contents: (),
+}
 
-    fn ann_paren_for_expr(node: pprust::ann_node) {
+impl pprust::pp_ann for IdentifiedAnnotation {
+    fn pre(&self, node: pprust::ann_node) {
         match node {
-          pprust::node_expr(s, _) => pprust::popen(s),
-          _ => ()
+            pprust::node_expr(s, _) => pprust::popen(s),
+            _ => ()
         }
     }
+    fn post(&self, node: pprust::ann_node) {
+        match node {
+            pprust::node_item(s, item) => {
+                pp::space(s.s);
+                pprust::synth_comment(s, item.id.to_str());
+            }
+            pprust::node_block(s, ref blk) => {
+                pp::space(s.s);
+                pprust::synth_comment(s, ~"block " + blk.id.to_str());
+            }
+            pprust::node_expr(s, expr) => {
+                pp::space(s.s);
+                pprust::synth_comment(s, expr.id.to_str());
+                pprust::pclose(s);
+            }
+            pprust::node_pat(s, pat) => {
+                pp::space(s.s);
+                pprust::synth_comment(s, ~"pat " + pat.id.to_str());
+            }
+        }
+    }
+}
+
+struct TypedAnnotation {
+    analysis: CrateAnalysis,
+}
+
+impl pprust::pp_ann for TypedAnnotation {
+    fn pre(&self, node: pprust::ann_node) {
+        match node {
+            pprust::node_expr(s, _) => pprust::popen(s),
+            _ => ()
+        }
+    }
+    fn post(&self, node: pprust::ann_node) {
+        let tcx = self.analysis.ty_cx;
+        match node {
+            pprust::node_expr(s, expr) => {
+                pp::space(s.s);
+                pp::word(s.s, "as");
+                pp::space(s.s);
+                pp::word(s.s, ppaux::ty_to_str(tcx, ty::expr_ty(tcx, expr)));
+                pprust::pclose(s);
+            }
+            _ => ()
+        }
+    }
+}
+
+pub fn pretty_print_input(sess: Session,
+                          cfg: ast::CrateConfig,
+                          input: &input,
+                          ppm: PpMode) {
     fn ann_typed_post(tcx: ty::ctxt, node: pprust::ann_node) {
         match node {
           pprust::node_expr(s, expr) => {
@@ -450,78 +515,58 @@ pub fn pretty_print_input(sess: Session, cfg: ast::CrateConfig, input: &input,
           _ => ()
         }
     }
-    fn ann_identified_post(node: pprust::ann_node) {
-        match node {
-          pprust::node_item(s, item) => {
-            pp::space(s.s);
-            pprust::synth_comment(s, int::to_str(item.id));
-          }
-          pprust::node_block(s, ref blk) => {
-            pp::space(s.s);
-            pprust::synth_comment(
-                s, ~"block " + int::to_str(blk.id));
-          }
-          pprust::node_expr(s, expr) => {
-            pp::space(s.s);
-            pprust::synth_comment(s, int::to_str(expr.id));
-            pprust::pclose(s);
-          }
-          pprust::node_pat(s, pat) => {
-            pp::space(s.s);
-            pprust::synth_comment(s, ~"pat " + int::to_str(pat.id));
-          }
-        }
-    }
 
     let crate = phase_1_parse_input(sess, cfg.clone(), input);
 
     let (crate, is_expanded) = match ppm {
-        ppm_expanded | ppm_expanded_identified | ppm_typed => {
+        PpmExpanded | PpmExpandedIdentified | PpmTyped => {
             (phase_2_configure_and_expand(sess, cfg, crate), true)
         }
         _ => (crate, false)
     };
 
     let annotation = match ppm {
-        ppm_identified | ppm_expanded_identified => {
-            pprust::pp_ann {
-                pre: ann_paren_for_expr,
-                post: ann_identified_post
-            }
+        PpmIdentified | PpmExpandedIdentified => {
+            @IdentifiedAnnotation {
+                contents: (),
+            } as @pprust::pp_ann
         }
-        ppm_typed => {
+        PpmTyped => {
             let analysis = phase_3_run_analysis_passes(sess, crate);
-            pprust::pp_ann {
-                pre: ann_paren_for_expr,
-                post: |a| ann_typed_post(analysis.ty_cx, a)
-            }
+            @TypedAnnotation {
+                analysis: analysis
+            } as @pprust::pp_ann
         }
-        _ => pprust::no_ann()
+        _ => @pprust::no_ann::new() as @pprust::pp_ann,
     };
 
     let src = sess.codemap.get_filemap(source_name(input)).src;
     do io::with_str_reader(src) |rdr| {
-        pprust::print_crate(sess.codemap, token::get_ident_interner(),
-                            sess.span_diagnostic, crate,
+        pprust::print_crate(sess.codemap,
+                            token::get_ident_interner(),
+                            sess.span_diagnostic,
+                            crate,
                             source_name(input),
-                            rdr, io::stdout(),
-                            annotation, is_expanded);
+                            rdr,
+                            io::stdout(),
+                            annotation,
+                            is_expanded);
     }
 }
 
-pub fn get_os(triple: &str) -> Option<session::os> {
+pub fn get_os(triple: &str) -> Option<session::Os> {
     for &(name, os) in os_names.iter() {
         if triple.contains(name) { return Some(os) }
     }
     None
 }
-static os_names : &'static [(&'static str, session::os)] = &'static [
-    ("mingw32", session::os_win32),
-    ("win32",   session::os_win32),
-    ("darwin",  session::os_macos),
-    ("android", session::os_android),
-    ("linux",   session::os_linux),
-    ("freebsd", session::os_freebsd)];
+static os_names : &'static [(&'static str, session::Os)] = &'static [
+    ("mingw32", session::OsWin32),
+    ("win32",   session::OsWin32),
+    ("darwin",  session::OsMacos),
+    ("android", session::OsAndroid),
+    ("linux",   session::OsLinux),
+    ("freebsd", session::OsFreebsd)];
 
 pub fn get_arch(triple: &str) -> Option<abi::Architecture> {
     for &(arch, abi) in architecture_abis.iter() {
@@ -544,8 +589,8 @@ static architecture_abis : &'static [(&'static str, abi::Architecture)] = &'stat
     ("mips",   abi::Mips)];
 
 pub fn build_target_config(sopts: @session::options,
-                           demitter: diagnostic::Emitter)
-                        -> @session::config {
+                           demitter: @diagnostic::Emitter)
+                           -> @session::config {
     let os = match get_os(sopts.target_triple) {
       Some(os) => os,
       None => early_error(demitter, ~"unknown operating system")
@@ -561,11 +606,12 @@ pub fn build_target_config(sopts: @session::options,
       abi::Arm => (ast::ty_i32, ast::ty_u32, ast::ty_f64),
       abi::Mips => (ast::ty_i32, ast::ty_u32, ast::ty_f64)
     };
+    let target_triple = sopts.target_triple.clone();
     let target_strs = match arch {
-      abi::X86 => x86::get_target_strs(os),
-      abi::X86_64 => x86_64::get_target_strs(os),
-      abi::Arm => arm::get_target_strs(os),
-      abi::Mips => mips::get_target_strs(os)
+      abi::X86 => x86::get_target_strs(target_triple, os),
+      abi::X86_64 => x86_64::get_target_strs(target_triple, os),
+      abi::Arm => arm::get_target_strs(target_triple, os),
+      abi::Mips => mips::get_target_strs(target_triple, os)
     };
     let target_cfg = @session::config {
         os: os,
@@ -592,17 +638,17 @@ pub fn host_triple() -> ~str {
 
 pub fn build_session_options(binary: @str,
                              matches: &getopts::Matches,
-                             demitter: diagnostic::Emitter)
-                          -> @session::options {
-    let crate_type = if opt_present(matches, "lib") {
+                             demitter: @diagnostic::Emitter)
+                             -> @session::options {
+    let crate_type = if matches.opt_present("lib") {
         session::lib_crate
-    } else if opt_present(matches, "bin") {
+    } else if matches.opt_present("bin") {
         session::bin_crate
     } else {
         session::unknown_crate
     };
-    let parse_only = opt_present(matches, "parse-only");
-    let no_trans = opt_present(matches, "no-trans");
+    let parse_only = matches.opt_present("parse-only");
+    let no_trans = matches.opt_present("no-trans");
 
     let lint_levels = [lint::allow, lint::warn,
                        lint::deny, lint::forbid];
@@ -615,8 +661,8 @@ pub fn build_session_options(binary: @str,
         // to_ascii_move and to_str_move to not do a unnecessary copy.
         let level_short = level_name.slice_chars(0, 1);
         let level_short = level_short.to_ascii().to_upper().to_str_ascii();
-        let flags = vec::append(getopts::opt_strs(matches, level_short),
-                                getopts::opt_strs(matches, level_name));
+        let flags = vec::append(matches.opt_strs(level_short),
+                                matches.opt_strs(level_name));
         for lint_name in flags.iter() {
             let lint_name = lint_name.replace("-", "_");
             match lint_dict.find_equiv(&lint_name) {
@@ -632,7 +678,7 @@ pub fn build_session_options(binary: @str,
     }
 
     let mut debugging_opts = 0u;
-    let debug_flags = getopts::opt_strs(matches, "Z");
+    let debug_flags = matches.opt_strs("Z");
     let debug_map = session::debugging_opts_map();
     for debug_flag in debug_flags.iter() {
         let mut this_bit = 0u;
@@ -645,40 +691,44 @@ pub fn build_session_options(binary: @str,
         }
         debugging_opts |= this_bit;
     }
+
     if debugging_opts & session::debug_llvm != 0 {
-        unsafe {
-            llvm::LLVMSetDebug(1);
+        set_llvm_debug();
+
+        fn set_llvm_debug() {
+            #[fixed_stack_segment]; #[inline(never)];
+            unsafe { llvm::LLVMSetDebug(1); }
         }
     }
 
     let output_type =
         if parse_only || no_trans {
             link::output_type_none
-        } else if opt_present(matches, "S") &&
-                  opt_present(matches, "emit-llvm") {
+        } else if matches.opt_present("S") &&
+                  matches.opt_present("emit-llvm") {
             link::output_type_llvm_assembly
-        } else if opt_present(matches, "S") {
+        } else if matches.opt_present("S") {
             link::output_type_assembly
-        } else if opt_present(matches, "c") {
+        } else if matches.opt_present("c") {
             link::output_type_object
-        } else if opt_present(matches, "emit-llvm") {
+        } else if matches.opt_present("emit-llvm") {
             link::output_type_bitcode
         } else { link::output_type_exe };
-    let sysroot_opt = getopts::opt_maybe_str(matches, "sysroot").map_move(|m| @Path(m));
-    let target = getopts::opt_maybe_str(matches, "target").unwrap_or_default(host_triple());
-    let target_cpu = getopts::opt_maybe_str(matches, "target-cpu").unwrap_or_default(~"generic");
-    let target_feature = getopts::opt_maybe_str(matches, "target-feature").unwrap_or_default(~"");
-    let save_temps = getopts::opt_present(matches, "save-temps");
+    let sysroot_opt = matches.opt_str("sysroot").map_move(|m| @Path(m));
+    let target = matches.opt_str("target").unwrap_or(host_triple());
+    let target_cpu = matches.opt_str("target-cpu").unwrap_or(~"generic");
+    let target_feature = matches.opt_str("target-feature").unwrap_or(~"");
+    let save_temps = matches.opt_present("save-temps");
     let opt_level = {
         if (debugging_opts & session::no_opt) != 0 {
             No
-        } else if opt_present(matches, "O") {
-            if opt_present(matches, "opt-level") {
+        } else if matches.opt_present("O") {
+            if matches.opt_present("opt-level") {
                 early_error(demitter, ~"-O and --opt-level both provided");
             }
             Default
-        } else if opt_present(matches, "opt-level") {
-            match getopts::opt_str(matches, "opt-level") {
+        } else if matches.opt_present("opt-level") {
+            match matches.opt_str("opt-level").unwrap() {
               ~"0" => No,
               ~"1" => Less,
               ~"2" => Default,
@@ -694,20 +744,35 @@ pub fn build_session_options(binary: @str,
     let extra_debuginfo = debugging_opts & session::extra_debug_info != 0;
     let debuginfo = debugging_opts & session::debug_info != 0 ||
         extra_debuginfo;
+
+    // If debugging info is generated, do not collapse monomorphized function instances.
+    // Functions with equivalent llvm code still need separate debugging descriptions because names
+    // might differ.
+    if debuginfo {
+        debugging_opts |= session::no_monomorphic_collapse;
+    }
+
     let statik = debugging_opts & session::statik != 0;
 
-    let addl_lib_search_paths = getopts::opt_strs(matches, "L").map(|s| Path(*s));
-    let linker = getopts::opt_maybe_str(matches, "linker");
-    let linker_args = getopts::opt_strs(matches, "link-args").flat_map( |a| {
+    let addl_lib_search_paths = matches.opt_strs("L").map(|s| Path(*s));
+    let linker = matches.opt_str("linker");
+    let linker_args = matches.opt_strs("link-args").flat_map( |a| {
         a.split_iter(' ').map(|arg| arg.to_owned()).collect()
     });
 
-    let cfg = parse_cfgspecs(getopts::opt_strs(matches, "cfg"), demitter);
-    let test = opt_present(matches, "test");
-    let android_cross_path = getopts::opt_maybe_str(
-        matches, "android-cross-path");
+    let cfg = parse_cfgspecs(matches.opt_strs("cfg"), demitter);
+    let test = matches.opt_present("test");
+    let android_cross_path = matches.opt_str("android-cross-path");
 
-    let custom_passes = match getopts::opt_maybe_str(matches, "passes") {
+    let custom_passes = match matches.opt_str("passes") {
+        None => ~[],
+        Some(s) => {
+            s.split_iter(|c: char| c == ' ' || c == ',').map(|s| {
+                s.trim().to_owned()
+            }).collect()
+        }
+    };
+    let llvm_args = match matches.opt_str("llvm-args") {
         None => ~[],
         Some(s) => {
             s.split_iter(|c: char| c == ' ' || c == ',').map(|s| {
@@ -722,6 +787,7 @@ pub fn build_session_options(binary: @str,
         gc: gc,
         optimize: opt_level,
         custom_passes: custom_passes,
+        llvm_args: llvm_args,
         debuginfo: debuginfo,
         extra_debuginfo: extra_debuginfo,
         lint_opts: lint_opts,
@@ -746,8 +812,8 @@ pub fn build_session_options(binary: @str,
     return sopts;
 }
 
-pub fn build_session(sopts: @session::options,
-                     demitter: diagnostic::Emitter) -> Session {
+pub fn build_session(sopts: @session::options, demitter: @diagnostic::Emitter)
+                     -> Session {
     let codemap = @codemap::CodeMap::new();
     let diagnostic_handler =
         diagnostic::mk_handler(Some(demitter));
@@ -758,9 +824,9 @@ pub fn build_session(sopts: @session::options,
 
 pub fn build_session_(sopts: @session::options,
                       cm: @codemap::CodeMap,
-                      demitter: diagnostic::Emitter,
+                      demitter: @diagnostic::Emitter,
                       span_diagnostic_handler: @mut diagnostic::span_handler)
-                   -> Session {
+                      -> Session {
     let target_cfg = build_target_config(sopts, demitter);
     let p_s = parse::new_parse_sess_special_handler(span_diagnostic_handler,
                                                     cm);
@@ -783,16 +849,17 @@ pub fn build_session_(sopts: @session::options,
         building_library: @mut false,
         working_dir: os::getcwd(),
         lints: @mut HashMap::new(),
+        node_id: @mut 1
     }
 }
 
-pub fn parse_pretty(sess: Session, name: &str) -> pp_mode {
+pub fn parse_pretty(sess: Session, name: &str) -> PpMode {
     match name {
-      &"normal" => ppm_normal,
-      &"expanded" => ppm_expanded,
-      &"typed" => ppm_typed,
-      &"expanded,identified" => ppm_expanded_identified,
-      &"identified" => ppm_identified,
+      &"normal" => PpmNormal,
+      &"expanded" => PpmExpanded,
+      &"typed" => PpmTyped,
+      &"expanded,identified" => PpmExpandedIdentified,
+      &"identified" => PpmIdentified,
       _ => {
         sess.fatal("argument to `pretty` must be one of `normal`, \
                     `expanded`, `typed`, `identified`, \
@@ -826,8 +893,11 @@ pub fn optgroups() -> ~[getopts::groups::OptGroup] {
   optopt("", "opt-level",
                         "Optimize with possible levels 0-3", "LEVEL"),
   optopt("", "passes", "Comma or space separated list of pass names to use. \
-                        Overrides the default passes for optimization levels,\n\
-                        a value of \"list\" will list the available passes.", "NAMES"),
+                        Appends to the default list of passes to run for the \
+                        specified current optimization level. A value of \
+                        \"list\" will list all of the available passes", "NAMES"),
+  optopt("", "llvm-args", "A list of arguments to pass to llvm, comma \
+                           separated", "ARGS"),
   optopt( "",  "out-dir",
                         "Write output to compiler-chosen filename
                           in <dir>", "DIR"),
@@ -924,7 +994,7 @@ pub fn build_output_filenames(input: &input,
           if !linkage_metas.is_empty() {
               // But if a linkage meta is present, that overrides
               let maybe_name = linkage_metas.iter().find(|m| "name" == m.name());
-              match maybe_name.chain(|m| m.value_str()) {
+              match maybe_name.and_then(|m| m.value_str()) {
                   Some(s) => stem = s,
                   _ => ()
               }
@@ -965,8 +1035,8 @@ pub fn build_output_filenames(input: &input,
     }
 }
 
-pub fn early_error(emitter: diagnostic::Emitter, msg: ~str) -> ! {
-    emitter(None, msg, diagnostic::fatal);
+pub fn early_error(emitter: @diagnostic::Emitter, msg: ~str) -> ! {
+    emitter.emit(None, msg, diagnostic::fatal);
     fail!();
 }
 
@@ -980,10 +1050,9 @@ pub fn list_metadata(sess: Session, path: &Path, out: @io::Writer) {
 mod test {
 
     use driver::driver::{build_configuration, build_session};
-    use driver::driver::{build_session_options, optgroups, str_input};
+    use driver::driver::{build_session_options, optgroups};
 
     use extra::getopts::groups::getopts;
-    use extra::getopts;
     use syntax::attr;
     use syntax::diagnostic;
 
@@ -993,12 +1062,16 @@ mod test {
         let matches =
             &match getopts([~"--test"], optgroups()) {
               Ok(m) => m,
-              Err(f) => fail!("test_switch_implies_cfg_test: %s", getopts::fail_str(f))
+              Err(f) => fail!("test_switch_implies_cfg_test: %s", f.to_err_msg())
             };
         let sessopts = build_session_options(
-            @"rustc", matches, diagnostic::emit);
-        let sess = build_session(sessopts, diagnostic::emit);
-        let cfg = build_configuration(sess, @"whatever", &str_input(@""));
+            @"rustc",
+            matches,
+            @diagnostic::DefaultEmitter as @diagnostic::Emitter);
+        let sess = build_session(sessopts,
+                                 @diagnostic::DefaultEmitter as
+                                    @diagnostic::Emitter);
+        let cfg = build_configuration(sess);
         assert!((attr::contains_name(cfg, "test")));
     }
 
@@ -1010,13 +1083,17 @@ mod test {
             &match getopts([~"--test", ~"--cfg=test"], optgroups()) {
               Ok(m) => m,
               Err(f) => {
-                fail!("test_switch_implies_cfg_test_unless_cfg_test: %s", getopts::fail_str(f));
+                fail!("test_switch_implies_cfg_test_unless_cfg_test: %s", f.to_err_msg());
               }
             };
         let sessopts = build_session_options(
-            @"rustc", matches, diagnostic::emit);
-        let sess = build_session(sessopts, diagnostic::emit);
-        let cfg = build_configuration(sess, @"whatever", &str_input(@""));
+            @"rustc",
+            matches,
+            @diagnostic::DefaultEmitter as @diagnostic::Emitter);
+        let sess = build_session(sessopts,
+                                 @diagnostic::DefaultEmitter as
+                                    @diagnostic::Emitter);
+        let cfg = build_configuration(sess);
         let mut test_items = cfg.iter().filter(|m| "test" == m.name());
         assert!(test_items.next().is_some());
         assert!(test_items.next().is_none());

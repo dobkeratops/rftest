@@ -19,35 +19,35 @@ use middle::moves;
 use middle::ty;
 use syntax::ast;
 use syntax::ast_util;
-use syntax::codemap::span;
+use syntax::codemap::Span;
 use util::ppaux::{UserString};
 
-pub fn gather_decl(bccx: @BorrowckCtxt,
+pub fn gather_decl(bccx: &BorrowckCtxt,
                    move_data: &mut MoveData,
                    decl_id: ast::NodeId,
-                   _decl_span: span,
+                   _decl_span: Span,
                    var_id: ast::NodeId) {
     let loan_path = @LpVar(var_id);
     move_data.add_move(bccx.tcx, loan_path, decl_id, Declared);
 }
 
-pub fn gather_move_from_expr(bccx: @BorrowckCtxt,
+pub fn gather_move_from_expr(bccx: &BorrowckCtxt,
                              move_data: &mut MoveData,
-                             move_expr: @ast::expr,
+                             move_expr: @ast::Expr,
                              cmt: mc::cmt) {
     gather_move_from_expr_or_pat(bccx, move_data, move_expr.id,
                                  MoveExpr(move_expr), cmt);
 }
 
-pub fn gather_move_from_pat(bccx: @BorrowckCtxt,
+pub fn gather_move_from_pat(bccx: &BorrowckCtxt,
                             move_data: &mut MoveData,
-                            move_pat: @ast::pat,
+                            move_pat: @ast::Pat,
                             cmt: mc::cmt) {
     gather_move_from_expr_or_pat(bccx, move_data, move_pat.id,
                                  MovePat(move_pat), cmt);
 }
 
-fn gather_move_from_expr_or_pat(bccx: @BorrowckCtxt,
+fn gather_move_from_expr_or_pat(bccx: &BorrowckCtxt,
                                 move_data: &mut MoveData,
                                 move_id: ast::NodeId,
                                 move_kind: MoveKind,
@@ -66,9 +66,9 @@ fn gather_move_from_expr_or_pat(bccx: @BorrowckCtxt,
     }
 }
 
-pub fn gather_captures(bccx: @BorrowckCtxt,
+pub fn gather_captures(bccx: &BorrowckCtxt,
                        move_data: &mut MoveData,
-                       closure_expr: @ast::expr) {
+                       closure_expr: @ast::Expr) {
     let captured_vars = bccx.capture_map.get(&closure_expr.id);
     for captured_var in captured_vars.iter() {
         match captured_var.mode {
@@ -83,10 +83,10 @@ pub fn gather_captures(bccx: @BorrowckCtxt,
     }
 }
 
-pub fn gather_assignment(bccx: @BorrowckCtxt,
+pub fn gather_assignment(bccx: &BorrowckCtxt,
                          move_data: &mut MoveData,
                          assignment_id: ast::NodeId,
-                         assignment_span: span,
+                         assignment_span: Span,
                          assignee_loan_path: @LoanPath,
                          assignee_id: ast::NodeId) {
     move_data.add_assignment(bccx.tcx,
@@ -96,11 +96,10 @@ pub fn gather_assignment(bccx: @BorrowckCtxt,
                              assignee_id);
 }
 
-fn check_is_legal_to_move_from(bccx: @BorrowckCtxt,
+fn check_is_legal_to_move_from(bccx: &BorrowckCtxt,
                                cmt0: mc::cmt,
                                cmt: mc::cmt) -> bool {
     match cmt.cat {
-        mc::cat_implicit_self(*) |
         mc::cat_deref(_, _, mc::region_ptr(*)) |
         mc::cat_deref(_, _, mc::gc_ptr(*)) |
         mc::cat_deref(_, _, mc::unsafe_ptr(*)) => {

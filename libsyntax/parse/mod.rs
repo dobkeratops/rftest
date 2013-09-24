@@ -11,9 +11,8 @@
 //! The main parser interface
 
 
-use ast::NodeId;
 use ast;
-use codemap::{span, CodeMap, FileMap, FileSubstr};
+use codemap::{Span, CodeMap, FileMap, FileSubstr};
 use codemap;
 use diagnostic::{span_handler, mk_span_handler, mk_handler, Emitter};
 use parse::attr::parser_attr;
@@ -29,7 +28,6 @@ pub mod token;
 pub mod comments;
 pub mod attr;
 
-
 /// Common routines shared by parser mods
 pub mod common;
 
@@ -42,17 +40,15 @@ pub mod obsolete;
 // info about a parsing session.
 pub struct ParseSess {
     cm: @codemap::CodeMap, // better be the same as the one in the reader!
-    next_id: NodeId,
     span_diagnostic: @mut span_handler, // better be the same as the one in the reader!
     /// Used to determine and report recursive mod inclusions
     included_mod_stack: ~[Path],
 }
 
-pub fn new_parse_sess(demitter: Option<Emitter>) -> @mut ParseSess {
+pub fn new_parse_sess(demitter: Option<@Emitter>) -> @mut ParseSess {
     let cm = @CodeMap::new();
     @mut ParseSess {
         cm: cm,
-        next_id: 1,
         span_diagnostic: mk_span_handler(mk_handler(demitter), cm),
         included_mod_stack: ~[],
     }
@@ -63,7 +59,6 @@ pub fn new_parse_sess_special_handler(sh: @mut span_handler,
                                    -> @mut ParseSess {
     @mut ParseSess {
         cm: cm,
-        next_id: 1,
         span_diagnostic: sh,
         included_mod_stack: ~[],
     }
@@ -101,7 +96,7 @@ pub fn parse_expr_from_source_str(
     source: @str,
     cfg: ast::CrateConfig,
     sess: @mut ParseSess
-) -> @ast::expr {
+) -> @ast::Expr {
     let p = new_parser_from_source_str(
         sess,
         cfg,
@@ -148,7 +143,7 @@ pub fn parse_stmt_from_source_str(
     cfg: ast::CrateConfig,
     attrs: ~[ast::Attribute],
     sess: @mut ParseSess
-) -> @ast::stmt {
+) -> @ast::Stmt {
     let p = new_parser_from_source_str(
         sess,
         cfg,
@@ -201,15 +196,6 @@ pub fn parse_from_source_str<T>(
     maybe_aborted(r,p)
 }
 
-// return the next unused node id.
-pub fn next_node_id(sess: @mut ParseSess) -> NodeId {
-    let rv = sess.next_id;
-    sess.next_id += 1;
-    // ID 0 is reserved for the crate and doesn't actually exist in the AST
-    assert!(rv != 0);
-    return rv;
-}
-
 // Create a new parser from a source string
 pub fn new_parser_from_source_str(sess: @mut ParseSess,
                                   cfg: ast::CrateConfig,
@@ -247,7 +233,7 @@ pub fn new_sub_parser_from_file(
     sess: @mut ParseSess,
     cfg: ast::CrateConfig,
     path: &Path,
-    sp: span
+    sp: Span
 ) -> Parser {
     filemap_to_parser(sess,file_to_filemap(sess,path,Some(sp)),cfg)
 }
@@ -272,7 +258,7 @@ pub fn new_parser_from_tts(sess: @mut ParseSess,
 
 /// Given a session and a path and an optional span (for error reporting),
 /// add the path to the session's codemap and return the new filemap.
-pub fn file_to_filemap(sess: @mut ParseSess, path: &Path, spanopt: Option<span>)
+pub fn file_to_filemap(sess: @mut ParseSess, path: &Path, spanopt: Option<Span>)
     -> @FileMap {
     match io::read_whole_file_str(path) {
         Ok(src) => string_to_filemap(sess, src.to_managed(), path.to_str().to_managed()),
@@ -332,7 +318,7 @@ mod test {
     use extra::serialize::Encodable;
     use extra;
     use std::io;
-    use codemap::{span, BytePos, spanned};
+    use codemap::{Span, BytePos, Spanned};
     use opt_vec;
     use ast;
     use abi;
@@ -340,7 +326,7 @@ mod test {
     use parse::token::{str_to_ident};
     use util::parser_testing::{string_to_tts_and_sess, string_to_parser};
     use util::parser_testing::{string_to_expr, string_to_item};
-    use util::parser_testing::{string_to_stmt, strs_to_idents};
+    use util::parser_testing::string_to_stmt;
 
     // map a string to tts, return the tt without its parsesess
     fn string_to_tts_only(source_str : @str) -> ~[ast::token_tree] {
@@ -357,31 +343,51 @@ mod test {
     }
 
     // produce a codemap::span
-    fn sp (a: uint, b: uint) -> span {
-        span{lo:BytePos(a),hi:BytePos(b),expn_info:None}
+    fn sp (a: uint, b: uint) -> Span {
+        Span{lo:BytePos(a),hi:BytePos(b),expn_info:None}
     }
 
-    #[test] fn path_exprs_1 () {
+    #[test] fn path_exprs_1() {
         assert_eq!(string_to_expr(@"a"),
-                   @ast::expr{id:1,
-                              node:ast::expr_path(ast::Path {span:sp(0,1),
-                                                              global:false,
-                                                              idents:~[str_to_ident("a")],
-                                                              rp:None,
-                                                              types:~[]}),
-                              span:sp(0,1)})
+                   @ast::Expr{
+                    id: ast::DUMMY_NODE_ID,
+                    node: ast::ExprPath(ast::Path {
+                        span: sp(0, 1),
+                        global: false,
+                        segments: ~[
+                            ast::PathSegment {
+                                identifier: str_to_ident("a"),
+                                lifetime: None,
+                                types: opt_vec::Empty,
+                            }
+                        ],
+                    }),
+                    span: sp(0, 1)
+                   })
     }
 
     #[test] fn path_exprs_2 () {
         assert_eq!(string_to_expr(@"::a::b"),
-                   @ast::expr{id:1,
-                               node:ast::expr_path(
-                                    ast::Path {span:sp(0,6),
-                                               global:true,
-                                               idents:strs_to_idents(~["a","b"]),
-                                               rp:None,
-                                               types:~[]}),
-                              span:sp(0,6)})
+                   @ast::Expr {
+                    id: ast::DUMMY_NODE_ID,
+                    node: ast::ExprPath(ast::Path {
+                            span: sp(0, 6),
+                            global: true,
+                            segments: ~[
+                                ast::PathSegment {
+                                    identifier: str_to_ident("a"),
+                                    lifetime: None,
+                                    types: opt_vec::Empty,
+                                },
+                                ast::PathSegment {
+                                    identifier: str_to_ident("b"),
+                                    lifetime: None,
+                                    types: opt_vec::Empty,
+                                }
+                            ]
+                        }),
+                    span: sp(0, 6)
+                   })
     }
 
     #[should_fail]
@@ -392,62 +398,173 @@ mod test {
     #[test] fn string_to_tts_1 () {
         let (tts,_ps) = string_to_tts_and_sess(@"fn a (b : int) { b; }");
         assert_eq!(to_json_str(@tts),
-                   ~"[\
-                [\"tt_tok\",null,[\"IDENT\",\"fn\",false]],\
-                [\"tt_tok\",null,[\"IDENT\",\"a\",false]],\
-                [\
-                    \"tt_delim\",\
-                    [\
-                        [\"tt_tok\",null,\"LPAREN\"],\
-                        [\"tt_tok\",null,[\"IDENT\",\"b\",false]],\
-                        [\"tt_tok\",null,\"COLON\"],\
-                        [\"tt_tok\",null,[\"IDENT\",\"int\",false]],\
-                        [\"tt_tok\",null,\"RPAREN\"]\
-                    ]\
-                ],\
-                [\
-                    \"tt_delim\",\
-                    [\
-                        [\"tt_tok\",null,\"LBRACE\"],\
-                        [\"tt_tok\",null,[\"IDENT\",\"b\",false]],\
-                        [\"tt_tok\",null,\"SEMI\"],\
-                        [\"tt_tok\",null,\"RBRACE\"]\
-                    ]\
+        ~"[\
+    {\
+        \"variant\":\"tt_tok\",\
+        \"fields\":[\
+            null,\
+            {\
+                \"variant\":\"IDENT\",\
+                \"fields\":[\
+                    \"fn\",\
+                    false\
                 ]\
-            ]"
-                  );
+            }\
+        ]\
+    },\
+    {\
+        \"variant\":\"tt_tok\",\
+        \"fields\":[\
+            null,\
+            {\
+                \"variant\":\"IDENT\",\
+                \"fields\":[\
+                    \"a\",\
+                    false\
+                ]\
+            }\
+        ]\
+    },\
+    {\
+        \"variant\":\"tt_delim\",\
+        \"fields\":[\
+            [\
+                {\
+                    \"variant\":\"tt_tok\",\
+                    \"fields\":[\
+                        null,\
+                        \"LPAREN\"\
+                    ]\
+                },\
+                {\
+                    \"variant\":\"tt_tok\",\
+                    \"fields\":[\
+                        null,\
+                        {\
+                            \"variant\":\"IDENT\",\
+                            \"fields\":[\
+                                \"b\",\
+                                false\
+                            ]\
+                        }\
+                    ]\
+                },\
+                {\
+                    \"variant\":\"tt_tok\",\
+                    \"fields\":[\
+                        null,\
+                        \"COLON\"\
+                    ]\
+                },\
+                {\
+                    \"variant\":\"tt_tok\",\
+                    \"fields\":[\
+                        null,\
+                        {\
+                            \"variant\":\"IDENT\",\
+                            \"fields\":[\
+                                \"int\",\
+                                false\
+                            ]\
+                        }\
+                    ]\
+                },\
+                {\
+                    \"variant\":\"tt_tok\",\
+                    \"fields\":[\
+                        null,\
+                        \"RPAREN\"\
+                    ]\
+                }\
+            ]\
+        ]\
+    },\
+    {\
+        \"variant\":\"tt_delim\",\
+        \"fields\":[\
+            [\
+                {\
+                    \"variant\":\"tt_tok\",\
+                    \"fields\":[\
+                        null,\
+                        \"LBRACE\"\
+                    ]\
+                },\
+                {\
+                    \"variant\":\"tt_tok\",\
+                    \"fields\":[\
+                        null,\
+                        {\
+                            \"variant\":\"IDENT\",\
+                            \"fields\":[\
+                                \"b\",\
+                                false\
+                            ]\
+                        }\
+                    ]\
+                },\
+                {\
+                    \"variant\":\"tt_tok\",\
+                    \"fields\":[\
+                        null,\
+                        \"SEMI\"\
+                    ]\
+                },\
+                {\
+                    \"variant\":\"tt_tok\",\
+                    \"fields\":[\
+                        null,\
+                        \"RBRACE\"\
+                    ]\
+                }\
+            ]\
+        ]\
+    }\
+]"
+        );
     }
 
     #[test] fn ret_expr() {
         assert_eq!(string_to_expr(@"return d"),
-                   @ast::expr{id:2,
-                              node:ast::expr_ret(
-                                  Some(@ast::expr{id:1,
-                                                  node:ast::expr_path(
-                                                       ast::Path{span:sp(7,8),
-                                                                 global:false,
-                                                                 idents:~[str_to_ident("d")],
-                                                                 rp:None,
-                                                                 types:~[]
-                                                                }),
-                                                  span:sp(7,8)})),
-                              span:sp(0,8)})
+                   @ast::Expr{
+                    id: ast::DUMMY_NODE_ID,
+                    node:ast::ExprRet(Some(@ast::Expr{
+                        id: ast::DUMMY_NODE_ID,
+                        node:ast::ExprPath(ast::Path{
+                            span: sp(7, 8),
+                            global: false,
+                            segments: ~[
+                                ast::PathSegment {
+                                    identifier: str_to_ident("d"),
+                                    lifetime: None,
+                                    types: opt_vec::Empty,
+                                }
+                            ],
+                        }),
+                        span:sp(7,8)
+                    })),
+                    span:sp(0,8)
+                   })
     }
 
     #[test] fn parse_stmt_1 () {
         assert_eq!(string_to_stmt(@"b;"),
-                   @spanned{
-                       node: ast::stmt_expr(@ast::expr{
-                           id: 1,
-                           node: ast::expr_path(
-                                ast::Path{
-                                   span:sp(0,1),
-                                   global:false,
-                                   idents:~[str_to_ident("b")],
-                                   rp:None,
-                                   types: ~[]}),
+                   @Spanned{
+                       node: ast::StmtExpr(@ast::Expr {
+                           id: ast::DUMMY_NODE_ID,
+                           node: ast::ExprPath(ast::Path {
+                               span:sp(0,1),
+                               global:false,
+                               segments: ~[
+                                ast::PathSegment {
+                                    identifier: str_to_ident("b"),
+                                    lifetime: None,
+                                    types: opt_vec::Empty,
+                                }
+                               ],
+                            }),
                            span: sp(0,1)},
-                                            2), // fixme
+                                           ast::DUMMY_NODE_ID),
                        span: sp(0,1)})
 
     }
@@ -459,86 +576,74 @@ mod test {
     #[test] fn parse_ident_pat () {
         let parser = string_to_parser(@"b");
         assert_eq!(parser.parse_pat(),
-                   @ast::pat{id:1, // fixme
-                             node: ast::pat_ident(ast::bind_infer,
-                                                   ast::Path{
-                                                      span:sp(0,1),
-                                                      global:false,
-                                                      idents:~[str_to_ident("b")],
-                                                      rp: None,
-                                                      types: ~[]},
-                                                  None // no idea
-                                                 ),
+                   @ast::Pat{id: ast::DUMMY_NODE_ID,
+                             node: ast::PatIdent(
+                                ast::BindInfer,
+                                ast::Path {
+                                    span:sp(0,1),
+                                    global:false,
+                                    segments: ~[
+                                        ast::PathSegment {
+                                            identifier: str_to_ident("b"),
+                                            lifetime: None,
+                                            types: opt_vec::Empty,
+                                        }
+                                    ],
+                                },
+                                None /* no idea */),
                              span: sp(0,1)});
         parser_done(parser);
     }
 
-    #[test] fn parse_arg () {
-        let parser = string_to_parser(@"b : int");
-        assert_eq!(parser.parse_arg_general(true),
-                   ast::arg{
-                       is_mutbl: false,
-                       ty: ast::Ty{id:3, // fixme
-                                    node: ast::ty_path(ast::Path{
-                                        span:sp(4,4), // this is bizarre...
-                                        // check this in the original parser?
-                                        global:false,
-                                        idents:~[str_to_ident("int")],
-                                        rp: None,
-                                        types: ~[]},
-                                                       None, 2),
-                                    span:sp(4,7)},
-                       pat: @ast::pat{id:1,
-                                      node: ast::pat_ident(ast::bind_infer,
-                                                            ast::Path{
-                                                               span:sp(0,1),
-                                                               global:false,
-                                                               idents:~[str_to_ident("b")],
-                                                               rp: None,
-                                                               types: ~[]},
-                                                           None // no idea
-                                                          ),
-                                      span: sp(0,1)},
-                       id: 4 // fixme
-                   })
-    }
-
     // check the contents of the tt manually:
     #[test] fn parse_fundecl () {
-        // this test depends on the intern order of "fn" and "int", and on the
-        // assignment order of the NodeIds.
+        // this test depends on the intern order of "fn" and "int"
         assert_eq!(string_to_item(@"fn a (b : int) { b; }"),
                   Some(
                       @ast::item{ident:str_to_ident("a"),
                             attrs:~[],
-                            id: 9, // fixme
+                            id: ast::DUMMY_NODE_ID,
                             node: ast::item_fn(ast::fn_decl{
                                 inputs: ~[ast::arg{
                                     is_mutbl: false,
-                                    ty: ast::Ty{id:3, // fixme
+                                    ty: ast::Ty{id: ast::DUMMY_NODE_ID,
                                                 node: ast::ty_path(ast::Path{
                                         span:sp(10,13),
                                         global:false,
-                                        idents:~[str_to_ident("int")],
-                                        rp: None,
-                                        types: ~[]},
-                                                       None, 2),
-                                                span:sp(10,13)},
-                                    pat: @ast::pat{id:1, // fixme
-                                                   node: ast::pat_ident(
-                                                       ast::bind_infer,
-                                                       ast::Path{
-                                                           span:sp(6,7),
-                                                           global:false,
-                                                           idents:~[str_to_ident("b")],
-                                                           rp: None,
-                                                           types: ~[]},
-                                                       None // no idea
-                                                   ),
-                                                  span: sp(6,7)},
-                                    id: 4 // fixme
+                                        segments: ~[
+                                            ast::PathSegment {
+                                                identifier:
+                                                    str_to_ident("int"),
+                                                lifetime: None,
+                                                types: opt_vec::Empty,
+                                            }
+                                        ],
+                                        }, None, ast::DUMMY_NODE_ID),
+                                        span:sp(10,13)
+                                    },
+                                    pat: @ast::Pat {
+                                        id: ast::DUMMY_NODE_ID,
+                                        node: ast::PatIdent(
+                                            ast::BindInfer,
+                                            ast::Path {
+                                                span:sp(6,7),
+                                                global:false,
+                                                segments: ~[
+                                                    ast::PathSegment {
+                                                        identifier:
+                                                            str_to_ident("b"),
+                                                        lifetime: None,
+                                                        types: opt_vec::Empty,
+                                                    }
+                                                ],
+                                            },
+                                            None // no idea
+                                        ),
+                                        span: sp(6,7)
+                                    },
+                                    id: ast::DUMMY_NODE_ID
                                 }],
-                                output: ast::Ty{id:5, // fixme
+                                output: ast::Ty{id: ast::DUMMY_NODE_ID,
                                                  node: ast::ty_nil,
                                                  span:sp(15,15)}, // not sure
                                 cf: ast::return_val
@@ -551,21 +656,30 @@ mod test {
                                     },
                                     ast::Block {
                                         view_items: ~[],
-                                        stmts: ~[@spanned{
-                                            node: ast::stmt_semi(@ast::expr{
-                                                id: 6,
-                                                node: ast::expr_path(
+                                        stmts: ~[@Spanned{
+                                            node: ast::StmtSemi(@ast::Expr{
+                                                id: ast::DUMMY_NODE_ID,
+                                                node: ast::ExprPath(
                                                       ast::Path{
                                                         span:sp(17,18),
                                                         global:false,
-                                                        idents:~[str_to_ident("b")],
-                                                        rp:None,
-                                                        types: ~[]}),
+                                                        segments: ~[
+                                                            ast::PathSegment {
+                                                                identifier:
+                                                                str_to_ident(
+                                                                    "b"),
+                                                                lifetime:
+                                                                    None,
+                                                                types:
+                                                                opt_vec::Empty
+                                                            }
+                                                        ],
+                                                      }),
                                                 span: sp(17,18)},
-                                                                 7), // fixme
+                                                ast::DUMMY_NODE_ID),
                                             span: sp(17,18)}],
                                         expr: None,
-                                        id: 8, // fixme
+                                        id: ast::DUMMY_NODE_ID,
                                         rules: ast::DefaultBlock, // no idea
                                         span: sp(15,21),
                                     }),

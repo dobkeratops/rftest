@@ -36,18 +36,20 @@ use std::c_str::ToCStr;
 use std::cast::transmute;
 use std::cast;
 use std::hashmap::{HashMap};
-use std::libc::{c_uint, c_longlong, c_ulonglong};
+use std::libc::{c_uint, c_longlong, c_ulonglong, c_char};
 use std::vec;
-use syntax::ast::ident;
-use syntax::ast_map::{path, path_elt};
-use syntax::codemap::span;
+use syntax::ast::{Name,Ident};
+use syntax::ast_map::{path, path_elt, path_pretty_name};
+use syntax::codemap::Span;
 use syntax::parse::token;
 use syntax::{ast, ast_map};
 
 pub use middle::trans::context::CrateContext;
 
-pub fn gensym_name(name: &str) -> ident {
-    token::str_to_ident(fmt!("%s_%u", name, token::gensym(name)))
+pub fn gensym_name(name: &str) -> (Ident, path_elt) {
+    let name = token::gensym(name);
+    let ident = Ident::new(name);
+    (ident, path_pretty_name(ident, name as u64))
 }
 
 pub struct tydesc_info {
@@ -56,6 +58,7 @@ pub struct tydesc_info {
     size: ValueRef,
     align: ValueRef,
     borrow_offset: ValueRef,
+    name: ValueRef,
     take_glue: Option<ValueRef>,
     drop_glue: Option<ValueRef>,
     free_glue: Option<ValueRef>,
@@ -108,7 +111,7 @@ pub struct BuilderRef_res {
 }
 
 impl Drop for BuilderRef_res {
-    fn drop(&self) {
+    fn drop(&mut self) {
         unsafe {
             llvm::LLVMDisposeBuilder(self.B);
         }
@@ -121,7 +124,7 @@ pub fn BuilderRef_res(B: BuilderRef) -> BuilderRef_res {
     }
 }
 
-pub type ExternMap = HashMap<@str, ValueRef>;
+pub type ExternMap = HashMap<~str, ValueRef>;
 
 // Types used for llself.
 pub struct ValSelfData {
@@ -196,14 +199,11 @@ pub struct FunctionContext {
     // The a value alloca'd for calls to upcalls.rust_personality. Used when
     // outputting the resume instruction.
     personality: Option<ValueRef>,
-    // If this is a for-loop body that returns, this holds the pointers needed
-    // for that (flagptr, retptr)
-    loop_ret: Option<(ValueRef, ValueRef)>,
 
-    // True if this function has an immediate return value, false otherwise.
-    // If this is false, the llretptr will alias the first argument of the
-    // function.
-    has_immediate_return_value: bool,
+    // True if the caller expects this fn to use the out pointer to
+    // return. Either way, your code should write into llretptr, but if
+    // this value is false, llretptr will be a local alloca.
+    caller_expects_out_pointer: bool,
 
     // Maps arguments to allocas created for them in llallocas.
     llargs: @mut HashMap<ast::NodeId, ValueRef>,
@@ -223,32 +223,32 @@ pub struct FunctionContext {
 
     // The source span and nesting context where this function comes from, for
     // error reporting and symbol generation.
-    span: Option<span>,
+    span: Option<Span>,
     path: path,
 
     // This function's enclosing crate context.
     ccx: @mut CrateContext,
 
     // Used and maintained by the debuginfo module.
-    debug_context: Option<~debuginfo::FunctionDebugContext>
+    debug_context: debuginfo::FunctionDebugContext,
 }
 
 impl FunctionContext {
     pub fn arg_pos(&self, arg: uint) -> uint {
-        if self.has_immediate_return_value {
-            arg + 1u
-        } else {
+        if self.caller_expects_out_pointer {
             arg + 2u
+        } else {
+            arg + 1u
         }
     }
 
     pub fn out_arg_pos(&self) -> uint {
-        assert!(!self.has_immediate_return_value);
+        assert!(self.caller_expects_out_pointer);
         0u
     }
 
     pub fn env_arg_pos(&self) -> uint {
-        if !self.has_immediate_return_value {
+        if self.caller_expects_out_pointer {
             1u
         } else {
             0u
@@ -294,9 +294,85 @@ pub enum cleantype {
     normal_exit_and_unwind
 }
 
+// Cleanup functions
+
+/// A cleanup function: a built-in destructor.
+pub trait CleanupFunction {
+    fn clean(&self, block: @mut Block) -> @mut Block;
+}
+
+/// A cleanup function that calls the "drop glue" (destructor function) on
+/// a typed value.
+pub struct TypeDroppingCleanupFunction {
+    val: ValueRef,
+    t: ty::t,
+}
+
+impl CleanupFunction for TypeDroppingCleanupFunction {
+    fn clean(&self, block: @mut Block) -> @mut Block {
+        glue::drop_ty(block, self.val, self.t)
+    }
+}
+
+/// A cleanup function that calls the "drop glue" (destructor function) on
+/// an immediate typed value.
+pub struct ImmediateTypeDroppingCleanupFunction {
+    val: ValueRef,
+    t: ty::t,
+}
+
+impl CleanupFunction for ImmediateTypeDroppingCleanupFunction {
+    fn clean(&self, block: @mut Block) -> @mut Block {
+        glue::drop_ty_immediate(block, self.val, self.t)
+    }
+}
+
+/// A cleanup function that releases a write guard, returning a value to
+/// mutable status.
+pub struct WriteGuardReleasingCleanupFunction {
+    root_key: root_map_key,
+    frozen_val_ref: ValueRef,
+    bits_val_ref: ValueRef,
+    filename_val: ValueRef,
+    line_val: ValueRef,
+}
+
+impl CleanupFunction for WriteGuardReleasingCleanupFunction {
+    fn clean(&self, bcx: @mut Block) -> @mut Block {
+        write_guard::return_to_mut(bcx,
+                                   self.root_key,
+                                   self.frozen_val_ref,
+                                   self.bits_val_ref,
+                                   self.filename_val,
+                                   self.line_val)
+    }
+}
+
+/// A cleanup function that frees some memory in the garbage-collected heap.
+pub struct GCHeapFreeingCleanupFunction {
+    ptr: ValueRef,
+}
+
+impl CleanupFunction for GCHeapFreeingCleanupFunction {
+    fn clean(&self, bcx: @mut Block) -> @mut Block {
+        glue::trans_free(bcx, self.ptr)
+    }
+}
+
+/// A cleanup function that frees some memory in the exchange heap.
+pub struct ExchangeHeapFreeingCleanupFunction {
+    ptr: ValueRef,
+}
+
+impl CleanupFunction for ExchangeHeapFreeingCleanupFunction {
+    fn clean(&self, bcx: @mut Block) -> @mut Block {
+        glue::trans_exchange_free(bcx, self.ptr)
+    }
+}
+
 pub enum cleanup {
-    clean(@fn(@mut Block) -> @mut Block, cleantype),
-    clean_temp(ValueRef, @fn(@mut Block) -> @mut Block, cleantype),
+    clean(@CleanupFunction, cleantype),
+    clean_temp(ValueRef, @CleanupFunction, cleantype),
 }
 
 // Can't use deriving(Clone) because of the managed closure.
@@ -337,13 +413,19 @@ pub fn cleanup_type(cx: ty::ctxt, ty: ty::t) -> cleantype {
 }
 
 pub fn add_clean(bcx: @mut Block, val: ValueRef, t: ty::t) {
-    if !ty::type_needs_drop(bcx.tcx(), t) { return; }
+    if !ty::type_needs_drop(bcx.tcx(), t) {
+        return
+    }
 
     debug!("add_clean(%s, %s, %s)", bcx.to_str(), bcx.val_to_str(val), t.repr(bcx.tcx()));
 
     let cleanup_type = cleanup_type(bcx.tcx(), t);
     do in_scope_cx(bcx, None) |scope_info| {
-        scope_info.cleanups.push(clean(|a| glue::drop_ty(a, val, t), cleanup_type));
+        scope_info.cleanups.push(clean(@TypeDroppingCleanupFunction {
+            val: val,
+            t: t,
+        } as @CleanupFunction,
+        cleanup_type));
         grow_scope_clean(scope_info);
     }
 }
@@ -355,9 +437,12 @@ pub fn add_clean_temp_immediate(cx: @mut Block, val: ValueRef, ty: ty::t) {
            ty.repr(cx.tcx()));
     let cleanup_type = cleanup_type(cx.tcx(), ty);
     do in_scope_cx(cx, None) |scope_info| {
-        scope_info.cleanups.push(
-            clean_temp(val, |a| glue::drop_ty_immediate(a, val, ty),
-                       cleanup_type));
+        scope_info.cleanups.push(clean_temp(val,
+            @ImmediateTypeDroppingCleanupFunction {
+                val: val,
+                t: ty,
+            } as @CleanupFunction,
+            cleanup_type));
         grow_scope_clean(scope_info);
     }
 }
@@ -381,7 +466,12 @@ pub fn add_clean_temp_mem_in_scope_(bcx: @mut Block, scope_id: Option<ast::NodeI
            t.repr(bcx.tcx()));
     let cleanup_type = cleanup_type(bcx.tcx(), t);
     do in_scope_cx(bcx, scope_id) |scope_info| {
-        scope_info.cleanups.push(clean_temp(val, |a| glue::drop_ty(a, val, t), cleanup_type));
+        scope_info.cleanups.push(clean_temp(val,
+            @TypeDroppingCleanupFunction {
+                val: val,
+                t: t,
+            } as @CleanupFunction,
+            cleanup_type));
         grow_scope_clean(scope_info);
     }
 }
@@ -405,29 +495,36 @@ pub fn add_clean_return_to_mut(bcx: @mut Block,
            bcx.val_to_str(frozen_val_ref),
            bcx.val_to_str(bits_val_ref));
     do in_scope_cx(bcx, Some(scope_id)) |scope_info| {
-        scope_info.cleanups.push(
-            clean_temp(
+        scope_info.cleanups.push(clean_temp(
                 frozen_val_ref,
-                |bcx| write_guard::return_to_mut(bcx, root_key, frozen_val_ref, bits_val_ref,
-                                                 filename_val, line_val),
+                @WriteGuardReleasingCleanupFunction {
+                    root_key: root_key,
+                    frozen_val_ref: frozen_val_ref,
+                    bits_val_ref: bits_val_ref,
+                    filename_val: filename_val,
+                    line_val: line_val,
+                } as @CleanupFunction,
                 normal_exit_only));
         grow_scope_clean(scope_info);
     }
 }
 pub fn add_clean_free(cx: @mut Block, ptr: ValueRef, heap: heap) {
     let free_fn = match heap {
-      heap_managed | heap_managed_unique => {
-        let f: @fn(@mut Block) -> @mut Block = |a| glue::trans_free(a, ptr);
-        f
-      }
-      heap_exchange | heap_exchange_closure => {
-        let f: @fn(@mut Block) -> @mut Block = |a| glue::trans_exchange_free(a, ptr);
-        f
-      }
+        heap_managed | heap_managed_unique => {
+            @GCHeapFreeingCleanupFunction {
+                ptr: ptr,
+            } as @CleanupFunction
+        }
+        heap_exchange | heap_exchange_closure => {
+            @ExchangeHeapFreeingCleanupFunction {
+                ptr: ptr,
+            } as @CleanupFunction
+        }
     };
     do in_scope_cx(cx, None) |scope_info| {
-        scope_info.cleanups.push(clean_temp(ptr, free_fn,
-                                      normal_exit_and_unwind));
+        scope_info.cleanups.push(clean_temp(ptr,
+                                            free_fn,
+                                            normal_exit_and_unwind));
         grow_scope_clean(scope_info);
     }
 }
@@ -463,7 +560,7 @@ pub fn block_cleanups(bcx: @mut Block) -> ~[cleanup] {
 pub struct ScopeInfo {
     parent: Option<@mut ScopeInfo>,
     loop_break: Option<@mut Block>,
-    loop_label: Option<ident>,
+    loop_label: Option<Name>,
     // A list of functions that must be run at when leaving this
     // block, cleaning up any variables that were introduced in the
     // block.
@@ -487,7 +584,7 @@ pub trait get_node_info {
     fn info(&self) -> Option<NodeInfo>;
 }
 
-impl get_node_info for ast::expr {
+impl get_node_info for ast::Expr {
     fn info(&self) -> Option<NodeInfo> {
         Some(NodeInfo {id: self.id,
                        callee_id: self.get_callee_id(),
@@ -503,16 +600,16 @@ impl get_node_info for ast::Block {
     }
 }
 
-impl get_node_info for Option<@ast::expr> {
+impl get_node_info for Option<@ast::Expr> {
     fn info(&self) -> Option<NodeInfo> {
-        self.chain_ref(|s| s.info())
+        self.and_then_ref(|s| s.info())
     }
 }
 
 pub struct NodeInfo {
     id: ast::NodeId,
     callee_id: Option<ast::NodeId>,
-    span: span
+    span: Span
 }
 
 // Basic block context.  We create a block context for each basic block
@@ -565,7 +662,7 @@ impl Block {
     pub fn tcx(&self) -> ty::ctxt { self.fcx.ccx.tcx }
     pub fn sess(&self) -> Session { self.fcx.ccx.sess }
 
-    pub fn ident(&self, ident: ident) -> @str {
+    pub fn ident(&self, ident: Ident) -> @str {
         token::ident_to_str(&ident)
     }
 
@@ -573,19 +670,19 @@ impl Block {
         ast_map::node_id_to_str(self.tcx().items, id, self.sess().intr())
     }
 
-    pub fn expr_to_str(&self, e: @ast::expr) -> ~str {
+    pub fn expr_to_str(&self, e: @ast::Expr) -> ~str {
         e.repr(self.tcx())
     }
 
-    pub fn expr_is_lval(&self, e: &ast::expr) -> bool {
+    pub fn expr_is_lval(&self, e: &ast::Expr) -> bool {
         ty::expr_is_lval(self.tcx(), self.ccx().maps.method_map, e)
     }
 
-    pub fn expr_kind(&self, e: &ast::expr) -> ty::ExprKind {
+    pub fn expr_kind(&self, e: &ast::Expr) -> ty::ExprKind {
         ty::expr_kind(self.tcx(), self.ccx().maps.method_map, e)
     }
 
-    pub fn def(&self, nid: ast::NodeId) -> ast::def {
+    pub fn def(&self, nid: ast::NodeId) -> ast::Def {
         match self.tcx().def_map.find(&nid) {
             Some(&v) => v,
             None => {
@@ -684,7 +781,7 @@ pub fn block_parent(cx: @mut Block) -> @mut Block {
 pub fn tuplify_box_ty(tcx: ty::ctxt, t: ty::t) -> ty::t {
     let ptr = ty::mk_ptr(
         tcx,
-        ty::mt {ty: ty::mk_i8(), mutbl: ast::m_imm}
+        ty::mt {ty: ty::mk_i8(), mutbl: ast::MutImmutable}
     );
     return ty::mk_tup(tcx, ~[ty::mk_uint(), ty::mk_type(tcx),
                          ptr, ptr,
@@ -712,7 +809,7 @@ pub fn C_integral(t: Type, u: u64, sign_extend: bool) -> ValueRef {
 
 pub fn C_floating(s: &str, t: Type) -> ValueRef {
     unsafe {
-        do s.to_c_str().with_ref |buf| {
+        do s.with_c_str |buf| {
             llvm::LLVMConstRealOfString(t.to_ref(), buf)
         }
     }
@@ -760,12 +857,12 @@ pub fn C_cstr(cx: &mut CrateContext, s: @str) -> ValueRef {
             None => ()
         }
 
-        let sc = do s.to_c_str().with_ref |buf| {
-            llvm::LLVMConstStringInContext(cx.llcx, buf, s.len() as c_uint, False)
+        let sc = do s.as_imm_buf |buf, buflen| {
+            llvm::LLVMConstStringInContext(cx.llcx, buf as *c_char, buflen as c_uint, False)
         };
 
         let gsym = token::gensym("str");
-        let g = do fmt!("str%u", gsym).to_c_str().with_ref |buf| {
+        let g = do fmt!("str%u", gsym).with_c_str |buf| {
             llvm::LLVMAddGlobal(cx.llmod, val_ty(sc).to_ref(), buf)
         };
         llvm::LLVMSetInitializer(g, sc);
@@ -923,7 +1020,7 @@ pub fn mono_data_classify(t: ty::t) -> MonoDataClass {
 
 #[deriving(Eq,IterBytes)]
 pub struct mono_id_ {
-    def: ast::def_id,
+    def: ast::DefId,
     params: ~[mono_param_id]
 }
 
@@ -950,7 +1047,8 @@ pub fn path_str(sess: session::Session, p: &[path_elt]) -> ~str {
     let mut first = true;
     for e in p.iter() {
         match *e {
-            ast_map::path_name(s) | ast_map::path_mod(s) => {
+            ast_map::path_name(s) | ast_map::path_mod(s) |
+            ast_map::path_pretty_name(s, _) => {
                 if first {
                     first = false
                 } else {
@@ -982,11 +1080,11 @@ pub fn node_id_type(bcx: @mut Block, id: ast::NodeId) -> ty::t {
     monomorphize_type(bcx, t)
 }
 
-pub fn expr_ty(bcx: @mut Block, ex: &ast::expr) -> ty::t {
+pub fn expr_ty(bcx: @mut Block, ex: &ast::Expr) -> ty::t {
     node_id_type(bcx, ex.id)
 }
 
-pub fn expr_ty_adjusted(bcx: @mut Block, ex: &ast::expr) -> ty::t {
+pub fn expr_ty_adjusted(bcx: @mut Block, ex: &ast::Expr) -> ty::t {
     let tcx = bcx.tcx();
     let t = ty::expr_ty_adjusted(tcx, ex);
     monomorphize_type(bcx, t)
@@ -1018,6 +1116,8 @@ pub fn node_vtables(bcx: @mut Block, id: ast::NodeId)
     raw_vtables.map_move(|vts| resolve_vtables_in_fn_ctxt(bcx.fcx, *vts))
 }
 
+// Apply the typaram substitutions in the FunctionContext to some
+// vtables. This should eliminate any vtable_params.
 pub fn resolve_vtables_in_fn_ctxt(fcx: &FunctionContext, vts: typeck::vtable_res)
     -> typeck::vtable_res {
     resolve_vtables_under_param_substs(fcx.ccx.tcx,
@@ -1050,15 +1150,6 @@ pub fn resolve_param_vtables_under_param_substs(
 
 
 
-// Apply the typaram substitutions in the FunctionContext to a vtable. This should
-// eliminate any vtable_params.
-pub fn resolve_vtable_in_fn_ctxt(fcx: &FunctionContext, vt: &typeck::vtable_origin)
-    -> typeck::vtable_origin {
-    resolve_vtable_under_param_substs(fcx.ccx.tcx,
-                                      fcx.param_substs,
-                                      vt)
-}
-
 pub fn resolve_vtable_under_param_substs(tcx: ty::ctxt,
                                          param_substs: Option<@param_substs>,
                                          vt: &typeck::vtable_origin)
@@ -1084,8 +1175,8 @@ pub fn resolve_vtable_under_param_substs(tcx: ty::ctxt,
                 }
                 _ => {
                     tcx.sess.bug(fmt!(
-                        "resolve_vtable_in_fn_ctxt: asked to lookup but \
-                         no vtables in the fn_ctxt!"))
+                        "resolve_vtable_under_param_substs: asked to lookup \
+                         but no vtables in the fn_ctxt!"))
                 }
             }
         }
@@ -1120,7 +1211,7 @@ pub fn dummy_substs(tps: ~[ty::t]) -> ty::substs {
 }
 
 pub fn filename_and_line_num_from_span(bcx: @mut Block,
-                                       span: span) -> (ValueRef, ValueRef) {
+                                       span: Span) -> (ValueRef, ValueRef) {
     let loc = bcx.sess().parse_sess.cm.lookup_char_pos(span.lo);
     let filename_cstr = C_cstr(bcx.ccx(), loc.file.name);
     let filename = build::PointerCast(bcx, filename_cstr, Type::i8p());
@@ -1133,8 +1224,8 @@ pub fn bool_to_i1(bcx: @mut Block, llval: ValueRef) -> ValueRef {
     build::ICmp(bcx, lib::llvm::IntNE, llval, C_bool(false))
 }
 
-pub fn langcall(bcx: @mut Block, span: Option<span>, msg: &str,
-                li: LangItem) -> ast::def_id {
+pub fn langcall(bcx: @mut Block, span: Option<Span>, msg: &str,
+                li: LangItem) -> ast::DefId {
     match bcx.tcx().lang_items.require(li) {
         Ok(id) => id,
         Err(s) => {

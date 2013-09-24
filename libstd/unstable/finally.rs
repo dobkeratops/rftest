@@ -18,7 +18,7 @@ stack closures that emulates Java-style try/finally blocks.
 do || {
     ...
 }.finally {
-    alway_run_this();
+    always_run_this();
 }
 ~~~
 */
@@ -55,7 +55,6 @@ impl<'self,T> Finally<T> for &'self fn() -> T {
 }
 
 finally_fn!(~fn() -> T)
-finally_fn!(@fn() -> T)
 finally_fn!(extern "Rust" fn() -> T)
 
 struct Finallyalizer<'self> {
@@ -64,7 +63,7 @@ struct Finallyalizer<'self> {
 
 #[unsafe_destructor]
 impl<'self> Drop for Finallyalizer<'self> {
-    fn drop(&self) {
+    fn drop(&mut self) {
         (self.dtor)();
     }
 }
@@ -83,7 +82,6 @@ fn test_success() {
 }
 
 #[test]
-#[ignore(cfg(windows))]
 #[should_fail]
 fn test_fail() {
     let mut i = 0;
@@ -120,14 +118,3 @@ fn test_owned() {
     spawn_with_finalizer(owned);
 }
 
-#[test]
-fn test_managed() {
-    let i = @mut 10;
-    let managed: @fn() -> int = || {
-        let r = *i;
-        *i += 10;
-        r
-    };
-    assert_eq!(do managed.finally {}, 10);
-    assert_eq!(*i, 20);
-}

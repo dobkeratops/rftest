@@ -14,7 +14,6 @@
 
 use c_str::ToCStr;
 use cast;
-use io;
 use libc;
 use libc::{c_char, size_t};
 use repr;
@@ -92,9 +91,12 @@ pub fn refcount<T>(t: @T) -> uint {
 }
 
 pub fn log_str<T>(t: &T) -> ~str {
-    do io::with_str_writer |wr| {
-        repr::write_repr(wr, t)
-    }
+    use rt::io;
+    use rt::io::Decorator;
+
+    let mut result = io::mem::MemWriter::new();
+    repr::write_repr(&mut result as &mut io::Writer, t);
+    str::from_utf8_owned(result.inner())
 }
 
 /// Trait for initiating task failure.
@@ -105,8 +107,8 @@ pub trait FailWithCause {
 
 impl FailWithCause for ~str {
     fn fail_with(cause: ~str, file: &'static str, line: uint) -> ! {
-        do cause.to_c_str().with_ref |msg_buf| {
-            do file.to_c_str().with_ref |file_buf| {
+        do cause.with_c_str |msg_buf| {
+            do file.with_c_str |file_buf| {
                 begin_unwind_(msg_buf, file_buf, line as libc::size_t)
             }
         }
@@ -115,8 +117,8 @@ impl FailWithCause for ~str {
 
 impl FailWithCause for &'static str {
     fn fail_with(cause: &'static str, file: &'static str, line: uint) -> ! {
-        do cause.to_c_str().with_ref |msg_buf| {
-            do file.to_c_str().with_ref |file_buf| {
+        do cause.with_c_str |msg_buf| {
+            do file.with_c_str |file_buf| {
                 begin_unwind_(msg_buf, file_buf, line as libc::size_t)
             }
         }
@@ -125,12 +127,12 @@ impl FailWithCause for &'static str {
 
 // FIXME #4427: Temporary until rt::rt_fail_ goes away
 pub fn begin_unwind_(msg: *c_char, file: *c_char, line: size_t) -> ! {
-    use either::Left;
     use option::{Some, None};
     use rt::in_green_task_context;
     use rt::task::Task;
     use rt::local::Local;
     use rt::logging::Logger;
+    use send_str::SendStrOwned;
     use str::Str;
 
     unsafe {
@@ -143,7 +145,7 @@ pub fn begin_unwind_(msg: *c_char, file: *c_char, line: size_t) -> ! {
         if in_green_task_context() {
             // XXX: Logging doesn't work here - the check to call the log
             // function never passes - so calling the log function directly.
-            do Local::borrow::<Task, ()> |task| {
+            do Local::borrow |task: &mut Task| {
                 let msg = match task.name {
                     Some(ref name) =>
                     fmt!("task '%s' failed at '%s', %s:%i",
@@ -153,14 +155,14 @@ pub fn begin_unwind_(msg: *c_char, file: *c_char, line: size_t) -> ! {
                          msg, file, line as int)
                 };
 
-                task.logger.log(Left(msg));
+                task.logger.log(SendStrOwned(msg));
             }
         } else {
             rterrln!("failed in non-task context at '%s', %s:%i",
                      msg, file, line as int);
         }
 
-        let task = Local::unsafe_borrow::<Task>();
+        let task: *mut Task = Local::unsafe_borrow();
         if (*task).unwinder.unwinding {
             rtabort!("unwinding again");
         }

@@ -12,33 +12,28 @@
 use back::link::mangle_exported_name;
 use driver::session;
 use lib::llvm::ValueRef;
-use middle::trans::base::{set_inline_hint_if_appr, set_inline_hint};
+use middle::trans::base::{set_llvm_fn_attrs, set_inline_hint};
 use middle::trans::base::{trans_enum_variant,push_ctxt};
-use middle::trans::base::{trans_fn, decl_internal_cdecl_fn};
+use middle::trans::base::{trans_fn, decl_internal_rust_fn};
 use middle::trans::base::{get_item_val, no_self};
 use middle::trans::base;
 use middle::trans::common::*;
 use middle::trans::datum;
-use middle::trans::foreign;
 use middle::trans::machine;
 use middle::trans::meth;
-use middle::trans::type_of::type_of_fn_from_ty;
 use middle::trans::type_of;
 use middle::trans::type_use;
+use middle::trans::intrinsic;
 use middle::ty;
-use middle::ty::{FnSig};
 use middle::typeck;
 use util::ppaux::{Repr,ty_to_str};
 
 use syntax::ast;
 use syntax::ast_map;
-use syntax::ast_map::path_name;
 use syntax::ast_util::local_def;
-use syntax::opt_vec;
-use syntax::abi::AbiSet;
 
 pub fn monomorphic_fn(ccx: @mut CrateContext,
-                      fn_id: ast::def_id,
+                      fn_id: ast::DefId,
                       real_substs: &ty::substs,
                       vtables: Option<typeck::vtable_res>,
                       self_vtables: Option<typeck::vtable_param_res>,
@@ -61,17 +56,10 @@ pub fn monomorphic_fn(ccx: @mut CrateContext,
     let _icx = push_ctxt("monomorphic_fn");
     let mut must_cast = false;
 
-    let do_normalize = |t: &ty::t| {
-        match normalize_for_monomorphization(ccx.tcx, *t) {
-          Some(t) => { must_cast = true; t }
-          None => *t
-        }
-    };
-
     let psubsts = @param_substs {
-        tys: real_substs.tps.map(|x| do_normalize(x)),
+        tys: real_substs.tps.to_owned(),
         vtables: vtables,
-        self_ty: real_substs.self_ty.map(|x| do_normalize(x)),
+        self_ty: real_substs.self_ty.clone(),
         self_vtables: self_vtables
     };
 
@@ -188,7 +176,14 @@ pub fn monomorphic_fn(ccx: @mut CrateContext,
             ty::subst_tps(ccx.tcx, substs, None, llitem_ty)
         }
     };
-    let llfty = type_of_fn_from_ty(ccx, mono_ty);
+
+    let f = match ty::get(mono_ty).sty {
+        ty::ty_bare_fn(ref f) => {
+            assert!(f.abis.is_rust() || f.abis.is_intrinsic());
+            f
+        }
+        _ => fail!("expected bare rust fn or an intrinsic")
+    };
 
     ccx.stats.n_monos += 1;
 
@@ -204,14 +199,14 @@ pub fn monomorphic_fn(ccx: @mut CrateContext,
     }
     ccx.monomorphizing.insert(fn_id, depth + 1);
 
-    let elt = path_name(gensym_name(ccx.sess.str_of(name)));
+    let (_, elt) = gensym_name(ccx.sess.str_of(name));
     let mut pt = (*pt).clone();
     pt.push(elt);
     let s = mangle_exported_name(ccx, pt.clone(), mono_ty);
     debug!("monomorphize_fn mangled to %s", s);
 
     let mk_lldecl = || {
-        let lldecl = decl_internal_cdecl_fn(ccx.llmod, s, llfty);
+        let lldecl = decl_internal_rust_fn(ccx, f.sig.inputs, f.sig.output, s);
         ccx.monomorphized.insert(hash_id, lldecl);
         lldecl
     };
@@ -222,7 +217,7 @@ pub fn monomorphic_fn(ccx: @mut CrateContext,
                 _
             }, _) => {
         let d = mk_lldecl();
-        set_inline_hint_if_appr(i.attrs, d);
+        set_llvm_fn_attrs(i.attrs, d);
         trans_fn(ccx,
                  pt,
                  decl,
@@ -239,8 +234,8 @@ pub fn monomorphic_fn(ccx: @mut CrateContext,
       }
       ast_map::node_foreign_item(i, _, _, _) => {
           let d = mk_lldecl();
-          foreign::trans_intrinsic(ccx, d, i, pt, psubsts, i.attrs,
-                                ref_id);
+          intrinsic::trans_intrinsic(ccx, d, i, pt, psubsts, i.attrs,
+                                     ref_id);
           d
       }
       ast_map::node_variant(ref v, enum_item, _) => {
@@ -266,13 +261,13 @@ pub fn monomorphic_fn(ccx: @mut CrateContext,
       ast_map::node_method(mth, _, _) => {
         // XXX: What should the self type be here?
         let d = mk_lldecl();
-        set_inline_hint_if_appr(mth.attrs.clone(), d);
+        set_llvm_fn_attrs(mth.attrs, d);
         meth::trans_method(ccx, pt, mth, Some(psubsts), d);
         d
       }
       ast_map::node_trait_method(@ast::provided(mth), _, pt) => {
         let d = mk_lldecl();
-        set_inline_hint_if_appr(mth.attrs.clone(), d);
+        set_llvm_fn_attrs(mth.attrs, d);
         meth::trans_method(ccx, (*pt).clone(), mth, Some(psubsts), d);
         d
       }
@@ -305,63 +300,8 @@ pub fn monomorphic_fn(ccx: @mut CrateContext,
     (lldecl, must_cast)
 }
 
-pub fn normalize_for_monomorphization(tcx: ty::ctxt,
-                                      ty: ty::t) -> Option<ty::t> {
-    // FIXME[mono] could do this recursively. is that worthwhile? (#2529)
-    return match ty::get(ty).sty {
-        ty::ty_box(*) => {
-            Some(ty::mk_opaque_box(tcx))
-        }
-        ty::ty_bare_fn(_) => {
-            Some(ty::mk_bare_fn(
-                tcx,
-                ty::BareFnTy {
-                    purity: ast::impure_fn,
-                    abis: AbiSet::Rust(),
-                    sig: FnSig {bound_lifetime_names: opt_vec::Empty,
-                                inputs: ~[],
-                                output: ty::mk_nil()}}))
-        }
-        ty::ty_closure(ref fty) => {
-            Some(normalized_closure_ty(tcx, fty.sigil))
-        }
-        ty::ty_trait(_, _, ref store, _, _) => {
-            let sigil = match *store {
-                ty::UniqTraitStore => ast::OwnedSigil,
-                ty::BoxTraitStore => ast::ManagedSigil,
-                ty::RegionTraitStore(_) => ast::BorrowedSigil,
-            };
-
-            // Traits have the same runtime representation as closures.
-            Some(normalized_closure_ty(tcx, sigil))
-        }
-        ty::ty_ptr(_) => {
-            Some(ty::mk_uint())
-        }
-        _ => {
-            None
-        }
-    };
-
-    fn normalized_closure_ty(tcx: ty::ctxt,
-                             sigil: ast::Sigil) -> ty::t
-    {
-        ty::mk_closure(
-            tcx,
-            ty::ClosureTy {
-                purity: ast::impure_fn,
-                sigil: sigil,
-                onceness: ast::Many,
-                region: ty::re_static,
-                bounds: ty::EmptyBuiltinBounds(),
-                sig: ty::FnSig {bound_lifetime_names: opt_vec::Empty,
-                                inputs: ~[],
-                                output: ty::mk_nil()}})
-    }
-}
-
 pub fn make_mono_id(ccx: @mut CrateContext,
-                    item: ast::def_id,
+                    item: ast::DefId,
                     substs: &param_substs,
                     param_uses: Option<@~[type_use::type_uses]>) -> mono_id {
     // FIXME (possibly #5801): Need a lot of type hints to get

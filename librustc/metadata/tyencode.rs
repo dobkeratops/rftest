@@ -17,7 +17,6 @@ use middle::ty;
 use std::hashmap::HashMap;
 use std::io::WriterUtil;
 use std::io;
-use std::uint;
 use syntax::abi::AbiSet;
 use syntax::ast;
 use syntax::ast::*;
@@ -27,7 +26,7 @@ use syntax::print::pprust::*;
 pub struct ctxt {
     diag: @mut span_handler,
     // Def -> str Callback:
-    ds: @fn(def_id) -> ~str,
+    ds: extern "Rust" fn(DefId) -> ~str,
     // The type context.
     tcx: ty::ctxt,
     abbrevs: abbrev_ctxt
@@ -96,11 +95,10 @@ pub fn enc_ty(w: @io::Writer, cx: @ctxt, t: ty::t) {
     }
 }
 
-fn enc_mutability(w: @io::Writer, mt: ast::mutability) {
+fn enc_mutability(w: @io::Writer, mt: ast::Mutability) {
     match mt {
-      m_imm => (),
-      m_mutbl => w.write_char('m'),
-      m_const => w.write_char('?')
+      MutImmutable => (),
+      MutMutable => w.write_char('m'),
     }
 }
 
@@ -241,10 +239,10 @@ fn enc_sty(w: @io::Writer, cx: @ctxt, st: &ty::sty) {
       ty::ty_nil => w.write_char('n'),
       ty::ty_bot => w.write_char('z'),
       ty::ty_bool => w.write_char('b'),
+      ty::ty_char => w.write_char('c'),
       ty::ty_int(t) => {
         match t {
           ty_i => w.write_char('i'),
-          ty_char => w.write_char('c'),
           ty_i8 => w.write_str(&"MB"),
           ty_i16 => w.write_str(&"MW"),
           ty_i32 => w.write_str(&"ML"),
@@ -324,7 +322,7 @@ fn enc_sty(w: @io::Writer, cx: @ctxt, st: &ty::sty) {
         w.write_char('p');
         w.write_str((cx.ds)(did));
         w.write_char('|');
-        w.write_str(uint::to_str(id));
+        w.write_str(id.to_str());
       }
       ty::ty_self(did) => {
         w.write_char('s');

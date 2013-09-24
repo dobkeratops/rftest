@@ -24,9 +24,7 @@ use middle::typeck::isr_alist;
 use util::ppaux::mt_to_str;
 
 use extra::list;
-use syntax::abi::AbiSet;
-use syntax::ast;
-use syntax::ast::{Many, Once, extern_fn, m_const, impure_fn};
+use syntax::ast::{Many, Once, extern_fn, impure_fn};
 use syntax::ast::{unsafe_fn};
 use syntax::ast::{Onceness, purity};
 
@@ -57,27 +55,22 @@ impl Combine for Lub {
                mt_to_str(tcx, a),
                mt_to_str(tcx, b));
 
-        let m = if a.mutbl == b.mutbl {
-            a.mutbl
-        } else {
-            m_const
-        };
+        if a.mutbl != b.mutbl {
+            return Err(ty::terr_mutability)
+        }
 
+        let m = a.mutbl;
         match m {
-          m_imm | m_const => {
-            self.tys(a.ty, b.ty).chain(|t| Ok(ty::mt {ty: t, mutbl: m}) )
+          MutImmutable => {
+            self.tys(a.ty, b.ty).and_then(|t| Ok(ty::mt {ty: t, mutbl: m}) )
           }
 
-          m_mutbl => {
+          MutMutable => {
             self.infcx.try(|| {
                 eq_tys(self, a.ty, b.ty).then(|| {
                     Ok(ty::mt {ty: a.ty, mutbl: m})
                 })
-            }).chain_err(|_e| {
-                self.tys(a.ty, b.ty).chain(|t| {
-                    Ok(ty::mt {ty: t, mutbl: m_const})
-                })
-            })
+            }).or_else(|e| Err(e))
           }
         }
     }
@@ -206,69 +199,7 @@ impl Combine for Lub {
         }
     }
 
-    fn bare_fn_tys(&self, a: &ty::BareFnTy,
-                   b: &ty::BareFnTy) -> cres<ty::BareFnTy> {
-        super_bare_fn_tys(self, a, b)
-    }
-
-    fn closure_tys(&self, a: &ty::ClosureTy,
-                   b: &ty::ClosureTy) -> cres<ty::ClosureTy> {
-        super_closure_tys(self, a, b)
-    }
-
-    // Traits please (FIXME: #2794):
-
-    fn sigils(&self, p1: ast::Sigil, p2: ast::Sigil)
-             -> cres<ast::Sigil> {
-        super_sigils(self, p1, p2)
-    }
-
-    fn abis(&self, p1: AbiSet, p2: AbiSet) -> cres<AbiSet> {
-        super_abis(self, p1, p2)
-    }
-
     fn tys(&self, a: ty::t, b: ty::t) -> cres<ty::t> {
         super_lattice_tys(self, a, b)
-    }
-
-    fn flds(&self, a: ty::field, b: ty::field) -> cres<ty::field> {
-        super_flds(self, a, b)
-    }
-
-    fn vstores(&self, vk: ty::terr_vstore_kind,
-               a: ty::vstore, b: ty::vstore) -> cres<ty::vstore> {
-        super_vstores(self, vk, a, b)
-    }
-
-    fn trait_stores(&self,
-                    vk: ty::terr_vstore_kind,
-                    a: ty::TraitStore,
-                    b: ty::TraitStore)
-                 -> cres<ty::TraitStore> {
-        super_trait_stores(self, vk, a, b)
-    }
-
-    fn args(&self, a: ty::t, b: ty::t) -> cres<ty::t> {
-        super_args(self, a, b)
-    }
-
-    fn substs(&self,
-              generics: &ty::Generics,
-              as_: &ty::substs,
-              bs: &ty::substs) -> cres<ty::substs> {
-        super_substs(self, generics, as_, bs)
-    }
-
-    fn tps(&self, as_: &[ty::t], bs: &[ty::t]) -> cres<~[ty::t]> {
-        super_tps(self, as_, bs)
-    }
-
-    fn self_tys(&self, a: Option<ty::t>, b: Option<ty::t>)
-               -> cres<Option<ty::t>> {
-        super_self_tys(self, a, b)
-    }
-
-    fn trait_refs(&self, a: &ty::TraitRef, b: &ty::TraitRef) -> cres<ty::TraitRef> {
-        super_trait_refs(self, a, b)
     }
 }

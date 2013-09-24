@@ -13,7 +13,7 @@
  */
 
 use ast;
-use codemap::span;
+use codemap::Span;
 use ext::base;
 use ext::base::*;
 use parse;
@@ -37,7 +37,7 @@ fn next_state(s: State) -> Option<State> {
     }
 }
 
-pub fn expand_asm(cx: @ExtCtxt, sp: span, tts: &[ast::token_tree])
+pub fn expand_asm(cx: @ExtCtxt, sp: Span, tts: &[ast::token_tree])
                -> base::MacResult {
     let p = parse::new_parser_from_tts(cx.parse_sess(),
                                        cx.cfg(),
@@ -75,10 +75,10 @@ pub fn expand_asm(cx: @ExtCtxt, sp: span, tts: &[ast::token_tree])
                     let out = p.parse_expr();
                     p.expect(&token::RPAREN);
 
-                    let out = @ast::expr {
-                        id: cx.next_id(),
+                    let out = @ast::Expr {
+                        id: ast::DUMMY_NODE_ID,
                         span: out.span,
-                        node: ast::expr_addr_of(ast::m_mutbl, out)
+                        node: ast::ExprAddrOf(ast::MutMutable, out)
                     };
 
                     outputs.push((constraint, out));
@@ -171,9 +171,9 @@ pub fn expand_asm(cx: @ExtCtxt, sp: span, tts: &[ast::token_tree])
         }
     }
 
-    MRExpr(@ast::expr {
-        id: cx.next_id(),
-        node: ast::expr_inline_asm(ast::inline_asm {
+    MRExpr(@ast::Expr {
+        id: ast::DUMMY_NODE_ID,
+        node: ast::ExprInlineAsm(ast::inline_asm {
             asm: asm,
             clobbers: cons.to_managed(),
             inputs: inputs,

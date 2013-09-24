@@ -9,13 +9,14 @@
 // except according to those terms.
 
 use ast;
-use codemap::span;
+use codemap::Span;
 use ext::base::*;
 use ext::base;
+use opt_vec;
 use parse::token;
 use parse::token::{str_to_ident};
 
-pub fn expand_syntax_ext(cx: @ExtCtxt, sp: span, tts: &[ast::token_tree])
+pub fn expand_syntax_ext(cx: @ExtCtxt, sp: Span, tts: &[ast::token_tree])
     -> base::MacResult {
     let mut res_str = ~"";
     for (i, e) in tts.iter().enumerate() {
@@ -33,15 +34,19 @@ pub fn expand_syntax_ext(cx: @ExtCtxt, sp: span, tts: &[ast::token_tree])
     }
     let res = str_to_ident(res_str);
 
-    let e = @ast::expr {
-        id: cx.next_id(),
-        node: ast::expr_path(
+    let e = @ast::Expr {
+        id: ast::DUMMY_NODE_ID,
+        node: ast::ExprPath(
             ast::Path {
                  span: sp,
                  global: false,
-                 idents: ~[res],
-                 rp: None,
-                 types: ~[],
+                 segments: ~[
+                    ast::PathSegment {
+                        identifier: res,
+                        lifetime: None,
+                        types: opt_vec::Empty,
+                    }
+                ]
             }
         ),
         span: sp,

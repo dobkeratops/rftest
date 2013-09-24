@@ -8,8 +8,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use ast::{MetaItem, item, expr};
-use codemap::span;
+use ast::{MetaItem, item, Expr};
+use codemap::Span;
 use ext::base::ExtCtxt;
 use ext::build::AstBuilder;
 use ext::deriving::generic::*;
@@ -17,7 +17,7 @@ use ext::deriving::generic::*;
 use std::vec;
 
 pub fn expand_deriving_zero(cx: @ExtCtxt,
-                            span: span,
+                            span: Span,
                             mitem: @MetaItem,
                             in_items: ~[@item])
     -> ~[@item] {
@@ -55,16 +55,14 @@ pub fn expand_deriving_zero(cx: @ExtCtxt,
     trait_def.expand(cx, span, mitem, in_items)
 }
 
-fn zero_substructure(cx: @ExtCtxt, span: span, substr: &Substructure) -> @expr {
+fn zero_substructure(cx: @ExtCtxt, span: Span, substr: &Substructure) -> @Expr {
     let zero_ident = ~[
         cx.ident_of("std"),
         cx.ident_of("num"),
         cx.ident_of("Zero"),
         cx.ident_of("zero")
     ];
-    let zero_call = || {
-        cx.expr_call_global(span, zero_ident.clone(), ~[])
-    };
+    let zero_call = cx.expr_call_global(span, zero_ident.clone(), ~[]);
 
     return match *substr.fields {
         StaticStruct(_, ref summary) => {
@@ -73,13 +71,13 @@ fn zero_substructure(cx: @ExtCtxt, span: span, substr: &Substructure) -> @expr {
                     if count == 0 {
                         cx.expr_ident(span, substr.type_ident)
                     } else {
-                        let exprs = vec::from_fn(count, |_| zero_call());
+                        let exprs = vec::from_elem(count, zero_call);
                         cx.expr_call_ident(span, substr.type_ident, exprs)
                     }
                 }
                 Right(ref fields) => {
                     let zero_fields = do fields.map |ident| {
-                        cx.field_imm(span, *ident, zero_call())
+                        cx.field_imm(span, *ident, zero_call)
                     };
                     cx.expr_struct_ident(span, substr.type_ident, zero_fields)
                 }

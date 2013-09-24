@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2013 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -11,10 +11,10 @@
 use ast::*;
 use ast;
 use ast_util;
-use codemap::{span, dummy_sp};
+use codemap::{Span, dummy_sp};
 use opt_vec;
 use parse::token;
-use visit::{SimpleVisitor, SimpleVisitorVisitor, Visitor};
+use visit::Visitor;
 use visit;
 
 use std::hashmap::HashMap;
@@ -23,135 +23,136 @@ use std::local_data;
 use std::num;
 use std::option;
 
-pub fn path_name_i(idents: &[ident]) -> ~str {
+pub fn path_name_i(idents: &[Ident]) -> ~str {
     // FIXME: Bad copies (#2543 -- same for everything else that says "bad")
     idents.map(|i| token::interner_get(i.name)).connect("::")
 }
 
-pub fn path_to_ident(p: &Path) -> ident {
-    *p.idents.last()
+// totally scary function: ignores all but the last element, should have
+// a different name
+pub fn path_to_ident(path: &Path) -> Ident {
+    path.segments.last().identifier
 }
 
-pub fn local_def(id: NodeId) -> def_id {
-    ast::def_id { crate: LOCAL_CRATE, node: id }
+pub fn local_def(id: NodeId) -> DefId {
+    ast::DefId { crate: LOCAL_CRATE, node: id }
 }
 
-pub fn is_local(did: ast::def_id) -> bool { did.crate == LOCAL_CRATE }
+pub fn is_local(did: ast::DefId) -> bool { did.crate == LOCAL_CRATE }
 
-pub fn stmt_id(s: &stmt) -> NodeId {
+pub fn stmt_id(s: &Stmt) -> NodeId {
     match s.node {
-      stmt_decl(_, id) => id,
-      stmt_expr(_, id) => id,
-      stmt_semi(_, id) => id,
-      stmt_mac(*) => fail!("attempted to analyze unexpanded stmt")
+      StmtDecl(_, id) => id,
+      StmtExpr(_, id) => id,
+      StmtSemi(_, id) => id,
+      StmtMac(*) => fail!("attempted to analyze unexpanded stmt")
     }
 }
 
-pub fn variant_def_ids(d: def) -> Option<(def_id, def_id)> {
+pub fn variant_def_ids(d: Def) -> Option<(DefId, DefId)> {
     match d {
-      def_variant(enum_id, var_id) => {
+      DefVariant(enum_id, var_id, _) => {
           Some((enum_id, var_id))
       }
       _ => None
     }
 }
 
-pub fn def_id_of_def(d: def) -> def_id {
+pub fn def_id_of_def(d: Def) -> DefId {
     match d {
-      def_fn(id, _) | def_static_method(id, _, _) | def_mod(id) |
-      def_foreign_mod(id) | def_static(id, _) |
-      def_variant(_, id) | def_ty(id) | def_ty_param(id, _) |
-      def_use(id) | def_struct(id) | def_trait(id) | def_method(id, _) => {
+      DefFn(id, _) | DefStaticMethod(id, _, _) | DefMod(id) |
+      DefForeignMod(id) | DefStatic(id, _) |
+      DefVariant(_, id, _) | DefTy(id) | DefTyParam(id, _) |
+      DefUse(id) | DefStruct(id) | DefTrait(id) | DefMethod(id, _) => {
         id
       }
-      def_arg(id, _) | def_local(id, _) | def_self(id, _) | def_self_ty(id)
-      | def_upvar(id, _, _, _) | def_binding(id, _) | def_region(id)
-      | def_typaram_binder(id) | def_label(id) => {
+      DefArg(id, _) | DefLocal(id, _) | DefSelf(id) | DefSelfTy(id)
+      | DefUpvar(id, _, _, _) | DefBinding(id, _) | DefRegion(id)
+      | DefTyParamBinder(id) | DefLabel(id) => {
         local_def(id)
       }
 
-      def_prim_ty(_) => fail!()
+      DefPrimTy(_) => fail!()
     }
 }
 
-pub fn binop_to_str(op: binop) -> ~str {
+pub fn binop_to_str(op: BinOp) -> ~str {
     match op {
-      add => return ~"+",
-      subtract => return ~"-",
-      mul => return ~"*",
-      div => return ~"/",
-      rem => return ~"%",
-      and => return ~"&&",
-      or => return ~"||",
-      bitxor => return ~"^",
-      bitand => return ~"&",
-      bitor => return ~"|",
-      shl => return ~"<<",
-      shr => return ~">>",
-      eq => return ~"==",
-      lt => return ~"<",
-      le => return ~"<=",
-      ne => return ~"!=",
-      ge => return ~">=",
-      gt => return ~">"
+      BiAdd => return ~"+",
+      BiSub => return ~"-",
+      BiMul => return ~"*",
+      BiDiv => return ~"/",
+      BiRem => return ~"%",
+      BiAnd => return ~"&&",
+      BiOr => return ~"||",
+      BiBitXor => return ~"^",
+      BiBitAnd => return ~"&",
+      BiBitOr => return ~"|",
+      BiShl => return ~"<<",
+      BiShr => return ~">>",
+      BiEq => return ~"==",
+      BiLt => return ~"<",
+      BiLe => return ~"<=",
+      BiNe => return ~"!=",
+      BiGe => return ~">=",
+      BiGt => return ~">"
     }
 }
 
-pub fn binop_to_method_name(op: binop) -> Option<~str> {
+pub fn binop_to_method_name(op: BinOp) -> Option<~str> {
     match op {
-      add => return Some(~"add"),
-      subtract => return Some(~"sub"),
-      mul => return Some(~"mul"),
-      div => return Some(~"div"),
-      rem => return Some(~"rem"),
-      bitxor => return Some(~"bitxor"),
-      bitand => return Some(~"bitand"),
-      bitor => return Some(~"bitor"),
-      shl => return Some(~"shl"),
-      shr => return Some(~"shr"),
-      lt => return Some(~"lt"),
-      le => return Some(~"le"),
-      ge => return Some(~"ge"),
-      gt => return Some(~"gt"),
-      eq => return Some(~"eq"),
-      ne => return Some(~"ne"),
-      and | or => return None
+      BiAdd => return Some(~"add"),
+      BiSub => return Some(~"sub"),
+      BiMul => return Some(~"mul"),
+      BiDiv => return Some(~"div"),
+      BiRem => return Some(~"rem"),
+      BiBitXor => return Some(~"bitxor"),
+      BiBitAnd => return Some(~"bitand"),
+      BiBitOr => return Some(~"bitor"),
+      BiShl => return Some(~"shl"),
+      BiShr => return Some(~"shr"),
+      BiLt => return Some(~"lt"),
+      BiLe => return Some(~"le"),
+      BiGe => return Some(~"ge"),
+      BiGt => return Some(~"gt"),
+      BiEq => return Some(~"eq"),
+      BiNe => return Some(~"ne"),
+      BiAnd | BiOr => return None
     }
 }
 
-pub fn lazy_binop(b: binop) -> bool {
+pub fn lazy_binop(b: BinOp) -> bool {
     match b {
-      and => true,
-      or => true,
+      BiAnd => true,
+      BiOr => true,
       _ => false
     }
 }
 
-pub fn is_shift_binop(b: binop) -> bool {
+pub fn is_shift_binop(b: BinOp) -> bool {
     match b {
-      shl => true,
-      shr => true,
+      BiShl => true,
+      BiShr => true,
       _ => false
     }
 }
 
-pub fn unop_to_str(op: unop) -> ~str {
+pub fn unop_to_str(op: UnOp) -> ~str {
     match op {
-      box(mt) => if mt == m_mutbl { ~"@mut " } else { ~"@" },
-      uniq => ~"~",
-      deref => ~"*",
-      not => ~"!",
-      neg => ~"-"
+      UnBox(mt) => if mt == MutMutable { ~"@mut " } else { ~"@" },
+      UnUniq => ~"~",
+      UnDeref => ~"*",
+      UnNot => ~"!",
+      UnNeg => ~"-"
     }
 }
 
-pub fn is_path(e: @expr) -> bool {
-    return match e.node { expr_path(_) => true, _ => false };
+pub fn is_path(e: @Expr) -> bool {
+    return match e.node { ExprPath(_) => true, _ => false };
 }
 
 pub fn int_ty_to_str(t: int_ty) -> ~str {
     match t {
-      ty_char => ~"u8", // ???
       ty_i => ~"",
       ty_i8 => ~"i8",
       ty_i16 => ~"i16",
@@ -164,7 +165,7 @@ pub fn int_ty_max(t: int_ty) -> u64 {
     match t {
       ty_i8 => 0x80u64,
       ty_i16 => 0x8000u64,
-      ty_i | ty_char | ty_i32 => 0x80000000u64, // actually ni about ty_i
+      ty_i | ty_i32 => 0x80000000u64, // actually ni about ty_i
       ty_i64 => 0x8000000000000000u64
     }
 }
@@ -192,19 +193,19 @@ pub fn float_ty_to_str(t: float_ty) -> ~str {
     match t { ty_f => ~"f", ty_f32 => ~"f32", ty_f64 => ~"f64" }
 }
 
-pub fn is_call_expr(e: @expr) -> bool {
-    match e.node { expr_call(*) => true, _ => false }
+pub fn is_call_expr(e: @Expr) -> bool {
+    match e.node { ExprCall(*) => true, _ => false }
 }
 
-pub fn block_from_expr(e: @expr) -> Block {
-    let mut blk = default_block(~[], option::Some::<@expr>(e), e.id);
+pub fn block_from_expr(e: @Expr) -> Block {
+    let mut blk = default_block(~[], option::Some::<@Expr>(e), e.id);
     blk.span = e.span;
     return blk;
 }
 
 pub fn default_block(
-    stmts1: ~[@stmt],
-    expr1: Option<@expr>,
+    stmts1: ~[@Stmt],
+    expr1: Option<@Expr>,
     id1: NodeId
 ) -> Block {
     ast::Block {
@@ -217,28 +218,34 @@ pub fn default_block(
     }
 }
 
-pub fn ident_to_path(s: span, i: ident) -> Path {
-    ast::Path { span: s,
-                 global: false,
-                 idents: ~[i],
-                 rp: None,
-                 types: ~[] }
+pub fn ident_to_path(s: Span, identifier: Ident) -> Path {
+    ast::Path {
+        span: s,
+        global: false,
+        segments: ~[
+            ast::PathSegment {
+                identifier: identifier,
+                lifetime: None,
+                types: opt_vec::Empty,
+            }
+        ],
+    }
 }
 
-pub fn ident_to_pat(id: NodeId, s: span, i: ident) -> @pat {
-    @ast::pat { id: id,
-                node: pat_ident(bind_infer, ident_to_path(s, i), None),
+pub fn ident_to_pat(id: NodeId, s: Span, i: Ident) -> @Pat {
+    @ast::Pat { id: id,
+                node: PatIdent(BindInfer, ident_to_path(s, i), None),
                 span: s }
 }
 
-pub fn is_unguarded(a: &arm) -> bool {
+pub fn is_unguarded(a: &Arm) -> bool {
     match a.guard {
       None => true,
       _    => false
     }
 }
 
-pub fn unguarded_pat(a: &arm) -> Option<~[@pat]> {
+pub fn unguarded_pat(a: &Arm) -> Option<~[@Pat]> {
     if is_unguarded(a) {
         Some(/* FIXME (#2543) */ a.pats.clone())
     } else {
@@ -296,13 +303,13 @@ pub fn struct_field_visibility(field: ast::struct_field) -> visibility {
 }
 
 pub trait inlined_item_utils {
-    fn ident(&self) -> ident;
+    fn ident(&self) -> Ident;
     fn id(&self) -> ast::NodeId;
-    fn accept<E: Clone>(&self, e: E, v: @mut Visitor<E>);
+    fn accept<E: Clone, V:Visitor<E>>(&self, e: E, v: &mut V);
 }
 
 impl inlined_item_utils for inlined_item {
-    fn ident(&self) -> ident {
+    fn ident(&self) -> Ident {
         match *self {
             ii_item(i) => i.ident,
             ii_foreign(i) => i.ident,
@@ -318,39 +325,39 @@ impl inlined_item_utils for inlined_item {
         }
     }
 
-    fn accept<E: Clone>(&self, e: E, v: @mut Visitor<E>) {
+    fn accept<E: Clone, V:Visitor<E>>(&self, e: E, v: &mut V) {
         match *self {
             ii_item(i) => v.visit_item(i, e),
             ii_foreign(i) => v.visit_foreign_item(i, e),
-            ii_method(_, _, m) => visit::visit_method_helper(v, m, e),
+            ii_method(_, _, m) => visit::walk_method_helper(v, m, e),
         }
     }
 }
 
 /* True if d is either a def_self, or a chain of def_upvars
  referring to a def_self */
-pub fn is_self(d: ast::def) -> bool {
+pub fn is_self(d: ast::Def) -> bool {
   match d {
-    def_self(*)           => true,
-    def_upvar(_, d, _, _) => is_self(*d),
+    DefSelf(*)           => true,
+    DefUpvar(_, d, _, _) => is_self(*d),
     _                     => false
   }
 }
 
 /// Maps a binary operator to its precedence
-pub fn operator_prec(op: ast::binop) -> uint {
+pub fn operator_prec(op: ast::BinOp) -> uint {
   match op {
       // 'as' sits here with 12
-      mul | div | rem   => 11u,
-      add | subtract    => 10u,
-      shl | shr         =>  9u,
-      bitand            =>  8u,
-      bitxor            =>  7u,
-      bitor             =>  6u,
-      lt | le | ge | gt =>  4u,
-      eq | ne           =>  3u,
-      and               =>  2u,
-      or                =>  1u
+      BiMul | BiDiv | BiRem     => 11u,
+      BiAdd | BiSub             => 10u,
+      BiShl | BiShr             =>  9u,
+      BiBitAnd                  =>  8u,
+      BiBitXor                  =>  7u,
+      BiBitOr                   =>  6u,
+      BiLt | BiLe | BiGe | BiGt =>  4u,
+      BiEq | BiNe               =>  3u,
+      BiAnd                     =>  2u,
+      BiOr                      =>  1u
   }
 }
 
@@ -390,64 +397,78 @@ impl id_range {
     }
 }
 
-struct IdVisitor {
-    visit_callback: @fn(NodeId),
+pub fn id_visitor(operation: @IdVisitingOperation, pass_through_items: bool)
+                  -> @mut Visitor<()> {
+    let visitor = @mut IdVisitor {
+        operation: operation,
+        pass_through_items: pass_through_items,
+        visited_outermost: false,
+    };
+    visitor as @mut Visitor<()>
+}
+
+pub trait IdVisitingOperation {
+    fn visit_id(&self, node_id: NodeId);
+}
+
+pub struct IdVisitor {
+    operation: @IdVisitingOperation,
     pass_through_items: bool,
     visited_outermost: bool,
 }
 
 impl IdVisitor {
-    fn visit_generics_helper(@mut self, generics: &Generics) {
+    fn visit_generics_helper(&self, generics: &Generics) {
         for type_parameter in generics.ty_params.iter() {
-            (self.visit_callback)(type_parameter.id)
+            self.operation.visit_id(type_parameter.id)
         }
         for lifetime in generics.lifetimes.iter() {
-            (self.visit_callback)(lifetime.id)
+            self.operation.visit_id(lifetime.id)
         }
     }
 }
 
 impl Visitor<()> for IdVisitor {
-    fn visit_mod(@mut self,
+    fn visit_mod(&mut self,
                  module: &_mod,
-                 _span: span,
+                 _: Span,
                  node_id: NodeId,
                  env: ()) {
-        (self.visit_callback)(node_id);
-        visit::visit_mod(self as @mut Visitor<()>, module, env)
+        self.operation.visit_id(node_id);
+        visit::walk_mod(self, module, env)
     }
 
-    fn visit_view_item(@mut self, view_item: &view_item, env: ()) {
+    fn visit_view_item(&mut self, view_item: &view_item, env: ()) {
         match view_item.node {
             view_item_extern_mod(_, _, _, node_id) => {
-                (self.visit_callback)(node_id)
+                self.operation.visit_id(node_id)
             }
             view_item_use(ref view_paths) => {
                 for view_path in view_paths.iter() {
                     match view_path.node {
                         view_path_simple(_, _, node_id) |
                         view_path_glob(_, node_id) => {
-                            (self.visit_callback)(node_id)
+                            self.operation.visit_id(node_id)
                         }
                         view_path_list(_, ref paths, node_id) => {
-                            (self.visit_callback)(node_id);
+                            self.operation.visit_id(node_id);
                             for path in paths.iter() {
-                                (self.visit_callback)(path.node.id)
+                                self.operation.visit_id(path.node.id)
                             }
                         }
                     }
                 }
             }
         }
-        visit::visit_view_item(self as @mut Visitor<()>, view_item, env)
+        visit::walk_view_item(self, view_item, env)
     }
 
-    fn visit_foreign_item(@mut self, foreign_item: @foreign_item, env: ()) {
-        (self.visit_callback)(foreign_item.id);
-        visit::visit_foreign_item(self as @mut Visitor<()>, foreign_item, env)
+    fn visit_foreign_item(&mut self, foreign_item: @foreign_item, env: ()) {
+        self.operation.visit_id(foreign_item.id);
+        visit::walk_foreign_item(self, foreign_item, env)
     }
 
-    fn visit_item(@mut self, item: @item, env: ()) {
+    fn visit_item(&mut self, item: @item, env: ()) {
         if !self.pass_through_items {
             if self.visited_outermost {
                 return
@@ -456,86 +477,72 @@ impl Visitor<()> for IdVisitor {
             }
         }
 
-        (self.visit_callback)(item.id);
+        self.operation.visit_id(item.id);
         match item.node {
             item_enum(ref enum_definition, _) => {
                 for variant in enum_definition.variants.iter() {
-                    (self.visit_callback)(variant.node.id)
+                    self.operation.visit_id(variant.node.id)
                 }
             }
             _ => {}
         }
 
-        visit::visit_item(self as @mut Visitor<()>, item, env);
+        visit::walk_item(self, item, env);
 
         self.visited_outermost = false
     }
 
-    fn visit_local(@mut self, local: @Local, env: ()) {
-        (self.visit_callback)(local.id);
-        visit::visit_local(self as @mut Visitor<()>, local, env)
+    fn visit_local(&mut self, local: @Local, env: ()) {
+        self.operation.visit_id(local.id);
+        visit::walk_local(self, local, env)
     }
 
-    fn visit_block(@mut self, block: &Block, env: ()) {
-        (self.visit_callback)(block.id);
-        visit::visit_block(self as @mut Visitor<()>, block, env)
+    fn visit_block(&mut self, block: &Block, env: ()) {
+        self.operation.visit_id(block.id);
+        visit::walk_block(self, block, env)
     }
 
-    fn visit_stmt(@mut self, statement: @stmt, env: ()) {
-        (self.visit_callback)(ast_util::stmt_id(statement));
-        visit::visit_stmt(self as @mut Visitor<()>, statement, env)
+    fn visit_stmt(&mut self, statement: @Stmt, env: ()) {
+        self.operation.visit_id(ast_util::stmt_id(statement));
+        visit::walk_stmt(self, statement, env)
     }
 
-    // XXX: Default
-    fn visit_arm(@mut self, arm: &arm, env: ()) {
-        visit::visit_arm(self as @mut Visitor<()>, arm, env)
+    fn visit_pat(&mut self, pattern: @Pat, env: ()) {
+        self.operation.visit_id(pattern.id);
+        visit::walk_pat(self, pattern, env)
     }
 
-    fn visit_pat(@mut self, pattern: @pat, env: ()) {
-        (self.visit_callback)(pattern.id);
-        visit::visit_pat(self as @mut Visitor<()>, pattern, env)
-    }
 
-    // XXX: Default
-    fn visit_decl(@mut self, declaration: @decl, env: ()) {
-        visit::visit_decl(self as @mut Visitor<()>, declaration, env)
-    }
-
-    fn visit_expr(@mut self, expression: @expr, env: ()) {
+    fn visit_expr(&mut self, expression: @Expr, env: ()) {
         {
             let optional_callee_id = expression.get_callee_id();
             for callee_id in optional_callee_id.iter() {
-                (self.visit_callback)(*callee_id)
+                self.operation.visit_id(*callee_id)
             }
         }
-        (self.visit_callback)(expression.id);
-        visit::visit_expr(self as @mut Visitor<()>, expression, env)
+        self.operation.visit_id(expression.id);
+        visit::walk_expr(self, expression, env)
     }
 
-    // XXX: Default
-    fn visit_expr_post(@mut self, _: @expr, _: ()) {
-        // Empty!
-    }
-
-    fn visit_ty(@mut self, typ: &Ty, env: ()) {
-        (self.visit_callback)(typ.id);
+    fn visit_ty(&mut self, typ: &Ty, env: ()) {
+        self.operation.visit_id(typ.id);
         match typ.node {
-            ty_path(_, _, id) => (self.visit_callback)(id),
+            ty_path(_, _, id) => self.operation.visit_id(id),
             _ => {}
         }
-        visit::visit_ty(self as @mut Visitor<()>, typ, env)
+        visit::walk_ty(self, typ, env)
     }
 
-    fn visit_generics(@mut self, generics: &Generics, env: ()) {
+    fn visit_generics(&mut self, generics: &Generics, env: ()) {
         self.visit_generics_helper(generics);
-        visit::visit_generics(self as @mut Visitor<()>, generics, env)
+        visit::walk_generics(self, generics, env)
     }
 
-    fn visit_fn(@mut self,
+    fn visit_fn(&mut self,
                 function_kind: &visit::fn_kind,
                 function_declaration: &fn_decl,
                 block: &Block,
-                span: span,
+                span: Span,
                 node_id: NodeId,
                 env: ()) {
         if !self.pass_through_items {
@@ -546,24 +553,24 @@ impl Visitor<()> for IdVisitor {
             }
         }
 
-        (self.visit_callback)(node_id);
+        self.operation.visit_id(node_id);
 
         match *function_kind {
             visit::fk_item_fn(_, generics, _, _) => {
                 self.visit_generics_helper(generics)
             }
             visit::fk_method(_, generics, method) => {
-                (self.visit_callback)(method.self_id);
+                self.operation.visit_id(method.self_id);
                 self.visit_generics_helper(generics)
             }
             visit::fk_anon(_) | visit::fk_fn_block => {}
         }
 
         for argument in function_declaration.inputs.iter() {
-            (self.visit_callback)(argument.id)
+            self.operation.visit_id(argument.id)
         }
 
-        visit::visit_fn(self as @mut Visitor<()>,
+        visit::walk_fn(self,
                         function_kind,
                         function_declaration,
                         block,
@@ -579,56 +586,37 @@ impl Visitor<()> for IdVisitor {
         }
     }
 
-    // XXX: Default
-    fn visit_ty_method(@mut self, type_method: &TypeMethod, env: ()) {
-        visit::visit_ty_method(self as @mut Visitor<()>, type_method, env)
-    }
-
-    // XXX: Default
-    fn visit_trait_method(@mut self, trait_method: &trait_method, env: ()) {
-        visit::visit_trait_method(self as @mut Visitor<()>, trait_method, env)
-    }
-
-    // XXX: Default
-    fn visit_struct_def(@mut self,
-                        struct_definition: @struct_def,
-                        identifier: ident,
-                        generics: &Generics,
-                        node_id: NodeId,
-                        env: ()) {
-        visit::visit_struct_def(self as @mut Visitor<()>,
-                                struct_definition,
-                                identifier,
-                                generics,
-                                node_id,
-                                env)
-    }
-
-    fn visit_struct_field(@mut self, struct_field: @struct_field, env: ()) {
-        (self.visit_callback)(struct_field.node.id);
-        visit::visit_struct_field(self as @mut Visitor<()>, struct_field, env)
+    fn visit_struct_field(&mut self, struct_field: @struct_field, env: ()) {
+        self.operation.visit_id(struct_field.node.id);
+        visit::walk_struct_field(self, struct_field, env)
     }
 }
 
-pub fn id_visitor(vfn: @fn(NodeId), pass_through_items: bool)
-                  -> @mut Visitor<()> {
-    let visitor = @mut IdVisitor {
-        visit_callback: vfn,
-        pass_through_items: pass_through_items,
+pub fn visit_ids_for_inlined_item(item: &inlined_item,
+                                  operation: @IdVisitingOperation) {
+    let mut id_visitor = IdVisitor {
+        operation: operation,
+        pass_through_items: true,
         visited_outermost: false,
     };
-    visitor as @mut Visitor<()>
+    item.accept((), &mut id_visitor);
 }
 
-pub fn visit_ids_for_inlined_item(item: &inlined_item, vfn: @fn(NodeId)) {
-    item.accept((), id_visitor(|id| vfn(id), true));
+struct IdRangeComputingVisitor {
+    result: @mut id_range,
 }
 
-pub fn compute_id_range(visit_ids_fn: &fn(@fn(NodeId))) -> id_range {
-    let result = @mut id_range::max();
-    do visit_ids_fn |id| {
-        result.add(id);
+impl IdVisitingOperation for IdRangeComputingVisitor {
+    fn visit_id(&self, id: NodeId) {
+        self.result.add(id)
     }
+}
+
+pub fn compute_id_range(visit_ids_fn: &fn(@IdVisitingOperation)) -> id_range {
+    let result = @mut id_range::max();
+    visit_ids_fn(@IdRangeComputingVisitor {
+        result: result,
+    } as @IdVisitingOperation);
     *result
 }
 
@@ -643,123 +631,54 @@ pub fn is_item_impl(item: @ast::item) -> bool {
     }
 }
 
-pub fn walk_pat(pat: @pat, it: &fn(@pat) -> bool) -> bool {
+pub fn walk_pat(pat: @Pat, it: &fn(@Pat) -> bool) -> bool {
     if !it(pat) {
         return false;
     }
 
     match pat.node {
-        pat_ident(_, _, Some(p)) => walk_pat(p, it),
-        pat_struct(_, ref fields, _) => {
+        PatIdent(_, _, Some(p)) => walk_pat(p, it),
+        PatStruct(_, ref fields, _) => {
             fields.iter().advance(|f| walk_pat(f.pat, |p| it(p)))
         }
-        pat_enum(_, Some(ref s)) | pat_tup(ref s) => {
+        PatEnum(_, Some(ref s)) | PatTup(ref s) => {
             s.iter().advance(|&p| walk_pat(p, |p| it(p)))
         }
-        pat_box(s) | pat_uniq(s) | pat_region(s) => {
+        PatBox(s) | PatUniq(s) | PatRegion(s) => {
             walk_pat(s, it)
         }
-        pat_vec(ref before, ref slice, ref after) => {
+        PatVec(ref before, ref slice, ref after) => {
             before.iter().advance(|&p| walk_pat(p, |p| it(p))) &&
                 slice.iter().advance(|&p| walk_pat(p, |p| it(p))) &&
                 after.iter().advance(|&p| walk_pat(p, |p| it(p)))
         }
-        pat_wild | pat_lit(_) | pat_range(_, _) | pat_ident(_, _, _) |
-        pat_enum(_, _) => {
+        PatWild | PatLit(_) | PatRange(_, _) | PatIdent(_, _, _) |
+        PatEnum(_, _) => {
             true
         }
     }
 }
 
 pub trait EachViewItem {
-    fn each_view_item(&self, f: @fn(&ast::view_item) -> bool) -> bool;
+    fn each_view_item(&self, f: &fn(&ast::view_item) -> bool) -> bool;
 }
 
-struct EachViewItemData {
-    callback: @fn(&ast::view_item) -> bool,
+struct EachViewItemData<'self> {
+    callback: &'self fn(&ast::view_item) -> bool,
 }
 
-impl SimpleVisitor for EachViewItemData {
-    fn visit_mod(@mut self, _: &_mod, _: span, _: NodeId) {
-        // XXX: Default method.
-    }
-    fn visit_view_item(@mut self, view_item: &view_item) {
+impl<'self> Visitor<()> for EachViewItemData<'self> {
+    fn visit_view_item(&mut self, view_item: &ast::view_item, _: ()) {
         let _ = (self.callback)(view_item);
-    }
-    fn visit_foreign_item(@mut self, _: @foreign_item) {
-        // XXX: Default method.
-    }
-    fn visit_item(@mut self, _: @item) {
-        // XXX: Default method.
-    }
-    fn visit_local(@mut self, _: @Local) {
-        // XXX: Default method.
-    }
-    fn visit_block(@mut self, _: &Block) {
-        // XXX: Default method.
-    }
-    fn visit_stmt(@mut self, _: @stmt) {
-        // XXX: Default method.
-    }
-    fn visit_arm(@mut self, _: &arm) {
-        // XXX: Default method.
-    }
-    fn visit_pat(@mut self, _: @pat) {
-        // XXX: Default method.
-    }
-    fn visit_decl(@mut self, _: @decl) {
-        // XXX: Default method.
-    }
-    fn visit_expr(@mut self, _: @expr) {
-        // XXX: Default method.
-    }
-    fn visit_expr_post(@mut self, _: @expr) {
-        // XXX: Default method.
-    }
-    fn visit_ty(@mut self, _: &Ty) {
-        // XXX: Default method.
-    }
-    fn visit_generics(@mut self, _: &Generics) {
-        // XXX: Default method.
-    }
-    fn visit_fn(@mut self,
-                _: &visit::fn_kind,
-                _: &fn_decl,
-                _: &Block,
-                _: span,
-                _: NodeId) {
-        // XXX: Default method.
-    }
-    fn visit_ty_method(@mut self, _: &TypeMethod) {
-        // XXX: Default method.
-    }
-    fn visit_trait_method(@mut self, _: &trait_method) {
-        // XXX: Default method.
-    }
-    fn visit_struct_def(@mut self,
-                        _: @struct_def,
-                        _: ident,
-                        _: &Generics,
-                        _: NodeId) {
-        // XXX: Default method.
-    }
-    fn visit_struct_field(@mut self, _: @struct_field) {
-        // XXX: Default method.
-    }
-    fn visit_struct_method(@mut self, _: @method) {
-        // XXX: Default method.
     }
 }
 
 impl EachViewItem for ast::Crate {
-    fn each_view_item(&self, f: @fn(&ast::view_item) -> bool) -> bool {
-        let data = @mut EachViewItemData {
+    fn each_view_item(&self, f: &fn(&ast::view_item) -> bool) -> bool {
+        let mut visit = EachViewItemData {
             callback: f,
         };
-        let visitor = @mut SimpleVisitorVisitor {
-            simple_visitor: data as @mut SimpleVisitor,
-        };
-        visit::visit_crate(visitor as @mut Visitor<()>, self, ());
+        visit::walk_crate(&mut visit, self, ());
         true
     }
 }
@@ -806,17 +725,14 @@ pub enum Privacy {
 
 /// Returns true if the given pattern consists solely of an identifier
 /// and false otherwise.
-pub fn pat_is_ident(pat: @ast::pat) -> bool {
+pub fn pat_is_ident(pat: @ast::Pat) -> bool {
     match pat.node {
-        ast::pat_ident(*) => true,
+        ast::PatIdent(*) => true,
         _ => false,
     }
 }
 
 // HYGIENE FUNCTIONS
-
-/// Construct an identifier with the given name and an empty context:
-pub fn new_ident(name: Name) -> ident { ident {name: name, ctxt: 0}}
 
 /// Extend a syntax context with a given mark
 pub fn new_mark(m:Mrk, tail:SyntaxContext) -> SyntaxContext {
@@ -848,13 +764,13 @@ pub fn new_mark_internal(m:Mrk, tail:SyntaxContext,table:&mut SCTable)
 }
 
 /// Extend a syntax context with a given rename
-pub fn new_rename(id:ident, to:Name, tail:SyntaxContext) -> SyntaxContext {
+pub fn new_rename(id:Ident, to:Name, tail:SyntaxContext) -> SyntaxContext {
     new_rename_internal(id, to, tail, get_sctable())
 }
 
 // Extend a syntax context with a given rename and sctable
 // FIXME #4536 : currently pub to allow testing
-pub fn new_rename_internal(id:ident, to:Name, tail:SyntaxContext, table: &mut SCTable)
+pub fn new_rename_internal(id:Ident, to:Name, tail:SyntaxContext, table: &mut SCTable)
     -> SyntaxContext {
     let key = (tail,id,to);
     // FIXME #5074
@@ -887,7 +803,7 @@ pub fn new_sctable_internal() -> SCTable {
 
 // fetch the SCTable from TLS, create one if it doesn't yet exist.
 pub fn get_sctable() -> @mut SCTable {
-    static sctable_key: local_data::Key<@@mut SCTable> = &local_data::Key;
+    local_data_key!(sctable_key: @@mut SCTable)
     match local_data::get(sctable_key, |k| k.map_move(|k| *k)) {
         None => {
             let new_table = @@mut new_sctable_internal();
@@ -898,6 +814,15 @@ pub fn get_sctable() -> @mut SCTable {
     }
 }
 
+/// print out an SCTable for debugging
+pub fn display_sctable(table : &SCTable) {
+    error!("SC table:");
+    for (idx,val) in table.table.iter().enumerate() {
+        error!("%4u : %?",idx,val);
+    }
+}
+
+
 /// Add a value to the end of a vec, return its index
 fn idx_push<T>(vec: &mut ~[T], val: T) -> uint {
     vec.push(val);
@@ -905,35 +830,76 @@ fn idx_push<T>(vec: &mut ~[T], val: T) -> uint {
 }
 
 /// Resolve a syntax object to a name, per MTWT.
-pub fn resolve(id : ident) -> Name {
-    resolve_internal(id, get_sctable())
+pub fn mtwt_resolve(id : Ident) -> Name {
+    resolve_internal(id, get_sctable(), get_resolve_table())
+}
+
+// FIXME #4536: must be pub for testing
+pub type ResolveTable = HashMap<(Name,SyntaxContext),Name>;
+
+// okay, I admit, putting this in TLS is not so nice:
+// fetch the SCTable from TLS, create one if it doesn't yet exist.
+pub fn get_resolve_table() -> @mut ResolveTable {
+    local_data_key!(resolve_table_key: @@mut ResolveTable)
+    match local_data::get(resolve_table_key, |k| k.map(|&k| *k)) {
+        None => {
+            let new_table = @@mut HashMap::new();
+            local_data::set(resolve_table_key,new_table);
+            *new_table
+        },
+        Some(intr) => *intr
+    }
 }
 
 // Resolve a syntax object to a name, per MTWT.
+// adding memoization to possibly resolve 500+ seconds in resolve for librustc (!)
 // FIXME #4536 : currently pub to allow testing
-pub fn resolve_internal(id : ident, table : &mut SCTable) -> Name {
-    match table.table[id.ctxt] {
-        EmptyCtxt => id.name,
-        // ignore marks here:
-        Mark(_,subctxt) => resolve_internal(ident{name:id.name, ctxt: subctxt},table),
-        // do the rename if necessary:
-        Rename(ident{name,ctxt},toname,subctxt) => {
-            // this could be cached or computed eagerly:
-            let resolvedfrom = resolve_internal(ident{name:name,ctxt:ctxt},table);
-            let resolvedthis = resolve_internal(ident{name:id.name,ctxt:subctxt},table);
-            if ((resolvedthis == resolvedfrom)
-                && (marksof(ctxt,resolvedthis,table)
-                    == marksof(subctxt,resolvedthis,table))) {
-                toname
-            } else {
-                resolvedthis
-            }
+pub fn resolve_internal(id : Ident,
+                        table : &mut SCTable,
+                        resolve_table : &mut ResolveTable) -> Name {
+    let key = (id.name,id.ctxt);
+    match resolve_table.contains_key(&key) {
+        false => {
+            let resolved = {
+                match table.table[id.ctxt] {
+                    EmptyCtxt => id.name,
+                    // ignore marks here:
+                    Mark(_,subctxt) =>
+                        resolve_internal(Ident{name:id.name, ctxt: subctxt},table,resolve_table),
+                    // do the rename if necessary:
+                    Rename(Ident{name,ctxt},toname,subctxt) => {
+                        let resolvedfrom =
+                            resolve_internal(Ident{name:name,ctxt:ctxt},table,resolve_table);
+                        let resolvedthis =
+                            resolve_internal(Ident{name:id.name,ctxt:subctxt},table,resolve_table);
+                        if ((resolvedthis == resolvedfrom)
+                            && (marksof(ctxt,resolvedthis,table)
+                                == marksof(subctxt,resolvedthis,table))) {
+                            toname
+                        } else {
+                            resolvedthis
+                        }
+                    }
+                    IllegalCtxt() => fail!(~"expected resolvable context, got IllegalCtxt")
+                }
+            };
+            resolve_table.insert(key,resolved);
+            resolved
         }
-        IllegalCtxt() => fail!(~"expected resolvable context, got IllegalCtxt")
+        true => {
+            // it's guaranteed to be there, because we just checked that it was
+            // there and we never remove anything from the table:
+            *(resolve_table.find(&key).unwrap())
+        }
     }
 }
 
 /// Compute the marks associated with a syntax context.
+pub fn mtwt_marksof(ctxt: SyntaxContext, stopname: Name) -> ~[Mrk] {
+    marksof(ctxt, stopname, get_sctable())
+}
+
+// the internal function for computing marks
 // it's not clear to me whether it's better to use a [] mutable
 // vector or a cons-list for this.
 pub fn marksof(ctxt: SyntaxContext, stopname: Name, table: &SCTable) -> ~[Mrk] {
@@ -960,6 +926,16 @@ pub fn marksof(ctxt: SyntaxContext, stopname: Name, table: &SCTable) -> ~[Mrk] {
     }
 }
 
+/// Return the outer mark for a context with a mark at the outside.
+/// FAILS when outside is not a mark.
+pub fn mtwt_outer_mark(ctxt: SyntaxContext) -> Mrk {
+    let sctable = get_sctable();
+    match sctable.table[ctxt] {
+        ast::Mark(mrk,_) => mrk,
+        _ => fail!("can't retrieve outer mark when outside is not a mark")
+    }
+}
+
 /// Push a name... unless it matches the one on top, in which
 /// case pop and discard (so two of the same marks cancel)
 pub fn xorPush(marks: &mut ~[uint], mark: uint) {
@@ -976,24 +952,55 @@ pub fn getLast(arr: &~[Mrk]) -> uint {
     *arr.last()
 }
 
-
-pub trait HasDefaultArgs {
-	fn num_trailing_defaults(self)->uint;
+// are two paths equal when compared unhygienically?
+// since I'm using this to replace ==, it seems appropriate
+// to compare the span, global, etc. fields as well.
+pub fn path_name_eq(a : &ast::Path, b : &ast::Path) -> bool {
+    (a.span == b.span)
+    && (a.global == b.global)
+    && (segments_name_eq(a.segments, b.segments))
 }
 
-impl<'self> HasDefaultArgs for &'self [ast::arg] {
-	fn num_trailing_defaults(self)->uint {
-		self.rev_iter().take_while( |a|{a.default.is_some()} ).len()
-	}
+// are two arrays of segments equal when compared unhygienically?
+pub fn segments_name_eq(a : &[ast::PathSegment], b : &[ast::PathSegment]) -> bool {
+    if (a.len() != b.len()) {
+        false
+    } else {
+        for (idx,seg) in a.iter().enumerate() {
+            if (seg.identifier.name != b[idx].identifier.name)
+                // FIXME #7743: ident -> name problems in lifetime comparison?
+                || (seg.lifetime != b[idx].lifetime)
+                // can types contain idents?
+                || (seg.types != b[idx].types) {
+                return false;
+            }
+        }
+        true
+    }
 }
-
-
 
 #[cfg(test)]
 mod test {
     use ast::*;
     use super::*;
     use std::io;
+    use opt_vec;
+    use std::hash::HashMap;
+
+    fn ident_to_segment(id : &Ident) -> PathSegment {
+        PathSegment{identifier:id.clone(), lifetime: None, types: opt_vec::Empty}
+    }
+
+    #[test] fn idents_name_eq_test() {
+        assert!(segments_name_eq([Ident{name:3,ctxt:4},
+                                   Ident{name:78,ctxt:82}].map(ident_to_segment),
+                                 [Ident{name:3,ctxt:104},
+                                   Ident{name:78,ctxt:182}].map(ident_to_segment)));
+        assert!(!segments_name_eq([Ident{name:3,ctxt:4},
+                                    Ident{name:78,ctxt:82}].map(ident_to_segment),
+                                  [Ident{name:3,ctxt:104},
+                                    Ident{name:77,ctxt:182}].map(ident_to_segment)));
+    }
 
     #[test] fn xorpush_test () {
         let mut s = ~[];
@@ -1015,12 +1022,12 @@ mod test {
 
     // convert a list of uints to an @[ident]
     // (ignores the interner completely)
-    fn uints_to_idents (uints: &~[uint]) -> @~[ident] {
-        @uints.map(|u| ident {name:*u, ctxt: empty_ctxt})
+    fn uints_to_idents (uints: &~[uint]) -> @~[Ident] {
+        @uints.map(|u| Ident {name:*u, ctxt: EMPTY_CTXT})
     }
 
-    fn id (u : uint, s: SyntaxContext) -> ident {
-        ident{name:u, ctxt: s}
+    fn id (u : uint, s: SyntaxContext) -> Ident {
+        Ident{name:u, ctxt: s}
     }
 
     // because of the SCTable, I now need a tidy way of
@@ -1028,7 +1035,7 @@ mod test {
     #[deriving(Clone, Eq)]
     enum TestSC {
         M(Mrk),
-        R(ident,Name)
+        R(Ident,Name)
     }
 
     // unfold a vector of TestSC values into a SCTable,
@@ -1066,7 +1073,7 @@ mod test {
         let mut t = new_sctable_internal();
 
         let test_sc = ~[M(3),R(id(101,0),14),M(9)];
-        assert_eq!(unfold_test_sc(test_sc.clone(),empty_ctxt,&mut t),4);
+        assert_eq!(unfold_test_sc(test_sc.clone(),EMPTY_CTXT,&mut t),4);
         assert_eq!(t.table[2],Mark(9,0));
         assert_eq!(t.table[3],Rename(id(101,0),14,2));
         assert_eq!(t.table[4],Mark(3,3));
@@ -1083,7 +1090,7 @@ mod test {
     #[test] fn unfold_marks_test() {
         let mut t = new_sctable_internal();
 
-        assert_eq!(unfold_marks(~[3,7],empty_ctxt,&mut t),3);
+        assert_eq!(unfold_marks(~[3,7],EMPTY_CTXT,&mut t),3);
         assert_eq!(t.table[2],Mark(7,0));
         assert_eq!(t.table[3],Mark(3,2));
     }
@@ -1092,31 +1099,31 @@ mod test {
         let stopname = 242;
         let name1 = 243;
         let mut t = new_sctable_internal();
-        assert_eq!(marksof (empty_ctxt,stopname,&t),~[]);
+        assert_eq!(marksof (EMPTY_CTXT,stopname,&t),~[]);
         // FIXME #5074: ANF'd to dodge nested calls
-        { let ans = unfold_marks(~[4,98],empty_ctxt,&mut t);
+        { let ans = unfold_marks(~[4,98],EMPTY_CTXT,&mut t);
          assert_eq! (marksof (ans,stopname,&t),~[4,98]);}
         // does xoring work?
-        { let ans = unfold_marks(~[5,5,16],empty_ctxt,&mut t);
+        { let ans = unfold_marks(~[5,5,16],EMPTY_CTXT,&mut t);
          assert_eq! (marksof (ans,stopname,&t), ~[16]);}
         // does nested xoring work?
-        { let ans = unfold_marks(~[5,10,10,5,16],empty_ctxt,&mut t);
+        { let ans = unfold_marks(~[5,10,10,5,16],EMPTY_CTXT,&mut t);
          assert_eq! (marksof (ans, stopname,&t), ~[16]);}
         // rename where stop doesn't match:
         { let chain = ~[M(9),
                         R(id(name1,
-                             new_mark_internal (4, empty_ctxt,&mut t)),
+                             new_mark_internal (4, EMPTY_CTXT,&mut t)),
                           100101102),
                         M(14)];
-         let ans = unfold_test_sc(chain,empty_ctxt,&mut t);
+         let ans = unfold_test_sc(chain,EMPTY_CTXT,&mut t);
          assert_eq! (marksof (ans, stopname, &t), ~[9,14]);}
         // rename where stop does match
-        { let name1sc = new_mark_internal(4, empty_ctxt, &mut t);
+        { let name1sc = new_mark_internal(4, EMPTY_CTXT, &mut t);
          let chain = ~[M(9),
                        R(id(name1, name1sc),
                          stopname),
                        M(14)];
-         let ans = unfold_test_sc(chain,empty_ctxt,&mut t);
+         let ans = unfold_test_sc(chain,EMPTY_CTXT,&mut t);
          assert_eq! (marksof (ans, stopname, &t), ~[9]); }
     }
 
@@ -1124,59 +1131,78 @@ mod test {
     #[test] fn resolve_tests () {
         let a = 40;
         let mut t = new_sctable_internal();
+        let mut rt = HashMap::new();
         // - ctxt is MT
-        assert_eq!(resolve_internal(id(a,empty_ctxt),&mut t),a);
+        assert_eq!(resolve_internal(id(a,EMPTY_CTXT),&mut t, &mut rt),a);
         // - simple ignored marks
-        { let sc = unfold_marks(~[1,2,3],empty_ctxt,&mut t);
-         assert_eq!(resolve_internal(id(a,sc),&mut t),a);}
+        { let sc = unfold_marks(~[1,2,3],EMPTY_CTXT,&mut t);
+         assert_eq!(resolve_internal(id(a,sc),&mut t, &mut rt),a);}
         // - orthogonal rename where names don't match
-        { let sc = unfold_test_sc(~[R(id(50,empty_ctxt),51),M(12)],empty_ctxt,&mut t);
-         assert_eq!(resolve_internal(id(a,sc),&mut t),a);}
+        { let sc = unfold_test_sc(~[R(id(50,EMPTY_CTXT),51),M(12)],EMPTY_CTXT,&mut t);
+         assert_eq!(resolve_internal(id(a,sc),&mut t, &mut rt),a);}
         // - rename where names do match, but marks don't
-        { let sc1 = new_mark_internal(1,empty_ctxt,&mut t);
+        { let sc1 = new_mark_internal(1,EMPTY_CTXT,&mut t);
          let sc = unfold_test_sc(~[R(id(a,sc1),50),
                                    M(1),
                                    M(2)],
-                                 empty_ctxt,&mut t);
-        assert_eq!(resolve_internal(id(a,sc),&mut t), a);}
+                                 EMPTY_CTXT,&mut t);
+        assert_eq!(resolve_internal(id(a,sc),&mut t, &mut rt), a);}
         // - rename where names and marks match
-        { let sc1 = unfold_test_sc(~[M(1),M(2)],empty_ctxt,&mut t);
-         let sc = unfold_test_sc(~[R(id(a,sc1),50),M(1),M(2)],empty_ctxt,&mut t);
-         assert_eq!(resolve_internal(id(a,sc),&mut t), 50); }
+        { let sc1 = unfold_test_sc(~[M(1),M(2)],EMPTY_CTXT,&mut t);
+         let sc = unfold_test_sc(~[R(id(a,sc1),50),M(1),M(2)],EMPTY_CTXT,&mut t);
+         assert_eq!(resolve_internal(id(a,sc),&mut t, &mut rt), 50); }
         // - rename where names and marks match by literal sharing
-        { let sc1 = unfold_test_sc(~[M(1),M(2)],empty_ctxt,&mut t);
+        { let sc1 = unfold_test_sc(~[M(1),M(2)],EMPTY_CTXT,&mut t);
          let sc = unfold_test_sc(~[R(id(a,sc1),50)],sc1,&mut t);
-         assert_eq!(resolve_internal(id(a,sc),&mut t), 50); }
+         assert_eq!(resolve_internal(id(a,sc),&mut t, &mut rt), 50); }
         // - two renames of the same var.. can only happen if you use
         // local-expand to prevent the inner binding from being renamed
         // during the rename-pass caused by the first:
         io::println("about to run bad test");
-        { let sc = unfold_test_sc(~[R(id(a,empty_ctxt),50),
-                                    R(id(a,empty_ctxt),51)],
-                                  empty_ctxt,&mut t);
-         assert_eq!(resolve_internal(id(a,sc),&mut t), 51); }
+        { let sc = unfold_test_sc(~[R(id(a,EMPTY_CTXT),50),
+                                    R(id(a,EMPTY_CTXT),51)],
+                                  EMPTY_CTXT,&mut t);
+         assert_eq!(resolve_internal(id(a,sc),&mut t, &mut rt), 51); }
         // the simplest double-rename:
-        { let a_to_a50 = new_rename_internal(id(a,empty_ctxt),50,empty_ctxt,&mut t);
+        { let a_to_a50 = new_rename_internal(id(a,EMPTY_CTXT),50,EMPTY_CTXT,&mut t);
          let a50_to_a51 = new_rename_internal(id(a,a_to_a50),51,a_to_a50,&mut t);
-         assert_eq!(resolve_internal(id(a,a50_to_a51),&mut t),51);
+         assert_eq!(resolve_internal(id(a,a50_to_a51),&mut t, &mut rt),51);
          // mark on the outside doesn't stop rename:
          let sc = new_mark_internal(9,a50_to_a51,&mut t);
-         assert_eq!(resolve_internal(id(a,sc),&mut t),51);
+         assert_eq!(resolve_internal(id(a,sc),&mut t, &mut rt),51);
          // but mark on the inside does:
          let a50_to_a51_b = unfold_test_sc(~[R(id(a,a_to_a50),51),
                                               M(9)],
                                            a_to_a50,
                                            &mut t);
-         assert_eq!(resolve_internal(id(a,a50_to_a51_b),&mut t),50);}
+         assert_eq!(resolve_internal(id(a,a50_to_a51_b),&mut t, &mut rt),50);}
     }
+
+    #[test] fn mtwt_resolve_test(){
+        let a = 40;
+        assert_eq!(mtwt_resolve(id(a,EMPTY_CTXT)),a);
+    }
+
 
     #[test] fn hashing_tests () {
         let mut t = new_sctable_internal();
-        assert_eq!(new_mark_internal(12,empty_ctxt,&mut t),2);
-        assert_eq!(new_mark_internal(13,empty_ctxt,&mut t),3);
+        assert_eq!(new_mark_internal(12,EMPTY_CTXT,&mut t),2);
+        assert_eq!(new_mark_internal(13,EMPTY_CTXT,&mut t),3);
         // using the same one again should result in the same index:
-        assert_eq!(new_mark_internal(12,empty_ctxt,&mut t),2);
+        assert_eq!(new_mark_internal(12,EMPTY_CTXT,&mut t),2);
         // I'm assuming that the rename table will behave the same....
+    }
+
+    #[test] fn resolve_table_hashing_tests() {
+        let mut t = new_sctable_internal();
+        let mut rt = HashMap::new();
+        assert_eq!(rt.len(),0);
+        resolve_internal(id(30,EMPTY_CTXT),&mut t, &mut rt);
+        assert_eq!(rt.len(),1);
+        resolve_internal(id(39,EMPTY_CTXT),&mut t, &mut rt);
+        assert_eq!(rt.len(),2);
+        resolve_internal(id(30,EMPTY_CTXT),&mut t, &mut rt);
+        assert_eq!(rt.len(),2);
     }
 
 }

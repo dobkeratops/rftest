@@ -52,7 +52,6 @@ use util;
 #[cfg(test)] use ptr;
 #[cfg(test)] use task;
 
-mod local_data_priv;
 pub mod spawn;
 
 /**
@@ -365,7 +364,7 @@ impl TaskBuilder {
         spawn::spawn_raw(opts, f);
     }
 
-    /// Runs a task, while transfering ownership of one argument to the child.
+    /// Runs a task, while transferring ownership of one argument to the child.
     pub fn spawn_with<A:Send>(&mut self, arg: A, f: ~fn(v: A)) {
         let arg = Cell::new(arg);
         do self.spawn {
@@ -474,10 +473,10 @@ pub fn spawn_indestructible(f: ~fn()) {
 
 pub fn spawn_with<A:Send>(arg: A, f: ~fn(v: A)) {
     /*!
-     * Runs a task, while transfering ownership of one argument to the
+     * Runs a task, while transferring ownership of one argument to the
      * child.
      *
-     * This is useful for transfering ownership of noncopyables to
+     * This is useful for transferring ownership of noncopyables to
      * another task.
      *
      * This function is equivalent to `task().spawn_with(arg, f)`.
@@ -526,7 +525,7 @@ pub fn with_task_name<U>(blk: &fn(Option<&str>) -> U) -> U {
     use rt::task::Task;
 
     if in_green_task_context() {
-        do Local::borrow::<Task, U> |task| {
+        do Local::borrow |task: &mut Task| {
             match task.name {
                 Some(ref name) => blk(Some(name.as_slice())),
                 None => blk(None)
@@ -537,15 +536,15 @@ pub fn with_task_name<U>(blk: &fn(Option<&str>) -> U) -> U {
     }
 }
 
-pub fn yield() {
+pub fn deschedule() {
     //! Yield control to the task scheduler
 
     use rt::local::Local;
     use rt::sched::Scheduler;
 
-    // XXX: What does yield really mean in newsched?
+    // FIXME #6842: What does yield really mean in newsched?
     // FIXME(#7544): Optimize this, since we know we won't block.
-    let sched = Local::take::<Scheduler>();
+    let sched: ~Scheduler = Local::take();
     do sched.deschedule_running_task_and_then |sched, task| {
         sched.enqueue_blocked_task(task);
     }
@@ -556,7 +555,7 @@ pub fn failing() -> bool {
 
     use rt::task::Task;
 
-    do Local::borrow::<Task, bool> |local| {
+    do Local::borrow |local: &mut Task| {
         local.unwinder.unwinding
     }
 }
@@ -568,10 +567,10 @@ pub fn failing() -> bool {
  *
  * ~~~
  * do task::unkillable {
- *     // detach / yield / destroy must all be called together
+ *     // detach / deschedule / destroy must all be called together
  *     rustrt::rust_port_detach(po);
  *     // This must not result in the current task being killed
- *     task::yield();
+ *     task::deschedule();
  *     rustrt::rust_port_destroy(po);
  * }
  * ~~~
@@ -582,7 +581,7 @@ pub fn unkillable<U>(f: &fn() -> U) -> U {
     unsafe {
         if in_green_task_context() {
             // The inhibits/allows might fail and need to borrow the task.
-            let t = Local::unsafe_borrow::<Task>();
+            let t: *mut Task = Local::unsafe_borrow();
             do (|| {
                 (*t).death.inhibit_kill((*t).unwinder.unwinding);
                 f()
@@ -597,26 +596,41 @@ pub fn unkillable<U>(f: &fn() -> U) -> U {
     }
 }
 
-/// The inverse of unkillable. Only ever to be used nested in unkillable().
-pub unsafe fn rekillable<U>(f: &fn() -> U) -> U {
+/**
+ * Makes killable a task marked as unkillable. This
+ * is meant to be used only nested in unkillable.
+ *
+ * # Example
+ *
+ * ~~~
+ * do task::unkillable {
+ *     do task::rekillable {
+ *          // Task is killable
+ *     }
+ *    // Task is unkillable again
+ * }
+ */
+pub fn rekillable<U>(f: &fn() -> U) -> U {
     use rt::task::Task;
 
-    if in_green_task_context() {
-        let t = Local::unsafe_borrow::<Task>();
-        do (|| {
-            (*t).death.allow_kill((*t).unwinder.unwinding);
+    unsafe {
+        if in_green_task_context() {
+            let t: *mut Task = Local::unsafe_borrow();
+            do (|| {
+                (*t).death.allow_kill((*t).unwinder.unwinding);
+                f()
+            }).finally {
+                (*t).death.inhibit_kill((*t).unwinder.unwinding);
+            }
+        } else {
+            // FIXME(#3095): As in unkillable().
             f()
-        }).finally {
-            (*t).death.inhibit_kill((*t).unwinder.unwinding);
         }
-    } else {
-        // FIXME(#3095): As in unkillable().
-        f()
     }
 }
 
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_kill_unkillable_task() {
     use rt::test::*;
 
@@ -636,8 +650,8 @@ fn test_kill_unkillable_task() {
     }
 }
 
-#[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
+#[ignore(cfg(windows))]
 fn test_kill_rekillable_task() {
     use rt::test::*;
 
@@ -646,17 +660,47 @@ fn test_kill_rekillable_task() {
     do run_in_newsched_task {
         do task::try {
             do task::unkillable {
-                unsafe {
-                    do task::rekillable {
-                        do task::spawn {
-                            fail!();
-                        }
+                do task::rekillable {
+                    do task::spawn {
+                        fail!();
                     }
                 }
             }
         };
     }
 }
+
+#[test]
+#[should_fail]
+#[ignore(cfg(windows))]
+fn test_rekillable_not_nested() {
+    do rekillable {
+        // This should fail before
+        // receiving anything since
+        // this block should be nested
+        // into a unkillable block.
+        deschedule();
+    }
+}
+
+
+#[test]
+#[ignore(cfg(windows))]
+fn test_rekillable_nested_failure() {
+
+    let result = do task::try {
+        do unkillable {
+            do rekillable {
+                let (port,chan) = comm::stream();
+                do task::spawn { chan.send(()); fail!(); }
+                port.recv(); // wait for child to exist
+                port.recv(); // block forever, expect to get killed.
+            }
+        }
+    };
+    assert!(result.is_err());
+}
+
 
 #[test] #[should_fail] #[ignore(cfg(windows))]
 fn test_cant_dup_task_builder() {
@@ -679,7 +723,7 @@ fn test_cant_dup_task_builder() {
 fn block_forever() { let (po, _ch) = stream::<()>(); po.recv(); }
 
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_unlinked_unsup_no_fail_down() { // grandchild sends on a port
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -689,7 +733,7 @@ fn test_spawn_unlinked_unsup_no_fail_down() { // grandchild sends on a port
             let ch = ch.clone();
             do spawn_unlinked {
                 // Give middle task a chance to fail-but-not-kill-us.
-                do 16.times { task::yield(); }
+                do 16.times { task::deschedule(); }
                 ch.send(()); // If killed first, grandparent hangs.
             }
             fail!(); // Shouldn't kill either (grand)parent or (grand)child.
@@ -698,7 +742,7 @@ fn test_spawn_unlinked_unsup_no_fail_down() { // grandchild sends on a port
     }
 }
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_unlinked_unsup_no_fail_up() { // child unlinked fails
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -706,17 +750,17 @@ fn test_spawn_unlinked_unsup_no_fail_up() { // child unlinked fails
     }
 }
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_unlinked_sup_no_fail_up() { // child unlinked fails
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
         do spawn_supervised { fail!(); }
         // Give child a chance to fail-but-not-kill-us.
-        do 16.times { task::yield(); }
+        do 16.times { task::deschedule(); }
     }
 }
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_unlinked_sup_fail_down() {
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -729,7 +773,7 @@ fn test_spawn_unlinked_sup_fail_down() {
 }
 
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_linked_sup_fail_up() { // child fails; parent fails
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -750,7 +794,7 @@ fn test_spawn_linked_sup_fail_up() { // child fails; parent fails
     }
 }
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_linked_sup_fail_down() { // parent fails; child fails
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -767,7 +811,7 @@ fn test_spawn_linked_sup_fail_down() { // parent fails; child fails
     }
 }
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_linked_unsup_fail_up() { // child fails; parent fails
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -780,7 +824,7 @@ fn test_spawn_linked_unsup_fail_up() { // child fails; parent fails
     }
 }
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_linked_unsup_fail_down() { // parent fails; child fails
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -793,7 +837,7 @@ fn test_spawn_linked_unsup_fail_down() { // parent fails; child fails
     }
 }
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_linked_unsup_default_opts() { // parent fails; child fails
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -812,7 +856,7 @@ fn test_spawn_linked_unsup_default_opts() { // parent fails; child fails
 // when the middle task exits successfully early before kill signals are sent.
 
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_failure_propagate_grandchild() {
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -821,7 +865,7 @@ fn test_spawn_failure_propagate_grandchild() {
             do spawn_supervised {
                 do spawn_supervised { block_forever(); }
             }
-            do 16.times { task::yield(); }
+            do 16.times { task::deschedule(); }
             fail!();
         };
         assert!(result.is_err());
@@ -829,7 +873,7 @@ fn test_spawn_failure_propagate_grandchild() {
 }
 
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_failure_propagate_secondborn() {
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -838,7 +882,7 @@ fn test_spawn_failure_propagate_secondborn() {
             do spawn_supervised {
                 do spawn { block_forever(); } // linked
             }
-            do 16.times { task::yield(); }
+            do 16.times { task::deschedule(); }
             fail!();
         };
         assert!(result.is_err());
@@ -846,7 +890,7 @@ fn test_spawn_failure_propagate_secondborn() {
 }
 
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_failure_propagate_nephew_or_niece() {
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -855,7 +899,7 @@ fn test_spawn_failure_propagate_nephew_or_niece() {
             do spawn { // linked
                 do spawn_supervised { block_forever(); }
             }
-            do 16.times { task::yield(); }
+            do 16.times { task::deschedule(); }
             fail!();
         };
         assert!(result.is_err());
@@ -863,7 +907,7 @@ fn test_spawn_failure_propagate_nephew_or_niece() {
 }
 
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_linked_sup_propagate_sibling() {
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -872,7 +916,7 @@ fn test_spawn_linked_sup_propagate_sibling() {
             do spawn { // linked
                 do spawn { block_forever(); } // linked
             }
-            do 16.times { task::yield(); }
+            do 16.times { task::deschedule(); }
             fail!();
         };
         assert!(result.is_err());
@@ -941,7 +985,6 @@ fn test_add_wrapper() {
 }
 
 #[test]
-#[ignore(cfg(windows))]
 fn test_future_result() {
     let mut result = None;
     let mut builder = task();
@@ -959,7 +1002,7 @@ fn test_future_result() {
     assert_eq!(result.unwrap().recv(), Failure);
 }
 
-#[test] #[should_fail] #[ignore(cfg(windows))]
+#[test] #[should_fail]
 fn test_back_to_the_future_result() {
     let mut builder = task();
     builder.future_result(util::ignore);
@@ -977,7 +1020,6 @@ fn test_try_success() {
 }
 
 #[test]
-#[ignore(cfg(windows))]
 fn test_try_fail() {
     match do try {
         fail!()
@@ -989,7 +1031,7 @@ fn test_try_fail() {
 
 #[cfg(test)]
 fn get_sched_id() -> int {
-    do Local::borrow::<::rt::sched::Scheduler, int> |sched| {
+    do Local::borrow |sched: &mut ::rt::sched::Scheduler| {
         sched.sched_id() as int
     }
 }
@@ -1045,15 +1087,12 @@ fn test_spawn_sched_childs_on_default_sched() {
 mod testrt {
     use libc;
 
-    #[nolink]
-    extern {
-        pub fn rust_dbg_lock_create() -> *libc::c_void;
-        pub fn rust_dbg_lock_destroy(lock: *libc::c_void);
-        pub fn rust_dbg_lock_lock(lock: *libc::c_void);
-        pub fn rust_dbg_lock_unlock(lock: *libc::c_void);
-        pub fn rust_dbg_lock_wait(lock: *libc::c_void);
-        pub fn rust_dbg_lock_signal(lock: *libc::c_void);
-    }
+    externfn!(fn rust_dbg_lock_create() -> *libc::c_void)
+    externfn!(fn rust_dbg_lock_destroy(lock: *libc::c_void))
+    externfn!(fn rust_dbg_lock_lock(lock: *libc::c_void))
+    externfn!(fn rust_dbg_lock_unlock(lock: *libc::c_void))
+    externfn!(fn rust_dbg_lock_wait(lock: *libc::c_void))
+    externfn!(fn rust_dbg_lock_signal(lock: *libc::c_void))
 }
 
 #[test]
@@ -1162,19 +1201,18 @@ fn test_avoid_copying_the_body_unlinked() {
 
 #[ignore(reason = "linked failure")]
 #[test]
-#[ignore(cfg(windows))]
 #[should_fail]
 fn test_unkillable() {
     let (po, ch) = stream();
 
     // We want to do this after failing
     do spawn_unlinked {
-        do 10.times { yield() }
+        do 10.times { deschedule() }
         ch.send(());
     }
 
     do spawn {
-        yield();
+        deschedule();
         // We want to fail after the unkillable task
         // blocks on recv
         fail!();
@@ -1198,19 +1236,18 @@ fn test_unkillable() {
 
 #[ignore(reason = "linked failure")]
 #[test]
-#[ignore(cfg(windows))]
 #[should_fail]
 fn test_unkillable_nested() {
     let (po, ch) = comm::stream();
 
     // We want to do this after failing
     do spawn_unlinked || {
-        do 10.times { yield() }
+        do 10.times { deschedule() }
         ch.send(());
     }
 
     do spawn {
-        yield();
+        deschedule();
         // We want to fail after the unkillable task
         // blocks on recv
         fail!();
@@ -1264,7 +1301,7 @@ fn test_simple_newsched_spawn() {
 }
 
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_spawn_watched() {
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -1277,7 +1314,7 @@ fn test_spawn_watched() {
                 t.unlinked();
                 t.watched();
                 do t.spawn {
-                    task::yield();
+                    task::deschedule();
                     fail!();
                 }
             }
@@ -1287,7 +1324,7 @@ fn test_spawn_watched() {
 }
 
 #[ignore(reason = "linked failure")]
-#[test] #[ignore(cfg(windows))]
+#[test]
 fn test_indestructible() {
     use rt::test::run_in_newsched_task;
     do run_in_newsched_task {
@@ -1313,7 +1350,7 @@ fn test_indestructible() {
                 t.unwatched();
                 do t.spawn {
                     p3.recv();
-                    task::yield();
+                    task::deschedule();
                     fail!();
                 }
                 c3.send(());

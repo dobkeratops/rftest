@@ -11,12 +11,14 @@
 /* The compiler code necessary to support the bytes! extension. */
 
 use ast;
-use codemap::span;
+use codemap::Span;
 use ext::base::*;
 use ext::base;
 use ext::build::AstBuilder;
 
-pub fn expand_syntax_ext(cx: @ExtCtxt, sp: span, tts: &[ast::token_tree]) -> base::MacResult {
+use std::char;
+
+pub fn expand_syntax_ext(cx: @ExtCtxt, sp: Span, tts: &[ast::token_tree]) -> base::MacResult {
     // Gather all argument expressions
     let exprs = get_exprs_from_tts(cx, sp, tts);
     let mut bytes = ~[];
@@ -24,47 +26,47 @@ pub fn expand_syntax_ext(cx: @ExtCtxt, sp: span, tts: &[ast::token_tree]) -> bas
     for expr in exprs.iter() {
         match expr.node {
             // expression is a literal
-            ast::expr_lit(lit) => match lit.node {
+            ast::ExprLit(lit) => match lit.node {
                 // string literal, push each byte to vector expression
                 ast::lit_str(s) => {
                     for byte in s.byte_iter() {
-                        bytes.push(cx.expr_u8(sp, byte));
+                        bytes.push(cx.expr_u8(expr.span, byte));
                     }
                 }
 
                 // u8 literal, push to vector expression
                 ast::lit_uint(v, ast::ty_u8) => {
                     if v > 0xFF {
-                        cx.span_err(sp, "Too large u8 literal in bytes!")
+                        cx.span_err(expr.span, "Too large u8 literal in bytes!")
                     } else {
-                        bytes.push(cx.expr_u8(sp, v as u8));
+                        bytes.push(cx.expr_u8(expr.span, v as u8));
                     }
                 }
 
                 // integer literal, push to vector expression
                 ast::lit_int_unsuffixed(v) => {
                     if v > 0xFF {
-                        cx.span_err(sp, "Too large integer literal in bytes!")
+                        cx.span_err(expr.span, "Too large integer literal in bytes!")
                     } else if v < 0 {
-                        cx.span_err(sp, "Negative integer literal in bytes!")
+                        cx.span_err(expr.span, "Negative integer literal in bytes!")
                     } else {
-                        bytes.push(cx.expr_u8(sp, v as u8));
+                        bytes.push(cx.expr_u8(expr.span, v as u8));
                     }
                 }
 
                 // char literal, push to vector expression
-                ast::lit_int(v, ast::ty_char) => {
-                    if (v as char).is_ascii() {
-                        bytes.push(cx.expr_u8(sp, v as u8));
+                ast::lit_char(v) => {
+                    if char::from_u32(v).unwrap().is_ascii() {
+                        bytes.push(cx.expr_u8(expr.span, v as u8));
                     } else {
-                        cx.span_err(sp, "Non-ascii char literal in bytes!")
+                        cx.span_err(expr.span, "Non-ascii char literal in bytes!")
                     }
                 }
 
-                _ => cx.span_err(sp, "Unsupported literal in bytes!")
+                _ => cx.span_err(expr.span, "Unsupported literal in bytes!")
             },
 
-            _ => cx.span_err(sp, "Non-literal in bytes!")
+            _ => cx.span_err(expr.span, "Non-literal in bytes!")
         }
     }
 

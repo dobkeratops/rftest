@@ -31,7 +31,6 @@ use treemap::TreeMap;
 use std::clone::Clone;
 use std::comm::{stream, SharedChan, GenericPort, GenericChan};
 use std::libc;
-use std::either;
 use std::io;
 use std::result;
 use std::task;
@@ -126,8 +125,8 @@ pub type MetricDiff = TreeMap<~str,MetricChange>;
 pub fn test_main(args: &[~str], tests: ~[TestDescAndFn]) {
     let opts =
         match parse_opts(args) {
-          either::Left(o) => o,
-          either::Right(m) => fail!(m)
+            Ok(o) => o,
+            Err(msg) => fail!(msg)
         };
     if !run_tests_console(&opts, tests) { fail!("Some tests failed"); }
 }
@@ -164,10 +163,11 @@ pub struct TestOpts {
     ratchet_metrics: Option<Path>,
     ratchet_noise_percent: Option<f64>,
     save_metrics: Option<Path>,
+    test_shard: Option<(uint,uint)>,
     logfile: Option<Path>
 }
 
-type OptRes = Either<TestOpts, ~str>;
+type OptRes = Result<TestOpts, ~str>;
 
 fn optgroups() -> ~[getopts::groups::OptGroup] {
     ~[groups::optflag("", "ignored", "Run ignored tests"),
@@ -184,10 +184,14 @@ fn optgroups() -> ~[getopts::groups::OptGroup] {
                      "Tests within N% of the recorded metrics will be \
                       considered as passing", "PERCENTAGE"),
       groups::optopt("", "logfile", "Write logs to the specified file instead \
-                          of stdout", "PATH")]
+                          of stdout", "PATH"),
+      groups::optopt("", "test-shard", "run shard A, of B shards, worth of the testsuite",
+                     "A.B")]
 }
 
 fn usage(binary: &str, helpstr: &str) -> ! {
+    #[fixed_stack_segment]; #[inline(never)];
+
     let message = fmt!("Usage: %s [OPTIONS] [FILTER]", binary);
     println(groups::usage(message, optgroups()));
     println("");
@@ -197,7 +201,7 @@ The FILTER is matched against the name of all tests to run, and if any tests
 have a substring match, only those tests are run.
 
 By default, all tests are run in parallel. This can be altered with the
-RUST_THREADS environment variable when running tests (set it to 1).
+RUST_TEST_TASKS environment variable when running tests (set it to 1).
 
 Test Attributes:
 
@@ -222,11 +226,11 @@ pub fn parse_opts(args: &[~str]) -> OptRes {
     let matches =
         match groups::getopts(args_, optgroups()) {
           Ok(m) => m,
-          Err(f) => return either::Right(getopts::fail_str(f))
+          Err(f) => return Err(f.to_err_msg())
         };
 
-    if getopts::opt_present(&matches, "h") { usage(args[0], "h"); }
-    if getopts::opt_present(&matches, "help") { usage(args[0], "help"); }
+    if matches.opt_present("h") { usage(args[0], "h"); }
+    if matches.opt_present("help") { usage(args[0], "help"); }
 
     let filter =
         if matches.free.len() > 0 {
@@ -235,23 +239,26 @@ pub fn parse_opts(args: &[~str]) -> OptRes {
             None
         };
 
-    let run_ignored = getopts::opt_present(&matches, "ignored");
+    let run_ignored = matches.opt_present("ignored");
 
-    let logfile = getopts::opt_maybe_str(&matches, "logfile");
+    let logfile = matches.opt_str("logfile");
     let logfile = logfile.map_move(|s| Path(s));
 
-    let run_benchmarks = getopts::opt_present(&matches, "bench");
+    let run_benchmarks = matches.opt_present("bench");
     let run_tests = ! run_benchmarks ||
-        getopts::opt_present(&matches, "test");
+        matches.opt_present("test");
 
-    let ratchet_metrics = getopts::opt_maybe_str(&matches, "ratchet-metrics");
+    let ratchet_metrics = matches.opt_str("ratchet-metrics");
     let ratchet_metrics = ratchet_metrics.map_move(|s| Path(s));
 
-    let ratchet_noise_percent = getopts::opt_maybe_str(&matches, "ratchet-noise-percent");
-    let ratchet_noise_percent = ratchet_noise_percent.map_move(|s| f64::from_str(s).unwrap());
+    let ratchet_noise_percent = matches.opt_str("ratchet-noise-percent");
+    let ratchet_noise_percent = ratchet_noise_percent.map_move(|s| from_str::<f64>(s).unwrap());
 
-    let save_metrics = getopts::opt_maybe_str(&matches, "save-metrics");
+    let save_metrics = matches.opt_str("save-metrics");
     let save_metrics = save_metrics.map_move(|s| Path(s));
+
+    let test_shard = matches.opt_str("test-shard");
+    let test_shard = opt_shard(test_shard);
 
     let test_opts = TestOpts {
         filter: filter,
@@ -261,11 +268,28 @@ pub fn parse_opts(args: &[~str]) -> OptRes {
         ratchet_metrics: ratchet_metrics,
         ratchet_noise_percent: ratchet_noise_percent,
         save_metrics: save_metrics,
+        test_shard: test_shard,
         logfile: logfile
     };
 
-    either::Left(test_opts)
+    Ok(test_opts)
 }
+
+pub fn opt_shard(maybestr: Option<~str>) -> Option<(uint,uint)> {
+    match maybestr {
+        None => None,
+        Some(s) => {
+            match s.split_iter('.').to_owned_vec() {
+                [a, b] => match (from_str::<uint>(a), from_str::<uint>(b)) {
+                    (Some(a), Some(b)) => Some((a,b)),
+                    _ => None
+                },
+                _ => None
+            }
+        }
+    }
+}
+
 
 #[deriving(Clone, Eq)]
 pub struct BenchSamples {
@@ -705,18 +729,20 @@ fn run_tests(opts: &TestOpts,
     }
 }
 
-// Windows tends to dislike being overloaded with threads.
-#[cfg(windows)]
-static SCHED_OVERCOMMIT : uint = 1;
-
-#[cfg(unix)]
-static SCHED_OVERCOMMIT : uint = 4u;
-
 fn get_concurrency() -> uint {
     use std::rt;
-    let threads = rt::util::default_sched_threads();
-    if threads == 1 { 1 }
-    else { threads * SCHED_OVERCOMMIT }
+    match os::getenv("RUST_TEST_TASKS") {
+        Some(s) => {
+            let opt_n: Option<uint> = FromStr::from_str(s);
+            match opt_n {
+                Some(n) if n > 0 => n,
+                _ => fail!("RUST_TEST_TASKS is `%s`, should be a positive integer.", s)
+            }
+        }
+        None => {
+            rt::util::default_sched_threads()
+        }
+    }
 }
 
 pub fn filter_tests(
@@ -770,12 +796,15 @@ pub fn filter_tests(
     }
     sort::quick_sort(filtered, lteq);
 
-    filtered
-}
-
-struct TestFuture {
-    test: TestDesc,
-    wait: @fn() -> TestResult,
+    // Shard the remaining tests, if sharding requested.
+    match opts.test_shard {
+        None => filtered,
+        Some((a,b)) =>
+            filtered.move_iter().enumerate()
+            .filter(|&(i,_)| i % b == a)
+            .map(|(_,t)| t)
+            .to_owned_vec()
+    }
 }
 
 pub fn run_test(force_ignore: bool,
@@ -873,7 +902,7 @@ impl MetricMap {
     /// Write MetricDiff to a file.
     pub fn save(&self, p: &Path) {
         let f = io::file_writer(p, [io::Create, io::Truncate]).unwrap();
-        json::to_pretty_writer(f, &self.to_json());
+        self.to_json().to_pretty_writer(f);
     }
 
     /// Compare against another MetricMap. Optionally compare all
@@ -1119,9 +1148,7 @@ mod tests {
                StaticTestName, DynTestName, DynTestFn};
     use test::{TestOpts, run_test};
 
-    use std::either;
     use std::comm::{stream, SharedChan};
-    use std::vec;
     use tempfile;
     use std::os;
 
@@ -1162,7 +1189,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore(cfg(windows))]
     fn test_should_fail() {
         fn f() { fail!(); }
         let desc = TestDescAndFn {
@@ -1202,8 +1228,8 @@ mod tests {
     fn first_free_arg_should_be_a_filter() {
         let args = ~[~"progname", ~"filter"];
         let opts = match parse_opts(args) {
-          either::Left(o) => o,
-          _ => fail!("Malformed arg in first_free_arg_should_be_a_filter")
+            Ok(o) => o,
+            _ => fail!("Malformed arg in first_free_arg_should_be_a_filter")
         };
         assert!("filter" == opts.filter.clone().unwrap());
     }
@@ -1212,8 +1238,8 @@ mod tests {
     fn parse_ignored_flag() {
         let args = ~[~"progname", ~"filter", ~"--ignored"];
         let opts = match parse_opts(args) {
-          either::Left(o) => o,
-          _ => fail!("Malformed arg in parse_ignored_flag")
+            Ok(o) => o,
+            _ => fail!("Malformed arg in parse_ignored_flag")
         };
         assert!((opts.run_ignored));
     }
@@ -1234,6 +1260,7 @@ mod tests {
             ratchet_noise_percent: None,
             ratchet_metrics: None,
             save_metrics: None,
+            test_shard: None
         };
 
         let tests = ~[
@@ -1272,6 +1299,7 @@ mod tests {
             ratchet_noise_percent: None,
             ratchet_metrics: None,
             save_metrics: None,
+            test_shard: None
         };
 
         let names =
@@ -1309,14 +1337,8 @@ mod tests {
               ~"test::parse_ignored_flag",
               ~"test::sort_tests"];
 
-        let pairs = vec::zip(expected, filtered);
-
-        for p in pairs.iter() {
-            match *p {
-                (ref a, ref b) => {
-                    assert!(*a == b.desc.name.to_str());
-                }
-            }
+        for (a, b) in expected.iter().zip(filtered.iter()) {
+            assert!(*a == b.desc.name.to_str());
         }
     }
 

@@ -22,6 +22,12 @@ pub fn string_to_tts_and_sess (source_str : @str) -> (~[ast::token_tree],@mut Pa
     (filemap_to_tts(ps,string_to_filemap(ps,source_str,@"bogofile")),ps)
 }
 
+// map a string to tts, using a made-up filename:
+pub fn string_to_tts(source_str : @str) -> ~[ast::token_tree] {
+    let (tts,_) = string_to_tts_and_sess(source_str);
+    tts
+}
+
 pub fn string_to_parser_and_sess(source_str: @str) -> (Parser,@mut ParseSess) {
     let ps = new_parse_sess(None);
     (new_parser_from_source_str(ps,~[],@"bogofile",source_str),ps)
@@ -40,14 +46,21 @@ fn with_error_checking_parse<T>(s: @str, f: &fn(&mut Parser) -> T) -> T {
     x
 }
 
+// parse a string, return a crate.
 pub fn string_to_crate (source_str : @str) -> @ast::Crate {
     do with_error_checking_parse(source_str) |p| {
         p.parse_crate_mod()
     }
 }
 
+// parse a string, return a crate and the ParseSess
+pub fn string_to_crate_and_sess (source_str : @str) -> (@ast::Crate,@mut ParseSess) {
+    let (p,ps) = string_to_parser_and_sess(source_str);
+    (p.parse_crate_mod(),ps)
+}
+
 // parse a string, return an expr
-pub fn string_to_expr (source_str : @str) -> @ast::expr {
+pub fn string_to_expr (source_str : @str) -> @ast::Expr {
     do with_error_checking_parse(source_str) |p| {
         p.parse_expr()
     }
@@ -60,16 +73,8 @@ pub fn string_to_item (source_str : @str) -> Option<@ast::item> {
     }
 }
 
-// parse a string, return an item and the ParseSess
-pub fn string_to_item_and_sess (source_str : @str) -> (Option<@ast::item>,@mut ParseSess) {
-    let (p,ps) = string_to_parser_and_sess(source_str);
-    let io = p.parse_item(~[]);
-    p.abort_if_errors();
-    (io,ps)
-}
-
 // parse a string, return a stmt
-pub fn string_to_stmt(source_str : @str) -> @ast::stmt {
+pub fn string_to_stmt(source_str : @str) -> @ast::Stmt {
     do with_error_checking_parse(source_str) |p| {
         p.parse_stmt(~[])
     }
@@ -77,12 +82,12 @@ pub fn string_to_stmt(source_str : @str) -> @ast::stmt {
 
 // parse a string, return a pat. Uses "irrefutable"... which doesn't
 // (currently) affect parsing.
-pub fn string_to_pat(source_str : @str) -> @ast::pat {
+pub fn string_to_pat(source_str : @str) -> @ast::Pat {
     string_to_parser(source_str).parse_pat()
 }
 
 // convert a vector of strings to a vector of ast::idents
-pub fn strs_to_idents(ids: ~[&str]) -> ~[ast::ident] {
+pub fn strs_to_idents(ids: ~[&str]) -> ~[ast::Ident] {
     ids.map(|u| token::str_to_ident(*u))
 }
 

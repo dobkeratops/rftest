@@ -10,6 +10,7 @@
 
 //! Unsafe casting functions
 
+use ptr::RawPtr;
 use sys;
 use unstable::intrinsics;
 
@@ -66,7 +67,10 @@ pub unsafe fn bump_box_refcount<T>(t: @T) { forget(t); }
  *
  * # Example
  *
- *     assert!(transmute("L") == ~[76u8, 0u8]);
+ * ~~~ {.rust}
+ * let v: &[u8] = transmute("L");
+ * assert!(v == [76u8]);
+ * ~~~
  */
 #[inline]
 pub unsafe fn transmute<L, G>(thing: L) -> G {
@@ -91,13 +95,13 @@ pub unsafe fn transmute_region<'a,'b,T>(ptr: &'a T) -> &'b T {
 
 /// Coerce an immutable reference to be mutable.
 #[inline]
-pub unsafe fn transmute_mut_unsafe<T>(ptr: *const T) -> *mut T {
+pub unsafe fn transmute_mut_unsafe<T,P:RawPtr<T>>(ptr: P) -> *mut T {
     transmute(ptr)
 }
 
 /// Coerce an immutable reference to be mutable.
 #[inline]
-pub unsafe fn transmute_immut_unsafe<T>(ptr: *const T) -> *T {
+pub unsafe fn transmute_immut_unsafe<T,P:RawPtr<T>>(ptr: P) -> *T {
     transmute(ptr)
 }
 

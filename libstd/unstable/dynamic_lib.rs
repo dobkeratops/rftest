@@ -26,7 +26,7 @@ use result::*;
 pub struct DynamicLibrary { priv handle: *libc::c_void }
 
 impl Drop for DynamicLibrary {
-    fn drop(&self) {
+    fn drop(&mut self) {
         match do dl::check_for_errors_in {
             unsafe {
                 dl::close(self.handle)
@@ -66,7 +66,7 @@ impl DynamicLibrary {
         // T but that feature is still unimplemented
 
         let maybe_symbol_value = do dl::check_for_errors_in {
-            do symbol.to_c_str().with_ref |raw_string| {
+            do symbol.with_c_str |raw_string| {
                 dl::symbol(self.handle, raw_string)
             }
         };
@@ -90,6 +90,8 @@ mod test {
     use libc;
 
     #[test]
+    // #[ignore(cfg(windows))] // FIXME #8818
+    #[ignore] // FIXME #9137 this library isn't thread-safe
     fn test_loading_cosine() {
         // The math library does not need to be loaded since it is already
         // statically linked in
@@ -120,6 +122,7 @@ mod test {
     #[cfg(target_os = "linux")]
     #[cfg(target_os = "macos")]
     #[cfg(target_os = "freebsd")]
+    #[ignore] // FIXME #9137 this library isn't thread-safe
     fn test_errors_do_not_crash() {
         // Open /dev/null as a library to get an error, and make sure
         // that only causes an error, and not a crash.
@@ -135,7 +138,7 @@ mod test {
 #[cfg(target_os = "android")]
 #[cfg(target_os = "macos")]
 #[cfg(target_os = "freebsd")]
-mod dl {
+pub mod dl {
     use c_str::ToCStr;
     use libc;
     use path;
@@ -145,16 +148,21 @@ mod dl {
     use result::*;
 
     pub unsafe fn open_external(filename: &path::Path) -> *libc::c_void {
-        do filename.to_c_str().with_ref |raw_name| {
+        #[fixed_stack_segment]; #[inline(never)];
+        do filename.with_c_str |raw_name| {
             dlopen(raw_name, Lazy as libc::c_int)
         }
     }
 
     pub unsafe fn open_internal() -> *libc::c_void {
+        #[fixed_stack_segment]; #[inline(never)];
+
         dlopen(ptr::null(), Lazy as libc::c_int)
     }
 
     pub fn check_for_errors_in<T>(f: &fn()->T) -> Result<T, ~str> {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             do atomically {
                 let _old_error = dlerror();
@@ -172,9 +180,13 @@ mod dl {
     }
 
     pub unsafe fn symbol(handle: *libc::c_void, symbol: *libc::c_char) -> *libc::c_void {
+        #[fixed_stack_segment]; #[inline(never)];
+
         dlsym(handle, symbol)
     }
     pub unsafe fn close(handle: *libc::c_void) {
+        #[fixed_stack_segment]; #[inline(never)];
+
         dlclose(handle); ()
     }
 
@@ -195,7 +207,7 @@ mod dl {
 }
 
 #[cfg(target_os = "win32")]
-mod dl {
+pub mod dl {
     use os;
     use libc;
     use path;
@@ -204,18 +216,21 @@ mod dl {
     use result::*;
 
     pub unsafe fn open_external(filename: &path::Path) -> *libc::c_void {
+        #[fixed_stack_segment]; #[inline(never)];
         do os::win32::as_utf16_p(filename.to_str()) |raw_name| {
             LoadLibraryW(raw_name)
         }
     }
 
     pub unsafe fn open_internal() -> *libc::c_void {
+        #[fixed_stack_segment]; #[inline(never)];
         let handle = ptr::null();
         GetModuleHandleExW(0 as libc::DWORD, ptr::null(), &handle as **libc::c_void);
         handle
     }
 
     pub fn check_for_errors_in<T>(f: &fn()->T) -> Result<T, ~str> {
+        #[fixed_stack_segment]; #[inline(never)];
         unsafe {
             do atomically {
                 SetLastError(0);
@@ -232,14 +247,28 @@ mod dl {
         }
     }
     pub unsafe fn symbol(handle: *libc::c_void, symbol: *libc::c_char) -> *libc::c_void {
+        #[fixed_stack_segment]; #[inline(never)];
         GetProcAddress(handle, symbol)
     }
     pub unsafe fn close(handle: *libc::c_void) {
+        #[fixed_stack_segment]; #[inline(never)];
         FreeLibrary(handle); ()
     }
 
+    #[cfg(target_arch = "x86")]
     #[link_name = "kernel32"]
     extern "stdcall" {
+        fn SetLastError(error: u32);
+        fn LoadLibraryW(name: *u16) -> *libc::c_void;
+        fn GetModuleHandleExW(dwFlags: libc::DWORD, name: *u16,
+                              handle: **libc::c_void) -> *libc::c_void;
+        fn GetProcAddress(handle: *libc::c_void, name: *libc::c_char) -> *libc::c_void;
+        fn FreeLibrary(handle: *libc::c_void);
+    }
+
+    #[cfg(target_arch = "x86_64")]
+    #[link_name = "kernel32"]
+    extern {
         fn SetLastError(error: u32);
         fn LoadLibraryW(name: *u16) -> *libc::c_void;
         fn GetModuleHandleExW(dwFlags: libc::DWORD, name: *u16,

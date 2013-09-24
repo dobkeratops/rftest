@@ -11,14 +11,16 @@
 // FIXME(#4375): this shouldn't have to be a nested module named 'generated'
 
 #[macro_escape];
+#[doc(hidden)];
 
 macro_rules! uint_module (($T:ty, $T_SIGNED:ty, $bits:expr) => (mod generated {
 
 #[allow(non_uppercase_statics)];
 
+use default::Default;
 use num::BitCount;
 use num::{ToStrRadix, FromStrRadix};
-use num::{Zero, One, strconv};
+use num::{CheckedDiv, Zero, One, strconv};
 use prelude::*;
 use str;
 
@@ -30,99 +32,15 @@ pub static bytes : uint = ($bits / 8);
 pub static min_value: $T = 0 as $T;
 pub static max_value: $T = 0 as $T - 1 as $T;
 
-enum Range { Closed, HalfOpen }
-
-#[inline]
-///
-/// Iterate through a range with a given step value.
-///
-/// Let `term` denote the closed interval `[stop-step,stop]` if `r` is Closed;
-/// otherwise `term` denotes the half-open interval `[stop-step,stop)`.
-/// Iterates through the range `[x_0, x_1, ..., x_n]` where
-/// `x_j == start + step*j`, and `x_n` lies in the interval `term`.
-///
-/// If no such nonnegative integer `n` exists, then the iteration range
-/// is empty.
-///
-fn range_step_core(start: $T, stop: $T, step: $T_SIGNED, r: Range, it: &fn($T) -> bool) -> bool {
-    let mut i = start;
-    if step == 0 {
-        fail!("range_step called with step == 0");
-    } else if step == (1 as $T_SIGNED) { // elide bounds check to tighten loop
-        while i < stop {
-            if !it(i) { return false; }
-            // no need for overflow check;
-            // cannot have i + 1 > max_value because i < stop <= max_value
-            i += (1 as $T);
-        }
-    } else if step == (-1 as $T_SIGNED) { // elide bounds check to tighten loop
-        while i > stop {
-            if !it(i) { return false; }
-            // no need for underflow check;
-            // cannot have i - 1 < min_value because i > stop >= min_value
-            i -= (1 as $T);
-        }
-    } else if step > 0 { // ascending
-        while i < stop {
-            if !it(i) { return false; }
-            // avoiding overflow. break if i + step > max_value
-            if i > max_value - (step as $T) { return true; }
-            i += step as $T;
-        }
-    } else { // descending
-        while i > stop {
-            if !it(i) { return false; }
-            // avoiding underflow. break if i + step < min_value
-            if i < min_value + ((-step) as $T) { return true; }
-            i -= -step as $T;
+impl CheckedDiv for $T {
+    #[inline]
+    fn checked_div(&self, v: &$T) -> Option<$T> {
+        if *v == 0 {
+            None
+        } else {
+            Some(self / *v)
         }
     }
-    match r {
-        HalfOpen => return true,
-        Closed => return (i != stop || it(i))
-    }
-}
-
-#[inline]
-///
-/// Iterate through the range [`start`..`stop`) with a given step value.
-///
-/// Iterates through the range `[x_0, x_1, ..., x_n]` where
-/// - `x_i == start + step*i`, and
-/// - `n` is the greatest nonnegative integer such that `x_n < stop`
-///
-/// (If no such `n` exists, then the iteration range is empty.)
-///
-/// # Arguments
-///
-/// * `start` - lower bound, inclusive
-/// * `stop` - higher bound, exclusive
-///
-/// # Examples
-/// ~~~ {.rust}
-/// let nums = [1,2,3,4,5,6,7];
-///
-/// for uint::range_step(0, nums.len() - 1, 2) |i| {
-///     printfln!("%d & %d", nums[i], nums[i+1]);
-/// }
-/// ~~~
-///
-pub fn range_step(start: $T, stop: $T, step: $T_SIGNED, it: &fn($T) -> bool) -> bool {
-    range_step_core(start, stop, step, HalfOpen, it)
-}
-
-#[inline]
-///
-/// Iterate through a range with a given step value.
-///
-/// Iterates through the range `[x_0, x_1, ..., x_n]` where
-/// `x_i == start + step*i` and `x_n <= last < step + x_n`.
-///
-/// (If no such nonnegative integer `n` exists, then the iteration
-///  range is empty.)
-///
-pub fn range_step_inclusive(start: $T, last: $T, step: $T_SIGNED, it: &fn($T) -> bool) -> bool {
-    range_step_core(start, last, step, Closed, it)
 }
 
 impl Num for $T {}
@@ -137,8 +55,6 @@ impl Ord for $T {
 impl Eq for $T {
     #[inline]
     fn eq(&self, other: &$T) -> bool { return (*self) == (*other); }
-    #[inline]
-    fn ne(&self, other: &$T) -> bool { return (*self) != (*other); }
 }
 
 impl Orderable for $T {
@@ -155,12 +71,17 @@ impl Orderable for $T {
     /// Returns the number constrained within the range `mn <= self <= mx`.
     #[inline]
     fn clamp(&self, mn: &$T, mx: &$T) -> $T {
-        cond!(
-            (*self > *mx) { *mx   }
-            (*self < *mn) { *mn   }
-            _             { *self }
-        )
+        match () {
+            _ if (*self > *mx) => *mx,
+            _ if (*self < *mn) => *mn,
+            _                  => *self,
+        }
     }
+}
+
+impl Default for $T {
+    #[inline]
+    fn default() -> $T { 0 }
 }
 
 impl Zero for $T {
@@ -227,9 +148,9 @@ impl Integer for $T {
 
     /// Unsigned integer modulo operation. Returns the same result as `rem` (`%`).
     #[inline]
-    fn mod_floor(&self, other: &$T) -> $T { *self / *other }
+    fn mod_floor(&self, other: &$T) -> $T { *self % *other }
 
-    /// Calculates `div_floor` and `modulo_floor` simultaneously
+    /// Calculates `div_floor` and `mod_floor` simultaneously
     #[inline]
     fn div_mod_floor(&self, other: &$T) -> ($T,$T) {
         (*self / *other, *self % *other)
@@ -318,20 +239,6 @@ impl Int for $T {}
 
 // String conversion functions and impl str -> num
 
-/// Parse a string as a number in base 10.
-#[inline]
-pub fn from_str(s: &str) -> Option<$T> {
-    strconv::from_str_common(s, 10u, false, false, false,
-                             strconv::ExpNone, false, false)
-}
-
-/// Parse a string as a number in the given base.
-#[inline]
-pub fn from_str_radix(s: &str, radix: uint) -> Option<$T> {
-    strconv::from_str_common(s, radix, false, false, false,
-                             strconv::ExpNone, false, false)
-}
-
 /// Parse a byte slice as a number in the given base.
 #[inline]
 pub fn parse_bytes(buf: &[u8], radix: uint) -> Option<$T> {
@@ -342,14 +249,16 @@ pub fn parse_bytes(buf: &[u8], radix: uint) -> Option<$T> {
 impl FromStr for $T {
     #[inline]
     fn from_str(s: &str) -> Option<$T> {
-        from_str(s)
+        strconv::from_str_common(s, 10u, false, false, false,
+                                 strconv::ExpNone, false, false)
     }
 }
 
 impl FromStrRadix for $T {
     #[inline]
     fn from_str_radix(s: &str, radix: uint) -> Option<$T> {
-        from_str_radix(s, radix)
+        strconv::from_str_common(s, radix, false, false, false,
+                                 strconv::ExpNone, false, false)
     }
 }
 
@@ -369,44 +278,34 @@ pub fn to_str_bytes<U>(n: $T, radix: uint, f: &fn(v: &[u8]) -> U) -> U {
     f(buf.slice(0, cur))
 }
 
-/// Convert to a string in base 10.
-#[inline]
-pub fn to_str(num: $T) -> ~str {
-    to_str_radix(num, 10u)
-}
-
-/// Convert to a string in a given base.
-#[inline]
-pub fn to_str_radix(num: $T, radix: uint) -> ~str {
-    let mut buf = ~[];
-    do strconv::int_to_str_bytes_common(num, radix, strconv::SignNone) |i| {
-        buf.push(i);
-    }
-    // We know we generated valid utf-8, so we don't need to go through that
-    // check.
-    unsafe { str::raw::from_bytes_owned(buf) }
-}
-
 impl ToStr for $T {
+    /// Convert to a string in base 10.
     #[inline]
     fn to_str(&self) -> ~str {
-        to_str(*self)
+        self.to_str_radix(10u)
     }
 }
 
 impl ToStrRadix for $T {
+    /// Convert to a string in a given base.
     #[inline]
     fn to_str_radix(&self, radix: uint) -> ~str {
-        to_str_radix(*self, radix)
+        let mut buf = ~[];
+        do strconv::int_to_str_bytes_common(*self, radix, strconv::SignNone) |i| {
+            buf.push(i);
+        }
+        // We know we generated valid utf-8, so we don't need to go through that
+        // check.
+        unsafe { str::raw::from_utf8_owned(buf) }
     }
 }
 
 impl Primitive for $T {
     #[inline]
-    fn bits() -> uint { bits }
+    fn bits(_: Option<$T>) -> uint { bits }
 
     #[inline]
-    fn bytes() -> uint { bits / 8 }
+    fn bytes(_: Option<$T>) -> uint { bits / 8 }
 }
 
 impl BitCount for $T {
@@ -431,16 +330,12 @@ impl BitCount for $T {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use prelude::*;
+    use super::*;
 
     use num;
     use sys;
     use u16;
-    use u32;
-    use u64;
-    use u8;
-    use uint;
 
     #[test]
     fn test_num() {
@@ -456,6 +351,19 @@ mod tests {
         assert_eq!((1 as $T).clamp(&(2 as $T), &(4 as $T)), 2 as $T);
         assert_eq!((8 as $T).clamp(&(2 as $T), &(4 as $T)), 4 as $T);
         assert_eq!((3 as $T).clamp(&(2 as $T), &(4 as $T)), 3 as $T);
+    }
+
+    #[test]
+    fn test_div_mod_floor() {
+        assert_eq!((10 as $T).div_floor(&(3 as $T)), 3 as $T);
+        assert_eq!((10 as $T).mod_floor(&(3 as $T)), 1 as $T);
+        assert_eq!((10 as $T).div_mod_floor(&(3 as $T)), (3 as $T, 1 as $T));
+        assert_eq!((5 as $T).div_floor(&(5 as $T)), 1 as $T);
+        assert_eq!((5 as $T).mod_floor(&(5 as $T)), 0 as $T);
+        assert_eq!((5 as $T).div_mod_floor(&(5 as $T)), (1 as $T, 0 as $T));
+        assert_eq!((3 as $T).div_floor(&(7 as $T)), 0 as $T);
+        assert_eq!((3 as $T).mod_floor(&(7 as $T)), 3 as $T);
+        assert_eq!((3 as $T).div_mod_floor(&(7 as $T)), (0 as $T, 3 as $T));
     }
 
     #[test]
@@ -519,32 +427,33 @@ mod tests {
 
     #[test]
     fn test_primitive() {
-        assert_eq!(Primitive::bits::<$T>(), sys::size_of::<$T>() * 8);
-        assert_eq!(Primitive::bytes::<$T>(), sys::size_of::<$T>());
+        let none: Option<$T> = None;
+        assert_eq!(Primitive::bits(none), sys::size_of::<$T>() * 8);
+        assert_eq!(Primitive::bytes(none), sys::size_of::<$T>());
     }
 
     #[test]
     pub fn test_to_str() {
-        assert_eq!(to_str_radix(0 as $T, 10u), ~"0");
-        assert_eq!(to_str_radix(1 as $T, 10u), ~"1");
-        assert_eq!(to_str_radix(2 as $T, 10u), ~"2");
-        assert_eq!(to_str_radix(11 as $T, 10u), ~"11");
-        assert_eq!(to_str_radix(11 as $T, 16u), ~"b");
-        assert_eq!(to_str_radix(255 as $T, 16u), ~"ff");
-        assert_eq!(to_str_radix(0xff as $T, 10u), ~"255");
+        assert_eq!((0 as $T).to_str_radix(10u), ~"0");
+        assert_eq!((1 as $T).to_str_radix(10u), ~"1");
+        assert_eq!((2 as $T).to_str_radix(10u), ~"2");
+        assert_eq!((11 as $T).to_str_radix(10u), ~"11");
+        assert_eq!((11 as $T).to_str_radix(16u), ~"b");
+        assert_eq!((255 as $T).to_str_radix(16u), ~"ff");
+        assert_eq!((0xff as $T).to_str_radix(10u), ~"255");
     }
 
     #[test]
     pub fn test_from_str() {
-        assert_eq!(from_str("0"), Some(0u as $T));
-        assert_eq!(from_str("3"), Some(3u as $T));
-        assert_eq!(from_str("10"), Some(10u as $T));
-        assert_eq!(u32::from_str("123456789"), Some(123456789 as u32));
-        assert_eq!(from_str("00100"), Some(100u as $T));
+        assert_eq!(from_str::<$T>("0"), Some(0u as $T));
+        assert_eq!(from_str::<$T>("3"), Some(3u as $T));
+        assert_eq!(from_str::<$T>("10"), Some(10u as $T));
+        assert_eq!(from_str::<u32>("123456789"), Some(123456789 as u32));
+        assert_eq!(from_str::<$T>("00100"), Some(100u as $T));
 
-        assert!(from_str("").is_none());
-        assert!(from_str(" ").is_none());
-        assert!(from_str("x").is_none());
+        assert!(from_str::<$T>("").is_none());
+        assert!(from_str::<$T>(" ").is_none());
+        assert!(from_str::<$T>("x").is_none());
     }
 
     #[test]
@@ -564,135 +473,81 @@ mod tests {
     #[test]
     fn test_uint_to_str_overflow() {
         let mut u8_val: u8 = 255_u8;
-        assert_eq!(u8::to_str(u8_val), ~"255");
+        assert_eq!(u8_val.to_str(), ~"255");
 
         u8_val += 1 as u8;
-        assert_eq!(u8::to_str(u8_val), ~"0");
+        assert_eq!(u8_val.to_str(), ~"0");
 
         let mut u16_val: u16 = 65_535_u16;
-        assert_eq!(u16::to_str(u16_val), ~"65535");
+        assert_eq!(u16_val.to_str(), ~"65535");
 
         u16_val += 1 as u16;
-        assert_eq!(u16::to_str(u16_val), ~"0");
+        assert_eq!(u16_val.to_str(), ~"0");
 
         let mut u32_val: u32 = 4_294_967_295_u32;
-        assert_eq!(u32::to_str(u32_val), ~"4294967295");
+        assert_eq!(u32_val.to_str(), ~"4294967295");
 
         u32_val += 1 as u32;
-        assert_eq!(u32::to_str(u32_val), ~"0");
+        assert_eq!(u32_val.to_str(), ~"0");
 
         let mut u64_val: u64 = 18_446_744_073_709_551_615_u64;
-        assert_eq!(u64::to_str(u64_val), ~"18446744073709551615");
+        assert_eq!(u64_val.to_str(), ~"18446744073709551615");
 
         u64_val += 1 as u64;
-        assert_eq!(u64::to_str(u64_val), ~"0");
+        assert_eq!(u64_val.to_str(), ~"0");
     }
 
     #[test]
     fn test_uint_from_str_overflow() {
         let mut u8_val: u8 = 255_u8;
-        assert_eq!(u8::from_str("255"), Some(u8_val));
-        assert!(u8::from_str("256").is_none());
+        assert_eq!(from_str::<u8>("255"), Some(u8_val));
+        assert!(from_str::<u8>("256").is_none());
 
         u8_val += 1 as u8;
-        assert_eq!(u8::from_str("0"), Some(u8_val));
-        assert!(u8::from_str("-1").is_none());
+        assert_eq!(from_str::<u8>("0"), Some(u8_val));
+        assert!(from_str::<u8>("-1").is_none());
 
         let mut u16_val: u16 = 65_535_u16;
-        assert_eq!(u16::from_str("65535"), Some(u16_val));
-        assert!(u16::from_str("65536").is_none());
+        assert_eq!(from_str::<u16>("65535"), Some(u16_val));
+        assert!(from_str::<u16>("65536").is_none());
 
         u16_val += 1 as u16;
-        assert_eq!(u16::from_str("0"), Some(u16_val));
-        assert!(u16::from_str("-1").is_none());
+        assert_eq!(from_str::<u16>("0"), Some(u16_val));
+        assert!(from_str::<u16>("-1").is_none());
 
         let mut u32_val: u32 = 4_294_967_295_u32;
-        assert_eq!(u32::from_str("4294967295"), Some(u32_val));
-        assert!(u32::from_str("4294967296").is_none());
+        assert_eq!(from_str::<u32>("4294967295"), Some(u32_val));
+        assert!(from_str::<u32>("4294967296").is_none());
 
         u32_val += 1 as u32;
-        assert_eq!(u32::from_str("0"), Some(u32_val));
-        assert!(u32::from_str("-1").is_none());
+        assert_eq!(from_str::<u32>("0"), Some(u32_val));
+        assert!(from_str::<u32>("-1").is_none());
 
         let mut u64_val: u64 = 18_446_744_073_709_551_615_u64;
-        assert_eq!(u64::from_str("18446744073709551615"), Some(u64_val));
-        assert!(u64::from_str("18446744073709551616").is_none());
+        assert_eq!(from_str::<u64>("18446744073709551615"), Some(u64_val));
+        assert!(from_str::<u64>("18446744073709551616").is_none());
 
         u64_val += 1 as u64;
-        assert_eq!(u64::from_str("0"), Some(u64_val));
-        assert!(u64::from_str("-1").is_none());
+        assert_eq!(from_str::<u64>("0"), Some(u64_val));
+        assert!(from_str::<u64>("-1").is_none());
     }
 
     #[test]
     #[should_fail]
-    #[ignore(cfg(windows))]
     pub fn to_str_radix1() {
-        uint::to_str_radix(100u, 1u);
+        100u.to_str_radix(1u);
     }
 
     #[test]
     #[should_fail]
-    #[ignore(cfg(windows))]
     pub fn to_str_radix37() {
-        uint::to_str_radix(100u, 37u);
+        100u.to_str_radix(37u);
     }
 
     #[test]
-    pub fn test_ranges() {
-        let mut l = ~[];
-
-        do range_step(20,26,2) |i| {
-            l.push(i);
-            true
-        };
-        do range_step(36,30,-2) |i| {
-            l.push(i);
-            true
-        };
-        do range_step(max_value - 2, max_value, 2) |i| {
-            l.push(i);
-            true
-        };
-        do range_step(max_value - 3, max_value, 2) |i| {
-            l.push(i);
-            true
-        };
-        do range_step(min_value + 2, min_value, -2) |i| {
-            l.push(i);
-            true
-        };
-        do range_step(min_value + 3, min_value, -2) |i| {
-            l.push(i);
-            true
-        };
-
-        assert_eq!(l, ~[20,22,24,
-                        36,34,32,
-                        max_value-2,
-                        max_value-3,max_value-1,
-                        min_value+2,
-                        min_value+3,min_value+1]);
-
-        // None of the `fail`s should execute.
-        do range_step(10,0,1) |_i| {
-            fail!("unreachable");
-        };
-        do range_step(0,1,-10) |_i| {
-            fail!("unreachable");
-        };
-    }
-
-    #[test]
-    #[should_fail]
-    #[ignore(cfg(windows))]
-    fn test_range_step_zero_step_up() {
-        do range_step(0,10,0) |_i| { true };
-    }
-    #[test]
-    #[should_fail]
-    #[ignore(cfg(windows))]
-    fn test_range_step_zero_step_down() {
-        do range_step(0,-10,0) |_i| { true };
+    fn test_unsigned_checked_div() {
+        assert_eq!(10u.checked_div(&2), Some(5));
+        assert_eq!(5u.checked_div(&0), None);
     }
 }
 

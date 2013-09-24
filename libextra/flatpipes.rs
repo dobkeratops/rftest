@@ -166,7 +166,7 @@ Constructors for flat pipes that send POD types using memcpy.
 
 This module is currently unsafe because it uses `Clone + Send` as a type
 parameter bounds meaning POD (plain old data), but `Clone + Send` and
-POD are not equivelant.
+POD are not equivalent.
 
 */
 pub mod pod {
@@ -564,8 +564,10 @@ pub mod bytepipes {
         }
     }
 
-    // XXX: Remove `@mut` when this module is ported to the new I/O traits,
-    // which use `&mut self` properly.
+    // FIXME #6850: Remove `@mut` when this module is ported to the new I/O traits,
+    // which use `&mut self` properly. (For example, util::comm::GenericPort's try_recv
+    // method doesn't use `&mut self`, so the `try_recv` method in the impl of `BytePort`
+    // for `PipeBytePort` can't have `&mut self` either.)
     pub struct PipeBytePort {
         port: comm::Port<~[u8]>,
         buf: @mut ~[u8]
@@ -965,12 +967,10 @@ mod test {
         }
 
         #[test]
-        #[ignore(cfg(windows))]
         fn test_try_recv_none4_reader() {
             test_try_recv_none4(reader_port_loader);
         }
         #[test]
-        #[ignore(cfg(windows))]
         fn test_try_recv_none4_pipe() {
             test_try_recv_none4(pipe_port_loader);
         }

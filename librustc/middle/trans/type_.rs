@@ -119,7 +119,6 @@ impl Type {
     pub fn int_from_ty(ctx: &CrateContext, t: ast::int_ty) -> Type {
         match t {
             ast::ty_i => ctx.int_type,
-            ast::ty_char => Type::char(),
             ast::ty_i8 => Type::i8(),
             ast::ty_i16 => Type::i16(),
             ast::ty_i32 => Type::i32(),
@@ -171,7 +170,7 @@ impl Type {
 
     pub fn named_struct(name: &str) -> Type {
         let ctx = base::task_llcx();
-        ty!(name.to_c_str().with_ref(|s| llvm::LLVMStructCreateNamed(ctx, s)))
+        ty!(name.with_c_str(|s| llvm::LLVMStructCreateNamed(ctx, s)))
     }
 
     pub fn empty_struct() -> Type {
@@ -216,8 +215,8 @@ impl Type {
                      glue_fn_ty, // drop
                      glue_fn_ty, // free
                      glue_fn_ty, // visit
-                     int_ty];    // borrow_offset
-
+                     int_ty, // borrow_offset
+                     Type::struct_([Type::i8p(), Type::int(arch)], false)]; // name
         tydesc.set_struct_body(elems, false);
 
         return tydesc;
@@ -279,23 +278,12 @@ impl Type {
 
     pub fn opaque_trait(ctx: &CrateContext, store: ty::TraitStore) -> Type {
         let tydesc_ptr = ctx.tydesc_type.ptr_to();
-        match store {
-            ty::BoxTraitStore => {
-                Type::struct_(
-                    [ tydesc_ptr, Type::opaque_box(ctx).ptr_to() ],
-                false)
-            }
-            ty::UniqTraitStore => {
-                Type::struct_(
-                    [ tydesc_ptr, Type::unique(ctx, &Type::i8()).ptr_to()],
-                false)
-            }
-            ty::RegionTraitStore(*) => {
-                Type::struct_(
-                    [ tydesc_ptr, Type::i8().ptr_to() ],
-                false)
-            }
-        }
+        let box_ty = match store {
+            ty::BoxTraitStore => Type::opaque_box(ctx),
+            ty::UniqTraitStore => Type::unique(ctx, &Type::i8()),
+            ty::RegionTraitStore(*) => Type::i8()
+        };
+        Type::struct_([tydesc_ptr, box_ty.ptr_to()], false)
     }
 
     pub fn kind(&self) -> TypeKind {

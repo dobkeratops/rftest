@@ -17,7 +17,7 @@ use option::{Option, None, Some};
 
 type Port = u16;
 
-#[deriving(Eq, TotalEq)]
+#[deriving(Eq, TotalEq, Clone)]
 pub enum IpAddr {
     Ipv4Addr(u8, u8, u8, u8),
     Ipv6Addr(u16, u16, u16, u16, u16, u16, u16, u16)
@@ -62,7 +62,7 @@ impl ToStr for IpAddr {
     }
 }
 
-#[deriving(Eq, TotalEq)]
+#[deriving(Eq, TotalEq, Clone)]
 pub struct SocketAddr {
     ip: IpAddr,
     port: Port,
@@ -163,20 +163,21 @@ impl<'self> Parser<'self> {
     // Read digit
     fn read_digit(&mut self, radix: u8) -> Option<u8> {
         fn parse_digit(c: char, radix: u8) -> Option<u8> {
+            let c = c as u8;
             // assuming radix is either 10 or 16
-            if c >= '0' && c <= '9' {
-                Some((c - '0') as u8)
-            } else if radix > 10 && c >= 'a' && c < 'a' + (radix - 10) as char {
-                Some((c - 'a' + (10 as char)) as u8)
-            } else if radix > 10 && c >= 'A' && c < 'A' + (radix - 10) as char {
-                Some((c - 'A' + (10 as char)) as u8)
+            if c >= '0' as u8 && c <= '9' as u8 {
+                Some((c - '0' as u8) as u8)
+            } else if radix > 10 && c >= 'a' as u8 && c < 'a' as u8 + (radix - 10) {
+                Some((c - 'a' as u8 + 10) as u8)
+            } else if radix > 10 && c >= 'A' as u8 && c < 'A' as u8 + (radix - 10) {
+                Some((c - 'A' as u8 + 10) as u8)
             } else {
                 None
             }
         }
 
         do self.read_atomically |p| {
-            p.read_char().chain(|c| parse_digit(c, radix))
+            p.read_char().and_then(|c| parse_digit(c, radix))
         }
     }
 
@@ -359,7 +360,7 @@ impl FromStr for SocketAddr {
 mod test {
     use super::*;
     use from_str::FromStr;
-    use option::{Some, None};
+    use option::{Option, Some, None};
 
     #[test]
     fn test_from_str_ipv4() {
@@ -368,13 +369,17 @@ mod test {
         assert_eq!(Some(Ipv4Addr(0, 0, 0, 0)), FromStr::from_str("0.0.0.0"));
 
         // out of range
-        assert_eq!(None, FromStr::from_str::<IpAddr>("256.0.0.1"));
+        let none: Option<IpAddr> = FromStr::from_str("256.0.0.1");
+        assert_eq!(None, none);
         // too short
-        assert_eq!(None, FromStr::from_str::<IpAddr>("255.0.0"));
+        let none: Option<IpAddr> = FromStr::from_str("255.0.0");
+        assert_eq!(None, none);
         // too long
-        assert_eq!(None, FromStr::from_str::<IpAddr>("255.0.0.1.2"));
+        let none: Option<IpAddr> = FromStr::from_str("255.0.0.1.2");
+        assert_eq!(None, none);
         // no number between dots
-        assert_eq!(None, FromStr::from_str::<IpAddr>("255.0..1"));
+        let none: Option<IpAddr> = FromStr::from_str("255.0..1");
+        assert_eq!(None, none);
     }
 
     #[test]
@@ -389,15 +394,20 @@ mod test {
                 FromStr::from_str("2a02:6b8::11:11"));
 
         // too long group
-        assert_eq!(None, FromStr::from_str::<IpAddr>("::00000"));
+        let none: Option<IpAddr> = FromStr::from_str("::00000");
+        assert_eq!(None, none);
         // too short
-        assert_eq!(None, FromStr::from_str::<IpAddr>("1:2:3:4:5:6:7"));
+        let none: Option<IpAddr> = FromStr::from_str("1:2:3:4:5:6:7");
+        assert_eq!(None, none);
         // too long
-        assert_eq!(None, FromStr::from_str::<IpAddr>("1:2:3:4:5:6:7:8:9"));
+        let none: Option<IpAddr> = FromStr::from_str("1:2:3:4:5:6:7:8:9");
+        assert_eq!(None, none);
         // triple colon
-        assert_eq!(None, FromStr::from_str::<IpAddr>("1:2:::6:7:8"));
+        let none: Option<IpAddr> = FromStr::from_str("1:2:::6:7:8");
+        assert_eq!(None, none);
         // two double colons
-        assert_eq!(None, FromStr::from_str::<IpAddr>("1:2::6::8"));
+        let none: Option<IpAddr> = FromStr::from_str("1:2::6::8");
+        assert_eq!(None, none);
     }
 
     #[test]
@@ -412,11 +422,15 @@ mod test {
                 FromStr::from_str("2001:db8:122:c000:2:2100:192.0.2.33"));
 
         // colon after v4
-        assert_eq!(None, FromStr::from_str::<IpAddr>("::127.0.0.1:"));
+        let none: Option<IpAddr> = FromStr::from_str("::127.0.0.1:");
+        assert_eq!(None, none);
         // not enought groups
-        assert_eq!(None, FromStr::from_str::<IpAddr>("1.2.3.4.5:127.0.0.1"));
+        let none: Option<IpAddr> = FromStr::from_str("1.2.3.4.5:127.0.0.1");
+        assert_eq!(None, none);
         // too many groups
-        assert_eq!(None, FromStr::from_str::<IpAddr>("1.2.3.4.5:6:7:127.0.0.1"));
+        let none: Option<IpAddr> =
+            FromStr::from_str("1.2.3.4.5:6:7:127.0.0.1");
+        assert_eq!(None, none);
     }
 
     #[test]
@@ -429,13 +443,17 @@ mod test {
                 FromStr::from_str("[::127.0.0.1]:22"));
 
         // without port
-        assert_eq!(None, FromStr::from_str::<SocketAddr>("127.0.0.1"));
+        let none: Option<SocketAddr> = FromStr::from_str("127.0.0.1");
+        assert_eq!(None, none);
         // without port
-        assert_eq!(None, FromStr::from_str::<SocketAddr>("127.0.0.1:"));
+        let none: Option<SocketAddr> = FromStr::from_str("127.0.0.1:");
+        assert_eq!(None, none);
         // wrong brackets around v4
-        assert_eq!(None, FromStr::from_str::<SocketAddr>("[127.0.0.1]:22"));
+        let none: Option<SocketAddr> = FromStr::from_str("[127.0.0.1]:22");
+        assert_eq!(None, none);
         // port out of range
-        assert_eq!(None, FromStr::from_str::<SocketAddr>("127.0.0.1:123456"));
+        let none: Option<SocketAddr> = FromStr::from_str("127.0.0.1:123456");
+        assert_eq!(None, none);
     }
 
     #[test]

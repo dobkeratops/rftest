@@ -8,11 +8,12 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use ast::{ident, matcher_, matcher, match_tok, match_nonterminal, match_seq};
+use ast::{Ident, matcher_, matcher, match_tok, match_nonterminal, match_seq};
 use ast::{tt_delim};
 use ast;
-use codemap::{span, spanned, dummy_sp};
-use ext::base::{ExtCtxt, MacResult, MRAny, MRDef, MacroDef, NormalTT};
+use codemap::{Span, Spanned, dummy_sp};
+use ext::base::{AnyMacro, ExtCtxt, MacResult, MRAny, MRDef, MacroDef};
+use ext::base::{NormalTT, SyntaxExpanderTTTrait};
 use ext::base;
 use ext::tt::macro_parser::{error};
 use ext::tt::macro_parser::{named_match, matched_seq, matched_nonterminal};
@@ -23,14 +24,124 @@ use parse::token::{get_ident_interner, special_idents, gensym_ident, ident_to_st
 use parse::token::{FAT_ARROW, SEMI, nt_matchers, nt_tt};
 use print;
 
+struct ParserAnyMacro {
+    parser: @Parser,
+}
+
+impl AnyMacro for ParserAnyMacro {
+    fn make_expr(&self) -> @ast::Expr {
+        self.parser.parse_expr()
+    }
+    fn make_item(&self) -> Option<@ast::item> {
+        self.parser.parse_item(~[])     // no attrs
+    }
+    fn make_stmt(&self) -> @ast::Stmt {
+        self.parser.parse_stmt(~[])     // no attrs
+    }
+}
+
+struct MacroRulesSyntaxExpanderTTFun {
+    name: Ident,
+    lhses: @~[@named_match],
+    rhses: @~[@named_match],
+}
+
+impl SyntaxExpanderTTTrait for MacroRulesSyntaxExpanderTTFun {
+    fn expand(&self,
+              cx: @ExtCtxt,
+              sp: Span,
+              arg: &[ast::token_tree],
+              _: ast::SyntaxContext)
+              -> MacResult {
+        generic_extension(cx, sp, self.name, arg, *self.lhses, *self.rhses)
+    }
+}
+
+// Given `lhses` and `rhses`, this is the new macro we create
+fn generic_extension(cx: @ExtCtxt,
+                     sp: Span,
+                     name: Ident,
+                     arg: &[ast::token_tree],
+                     lhses: &[@named_match],
+                     rhses: &[@named_match])
+                     -> MacResult {
+    if cx.trace_macros() {
+        printfln!("%s! { %s }",
+                  cx.str_of(name),
+                  print::pprust::tt_to_str(
+                      &ast::tt_delim(@mut arg.to_owned()),
+                      get_ident_interner()));
+    }
+
+    // Which arm's failure should we report? (the one furthest along)
+    let mut best_fail_spot = dummy_sp();
+    let mut best_fail_msg = ~"internal error: ran no matchers";
+
+    let s_d = cx.parse_sess().span_diagnostic;
+
+    for (i, lhs) in lhses.iter().enumerate() { // try each arm's matchers
+        match *lhs {
+          @matched_nonterminal(nt_matchers(ref mtcs)) => {
+            // `none` is because we're not interpolating
+            let arg_rdr = new_tt_reader(
+                s_d,
+                None,
+                arg.to_owned()
+            ) as @mut reader;
+            match parse(cx.parse_sess(), cx.cfg(), arg_rdr, *mtcs) {
+              success(named_matches) => {
+                let rhs = match rhses[i] {
+                    // okay, what's your transcriber?
+                    @matched_nonterminal(nt_tt(@ref tt)) => {
+                        match (*tt) {
+                            // cut off delimiters; don't parse 'em
+                            tt_delim(ref tts) => {
+                                (*tts).slice(1u,(*tts).len()-1u).to_owned()
+                            }
+                            _ => cx.span_fatal(
+                                sp, "macro rhs must be delimited")
+                        }
+                    },
+                    _ => cx.span_bug(sp, "bad thing in rhs")
+                };
+                // rhs has holes ( `$id` and `$(...)` that need filled)
+                let trncbr = new_tt_reader(s_d, Some(named_matches),
+                                           rhs);
+                let p = @Parser(cx.parse_sess(),
+                                cx.cfg(),
+                                trncbr as @mut reader);
+
+                // Let the context choose how to interpret the result.
+                // Weird, but useful for X-macros.
+                return MRAny(@ParserAnyMacro {
+                    parser: p,
+                } as @AnyMacro)
+              }
+              failure(sp, ref msg) => if sp.lo >= best_fail_spot.lo {
+                best_fail_spot = sp;
+                best_fail_msg = (*msg).clone();
+              },
+              error(sp, ref msg) => cx.span_fatal(sp, (*msg))
+            }
+          }
+          _ => cx.bug("non-matcher found in parsed lhses")
+        }
+    }
+    cx.span_fatal(best_fail_spot, best_fail_msg);
+}
+
+// this procedure performs the expansion of the
+// macro_rules! macro. It parses the RHS and adds
+// an extension to the current context.
 pub fn add_new_extension(cx: @ExtCtxt,
-                         sp: span,
-                         name: ident,
-                         arg: ~[ast::token_tree])
-                      -> base::MacResult {
+                         sp: Span,
+                         name: Ident,
+                         arg: ~[ast::token_tree],
+                         _: ast::SyntaxContext)
+                         -> base::MacResult {
     // these spans won't matter, anyways
     fn ms(m: matcher_) -> matcher {
-        spanned {
+        Spanned {
             node: m.clone(),
             span: dummy_sp()
         }
@@ -39,6 +150,7 @@ pub fn add_new_extension(cx: @ExtCtxt,
     let lhs_nm =  gensym_ident("lhs");
     let rhs_nm =  gensym_ident("rhs");
 
+    // The pattern that macro_rules matches.
     // The grammar for macro_rules! is:
     // $( $lhs:mtcs => $rhs:tt );+
     // ...quasiquoting this would be nice.
@@ -74,11 +186,13 @@ pub fn add_new_extension(cx: @ExtCtxt,
     };
 
     // Given `lhses` and `rhses`, this is the new macro we create
-    fn generic_extension(cx: @ExtCtxt, sp: span, name: ident,
+    fn generic_extension(cx: @ExtCtxt,
+                         sp: Span,
+                         name: Ident,
                          arg: &[ast::token_tree],
-                         lhses: &[@named_match], rhses: &[@named_match])
-    -> MacResult {
-
+                         lhses: &[@named_match],
+                         rhses: &[@named_match])
+                         -> MacResult {
         if cx.trace_macros() {
             printfln!("%s! { %s }",
                       cx.str_of(name),
@@ -127,9 +241,9 @@ pub fn add_new_extension(cx: @ExtCtxt,
 
                     // Let the context choose how to interpret the result.
                     // Weird, but useful for X-macros.
-                    return MRAny(|| p.parse_expr(),
-                                  || p.parse_item(~[/* no attrs*/]),
-                                  || p.parse_stmt(~[/* no attrs*/]));
+                    return MRAny(@ParserAnyMacro {
+                        parser: p
+                    } as @AnyMacro);
                   }
                   failure(sp, ref msg) => if sp.lo >= best_fail_spot.lo {
                     best_fail_spot = sp;
@@ -144,11 +258,14 @@ pub fn add_new_extension(cx: @ExtCtxt,
         cx.span_fatal(best_fail_spot, best_fail_msg);
     }
 
-    let exp: @fn(@ExtCtxt, span, &[ast::token_tree]) -> MacResult =
-        |cx, sp, arg| generic_extension(cx, sp, name, arg, *lhses, *rhses);
+    let exp = @MacroRulesSyntaxExpanderTTFun {
+        name: name,
+        lhses: lhses,
+        rhses: rhses,
+    } as @SyntaxExpanderTTTrait;
 
-    return MRDef(MacroDef{
+    return MRDef(MacroDef {
         name: ident_to_str(&name),
-        ext: NormalTT(base::SyntaxExpanderTT{expander: exp, span: Some(sp)})
+        ext: NormalTT(exp, Some(sp))
     });
 }

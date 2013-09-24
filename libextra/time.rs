@@ -10,8 +10,6 @@
 
 #[allow(missing_doc)];
 
-
-use std::int;
 use std::io;
 use std::num;
 use std::str;
@@ -34,7 +32,7 @@ pub mod rustrt {
 }
 
 /// A record specifying a time value in seconds and nanoseconds.
-#[deriving(Eq, Encodable, Decodable)]
+#[deriving(Clone, DeepClone, Eq, Encodable, Decodable)]
 pub struct Timespec { sec: i64, nsec: i32 }
 
 /*
@@ -64,6 +62,8 @@ impl Ord for Timespec {
  * nanoseconds since 1970-01-01T00:00:00Z.
  */
 pub fn get_time() -> Timespec {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         let mut sec = 0i64;
         let mut nsec = 0i32;
@@ -78,6 +78,8 @@ pub fn get_time() -> Timespec {
  * in nanoseconds since an unspecified epoch.
  */
 pub fn precise_time_ns() -> u64 {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         let mut ns = 0u64;
         rustrt::precise_time_ns(&mut ns);
@@ -95,12 +97,14 @@ pub fn precise_time_s() -> float {
 }
 
 pub fn tzset() {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         rustrt::rust_tzset();
     }
 }
 
-#[deriving(Eq, Encodable, Decodable)]
+#[deriving(Clone, DeepClone, Eq, Encodable, Decodable)]
 pub struct Tm {
     tm_sec: i32, // seconds after the minute ~[0-60]
     tm_min: i32, // minutes after the hour ~[0-59]
@@ -117,6 +121,9 @@ pub struct Tm {
 }
 
 pub fn empty_tm() -> Tm {
+    // 64 is the max size of the timezone buffer allocated on windows
+    // in rust_localtime. In glibc the max timezone size is supposedly 3.
+    let zone = str::with_capacity(64);
     Tm {
         tm_sec: 0_i32,
         tm_min: 0_i32,
@@ -128,13 +135,15 @@ pub fn empty_tm() -> Tm {
         tm_yday: 0_i32,
         tm_isdst: 0_i32,
         tm_gmtoff: 0_i32,
-        tm_zone: ~"",
+        tm_zone: zone,
         tm_nsec: 0_i32,
     }
 }
 
 /// Returns the specified time in UTC
 pub fn at_utc(clock: Timespec) -> Tm {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         let Timespec { sec, nsec } = clock;
         let mut tm = empty_tm();
@@ -150,6 +159,8 @@ pub fn now_utc() -> Tm {
 
 /// Returns the specified time in the local timezone
 pub fn at(clock: Timespec) -> Tm {
+    #[fixed_stack_segment]; #[inline(never)];
+
     unsafe {
         let Timespec { sec, nsec } = clock;
         let mut tm = empty_tm();
@@ -176,6 +187,8 @@ pub fn strftime(format: &str, tm: &Tm) -> ~str {
 impl Tm {
     /// Convert time to the seconds from January 1, 1970
     pub fn to_timespec(&self) -> Timespec {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             let sec = match self.tm_gmtoff {
                 0_i32 => rustrt::rust_timegm(self),
@@ -308,6 +321,33 @@ fn do_strptime(s: &str, format: &str) -> Result<Tm, ~str> {
         Some((value, pos))
     }
 
+    fn match_fractional_seconds(ss: &str, pos: uint) -> (i32, uint) {
+        let len = ss.len();
+        let mut value = 0_i32;
+        let mut multiplier = NSEC_PER_SEC / 10;
+        let mut pos = pos;
+
+        loop {
+            if pos >= len {
+                break;
+            }
+            let range = ss.char_range_at(pos);
+
+            match range.ch {
+                '0' .. '9' => {
+                    pos = range.next;
+                    // This will drop digits after the nanoseconds place
+                    let digit = range.ch as i32 - '0' as i32;
+                    value += digit * multiplier;
+                    multiplier /= 10;
+                }
+                _ => break
+            }
+        }
+
+        (value, pos)
+    }
+
     fn match_digits_in_range(ss: &str, pos: uint, digits: uint, ws: bool,
                              min: i32, max: i32) -> Option<(i32, uint)> {
         match match_digits(ss, pos, digits, ws) {
@@ -402,21 +442,21 @@ fn do_strptime(s: &str, format: &str) -> Result<Tm, ~str> {
           },
           'c' => {
             parse_type(s, pos, 'a', &mut *tm)
-                .chain(|pos| parse_char(s, pos, ' '))
-                .chain(|pos| parse_type(s, pos, 'b', &mut *tm))
-                .chain(|pos| parse_char(s, pos, ' '))
-                .chain(|pos| parse_type(s, pos, 'e', &mut *tm))
-                .chain(|pos| parse_char(s, pos, ' '))
-                .chain(|pos| parse_type(s, pos, 'T', &mut *tm))
-                .chain(|pos| parse_char(s, pos, ' '))
-                .chain(|pos| parse_type(s, pos, 'Y', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, ' '))
+                .and_then(|pos| parse_type(s, pos, 'b', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, ' '))
+                .and_then(|pos| parse_type(s, pos, 'e', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, ' '))
+                .and_then(|pos| parse_type(s, pos, 'T', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, ' '))
+                .and_then(|pos| parse_type(s, pos, 'Y', &mut *tm))
           }
           'D' | 'x' => {
             parse_type(s, pos, 'm', &mut *tm)
-                .chain(|pos| parse_char(s, pos, '/'))
-                .chain(|pos| parse_type(s, pos, 'd', &mut *tm))
-                .chain(|pos| parse_char(s, pos, '/'))
-                .chain(|pos| parse_type(s, pos, 'y', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, '/'))
+                .and_then(|pos| parse_type(s, pos, 'd', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, '/'))
+                .and_then(|pos| parse_type(s, pos, 'y', &mut *tm))
           }
           'd' => match match_digits_in_range(s, pos, 2u, false, 1_i32,
                                              31_i32) {
@@ -428,12 +468,17 @@ fn do_strptime(s: &str, format: &str) -> Result<Tm, ~str> {
             Some(item) => { let (v, pos) = item; tm.tm_mday = v; Ok(pos) }
             None => Err(~"Invalid day of the month")
           },
+          'f' => {
+            let (val, pos) = match_fractional_seconds(s, pos);
+            tm.tm_nsec = val;
+            Ok(pos)
+          }
           'F' => {
             parse_type(s, pos, 'Y', &mut *tm)
-                .chain(|pos| parse_char(s, pos, '-'))
-                .chain(|pos| parse_type(s, pos, 'm', &mut *tm))
-                .chain(|pos| parse_char(s, pos, '-'))
-                .chain(|pos| parse_type(s, pos, 'd', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, '-'))
+                .and_then(|pos| parse_type(s, pos, 'm', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, '-'))
+                .and_then(|pos| parse_type(s, pos, 'd', &mut *tm))
           }
           'H' => {
             match match_digits_in_range(s, pos, 2u, false, 0_i32, 23_i32) {
@@ -508,17 +553,17 @@ fn do_strptime(s: &str, format: &str) -> Result<Tm, ~str> {
           },
           'R' => {
             parse_type(s, pos, 'H', &mut *tm)
-                .chain(|pos| parse_char(s, pos, ':'))
-                .chain(|pos| parse_type(s, pos, 'M', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, ':'))
+                .and_then(|pos| parse_type(s, pos, 'M', &mut *tm))
           }
           'r' => {
             parse_type(s, pos, 'I', &mut *tm)
-                .chain(|pos| parse_char(s, pos, ':'))
-                .chain(|pos| parse_type(s, pos, 'M', &mut *tm))
-                .chain(|pos| parse_char(s, pos, ':'))
-                .chain(|pos| parse_type(s, pos, 'S', &mut *tm))
-                .chain(|pos| parse_char(s, pos, ' '))
-                .chain(|pos| parse_type(s, pos, 'p', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, ':'))
+                .and_then(|pos| parse_type(s, pos, 'M', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, ':'))
+                .and_then(|pos| parse_type(s, pos, 'S', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, ' '))
+                .and_then(|pos| parse_type(s, pos, 'p', &mut *tm))
           }
           'S' => {
             match match_digits_in_range(s, pos, 2u, false, 0_i32, 60_i32) {
@@ -533,10 +578,10 @@ fn do_strptime(s: &str, format: &str) -> Result<Tm, ~str> {
           //'s' {}
           'T' | 'X' => {
             parse_type(s, pos, 'H', &mut *tm)
-                .chain(|pos| parse_char(s, pos, ':'))
-                .chain(|pos| parse_type(s, pos, 'M', &mut *tm))
-                .chain(|pos| parse_char(s, pos, ':'))
-                .chain(|pos| parse_type(s, pos, 'S', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, ':'))
+                .and_then(|pos| parse_type(s, pos, 'M', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, ':'))
+                .and_then(|pos| parse_type(s, pos, 'S', &mut *tm))
           }
           't' => parse_char(s, pos, '\t'),
           'u' => {
@@ -551,10 +596,10 @@ fn do_strptime(s: &str, format: &str) -> Result<Tm, ~str> {
           }
           'v' => {
             parse_type(s, pos, 'e', &mut *tm)
-                .chain(|pos|  parse_char(s, pos, '-'))
-                .chain(|pos| parse_type(s, pos, 'b', &mut *tm))
-                .chain(|pos| parse_char(s, pos, '-'))
-                .chain(|pos| parse_type(s, pos, 'Y', &mut *tm))
+                .and_then(|pos|  parse_char(s, pos, '-'))
+                .and_then(|pos| parse_type(s, pos, 'b', &mut *tm))
+                .and_then(|pos| parse_char(s, pos, '-'))
+                .and_then(|pos| parse_type(s, pos, 'Y', &mut *tm))
           }
           //'W' {}
           'w' => {
@@ -760,6 +805,7 @@ fn do_strftime(format: &str, tm: &Tm) -> ~str {
           }
           'd' => fmt!("%02d", tm.tm_mday as int),
           'e' => fmt!("%2d", tm.tm_mday as int),
+          'f' => fmt!("%09d", tm.tm_nsec as int),
           'F' => {
             fmt!("%s-%s-%s",
                 parse_type('Y', tm),
@@ -812,7 +858,7 @@ fn do_strftime(format: &str, tm: &Tm) -> ~str {
           //'U' {}
           'u' => {
             let i = tm.tm_wday as int;
-            int::to_str(if i == 0 { 7 } else { i })
+            (if i == 0 { 7 } else { i }).to_str()
           }
           //'V' {}
           'v' => {
@@ -822,10 +868,10 @@ fn do_strftime(format: &str, tm: &Tm) -> ~str {
                 parse_type('Y', tm))
           }
           //'W' {}
-          'w' => int::to_str(tm.tm_wday as int),
+          'w' => (tm.tm_wday as int).to_str(),
           //'X' {}
           //'x' {}
-          'Y' => int::to_str(tm.tm_year as int + 1900),
+          'Y' => (tm.tm_year as int + 1900).to_str(),
           'y' => fmt!("%02d", (tm.tm_year as int + 1900) % 100),
           'Z' => tm.tm_zone.clone(),
           'z' => {
@@ -998,12 +1044,12 @@ mod tests {
           Err(_) => ()
         }
 
-        let format = "%a %b %e %T %Y";
+        let format = "%a %b %e %T.%f %Y";
         assert_eq!(strptime("", format), Err(~"Invalid time"));
         assert!(strptime("Fri Feb 13 15:31:30", format)
             == Err(~"Invalid time"));
 
-        match strptime("Fri Feb 13 15:31:30 2009", format) {
+        match strptime("Fri Feb 13 15:31:30.01234 2009", format) {
           Err(e) => fail!(e),
           Ok(ref tm) => {
             assert!(tm.tm_sec == 30_i32);
@@ -1017,7 +1063,7 @@ mod tests {
             assert!(tm.tm_isdst == 0_i32);
             assert!(tm.tm_gmtoff == 0_i32);
             assert!(tm.tm_zone == ~"");
-            assert!(tm.tm_nsec == 0_i32);
+            assert!(tm.tm_nsec == 12340000_i32);
           }
         }
 
@@ -1174,6 +1220,7 @@ mod tests {
         assert_eq!(local.strftime("%D"), ~"02/13/09");
         assert_eq!(local.strftime("%d"), ~"13");
         assert_eq!(local.strftime("%e"), ~"13");
+        assert_eq!(local.strftime("%f"), ~"000054321");
         assert_eq!(local.strftime("%F"), ~"2009-02-13");
         // assert!(local.strftime("%G") == "2009");
         // assert!(local.strftime("%g") == "09");

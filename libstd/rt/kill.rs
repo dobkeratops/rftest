@@ -20,6 +20,7 @@ observed by the parent of a task::try task that itself spawns child tasks
 (such as any #[test] function). In both cases the data structures live in
 KillHandle.
 
+
 I. Task killing.
 
 The model for killing involves two atomic flags, the "kill flag" and the
@@ -60,9 +61,92 @@ killer does perform both writes, it means it saw a KILL_RUNNING in the
 unkillable flag, which means an unkillable task will see KILL_KILLED and fail
 immediately (rendering the subsequent write to the kill flag unnecessary).
 
+
 II. Exit code propagation.
 
-FIXME(#7544): Decide on the ultimate model for this and document it.
+The basic model for exit code propagation, which is used with the "watched"
+spawn mode (on by default for linked spawns, off for supervised and unlinked
+spawns), is that a parent will wait for all its watched children to exit
+before reporting whether it succeeded or failed. A watching parent will only
+report success if it succeeded and all its children also reported success;
+otherwise, it will report failure. This is most useful for writing test cases:
+
+~~~
+#[test]
+fn test_something_in_another_task {
+    do spawn {
+        assert!(collatz_conjecture_is_false());
+    }
+}
+~~~
+
+Here, as the child task will certainly outlive the parent task, we might miss
+the failure of the child when deciding whether or not the test case passed.
+The watched spawn mode avoids this problem.
+
+In order to propagate exit codes from children to their parents, any
+'watching' parent must wait for all of its children to exit before it can
+report its final exit status. We achieve this by using an UnsafeArc, using the
+reference counting to track how many children are still alive, and using the
+unwrap() operation in the parent's exit path to wait for all children to exit.
+The UnsafeArc referred to here is actually the KillHandle itself.
+
+This also works transitively, as if a "middle" watched child task is itself
+watching a grandchild task, the "middle" task will do unwrap() on its own
+KillHandle (thereby waiting for the grandchild to exit) before dropping its
+reference to its watching parent (which will alert the parent).
+
+While UnsafeArc::unwrap() accomplishes the synchronization, there remains the
+matter of reporting the exit codes themselves. This is easiest when an exiting
+watched task has no watched children of its own:
+
+- If the task with no watched children exits successfully, it need do nothing.
+- If the task with no watched children has failed, it sets a flag in the
+  parent's KillHandle ("any_child_failed") to false. It then stays false forever.
+
+However, if a "middle" watched task with watched children of its own exits
+before its child exits, we need to ensure that the grandparent task may still
+see a failure from the grandchild task. While we could achieve this by having
+each intermediate task block on its handle, this keeps around the other resources
+the task was using. To be more efficient, this is accomplished via "tombstones".
+
+A tombstone is a closure, ~fn() -> bool, which will perform any waiting necessary
+to collect the exit code of descendant tasks. In its environment is captured
+the KillHandle of whichever task created the tombstone, and perhaps also any
+tombstones that that task itself had, and finally also another tombstone,
+effectively creating a lazy-list of heap closures.
+
+When a child wishes to exit early and leave tombstones behind for its parent,
+it must use a LittleLock (pthread mutex) to synchronize with any possible
+sibling tasks which are trying to do the same thing with the same parent.
+However, on the other side, when the parent is ready to pull on the tombstones,
+it need not use this lock, because the unwrap() serves as a barrier that ensures
+no children will remain with references to the handle.
+
+The main logic for creating and assigning tombstones can be found in the
+function reparent_children_to() in the impl for KillHandle.
+
+
+IIA. Issues with exit code propagation.
+
+There are two known issues with the current scheme for exit code propagation.
+
+- As documented in issue #8136, the structure mandates the possibility for stack
+  overflow when collecting tombstones that are very deeply nested. This cannot
+  be avoided with the closure representation, as tombstones end up structured in
+  a sort of tree. However, notably, the tombstones do not actually need to be
+  collected in any particular order, and so a doubly-linked list may be used.
+  However we do not do this yet because DList is in libextra.
+
+- A discussion with Graydon made me realize that if we decoupled the exit code
+  propagation from the parents-waiting action, this could result in a simpler
+  implementation as the exit codes themselves would not have to be propagated,
+  and could instead be propagated implicitly through the taskgroup mechanism
+  that we already have. The tombstoning scheme would still be required. I have
+  not implemented this because currently we can't receive a linked failure kill
+  signal during the task cleanup activity, as that is currently "unkillable",
+  and occurs outside the task's unwinder's "try" block, so would require some
+  restructuring.
 
 */
 
@@ -75,7 +159,7 @@ use rt::task::Task;
 use task::spawn::Taskgroup;
 use to_bytes::IterBytes;
 use unstable::atomics::{AtomicUint, Relaxed};
-use unstable::sync::{UnsafeAtomicRcBox, LittleLock};
+use unstable::sync::{UnsafeArc, LittleLock};
 use util;
 
 static KILLED_MSG: &'static str = "killed by linked failure";
@@ -86,7 +170,7 @@ static KILL_KILLED:     uint = 1;
 static KILL_UNKILLABLE: uint = 2;
 
 struct KillFlag(AtomicUint);
-type KillFlagHandle = UnsafeAtomicRcBox<KillFlag>;
+type KillFlagHandle = UnsafeArc<KillFlag>;
 
 /// A handle to a blocked task. Usually this means having the ~Task pointer by
 /// ownership, but if the task is killable, a killer can steal it at any time.
@@ -127,7 +211,7 @@ struct KillHandleInner {
 
 /// State shared between tasks used for task killing during linked failure.
 #[deriving(Clone)]
-pub struct KillHandle(UnsafeAtomicRcBox<KillHandleInner>);
+pub struct KillHandle(UnsafeArc<KillHandleInner>);
 
 /// Per-task state related to task death, killing, failure, etc.
 pub struct Death {
@@ -141,7 +225,7 @@ pub struct Death {
     on_exit:         Option<~fn(bool)>,
     // nesting level counter for task::unkillable calls (0 == killable).
     unkillable:      int,
-    // nesting level counter for unstable::atomically calls (0 == can yield).
+    // nesting level counter for unstable::atomically calls (0 == can deschedule).
     wont_sleep:      int,
     // A "spare" handle to the kill flag inside the kill handle. Used during
     // blocking/waking as an optimization to avoid two xadds on the refcount.
@@ -151,7 +235,7 @@ pub struct Death {
 impl Drop for KillFlag {
     // Letting a KillFlag with a task inside get dropped would leak the task.
     // We could free it here, but the task should get awoken by hand somehow.
-    fn drop(&self) {
+    fn drop(&mut self) {
         match self.load(Relaxed) {
             KILL_RUNNING | KILL_KILLED => { },
             _ => rtabort!("can't drop kill flag with a blocked task inside!"),
@@ -233,7 +317,7 @@ impl BlockedTask {
         let handles = match self {
             Unkillable(task) => {
                 let flag = unsafe { KillFlag(AtomicUint::new(cast::transmute(task))) };
-                UnsafeAtomicRcBox::newN(flag, num_handles)
+                UnsafeArc::newN(flag, num_handles)
             }
             Killable(flag_arc) => flag_arc.cloneN(num_handles),
         };
@@ -296,8 +380,8 @@ impl Eq for KillHandle {
 impl KillHandle {
     pub fn new() -> (KillHandle, KillFlagHandle) {
         let (flag, flag_clone) =
-            UnsafeAtomicRcBox::new2(KillFlag(AtomicUint::new(KILL_RUNNING)));
-        let handle = KillHandle(UnsafeAtomicRcBox::new(KillHandleInner {
+            UnsafeArc::new2(KillFlag(AtomicUint::new(KILL_RUNNING)));
+        let handle = KillHandle(UnsafeArc::new(KillHandleInner {
             // Linked failure fields
             killed:     flag,
             unkillable: AtomicUint::new(KILL_RUNNING),
@@ -376,7 +460,7 @@ impl KillHandle {
     pub fn notify_immediate_failure(&mut self) {
         // A benign data race may happen here if there are failing sibling
         // tasks that were also spawned-watched. The refcount's write barriers
-        // in UnsafeAtomicRcBox ensure that this write will be seen by the
+        // in UnsafeArc ensure that this write will be seen by the
         // unwrapper/destructor, whichever task may unwrap it.
         unsafe { (*self.get()).any_child_failed = true; }
     }
@@ -563,7 +647,11 @@ impl Death {
     /// All calls must be paired with a preceding call to inhibit_kill.
     #[inline]
     pub fn allow_kill(&mut self, already_failing: bool) {
-        rtassert!(self.unkillable != 0);
+        if self.unkillable == 0 {
+            // we need to decrement the counter before failing.
+            self.unkillable -= 1;
+            fail!("Cannot enter a rekillable() block without a surrounding unkillable()");
+        }
         self.unkillable -= 1;
         if self.unkillable == 0 {
             rtassert!(self.kill_handle.is_some());
@@ -572,16 +660,16 @@ impl Death {
     }
 
     /// Enter a possibly-nested "atomic" section of code. Just for assertions.
-    /// All calls must be paired with a subsequent call to allow_yield.
+    /// All calls must be paired with a subsequent call to allow_deschedule.
     #[inline]
-    pub fn inhibit_yield(&mut self) {
+    pub fn inhibit_deschedule(&mut self) {
         self.wont_sleep += 1;
     }
 
     /// Exit a possibly-nested "atomic" section of code. Just for assertions.
-    /// All calls must be paired with a preceding call to inhibit_yield.
+    /// All calls must be paired with a preceding call to inhibit_deschedule.
     #[inline]
-    pub fn allow_yield(&mut self) {
+    pub fn allow_deschedule(&mut self) {
         rtassert!(self.wont_sleep != 0);
         self.wont_sleep -= 1;
     }
@@ -597,7 +685,7 @@ impl Death {
 }
 
 impl Drop for Death {
-    fn drop(&self) {
+    fn drop(&mut self) {
         // Mustn't be in an atomic or unkillable section at task death.
         rtassert!(self.unkillable == 0);
         rtassert!(self.wont_sleep == 0);

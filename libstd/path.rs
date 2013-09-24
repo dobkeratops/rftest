@@ -21,14 +21,14 @@ use c_str;
 use clone::Clone;
 use cmp::Eq;
 use container::Container;
-use iterator::{Iterator, range};
+use iter::{Iterator, range};
 use libc;
 use num;
 use option::{None, Option, Some};
 use str::{OwnedStr, Str, StrSlice, StrVector};
 use to_str::ToStr;
 use ascii::{AsciiCast, AsciiStr};
-use vec::{OwnedVector, ImmutableVector, OwnedCopyableVector};
+use vec::{Vector, OwnedVector, ImmutableVector, OwnedCopyableVector};
 
 #[cfg(windows)]
 pub use Path = self::WindowsPath;
@@ -57,54 +57,115 @@ pub fn PosixPath(s: &str) -> PosixPath {
     GenericPath::from_str(s)
 }
 
-pub trait GenericPath {
-    /// Converts a string to a Path
+pub trait GenericPath : Clone + Eq + ToStr {
+    /// Converts a string to a path.
     fn from_str(&str) -> Self;
 
-    /// Returns the directory component of `self`, as a string
-    fn dirname(&self) -> ~str;
+    /// Returns the directory component of `self`, as a string.
+    fn dirname(&self) -> ~str {
+        let s = self.dir_path().to_str();
+        match s.len() {
+            0 => ~".",
+            _ => s,
+        }
+    }
+
     /// Returns the file component of `self`, as a string option.
     /// Returns None if `self` names a directory.
-    fn filename(&self) -> Option<~str>;
+    fn filename<'a>(&'a self) -> Option<&'a str> {
+        match self.components().len() {
+            0 => None,
+            n => Some(self.components()[n - 1].as_slice()),
+        }
+    }
+
     /// Returns the stem of the file component of `self`, as a string option.
     /// The stem is the slice of a filename starting at 0 and ending just before
     /// the last '.' in the name.
     /// Returns None if `self` names a directory.
-    fn filestem(&self) -> Option<~str>;
+    fn filestem<'a>(&'a self) -> Option<&'a str> {
+        match self.filename() {
+            None => None,
+            Some(ref f) => {
+                match f.rfind('.') {
+                    Some(p) => Some(f.slice_to(p)),
+                    None => Some((*f)),
+                }
+            }
+        }
+    }
+
     /// Returns the type of the file component of `self`, as a string option.
     /// The file type is the slice of a filename starting just after the last
     /// '.' in the name and ending at the last index in the filename.
     /// Returns None if `self` names a directory.
-    fn filetype(&self) -> Option<~str>;
+    fn filetype<'a>(&'a self) -> Option<&'a str> {
+        match self.filename() {
+            None => None,
+            Some(ref f) => {
+                match f.rfind('.') {
+                    Some(p) if p < f.len() => Some(f.slice_from(p)),
+                    _ => None,
+                }
+            }
+        }
+    }
 
     /// Returns a new path consisting of `self` with the parent directory component replaced
     /// with the given string.
     fn with_dirname(&self, (&str)) -> Self;
+
     /// Returns a new path consisting of `self` with the file component replaced
     /// with the given string.
     fn with_filename(&self, (&str)) -> Self;
+
     /// Returns a new path consisting of `self` with the file stem replaced
     /// with the given string.
-    fn with_filestem(&self, (&str)) -> Self;
+    fn with_filestem(&self, s: &str) -> Self {
+        match self.filetype() {
+            None => self.with_filename(s),
+            Some(ref t) => self.with_filename(s.to_owned() + *t),
+        }
+    }
+
     /// Returns a new path consisting of `self` with the file type replaced
     /// with the given string.
-    fn with_filetype(&self, (&str)) -> Self;
+    fn with_filetype(&self, t: &str) -> Self {
+        match (t.len(), self.filestem()) {
+            (0, None)        => (*self).clone(),
+            (0, Some(ref s)) => self.with_filename(*s),
+            (_, None)        => self.with_filename(fmt!(".%s", t)),
+            (_, Some(ref s)) => self.with_filename(fmt!("%s.%s", *s, t)),
+        }
+    }
 
     /// Returns the directory component of `self`, as a new path.
     /// If `self` has no parent, returns `self`.
-    fn dir_path(&self) -> Self;
+    fn dir_path(&self) -> Self {
+        match self.components().len() {
+            0 => (*self).clone(),
+            _ => self.pop(),
+        }
+    }
+
     /// Returns the file component of `self`, as a new path.
     /// If `self` names a directory, returns the empty path.
     fn file_path(&self) -> Self;
 
-    /// Returns a new Path whose parent directory is `self` and whose
+    /// Returns a new path whose parent directory is `self` and whose
     /// file component is the given string.
     fn push(&self, (&str)) -> Self;
-    /// Returns a new Path consisting of the given path, made relative to `self`.
-    fn push_rel(&self, (&Self)) -> Self;
-    /// Returns a new Path consisting of the path given by the given vector
+
+    /// Returns a new path consisting of the given path, made relative to `self`.
+    fn push_rel(&self, other: &Self) -> Self {
+        assert!(!other.is_absolute());
+        self.push_many(other.components())
+    }
+
+    /// Returns a new path consisting of the path given by the given vector
     /// of strings, relative to `self`.
     fn push_many<S: Str>(&self, (&[S])) -> Self;
+
     /// Identical to `dir_path` except in the case where `self` has only one
     /// component. In this case, `pop` returns the empty path.
     fn pop(&self) -> Self;
@@ -112,9 +173,10 @@ pub trait GenericPath {
     /// The same as `push_rel`, except that the directory argument must not
     /// contain directory separators in any of its components.
     fn unsafe_join(&self, (&Self)) -> Self;
-    /// On Unix, always returns false. On Windows, returns true iff `self`'s
+
+    /// On Unix, always returns `false`. On Windows, returns `true` iff `self`'s
     /// file stem is one of: `con` `aux` `com1` `com2` `com3` `com4`
-    /// `lpt1` `lpt2` `lpt3` `prn` `nul`
+    /// `lpt1` `lpt2` `lpt3` `prn` `nul`.
     fn is_restricted(&self) -> bool;
 
     /// Returns a new path that names the same file as `self`, without containing
@@ -125,10 +187,18 @@ pub trait GenericPath {
     /// Returns `true` if `self` is an absolute path.
     fn is_absolute(&self) -> bool;
 
-    /// True if `self` is an ancestor of `other`. See `test_is_ancestor_of` for examples
-    fn is_ancestor_of(&self, (&Self)) -> bool;
+    /// True if `self` is an ancestor of `other`.
+    // See `test_is_ancestor_of` for examples.
+    fn is_ancestor_of(&self, other: &Self) -> bool {
+        debug!("%s / %s %? %?", self.to_str(), other.to_str(), self.is_absolute(),
+               self.components().len());
+        self == other ||
+            (!other.components().is_empty() &&
+             !(self.components().is_empty() && !self.is_absolute()) &&
+             self.is_ancestor_of(&other.pop()))
+    }
 
-    /// Find the relative path from one file to another
+    /// Finds the relative path from one file to another.
     fn get_relative_to(&self, abs2: (&Self)) -> Self {
         assert!(self.is_absolute());
         assert!(abs2.is_absolute());
@@ -163,7 +233,7 @@ pub trait GenericPath {
         result
     }
 
-    fn components(self) -> ~[~str];
+    fn components<'a>(&'a self) -> &'a [~str];
 }
 
 #[cfg(target_os = "linux")]
@@ -381,7 +451,8 @@ mod stat {
 #[cfg(target_os = "win32")]
 impl WindowsPath {
     pub fn stat(&self) -> Option<libc::stat> {
-        do self.to_c_str().with_ref |buf| {
+        #[fixed_stack_segment]; #[inline(never)];
+        do self.with_c_str |buf| {
             let mut st = stat::arch::default_stat();
             match unsafe { libc::stat(buf, &mut st) } {
                 0 => Some(st),
@@ -415,7 +486,8 @@ impl WindowsPath {
 #[cfg(not(target_os = "win32"))]
 impl PosixPath {
     pub fn stat(&self) -> Option<libc::stat> {
-        do self.to_c_str().with_ref |buf| {
+        #[fixed_stack_segment]; #[inline(never)];
+        do self.with_c_str |buf| {
             let mut st = stat::arch::default_stat();
             match unsafe { libc::stat(buf as *libc::c_char, &mut st) } {
                 0 => Some(st),
@@ -445,7 +517,7 @@ impl PosixPath {
         }
     }
 
-    /// Execute a function on p as well as all of its ancestors
+    /// Executes a function `f` on `self` as well as on all of its ancestors.
     pub fn each_parent(&self, f: &fn(&Path)) {
         if !self.components.is_empty() {
             f(self);
@@ -493,7 +565,8 @@ impl PosixPath {
 #[cfg(unix)]
 impl PosixPath {
     pub fn lstat(&self) -> Option<libc::stat> {
-        do self.to_c_str().with_ref |buf| {
+        #[fixed_stack_segment]; #[inline(never)];
+        do self.with_c_str |buf| {
             let mut st = stat::arch::default_stat();
             match unsafe { libc::lstat(buf, &mut st) } {
                 0 => Some(st),
@@ -546,7 +619,7 @@ impl WindowsPath {
         }
     }
 
-    /// Execute a function on p as well as all of its ancestors
+    /// Executes a function `f` on `self` as well as on all of its ancestors.
     pub fn each_parent(&self, f: &fn(&Path)) {
         if !self.components.is_empty() {
             f(self);
@@ -569,10 +642,12 @@ impl ToCStr for PosixPath {
     fn to_c_str(&self) -> c_str::CString {
         self.to_str().to_c_str()
     }
+
+    unsafe fn to_c_str_unchecked(&self) -> c_str::CString {
+        self.to_str().to_c_str_unchecked()
+    }
 }
 
-// FIXME (#3227): when default methods in traits are working, de-duplicate
-// PosixPath and WindowsPath, most of their methods are common.
 impl GenericPath for PosixPath {
     fn from_str(s: &str) -> PosixPath {
         let components = s.split_iter('/')
@@ -582,45 +657,6 @@ impl GenericPath for PosixPath {
         PosixPath {
             is_absolute: is_absolute,
             components: components,
-        }
-    }
-
-    fn dirname(&self) -> ~str {
-        let s = self.dir_path().to_str();
-        match s.len() {
-            0 => ~".",
-            _ => s,
-        }
-    }
-
-    fn filename(&self) -> Option<~str> {
-        match self.components.len() {
-            0 => None,
-            n => Some(self.components[n - 1].clone()),
-        }
-    }
-
-    fn filestem(&self) -> Option<~str> {
-        match self.filename() {
-            None => None,
-            Some(ref f) => {
-                match f.rfind('.') {
-                    Some(p) => Some(f.slice_to(p).to_owned()),
-                    None => Some((*f).clone()),
-                }
-            }
-        }
-    }
-
-    fn filetype(&self) -> Option<~str> {
-        match self.filename() {
-            None => None,
-            Some(ref f) => {
-                match f.rfind('.') {
-                    Some(p) if p < f.len() => Some(f.slice_from(p).to_owned()),
-                    _ => None,
-                }
-            }
         }
     }
 
@@ -637,33 +673,10 @@ impl GenericPath for PosixPath {
         self.dir_path().push(f)
     }
 
-    fn with_filestem(&self, s: &str) -> PosixPath {
-        match self.filetype() {
-            None => self.with_filename(s),
-            Some(ref t) => self.with_filename(s.to_owned() + *t),
-        }
-    }
-
-    fn with_filetype(&self, t: &str) -> PosixPath {
-        match (t.len(), self.filestem()) {
-            (0, None)        => (*self).clone(),
-            (0, Some(ref s)) => self.with_filename(*s),
-            (_, None)        => self.with_filename(fmt!(".%s", t)),
-            (_, Some(ref s)) => self.with_filename(fmt!("%s.%s", *s, t)),
-        }
-    }
-
-    fn dir_path(&self) -> PosixPath {
-        match self.components.len() {
-            0 => (*self).clone(),
-            _ => self.pop(),
-        }
-    }
-
     fn file_path(&self) -> PosixPath {
         let cs = match self.filename() {
           None => ~[],
-          Some(ref f) => ~[(*f).clone()]
+          Some(ref f) => ~[(*f).to_owned()]
         };
         PosixPath {
             is_absolute: false,
@@ -671,24 +684,17 @@ impl GenericPath for PosixPath {
         }
     }
 
-    fn push_rel(&self, other: &PosixPath) -> PosixPath {
-        assert!(!other.is_absolute);
-        self.push_many(other.components)
-    }
-
-    fn unsafe_join(&self, other: &PosixPath) -> PosixPath {
-        if other.is_absolute {
-            PosixPath {
-                is_absolute: true,
-                components: other.components.clone(),
+    fn push(&self, s: &str) -> PosixPath {
+        let mut v = self.components.clone();
+        for s in s.split_iter(posix::is_sep) {
+            if !s.is_empty() {
+                v.push(s.to_owned())
             }
-        } else {
-            self.push_rel(other)
         }
-    }
-
-    fn is_restricted(&self) -> bool {
-        false
+        PosixPath {
+            components: v,
+            ..(*self).clone()
+        }
     }
 
     fn push_many<S: Str>(&self, cs: &[S]) -> PosixPath {
@@ -706,19 +712,6 @@ impl GenericPath for PosixPath {
         }
     }
 
-    fn push(&self, s: &str) -> PosixPath {
-        let mut v = self.components.clone();
-        for s in s.split_iter(posix::is_sep) {
-            if !s.is_empty() {
-                v.push(s.to_owned())
-            }
-        }
-        PosixPath {
-            components: v,
-            ..(*self).clone()
-        }
-    }
-
     fn pop(&self) -> PosixPath {
         let mut cs = self.components.clone();
         if cs.len() != 0 {
@@ -728,6 +721,21 @@ impl GenericPath for PosixPath {
             is_absolute: self.is_absolute,
             components: cs,
         } //..self }
+    }
+
+    fn unsafe_join(&self, other: &PosixPath) -> PosixPath {
+        if other.is_absolute {
+            PosixPath {
+                is_absolute: true,
+                components: other.components.clone(),
+            }
+        } else {
+            self.push_rel(other)
+        }
+    }
+
+    fn is_restricted(&self) -> bool {
+        false
     }
 
     fn normalize(&self) -> PosixPath {
@@ -741,15 +749,8 @@ impl GenericPath for PosixPath {
         self.is_absolute
     }
 
-    fn is_ancestor_of(&self, other: &PosixPath) -> bool {
-        debug!("%s / %s %? %?", self.to_str(), other.to_str(), self.is_absolute,
-               self.components.len());
-        self == other ||
-            (!other.components.is_empty() && !(self.components.is_empty() && !self.is_absolute) &&
-             self.is_ancestor_of(&other.pop()))
-    }
+    fn components<'a>(&'a self) -> &'a [~str] { self.components.as_slice() }
 
-   fn components(self) -> ~[~str] { self.components }
 }
 
 
@@ -780,6 +781,10 @@ impl ToStr for WindowsPath {
 impl c_str::ToCStr for WindowsPath {
     fn to_c_str(&self) -> c_str::CString {
         self.to_str().to_c_str()
+    }
+
+    unsafe fn to_c_str_unchecked(&self) -> c_str::CString {
+        self.to_str().to_c_str_unchecked()
     }
 }
 
@@ -823,45 +828,6 @@ impl GenericPath for WindowsPath {
         }
     }
 
-    fn dirname(&self) -> ~str {
-        let s = self.dir_path().to_str();
-        match s.len() {
-            0 => ~".",
-            _ => s,
-        }
-    }
-
-    fn filename(&self) -> Option<~str> {
-        match self.components.len() {
-            0 => None,
-            n => Some(self.components[n - 1].clone()),
-        }
-    }
-
-    fn filestem(&self) -> Option<~str> {
-        match self.filename() {
-            None => None,
-            Some(ref f) => {
-                match f.rfind('.') {
-                    Some(p) => Some(f.slice_to(p).to_owned()),
-                    None => Some((*f).clone()),
-                }
-            }
-        }
-    }
-
-    fn filetype(&self) -> Option<~str> {
-        match self.filename() {
-          None => None,
-          Some(ref f) => {
-            match f.rfind('.') {
-                Some(p) if p < f.len() => Some(f.slice_from(p).to_owned()),
-                _ => None,
-            }
-          }
-        }
-    }
-
     fn with_dirname(&self, d: &str) -> WindowsPath {
         let dpath = WindowsPath(d);
         match self.filename() {
@@ -875,29 +841,6 @@ impl GenericPath for WindowsPath {
         self.dir_path().push(f)
     }
 
-    fn with_filestem(&self, s: &str) -> WindowsPath {
-        match self.filetype() {
-            None => self.with_filename(s),
-            Some(ref t) => self.with_filename(s.to_owned() + *t),
-        }
-    }
-
-    fn with_filetype(&self, t: &str) -> WindowsPath {
-        match (t.len(), self.filestem()) {
-            (0, None)        => (*self).clone(),
-            (0, Some(ref s)) => self.with_filename(*s),
-            (_, None)        => self.with_filename(fmt!(".%s", t)),
-            (_, Some(ref s)) => self.with_filename(fmt!("%s.%s", *s, t)),
-        }
-    }
-
-    fn dir_path(&self) -> WindowsPath {
-        match self.components.len() {
-            0 => (*self).clone(),
-            _ => self.pop(),
-        }
-    }
-
     fn file_path(&self) -> WindowsPath {
         WindowsPath {
             host: None,
@@ -905,14 +848,50 @@ impl GenericPath for WindowsPath {
             is_absolute: false,
             components: match self.filename() {
                 None => ~[],
-                Some(ref f) => ~[(*f).clone()],
+                Some(ref f) => ~[(*f).to_owned()],
             }
         }
     }
 
-    fn push_rel(&self, other: &WindowsPath) -> WindowsPath {
-        assert!(!other.is_absolute);
-        self.push_many(other.components)
+    fn push(&self, s: &str) -> WindowsPath {
+        let mut v = self.components.clone();
+        for s in s.split_iter(windows::is_sep) {
+            if !s.is_empty() {
+                v.push(s.to_owned())
+            }
+        }
+        WindowsPath { components: v, ..(*self).clone() }
+    }
+
+    fn push_many<S: Str>(&self, cs: &[S]) -> WindowsPath {
+        let mut v = self.components.clone();
+        for e in cs.iter() {
+            for s in e.as_slice().split_iter(windows::is_sep) {
+                if !s.is_empty() {
+                    v.push(s.to_owned())
+                }
+            }
+        }
+        // tedious, but as-is, we can't use ..self
+        WindowsPath {
+            host: self.host.clone(),
+            device: self.device.clone(),
+            is_absolute: self.is_absolute,
+            components: v
+        }
+    }
+
+    fn pop(&self) -> WindowsPath {
+        let mut cs = self.components.clone();
+        if cs.len() != 0 {
+            cs.pop();
+        }
+        WindowsPath {
+            host: self.host.clone(),
+            device: self.device.clone(),
+            is_absolute: self.is_absolute,
+            components: cs,
+        }
     }
 
     fn unsafe_join(&self, other: &WindowsPath) -> WindowsPath {
@@ -972,47 +951,6 @@ impl GenericPath for WindowsPath {
         }
     }
 
-    fn push_many<S: Str>(&self, cs: &[S]) -> WindowsPath {
-        let mut v = self.components.clone();
-        for e in cs.iter() {
-            for s in e.as_slice().split_iter(windows::is_sep) {
-                if !s.is_empty() {
-                    v.push(s.to_owned())
-                }
-            }
-        }
-        // tedious, but as-is, we can't use ..self
-        WindowsPath {
-            host: self.host.clone(),
-            device: self.device.clone(),
-            is_absolute: self.is_absolute,
-            components: v
-        }
-    }
-
-    fn push(&self, s: &str) -> WindowsPath {
-        let mut v = self.components.clone();
-        for s in s.split_iter(windows::is_sep) {
-            if !s.is_empty() {
-                v.push(s.to_owned())
-            }
-        }
-        WindowsPath { components: v, ..(*self).clone() }
-    }
-
-    fn pop(&self) -> WindowsPath {
-        let mut cs = self.components.clone();
-        if cs.len() != 0 {
-            cs.pop();
-        }
-        WindowsPath {
-            host: self.host.clone(),
-            device: self.device.clone(),
-            is_absolute: self.is_absolute,
-            components: cs,
-        }
-    }
-
     fn normalize(&self) -> WindowsPath {
         WindowsPath {
             host: self.host.clone(),
@@ -1032,13 +970,8 @@ impl GenericPath for WindowsPath {
         self.is_absolute
     }
 
-    fn is_ancestor_of(&self, other: &WindowsPath) -> bool {
-        self == other ||
-            (!other.components.is_empty() && !(self.components.is_empty() && !self.is_absolute) &&
-             self.is_ancestor_of(&other.pop()))
-    }
+    fn components<'a>(&'a self) -> &'a [~str] { self.components.as_slice() }
 
-   fn components(self) -> ~[~str] { self.components }
 }
 
 pub fn normalize(components: &[~str]) -> ~[~str] {
@@ -1093,6 +1026,8 @@ pub mod windows {
     }
 
     pub fn extract_drive_prefix(s: &str) -> Option<(~str,~str)> {
+        #[fixed_stack_segment]; #[inline(never)];
+
         unsafe {
             if (s.len() > 1 &&
                 libc::isalpha(s[0] as libc::c_int) != 0 &&
@@ -1130,10 +1065,10 @@ mod tests {
     #[test]
     fn test_filetype_foo_bar() {
         let wp = PosixPath("foo.bar");
-        assert_eq!(wp.filetype(), Some(~".bar"));
+        assert_eq!(wp.filetype(), Some(".bar"));
 
         let wp = WindowsPath("foo.bar");
-        assert_eq!(wp.filetype(), Some(~".bar"));
+        assert_eq!(wp.filetype(), Some(".bar"));
     }
 
     #[test]

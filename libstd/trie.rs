@@ -11,7 +11,6 @@
 //! An ordered map and set for integer keys implemented as a radix trie
 
 use prelude::*;
-use iterator::{FromIterator, Extendable};
 use uint;
 use util::{swap, replace};
 use vec;
@@ -205,16 +204,16 @@ impl<T> TrieMap<T> {
     }
 }
 
-impl<T, Iter: Iterator<(uint, T)>> FromIterator<(uint, T), Iter> for TrieMap<T> {
-    fn from_iterator(iter: &mut Iter) -> TrieMap<T> {
+impl<T> FromIterator<(uint, T)> for TrieMap<T> {
+    fn from_iterator<Iter: Iterator<(uint, T)>>(iter: &mut Iter) -> TrieMap<T> {
         let mut map = TrieMap::new();
         map.extend(iter);
         map
     }
 }
 
-impl<T, Iter: Iterator<(uint, T)>> Extendable<(uint, T), Iter> for TrieMap<T> {
-    fn extend(&mut self, iter: &mut Iter) {
+impl<T> Extendable<(uint, T)> for TrieMap<T> {
+    fn extend<Iter: Iterator<(uint, T)>>(&mut self, iter: &mut Iter) {
         for (k, v) in *iter {
             self.insert(k, v);
         }
@@ -294,16 +293,16 @@ impl TrieSet {
     }
 }
 
-impl<Iter: Iterator<uint>> FromIterator<uint, Iter> for TrieSet {
-    fn from_iterator(iter: &mut Iter) -> TrieSet {
+impl FromIterator<uint> for TrieSet {
+    fn from_iterator<Iter: Iterator<uint>>(iter: &mut Iter) -> TrieSet {
         let mut set = TrieSet::new();
         set.extend(iter);
         set
     }
 }
 
-impl<Iter: Iterator<uint>> Extendable<uint, Iter> for TrieSet {
-    fn extend(&mut self, iter: &mut Iter) {
+impl Extendable<uint> for TrieSet {
+    fn extend<Iter: Iterator<uint>>(&mut self, iter: &mut Iter) {
         for elem in *iter {
             self.insert(elem);
         }
@@ -521,6 +520,7 @@ pub fn check_integrity<T>(trie: &TrieNode<T>) {
 mod test_map {
     use super::*;
     use prelude::*;
+    use iter::range_step;
     use uint;
 
     #[test]
@@ -539,21 +539,19 @@ mod test_map {
     #[test]
     fn test_step() {
         let mut trie = TrieMap::new();
-        let n = 300;
+        let n = 300u;
 
-        do uint::range_step(1, n, 2) |x| {
+        for x in range_step(1u, n, 2) {
             assert!(trie.insert(x, x + 1));
             assert!(trie.contains_key(&x));
             check_integrity(&trie.root);
-            true
-        };
+        }
 
-        do uint::range_step(0, n, 2) |x| {
+        for x in range_step(0u, n, 2) {
             assert!(!trie.contains_key(&x));
             assert!(trie.insert(x, x + 1));
             check_integrity(&trie.root);
-            true
-        };
+        }
 
         for x in range(0u, n) {
             assert!(trie.contains_key(&x));
@@ -561,19 +559,17 @@ mod test_map {
             check_integrity(&trie.root);
         }
 
-        do uint::range_step(1, n, 2) |x| {
+        for x in range_step(1u, n, 2) {
             assert!(trie.remove(&x));
             assert!(!trie.contains_key(&x));
             check_integrity(&trie.root);
-            true
-        };
+        }
 
-        do uint::range_step(0, n, 2) |x| {
+        for x in range_step(0u, n, 2) {
             assert!(trie.contains_key(&x));
             assert!(!trie.insert(x, x + 1));
             check_integrity(&trie.root);
-            true
-        };
+        }
     }
 
     #[test]
@@ -716,11 +712,10 @@ mod test_map {
         let value = 42u;
 
         let mut map : TrieMap<uint> = TrieMap::new();
-        do uint::range_step(0u, last, step as int) |x| {
+        for x in range_step(0u, last, step) {
             assert!(x % step == 0);
             map.insert(x, value);
-            true
-        };
+        }
 
         for i in range(0u, last - step) {
             let mut lb = map.lower_bound_iter(i);

@@ -15,7 +15,7 @@
 
 use std::num;
 use std::vec;
-use std::iterator::{FromIterator, Invert, RandomAccessIterator, Extendable};
+use std::iter::{Invert, RandomAccessIterator};
 
 use container::Deque;
 
@@ -243,6 +243,8 @@ pub struct RingBufIterator<'self, T> {
 iterator!{impl RingBufIterator -> &'self T, get_ref}
 iterator_rev!{impl RingBufIterator -> &'self T, get_ref}
 
+impl<'self, T> ExactSize<&'self T> for RingBufIterator<'self, T> {}
+
 impl<'self, T> RandomAccessIterator<&'self T> for RingBufIterator<'self, T> {
     #[inline]
     fn indexable(&self) -> uint { self.rindex - self.index }
@@ -267,6 +269,8 @@ pub struct RingBufMutIterator<'self, T> {
 }
 iterator!{impl RingBufMutIterator -> &'self mut T, get_mut_ref}
 iterator_rev!{impl RingBufMutIterator -> &'self mut T, get_mut_ref}
+
+impl<'self, T> ExactSize<&'self mut T> for RingBufMutIterator<'self, T> {}
 
 /// Grow is only called on full elts, so nelts is also len(elts), unlike
 /// elsewhere.
@@ -322,8 +326,8 @@ impl<A: Eq> Eq for RingBuf<A> {
     }
 }
 
-impl<A, T: Iterator<A>> FromIterator<A, T> for RingBuf<A> {
-    fn from_iterator(iterator: &mut T) -> RingBuf<A> {
+impl<A> FromIterator<A> for RingBuf<A> {
+    fn from_iterator<T: Iterator<A>>(iterator: &mut T) -> RingBuf<A> {
         let (lower, _) = iterator.size_hint();
         let mut deq = RingBuf::with_capacity(lower);
         deq.extend(iterator);
@@ -331,8 +335,8 @@ impl<A, T: Iterator<A>> FromIterator<A, T> for RingBuf<A> {
     }
 }
 
-impl<A, T: Iterator<A>> Extendable<A, T> for RingBuf<A> {
-    fn extend(&mut self, iterator: &mut T) {
+impl<A> Extendable<A> for RingBuf<A> {
+    fn extend<T: Iterator<A>>(&mut self, iterator: &mut T) {
         for elt in *iterator {
             self.push_back(elt);
         }
@@ -483,7 +487,7 @@ mod tests {
     #[bench]
     fn bench_new(b: &mut test::BenchHarness) {
         do b.iter {
-            let _ = RingBuf::new::<u64>();
+            let _: RingBuf<u64> = RingBuf::new();
         }
     }
 
@@ -690,13 +694,13 @@ mod tests {
 
     #[test]
     fn test_from_iterator() {
-        use std::iterator;
+        use std::iter;
         let v = ~[1,2,3,4,5,6,7];
         let deq: RingBuf<int> = v.iter().map(|&x| x).collect();
         let u: ~[int] = deq.iter().map(|&x| x).collect();
         assert_eq!(u, v);
 
-        let mut seq = iterator::count(0u, 2).take(256);
+        let mut seq = iter::count(0u, 2).take(256);
         let deq: RingBuf<uint> = seq.collect();
         for (i, &x) in deq.iter().enumerate() {
             assert_eq!(2*i, x);

@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2013 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,10 +8,25 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-//! Semver parsing and logic
-
-#[allow(missing_doc)];
-
+//! Semantic version parsing and comparison.
+//!
+//! Semantic versioning (see http://semver.org/) is a set of rules for
+//! assigning version numbers intended to convey meaning about what has
+//! changed, and how much. A version number has five parts:
+//!
+//!  * Major number, updated for incompatible API changes
+//!  * Minor number, updated for backwards-compatible API additions
+//!  * Patch number, updated for backwards-compatible bugfixes
+//!  * Pre-release information (optional), preceded by a hyphen (`-`)
+//!  * Build metadata (optional), preceded by a plus sign (`+`)
+//!
+//! The three mandatory components are required to be decimal numbers. The
+//! pre-release information and build metadata are required to be a
+//! period-separated list of identifiers containing only alphanumeric
+//! characters and hyphens.
+//!
+//! An example version number with all five components is
+//! `0.8.1-rc.3.0+20130922.linux`.
 
 use std::char;
 use std::cmp;
@@ -19,8 +34,9 @@ use std::io::{ReaderUtil};
 use std::io;
 use std::option::{Option, Some, None};
 use std::to_str::ToStr;
-use std::uint;
 
+/// An identifier in the pre-release or build metadata. If the identifier can
+/// be parsed as a decimal value, it will be represented with `Numeric`.
 #[deriving(Clone, Eq)]
 pub enum Identifier {
     Numeric(uint),
@@ -37,18 +53,6 @@ impl cmp::Ord for Identifier {
             (&AlphaNumeric(_), _) => false
         }
     }
-    #[inline]
-    fn le(&self, other: &Identifier) -> bool {
-        ! (other < self)
-    }
-    #[inline]
-    fn gt(&self, other: &Identifier) -> bool {
-        other < self
-    }
-    #[inline]
-    fn ge(&self, other: &Identifier) -> bool {
-        ! (self < other)
-    }
 }
 
 impl ToStr for Identifier {
@@ -62,12 +66,20 @@ impl ToStr for Identifier {
 }
 
 
+/// Represents a version number conforming to the semantic versioning scheme.
 #[deriving(Clone, Eq)]
 pub struct Version {
+    /// The major version, to be incremented on incompatible changes.
     major: uint,
+    /// The minor version, to be incremented when functionality is added in a
+    /// backwards-compatible manner.
     minor: uint,
+    /// The patch version, to be incremented when backwards-compatible bug
+    /// fixes are made.
     patch: uint,
+    /// The pre-release version identifier, if one exists.
     pre: ~[Identifier],
+    /// The build metadata, ignored when determining version precedence.
     build: ~[Identifier],
 }
 
@@ -152,7 +164,7 @@ fn take_nonempty_prefix(rdr: @io::Reader,
 
 fn take_num(rdr: @io::Reader, ch: char) -> (uint, char) {
     let (s, ch) = take_nonempty_prefix(rdr, ch, char::is_digit);
-    match uint::from_str(s) {
+    match from_str::<uint>(s) {
         None => { bad_parse::cond.raise(()); (0, ch) },
         Some(i) => (i, ch)
     }
@@ -161,7 +173,7 @@ fn take_num(rdr: @io::Reader, ch: char) -> (uint, char) {
 fn take_ident(rdr: @io::Reader, ch: char) -> (Identifier, char) {
     let (s,ch) = take_nonempty_prefix(rdr, ch, char::is_alphanumeric);
     if s.iter().all(char::is_digit) {
-        match uint::from_str(s) {
+        match from_str::<uint>(s) {
             None => { bad_parse::cond.raise(()); (Numeric(0), ch) },
             Some(i) => (Numeric(i), ch)
         }
@@ -215,6 +227,7 @@ fn parse_reader(rdr: @io::Reader) -> Version {
 }
 
 
+/// Parse a string into a semver object.
 pub fn parse(s: &str) -> Option<Version> {
     if !s.is_ascii() {
         return None;

@@ -49,13 +49,17 @@ they contained the following prologue:
 
 
 #[link(name = "std",
-       vers = "0.8-pre",
+       vers = "0.8",
        uuid = "c70c24a7-5551-4f73-8e37-380b11d80be8",
        url = "https://github.com/mozilla/rust/tree/master/src/libstd")];
 
 #[comment = "The Rust standard library"];
 #[license = "MIT/ASL2"];
 #[crate_type = "lib"];
+
+#[doc(html_logo_url = "http://www.rust-lang.org/logos/rust-logo-128x128-blk.png",
+      html_favicon_url = "http://www.rust-lang.org/favicon.ico",
+      passes = "strip-hidden")];
 
 // Don't link to std. We are std.
 #[no_std];
@@ -64,7 +68,7 @@ they contained the following prologue:
 #[deny(missing_doc)];
 
 // Make extra accessible for benchmarking
-#[cfg(test)] extern mod extra(vers="0.8-pre");
+#[cfg(test)] extern mod extra(vers="0.8");
 
 // Make std testable by not duplicating lang items. See #2912
 #[cfg(test)] extern mod realstd(name = "std");
@@ -110,7 +114,7 @@ pub mod prelude;
 #[path = "num/f32.rs"]   pub mod f32;
 #[path = "num/f64.rs"]   pub mod f64;
 
-pub mod nil;
+pub mod unit;
 pub mod bool;
 pub mod char;
 pub mod tuple;
@@ -121,6 +125,7 @@ pub mod str;
 
 #[path = "str/ascii.rs"]
 pub mod ascii;
+pub mod send_str;
 
 pub mod ptr;
 pub mod owned;
@@ -141,14 +146,13 @@ pub mod from_str;
 #[path = "num/num.rs"]
 pub mod num;
 pub mod iter;
-pub mod iterator;
 pub mod to_str;
 pub mod to_bytes;
 pub mod clone;
 pub mod io;
 pub mod hash;
 pub mod container;
-
+pub mod default;
 
 /* Common data structures */
 
@@ -185,7 +189,7 @@ pub mod reflect;
 pub mod condition;
 pub mod logging;
 pub mod util;
-
+pub mod routine;
 
 /* Unsupported interfaces */
 
@@ -198,7 +202,7 @@ mod unicode;
 #[path = "num/cmath.rs"]
 mod cmath;
 
-// XXX: This shouldn't be pub, and it should be reexported under 'unstable'
+// FIXME #7809: This shouldn't be pub, and it should be reexported under 'unstable'
 // but name resolution doesn't work without it being pub.
 pub mod rt;
 
@@ -213,6 +217,7 @@ mod std {
     pub use option;
     pub use kinds;
     pub use local_data;
+    pub use logging;
     pub use sys;
     pub use unstable;
     pub use str;

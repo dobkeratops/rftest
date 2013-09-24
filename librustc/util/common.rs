@@ -10,8 +10,9 @@
 
 
 use syntax::ast;
-use syntax::codemap::{span};
-use syntax::oldvisit;
+use syntax::codemap::{Span};
+use syntax::visit;
+use syntax::visit::Visitor;
 
 use std::hashmap::HashSet;
 use extra;
@@ -39,7 +40,7 @@ pub struct _indenter {
 }
 
 impl Drop for _indenter {
-    fn drop(&self) { debug!("<<"); }
+    fn drop(&mut self) { debug!("<<"); }
 }
 
 pub fn _indenter(_i: ()) -> _indenter {
@@ -53,52 +54,62 @@ pub fn indenter() -> _indenter {
     _indenter(())
 }
 
-pub fn field_expr(f: ast::Field) -> @ast::expr { return f.expr; }
+pub fn field_expr(f: ast::Field) -> @ast::Expr { return f.expr; }
 
-pub fn field_exprs(fields: ~[ast::Field]) -> ~[@ast::expr] {
+pub fn field_exprs(fields: ~[ast::Field]) -> ~[@ast::Expr] {
     fields.map(|f| f.expr)
 }
 
-// Takes a predicate p, returns true iff p is true for any subexpressions
-// of b -- skipping any inner loops (loop, while, loop_body)
-pub fn loop_query(b: &ast::Block, p: @fn(&ast::expr_) -> bool) -> bool {
-    let rs = @mut false;
-    let visit_expr: @fn(@ast::expr,
-                        (@mut bool,
-                         oldvisit::vt<@mut bool>)) = |e, (flag, v)| {
-        *flag |= p(&e.node);
+struct LoopQueryVisitor<'self> {
+    p: &'self fn(&ast::Expr_) -> bool
+}
+
+impl<'self> Visitor<@mut bool> for LoopQueryVisitor<'self> {
+    fn visit_expr(&mut self, e: @ast::Expr, flag: @mut bool) {
+        *flag |= (self.p)(&e.node);
         match e.node {
           // Skip inner loops, since a break in the inner loop isn't a
           // break inside the outer loop
-          ast::expr_loop(*) | ast::expr_while(*) => {}
-          _ => oldvisit::visit_expr(e, (flag, v))
+          ast::ExprLoop(*) | ast::ExprWhile(*) => {}
+          _ => visit::walk_expr(self, e, flag)
         }
-    };
-    let v = oldvisit::mk_vt(@oldvisit::Visitor {
-        visit_expr: visit_expr,
-        .. *oldvisit::default_visitor()});
-    oldvisit::visit_block(b, (rs, v));
-    return *rs;
+    }
 }
 
 // Takes a predicate p, returns true iff p is true for any subexpressions
 // of b -- skipping any inner loops (loop, while, loop_body)
-pub fn block_query(b: &ast::Block, p: @fn(@ast::expr) -> bool) -> bool {
+pub fn loop_query(b: &ast::Block, p: &fn(&ast::Expr_) -> bool) -> bool {
     let rs = @mut false;
-    let visit_expr: @fn(@ast::expr,
-                        (@mut bool,
-                         oldvisit::vt<@mut bool>)) = |e, (flag, v)| {
-        *flag |= p(e);
-        oldvisit::visit_expr(e, (flag, v))
+    let mut v = LoopQueryVisitor {
+        p: p,
     };
-    let v = oldvisit::mk_vt(@oldvisit::Visitor{
-        visit_expr: visit_expr,
-        .. *oldvisit::default_visitor()});
-    oldvisit::visit_block(b, (rs, v));
+    visit::walk_block(&mut v, b, rs);
     return *rs;
 }
 
-pub fn local_rhs_span(l: @ast::Local, def: span) -> span {
+struct BlockQueryVisitor<'self> {
+    p: &'self fn(@ast::Expr) -> bool
+}
+
+impl<'self> Visitor<@mut bool> for BlockQueryVisitor<'self> {
+    fn visit_expr(&mut self, e: @ast::Expr, flag: @mut bool) {
+        *flag |= (self.p)(e);
+        visit::walk_expr(self, e, flag)
+    }
+}
+
+// Takes a predicate p, returns true iff p is true for any subexpressions
+// of b -- skipping any inner loops (loop, while, loop_body)
+pub fn block_query(b: &ast::Block, p: &fn(@ast::Expr) -> bool) -> bool {
+    let rs = @mut false;
+    let mut v = BlockQueryVisitor {
+        p: p,
+    };
+    visit::walk_block(&mut v, b, rs);
+    return *rs;
+}
+
+pub fn local_rhs_span(l: @ast::Local, def: Span) -> Span {
     match l.init {
       Some(i) => return i.span,
       _ => return def

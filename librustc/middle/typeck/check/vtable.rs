@@ -27,9 +27,10 @@ use std::hashmap::HashSet;
 use std::result;
 use syntax::ast;
 use syntax::ast_util;
-use syntax::codemap::span;
+use syntax::codemap::Span;
 use syntax::print::pprust::expr_to_str;
-use syntax::oldvisit;
+use syntax::visit;
+use syntax::visit::Visitor;
 
 // vtable resolution looks for places where trait bounds are
 // substituted in and figures out which vtable is used. There is some
@@ -61,7 +62,7 @@ use syntax::oldvisit;
 /// responsible for this vtable instantiation. (This may not be an expression
 /// if the vtable instantiation is being performed as part of "deriving".)
 pub struct LocationInfo {
-    span: span,
+    span: Span,
     id: ast::NodeId
 }
 
@@ -134,6 +135,9 @@ fn lookup_vtables_for_param(vcx: &VtableContext,
     do ty::each_bound_trait_and_supertraits(tcx, type_param_bounds.trait_bounds) |trait_ref| {
         // ...and here trait_ref is each bound that was declared on A,
         // expressed in terms of the type parameters.
+
+        ty::populate_implementations_for_trait_if_necessary(tcx,
+                                                            trait_ref.def_id);
 
         // Substitute the values of the type parameters that may
         // appear in the bound.
@@ -320,6 +324,10 @@ fn search_for_vtable(vcx: &VtableContext,
     let mut found = ~[];
     let mut impls_seen = HashSet::new();
 
+    // Load the implementations from external metadata if necessary.
+    ty::populate_implementations_for_trait_if_necessary(tcx,
+                                                        trait_ref.def_id);
+
     // XXX: this is a bad way to do this, since we do
     // pointless allocations.
     let impls = tcx.trait_impls.find(&trait_ref.def_id)
@@ -465,7 +473,7 @@ fn search_for_vtable(vcx: &VtableContext,
 
 fn fixup_substs(vcx: &VtableContext,
                 location_info: &LocationInfo,
-                id: ast::def_id,
+                id: ast::DefId,
                 substs: ty::substs,
                 is_early: bool)
                 -> Option<ty::substs> {
@@ -474,7 +482,7 @@ fn fixup_substs(vcx: &VtableContext,
     let t = ty::mk_trait(tcx,
                          id, substs,
                          ty::RegionTraitStore(ty::re_static),
-                         ast::m_imm,
+                         ast::MutImmutable,
                          ty::EmptyBuiltinBounds());
     do fixup_ty(vcx, location_info, t, is_early).map |t_f| {
         match ty::get(*t_f).sty {
@@ -508,7 +516,7 @@ fn connect_trait_tps(vcx: &VtableContext,
                      location_info: &LocationInfo,
                      impl_substs: &ty::substs,
                      trait_ref: @ty::TraitRef,
-                     impl_did: ast::def_id)
+                     impl_did: ast::DefId)
 {
     let tcx = vcx.tcx();
 
@@ -530,7 +538,7 @@ fn insert_vtables(fcx: @mut FnCtxt,
     fcx.inh.vtable_map.insert(callee_id, vtables);
 }
 
-pub fn location_info_for_expr(expr: @ast::expr) -> LocationInfo {
+pub fn location_info_for_expr(expr: @ast::Expr) -> LocationInfo {
     LocationInfo {
         span: expr.span,
         id: expr.id
@@ -543,7 +551,7 @@ pub fn location_info_for_item(item: @ast::item) -> LocationInfo {
     }
 }
 
-pub fn early_resolve_expr(ex: @ast::expr,
+pub fn early_resolve_expr(ex: @ast::Expr,
                           fcx: @mut FnCtxt,
                           is_early: bool) {
     debug!("vtable: early_resolve_expr() ex with id %? (early: %b): %s",
@@ -552,7 +560,7 @@ pub fn early_resolve_expr(ex: @ast::expr,
 
     let cx = fcx.ccx;
     match ex.node {
-      ast::expr_path(*) => {
+      ast::ExprPath(*) => {
         do fcx.opt_node_ty_substs(ex.id) |substs| {
             debug!("vtable resolution on parameter bounds for expr %s",
                    ex.repr(fcx.tcx()));
@@ -576,16 +584,16 @@ pub fn early_resolve_expr(ex: @ast::expr,
         };
       }
 
-      ast::expr_paren(e) => {
+      ast::ExprParen(e) => {
           early_resolve_expr(e, fcx, is_early);
       }
 
       // Must resolve bounds on methods with bounded params
-      ast::expr_binary(callee_id, _, _, _) |
-      ast::expr_unary(callee_id, _, _) |
-      ast::expr_assign_op(callee_id, _, _, _) |
-      ast::expr_index(callee_id, _, _) |
-      ast::expr_method_call(callee_id, _, _, _, _, _) => {
+      ast::ExprBinary(callee_id, _, _, _) |
+      ast::ExprUnary(callee_id, _, _) |
+      ast::ExprAssignOp(callee_id, _, _, _) |
+      ast::ExprIndex(callee_id, _, _) |
+      ast::ExprMethodCall(callee_id, _, _, _, _, _) => {
         match ty::method_call_type_param_defs(cx.tcx, fcx.inh.method_map, ex.id) {
           Some(type_param_defs) => {
             debug!("vtable resolution on parameter bounds for method call %s",
@@ -603,17 +611,17 @@ pub fn early_resolve_expr(ex: @ast::expr,
           None => ()
         }
       }
-      ast::expr_cast(src, _) => {
+      ast::ExprCast(src, _) => {
           debug!("vtable resolution on expr %s", ex.repr(fcx.tcx()));
           let target_ty = fcx.expr_ty(ex);
           match ty::get(target_ty).sty {
               // Bounds of type's contents are not checked here, but in kind.rs.
               ty::ty_trait(target_def_id, ref target_substs, store,
                            target_mutbl, _bounds) => {
-                  fn mutability_allowed(a_mutbl: ast::mutability,
-                                        b_mutbl: ast::mutability) -> bool {
+                  fn mutability_allowed(a_mutbl: ast::Mutability,
+                                        b_mutbl: ast::Mutability) -> bool {
                       a_mutbl == b_mutbl ||
-                      (a_mutbl == ast::m_mutbl && b_mutbl == ast::m_imm)
+                      (a_mutbl == ast::MutMutable && b_mutbl == ast::MutImmutable)
                   }
                   // Look up vtables for the type we're casting to,
                   // passing in the source and target type.  The source
@@ -647,30 +655,21 @@ pub fn early_resolve_expr(ex: @ast::expr,
                                   self_ty: Some(mt.ty)
                               }
                           };
-                          let vtable_opt =
-                              lookup_vtable(&vcx,
-                                            location_info,
-                                            mt.ty,
-                                            target_trait_ref,
-                                            is_early);
-                          match vtable_opt {
-                              Some(vtable) => {
-                                  // Map this expression to that
-                                  // vtable (that is: "ex has vtable
-                                  // <vtable>")
-                                  if !is_early {
-                                      insert_vtables(fcx, ex.id,
-                                                     @~[@~[vtable]]);
-                                  }
-                              }
-                              None => {
-                                  fcx.tcx().sess.span_err(
-                                      ex.span,
-                                      fmt!("failed to find an implementation \
-                                            of trait %s for %s",
-                                           fcx.infcx().ty_to_str(target_ty),
-                                           fcx.infcx().ty_to_str(mt.ty)));
-                              }
+
+                          let param_bounds = ty::ParamBounds {
+                              builtin_bounds: ty::EmptyBuiltinBounds(),
+                              trait_bounds: ~[target_trait_ref]
+                          };
+                          let vtables =
+                                lookup_vtables_for_param(&vcx,
+                                                         location_info,
+                                                         None,
+                                                         &param_bounds,
+                                                         mt.ty,
+                                                         is_early);
+
+                          if !is_early {
+                              insert_vtables(fcx, ex.id, @~[vtables]);
                           }
 
                           // Now, if this is &trait, we need to link the
@@ -721,11 +720,11 @@ pub fn early_resolve_expr(ex: @ast::expr,
     }
 }
 
-fn resolve_expr(ex: @ast::expr,
-                (fcx, v): (@mut FnCtxt,
-                           oldvisit::vt<@mut FnCtxt>)) {
+fn resolve_expr(fcx: @mut FnCtxt,
+                ex: @ast::Expr) {
+    let mut fcx = fcx;
     early_resolve_expr(ex, fcx, false);
-    oldvisit::visit_expr(ex, (fcx, v));
+    visit::walk_expr(&mut fcx, ex, ());
 }
 
 pub fn resolve_impl(ccx: @mut CrateCtxt, impl_item: @ast::item) {
@@ -772,12 +771,18 @@ pub fn resolve_impl(ccx: @mut CrateCtxt, impl_item: @ast::item) {
     }
 }
 
+impl visit::Visitor<()> for @mut FnCtxt {
+    fn visit_expr(&mut self, ex:@ast::Expr, _:()) {
+        resolve_expr(*self, ex);
+    }
+    fn visit_item(&mut self, _:@ast::item, _:()) {
+        // no-op
+    }
+}
+
 // Detect points where a trait-bounded type parameter is
 // instantiated, resolve the impls for the parameters.
 pub fn resolve_in_block(fcx: @mut FnCtxt, bl: &ast::Block) {
-    oldvisit::visit_block(bl, (fcx, oldvisit::mk_vt(@oldvisit::Visitor {
-        visit_expr: resolve_expr,
-        visit_item: |_,_| {},
-        .. *oldvisit::default_visitor()
-    })));
+    let mut fcx = fcx;
+    visit::walk_block(&mut fcx, bl, ());
 }

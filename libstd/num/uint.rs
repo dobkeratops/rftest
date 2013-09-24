@@ -10,7 +10,10 @@
 
 //! Operations and constants for `uint`
 
-use iter;
+use num;
+use num::{CheckedAdd, CheckedSub, CheckedMul};
+use option::{Option, Some, None};
+use unstable::intrinsics;
 use sys;
 
 pub use self::generated::*;
@@ -70,7 +73,7 @@ pub fn div_round(x: uint, y: uint) -> uint {
 ///
 pub fn div_floor(x: uint, y: uint) -> uint { return x / y; }
 
-impl iter::Times for uint {
+impl num::Times for uint {
     #[inline]
     ///
     /// A convenience form for basic repetition. Given a uint `x`,
@@ -98,7 +101,83 @@ pub fn next_power_of_two(n: uint) -> uint {
     let mut tmp: uint = n - 1u;
     let mut shift: uint = 1u;
     while shift <= halfbits { tmp |= tmp >> shift; shift <<= 1u; }
-    return tmp + 1u;
+    tmp + 1u
+}
+
+/// Returns the smallest power of 2 greater than or equal to `n`
+#[inline]
+pub fn next_power_of_two_opt(n: uint) -> Option<uint> {
+    let halfbits: uint = sys::size_of::<uint>() * 4u;
+    let mut tmp: uint = n - 1u;
+    let mut shift: uint = 1u;
+    while shift <= halfbits { tmp |= tmp >> shift; shift <<= 1u; }
+    tmp.checked_add(&1)
+}
+
+#[cfg(target_word_size = "32")]
+impl CheckedAdd for uint {
+    #[inline]
+    fn checked_add(&self, v: &uint) -> Option<uint> {
+        unsafe {
+            let (x, y) = intrinsics::u32_add_with_overflow(*self as u32, *v as u32);
+            if y { None } else { Some(x as uint) }
+        }
+    }
+}
+
+#[cfg(target_word_size = "64")]
+impl CheckedAdd for uint {
+    #[inline]
+    fn checked_add(&self, v: &uint) -> Option<uint> {
+        unsafe {
+            let (x, y) = intrinsics::u64_add_with_overflow(*self as u64, *v as u64);
+            if y { None } else { Some(x as uint) }
+        }
+    }
+}
+
+#[cfg(target_word_size = "32")]
+impl CheckedSub for uint {
+    #[inline]
+    fn checked_sub(&self, v: &uint) -> Option<uint> {
+        unsafe {
+            let (x, y) = intrinsics::u32_sub_with_overflow(*self as u32, *v as u32);
+            if y { None } else { Some(x as uint) }
+        }
+    }
+}
+
+#[cfg(target_word_size = "64")]
+impl CheckedSub for uint {
+    #[inline]
+    fn checked_sub(&self, v: &uint) -> Option<uint> {
+        unsafe {
+            let (x, y) = intrinsics::u64_sub_with_overflow(*self as u64, *v as u64);
+            if y { None } else { Some(x as uint) }
+        }
+    }
+}
+
+#[cfg(target_word_size = "32")]
+impl CheckedMul for uint {
+    #[inline]
+    fn checked_mul(&self, v: &uint) -> Option<uint> {
+        unsafe {
+            let (x, y) = intrinsics::u32_mul_with_overflow(*self as u32, *v as u32);
+            if y { None } else { Some(x as uint) }
+        }
+    }
+}
+
+#[cfg(target_word_size = "64")]
+impl CheckedMul for uint {
+    #[inline]
+    fn checked_mul(&self, v: &uint) -> Option<uint> {
+        unsafe {
+            let (x, y) = intrinsics::u64_mul_with_overflow(*self as u64, *v as u64);
+            if y { None } else { Some(x as uint) }
+        }
+    }
 }
 
 #[test]
@@ -162,7 +241,7 @@ fn test_div() {
 
 #[test]
 pub fn test_times() {
-    use iter::Times;
+    use num::Times;
     let ten = 10 as uint;
     let mut accum = 0;
     do ten.times { accum += 1; }

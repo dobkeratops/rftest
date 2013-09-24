@@ -13,7 +13,7 @@
 use libc;
 use libc::{c_void, uintptr_t, size_t};
 use ops::Drop;
-use option::{Some, None};
+use option::{Option, None, Some};
 use rt::local::Local;
 use rt::task::Task;
 use unstable::raw;
@@ -37,14 +37,13 @@ pub struct LocalHeap {
 }
 
 impl LocalHeap {
+    #[fixed_stack_segment] #[inline(never)]
     pub fn new() -> LocalHeap {
         unsafe {
-            // Don't need synchronization for the single-threaded local heap
-            let synchronized = false as uintptr_t;
             // XXX: These usually come from the environment
             let detailed_leaks = false as uintptr_t;
             let poison_on_free = false as uintptr_t;
-            let region = rust_new_memory_region(synchronized, detailed_leaks, poison_on_free);
+            let region = rust_new_memory_region(detailed_leaks, poison_on_free);
             assert!(region.is_not_null());
             let boxed = rust_new_boxed_region(region, poison_on_free);
             assert!(boxed.is_not_null());
@@ -55,18 +54,21 @@ impl LocalHeap {
         }
     }
 
+    #[fixed_stack_segment] #[inline(never)]
     pub fn alloc(&mut self, td: *TypeDesc, size: uint) -> *OpaqueBox {
         unsafe {
             return rust_boxed_region_malloc(self.boxed_region, td, size as size_t);
         }
     }
 
+    #[fixed_stack_segment] #[inline(never)]
     pub fn realloc(&mut self, ptr: *OpaqueBox, size: uint) -> *OpaqueBox {
         unsafe {
             return rust_boxed_region_realloc(self.boxed_region, ptr, size as size_t);
         }
     }
 
+    #[fixed_stack_segment] #[inline(never)]
     pub fn free(&mut self, box: *OpaqueBox) {
         unsafe {
             return rust_boxed_region_free(self.boxed_region, box);
@@ -75,7 +77,8 @@ impl LocalHeap {
 }
 
 impl Drop for LocalHeap {
-    fn drop(&self) {
+    #[fixed_stack_segment] #[inline(never)]
+    fn drop(&mut self) {
         unsafe {
             rust_delete_boxed_region(self.boxed_region);
             rust_delete_memory_region(self.memory_region);
@@ -86,7 +89,8 @@ impl Drop for LocalHeap {
 // A little compatibility function
 pub unsafe fn local_free(ptr: *libc::c_char) {
     // XXX: Unsafe borrow for speed. Lame.
-    match Local::try_unsafe_borrow::<Task>() {
+    let task_ptr: Option<*mut Task> = Local::try_unsafe_borrow();
+    match task_ptr {
         Some(task) => {
             (*task).heap.free(ptr as *libc::c_void);
         }
@@ -95,7 +99,7 @@ pub unsafe fn local_free(ptr: *libc::c_char) {
 }
 
 pub fn live_allocs() -> *raw::Box<()> {
-    let region = do Local::borrow::<Task, *BoxedRegion> |task| {
+    let region = do Local::borrow |task: &mut Task| {
         task.heap.boxed_region
     };
 
@@ -104,8 +108,7 @@ pub fn live_allocs() -> *raw::Box<()> {
 
 extern {
     #[fast_ffi]
-    fn rust_new_memory_region(synchronized: uintptr_t,
-                               detailed_leaks: uintptr_t,
+    fn rust_new_memory_region(detailed_leaks: uintptr_t,
                                poison_on_free: uintptr_t) -> *MemoryRegion;
     #[fast_ffi]
     fn rust_delete_memory_region(region: *MemoryRegion);

@@ -8,85 +8,134 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// FIXME #3921. This is unsafe because linenoise uses global mutable
-// state without mutexes.
-
 use std::c_str::ToCStr;
 use std::libc::{c_char, c_int};
-use std::local_data;
-use std::str;
+use std::{local_data, str, rt};
+use std::unstable::finally::Finally;
 
 pub mod rustrt {
     use std::libc::{c_char, c_int};
 
-    extern {
-        pub fn linenoise(prompt: *c_char) -> *c_char;
-        pub fn linenoiseHistoryAdd(line: *c_char) -> c_int;
-        pub fn linenoiseHistorySetMaxLen(len: c_int) -> c_int;
-        pub fn linenoiseHistorySave(file: *c_char) -> c_int;
-        pub fn linenoiseHistoryLoad(file: *c_char) -> c_int;
-        pub fn linenoiseSetCompletionCallback(callback: *u8);
-        pub fn linenoiseAddCompletion(completions: *(), line: *c_char);
+    externfn!(fn linenoise(prompt: *c_char) -> *c_char)
+    externfn!(fn linenoiseHistoryAdd(line: *c_char) -> c_int)
+    externfn!(fn linenoiseHistorySetMaxLen(len: c_int) -> c_int)
+    externfn!(fn linenoiseHistorySave(file: *c_char) -> c_int)
+    externfn!(fn linenoiseHistoryLoad(file: *c_char) -> c_int)
+    externfn!(fn linenoiseSetCompletionCallback(callback: extern "C" fn(*i8, *())))
+    externfn!(fn linenoiseAddCompletion(completions: *(), line: *c_char))
+
+    externfn!(fn rust_take_linenoise_lock())
+    externfn!(fn rust_drop_linenoise_lock())
+}
+
+macro_rules! locked {
+    ($expr:expr) => {
+        {
+            // FIXME #9105: can't use a static mutex in pure Rust yet.
+            rustrt::rust_take_linenoise_lock();
+            let x = $expr;
+            rustrt::rust_drop_linenoise_lock();
+            x
+        }
     }
 }
 
 /// Add a line to history
-pub unsafe fn add_history(line: &str) -> bool {
-    do line.to_c_str().with_ref |buf| {
-        rustrt::linenoiseHistoryAdd(buf) == 1 as c_int
+pub fn add_history(line: &str) -> bool {
+    do line.with_c_str |buf| {
+        unsafe {
+            (locked!(rustrt::linenoiseHistoryAdd(buf))) == 1 as c_int
+        }
     }
 }
 
 /// Set the maximum amount of lines stored
-pub unsafe fn set_history_max_len(len: int) -> bool {
-    rustrt::linenoiseHistorySetMaxLen(len as c_int) == 1 as c_int
+pub fn set_history_max_len(len: int) -> bool {
+    unsafe {
+        (locked!(rustrt::linenoiseHistorySetMaxLen(len as c_int))) == 1
+            as c_int
+    }
 }
 
 /// Save line history to a file
-pub unsafe fn save_history(file: &str) -> bool {
-    do file.to_c_str().with_ref |buf| {
-        rustrt::linenoiseHistorySave(buf) == 1 as c_int
+pub fn save_history(file: &str) -> bool {
+    do file.with_c_str |buf| {
+        // 0 on success, -1 on failure
+        unsafe {
+            (locked!(rustrt::linenoiseHistorySave(buf))) == 0 as c_int
+        }
     }
 }
 
 /// Load line history from a file
-pub unsafe fn load_history(file: &str) -> bool {
-    do file.to_c_str().with_ref |buf| {
-        rustrt::linenoiseHistoryLoad(buf) == 1 as c_int
+pub fn load_history(file: &str) -> bool {
+    do file.with_c_str |buf| {
+        // 0 on success, -1 on failure
+        unsafe {
+            (locked!(rustrt::linenoiseHistoryLoad(buf))) == 0 as c_int
+        }
     }
 }
 
 /// Print out a prompt and then wait for input and return it
-pub unsafe fn read(prompt: &str) -> Option<~str> {
-    do prompt.to_c_str().with_ref |buf| {
-        let line = rustrt::linenoise(buf);
+pub fn read(prompt: &str) -> Option<~str> {
+    do prompt.with_c_str |buf| {
+        let line = unsafe {
+            locked!(rustrt::linenoise(buf))
+        };
 
         if line.is_null() { None }
-        else { Some(str::raw::from_c_str(line)) }
+        else {
+            unsafe {
+                do (|| {
+                    Some(str::raw::from_c_str(line))
+                }).finally {
+                    // linenoise's return value is from strdup, so we
+                    // better not leak it.
+                    rt::global_heap::exchange_free(line);
+                }
+            }
+        }
     }
 }
 
-pub type CompletionCb = @fn(~str, @fn(~str));
+/// The callback used to perform completions.
+pub trait CompletionCb {
+    /// Performs a completion.
+    fn complete(&self, line: ~str, suggestion: &fn(~str));
+}
 
-static complete_key: local_data::Key<@CompletionCb> = &local_data::Key;
+local_data_key!(complete_key: @CompletionCb)
 
-/// Bind to the main completion callback
-pub unsafe fn complete(cb: CompletionCb) {
-    local_data::set(complete_key, @cb);
+/// Bind to the main completion callback in the current task.
+///
+/// The completion callback should not call any `extra::rl` functions
+/// other than the closure that it receives as its second
+/// argument. Calling such a function will deadlock on the mutex used
+/// to ensure that the calls are thread-safe.
+pub unsafe fn complete(cb: @CompletionCb) {
+    local_data::set(complete_key, cb);
 
     extern fn callback(line: *c_char, completions: *()) {
-        do local_data::get(complete_key) |cb| {
-            let cb = **cb.unwrap();
-
-            unsafe {
-                do cb(str::raw::from_c_str(line)) |suggestion| {
-                    do suggestion.to_c_str().with_ref |buf| {
-                        rustrt::linenoiseAddCompletion(completions, buf);
+        do local_data::get(complete_key) |opt_cb| {
+            // only fetch completions if a completion handler has been
+            // registered in the current task.
+            match opt_cb {
+                None => {}
+                Some(cb) => {
+                    unsafe {
+                        do cb.complete(str::raw::from_c_str(line))
+                                |suggestion| {
+                            do suggestion.with_c_str |buf| {
+                                rustrt::linenoiseAddCompletion(completions,
+                                                               buf);
+                            }
+                        }
                     }
                 }
-}
+            }
         }
     }
 
-    rustrt::linenoiseSetCompletionCallback(callback);
+    locked!(rustrt::linenoiseSetCompletionCallback(callback));
 }

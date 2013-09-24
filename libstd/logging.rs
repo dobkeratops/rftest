@@ -12,9 +12,9 @@
 
 use option::*;
 use os;
-use either::*;
 use rt;
 use rt::logging::{Logger, StdErrLogger};
+use send_str::SendStrOwned;
 
 /// Turns on logging to stdout globally
 pub fn console_on() {
@@ -37,38 +37,29 @@ pub fn console_off() {
     rt::logging::console_off();
 }
 
-#[cfg(not(test))]
-#[lang="log_type"]
-#[allow(missing_doc)]
-pub fn log_type<T>(_level: u32, object: &T) {
-    use io;
-    use repr;
-    use str;
-
-    let bytes = do io::with_bytes_writer |writer| {
-        repr::write_repr(writer, object);
-    };
-
-    // XXX: Bad allocation
-    let msg = str::from_bytes(bytes);
-    newsched_log_str(msg);
-}
-
 fn newsched_log_str(msg: ~str) {
     use rt::task::Task;
     use rt::local::Local;
 
     unsafe {
-        match Local::try_unsafe_borrow::<Task>() {
+        let optional_task: Option<*mut Task> = Local::try_unsafe_borrow();
+        match optional_task {
             Some(local) => {
                 // Use the available logger
-                (*local).logger.log(Left(msg));
+                (*local).logger.log(SendStrOwned(msg));
             }
             None => {
                 // There is no logger anywhere, just write to stderr
                 let mut logger = StdErrLogger;
-                logger.log(Left(msg));
+                logger.log(SendStrOwned(msg));
             }
         }
     }
+}
+
+// XXX: This will change soon to not require an allocation. This is an unstable
+//      api which should not be used outside of the macros in ext/expand.
+#[doc(hidden)]
+pub fn log(_level: u32, msg: ~str) {
+    newsched_log_str(msg);
 }

@@ -13,7 +13,7 @@
 use c_str::ToCStr;
 use cast::transmute;
 use libc::{c_char, c_void, size_t, uintptr_t};
-use option::{Some, None};
+use option::{Option, None, Some};
 use sys;
 use rt::task::Task;
 use rt::local::Local;
@@ -29,7 +29,7 @@ pub fn fail_bounds_check(file: *c_char, line: size_t,
                          index: size_t, len: size_t) {
     let msg = fmt!("index out of bounds: the len is %d but the index is %d",
                     len as int, index as int);
-    do msg.to_c_str().with_ref |buf| {
+    do msg.with_c_str |buf| {
         fail_(buf, file, line);
     }
 }
@@ -37,7 +37,8 @@ pub fn fail_bounds_check(file: *c_char, line: size_t,
 #[lang="malloc"]
 pub unsafe fn local_malloc(td: *c_char, size: uintptr_t) -> *c_char {
     // XXX: Unsafe borrow for speed. Lame.
-    match Local::try_unsafe_borrow::<Task>() {
+    let task: Option<*mut Task> = Local::try_unsafe_borrow();
+    match task {
         Some(task) => {
             (*task).heap.alloc(td as *c_void, size as uint) as *c_char
         }
@@ -92,18 +93,12 @@ pub unsafe fn check_not_borrowed(a: *u8,
     borrowck::check_not_borrowed(a, file, line)
 }
 
-#[lang="annihilate"]
-pub unsafe fn annihilate() {
-    ::cleanup::annihilate()
-}
-
 #[lang="start"]
-pub fn start(main: *u8, argc: int, argv: **c_char,
-             crate_map: *u8) -> int {
+pub fn start(main: *u8, argc: int, argv: **c_char) -> int {
     use rt;
 
     unsafe {
-        return do rt::start(argc, argv as **u8, crate_map) {
+        return do rt::start(argc, argv as **u8) {
             let main: extern "Rust" fn() = transmute(main);
             main();
         };

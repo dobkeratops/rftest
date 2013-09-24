@@ -12,32 +12,26 @@
 
 use cast;
 use clone::Clone;
-use iterator::{range, Iterator};
+#[cfg(not(test))]
+use cmp::Equiv;
+use iter::{range, Iterator};
 use option::{Option, Some, None};
 use unstable::intrinsics;
 use util::swap;
-
-#[cfg(not(test))] use ops::{Add,Sub};
-#[cfg(not(test))] use num::Int;
 
 #[cfg(not(test))] use cmp::{Eq, Ord};
 
 /// Calculate the offset from a pointer
 #[inline]
-pub fn offset<T>(ptr: *T, count: int) -> *T {
-    unsafe { intrinsics::offset(ptr, count) }
+pub unsafe fn offset<T>(ptr: *T, count: int) -> *T {
+    intrinsics::offset(ptr, count)
 }
 
-/// Calculate the offset from a const pointer
+/// Calculate the offset from a mut pointer. The count *must* be in bounds or
+/// otherwise the loads of this address are undefined.
 #[inline]
-pub fn const_offset<T>(ptr: *const T, count: int) -> *const T {
-    unsafe { intrinsics::offset(ptr as *T, count) }
-}
-
-/// Calculate the offset from a mut pointer
-#[inline]
-pub fn mut_offset<T>(ptr: *mut T, count: int) -> *mut T {
-    unsafe { intrinsics::offset(ptr as *T, count) as *mut T }
+pub unsafe fn mut_offset<T>(ptr: *mut T, count: int) -> *mut T {
+    intrinsics::offset(ptr as *T, count) as *mut T
 }
 
 /// Return the offset of the first null pointer in `buf`.
@@ -47,6 +41,7 @@ pub unsafe fn buf_len<T>(buf: **T) -> uint {
 }
 
 impl<T> Clone for *T {
+    #[inline]
     fn clone(&self) -> *T {
         *self
     }
@@ -72,11 +67,11 @@ pub fn mut_null<T>() -> *mut T { 0 as *mut T }
 
 /// Returns true if the pointer is equal to the null pointer.
 #[inline]
-pub fn is_null<T>(ptr: *const T) -> bool { ptr == null() }
+pub fn is_null<T,P:RawPtr<T>>(ptr: P) -> bool { ptr.is_null() }
 
 /// Returns true if the pointer is not equal to the null pointer.
 #[inline]
-pub fn is_not_null<T>(ptr: *const T) -> bool { !is_null(ptr) }
+pub fn is_not_null<T,P:RawPtr<T>>(ptr: P) -> bool { ptr.is_not_null() }
 
 /**
  * Copies data from one location to another.
@@ -86,8 +81,10 @@ pub fn is_not_null<T>(ptr: *const T) -> bool { !is_null(ptr) }
  */
 #[inline]
 #[cfg(target_word_size = "32")]
-pub unsafe fn copy_memory<T>(dst: *mut T, src: *const T, count: uint) {
-    intrinsics::memmove32(dst, src as *T, count as u32);
+pub unsafe fn copy_memory<T,P:RawPtr<T>>(dst: *mut T, src: P, count: uint) {
+    intrinsics::memmove32(dst,
+                          cast::transmute_immut_unsafe(src),
+                          count as u32);
 }
 
 /**
@@ -98,8 +95,10 @@ pub unsafe fn copy_memory<T>(dst: *mut T, src: *const T, count: uint) {
  */
 #[inline]
 #[cfg(target_word_size = "64")]
-pub unsafe fn copy_memory<T>(dst: *mut T, src: *const T, count: uint) {
-    intrinsics::memmove64(dst, src as *T, count as u64);
+pub unsafe fn copy_memory<T,P:RawPtr<T>>(dst: *mut T, src: P, count: uint) {
+    intrinsics::memmove64(dst,
+                          cast::transmute_immut_unsafe(src),
+                          count as u64);
 }
 
 /**
@@ -110,8 +109,12 @@ pub unsafe fn copy_memory<T>(dst: *mut T, src: *const T, count: uint) {
  */
 #[inline]
 #[cfg(target_word_size = "32")]
-pub unsafe fn copy_nonoverlapping_memory<T>(dst: *mut T, src: *const T, count: uint) {
-    intrinsics::memcpy32(dst, src as *T, count as u32);
+pub unsafe fn copy_nonoverlapping_memory<T,P:RawPtr<T>>(dst: *mut T,
+                                                        src: P,
+                                                        count: uint) {
+    intrinsics::memcpy32(dst,
+                         cast::transmute_immut_unsafe(src),
+                         count as u32);
 }
 
 /**
@@ -122,8 +125,12 @@ pub unsafe fn copy_nonoverlapping_memory<T>(dst: *mut T, src: *const T, count: u
  */
 #[inline]
 #[cfg(target_word_size = "64")]
-pub unsafe fn copy_nonoverlapping_memory<T>(dst: *mut T, src: *const T, count: uint) {
-    intrinsics::memcpy64(dst, src as *T, count as u64);
+pub unsafe fn copy_nonoverlapping_memory<T,P:RawPtr<T>>(dst: *mut T,
+                                                        src: P,
+                                                        count: uint) {
+    intrinsics::memcpy64(dst,
+                         cast::transmute_immut_unsafe(src),
+                         count as u64);
 }
 
 /**
@@ -215,12 +222,6 @@ pub fn to_unsafe_ptr<T>(thing: &T) -> *T {
     thing as *T
 }
 
-/// Transform a const region pointer - &const T - to a const unsafe pointer - *const T.
-#[inline]
-pub fn to_const_unsafe_ptr<T>(thing: &const T) -> *const T {
-    thing as *const T
-}
-
 /// Transform a mutable region pointer - &mut T - to a mutable unsafe pointer - *mut T.
 #[inline]
 pub fn to_mut_unsafe_ptr<T>(thing: &mut T) -> *mut T {
@@ -253,7 +254,7 @@ pub unsafe fn array_each_with_len<T>(arr: **T, len: uint, cb: &fn(*T)) {
   passing to the provided callback function
 
   SAFETY NOTE: This will only work with a null-terminated
-  pointer array. Barely less-dodgey Pointer Arithmetic.
+  pointer array. Barely less-dodgy Pointer Arithmetic.
   Dragons be here.
 */
 pub unsafe fn array_each<T>(arr: **T, cb: &fn(*T)) {
@@ -268,22 +269,31 @@ pub unsafe fn array_each<T>(arr: **T, cb: &fn(*T)) {
 
 #[allow(missing_doc)]
 pub trait RawPtr<T> {
+    fn null() -> Self;
     fn is_null(&self) -> bool;
     fn is_not_null(&self) -> bool;
+    fn to_uint(&self) -> uint;
     unsafe fn to_option(&self) -> Option<&T>;
-    fn offset(&self, count: int) -> Self;
-    unsafe fn offset_inbounds(self, count: int) -> Self;
+    unsafe fn offset(self, count: int) -> Self;
 }
 
 /// Extension methods for immutable pointers
 impl<T> RawPtr<T> for *T {
+    /// Returns the null pointer.
+    #[inline]
+    fn null() -> *T { null() }
+
     /// Returns true if the pointer is equal to the null pointer.
     #[inline]
-    fn is_null(&self) -> bool { is_null(*self) }
+    fn is_null(&self) -> bool { *self == RawPtr::null() }
 
     /// Returns true if the pointer is not equal to the null pointer.
     #[inline]
-    fn is_not_null(&self) -> bool { is_not_null(*self) }
+    fn is_not_null(&self) -> bool { *self != RawPtr::null() }
+
+    /// Returns the address of this pointer.
+    #[inline]
+    fn to_uint(&self) -> uint { *self as uint }
 
     ///
     /// Returns `None` if the pointer is null, or else returns the value wrapped
@@ -301,28 +311,30 @@ impl<T> RawPtr<T> for *T {
             Some(cast::transmute(*self))
         }
     }
-
-    /// Calculates the offset from a pointer.
-    #[inline]
-    fn offset(&self, count: int) -> *T { offset(*self, count) }
 
     /// Calculates the offset from a pointer. The offset *must* be in-bounds of
     /// the object, or one-byte-past-the-end.
     #[inline]
-    unsafe fn offset_inbounds(self, count: int) -> *T {
-        intrinsics::offset_inbounds(self, count)
-    }
+    unsafe fn offset(self, count: int) -> *T { offset(self, count) }
 }
 
 /// Extension methods for mutable pointers
 impl<T> RawPtr<T> for *mut T {
+    /// Returns the null pointer.
+    #[inline]
+    fn null() -> *mut T { mut_null() }
+
     /// Returns true if the pointer is equal to the null pointer.
     #[inline]
-    fn is_null(&self) -> bool { is_null(*self) }
+    fn is_null(&self) -> bool { *self == RawPtr::null() }
 
     /// Returns true if the pointer is not equal to the null pointer.
     #[inline]
-    fn is_not_null(&self) -> bool { is_not_null(*self) }
+    fn is_not_null(&self) -> bool { *self != RawPtr::null() }
+
+    /// Returns the address of this pointer.
+    #[inline]
+    fn to_uint(&self) -> uint { *self as uint }
 
     ///
     /// Returns `None` if the pointer is null, or else returns the value wrapped
@@ -340,10 +352,6 @@ impl<T> RawPtr<T> for *mut T {
             Some(cast::transmute(*self))
         }
     }
-
-    /// Calculates the offset from a mutable pointer.
-    #[inline]
-    fn offset(&self, count: int) -> *mut T { mut_offset(*self, count) }
 
     /// Calculates the offset from a pointer. The offset *must* be in-bounds of
     /// the object, or one-byte-past-the-end. An arithmetic overflow is also
@@ -352,80 +360,124 @@ impl<T> RawPtr<T> for *mut T {
     /// This method should be preferred over `offset` when the guarantee can be
     /// satisfied, to enable better optimization.
     #[inline]
-    unsafe fn offset_inbounds(self, count: int) -> *mut T {
-        intrinsics::offset_inbounds(self as *T, count) as *mut T
-    }
+    unsafe fn offset(self, count: int) -> *mut T { mut_offset(self, count) }
 }
 
 // Equality for pointers
 #[cfg(not(test))]
-impl<T> Eq for *const T {
+impl<T> Eq for *T {
     #[inline]
-    fn eq(&self, other: &*const T) -> bool {
-        (*self as uint) == (*other as uint)
+    fn eq(&self, other: &*T) -> bool {
+        *self == *other
     }
     #[inline]
-    fn ne(&self, other: &*const T) -> bool { !self.eq(other) }
+    fn ne(&self, other: &*T) -> bool { !self.eq(other) }
+}
+
+#[cfg(not(test))]
+impl<T> Eq for *mut T {
+    #[inline]
+    fn eq(&self, other: &*mut T) -> bool {
+        *self == *other
+    }
+    #[inline]
+    fn ne(&self, other: &*mut T) -> bool { !self.eq(other) }
+}
+
+// Equivalence for pointers
+#[cfg(not(test))]
+impl<T> Equiv<*mut T> for *T {
+    fn equiv(&self, other: &*mut T) -> bool {
+        self.to_uint() == other.to_uint()
+    }
+}
+
+#[cfg(not(test))]
+impl<T> Equiv<*T> for *mut T {
+    fn equiv(&self, other: &*T) -> bool {
+        self.to_uint() == other.to_uint()
+    }
+}
+
+// Equality for extern "C" fn pointers
+#[cfg(not(test))]
+mod externfnpointers {
+    use cast;
+    use cmp::Eq;
+
+    impl<_R> Eq for extern "C" fn() -> _R {
+        #[inline]
+        fn eq(&self, other: &extern "C" fn() -> _R) -> bool {
+            let self_: *() = unsafe { cast::transmute(*self) };
+            let other_: *() = unsafe { cast::transmute(*other) };
+            self_ == other_
+        }
+        #[inline]
+        fn ne(&self, other: &extern "C" fn() -> _R) -> bool {
+            !self.eq(other)
+        }
+    }
+    macro_rules! fnptreq(
+        ($($p:ident),*) => {
+            impl<_R,$($p),*> Eq for extern "C" fn($($p),*) -> _R {
+                #[inline]
+                fn eq(&self, other: &extern "C" fn($($p),*) -> _R) -> bool {
+                    let self_: *() = unsafe { cast::transmute(*self) };
+                    let other_: *() = unsafe { cast::transmute(*other) };
+                    self_ == other_
+                }
+                #[inline]
+                fn ne(&self, other: &extern "C" fn($($p),*) -> _R) -> bool {
+                    !self.eq(other)
+                }
+            }
+        }
+    )
+    fnptreq!(A)
+    fnptreq!(A,B)
+    fnptreq!(A,B,C)
+    fnptreq!(A,B,C,D)
+    fnptreq!(A,B,C,D,E)
 }
 
 // Comparison for pointers
 #[cfg(not(test))]
-impl<T> Ord for *const T {
+impl<T> Ord for *T {
     #[inline]
-    fn lt(&self, other: &*const T) -> bool {
-        (*self as uint) < (*other as uint)
+    fn lt(&self, other: &*T) -> bool {
+        *self < *other
     }
     #[inline]
-    fn le(&self, other: &*const T) -> bool {
-        (*self as uint) <= (*other as uint)
+    fn le(&self, other: &*T) -> bool {
+        *self <= *other
     }
     #[inline]
-    fn ge(&self, other: &*const T) -> bool {
-        (*self as uint) >= (*other as uint)
+    fn ge(&self, other: &*T) -> bool {
+        *self >= *other
     }
     #[inline]
-    fn gt(&self, other: &*const T) -> bool {
-        (*self as uint) > (*other as uint)
-    }
-}
-
-#[cfg(not(test))]
-impl<T, I: Int> Add<I, *T> for *T {
-    /// Add an integer value to a pointer to get an offset pointer.
-    /// Is calculated according to the size of the type pointed to.
-    #[inline]
-    fn add(&self, rhs: &I) -> *T {
-        self.offset(rhs.to_int() as int)
+    fn gt(&self, other: &*T) -> bool {
+        *self > *other
     }
 }
 
 #[cfg(not(test))]
-impl<T, I: Int> Sub<I, *T> for *T {
-    /// Subtract an integer value from a pointer to get an offset pointer.
-    /// Is calculated according to the size of the type pointed to.
+impl<T> Ord for *mut T {
     #[inline]
-    fn sub(&self, rhs: &I) -> *T {
-        self.offset(-rhs.to_int() as int)
+    fn lt(&self, other: &*mut T) -> bool {
+        *self < *other
     }
-}
-
-#[cfg(not(test))]
-impl<T, I: Int> Add<I, *mut T> for *mut T {
-    /// Add an integer value to a pointer to get an offset pointer.
-    /// Is calculated according to the size of the type pointed to.
     #[inline]
-    fn add(&self, rhs: &I) -> *mut T {
-        self.offset(rhs.to_int() as int)
+    fn le(&self, other: &*mut T) -> bool {
+        *self <= *other
     }
-}
-
-#[cfg(not(test))]
-impl<T, I: Int> Sub<I, *mut T> for *mut T {
-    /// Subtract an integer value from a pointer to get an offset pointer.
-    /// Is calculated according to the size of the type pointed to.
     #[inline]
-    fn sub(&self, rhs: &I) -> *mut T {
-        self.offset(-rhs.to_int() as int)
+    fn ge(&self, other: &*mut T) -> bool {
+        *self >= *other
+    }
+    #[inline]
+    fn gt(&self, other: &*mut T) -> bool {
+        *self > *other
     }
 }
 
@@ -481,7 +533,7 @@ pub mod ptr_tests {
     fn test_position() {
         use libc::c_char;
 
-        do "hello".to_c_str().with_ref |p| {
+        do "hello".with_c_str |p| {
             unsafe {
                 assert!(2u == position(p, |c| *c == 'l' as c_char));
                 assert!(4u == position(p, |c| *c == 'o' as c_char));
@@ -492,9 +544,9 @@ pub mod ptr_tests {
 
     #[test]
     fn test_buf_len() {
-        do "hello".to_c_str().with_ref |p0| {
-            do "there".to_c_str().with_ref |p1| {
-                do "thing".to_c_str().with_ref |p2| {
+        do "hello".with_c_str |p0| {
+            do "there".with_c_str |p1| {
+                do "thing".with_c_str |p2| {
                     let v = ~[p0, p1, p2, null()];
                     do v.as_imm_buf |vp, len| {
                         assert_eq!(unsafe { buf_len(vp) }, 3u);
@@ -511,7 +563,7 @@ pub mod ptr_tests {
         assert!(p.is_null());
         assert!(!p.is_not_null());
 
-        let q = offset(p, 1);
+        let q = unsafe { offset(p, 1) };
         assert!(!q.is_null());
         assert!(q.is_not_null());
 
@@ -519,7 +571,7 @@ pub mod ptr_tests {
         assert!(mp.is_null());
         assert!(!mp.is_not_null());
 
-        let mq = mp.offset(1);
+        let mq = unsafe { mp.offset(1) };
         assert!(!mq.is_null());
         assert!(mq.is_not_null());
     }
@@ -548,20 +600,20 @@ pub mod ptr_tests {
         unsafe {
             let xs = ~[5, ..16];
             let mut ptr = to_ptr(xs);
-            let end = ptr + 16;
+            let end = ptr.offset(16);
 
             while ptr < end {
                 assert_eq!(*ptr, 5);
-                ptr = ptr + 1u;
+                ptr = ptr.offset(1);
             }
 
             let mut xs_mut = xs.clone();
             let mut m_ptr = to_mut_ptr(xs_mut);
-            let m_end = m_ptr + 16i16;
+            let m_end = m_ptr.offset(16);
 
             while m_ptr < m_end {
                 *m_ptr += 5;
-                m_ptr = m_ptr + 1u8;
+                m_ptr = m_ptr.offset(1);
             }
 
             assert_eq!(xs_mut, ~[10, ..16]);
@@ -578,17 +630,17 @@ pub mod ptr_tests {
             let ptr = to_ptr(xs);
 
             while idx >= 0i8 {
-                assert_eq!(*(ptr + idx), idx as int);
+                assert_eq!(*(ptr.offset(idx as int)), idx as int);
                 idx = idx - 1i8;
             }
 
             let mut xs_mut = xs.clone();
             let m_start = to_mut_ptr(xs_mut);
-            let mut m_ptr = m_start + 9u32;
+            let mut m_ptr = m_start.offset(9);
 
             while m_ptr >= m_start {
                 *m_ptr += *m_ptr;
-                m_ptr = m_ptr - 1i8;
+                m_ptr = m_ptr.offset(-1);
             }
 
             assert_eq!(xs_mut, ~[0,2,4,6,8,10,12,14,16,18]);
@@ -647,7 +699,7 @@ pub mod ptr_tests {
                 one, two, three
             ];
 
-            do arr.as_imm_buf |arr_ptr, arr_len| {
+            do arr.as_imm_buf |arr_ptr, _| {
                 let mut ctr = 0;
                 let mut iteration_count = 0;
                 do array_each(arr_ptr) |e| {
@@ -669,7 +721,6 @@ pub mod ptr_tests {
 
     #[test]
     #[should_fail]
-    #[ignore(cfg(windows))]
     fn test_ptr_array_each_with_len_null_ptr() {
         unsafe {
             array_each_with_len(0 as **libc::c_char, 1, |e| {
@@ -679,7 +730,6 @@ pub mod ptr_tests {
     }
     #[test]
     #[should_fail]
-    #[ignore(cfg(windows))]
     fn test_ptr_array_each_null_ptr() {
         unsafe {
             array_each(0 as **libc::c_char, |e| {

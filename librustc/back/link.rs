@@ -26,7 +26,7 @@ use std::c_str::ToCStr;
 use std::char;
 use std::hash::Streaming;
 use std::hash;
-use std::libc::{c_int, c_uint};
+use std::io;
 use std::os::consts::{macos, freebsd, linux, android, win32};
 use std::os;
 use std::ptr;
@@ -35,11 +35,10 @@ use std::run;
 use std::str;
 use std::vec;
 use syntax::ast;
-use syntax::ast_map::{path, path_mod, path_name};
+use syntax::ast_map::{path, path_mod, path_name, path_pretty_name};
 use syntax::attr;
 use syntax::attr::{AttrMetaMethods};
 use syntax::print::pprust;
-use syntax::parse::token;
 
 #[deriving(Clone, Eq)]
 pub enum output_type {
@@ -66,37 +65,19 @@ pub fn llvm_err(sess: Session, msg: ~str) -> ! {
     }
 }
 
-pub fn WriteOutputFile(sess: Session,
-        PM: lib::llvm::PassManagerRef, M: ModuleRef,
-        Triple: &str,
-        Cpu: &str,
-        Feature: &str,
+pub fn WriteOutputFile(
+        sess: Session,
+        Target: lib::llvm::TargetMachineRef,
+        PM: lib::llvm::PassManagerRef,
+        M: ModuleRef,
         Output: &str,
-        // FIXME: When #2334 is fixed, change
-        // c_uint to FileType
-        FileType: c_uint,
-        OptLevel: c_int,
-        EnableSegmentedStacks: bool) {
+        FileType: lib::llvm::FileType) {
     unsafe {
-        do Triple.to_c_str().with_ref |Triple| {
-            do Cpu.to_c_str().with_ref |Cpu| {
-                do Feature.to_c_str().with_ref |Feature| {
-                    do Output.to_c_str().with_ref |Output| {
-                        let result = llvm::LLVMRustWriteOutputFile(
-                                PM,
-                                M,
-                                Triple,
-                                Cpu,
-                                Feature,
-                                Output,
-                                FileType,
-                                OptLevel,
-                                EnableSegmentedStacks);
-                        if (!result) {
-                            llvm_err(sess, ~"Could not write output");
-                        }
-                    }
-                }
+        do Output.with_c_str |Output| {
+            let result = llvm::LLVMRustWriteOutputFile(
+                    Target, PM, M, Output, FileType);
+            if !result {
+                llvm_err(sess, ~"Could not write output");
             }
         }
     }
@@ -124,7 +105,7 @@ pub mod jit {
     impl Engine for LLVMJITData {}
 
     impl Drop for LLVMJITData {
-        fn drop(&self) {
+        fn drop(&mut self) {
             unsafe {
                 llvm::LLVMDisposeExecutionEngine(self.ee);
                 llvm::LLVMContextDispose(self.llcx);
@@ -152,7 +133,7 @@ pub mod jit {
 
                 debug!("linking: %s", path);
 
-                do path.to_c_str().with_ref |buf_t| {
+                do path.with_c_str |buf_t| {
                     if !llvm::LLVMRustLoadCrate(manager, buf_t) {
                         llvm_err(sess, ~"Could not link");
                     }
@@ -171,7 +152,7 @@ pub mod jit {
             // Next, we need to get a handle on the _rust_main function by
             // looking up it's corresponding ValueRef and then requesting that
             // the execution engine compiles the function.
-            let fun = do "_rust_main".to_c_str().with_ref |entry| {
+            let fun = do "_rust_main".with_c_str |entry| {
                 llvm::LLVMGetNamedFunction(m, entry)
             };
             if fun.is_null() {
@@ -209,7 +190,7 @@ pub mod jit {
 
     // The stage1 compiler won't work, but that doesn't really matter. TLS
     // changed only very recently to allow storage of owned values.
-    static engine_key: local_data::Key<~Engine> = &local_data::Key;
+    local_data_key!(engine_key: ~Engine)
 
     fn set_engine(engine: ~Engine) {
         local_data::set(engine_key, engine)
@@ -230,24 +211,14 @@ pub mod write {
     use driver::session::Session;
     use driver::session;
     use lib::llvm::llvm;
-    use lib::llvm::{ModuleRef, mk_pass_manager, mk_target_data};
-    use lib::llvm::{ContextRef};
+    use lib::llvm::{ModuleRef, ContextRef};
     use lib;
 
-    use back::passes;
-
     use std::c_str::ToCStr;
-    use std::libc::{c_int, c_uint};
+    use std::libc::{c_uint, c_int};
     use std::path::Path;
     use std::run;
     use std::str;
-
-    pub fn is_object_or_assembly_or_exe(ot: output_type) -> bool {
-        match ot {
-            output_type_assembly | output_type_object | output_type_exe => true,
-            _ => false
-        }
-    }
 
     pub fn run_passes(sess: Session,
                       llcx: ContextRef,
@@ -257,177 +228,150 @@ pub mod write {
         unsafe {
             llvm::LLVMInitializePasses();
 
-            let opts = sess.opts;
-            if sess.time_llvm_passes() { llvm::LLVMRustEnableTimePasses(); }
-            let td = mk_target_data(sess.targ_cfg.target_strs.data_layout);
-            let pm = mk_pass_manager();
-            llvm::LLVMAddTargetData(td.lltd, pm.llpm);
+            // Only initialize the platforms supported by Rust here, because
+            // using --llvm-root will have multiple platforms that rustllvm
+            // doesn't actually link to and it's pointless to put target info
+            // into the registry that Rust can not generate machine code for.
+            llvm::LLVMInitializeX86TargetInfo();
+            llvm::LLVMInitializeX86Target();
+            llvm::LLVMInitializeX86TargetMC();
+            llvm::LLVMInitializeX86AsmPrinter();
+            llvm::LLVMInitializeX86AsmParser();
 
-            // Generate a pre-optimization intermediate file if -save-temps
-            // was specified.
-            if opts.save_temps {
-                match output_type {
-                  output_type_bitcode => {
-                    if opts.optimize != session::No {
-                        let filename = output.with_filetype("no-opt.bc");
-                        do filename.to_c_str().with_ref |buf| {
-                            llvm::LLVMWriteBitcodeToFile(llmod, buf);
-                        }
-                    }
-                  }
-                  _ => {
-                    let filename = output.with_filetype("bc");
-                    do filename.to_c_str().with_ref |buf| {
-                        llvm::LLVMWriteBitcodeToFile(llmod, buf);
-                    }
-                  }
-                }
-            }
+            llvm::LLVMInitializeARMTargetInfo();
+            llvm::LLVMInitializeARMTarget();
+            llvm::LLVMInitializeARMTargetMC();
+            llvm::LLVMInitializeARMAsmPrinter();
+            llvm::LLVMInitializeARMAsmParser();
 
-            let mut mpm = passes::PassManager::new(td.lltd);
+            llvm::LLVMInitializeMipsTargetInfo();
+            llvm::LLVMInitializeMipsTarget();
+            llvm::LLVMInitializeMipsTargetMC();
+            llvm::LLVMInitializeMipsAsmPrinter();
+            llvm::LLVMInitializeMipsAsmParser();
 
-            if !sess.no_verify() {
-                mpm.add_pass_from_name("verify");
-            }
-
-            let passes = if sess.opts.custom_passes.len() > 0 {
-                sess.opts.custom_passes.clone()
-            } else {
-                if sess.lint_llvm() {
-                    mpm.add_pass_from_name("lint");
-                }
-                passes::create_standard_passes(opts.optimize)
-            };
-
-
-            debug!("Passes: %?", passes);
-            passes::populate_pass_manager(sess, &mut mpm, passes);
-
-            debug!("Running Module Optimization Pass");
-            mpm.run(llmod);
-
-            if opts.jit {
-                // If we are using JIT, go ahead and create and execute the
-                // engine now.  JIT execution takes ownership of the module and
-                // context, so don't dispose and return.
-                jit::exec(sess, llcx, llmod, true);
-
-                if sess.time_llvm_passes() {
-                    llvm::LLVMRustPrintPassTimings();
-                }
-                return;
-            } else if is_object_or_assembly_or_exe(output_type) {
-                let LLVMOptNone       = 0 as c_int; // -O0
-                let LLVMOptLess       = 1 as c_int; // -O1
-                let LLVMOptDefault    = 2 as c_int; // -O2, -Os
-                let LLVMOptAggressive = 3 as c_int; // -O3
-
-                let CodeGenOptLevel = match opts.optimize {
-                  session::No => LLVMOptNone,
-                  session::Less => LLVMOptLess,
-                  session::Default => LLVMOptDefault,
-                  session::Aggressive => LLVMOptAggressive
-                };
-
-                let FileType = match output_type {
-                    output_type_object | output_type_exe => lib::llvm::ObjectFile,
-                    _ => lib::llvm::AssemblyFile
-                };
-
-                // Write optimized bitcode if --save-temps was on.
-
-                if opts.save_temps {
-                    // Always output the bitcode file with --save-temps
-
-                    let filename = output.with_filetype("opt.bc");
-                    do filename.to_c_str().with_ref |buf| {
-                        llvm::LLVMWriteBitcodeToFile(llmod, buf)
-                    };
-                    // Save the assembly file if -S is used
-                    if output_type == output_type_assembly {
-                        WriteOutputFile(
-                            sess,
-                            pm.llpm,
-                            llmod,
-                            sess.targ_cfg.target_strs.target_triple,
-                            opts.target_cpu,
-                            opts.target_feature,
-                            output.to_str(),
-                            lib::llvm::AssemblyFile as c_uint,
-                            CodeGenOptLevel,
-                            true);
-                    }
-
-                    // Save the object file for -c or --save-temps alone
-                    // This .o is needed when an exe is built
-                    if output_type == output_type_object ||
-                           output_type == output_type_exe {
-                        WriteOutputFile(
-                            sess,
-                            pm.llpm,
-                            llmod,
-                            sess.targ_cfg.target_strs.target_triple,
-                            opts.target_cpu,
-                            opts.target_feature,
-                            output.to_str(),
-                            lib::llvm::ObjectFile as c_uint,
-                            CodeGenOptLevel,
-                            true);
-                    }
-                } else {
-                    // If we aren't saving temps then just output the file
-                    // type corresponding to the '-c' or '-S' flag used
-                    WriteOutputFile(
-                        sess,
-                        pm.llpm,
-                        llmod,
-                        sess.targ_cfg.target_strs.target_triple,
-                        opts.target_cpu,
-                        opts.target_feature,
-                        output.to_str(),
-                        FileType as c_uint,
-                        CodeGenOptLevel,
-                        true);
-                }
-                // Clean up and return
-
-                llvm::LLVMDisposeModule(llmod);
-                llvm::LLVMContextDispose(llcx);
-                if sess.time_llvm_passes() {
-                    llvm::LLVMRustPrintPassTimings();
-                }
-                return;
-            }
-
-            if output_type == output_type_llvm_assembly {
-                // Given options "-S --emit-llvm": output LLVM assembly
-                do output.to_c_str().with_ref |buf_o| {
-                    llvm::LLVMRustAddPrintModulePass(pm.llpm, llmod, buf_o);
-                }
-            } else {
-                // If only a bitcode file is asked for by using the
-                // '--emit-llvm' flag, then output it here
-                do output.to_c_str().with_ref |buf| {
+            if sess.opts.save_temps {
+                do output.with_filetype("no-opt.bc").with_c_str |buf| {
                     llvm::LLVMWriteBitcodeToFile(llmod, buf);
                 }
             }
 
-            llvm::LLVMDisposeModule(llmod);
-            llvm::LLVMContextDispose(llcx);
+            configure_llvm(sess);
+
+            let OptLevel = match sess.opts.optimize {
+              session::No => lib::llvm::CodeGenLevelNone,
+              session::Less => lib::llvm::CodeGenLevelLess,
+              session::Default => lib::llvm::CodeGenLevelDefault,
+              session::Aggressive => lib::llvm::CodeGenLevelAggressive,
+            };
+
+            let tm = do sess.targ_cfg.target_strs.target_triple.with_c_str |T| {
+                do sess.opts.target_cpu.with_c_str |CPU| {
+                    do sess.opts.target_feature.with_c_str |Features| {
+                        llvm::LLVMRustCreateTargetMachine(
+                            T, CPU, Features,
+                            lib::llvm::CodeModelDefault,
+                            lib::llvm::RelocPIC,
+                            OptLevel,
+                            true
+                        )
+                    }
+                }
+            };
+
+            // Create the two optimizing pass managers. These mirror what clang
+            // does, and are by populated by LLVM's default PassManagerBuilder.
+            // Each manager has a different set of passes, but they also share
+            // some common passes.
+            let fpm = llvm::LLVMCreateFunctionPassManagerForModule(llmod);
+            let mpm = llvm::LLVMCreatePassManager();
+
+            // If we're verifying or linting, add them to the function pass
+            // manager.
+            let addpass = |pass: &str| {
+                do pass.with_c_str |s| { llvm::LLVMRustAddPass(fpm, s) }
+            };
+            if !sess.no_verify() { assert!(addpass("verify")); }
+            if sess.lint_llvm()  { assert!(addpass("lint"));   }
+
+            if !sess.no_prepopulate_passes() {
+                llvm::LLVMRustAddAnalysisPasses(tm, fpm, llmod);
+                llvm::LLVMRustAddAnalysisPasses(tm, mpm, llmod);
+                populate_llvm_passess(fpm, mpm, llmod, OptLevel);
+            }
+
+            for pass in sess.opts.custom_passes.iter() {
+                do pass.with_c_str |s| {
+                    if !llvm::LLVMRustAddPass(mpm, s) {
+                        sess.warn(fmt!("Unknown pass %s, ignoring", *pass));
+                    }
+                }
+            }
+
+            // Finally, run the actual optimization passes
+            llvm::LLVMRustRunFunctionPassManager(fpm, llmod);
+            llvm::LLVMRunPassManager(mpm, llmod);
+
+            // Deallocate managers that we're now done with
+            llvm::LLVMDisposePassManager(fpm);
+            llvm::LLVMDisposePassManager(mpm);
+
+            if sess.opts.save_temps {
+                do output.with_filetype("bc").with_c_str |buf| {
+                    llvm::LLVMWriteBitcodeToFile(llmod, buf);
+                }
+            }
+
+            if sess.opts.jit {
+                // If we are using JIT, go ahead and create and execute the
+                // engine now. JIT execution takes ownership of the module and
+                // context, so don't dispose
+                jit::exec(sess, llcx, llmod, true);
+            } else {
+                // Create a codegen-specific pass manager to emit the actual
+                // assembly or object files. This may not end up getting used,
+                // but we make it anyway for good measure.
+                let cpm = llvm::LLVMCreatePassManager();
+                llvm::LLVMRustAddAnalysisPasses(tm, cpm, llmod);
+                llvm::LLVMRustAddLibraryInfo(cpm, llmod);
+
+                match output_type {
+                    output_type_none => {}
+                    output_type_bitcode => {
+                        do output.with_c_str |buf| {
+                            llvm::LLVMWriteBitcodeToFile(llmod, buf);
+                        }
+                    }
+                    output_type_llvm_assembly => {
+                        do output.with_c_str |output| {
+                            llvm::LLVMRustPrintModule(cpm, llmod, output)
+                        }
+                    }
+                    output_type_assembly => {
+                        WriteOutputFile(sess, tm, cpm, llmod, output.to_str(),
+                                        lib::llvm::AssemblyFile);
+                    }
+                    output_type_exe | output_type_object => {
+                        WriteOutputFile(sess, tm, cpm, llmod, output.to_str(),
+                                        lib::llvm::ObjectFile);
+                    }
+                }
+
+                llvm::LLVMDisposePassManager(cpm);
+            }
+
+            llvm::LLVMRustDisposeTargetMachine(tm);
+            // the jit takes ownership of these two items
+            if !sess.opts.jit {
+                llvm::LLVMDisposeModule(llmod);
+                llvm::LLVMContextDispose(llcx);
+            }
             if sess.time_llvm_passes() { llvm::LLVMRustPrintPassTimings(); }
         }
     }
 
-    pub fn run_ndk(sess: Session, assembly: &Path, object: &Path) {
-        let cc_prog: ~str = match &sess.opts.android_cross_path {
-            &Some(ref path) => {
-                fmt!("%s/bin/arm-linux-androideabi-gcc", *path)
-            }
-            &None => {
-                sess.fatal("need Android NDK path for building \
-                            (--android-cross-path)")
-            }
-        };
+    pub fn run_assembler(sess: Session, assembly: &Path, object: &Path) {
+        let cc_prog = super::get_cc_prog(sess);
 
         let cc_args = ~[
             ~"-c",
@@ -441,9 +385,77 @@ pub mod write {
                         cc_prog, prog.status));
             sess.note(fmt!("%s arguments: %s",
                         cc_prog, cc_args.connect(" ")));
-            sess.note(str::from_bytes(prog.error + prog.output));
+            sess.note(str::from_utf8(prog.error + prog.output));
             sess.abort_if_errors();
         }
+    }
+
+    unsafe fn configure_llvm(sess: Session) {
+        // Copy what clan does by turning on loop vectorization at O2 and
+        // slp vectorization at O3
+        let vectorize_loop = !sess.no_vectorize_loops() &&
+                             (sess.opts.optimize == session::Default ||
+                              sess.opts.optimize == session::Aggressive);
+        let vectorize_slp = !sess.no_vectorize_slp() &&
+                            sess.opts.optimize == session::Aggressive;
+
+        let mut llvm_c_strs = ~[];
+        let mut llvm_args = ~[];
+        let add = |arg: &str| {
+            let s = arg.to_c_str();
+            llvm_args.push(s.with_ref(|p| p));
+            llvm_c_strs.push(s);
+        };
+        add("rustc"); // fake program name
+        add("-arm-enable-ehabi");
+        add("-arm-enable-ehabi-descriptors");
+        if vectorize_loop { add("-vectorize-loops"); }
+        if vectorize_slp  { add("-vectorize-slp");   }
+        if sess.time_llvm_passes() { add("-time-passes"); }
+        if sess.print_llvm_passes() { add("-debug-pass=Structure"); }
+
+        for arg in sess.opts.llvm_args.iter() {
+            add(*arg);
+        }
+
+        do llvm_args.as_imm_buf |p, len| {
+            llvm::LLVMRustSetLLVMOptions(len as c_int, p);
+        }
+    }
+
+    unsafe fn populate_llvm_passess(fpm: lib::llvm::PassManagerRef,
+                                    mpm: lib::llvm::PassManagerRef,
+                                    llmod: ModuleRef,
+                                    opt: lib::llvm::CodeGenOptLevel) {
+        // Create the PassManagerBuilder for LLVM. We configure it with
+        // reasonable defaults and prepare it to actually populate the pass
+        // manager.
+        let builder = llvm::LLVMPassManagerBuilderCreate();
+        match opt {
+            lib::llvm::CodeGenLevelNone => {
+                // Don't add lifetime intrinsics add O0
+                llvm::LLVMRustAddAlwaysInlinePass(builder, false);
+            }
+            lib::llvm::CodeGenLevelLess => {
+                llvm::LLVMRustAddAlwaysInlinePass(builder, true);
+            }
+            // numeric values copied from clang
+            lib::llvm::CodeGenLevelDefault => {
+                llvm::LLVMPassManagerBuilderUseInlinerWithThreshold(builder,
+                                                                    225);
+            }
+            lib::llvm::CodeGenLevelAggressive => {
+                llvm::LLVMPassManagerBuilderUseInlinerWithThreshold(builder,
+                                                                    275);
+            }
+        }
+        llvm::LLVMPassManagerBuilderSetOptLevel(builder, opt as c_uint);
+        llvm::LLVMRustAddBuilderLibraryInfo(builder, llmod);
+
+        // Use the builder to populate the function/module pass managers.
+        llvm::LLVMPassManagerBuilderPopulateFunctionPassManager(builder, fpm);
+        llvm::LLVMPassManagerBuilderPopulateModulePassManager(builder, mpm);
+        llvm::LLVMPassManagerBuilderDispose(builder);
     }
 }
 
@@ -594,8 +606,8 @@ pub fn build_link_meta(sess: Session,
     fn crate_meta_name(sess: Session, output: &Path, opt_name: Option<@str>)
         -> @str {
         match opt_name {
-            Some(v) => v,
-            None => {
+            Some(v) if !v.is_empty() => v,
+            _ => {
                 // to_managed could go away if there was a version of
                 // filestem that returned an @str
                 let name = session::expect(sess,
@@ -603,6 +615,10 @@ pub fn build_link_meta(sess: Session,
                                            || fmt!("output file name `%s` doesn't\
                                                     appear to have a stem",
                                                    output.to_str())).to_managed();
+                if name.is_empty() {
+                    sess.fatal("missing crate link meta `name`, and the \
+                                inferred name is blank");
+                }
                 warn_missing(sess, "name", name);
                 name
             }
@@ -611,8 +627,8 @@ pub fn build_link_meta(sess: Session,
 
     fn crate_meta_vers(sess: Session, opt_vers: Option<@str>) -> @str {
         match opt_vers {
-            Some(v) => v,
-            None => {
+            Some(v) if !v.is_empty() => v,
+            _ => {
                 let vers = @"0.0";
                 warn_missing(sess, "vers", vers);
                 vers
@@ -650,8 +666,7 @@ pub fn truncated_hash_result(symbol_hasher: &mut hash::State) -> ~str {
 pub fn symbol_hash(tcx: ty::ctxt,
                    symbol_hasher: &mut hash::State,
                    t: ty::t,
-                   link_meta: LinkMeta)
-                   -> @str {
+                   link_meta: LinkMeta) -> @str {
     // NB: do *not* use abbrevs here as we want the symbol names
     // to be independent of one another in the crate.
 
@@ -662,8 +677,8 @@ pub fn symbol_hash(tcx: ty::ctxt,
     write_string(symbol_hasher, "-");
     write_string(symbol_hasher, encoder::encoded_ty(tcx, t));
     let mut hash = truncated_hash_result(symbol_hasher);
-    // Prefix with _ so that it never blends into adjacent digits
-    hash.unshift_char('_');
+    // Prefix with 'h' so that it never blends into adjacent digits
+    hash.unshift_char('h');
     // tjc: allocation is unfortunate; need to change std::hash
     hash.to_managed()
 }
@@ -706,7 +721,7 @@ pub fn sanitize(s: &str) -> ~str {
             'a' .. 'z'
             | 'A' .. 'Z'
             | '0' .. '9'
-            | '_' => result.push_char(c),
+            | '_' | '.' | '$' => result.push_char(c),
 
             _ => {
                 let mut tstr = ~"";
@@ -727,19 +742,65 @@ pub fn sanitize(s: &str) -> ~str {
     return result;
 }
 
-pub fn mangle(sess: Session, ss: path) -> ~str {
-    // Follow C++ namespace-mangling style
+pub fn mangle(sess: Session, ss: path,
+              hash: Option<&str>, vers: Option<&str>) -> ~str {
+    // Follow C++ namespace-mangling style, see
+    // http://en.wikipedia.org/wiki/Name_mangling for more info.
+    //
+    // It turns out that on OSX you can actually have arbitrary symbols in
+    // function names (at least when given to LLVM), but this is not possible
+    // when using unix's linker. Perhaps one day when we just a linker from LLVM
+    // we won't need to do this name mangling. The problem with name mangling is
+    // that it seriously limits the available characters. For example we can't
+    // have things like @T or ~[T] in symbol names when one would theoretically
+    // want them for things like impls of traits on that type.
+    //
+    // To be able to work on all platforms and get *some* reasonable output, we
+    // use C++ name-mangling.
 
-    let mut n = ~"_ZN"; // Begin name-sequence.
+    let mut n = ~"_ZN"; // _Z == Begin name-sequence, N == nested
 
+    let push = |s: &str| {
+        let sani = sanitize(s);
+        n.push_str(fmt!("%u%s", sani.len(), sani));
+    };
+
+    // First, connect each component with <len, name> pairs.
     for s in ss.iter() {
         match *s {
-            path_name(s) | path_mod(s) => {
-                let sani = sanitize(sess.str_of(s));
-                n.push_str(fmt!("%u%s", sani.len(), sani));
+            path_name(s) | path_mod(s) | path_pretty_name(s, _) => {
+                push(sess.str_of(s))
             }
         }
     }
+
+    // next, if any identifiers are "pretty" and need extra information tacked
+    // on, then use the hash to generate two unique characters. For now
+    // hopefully 2 characters is enough to avoid collisions.
+    static EXTRA_CHARS: &'static str =
+        "abcdefghijklmnopqrstuvwxyz\
+         ABCDEFGHIJKLMNOPQRSTUVWXYZ\
+         0123456789";
+    let mut hash = match hash { Some(s) => s.to_owned(), None => ~"" };
+    for s in ss.iter() {
+        match *s {
+            path_pretty_name(_, extra) => {
+                let hi = (extra >> 32) as u32 as uint;
+                let lo = extra as u32 as uint;
+                hash.push_char(EXTRA_CHARS[hi % EXTRA_CHARS.len()] as char);
+                hash.push_char(EXTRA_CHARS[lo % EXTRA_CHARS.len()] as char);
+            }
+            _ => {}
+        }
+    }
+    if hash.len() > 0 {
+        push(hash);
+    }
+    match vers {
+        Some(s) => push(s),
+        None => {}
+    }
+
     n.push_char('E'); // End name-sequence.
     n
 }
@@ -748,10 +809,15 @@ pub fn exported_name(sess: Session,
                      path: path,
                      hash: &str,
                      vers: &str) -> ~str {
-    mangle(sess,
-           vec::append_one(
-               vec::append_one(path, path_name(sess.ident_of(hash))),
-               path_name(sess.ident_of(vers))))
+    // The version will get mangled to have a leading '_', but it makes more
+    // sense to lead with a 'v' b/c this is a version...
+    let vers = if vers.len() > 0 && !char::is_XID_start(vers.char_at(0)) {
+        "v" + vers
+    } else {
+        vers.to_owned()
+    };
+
+    mangle(sess, path, Some(hash), Some(vers.as_slice()))
 }
 
 pub fn mangle_exported_name(ccx: &mut CrateContext,
@@ -769,64 +835,59 @@ pub fn mangle_internal_name_by_type_only(ccx: &mut CrateContext,
     let s = ppaux::ty_to_short_str(ccx.tcx, t);
     let hash = get_symbol_hash(ccx, t);
     return mangle(ccx.sess,
-        ~[path_name(ccx.sess.ident_of(name)),
-          path_name(ccx.sess.ident_of(s)),
-          path_name(ccx.sess.ident_of(hash))]);
+                  ~[path_name(ccx.sess.ident_of(name)),
+                    path_name(ccx.sess.ident_of(s))],
+                  Some(hash.as_slice()),
+                  None);
 }
 
 pub fn mangle_internal_name_by_type_and_seq(ccx: &mut CrateContext,
-                                         t: ty::t,
-                                         name: &str) -> ~str {
+                                            t: ty::t,
+                                            name: &str) -> ~str {
     let s = ppaux::ty_to_str(ccx.tcx, t);
     let hash = get_symbol_hash(ccx, t);
+    let (_, name) = gensym_name(name);
     return mangle(ccx.sess,
-        ~[path_name(ccx.sess.ident_of(s)),
-          path_name(ccx.sess.ident_of(hash)),
-          path_name(gensym_name(name))]);
+                  ~[path_name(ccx.sess.ident_of(s)), name],
+                  Some(hash.as_slice()),
+                  None);
 }
 
 pub fn mangle_internal_name_by_path_and_seq(ccx: &mut CrateContext,
                                             mut path: path,
                                             flav: &str) -> ~str {
-    path.push(path_name(gensym_name(flav)));
-    mangle(ccx.sess, path)
+    let (_, name) = gensym_name(flav);
+    path.push(name);
+    mangle(ccx.sess, path, None, None)
 }
 
 pub fn mangle_internal_name_by_path(ccx: &mut CrateContext, path: path) -> ~str {
-    mangle(ccx.sess, path)
-}
-
-pub fn mangle_internal_name_by_seq(_ccx: &mut CrateContext, flav: &str) -> ~str {
-    return fmt!("%s_%u", flav, token::gensym(flav));
+    mangle(ccx.sess, path, None, None)
 }
 
 
-pub fn output_dll_filename(os: session::os, lm: LinkMeta) -> ~str {
+pub fn output_dll_filename(os: session::Os, lm: LinkMeta) -> ~str {
     let (dll_prefix, dll_suffix) = match os {
-        session::os_win32 => (win32::DLL_PREFIX, win32::DLL_SUFFIX),
-        session::os_macos => (macos::DLL_PREFIX, macos::DLL_SUFFIX),
-        session::os_linux => (linux::DLL_PREFIX, linux::DLL_SUFFIX),
-        session::os_android => (android::DLL_PREFIX, android::DLL_SUFFIX),
-        session::os_freebsd => (freebsd::DLL_PREFIX, freebsd::DLL_SUFFIX),
+        session::OsWin32 => (win32::DLL_PREFIX, win32::DLL_SUFFIX),
+        session::OsMacos => (macos::DLL_PREFIX, macos::DLL_SUFFIX),
+        session::OsLinux => (linux::DLL_PREFIX, linux::DLL_SUFFIX),
+        session::OsAndroid => (android::DLL_PREFIX, android::DLL_SUFFIX),
+        session::OsFreebsd => (freebsd::DLL_PREFIX, freebsd::DLL_SUFFIX),
     };
     fmt!("%s%s-%s-%s%s", dll_prefix, lm.name, lm.extras_hash, lm.vers, dll_suffix)
 }
 
-// If the user wants an exe generated we need to invoke
-// cc to link the object file with some libs
-pub fn link_binary(sess: Session,
-                   obj_filename: &Path,
-                   out_filename: &Path,
-                   lm: LinkMeta) {
+pub fn get_cc_prog(sess: Session) -> ~str {
     // In the future, FreeBSD will use clang as default compiler.
     // It would be flexible to use cc (system's default C compiler)
     // instead of hard-coded gcc.
-    // For win32, there is no cc command,
-    // so we add a condition to make it use gcc.
-    let cc_prog: ~str = match sess.opts.linker {
+    // For win32, there is no cc command, so we add a condition to make it use g++.
+    // We use g++ rather than gcc because it automatically adds linker options required
+    // for generation of dll modules that correctly register stack unwind tables.
+    match sess.opts.linker {
         Some(ref linker) => linker.to_str(),
         None => match sess.targ_cfg.os {
-            session::os_android =>
+            session::OsAndroid =>
                 match &sess.opts.android_cross_path {
                     &Some(ref path) => {
                         fmt!("%s/bin/arm-linux-androideabi-gcc", *path)
@@ -836,12 +897,21 @@ pub fn link_binary(sess: Session,
                                     (--android-cross-path)")
                     }
                 },
-            session::os_win32 => ~"gcc",
+            session::OsWin32 => ~"g++",
             _ => ~"cc"
         }
-    };
-    // The invocations of cc share some flags across platforms
+    }
+}
 
+// If the user wants an exe generated we need to invoke
+// cc to link the object file with some libs
+pub fn link_binary(sess: Session,
+                   obj_filename: &Path,
+                   out_filename: &Path,
+                   lm: LinkMeta) {
+
+    let cc_prog = get_cc_prog(sess);
+    // The invocations of cc share some flags across platforms
 
     let output = if *sess.building_library {
         let long_libname = output_dll_filename(sess.targ_cfg.os, lm);
@@ -858,6 +928,10 @@ pub fn link_binary(sess: Session,
     debug!("output: %s", output.to_str());
     let cc_args = link_args(sess, obj_filename, out_filename, lm);
     debug!("%s link args: %s", cc_prog, cc_args.connect(" "));
+    if (sess.opts.debugging_opts & session::print_link_args) != 0 {
+        io::println(fmt!("%s link args: %s", cc_prog, cc_args.connect(" ")));
+    }
+
     // We run 'cc' here
     let prog = run::process_output(cc_prog, cc_args);
     if 0 != prog.status {
@@ -865,12 +939,12 @@ pub fn link_binary(sess: Session,
                       cc_prog, prog.status));
         sess.note(fmt!("%s arguments: %s",
                        cc_prog, cc_args.connect(" ")));
-        sess.note(str::from_bytes(prog.error + prog.output));
+        sess.note(str::from_utf8(prog.error + prog.output));
         sess.abort_if_errors();
     }
 
     // Clean up on Darwin
-    if sess.targ_cfg.os == session::os_macos {
+    if sess.targ_cfg.os == session::OsMacos {
         run::process_status("dsymutil", [output.to_str()]);
     }
 
@@ -891,7 +965,7 @@ pub fn link_args(sess: Session,
     // Converts a library file-stem into a cc -l argument
     fn unlib(config: @session::config, stem: ~str) -> ~str {
         if stem.starts_with("lib") &&
-            config.os != session::os_win32 {
+            config.os != session::OsWin32 {
             stem.slice(3, stem.len()).to_owned()
         } else {
             stem
@@ -917,7 +991,7 @@ pub fn link_args(sess: Session,
         obj_filename.to_str()]);
 
     let lib_cmd = match sess.targ_cfg.os {
-        session::os_macos => ~"-dynamiclib",
+        session::OsMacos => ~"-dynamiclib",
         _ => ~"-shared"
     };
 
@@ -926,13 +1000,13 @@ pub fn link_args(sess: Session,
     let cstore = sess.cstore;
     let r = cstore::get_used_crate_files(cstore);
     for cratepath in r.iter() {
-        if cratepath.filetype() == Some(~".rlib") {
+        if cratepath.filetype() == Some(".rlib") {
             args.push(cratepath.to_str());
             loop;
         }
         let dir = cratepath.dirname();
         if dir != ~"" { args.push(~"-L" + dir); }
-        let libarg = unlib(sess.targ_cfg, cratepath.filestem().unwrap());
+        let libarg = unlib(sess.targ_cfg, cratepath.filestem().unwrap().to_owned());
         args.push(~"-l" + libarg);
     }
 
@@ -973,7 +1047,7 @@ pub fn link_args(sess: Session,
 
         // On mac we need to tell the linker to let this library
         // be rpathed
-        if sess.targ_cfg.os == session::os_macos {
+        if sess.targ_cfg.os == session::OsMacos {
             args.push(~"-Wl,-install_name,@rpath/"
                       + output.filename().unwrap());
         }
@@ -981,7 +1055,7 @@ pub fn link_args(sess: Session,
 
     // On linux librt and libdl are an indirect dependencies via rustrt,
     // and binutils 2.22+ won't add them automatically
-    if sess.targ_cfg.os == session::os_linux {
+    if sess.targ_cfg.os == session::OsLinux {
         args.push_all([~"-lrt", ~"-ldl"]);
 
         // LLVM implements the `frem` instruction as a call to `fmod`,
@@ -989,12 +1063,12 @@ pub fn link_args(sess: Session,
         // have to be explicit about linking to it. See #2510
         args.push(~"-lm");
     }
-    else if sess.targ_cfg.os == session::os_android {
+    else if sess.targ_cfg.os == session::OsAndroid {
         args.push_all([~"-ldl", ~"-llog",  ~"-lsupc++", ~"-lgnustl_shared"]);
         args.push(~"-lm");
     }
 
-    if sess.targ_cfg.os == session::os_freebsd {
+    if sess.targ_cfg.os == session::OsFreebsd {
         args.push_all([~"-pthread", ~"-lrt",
                        ~"-L/usr/local/lib", ~"-lexecinfo",
                        ~"-L/usr/local/lib/gcc46",
@@ -1008,7 +1082,7 @@ pub fn link_args(sess: Session,
     // linker from the dwarf unwind info. Unfortunately, it does not seem to
     // understand how to unwind our __morestack frame, so we have to turn it
     // off. This has impacted some other projects like GHC.
-    if sess.targ_cfg.os == session::os_macos {
+    if sess.targ_cfg.os == session::OsMacos {
         args.push(~"-Wl,-no_compact_unwind");
     }
 

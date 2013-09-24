@@ -51,7 +51,7 @@ pub enum DefIdSource {
     TypeParameter
 }
 type conv_did<'self> =
-    &'self fn(source: DefIdSource, ast::def_id) -> ast::def_id;
+    &'self fn(source: DefIdSource, ast::DefId) -> ast::DefId;
 
 pub struct PState<'self> {
     data: &'self [u8],
@@ -90,14 +90,13 @@ fn scan<R>(st: &mut PState, is_last: &fn(char) -> bool,
     return op(st.data.slice(start_pos, end_pos));
 }
 
-pub fn parse_ident(st: &mut PState, last: char) -> ast::ident {
+pub fn parse_ident(st: &mut PState, last: char) -> ast::Ident {
     fn is_last(b: char, c: char) -> bool { return c == b; }
     return parse_ident_(st, |a| is_last(last, a) );
 }
 
-fn parse_ident_(st: &mut PState, is_last: @fn(char) -> bool) ->
-   ast::ident {
-    let rslt = scan(st, is_last, str::from_bytes);
+fn parse_ident_(st: &mut PState, is_last: &fn(char) -> bool) -> ast::Ident {
+    let rslt = scan(st, is_last, str::from_utf8);
     return st.tcx.sess.ident_of(rslt);
 }
 
@@ -130,7 +129,7 @@ pub fn parse_trait_ref_data(data: &[u8], crate_num: int, pos: uint, tcx: ty::ctx
 }
 
 fn parse_path(st: &mut PState) -> @ast::Path {
-    let mut idents: ~[ast::ident] = ~[];
+    let mut idents: ~[ast::Ident] = ~[];
     fn is_last(c: char) -> bool { return c == '(' || c == ':'; }
     idents.push(parse_ident_(st, is_last));
     loop {
@@ -138,12 +137,20 @@ fn parse_path(st: &mut PState) -> @ast::Path {
           ':' => { next(st); next(st); }
           c => {
             if c == '(' {
-                return @ast::Path { span: dummy_sp(),
-                                    global: false,
-                                    idents: idents,
-                                    rp: None,
-                                    types: ~[] };
-            } else { idents.push(parse_ident_(st, is_last)); }
+                return @ast::Path {
+                    span: dummy_sp(),
+                    global: false,
+                    segments: idents.move_iter().map(|identifier| {
+                        ast::PathSegment {
+                            identifier: identifier,
+                            lifetime: None,
+                            types: opt_vec::Empty,
+                        }
+                    }).collect()
+                };
+            } else {
+                idents.push(parse_ident_(st, is_last));
+            }
           }
         }
     };
@@ -414,11 +421,10 @@ fn parse_ty(st: &mut PState, conv: conv_did) -> ty::t {
     }
 }
 
-fn parse_mutability(st: &mut PState) -> ast::mutability {
+fn parse_mutability(st: &mut PState) -> ast::Mutability {
     match peek(st) {
-      'm' => { next(st); ast::m_mutbl }
-      '?' => { next(st); ast::m_const }
-      _ => { ast::m_imm }
+      'm' => { next(st); ast::MutMutable }
+      _ => { ast::MutImmutable }
     }
 }
 
@@ -428,7 +434,7 @@ fn parse_mt(st: &mut PState, conv: conv_did) -> ty::mt {
 }
 
 fn parse_def(st: &mut PState, source: DefIdSource,
-             conv: conv_did) -> ast::def_id {
+             conv: conv_did) -> ast::DefId {
     return conv(source, scan(st, |c| { c == '|' }, parse_def_id));
 }
 
@@ -470,7 +476,7 @@ fn parse_abi_set(st: &mut PState) -> AbiSet {
     let mut abis = AbiSet::empty();
     while peek(st) != ']' {
         // FIXME(#5422) str API should not force this copy
-        let abi_str = scan(st, |c| c == ',', str::from_bytes);
+        let abi_str = scan(st, |c| c == ',', str::from_utf8);
         let abi = abi::lookup(abi_str).expect(abi_str);
         abis.add(abi);
     }
@@ -528,7 +534,7 @@ fn parse_sig(st: &mut PState, conv: conv_did) -> ty::FnSig {
 }
 
 // Rust metadata parsing
-pub fn parse_def_id(buf: &[u8]) -> ast::def_id {
+pub fn parse_def_id(buf: &[u8]) -> ast::DefId {
     let mut colon_idx = 0u;
     let len = buf.len();
     while colon_idx < len && buf[colon_idx] != ':' as u8 { colon_idx += 1u; }
@@ -550,7 +556,7 @@ pub fn parse_def_id(buf: &[u8]) -> ast::def_id {
        None => fail!("internal error: parse_def_id: id expected, but found %?",
                      def_part)
     };
-    ast::def_id { crate: crate_num, node: def_num }
+    ast::DefId { crate: crate_num, node: def_num }
 }
 
 pub fn parse_type_param_def_data(data: &[u8], start: uint,

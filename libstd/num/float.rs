@@ -23,6 +23,7 @@
 #[allow(missing_doc)];
 #[allow(non_uppercase_statics)];
 
+use default::Default;
 use num::{Zero, One, strconv};
 use num::FPCategory;
 use num;
@@ -112,29 +113,6 @@ pub fn to_str_hex(num: float) -> ~str {
 }
 
 ///
-/// Converts a float to a string in a given radix
-///
-/// # Arguments
-///
-/// * num - The float value
-/// * radix - The base to use
-///
-/// # Failure
-///
-/// Fails if called on a special value like `inf`, `-inf` or `NaN` due to
-/// possible misinterpretation of the result at higher bases. If those values
-/// are expected, use `to_str_radix_special()` instead.
-///
-#[inline]
-pub fn to_str_radix(num: float, radix: uint) -> ~str {
-    let (r, special) = strconv::float_to_str_common(
-        num, radix, true, strconv::SignNeg, strconv::DigAll);
-    if special { fail!("number has a special value, \
-                         try to_str_radix_special() if those are expected") }
-    r
-}
-
-///
 /// Converts a float to a string in a given radix, and a flag indicating
 /// whether it's a special value
 ///
@@ -187,43 +165,26 @@ impl to_str::ToStr for float {
 }
 
 impl num::ToStrRadix for float {
+    /// Converts a float to a string in a given radix
+    ///
+    /// # Arguments
+    ///
+    /// * num - The float value
+    /// * radix - The base to use
+    ///
+    /// # Failure
+    ///
+    /// Fails if called on a special value like `inf`, `-inf` or `NaN` due to
+    /// possible misinterpretation of the result at higher bases. If those values
+    /// are expected, use `to_str_radix_special()` instead.
     #[inline]
     fn to_str_radix(&self, radix: uint) -> ~str {
-        to_str_radix(*self, radix)
+        let (r, special) = strconv::float_to_str_common(
+            *self, radix, true, strconv::SignNeg, strconv::DigAll);
+        if special { fail!("number has a special value, \
+                             try to_str_radix_special() if those are expected") }
+        r
     }
-}
-
-///
-/// Convert a string in base 10 to a float.
-/// Accepts a optional decimal exponent.
-///
-/// This function accepts strings such as
-///
-/// * '3.14'
-/// * '+3.14', equivalent to '3.14'
-/// * '-3.14'
-/// * '2.5E10', or equivalently, '2.5e10'
-/// * '2.5E-10'
-/// * '.' (understood as 0)
-/// * '5.'
-/// * '.5', or, equivalently,  '0.5'
-/// * '+inf', 'inf', '-inf', 'NaN'
-///
-/// Leading and trailing whitespace represent an error.
-///
-/// # Arguments
-///
-/// * num - A string
-///
-/// # Return value
-///
-/// `none` if the string did not represent a valid number.  Otherwise,
-/// `Some(n)` where `n` is the floating-point number represented by `num`.
-///
-#[inline]
-pub fn from_str(num: &str) -> Option<float> {
-    strconv::from_str_common(num, 10u, true, true, true,
-                             strconv::ExpDec, false, false)
 }
 
 ///
@@ -259,40 +220,65 @@ pub fn from_str_hex(num: &str) -> Option<float> {
                              strconv::ExpBin, false, false)
 }
 
-///
-/// Convert a string in an given base to a float.
-///
-/// Due to possible conflicts, this function does **not** accept
-/// the special values `inf`, `-inf`, `+inf` and `NaN`, **nor**
-/// does it recognize exponents of any kind.
-///
-/// Leading and trailing whitespace represent an error.
-///
-/// # Arguments
-///
-/// * num - A string
-/// * radix - The base to use. Must lie in the range [2 .. 36]
-///
-/// # Return value
-///
-/// `none` if the string did not represent a valid number. Otherwise,
-/// `Some(n)` where `n` is the floating-point number represented by `num`.
-///
-#[inline]
-pub fn from_str_radix(num: &str, radix: uint) -> Option<float> {
-    strconv::from_str_common(num, radix, true, true, false,
-                             strconv::ExpNone, false, false)
-}
-
 impl FromStr for float {
+    ///
+    /// Convert a string in base 10 to a float.
+    /// Accepts a optional decimal exponent.
+    ///
+    /// This function accepts strings such as
+    ///
+    /// * '3.14'
+    /// * '+3.14', equivalent to '3.14'
+    /// * '-3.14'
+    /// * '2.5E10', or equivalently, '2.5e10'
+    /// * '2.5E-10'
+    /// * '.' (understood as 0)
+    /// * '5.'
+    /// * '.5', or, equivalently,  '0.5'
+    /// * '+inf', 'inf', '-inf', 'NaN'
+    ///
+    /// Leading and trailing whitespace represent an error.
+    ///
+    /// # Arguments
+    ///
+    /// * num - A string
+    ///
+    /// # Return value
+    ///
+    /// `none` if the string did not represent a valid number.  Otherwise,
+    /// `Some(n)` where `n` is the floating-point number represented by `num`.
+    ///
     #[inline]
-    fn from_str(val: &str) -> Option<float> { from_str(val) }
+    fn from_str(val: &str) -> Option<float> {
+        strconv::from_str_common(val, 10u, true, true, true,
+                                 strconv::ExpDec, false, false)
+    }
 }
 
 impl num::FromStrRadix for float {
+    ///
+    /// Convert a string in an given base to a float.
+    ///
+    /// Due to possible conflicts, this function does **not** accept
+    /// the special values `inf`, `-inf`, `+inf` and `NaN`, **nor**
+    /// does it recognize exponents of any kind.
+    ///
+    /// Leading and trailing whitespace represent an error.
+    ///
+    /// # Arguments
+    ///
+    /// * num - A string
+    /// * radix - The base to use. Must lie in the range [2 .. 36]
+    ///
+    /// # Return value
+    ///
+    /// `none` if the string did not represent a valid number. Otherwise,
+    /// `Some(n)` where `n` is the floating-point number represented by `num`.
+    ///
     #[inline]
     fn from_str_radix(val: &str, radix: uint) -> Option<float> {
-        from_str_radix(val, radix)
+        strconv::from_str_common(val, radix, true, true, false,
+                                 strconv::ExpNone, false, false)
     }
 }
 
@@ -338,8 +324,6 @@ impl Num for float {}
 impl Eq for float {
     #[inline]
     fn eq(&self, other: &float) -> bool { (*self) == (*other) }
-    #[inline]
-    fn ne(&self, other: &float) -> bool { (*self) != (*other) }
 }
 
 #[cfg(not(test))]
@@ -349,7 +333,7 @@ impl ApproxEq<float> for float {
 
     #[inline]
     fn approx_eq(&self, other: &float) -> bool {
-        self.approx_eq_eps(other, &ApproxEq::approx_epsilon::<float, float>())
+        self.approx_eq_eps(other, &1.0e-6)
     }
 
     #[inline]
@@ -389,6 +373,11 @@ impl Orderable for float {
     fn clamp(&self, mn: &float, mx: &float) -> float {
         (*self as f64).clamp(&(*mn as f64), &(*mx as f64)) as float
     }
+}
+
+impl Default for float {
+    #[inline]
+    fn default() -> float { 0.0 }
 }
 
 impl Zero for float {
@@ -790,36 +779,60 @@ impl Signed for float {
 
 impl Bounded for float {
     #[inline]
-    fn min_value() -> float { Bounded::min_value::<f64>() as float }
+    fn min_value() -> float {
+        let x: f64 = Bounded::min_value();
+        x as float
+    }
 
     #[inline]
-    fn max_value() -> float { Bounded::max_value::<f64>() as float }
+    fn max_value() -> float {
+        let x: f64 = Bounded::max_value();
+        x as float
+    }
 }
 
 impl Primitive for float {
     #[inline]
-    fn bits() -> uint { Primitive::bits::<f64>() }
+    fn bits(_: Option<float>) -> uint {
+        let bits: uint = Primitive::bits(Some(0f64));
+        bits
+    }
 
     #[inline]
-    fn bytes() -> uint { Primitive::bytes::<f64>() }
+    fn bytes(_: Option<float>) -> uint {
+        let bytes: uint = Primitive::bytes(Some(0f64));
+        bytes
+    }
 }
 
 impl Float for float {
     #[inline]
-    fn NaN() -> float { Float::NaN::<f64>() as float }
+    fn nan() -> float {
+        let value: f64 = Float::nan();
+        value as float
+    }
 
     #[inline]
-    fn infinity() -> float { Float::infinity::<f64>() as float }
+    fn infinity() -> float {
+        let value: f64 = Float::infinity();
+        value as float
+    }
 
     #[inline]
-    fn neg_infinity() -> float { Float::neg_infinity::<f64>() as float }
+    fn neg_infinity() -> float {
+        let value: f64 = Float::neg_infinity();
+        value as float
+    }
 
     #[inline]
-    fn neg_zero() -> float { Float::neg_zero::<f64>() as float }
+    fn neg_zero() -> float {
+        let value: f64 = Float::neg_zero();
+        value as float
+    }
 
     /// Returns `true` if the number is NaN
     #[inline]
-    fn is_NaN(&self) -> bool { (*self as f64).is_NaN() }
+    fn is_nan(&self) -> bool { (*self as f64).is_nan() }
 
     /// Returns `true` if the number is infinite
     #[inline]
@@ -839,30 +852,46 @@ impl Float for float {
     fn classify(&self) -> FPCategory { (*self as f64).classify() }
 
     #[inline]
-    fn mantissa_digits() -> uint { Float::mantissa_digits::<f64>() }
+    fn mantissa_digits(_: Option<float>) -> uint {
+        Float::mantissa_digits(Some(0f64))
+    }
 
     #[inline]
-    fn digits() -> uint { Float::digits::<f64>() }
+    fn digits(_: Option<float>) -> uint {
+        Float::digits(Some(0f64))
+    }
 
     #[inline]
-    fn epsilon() -> float { Float::epsilon::<f64>() as float }
+    fn epsilon() -> float {
+        let value: f64 = Float::epsilon();
+        value as float
+    }
 
     #[inline]
-    fn min_exp() -> int { Float::min_exp::<f64>() }
+    fn min_exp(_: Option<float>) -> int {
+        Float::min_exp(Some(0f64))
+    }
 
     #[inline]
-    fn max_exp() -> int { Float::max_exp::<f64>() }
+    fn max_exp(_: Option<float>) -> int {
+        Float::max_exp(Some(0f64))
+    }
 
     #[inline]
-    fn min_10_exp() -> int { Float::min_10_exp::<f64>() }
+    fn min_10_exp(_: Option<float>) -> int {
+        Float::min_10_exp(Some(0f64))
+    }
 
     #[inline]
-    fn max_10_exp() -> int { Float::max_10_exp::<f64>() }
+    fn max_10_exp(_: Option<float>) -> int {
+        Float::max_10_exp(Some(0f64))
+    }
 
     /// Constructs a floating point number by multiplying `x` by 2 raised to the power of `exp`
     #[inline]
     fn ldexp(x: float, exp: int) -> float {
-        Float::ldexp(x as f64, exp) as float
+        let value: f64 = Float::ldexp(x as f64, exp);
+        value as float
     }
 
     ///
@@ -915,8 +944,8 @@ impl Float for float {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use prelude::*;
+    use super::*;
 
     use num::*;
     use num;
@@ -944,9 +973,10 @@ mod tests {
         assert_eq!(1f.clamp(&2f, &4f), 2f);
         assert_eq!(8f.clamp(&2f, &4f), 4f);
         assert_eq!(3f.clamp(&2f, &4f), 3f);
-        assert!(3f.clamp(&Float::NaN::<float>(), &4f).is_NaN());
-        assert!(3f.clamp(&2f, &Float::NaN::<float>()).is_NaN());
-        assert!(Float::NaN::<float>().clamp(&2f, &4f).is_NaN());
+        let nan: float = Float::nan();
+        assert!(3f.clamp(&nan, &4f).is_nan());
+        assert!(3f.clamp(&2f, &nan).is_nan());
+        assert!(nan.clamp(&2f, &4f).is_nan());
     }
 
     #[test]
@@ -1023,9 +1053,13 @@ mod tests {
     fn test_asinh() {
         assert_eq!(0.0f.asinh(), 0.0f);
         assert_eq!((-0.0f).asinh(), -0.0f);
-        assert_eq!(Float::infinity::<float>().asinh(), Float::infinity::<float>());
-        assert_eq!(Float::neg_infinity::<float>().asinh(), Float::neg_infinity::<float>());
-        assert!(Float::NaN::<float>().asinh().is_NaN());
+
+        let inf: float = Float::infinity();
+        let neg_inf: float = Float::neg_infinity();
+        let nan: float = Float::nan();
+        assert_eq!(inf.asinh(), inf);
+        assert_eq!(neg_inf.asinh(), neg_inf);
+        assert!(nan.asinh().is_nan());
         assert_approx_eq!(2.0f.asinh(), 1.443635475178810342493276740273105f);
         assert_approx_eq!((-2.0f).asinh(), -1.443635475178810342493276740273105f);
     }
@@ -1033,10 +1067,14 @@ mod tests {
     #[test]
     fn test_acosh() {
         assert_eq!(1.0f.acosh(), 0.0f);
-        assert!(0.999f.acosh().is_NaN());
-        assert_eq!(Float::infinity::<float>().acosh(), Float::infinity::<float>());
-        assert!(Float::neg_infinity::<float>().acosh().is_NaN());
-        assert!(Float::NaN::<float>().acosh().is_NaN());
+        assert!(0.999f.acosh().is_nan());
+
+        let inf: float = Float::infinity();
+        let neg_inf: float = Float::neg_infinity();
+        let nan: float = Float::nan();
+        assert_eq!(inf.acosh(), inf);
+        assert!(neg_inf.acosh().is_nan());
+        assert!(nan.acosh().is_nan());
         assert_approx_eq!(2.0f.acosh(), 1.31695789692481670862504634730796844f);
         assert_approx_eq!(3.0f.acosh(), 1.76274717403908605046521864995958461f);
     }
@@ -1045,34 +1083,58 @@ mod tests {
     fn test_atanh() {
         assert_eq!(0.0f.atanh(), 0.0f);
         assert_eq!((-0.0f).atanh(), -0.0f);
-        assert_eq!(1.0f.atanh(), Float::infinity::<float>());
-        assert_eq!((-1.0f).atanh(), Float::neg_infinity::<float>());
-        assert!(2f64.atanh().atanh().is_NaN());
-        assert!((-2f64).atanh().atanh().is_NaN());
-        assert!(Float::infinity::<f64>().atanh().is_NaN());
-        assert!(Float::neg_infinity::<f64>().atanh().is_NaN());
-        assert!(Float::NaN::<float>().atanh().is_NaN());
+
+        let inf: float = Float::infinity();
+        let neg_inf: float = Float::neg_infinity();
+        let inf64: f64 = Float::infinity();
+        let neg_inf64: f64 = Float::neg_infinity();
+        let nan: float = Float::nan();
+        assert_eq!(1.0f.atanh(), inf);
+        assert_eq!((-1.0f).atanh(), neg_inf);
+        assert!(2f64.atanh().atanh().is_nan());
+        assert!((-2f64).atanh().atanh().is_nan());
+        assert!(inf64.atanh().is_nan());
+        assert!(neg_inf64.atanh().is_nan());
+        assert!(nan.atanh().is_nan());
         assert_approx_eq!(0.5f.atanh(), 0.54930614433405484569762261846126285f);
         assert_approx_eq!((-0.5f).atanh(), -0.54930614433405484569762261846126285f);
     }
 
     #[test]
     fn test_real_consts() {
-        assert_approx_eq!(Real::two_pi::<float>(), 2f * Real::pi::<float>());
-        assert_approx_eq!(Real::frac_pi_2::<float>(), Real::pi::<float>() / 2f);
-        assert_approx_eq!(Real::frac_pi_3::<float>(), Real::pi::<float>() / 3f);
-        assert_approx_eq!(Real::frac_pi_4::<float>(), Real::pi::<float>() / 4f);
-        assert_approx_eq!(Real::frac_pi_6::<float>(), Real::pi::<float>() / 6f);
-        assert_approx_eq!(Real::frac_pi_8::<float>(), Real::pi::<float>() / 8f);
-        assert_approx_eq!(Real::frac_1_pi::<float>(), 1f / Real::pi::<float>());
-        assert_approx_eq!(Real::frac_2_pi::<float>(), 2f / Real::pi::<float>());
-        assert_approx_eq!(Real::frac_2_sqrtpi::<float>(), 2f / Real::pi::<float>().sqrt());
-        assert_approx_eq!(Real::sqrt2::<float>(), 2f.sqrt());
-        assert_approx_eq!(Real::frac_1_sqrt2::<float>(), 1f / 2f.sqrt());
-        assert_approx_eq!(Real::log2_e::<float>(), Real::e::<float>().log2());
-        assert_approx_eq!(Real::log10_e::<float>(), Real::e::<float>().log10());
-        assert_approx_eq!(Real::ln_2::<float>(), 2f.ln());
-        assert_approx_eq!(Real::ln_10::<float>(), 10f.ln());
+        let pi: float = Real::pi();
+        let two_pi: float = Real::two_pi();
+        let frac_pi_2: float = Real::frac_pi_2();
+        let frac_pi_3: float = Real::frac_pi_3();
+        let frac_pi_4: float = Real::frac_pi_4();
+        let frac_pi_6: float = Real::frac_pi_6();
+        let frac_pi_8: float = Real::frac_pi_8();
+        let frac_1_pi: float = Real::frac_1_pi();
+        let frac_2_pi: float = Real::frac_2_pi();
+        let frac_2_sqrtpi: float = Real::frac_2_sqrtpi();
+        let sqrt2: float = Real::sqrt2();
+        let frac_1_sqrt2: float = Real::frac_1_sqrt2();
+        let e: float = Real::e();
+        let log2_e: float = Real::log2_e();
+        let log10_e: float = Real::log10_e();
+        let ln_2: float = Real::ln_2();
+        let ln_10: float = Real::ln_10();
+
+        assert_approx_eq!(two_pi, 2f * pi);
+        assert_approx_eq!(frac_pi_2, pi / 2f);
+        assert_approx_eq!(frac_pi_3, pi / 3f);
+        assert_approx_eq!(frac_pi_4, pi / 4f);
+        assert_approx_eq!(frac_pi_6, pi / 6f);
+        assert_approx_eq!(frac_pi_8, pi / 8f);
+        assert_approx_eq!(frac_1_pi, 1f / pi);
+        assert_approx_eq!(frac_2_pi, 2f / pi);
+        assert_approx_eq!(frac_2_sqrtpi, 2f / pi.sqrt());
+        assert_approx_eq!(sqrt2, 2f.sqrt());
+        assert_approx_eq!(frac_1_sqrt2, 1f / 2f.sqrt());
+        assert_approx_eq!(log2_e, e.log2());
+        assert_approx_eq!(log10_e, e.log10());
+        assert_approx_eq!(ln_2, 2f.ln());
+        assert_approx_eq!(ln_10, 10f.ln());
     }
 
     #[test]
@@ -1084,7 +1146,7 @@ mod tests {
         assert_eq!((-1f).abs(), 1f);
         assert_eq!(neg_infinity.abs(), infinity);
         assert_eq!((1f/neg_infinity).abs(), 0f);
-        assert!(NaN.abs().is_NaN());
+        assert!(NaN.abs().is_nan());
     }
 
     #[test]
@@ -1097,8 +1159,12 @@ mod tests {
         assert_eq!(infinity.abs_sub(&1f), infinity);
         assert_eq!(0f.abs_sub(&neg_infinity), infinity);
         assert_eq!(0f.abs_sub(&infinity), 0f);
-        assert!(NaN.abs_sub(&-1f).is_NaN());
-        assert!(1f.abs_sub(&NaN).is_NaN());
+    }
+
+    #[test] #[ignore(cfg(windows))] // FIXME #8663
+    fn test_abs_sub_nowin() {
+        assert!(NaN.abs_sub(&-1f).is_nan());
+        assert!(1f.abs_sub(&NaN).is_nan());
     }
 
     #[test]
@@ -1110,7 +1176,7 @@ mod tests {
         assert_eq!((-1f).signum(), -1f);
         assert_eq!(neg_infinity.signum(), -1f);
         assert_eq!((1f/neg_infinity).signum(), -1f);
-        assert!(NaN.signum().is_NaN());
+        assert!(NaN.signum().is_nan());
     }
 
     #[test]
@@ -1148,17 +1214,23 @@ mod tests {
 
     #[test]
     fn test_primitive() {
-        assert_eq!(Primitive::bits::<float>(), sys::size_of::<float>() * 8);
-        assert_eq!(Primitive::bytes::<float>(), sys::size_of::<float>());
+        let none: Option<float> = None;
+        assert_eq!(Primitive::bits(none), sys::size_of::<float>() * 8);
+        assert_eq!(Primitive::bytes(none), sys::size_of::<float>());
     }
 
     #[test]
     fn test_is_normal() {
-        assert!(!Float::NaN::<float>().is_normal());
-        assert!(!Float::infinity::<float>().is_normal());
-        assert!(!Float::neg_infinity::<float>().is_normal());
-        assert!(!Zero::zero::<float>().is_normal());
-        assert!(!Float::neg_zero::<float>().is_normal());
+        let nan: float = Float::nan();
+        let inf: float = Float::infinity();
+        let neg_inf: float = Float::neg_infinity();
+        let zero: float = Zero::zero();
+        let neg_zero: float = Float::neg_zero();
+        assert!(!nan.is_normal());
+        assert!(!inf.is_normal());
+        assert!(!neg_inf.is_normal());
+        assert!(!zero.is_normal());
+        assert!(!neg_zero.is_normal());
         assert!(1f.is_normal());
         assert!(1e-307f.is_normal());
         assert!(!1e-308f.is_normal());
@@ -1166,11 +1238,16 @@ mod tests {
 
     #[test]
     fn test_classify() {
-        assert_eq!(Float::NaN::<float>().classify(), FPNaN);
-        assert_eq!(Float::infinity::<float>().classify(), FPInfinite);
-        assert_eq!(Float::neg_infinity::<float>().classify(), FPInfinite);
-        assert_eq!(Zero::zero::<float>().classify(), FPZero);
-        assert_eq!(Float::neg_zero::<float>().classify(), FPZero);
+        let nan: float = Float::nan();
+        let inf: float = Float::infinity();
+        let neg_inf: float = Float::neg_infinity();
+        let zero: float = Zero::zero();
+        let neg_zero: float = Float::neg_zero();
+        assert_eq!(nan.classify(), FPNaN);
+        assert_eq!(inf.classify(), FPInfinite);
+        assert_eq!(neg_inf.classify(), FPInfinite);
+        assert_eq!(zero.classify(), FPZero);
+        assert_eq!(neg_zero.classify(), FPZero);
         assert_eq!(1f.classify(), FPNormal);
         assert_eq!(1e-307f.classify(), FPNormal);
         assert_eq!(1e-308f.classify(), FPSubnormal);
@@ -1187,11 +1264,13 @@ mod tests {
 
         assert_eq!(Float::ldexp(0f, -123), 0f);
         assert_eq!(Float::ldexp(-0f, -123), -0f);
-        assert_eq!(Float::ldexp(Float::infinity::<float>(), -123),
-                   Float::infinity::<float>());
-        assert_eq!(Float::ldexp(Float::neg_infinity::<float>(), -123),
-                   Float::neg_infinity::<float>());
-        assert!(Float::ldexp(Float::NaN::<float>(), -123).is_NaN());
+
+        let inf: float = Float::infinity();
+        let neg_inf: float = Float::neg_infinity();
+        let nan: float = Float::nan();
+        assert_eq!(Float::ldexp(inf, -123), inf);
+        assert_eq!(Float::ldexp(neg_inf, -123), neg_inf);
+        assert!(Float::ldexp(nan, -123).is_nan());
     }
 
     #[test]
@@ -1209,11 +1288,16 @@ mod tests {
 
         assert_eq!(0f.frexp(), (0f, 0));
         assert_eq!((-0f).frexp(), (-0f, 0));
-        assert_eq!(match Float::infinity::<float>().frexp() { (x, _) => x },
-                   Float::infinity::<float>())
-        assert_eq!(match Float::neg_infinity::<float>().frexp() { (x, _) => x },
-                   Float::neg_infinity::<float>())
-        assert!(match Float::NaN::<float>().frexp() { (x, _) => x.is_NaN() })
+    }
+
+    #[test] #[ignore(cfg(windows))] // FIXME #8755
+    fn test_frexp_nowin() {
+        let inf: float = Float::infinity();
+        let neg_inf: float = Float::neg_infinity();
+        let nan: float = Float::nan();
+        assert_eq!(match inf.frexp() { (x, _) => x }, inf);
+        assert_eq!(match neg_inf.frexp() { (x, _) => x }, neg_inf);
+        assert!(match nan.frexp() { (x, _) => x.is_nan() })
     }
 
     #[test]
@@ -1224,49 +1308,49 @@ mod tests {
 
     #[test]
     pub fn test_from_str() {
-        assert_eq!(from_str("3"), Some(3.));
-        assert_eq!(from_str("3.14"), Some(3.14));
-        assert_eq!(from_str("+3.14"), Some(3.14));
-        assert_eq!(from_str("-3.14"), Some(-3.14));
-        assert_eq!(from_str("2.5E10"), Some(25000000000.));
-        assert_eq!(from_str("2.5e10"), Some(25000000000.));
-        assert_eq!(from_str("25000000000.E-10"), Some(2.5));
-        assert_eq!(from_str("."), Some(0.));
-        assert_eq!(from_str(".e1"), Some(0.));
-        assert_eq!(from_str(".e-1"), Some(0.));
-        assert_eq!(from_str("5."), Some(5.));
-        assert_eq!(from_str(".5"), Some(0.5));
-        assert_eq!(from_str("0.5"), Some(0.5));
-        assert_eq!(from_str("-.5"), Some(-0.5));
-        assert_eq!(from_str("-5"), Some(-5.));
-        assert_eq!(from_str("inf"), Some(infinity));
-        assert_eq!(from_str("+inf"), Some(infinity));
-        assert_eq!(from_str("-inf"), Some(neg_infinity));
+        assert_eq!(from_str::<float>("3"), Some(3.));
+        assert_eq!(from_str::<float>("3.14"), Some(3.14));
+        assert_eq!(from_str::<float>("+3.14"), Some(3.14));
+        assert_eq!(from_str::<float>("-3.14"), Some(-3.14));
+        assert_eq!(from_str::<float>("2.5E10"), Some(25000000000.));
+        assert_eq!(from_str::<float>("2.5e10"), Some(25000000000.));
+        assert_eq!(from_str::<float>("25000000000.E-10"), Some(2.5));
+        assert_eq!(from_str::<float>("."), Some(0.));
+        assert_eq!(from_str::<float>(".e1"), Some(0.));
+        assert_eq!(from_str::<float>(".e-1"), Some(0.));
+        assert_eq!(from_str::<float>("5."), Some(5.));
+        assert_eq!(from_str::<float>(".5"), Some(0.5));
+        assert_eq!(from_str::<float>("0.5"), Some(0.5));
+        assert_eq!(from_str::<float>("-.5"), Some(-0.5));
+        assert_eq!(from_str::<float>("-5"), Some(-5.));
+        assert_eq!(from_str::<float>("inf"), Some(infinity));
+        assert_eq!(from_str::<float>("+inf"), Some(infinity));
+        assert_eq!(from_str::<float>("-inf"), Some(neg_infinity));
         // note: NaN != NaN, hence this slightly complex test
-        match from_str("NaN") {
-            Some(f) => assert!(f.is_NaN()),
+        match from_str::<float>("NaN") {
+            Some(f) => assert!(f.is_nan()),
             None => fail!()
         }
         // note: -0 == 0, hence these slightly more complex tests
-        match from_str("-0") {
+        match from_str::<float>("-0") {
             Some(v) if v.is_zero() => assert!(v.is_negative()),
             _ => fail!()
         }
-        match from_str("0") {
+        match from_str::<float>("0") {
             Some(v) if v.is_zero() => assert!(v.is_positive()),
             _ => fail!()
         }
 
-        assert!(from_str("").is_none());
-        assert!(from_str("x").is_none());
-        assert!(from_str(" ").is_none());
-        assert!(from_str("   ").is_none());
-        assert!(from_str("e").is_none());
-        assert!(from_str("E").is_none());
-        assert!(from_str("E1").is_none());
-        assert!(from_str("1e1e1").is_none());
-        assert!(from_str("1e1.1").is_none());
-        assert!(from_str("1e1-1").is_none());
+        assert!(from_str::<float>("").is_none());
+        assert!(from_str::<float>("x").is_none());
+        assert!(from_str::<float>(" ").is_none());
+        assert!(from_str::<float>("   ").is_none());
+        assert!(from_str::<float>("e").is_none());
+        assert!(from_str::<float>("E").is_none());
+        assert!(from_str::<float>("E1").is_none());
+        assert!(from_str::<float>("1e1e1").is_none());
+        assert!(from_str::<float>("1e1.1").is_none());
+        assert!(from_str::<float>("1e1-1").is_none());
     }
 
     #[test]
@@ -1291,7 +1375,7 @@ mod tests {
         assert_eq!(from_str_hex("-inf"), Some(neg_infinity));
         // note: NaN != NaN, hence this slightly complex test
         match from_str_hex("NaN") {
-            Some(f) => assert!(f.is_NaN()),
+            Some(f) => assert!(f.is_nan()),
             None => fail!()
         }
         // note: -0 == 0, hence these slightly more complex tests
@@ -1342,8 +1426,8 @@ mod tests {
 
     #[test]
     pub fn test_to_str_radix() {
-        assert_eq!(to_str_radix(36., 36u), ~"10");
-        assert_eq!(to_str_radix(8.125, 2u), ~"1000.001");
+        assert_eq!(36.0f.to_str_radix(36u), ~"10");
+        assert_eq!(8.125f.to_str_radix(2u), ~"1000.001");
     }
 
     #[test]

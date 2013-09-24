@@ -21,7 +21,7 @@ use rt::local::Local;
 use rt::select::{SelectInner, SelectPortInner};
 use select::{Select, SelectPort};
 use unstable::atomics::{AtomicUint, AtomicOption, Acquire, Relaxed, SeqCst};
-use unstable::sync::UnsafeAtomicRcBox;
+use unstable::sync::UnsafeArc;
 use util::Void;
 use comm::{GenericChan, GenericSmartChan, GenericPort, Peekable};
 use cell::Cell;
@@ -46,7 +46,7 @@ struct Packet<T> {
     payload: Option<T>,
 }
 
-/// A one-shot channel.
+// A one-shot channel.
 pub struct ChanOne<T> {
     void_packet: *mut Void,
     suppress_finalize: bool
@@ -125,7 +125,7 @@ impl<T> ChanOne<T> {
         unsafe {
 
             // Install the payload
-            assert!((*packet).payload.is_none());
+            rtassert!((*packet).payload.is_none());
             (*packet).payload = Some(val);
 
             // Atomically swap out the old state to figure out what
@@ -144,16 +144,8 @@ impl<T> ChanOne<T> {
             match oldstate {
                 STATE_BOTH => {
                     // Port is not waiting yet. Nothing to do
-                    do Local::borrow::<Scheduler, ()> |sched| {
-                        rtdebug!("non-rendezvous send");
-                        sched.metrics.non_rendezvous_sends += 1;
-                    }
                 }
                 STATE_ONE => {
-                    do Local::borrow::<Scheduler, ()> |sched| {
-                        rtdebug!("rendezvous send");
-                        sched.metrics.rendezvous_sends += 1;
-                    }
                     // Port has closed. Need to clean up.
                     let _packet: ~Packet<T> = cast::transmute(this.void_packet);
                     recvr_active = false;
@@ -167,7 +159,7 @@ impl<T> ChanOne<T> {
                         };
                     } else {
                         let recvr = Cell::new(recvr);
-                        do Local::borrow::<Scheduler, ()> |sched| {
+                        do Local::borrow |sched: &mut Scheduler| {
                             sched.enqueue_blocked_task(recvr.take());
                         }
                     }
@@ -207,7 +199,7 @@ impl<T> PortOne<T> {
         if !this.optimistic_check() {
             // No data available yet.
             // Switch to the scheduler to put the ~Task into the Packet state.
-            let sched = Local::take::<Scheduler>();
+            let sched: ~Scheduler = Local::take();
             do sched.deschedule_running_task_and_then |sched, task| {
                 this.block_on(sched, task);
             }
@@ -229,7 +221,7 @@ impl<T> SelectInner for PortOne<T> {
         // The optimistic check is never necessary for correctness. For testing
         // purposes, making it randomly return false simulates a racing sender.
         use rand::{Rand};
-        let actually_check = do Local::borrow::<Scheduler, bool> |sched| {
+        let actually_check = do Local::borrow |sched: &mut Scheduler| {
             Rand::rand(&mut sched.rng)
         };
         if actually_check {
@@ -251,7 +243,6 @@ impl<T> SelectInner for PortOne<T> {
                 STATE_BOTH => {
                     // Data has not been sent. Now we're blocked.
                     rtdebug!("non-rendezvous recv");
-                    sched.metrics.non_rendezvous_recvs += 1;
                     false
                 }
                 STATE_ONE => {
@@ -267,7 +258,6 @@ impl<T> SelectInner for PortOne<T> {
                     (*self.packet()).state.store(STATE_ONE, Relaxed);
 
                     rtdebug!("rendezvous recv");
-                    sched.metrics.rendezvous_recvs += 1;
 
                     // Channel is closed. Switch back and check the data.
                     // NB: We have to drop back into the scheduler event loop here
@@ -307,7 +297,7 @@ impl<T> SelectInner for PortOne<T> {
                         STATE_ONE  => true, // Lost the race. Data available.
                         same_ptr   => {
                             // We successfully unblocked our task pointer.
-                            assert!(task_as_state == same_ptr);
+                            rtassert!(task_as_state == same_ptr);
                             let handle = BlockedTask::cast_from_uint(task_as_state);
                             // Because we are already awake, the handle we
                             // gave to this port shall already be empty.
@@ -341,7 +331,8 @@ impl<T> SelectPortInner<T> for PortOne<T> {
         unsafe {
             // See corresponding store() above in block_on for rationale.
             // FIXME(#8130) This can happen only in test builds.
-            assert!((*packet).state.load(Relaxed) == STATE_ONE);
+            // This load is not required for correctness and may be compiled out.
+            rtassert!((*packet).state.load(Relaxed) == STATE_ONE);
 
             let payload = (*packet).payload.take();
 
@@ -372,7 +363,7 @@ impl<T> Peekable<T> for PortOne<T> {
 
 #[unsafe_destructor]
 impl<T> Drop for ChanOne<T> {
-    fn drop(&self) {
+    fn drop(&mut self) {
         if self.suppress_finalize { return }
 
         unsafe {
@@ -387,7 +378,7 @@ impl<T> Drop for ChanOne<T> {
                 },
                 task_as_state => {
                     // The port is blocked waiting for a message we will never send. Wake it.
-                    assert!((*this.packet()).payload.is_none());
+                    rtassert!((*this.packet()).payload.is_none());
                     let recvr = BlockedTask::cast_from_uint(task_as_state);
                     do recvr.wake().map_move |woken_task| {
                         Scheduler::run_task(woken_task);
@@ -400,7 +391,7 @@ impl<T> Drop for ChanOne<T> {
 
 #[unsafe_destructor]
 impl<T> Drop for PortOne<T> {
-    fn drop(&self) {
+    fn drop(&mut self) {
         if self.suppress_finalize { return }
 
         unsafe {
@@ -499,13 +490,14 @@ impl<T> GenericPort<T> for Port<T> {
     }
 
     fn try_recv(&self) -> Option<T> {
-        let pone = self.next.take();
-        match pone.try_recv() {
-            Some(StreamPayload { val, next }) => {
-                self.next.put_back(next);
-                Some(val)
+        do self.next.take_opt().map_move_default(None) |pone| {
+            match pone.try_recv() {
+                Some(StreamPayload { val, next }) => {
+                    self.next.put_back(next);
+                    Some(val)
+                }
+                None => None
             }
-            None => None
         }
     }
 }
@@ -575,14 +567,14 @@ impl<'self, T> SelectPort<T> for &'self Port<T> { }
 
 pub struct SharedChan<T> {
     // Just like Chan, but a shared AtomicOption instead of Cell
-    priv next: UnsafeAtomicRcBox<AtomicOption<StreamChanOne<T>>>
+    priv next: UnsafeArc<AtomicOption<StreamChanOne<T>>>
 }
 
 impl<T> SharedChan<T> {
     pub fn new(chan: Chan<T>) -> SharedChan<T> {
         let next = chan.next.take();
         let next = AtomicOption::new(~next);
-        SharedChan { next: UnsafeAtomicRcBox::new(next) }
+        SharedChan { next: UnsafeArc::new(next) }
     }
 }
 
@@ -628,7 +620,7 @@ impl<T> Clone for SharedChan<T> {
 
 pub struct SharedPort<T> {
     // The next port on which we will receive the next port on which we will receive T
-    priv next_link: UnsafeAtomicRcBox<AtomicOption<PortOne<StreamPortOne<T>>>>
+    priv next_link: UnsafeArc<AtomicOption<PortOne<StreamPortOne<T>>>>
 }
 
 impl<T> SharedPort<T> {
@@ -638,7 +630,7 @@ impl<T> SharedPort<T> {
         let (next_link_port, next_link_chan) = oneshot();
         next_link_chan.send(next_data_port);
         let next_link = AtomicOption::new(~next_link_port);
-        SharedPort { next_link: UnsafeAtomicRcBox::new(next_link) }
+        SharedPort { next_link: UnsafeArc::new(next_link) }
     }
 }
 
@@ -681,7 +673,7 @@ impl<T> Clone for SharedPort<T> {
     }
 }
 
-// XXX: Need better name
+// FIXME #7760: Need better name
 type MegaPipe<T> = (SharedPort<T>, SharedChan<T>);
 
 pub fn megapipe<T: Send>() -> MegaPipe<T> {
@@ -726,7 +718,8 @@ mod test {
     use option::*;
     use rt::test::*;
     use cell::Cell;
-    use iter::Times;
+    use num::Times;
+    use rt::util;
 
     #[test]
     fn oneshot_single_thread_close_port_first() {
@@ -875,6 +868,7 @@ mod test {
 
     #[test]
     fn oneshot_multi_thread_close_stress() {
+        if util::limit_thread_creation_due_to_osx_and_valgrind() { return; }
         do stress_factor().times {
             do run_in_newsched_task {
                 let (port, chan) = oneshot::<int>();
@@ -890,6 +884,7 @@ mod test {
 
     #[test]
     fn oneshot_multi_thread_send_close_stress() {
+        if util::limit_thread_creation_due_to_osx_and_valgrind() { return; }
         do stress_factor().times {
             do run_in_newsched_task {
                 let (port, chan) = oneshot::<int>();
@@ -910,6 +905,7 @@ mod test {
 
     #[test]
     fn oneshot_multi_thread_recv_close_stress() {
+        if util::limit_thread_creation_due_to_osx_and_valgrind() { return; }
         do stress_factor().times {
             do run_in_newsched_task {
                 let (port, chan) = oneshot::<int>();
@@ -936,6 +932,7 @@ mod test {
 
     #[test]
     fn oneshot_multi_thread_send_recv_stress() {
+        if util::limit_thread_creation_due_to_osx_and_valgrind() { return; }
         do stress_factor().times {
             do run_in_newsched_task {
                 let (port, chan) = oneshot::<~int>();
@@ -955,6 +952,7 @@ mod test {
 
     #[test]
     fn stream_send_recv_stress() {
+        if util::limit_thread_creation_due_to_osx_and_valgrind() { return; }
         do stress_factor().times {
             do run_in_mt_newsched_task {
                 let (port, chan) = stream::<~int>();
@@ -999,6 +997,7 @@ mod test {
 
     #[test]
     fn shared_chan_stress() {
+        if util::limit_thread_creation_due_to_osx_and_valgrind() { return; }
         do run_in_mt_newsched_task {
             let (port, chan) = stream();
             let chan = SharedChan::new(chan);
@@ -1018,10 +1017,10 @@ mod test {
 
     #[test]
     fn shared_port_stress() {
+        if util::limit_thread_creation_due_to_osx_and_valgrind() { return; }
         do run_in_mt_newsched_task {
-            // XXX: Removing these type annotations causes an ICE
-            let (end_port, end_chan) = stream::<()>();
-            let (port, chan) = stream::<()>();
+            let (end_port, end_chan) = stream();
+            let (port, chan) = stream();
             let end_chan = SharedChan::new(end_chan);
             let port = SharedPort::new(port);
             let total = stress_factor() + 100;
@@ -1096,7 +1095,9 @@ mod test {
     #[test]
     fn megapipe_stress() {
         use rand;
-        use rand::RngUtil;
+        use rand::Rng;
+
+        if util::limit_thread_creation_due_to_osx_and_valgrind() { return; }
 
         do run_in_mt_newsched_task {
             let (end_port, end_chan) = stream::<()>();
@@ -1105,7 +1106,7 @@ mod test {
             let total = stress_factor() + 10;
             let mut rng = rand::rng();
             do total.times {
-                let msgs = rng.gen_uint_range(0, 10);
+                let msgs = rng.gen_integer_range(0u, 10);
                 let pipe_clone = pipe.clone();
                 let end_chan_clone = end_chan.clone();
                 do spawntask_random {

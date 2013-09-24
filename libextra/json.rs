@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2013 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -16,7 +16,8 @@
 
 //! json parsing and serialization
 
-use std::iterator;
+use std::char;
+use std::cast::transmute;
 use std::float;
 use std::hashmap::HashMap;
 use std::io::WriterUtil;
@@ -134,18 +135,21 @@ impl serialize::Encoder for Encoder {
                          _id: uint,
                          cnt: uint,
                          f: &fn(&mut Encoder)) {
-        // enums are encoded as strings or vectors:
+        // enums are encoded as strings or objects
         // Bunny => "Bunny"
-        // Kangaroo(34,"William") => ["Kangaroo",[34,"William"]]
-
+        // Kangaroo(34,"William") => {"variant": "Kangaroo", "fields": [34,"William"]}
         if cnt == 0 {
             self.wr.write_str(escape_str(name));
         } else {
-            self.wr.write_char('[');
+            self.wr.write_char('{');
+            self.wr.write_str("\"variant\"");
+            self.wr.write_char(':');
             self.wr.write_str(escape_str(name));
             self.wr.write_char(',');
+            self.wr.write_str("\"fields\"");
+            self.wr.write_str(":[");
             f(self);
-            self.wr.write_char(']');
+            self.wr.write_str("]}");
         }
     }
 
@@ -459,26 +463,24 @@ impl<E: serialize::Encoder> serialize::Encodable<E> for Json {
     }
 }
 
-/// Encodes a json value into a io::writer
-pub fn to_writer(wr: @io::Writer, json: &Json) {
-    let mut encoder = Encoder(wr);
-    json.encode(&mut encoder)
-}
+impl Json{
+    /// Encodes a json value into a io::writer.  Uses a single line.
+    pub fn to_writer(&self, wr: @io::Writer) {
+        let mut encoder = Encoder(wr);
+        self.encode(&mut encoder)
+    }
 
-/// Encodes a json value into a string
-pub fn to_str(json: &Json) -> ~str {
-    io::with_str_writer(|wr| to_writer(wr, json))
-}
+    /// Encodes a json value into a io::writer.
+    /// Pretty-prints in a more readable format.
+    pub fn to_pretty_writer(&self, wr: @io::Writer) {
+        let mut encoder = PrettyEncoder(wr);
+        self.encode(&mut encoder)
+    }
 
-/// Encodes a json value into a io::writer
-pub fn to_pretty_writer(wr: @io::Writer, json: &Json) {
-    let mut encoder = PrettyEncoder(wr);
-    json.encode(&mut encoder)
-}
-
-/// Encodes a json value into a string
-pub fn to_pretty_str(json: &Json) -> ~str {
-    io::with_str_writer(|wr| to_pretty_writer(wr, json))
+    /// Encodes a json value into a string
+    pub fn to_pretty_str(&self) -> ~str {
+        io::with_str_writer(|wr| self.to_pretty_writer(wr))
+    }
 }
 
 pub struct Parser<T> {
@@ -489,10 +491,10 @@ pub struct Parser<T> {
 }
 
 /// Decode a json value from an Iterator<char>
-pub fn Parser<T : iterator::Iterator<char>>(rdr: ~T) -> Parser<T> {
+pub fn Parser<T : Iterator<char>>(rdr: ~T) -> Parser<T> {
     let mut p = Parser {
         rdr: rdr,
-        ch: 0 as char,
+        ch: '\x00',
         line: 1,
         col: 0,
     };
@@ -500,7 +502,7 @@ pub fn Parser<T : iterator::Iterator<char>>(rdr: ~T) -> Parser<T> {
     p
 }
 
-impl<T: iterator::Iterator<char>> Parser<T> {
+impl<T: Iterator<char>> Parser<T> {
     pub fn parse(&mut self) -> Result<Json, Error> {
         match self.parse_value() {
           Ok(value) => {
@@ -518,13 +520,14 @@ impl<T: iterator::Iterator<char>> Parser<T> {
     }
 }
 
-impl<T : iterator::Iterator<char>> Parser<T> {
-    fn eof(&self) -> bool { self.ch == -1 as char }
+impl<T : Iterator<char>> Parser<T> {
+    // FIXME: #8971: unsound
+    fn eof(&self) -> bool { self.ch == unsafe { transmute(-1u32) } }
 
     fn bump(&mut self) {
         match self.rdr.next() {
             Some(ch) => self.ch = ch,
-            None() => self.ch = -1 as char,
+            None() => self.ch = unsafe { transmute(-1u32) }, // FIXME: #8971: unsound
         }
 
         if self.ch == '\n' {
@@ -757,7 +760,7 @@ impl<T : iterator::Iterator<char>> Parser<T> {
                             ~"invalid \\u escape (not four digits)");
                       }
 
-                      res.push_char(n as char);
+                      res.push_char(char::from_u32(n as u32).unwrap());
                   }
                   _ => return self.error(~"invalid escape")
                 }
@@ -857,7 +860,7 @@ impl<T : iterator::Iterator<char>> Parser<T> {
 
 /// Decodes a json value from an @io::Reader
 pub fn from_reader(rdr: @io::Reader) -> Result<Json, Error> {
-    let s = str::from_bytes(rdr.read_whole_stream());
+    let s = str::from_utf8(rdr.read_whole_stream());
     let mut parser = Parser(~s.iter());
     parser.parse()
 }
@@ -947,14 +950,20 @@ impl serialize::Decoder for Decoder {
         debug!("read_enum_variant(names=%?)", names);
         let name = match self.stack.pop() {
             String(s) => s,
-            List(list) => {
-                for v in list.move_rev_iter() {
-                    self.stack.push(v);
+            Object(o) => {
+                let n = match o.find(&~"variant").expect("invalidly encoded json") {
+                    &String(ref s) => s.clone(),
+                    _ => fail!("invalidly encoded json"),
+                };
+                match o.find(&~"fields").expect("invalidly encoded json") {
+                    &List(ref l) => {
+                        for field in l.rev_iter() {
+                            self.stack.push(field.clone());
+                        }
+                    },
+                    _ => fail!("invalidly encoded json")
                 }
-                match self.stack.pop() {
-                    String(s) => s,
-                    value => fail!("invalid variant name: %?", value),
-                }
+                n
             }
             ref json => fail!("invalid variant: %?", *json),
         };
@@ -1166,9 +1175,6 @@ impl Ord for Json {
             }
         }
     }
-    fn le(&self, other: &Json) -> bool { !(*other).lt(&(*self)) }
-    fn ge(&self, other: &Json) -> bool { !(*self).lt(other) }
-    fn gt(&self, other: &Json) -> bool { (*other).lt(&(*self))  }
 }
 
 /// A trait for converting values to JSON
@@ -1307,7 +1313,10 @@ impl<A:ToJson> ToJson for Option<A> {
 }
 
 impl to_str::ToStr for Json {
-    fn to_str(&self) -> ~str { to_str(self) }
+    /// Encodes a json value into a string
+    fn to_str(&self) -> ~str {
+      io::with_str_writer(|wr| self.to_writer(wr))
+    }
 }
 
 impl to_str::ToStr for Error {
@@ -1358,69 +1367,67 @@ mod tests {
 
     #[test]
     fn test_write_null() {
-        assert_eq!(to_str(&Null), ~"null");
-        assert_eq!(to_pretty_str(&Null), ~"null");
+        assert_eq!(Null.to_str(), ~"null");
+        assert_eq!(Null.to_pretty_str(), ~"null");
     }
 
 
     #[test]
     fn test_write_number() {
-        assert_eq!(to_str(&Number(3f)), ~"3");
-        assert_eq!(to_pretty_str(&Number(3f)), ~"3");
+        assert_eq!(Number(3f).to_str(), ~"3");
+        assert_eq!(Number(3f).to_pretty_str(), ~"3");
 
-        assert_eq!(to_str(&Number(3.1f)), ~"3.1");
-        assert_eq!(to_pretty_str(&Number(3.1f)), ~"3.1");
+        assert_eq!(Number(3.1f).to_str(), ~"3.1");
+        assert_eq!(Number(3.1f).to_pretty_str(), ~"3.1");
 
-        assert_eq!(to_str(&Number(-1.5f)), ~"-1.5");
-        assert_eq!(to_pretty_str(&Number(-1.5f)), ~"-1.5");
+        assert_eq!(Number(-1.5f).to_str(), ~"-1.5");
+        assert_eq!(Number(-1.5f).to_pretty_str(), ~"-1.5");
 
-        assert_eq!(to_str(&Number(0.5f)), ~"0.5");
-        assert_eq!(to_pretty_str(&Number(0.5f)), ~"0.5");
+        assert_eq!(Number(0.5f).to_str(), ~"0.5");
+        assert_eq!(Number(0.5f).to_pretty_str(), ~"0.5");
     }
 
     #[test]
     fn test_write_str() {
-        assert_eq!(to_str(&String(~"")), ~"\"\"");
-        assert_eq!(to_pretty_str(&String(~"")), ~"\"\"");
+        assert_eq!(String(~"").to_str(), ~"\"\"");
+        assert_eq!(String(~"").to_pretty_str(), ~"\"\"");
 
-        assert_eq!(to_str(&String(~"foo")), ~"\"foo\"");
-        assert_eq!(to_pretty_str(&String(~"foo")), ~"\"foo\"");
+        assert_eq!(String(~"foo").to_str(), ~"\"foo\"");
+        assert_eq!(String(~"foo").to_pretty_str(), ~"\"foo\"");
     }
 
     #[test]
     fn test_write_bool() {
-        assert_eq!(to_str(&Boolean(true)), ~"true");
-        assert_eq!(to_pretty_str(&Boolean(true)), ~"true");
+        assert_eq!(Boolean(true).to_str(), ~"true");
+        assert_eq!(Boolean(true).to_pretty_str(), ~"true");
 
-        assert_eq!(to_str(&Boolean(false)), ~"false");
-        assert_eq!(to_pretty_str(&Boolean(false)), ~"false");
+        assert_eq!(Boolean(false).to_str(), ~"false");
+        assert_eq!(Boolean(false).to_pretty_str(), ~"false");
     }
 
     #[test]
     fn test_write_list() {
-        assert_eq!(to_str(&List(~[])), ~"[]");
-        assert_eq!(to_pretty_str(&List(~[])), ~"[]");
+        assert_eq!(List(~[]).to_str(), ~"[]");
+        assert_eq!(List(~[]).to_pretty_str(), ~"[]");
 
-        assert_eq!(to_str(&List(~[Boolean(true)])), ~"[true]");
+        assert_eq!(List(~[Boolean(true)]).to_str(), ~"[true]");
         assert_eq!(
-            to_pretty_str(&List(~[Boolean(true)])),
+            List(~[Boolean(true)]).to_pretty_str(),
             ~"\
             [\n  \
                 true\n\
             ]"
         );
 
-        assert_eq!(to_str(&List(~[
+        let longTestList = List(~[
             Boolean(false),
             Null,
-            List(~[String(~"foo\nbar"), Number(3.5f)])
-        ])), ~"[false,null,[\"foo\\nbar\",3.5]]");
+            List(~[String(~"foo\nbar"), Number(3.5f)])]);
+
+        assert_eq!(longTestList.to_str(),
+            ~"[false,null,[\"foo\\nbar\",3.5]]");
         assert_eq!(
-            to_pretty_str(&List(~[
-                Boolean(false),
-                Null,
-                List(~[String(~"foo\nbar"), Number(3.5f)])
-            ])),
+            longTestList.to_pretty_str(),
             ~"\
             [\n  \
                 false,\n  \
@@ -1435,28 +1442,30 @@ mod tests {
 
     #[test]
     fn test_write_object() {
-        assert_eq!(to_str(&mk_object([])), ~"{}");
-        assert_eq!(to_pretty_str(&mk_object([])), ~"{}");
+        assert_eq!(mk_object([]).to_str(), ~"{}");
+        assert_eq!(mk_object([]).to_pretty_str(), ~"{}");
 
         assert_eq!(
-            to_str(&mk_object([(~"a", Boolean(true))])),
+            mk_object([(~"a", Boolean(true))]).to_str(),
             ~"{\"a\":true}"
         );
         assert_eq!(
-            to_pretty_str(&mk_object([(~"a", Boolean(true))])),
+            mk_object([(~"a", Boolean(true))]).to_pretty_str(),
             ~"\
             {\n  \
                 \"a\": true\n\
             }"
         );
 
-        assert_eq!(
-            to_str(&mk_object([
+        let complexObj = mk_object([
                 (~"b", List(~[
                     mk_object([(~"c", String(~"\x0c\r"))]),
                     mk_object([(~"d", String(~""))])
                 ]))
-            ])),
+            ]);
+
+        assert_eq!(
+            complexObj.to_str(),
             ~"{\
                 \"b\":[\
                     {\"c\":\"\\f\\r\"},\
@@ -1465,12 +1474,7 @@ mod tests {
             }"
         );
         assert_eq!(
-            to_pretty_str(&mk_object([
-                (~"b", List(~[
-                    mk_object([(~"c", String(~"\x0c\r"))]),
-                    mk_object([(~"d", String(~""))])
-                ]))
-            ])),
+            complexObj.to_pretty_str(),
             ~"\
             {\n  \
                 \"b\": [\n    \
@@ -1494,8 +1498,8 @@ mod tests {
 
         // We can't compare the strings directly because the object fields be
         // printed in a different order.
-        assert_eq!(a.clone(), from_str(to_str(&a)).unwrap());
-        assert_eq!(a.clone(), from_str(to_pretty_str(&a)).unwrap());
+        assert_eq!(a.clone(), from_str(a.to_str()).unwrap());
+        assert_eq!(a.clone(), from_str(a.to_pretty_str()).unwrap());
     }
 
     #[test]
@@ -1522,7 +1526,7 @@ mod tests {
                 let mut encoder = Encoder(wr);
                 animal.encode(&mut encoder);
             },
-            ~"[\"Frog\",\"Henry\",349]"
+            ~"{\"variant\":\"Frog\",\"fields\":[\"Henry\",349]}"
         );
         assert_eq!(
             do io::with_str_writer |wr| {
@@ -1926,14 +1930,14 @@ mod tests {
         assert_eq!(value, Dog);
 
         let mut decoder =
-            Decoder(from_str("[\"Frog\",\"Henry\",349]").unwrap());
+            Decoder(from_str("{\"variant\":\"Frog\",\"fields\":[\"Henry\",349]}").unwrap());
         let value: Animal = Decodable::decode(&mut decoder);
         assert_eq!(value, Frog(~"Henry", 349));
     }
 
     #[test]
     fn test_decode_map() {
-        let s = ~"{\"a\": \"Dog\", \"b\": [\"Frog\", \"Henry\", 349]}";
+        let s = ~"{\"a\": \"Dog\", \"b\": {\"variant\":\"Frog\",\"fields\":[\"Henry\", 349]}}";
         let mut decoder = Decoder(from_str(s).unwrap());
         let mut map: TreeMap<~str, Animal> = Decodable::decode(&mut decoder);
 

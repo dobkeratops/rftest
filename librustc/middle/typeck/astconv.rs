@@ -11,7 +11,7 @@
 /*!
  * Conversion from AST representation of types to the ty.rs
  * representation.  The main routine here is `ast_ty_to_ty()`: each use
- * is parameterized by an instance of `AstConv` and a `region_scope`.
+ * is parameterized by an instance of `AstConv` and a `RegionScope`.
  *
  * The parameterization of `ast_ty_to_ty()` is because it behaves
  * somewhat differently during the collect and check phases,
@@ -23,12 +23,12 @@
  * In the check phase, when the @FnCtxt is used as the `AstConv`,
  * `get_item_ty()` just looks up the item type in `tcx.tcache`.
  *
- * The `region_scope` trait controls how region references are
+ * The `RegionScope` trait controls how region references are
  * handled.  It has two methods which are used to resolve anonymous
  * region references (e.g., `&T`) and named region references (e.g.,
  * `&a.T`).  There are numerous region scopes that can be used, but most
- * commonly you want either `empty_rscope`, which permits only the static
- * region, or `type_rscope`, which permits the self region if the type in
+ * commonly you want either `EmptyRscope`, which permits only the static
+ * region, or `TypeRscope`, which permits the self region if the type in
  * question is parameterized by a region.
  *
  * Unlike the `AstConv` trait, the region scope can change as we descend
@@ -58,15 +58,14 @@ use middle::ty::{substs};
 use middle::ty::{ty_param_substs_and_ty};
 use middle::ty;
 use middle::typeck::rscope::in_binding_rscope;
-use middle::typeck::rscope::{region_scope, RegionError};
+use middle::typeck::rscope::{RegionScope, RegionError};
 use middle::typeck::rscope::RegionParamNames;
 use middle::typeck::lookup_def_tcx;
 
 use std::result;
-use std::vec;
 use syntax::abi::AbiSet;
 use syntax::{ast, ast_util};
-use syntax::codemap::span;
+use syntax::codemap::Span;
 use syntax::opt_vec::OptVec;
 use syntax::opt_vec;
 use syntax::print::pprust::{lifetime_to_str, path_to_str};
@@ -75,16 +74,16 @@ use util::common::indenter;
 
 pub trait AstConv {
     fn tcx(&self) -> ty::ctxt;
-    fn get_item_ty(&self, id: ast::def_id) -> ty::ty_param_bounds_and_ty;
-    fn get_trait_def(&self, id: ast::def_id) -> @ty::TraitDef;
+    fn get_item_ty(&self, id: ast::DefId) -> ty::ty_param_bounds_and_ty;
+    fn get_trait_def(&self, id: ast::DefId) -> @ty::TraitDef;
 
     // what type should we use when a type is omitted?
-    fn ty_infer(&self, span: span) -> ty::t;
+    fn ty_infer(&self, span: Span) -> ty::t;
 }
 
 pub fn get_region_reporting_err(
     tcx: ty::ctxt,
-    span: span,
+    span: Span,
     a_r: &Option<ast::Lifetime>,
     res: Result<ty::Region, RegionError>) -> ty::Region
 {
@@ -105,10 +104,10 @@ pub fn get_region_reporting_err(
     }
 }
 
-pub fn ast_region_to_region<AC:AstConv,RS:region_scope + Clone + 'static>(
+pub fn ast_region_to_region<AC:AstConv,RS:RegionScope + Clone + 'static>(
     this: &AC,
     rscope: &RS,
-    default_span: span,
+    default_span: Span,
     opt_lifetime: &Option<ast::Lifetime>) -> ty::Region
 {
     let (span, res) = match opt_lifetime {
@@ -130,10 +129,10 @@ pub fn ast_region_to_region<AC:AstConv,RS:region_scope + Clone + 'static>(
     get_region_reporting_err(this.tcx(), span, opt_lifetime, res)
 }
 
-fn ast_path_substs<AC:AstConv,RS:region_scope + Clone + 'static>(
+fn ast_path_substs<AC:AstConv,RS:RegionScope + Clone + 'static>(
     this: &AC,
     rscope: &RS,
-    def_id: ast::def_id,
+    def_id: ast::DefId,
     decl_generics: &ty::Generics,
     self_ty: Option<ty::t>,
     path: &ast::Path) -> ty::substs
@@ -150,7 +149,8 @@ fn ast_path_substs<AC:AstConv,RS:region_scope + Clone + 'static>(
     // If the type is parameterized by the this region, then replace this
     // region with the current anon region binding (in other words,
     // whatever & would get replaced with).
-    let regions = match (&decl_generics.region_param, &path.rp) {
+    let regions = match (&decl_generics.region_param,
+                         &path.segments.last().lifetime) {
         (&None, &None) => {
             opt_vec::Empty
         }
@@ -169,27 +169,41 @@ fn ast_path_substs<AC:AstConv,RS:region_scope + Clone + 'static>(
         }
         (&Some(_), &Some(_)) => {
             opt_vec::with(
-                ast_region_to_region(this, rscope, path.span, &path.rp))
+                ast_region_to_region(this,
+                                     rscope,
+                                     path.span,
+                                     &path.segments.last().lifetime))
         }
     };
 
     // Convert the type parameters supplied by the user.
-    if !vec::same_length(*decl_generics.type_param_defs, path.types) {
+    let supplied_type_parameter_count =
+        path.segments.iter().flat_map(|s| s.types.iter()).len();
+    if decl_generics.type_param_defs.len() != supplied_type_parameter_count {
         this.tcx().sess.span_fatal(
             path.span,
             fmt!("wrong number of type arguments: expected %u but found %u",
-                 decl_generics.type_param_defs.len(), path.types.len()));
+                 decl_generics.type_param_defs.len(),
+                 supplied_type_parameter_count));
     }
-    let tps = path.types.map(|a_t| ast_ty_to_ty(this, rscope, a_t));
+    let tps = path.segments
+                  .iter()
+                  .flat_map(|s| s.types.iter())
+                  .map(|a_t| ast_ty_to_ty(this, rscope, a_t))
+                  .collect();
 
-    substs {regions:ty::NonerasedRegions(regions), self_ty:self_ty, tps:tps}
+    substs {
+        regions: ty::NonerasedRegions(regions),
+        self_ty: self_ty,
+        tps: tps
+    }
 }
 
 pub fn ast_path_to_substs_and_ty<AC:AstConv,
-                                 RS:region_scope + Clone + 'static>(
+                                 RS:RegionScope + Clone + 'static>(
                                  this: &AC,
                                  rscope: &RS,
-                                 did: ast::def_id,
+                                 did: ast::DefId,
                                  path: &ast::Path)
                                  -> ty_param_substs_and_ty {
     let tcx = this.tcx();
@@ -203,10 +217,10 @@ pub fn ast_path_to_substs_and_ty<AC:AstConv,
     ty_param_substs_and_ty { substs: substs, ty: ty }
 }
 
-pub fn ast_path_to_trait_ref<AC:AstConv,RS:region_scope + Clone + 'static>(
+pub fn ast_path_to_trait_ref<AC:AstConv,RS:RegionScope + Clone + 'static>(
     this: &AC,
     rscope: &RS,
-    trait_def_id: ast::def_id,
+    trait_def_id: ast::DefId,
     self_ty: Option<ty::t>,
     path: &ast::Path) -> @ty::TraitRef
 {
@@ -226,10 +240,10 @@ pub fn ast_path_to_trait_ref<AC:AstConv,RS:region_scope + Clone + 'static>(
     return trait_ref;
 }
 
-pub fn ast_path_to_ty<AC:AstConv,RS:region_scope + Clone + 'static>(
+pub fn ast_path_to_ty<AC:AstConv,RS:RegionScope + Clone + 'static>(
         this: &AC,
         rscope: &RS,
-        did: ast::def_id,
+        did: ast::DefId,
         path: &ast::Path)
      -> ty_param_substs_and_ty
 {
@@ -248,10 +262,10 @@ pub static NO_TPS: uint = 2;
 // Parses the programmer's textual representation of a type into our
 // internal notion of a type. `getter` is a function that returns the type
 // corresponding to a definition ID:
-pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
+pub fn ast_ty_to_ty<AC:AstConv, RS:RegionScope + Clone + 'static>(
     this: &AC, rscope: &RS, ast_ty: &ast::Ty) -> ty::t {
 
-    fn ast_mt_to_mt<AC:AstConv, RS:region_scope + Clone + 'static>(
+    fn ast_mt_to_mt<AC:AstConv, RS:RegionScope + Clone + 'static>(
         this: &AC, rscope: &RS, mt: &ast::mt) -> ty::mt {
 
         ty::mt {ty: ast_ty_to_ty(this, rscope, mt.ty), mutbl: mt.mutbl}
@@ -260,7 +274,7 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
     // Handle @, ~, and & being able to mean estrs and evecs.
     // If a_seq_ty is a str or a vec, make it an estr/evec.
     // Also handle first-class trait types.
-    fn mk_pointer<AC:AstConv,RS:region_scope + Clone + 'static>(
+    fn mk_pointer<AC:AstConv,RS:RegionScope + Clone + 'static>(
         this: &AC,
         rscope: &RS,
         a_seq_ty: &ast::mt,
@@ -272,8 +286,7 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
         match a_seq_ty.ty.node {
             ast::ty_vec(ref mt) => {
                 let mut mt = ast_mt_to_mt(this, rscope, mt);
-                if a_seq_ty.mutbl == ast::m_mutbl ||
-                        a_seq_ty.mutbl == ast::m_const {
+                if a_seq_ty.mutbl == ast::MutMutable {
                     mt = ty::mt { ty: mt.ty, mutbl: a_seq_ty.mutbl };
                 }
                 return ty::mk_evec(tcx, mt, vst);
@@ -283,11 +296,11 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
                 // restriction is enforced in the below case for ty_path, which
                 // will run after this as long as the path isn't a trait.
                 match tcx.def_map.find(&id) {
-                    Some(&ast::def_prim_ty(ast::ty_str)) if a_seq_ty.mutbl == ast::m_imm => {
+                    Some(&ast::DefPrimTy(ast::ty_str)) if a_seq_ty.mutbl == ast::MutImmutable => {
                         check_path_args(tcx, path, NO_TPS | NO_REGIONS);
                         return ty::mk_estr(tcx, vst);
                     }
-                    Some(&ast::def_trait(trait_def_id)) => {
+                    Some(&ast::DefTrait(trait_def_id)) => {
                         let result = ast_path_to_trait_ref(
                             this, rscope, trait_def_id, None, path);
                         let trait_store = match vst {
@@ -326,7 +339,7 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
                        path: &ast::Path,
                        flags: uint) {
         if (flags & NO_TPS) != 0u {
-            if path.types.len() > 0u {
+            if !path.segments.iter().all(|s| s.types.is_empty()) {
                 tcx.sess.span_err(
                     path.span,
                     "type parameters are not allowed on this type");
@@ -334,7 +347,7 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
         }
 
         if (flags & NO_REGIONS) != 0u {
-            if path.rp.is_some() {
+            if path.segments.last().lifetime.is_some() {
                 tcx.sess.span_err(
                     path.span,
                     "region parameters are not allowed on this type");
@@ -387,6 +400,11 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
                                             bf.abis, &bf.lifetimes, &bf.decl))
       }
       ast::ty_closure(ref f) => {
+        if f.sigil == ast::ManagedSigil {
+            tcx.sess.span_err(ast_ty.span,
+                              "managed closures are not supported");
+        }
+
           let bounds = conv_builtin_bounds(this.tcx(), &f.bounds, match f.sigil {
               // Use corresponding trait store to figure out default bounds
               // if none were specified.
@@ -417,14 +435,14 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
         // Kind bounds on path types are only supported for traits.
         match a_def {
             // But don't emit the error if the user meant to do a trait anyway.
-            ast::def_trait(*) => { },
+            ast::DefTrait(*) => { },
             _ if bounds.is_some() =>
                 tcx.sess.span_err(ast_ty.span,
                     "kind bounds can only be used on trait types"),
             _ => { },
         }
         match a_def {
-          ast::def_trait(_) => {
+          ast::DefTrait(_) => {
               let path_str = path_to_str(path, tcx.sess.intr());
               tcx.sess.span_err(
                   ast_ty.span,
@@ -433,14 +451,18 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
                        path_str, path_str, path_str, path_str));
               ty::mk_err()
           }
-          ast::def_ty(did) | ast::def_struct(did) => {
+          ast::DefTy(did) | ast::DefStruct(did) => {
             ast_path_to_ty(this, rscope, did, path).ty
           }
-          ast::def_prim_ty(nty) => {
+          ast::DefPrimTy(nty) => {
             match nty {
               ast::ty_bool => {
                 check_path_args(tcx, path, NO_TPS | NO_REGIONS);
                 ty::mk_bool()
+              }
+              ast::ty_char => {
+                check_path_args(tcx, path, NO_TPS | NO_REGIONS);
+                ty::mk_char()
               }
               ast::ty_int(it) => {
                 check_path_args(tcx, path, NO_TPS | NO_REGIONS);
@@ -462,11 +484,11 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
               }
             }
           }
-          ast::def_ty_param(id, n) => {
+          ast::DefTyParam(id, n) => {
             check_path_args(tcx, path, NO_TPS | NO_REGIONS);
             ty::mk_param(tcx, n, id)
           }
-          ast::def_self_ty(id) => {
+          ast::DefSelfTy(id) => {
             // n.b.: resolve guarantees that the this type only appears in a
             // trait, which we rely upon in various places when creating
             // substs
@@ -504,6 +526,9 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
           }
         }
       }
+      ast::ty_typeof(_e) => {
+          tcx.sess.span_bug(ast_ty.span, "typeof is reserved but unimplemented");
+      }
       ast::ty_infer => {
         // ty_infer should only appear as the type of arguments or return
         // values in a fn_expr, or as the type of local variables.  Both of
@@ -524,7 +549,7 @@ pub fn ast_ty_to_ty<AC:AstConv, RS:region_scope + Clone + 'static>(
 }
 
 pub fn ty_of_arg<AC:AstConv,
-                 RS:region_scope + Clone + 'static>(
+                 RS:RegionScope + Clone + 'static>(
                  this: &AC,
                  rscope: &RS,
                  a: &ast::arg,
@@ -539,7 +564,7 @@ pub fn ty_of_arg<AC:AstConv,
 
 pub fn bound_lifetimes<AC:AstConv>(
     this: &AC,
-    ast_lifetimes: &OptVec<ast::Lifetime>) -> OptVec<ast::ident>
+    ast_lifetimes: &OptVec<ast::Lifetime>) -> OptVec<ast::Ident>
 {
     /*!
      *
@@ -572,7 +597,7 @@ struct SelfInfo {
     explicit_self: ast::explicit_self
 }
 
-pub fn ty_of_method<AC:AstConv,RS:region_scope + Clone + 'static>(
+pub fn ty_of_method<AC:AstConv,RS:RegionScope + Clone + 'static>(
     this: &AC,
     rscope: &RS,
     purity: ast::purity,
@@ -590,7 +615,7 @@ pub fn ty_of_method<AC:AstConv,RS:region_scope + Clone + 'static>(
     (a.unwrap(), b)
 }
 
-pub fn ty_of_bare_fn<AC:AstConv,RS:region_scope + Clone + 'static>(
+pub fn ty_of_bare_fn<AC:AstConv,RS:RegionScope + Clone + 'static>(
     this: &AC,
     rscope: &RS,
     purity: ast::purity,
@@ -603,7 +628,7 @@ pub fn ty_of_bare_fn<AC:AstConv,RS:region_scope + Clone + 'static>(
     b
 }
 
-fn ty_of_method_or_bare_fn<AC:AstConv,RS:region_scope + Clone + 'static>(
+fn ty_of_method_or_bare_fn<AC:AstConv,RS:RegionScope + Clone + 'static>(
     this: &AC,
     rscope: &RS,
     purity: ast::purity,
@@ -641,7 +666,7 @@ fn ty_of_method_or_bare_fn<AC:AstConv,RS:region_scope + Clone + 'static>(
                                 output: output_ty}
             });
 
-    fn transform_self_ty<AC:AstConv,RS:region_scope + Clone + 'static>(
+    fn transform_self_ty<AC:AstConv,RS:RegionScope + Clone + 'static>(
         this: &AC,
         rscope: &RS,
         self_info: &SelfInfo) -> Option<ty::t>
@@ -668,13 +693,13 @@ fn ty_of_method_or_bare_fn<AC:AstConv,RS:region_scope + Clone + 'static>(
             ast::sty_uniq => {
                 Some(ty::mk_uniq(this.tcx(),
                                  ty::mt {ty: self_info.untransformed_self_ty,
-                                         mutbl: ast::m_imm}))
+                                         mutbl: ast::MutImmutable}))
             }
         }
     }
 }
 
-pub fn ty_of_closure<AC:AstConv,RS:region_scope + Clone + 'static>(
+pub fn ty_of_closure<AC:AstConv,RS:RegionScope + Clone + 'static>(
     this: &AC,
     rscope: &RS,
     sigil: ast::Sigil,
@@ -685,7 +710,7 @@ pub fn ty_of_closure<AC:AstConv,RS:region_scope + Clone + 'static>(
     decl: &ast::fn_decl,
     expected_sig: Option<ty::FnSig>,
     lifetimes: &OptVec<ast::Lifetime>,
-    span: span)
+    span: Span)
     -> ty::ClosureTy
 {
     // The caller should not both provide explicit bound lifetime
@@ -725,7 +750,7 @@ pub fn ty_of_closure<AC:AstConv,RS:region_scope + Clone + 'static>(
                           RegionParamNames(bound_lifetime_names.clone()));
 
     let input_tys = do decl.inputs.iter().enumerate().map |(i, a)| {
-        let expected_arg_ty = do expected_sig.chain_ref |e| {
+        let expected_arg_ty = do expected_sig.and_then_ref |e| {
             // no guarantee that the correct number of expected args
             // were supplied
             if i < e.inputs.len() {Some(e.inputs[i])} else {None}
@@ -772,10 +797,9 @@ fn conv_builtin_bounds(tcx: ty::ctxt, ast_bounds: &Option<OptVec<ast::TyParamBou
                 match *ast_bound {
                     ast::TraitTyParamBound(ref b) => {
                         match lookup_def_tcx(tcx, b.path.span, b.ref_id) {
-                            ast::def_trait(trait_did) => {
-                                if try_add_builtin_trait(tcx,
-                                                         trait_did,
-                                                         &mut builtin_bounds) {
+                            ast::DefTrait(trait_did) => {
+                                if ty::try_add_builtin_trait(tcx, trait_did,
+                                                             &mut builtin_bounds) {
                                     loop; // success
                                 }
                             }
@@ -805,28 +829,5 @@ fn conv_builtin_bounds(tcx: ty::ctxt, ast_bounds: &Option<OptVec<ast::TyParamBou
         }
         // &'r Trait is sugar for &'r Trait:<no-bounds>.
         (&None, ty::RegionTraitStore(*)) => ty::EmptyBuiltinBounds(),
-    }
-}
-
-pub fn try_add_builtin_trait(tcx: ty::ctxt,
-                             trait_def_id: ast::def_id,
-                             builtin_bounds: &mut ty::BuiltinBounds) -> bool {
-    //! Checks whether `trait_ref` refers to one of the builtin
-    //! traits, like `Send`, and adds the corresponding
-    //! bound to the set `builtin_bounds` if so. Returns true if `trait_ref`
-    //! is a builtin trait.
-
-    let li = &tcx.lang_items;
-    if Some(trait_def_id) == li.send_trait() {
-        builtin_bounds.add(ty::BoundSend);
-        true
-    } else if Some(trait_def_id) == li.freeze_trait() {
-        builtin_bounds.add(ty::BoundFreeze);
-        true
-    } else if Some(trait_def_id) == li.sized_trait() {
-        builtin_bounds.add(ty::BoundSized);
-        true
-    } else {
-        false
     }
 }

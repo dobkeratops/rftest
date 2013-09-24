@@ -8,7 +8,6 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use std::uint;
 use std::vec;
 
 
@@ -47,18 +46,18 @@ pub trait Digest {
     fn output_bits(&self) -> uint;
 
     /**
-     * Convenience functon that feeds a string into a digest
+     * Convenience function that feeds a string into a digest.
      *
      * # Arguments
      *
-     * * in The string to feed into the digest
+     * * `input` The string to feed into the digest
      */
     fn input_str(&mut self, input: &str) {
         self.input(input.as_bytes());
     }
 
     /**
-     * Convenience functon that retrieves the result of a digest as a
+     * Convenience function that retrieves the result of a digest as a
      * ~str in hexadecimal format.
      */
     fn result_str(&mut self) -> ~str {
@@ -71,7 +70,7 @@ pub trait Digest {
 fn to_hex(rr: &[u8]) -> ~str {
     let mut s = ~"";
     for b in rr.iter() {
-        let hex = uint::to_str_radix(*b as uint, 16u);
+        let hex = (*b as uint).to_str_radix(16u);
         if hex.len() == 1 {
             s.push_char('0');
         }

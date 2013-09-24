@@ -17,9 +17,9 @@ Obsolete syntax that becomes too hard to parse can be
 removed.
 */
 
-use ast::{expr, expr_lit, lit_nil, Attribute};
+use ast::{Expr, ExprLit, lit_nil, Attribute};
 use ast;
-use codemap::{span, respan};
+use codemap::{Span, respan};
 use parse::parser::Parser;
 use parse::token::{keywords, Token};
 use parse::token;
@@ -32,7 +32,6 @@ use std::to_bytes;
 pub enum ObsoleteSyntax {
     ObsoleteLet,
     ObsoleteFieldTerminator,
-    ObsoleteStructCtor,
     ObsoleteWith,
     ObsoleteClassTraits,
     ObsoletePrivSection,
@@ -54,7 +53,6 @@ pub enum ObsoleteSyntax {
     ObsoleteMode,
     ObsoleteImplicitSelf,
     ObsoleteLifetimeNotation,
-    ObsoleteConstManagedPointer,
     ObsoletePurity,
     ObsoleteStaticMethod,
     ObsoleteConstItem,
@@ -66,6 +64,7 @@ pub enum ObsoleteSyntax {
     ObsoleteUnsafeExternFn,
     ObsoletePrivVisibility,
     ObsoleteTraitFuncVisibility,
+    ObsoleteConstPointer,
 }
 
 impl to_bytes::IterBytes for ObsoleteSyntax {
@@ -77,26 +76,25 @@ impl to_bytes::IterBytes for ObsoleteSyntax {
 
 pub trait ParserObsoleteMethods {
     /// Reports an obsolete syntax non-fatal error.
-    fn obsolete(&self, sp: span, kind: ObsoleteSyntax);
+    fn obsolete(&self, sp: Span, kind: ObsoleteSyntax);
     // Reports an obsolete syntax non-fatal error, and returns
     // a placeholder expression
-    fn obsolete_expr(&self, sp: span, kind: ObsoleteSyntax) -> @expr;
+    fn obsolete_expr(&self, sp: Span, kind: ObsoleteSyntax) -> @Expr;
     fn report(&self,
-              sp: span,
+              sp: Span,
               kind: ObsoleteSyntax,
               kind_str: &str,
               desc: &str);
     fn token_is_obsolete_ident(&self, ident: &str, token: &Token) -> bool;
     fn is_obsolete_ident(&self, ident: &str) -> bool;
     fn eat_obsolete_ident(&self, ident: &str) -> bool;
-    fn try_parse_obsolete_struct_ctor(&self) -> bool;
     fn try_parse_obsolete_with(&self) -> bool;
     fn try_parse_obsolete_priv_section(&self, attrs: &[Attribute]) -> bool;
 }
 
 impl ParserObsoleteMethods for Parser {
     /// Reports an obsolete syntax non-fatal error.
-    fn obsolete(&self, sp: span, kind: ObsoleteSyntax) {
+    fn obsolete(&self, sp: Span, kind: ObsoleteSyntax) {
         let (kind_str, desc) = match kind {
             ObsoleteLet => (
                 "`let` in field declaration",
@@ -105,12 +103,6 @@ impl ParserObsoleteMethods for Parser {
             ObsoleteFieldTerminator => (
                 "field declaration terminated with semicolon",
                 "fields are now separated by commas"
-            ),
-            ObsoleteStructCtor => (
-                "struct constructor",
-                "structs are now constructed with `MyStruct { foo: val }` \
-                 syntax. Structs with private fields cannot be created \
-                 outside of their defining module"
             ),
             ObsoleteWith => (
                 "with",
@@ -209,10 +201,6 @@ impl ParserObsoleteMethods for Parser {
                 "instead of `&foo/bar`, write `&'foo bar`; instead of \
                  `bar/&foo`, write `&bar<'foo>"
             ),
-            ObsoleteConstManagedPointer => (
-                "const `@` pointer",
-                "instead of `@const Foo`, write `@Foo`"
-            ),
             ObsoletePurity => (
                 "pure function",
                 "remove `pure`"
@@ -263,6 +251,11 @@ impl ParserObsoleteMethods for Parser {
                 "visibility not necessary",
                 "trait functions inherit the visibility of the trait itself"
             ),
+            ObsoleteConstPointer => (
+                "const pointer",
+                "instead of `&const Foo` or `@const Foo`, write `&Foo` or \
+                 `@Foo`"
+            ),
         };
 
         self.report(sp, kind, kind_str, desc);
@@ -270,13 +263,13 @@ impl ParserObsoleteMethods for Parser {
 
     // Reports an obsolete syntax non-fatal error, and returns
     // a placeholder expression
-    fn obsolete_expr(&self, sp: span, kind: ObsoleteSyntax) -> @expr {
+    fn obsolete_expr(&self, sp: Span, kind: ObsoleteSyntax) -> @Expr {
         self.obsolete(sp, kind);
-        self.mk_expr(sp.lo, sp.hi, expr_lit(@respan(sp, lit_nil)))
+        self.mk_expr(sp.lo, sp.hi, ExprLit(@respan(sp, lit_nil)))
     }
 
     fn report(&self,
-              sp: span,
+              sp: Span,
               kind: ObsoleteSyntax,
               kind_str: &str,
               desc: &str) {
@@ -305,17 +298,6 @@ impl ParserObsoleteMethods for Parser {
     fn eat_obsolete_ident(&self, ident: &str) -> bool {
         if self.is_obsolete_ident(ident) {
             self.bump();
-            true
-        } else {
-            false
-        }
-    }
-
-    fn try_parse_obsolete_struct_ctor(&self) -> bool {
-        if self.eat_obsolete_ident("new") {
-            self.obsolete(*self.last_span, ObsoleteStructCtor);
-            self.parse_fn_decl();
-            self.parse_block();
             true
         } else {
             false

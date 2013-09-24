@@ -19,7 +19,7 @@ file, TCP, UDP, Unix domain sockets.
 Readers and Writers may be composed to add capabilities like string
 parsing, encoding, and compression.
 
-This will likely live in core::io, not core::rt::io.
+This will likely live in std::io, not std::rt::io.
 
 # Examples
 
@@ -93,7 +93,7 @@ Asynchronous interfaces are most often associated with the callback
 (continuation-passing) style popularised by node.js. Such systems rely
 on all computations being run inside an event loop which maintains a
 list of all pending I/O events; when one completes the registered
-callback is run and the code that made the I/O request continiues.
+callback is run and the code that made the I/O request continues.
 Such interfaces achieve non-blocking at the expense of being more
 difficult to reason about.
 
@@ -136,7 +136,7 @@ Rust's I/O employs a combination of techniques to reduce boilerplate
 while still providing feedback about errors. The basic strategy:
 
 * Errors are fatal by default, resulting in task failure
-* Errors raise the `io_error` conditon which provides an opportunity to inspect
+* Errors raise the `io_error` condition which provides an opportunity to inspect
   an IoError object containing details.
 * Return values must have a sensible null or zero value which is returned
   if a condition is handled successfully. This may be an `Option`, an empty
@@ -189,7 +189,7 @@ will start passing around null or zero objects when wrapped in a condition handl
 * XXX: How should we use condition handlers that return values?
 * XXX: Should EOF raise default conditions when EOF is not an error?
 
-# Issues withi/o scheduler affinity, work stealing, task pinning
+# Issues with i/o scheduler affinity, work stealing, task pinning
 
 # Resource management
 
@@ -245,6 +245,7 @@ Out of scope
 use prelude::*;
 use to_str::ToStr;
 use str::{StrSlice, OwnedStr};
+use path::Path;
 
 // Reexports
 pub use self::stdio::stdin;
@@ -259,6 +260,9 @@ pub use self::net::ip::IpAddr;
 pub use self::net::tcp::TcpListener;
 pub use self::net::tcp::TcpStream;
 pub use self::net::udp::UdpStream;
+pub use self::pipe::PipeStream;
+pub use self::pipe::UnboundPipeStream;
+pub use self::process::Process;
 
 // Some extension traits that all Readers and Writers get.
 pub use self::extensions::ReaderUtil;
@@ -268,15 +272,14 @@ pub use self::extensions::WriterByteConversions;
 /// Synchronous, non-blocking file I/O.
 pub mod file;
 
+/// Synchronous, in-memory I/O.
+pub mod pipe;
+
+/// Child process management.
+pub mod process;
+
 /// Synchronous, non-blocking network I/O.
-pub mod net {
-    pub mod tcp;
-    pub mod udp;
-    pub mod ip;
-    #[cfg(unix)]
-    pub mod unix;
-    pub mod http;
-}
+pub mod net;
 
 /// Readers and Writers for memory buffers and strings.
 pub mod mem;
@@ -301,6 +304,9 @@ mod support;
 
 /// Basic Timer
 pub mod timer;
+
+/// Buffered I/O wrappers
+pub mod buffered;
 
 /// Thread-blocking implementations
 pub mod native {
@@ -361,7 +367,10 @@ pub enum IoErrorKind {
     Closed,
     ConnectionRefused,
     ConnectionReset,
-    BrokenPipe
+    BrokenPipe,
+    PathAlreadyExists,
+    PathDoesntExist,
+    MismatchedFileTypeForOperation
 }
 
 // FIXME: #8242 implementing manually because deriving doesn't work for some reason
@@ -377,7 +386,10 @@ impl ToStr for IoErrorKind {
             Closed => ~"Closed",
             ConnectionRefused => ~"ConnectionRefused",
             ConnectionReset => ~"ConnectionReset",
-            BrokenPipe => ~"BrokenPipe"
+            BrokenPipe => ~"BrokenPipe",
+            PathAlreadyExists => ~"PathAlreadyExists",
+            PathDoesntExist => ~"PathDoesntExist",
+            MismatchedFileTypeForOperation => ~"MismatchedFileTypeForOperation"
         }
     }
 }
@@ -385,15 +397,25 @@ impl ToStr for IoErrorKind {
 // XXX: Can't put doc comments on macros
 // Raised by `I/O` operations on error.
 condition! {
-    // FIXME (#6009): uncomment `pub` after expansion support lands.
-    /*pub*/ io_error: super::IoError -> ();
+    pub io_error: IoError -> ();
 }
 
 // XXX: Can't put doc comments on macros
 // Raised by `read` on error
 condition! {
-    // FIXME (#6009): uncomment `pub` after expansion support lands.
-    /*pub*/ read_error: super::IoError -> ();
+    pub read_error: IoError -> ();
+}
+
+/// Helper for wrapper calls where you want to
+/// ignore any io_errors that might be raised
+pub fn ignore_io_error<T>(cb: &fn() -> T) -> T {
+    do io_error::cond.trap(|_| {
+        // just swallow the error.. downstream users
+        // who can make a decision based on a None result
+        // won't care
+    }).inside {
+        cb()
+    }
 }
 
 pub trait Reader {
@@ -430,7 +452,7 @@ pub trait Reader {
     ///         println(reader.read_line());
     ///     }
     ///
-    /// # Failue
+    /// # Failure
     ///
     /// Returns `true` on failure.
     fn eof(&mut self) -> bool;
@@ -450,6 +472,8 @@ pub trait Writer {
 
 pub trait Stream: Reader + Writer { }
 
+impl<T: Reader + Writer> Stream for T;
+
 pub enum SeekStyle {
     /// Seek from the beginning of the stream
     SeekSet,
@@ -462,6 +486,7 @@ pub enum SeekStyle {
 /// # XXX
 /// * Are `u64` and `i64` the right choices?
 pub trait Seek {
+    /// Return position of file cursor in the stream
     fn tell(&self) -> u64;
 
     /// Seek to an offset in a stream
@@ -474,17 +499,48 @@ pub trait Seek {
     fn seek(&mut self, pos: i64, style: SeekStyle);
 }
 
-/// A listener is a value that listens for connections
-pub trait Listener<S> {
-    /// Wait for and accept an incoming connection
-    ///
-    /// Returns `None` on timeout.
+/// A listener is a value that can consume itself to start listening for connections.
+/// Doing so produces some sort of Acceptor.
+pub trait Listener<T, A: Acceptor<T>> {
+    /// Spin up the listener and start queueing incoming connections
     ///
     /// # Failure
     ///
     /// Raises `io_error` condition. If the condition is handled,
+    /// then `listen` returns `None`.
+    fn listen(self) -> Option<A>;
+}
+
+/// An acceptor is a value that presents incoming connections
+pub trait Acceptor<T> {
+    /// Wait for and accept an incoming connection
+    ///
+    /// # Failure
+    /// Raise `io_error` condition. If the condition is handled,
     /// then `accept` returns `None`.
-    fn accept(&mut self) -> Option<S>;
+    fn accept(&mut self) -> Option<T>;
+
+    /// Create an iterator over incoming connection attempts
+    fn incoming<'r>(&'r mut self) -> IncomingIterator<'r, Self> {
+        IncomingIterator { inc: self }
+    }
+}
+
+/// An infinite iterator over incoming connection attempts.
+/// Calling `next` will block the task until a connection is attempted.
+///
+/// Since connection attempts can continue forever, this iterator always returns Some.
+/// The Some contains another Option representing whether the connection attempt was succesful.
+/// A successful connection will be wrapped in Some.
+/// A failed connection is represented as a None and raises a condition.
+struct IncomingIterator<'self, A> {
+    priv inc: &'self mut A,
+}
+
+impl<'self, T, A: Acceptor<T>> Iterator<Option<T>> for IncomingIterator<'self, A> {
+    fn next(&mut self) -> Option<Option<T>> {
+        Some(self.inc.accept())
+    }
 }
 
 /// Common trait for decorator types.
@@ -539,4 +595,47 @@ pub fn placeholder_error() -> IoError {
         desc: "Placeholder error. You shouldn't be seeing this",
         detail: None
     }
+}
+
+/// Instructions on how to open a file and return a `FileStream`.
+pub enum FileMode {
+    /// Opens an existing file. IoError if file does not exist.
+    Open,
+    /// Creates a file. IoError if file exists.
+    Create,
+    /// Opens an existing file or creates a new one.
+    OpenOrCreate,
+    /// Opens an existing file or creates a new one, positioned at EOF.
+    Append,
+    /// Opens an existing file, truncating it to 0 bytes.
+    Truncate,
+    /// Opens an existing file or creates a new one, truncating it to 0 bytes.
+    CreateOrTruncate,
+}
+
+/// Access permissions with which the file should be opened.
+/// `FileStream`s opened with `Read` will raise an `io_error` condition if written to.
+pub enum FileAccess {
+    Read,
+    Write,
+    ReadWrite
+}
+
+pub struct FileStat {
+    /// A `Path` object containing information about the `PathInfo`'s location
+    path: Path,
+    /// `true` if the file pointed at by the `PathInfo` is a regular file
+    is_file: bool,
+    /// `true` if the file pointed at by the `PathInfo` is a directory
+    is_dir: bool,
+    /// The file pointed at by the `PathInfo`'s size in bytes
+    size: u64,
+    /// The file pointed at by the `PathInfo`'s creation time
+    created: u64,
+    /// The file pointed at by the `PathInfo`'s last-modification time in
+    /// platform-dependent msecs
+    modified: u64,
+    /// The file pointed at by the `PathInfo`'s last-accessd time (e.g. read) in
+    /// platform-dependent msecs
+    accessed: u64,
 }
