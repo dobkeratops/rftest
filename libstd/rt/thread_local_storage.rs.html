@@ -1,146 +1,145 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg5><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../libstd/rt/thread_local_storage.rs.html">thread_local_storage.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;libc::c_void</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;libc::c_int</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;ptr::null</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;libc::types::os::arch::extra::</c0><c3>{</c3><c0>DWORD</c0><c3>,</c3><c0>&nbsp;LPVOID</c0><c3>,</c3><c0>&nbsp;BOOL</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a id="n260721">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a id="n260723">&nbsp;</a><c21>pub</c21><c8><a href="#19_13_refs">&nbsp;</a></c8><c35>type</c35><c35><a href="#19_13_refs">&nbsp;Key&nbsp;=&nbsp;</a></c35><c35><a href="../../libstd/rt/thread_local_storage.rs.html#50">pthread_key_t</a></c35><c35>;
-</c35><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>fixed_stack_segment</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a id="n260724">&nbsp;</a><c50>#</c50><c3>[</c3><c50>inline</c50><c4>(</c4><c50>never</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a id="n260727"><a id="n260726"><a id="n260815"><a id="n260728"><a id="n260730">&nbsp;</a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c30>fn&nbsp;create</c30><c4>(</c4><c20><a href="#25_21_refs">key</a></c20><c1>:&nbsp;</c1><c8>&amp;mut&nbsp;</c8><c8><a href="../../libstd/rt/thread_local_storage.rs.html#19">Key</a></c8><c4>)</c4><c1>&nbsp;</c1><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a id="n260742"><a id="n260733"><a id="n260738"><a id="n260739"><a id="n260740"><a id="n260741">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c22><c4>(</c4><c12>0</c12><c3>,</c3><c22>&nbsp;</c22><c26><a href="c=0 n=260939">pthread_key_create</a></c26><c4>(</c4><c26><a href="../../libstd/rt/thread_local_storage.rs.html#25">key</a></c26><c3>,</c3><c27>&nbsp;</c27><c26><a href="../../libstd/ptr.rs.html#61">null</a></c26><c4>()))</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>fixed_stack_segment</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a id="n260816">&nbsp;</a><c50>#</c50><c3>[</c3><c50>inline</c50><c4>(</c4><c50>never</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a id="n260910"><a id="n260824"><a id="n260826"><a id="n260819"><a id="n260822"><a id="n260818"><a id="n260823">&nbsp;</a></a></a></a></a></a></a><c21>pub</c21><c1><a href="#31_17_refs">&nbsp;</a></c1><c21>unsafe</c21><c1><a href="#31_17_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#31_17_refs">&nbsp;set</a></c30><c4>(</c4><c20><a href="#32_18_refs">key</a></c20><c1><a href="#31_17_refs">:&nbsp;</a></c1><c8><a href="../../libstd/rt/thread_local_storage.rs.html#19">Key</a></c8><c3>,</c3><c1><a href="#31_17_refs">&nbsp;</a></c1><c20><a href="#32_28_refs">value</a></c20><c1><a href="#31_17_refs">:&nbsp;</a></c1><c8><a href="#31_17_refs">*mut&nbsp;</a></c8><c8><a href="../../libstd/libc.rs.html#197">c_void</a></c8><c4>)</c4><c1><a href="#31_17_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#31_17_refs">
-</a></c22><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n260835"><a id="n260837"><a id="n260836"><a id="n260834"><a id="n260829">&nbsp;</a></a></a></a></a><c22><a href="#31_17_refs">&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</a></c22><c4>(</c4><c12><a href="#31_17_refs">0</a></c12><c3>,</c3><c22><a href="#31_17_refs">&nbsp;</a></c22><c26><a href="c=0 n=260951">pthread_setspecific</a></c26><c4>(</c4><c26><a href="../../libstd/rt/thread_local_storage.rs.html#32">key</a></c26><c3>,</c3><c27><a href="#31_17_refs">&nbsp;</a></c27><c26><a href="../../libstd/rt/thread_local_storage.rs.html#32">value</a></c26><c4>))</c4><c3>;</c3><c22><a href="#31_17_refs">
-</a></c22><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>fixed_stack_segment</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n260911">&nbsp;</a><c50>#</c50><c3>[</c3><c50>inline</c50><c4>(</c4><c50>never</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a id="n260914"><a id="n260918"><a id="n260913"><a id="n260922"><a id="n260917">&nbsp;</a></a></a></a></a><c21>pub</c21><c1><a href="#38_17_refs">&nbsp;</a></c1><c21>unsafe</c21><c1><a href="#38_17_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#38_17_refs">&nbsp;get</a></c30><c4>(</c4><c20><a href="#39_18_refs">key</a></c20><c1><a href="#38_17_refs">:&nbsp;</a></c1><c8><a href="../../libstd/rt/thread_local_storage.rs.html#19">Key</a></c8><c4>)</c4><c1><a href="#38_17_refs">&nbsp;</a></c1><c4>-&gt;</c4><c1><a href="#38_17_refs">&nbsp;</a></c1><c8><a href="#38_17_refs">*mut&nbsp;</a></c8><c8><a href="../../libstd/libc.rs.html#197">c_void</a></c8><c1><a href="#38_17_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#38_17_refs">
-</a></c22><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a id="n260920"><a id="n260919"><a id="n260921">&nbsp;</a></a></a><c22><a href="#38_17_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="c=0 n=260959">pthread_getspecific</a></c26><c4>(</c4><c26><a href="../../libstd/rt/thread_local_storage.rs.html#39">key</a></c26><c4>)</c4><c27><a href="#38_17_refs">
-</a></c27><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os="macos"</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>non_camel_case_types</c50><c4>)</c4><c3>]</c3><c50>&nbsp;</c50><c40>//&nbsp;foreign&nbsp;type
-</c40><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c35>type&nbsp;pthread_key_t&nbsp;=&nbsp;::libc::c_ulong;
-</c35><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os="linux"</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os="freebsd"</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os="android"</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n260923">&nbsp;</a><c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>non_camel_case_types</c50><c4>)</c4><c3>]</c3><c50>&nbsp;</c50><c40>//&nbsp;foreign&nbsp;type
-</c40><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n260925">&nbsp;</a><c35>type</c35><c35><a href="#50_47_refs">&nbsp;pthread_key_t&nbsp;=&nbsp;</a></c35><c35><a href="../../libstd/libc.rs.html#410">::libc::c_uint</a></c35><c35>;
-</c35><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a id="n260926">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c21>extern</c21><c1>&nbsp;</c1><c3>{</c3><c1>
-</c1><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c1>&nbsp;&nbsp;&nbsp;&nbsp;#</c1><c3>[</c3><c1>fast_ffi</c1><c3>]</c3><c1>
-</c1><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n260935"><a id="n260934"><a id="n260928"><a id="n260938"><a id="n260933"><a id="n260929"><a id="n260930">&nbsp;</a></a></a></a></a></a></a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;pthread_key_create</c30><c4>(</c4><c20>key</c20><c1>:&nbsp;</c1><c8>*mut&nbsp;</c8><c8><a href="../../libstd/rt/thread_local_storage.rs.html#50">pthread_key_t</a></c8><c3>,</c3><c1>&nbsp;</c1><c20>dtor</c20><c1>:&nbsp;</c1><c8>*u8</c8><c4>)</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8><a href="../../libstd/libc.rs.html#409">c_int</a></c8><c3>;</c3><c1>
-</c1><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c1>&nbsp;&nbsp;&nbsp;&nbsp;#</c1><c3>[</c3><c1>fast_ffi</c1><c3>]</c3><c1>
-</c1><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a id="n260950"><a id="n260945"><a id="n260947"><a id="n260941"><a id="n260946"><a id="n260942">&nbsp;</a></a></a></a></a></a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;pthread_setspecific</c30><c4>(</c4><c20>key</c20><c1>:&nbsp;</c1><c8><a href="../../libstd/rt/thread_local_storage.rs.html#50">pthread_key_t</a></c8><c3>,</c3><c1>&nbsp;</c1><c20>value</c20><c1>:&nbsp;</c1><c8>*mut&nbsp;</c8><c8><a href="../../libstd/libc.rs.html#197">c_void</a></c8><c4>)</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8><a href="../../libstd/libc.rs.html#409">c_int</a></c8><c3>;</c3><c1>
-</c1><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c1>&nbsp;&nbsp;&nbsp;&nbsp;#</c1><c3>[</c3><c1>fast_ffi</c1><c3>]</c3><c1>
-</c1><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a id="n260957"><a id="n260958"><a id="n260954"><a id="n260953">&nbsp;</a></a></a></a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;pthread_getspecific</c30><c4>(</c4><c20>key</c20><c1>:&nbsp;</c1><c8><a href="../../libstd/rt/thread_local_storage.rs.html#50">pthread_key_t</a></c8><c4>)</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8>*mut&nbsp;</c8><c8><a href="../../libstd/libc.rs.html#197">c_void</a></c8><c3>;</c3><c1>
-</c1><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c35>type&nbsp;Key&nbsp;=&nbsp;DWORD;
-</c35><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>fixed_stack_segment</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>inline</c50><c4>(</c4><c50>never</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>unsafe</c21><c0>&nbsp;</c0><c30>fn&nbsp;create</c30><c4>(</c4><c0>key:&nbsp;&amp;mut&nbsp;Key</c0><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c36>static&nbsp;TLS_OUT_OF_INDEXES:&nbsp;DWORD&nbsp;=&nbsp;0xFFFFFFFF;
-</c36><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;*key&nbsp;=&nbsp;TlsAlloc</c0><c4>()</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>*key&nbsp;!=&nbsp;TLS_OUT_OF_INDEXES</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>fixed_stack_segment</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>inline</c50><c4>(</c4><c50>never</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>unsafe</c21><c0>&nbsp;</c0><c30>fn&nbsp;set</c30><c4>(</c4><c0>key:&nbsp;Key</c0><c3>,</c3><c0>&nbsp;value:&nbsp;*mut&nbsp;c_void</c0><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>0&nbsp;!=&nbsp;TlsSetValue</c0><c4>(</c4><c0>key</c0><c3>,</c3><c0>&nbsp;value</c0><c4>))</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>fixed_stack_segment</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>inline</c50><c4>(</c4><c50>never</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>unsafe</c21><c0>&nbsp;</c0><c30>fn&nbsp;get</c30><c4>(</c4><c0>key:&nbsp;Key</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;*mut&nbsp;c_void&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;TlsGetValue</c0><c4>(</c4><c0>key</c0><c4>)</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c3>,</c3><c50>&nbsp;target_arch&nbsp;=&nbsp;"x86"</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>abi&nbsp;=&nbsp;"stdcall"</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a>&nbsp;<c21>extern</c21><c0>&nbsp;"stdcall"&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;TlsAlloc</c30><c4>()</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;DWORD</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;TlsSetValue</c30><c4>(</c4><c0>dwTlsIndex:&nbsp;DWORD</c0><c3>,</c3><c0>&nbsp;lpTlsvalue:&nbsp;LPVOID</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;BOOL</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;TlsGetValue</c30><c4>(</c4><c0>dwTlsIndex:&nbsp;DWORD</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;LPVOID</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c3>,</c3><c50>&nbsp;target_arch&nbsp;=&nbsp;"x86_64"</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a>&nbsp;<c21>extern</c21><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;TlsAlloc</c30><c4>()</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;DWORD</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;TlsSetValue</c30><c4>(</c4><c0>dwTlsIndex:&nbsp;DWORD</c0><c3>,</c3><c0>&nbsp;lpTlsvalue:&nbsp;LPVOID</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;BOOL</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;TlsGetValue</c30><c4>(</c4><c0>dwTlsIndex:&nbsp;DWORD</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;LPVOID</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a>&nbsp;<c30>fn&nbsp;tls_smoke_test</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;cast::transmute</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>unsafe</c21><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;key&nbsp;=&nbsp;0</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;value&nbsp;=&nbsp;~20</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create</c0><c4>(</c4><c0>&amp;mut&nbsp;key</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c4>(</c4><c0>key</c0><c3>,</c3><c0>&nbsp;transmute</c0><c4>(</c4><c0>value</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;value:&nbsp;~int&nbsp;=&nbsp;transmute</c0><c4>(</c4><c0>get</c0><c4>(</c4><c0>key</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>value</c0><c3>,</c3><c0>&nbsp;~20</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;value&nbsp;=&nbsp;~30</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c4>(</c4><c0>key</c0><c3>,</c3><c0>&nbsp;transmute</c0><c4>(</c4><c0>value</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;value:&nbsp;~int&nbsp;=&nbsp;transmute</c0><c4>(</c4><c0>get</c0><c4>(</c4><c0>key</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>value</c0><c3>,</c3><c0>&nbsp;~30</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><div class="refblock"><br/><a id="31_17_refs"><a href="#31"><c40>libstd/rt/thread_local_storage.rs:31:17-31:17&nbsp;-fn-&nbsp;definition:<br/></c40><pr>#[inline(never)]
-<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;set(key:&nbsp;Key,&nbsp;value:&nbsp;*mut&nbsp;c_void)&nbsp;{
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/local_ptr.rs.html"><c40>libstd/rt/local_ptr.rs:<br/></c40></a><a href="../../libstd/rt/local_ptr.rs.html#49"><c40>49:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;tls::set(key,&nbsp;void_ptr);
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#65"><c40>65:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;tls::set(key,&nbsp;ptr::mut_null());
-<br/></a><br/><br/><a id="50_47_refs"><a href="#50"><c40>libstd/rt/thread_local_storage.rs:50:47-50:47&nbsp;-ty-&nbsp;definition:<br/></c40><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;foreign&nbsp;type
+<head><link href="../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../../libstd/rt/">rt</a></c0><c1>/</c1><c0><a href="./../../libstd/rt/thread_local_storage.rs.html">thread_local_storage.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>dead_code</c50><c4>)</c4><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;libc::c_int</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;ptr::null</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;libc::types::os::arch::extra::</c0><c3>{</c3><c0>DWORD</c0><c3>,</c3><c0>&nbsp;LPVOID</c0><c3>,</c3><c0>&nbsp;BOOL</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[242569]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[242571]">&nbsp;</a><c21>pub</c21><c8><a href="#20_13_refs">&nbsp;</a></c8><c35>type</c35><c35><a href="#20_13_refs">&nbsp;Key&nbsp;=&nbsp;</a></c35><c35><a href="../../libstd/rt/thread_local_storage.rs.html#50">pthread_key_t</a></c35><c35>;
+</c35><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[242572]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[242713, 242576, 242578, 242575, 242577]">&nbsp;</a><c21>pub</c21><c1><a href="#23_13_refs">&nbsp;</a></c1><c21>unsafe</c21><c1><a href="#23_13_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#23_13_refs">&nbsp;create</a></c30><c4>(</c4><c20><a href="#24_21_refs">key</a></c20><c1><a href="#23_13_refs">:&nbsp;</a></c1><c8><a href="#23_13_refs">&amp;mut&nbsp;</a></c8><c8><a href="../../libstd/rt/thread_local_storage.rs.html#20">Key</a></c8><c4>)</c4><c1><a href="#23_13_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#23_13_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[242593, 242592, 242591, 242582, 242589, 242590]">&nbsp;</a><c22><a href="#23_13_refs">&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</a></c22><c4>(</c4><c12><a href="#23_13_refs">0</a></c12><c3>,</c3><c22><a href="#23_13_refs">&nbsp;</a></c22><c26><a href="c=0 n=243014">pthread_key_create</a></c26><c4>(</c4><c26><a href="../../libstd/rt/thread_local_storage.rs.html#24">key</a></c26><c3>,</c3><c27><a href="#23_13_refs">&nbsp;</a></c27><c26><a href="../../libstd/ptr.rs.html#55">null</a></c26><c4>()))</c4><c3>;</c3><c22><a href="#23_13_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[242714]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[242718, 242723, 242858, 242724, 242722, 242717, 242721]">&nbsp;</a><c21>pub</c21><c1><a href="#28_13_refs">&nbsp;</a></c1><c21>unsafe</c21><c1><a href="#28_13_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#28_13_refs">&nbsp;set</a></c30><c4>(</c4><c20><a href="#29_18_refs">key</a></c20><c1><a href="#28_13_refs">:&nbsp;</a></c1><c8><a href="../../libstd/rt/thread_local_storage.rs.html#20">Key</a></c8><c3>,</c3><c1><a href="#28_13_refs">&nbsp;</a></c1><c20><a href="#29_28_refs">value</a></c20><c1><a href="#28_13_refs">:&nbsp;</a></c1><c8><a href="#28_13_refs">*mut&nbsp;u8</a></c8><c4>)</c4><c1><a href="#28_13_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#28_13_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[242737, 242735, 242728, 242736, 242738]">&nbsp;</a><c22><a href="#28_13_refs">&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</a></c22><c4>(</c4><c12><a href="#28_13_refs">0</a></c12><c3>,</c3><c22><a href="#28_13_refs">&nbsp;</a></c22><c26><a href="c=0 n=243042">pthread_setspecific</a></c26><c4>(</c4><c26><a href="../../libstd/rt/thread_local_storage.rs.html#29">key</a></c26><c3>,</c3><c27><a href="#28_13_refs">&nbsp;</a></c27><c26><a href="../../libstd/rt/thread_local_storage.rs.html#29">value</a></c26><c4>))</c4><c3>;</c3><c22><a href="#28_13_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[242859]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[242865, 242863, 242862, 242867, 242866]">&nbsp;</a><c21>pub</c21><c1><a href="#33_13_refs">&nbsp;</a></c1><c21>unsafe</c21><c1><a href="#33_13_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#33_13_refs">&nbsp;get</a></c30><c4>(</c4><c20><a href="#34_18_refs">key</a></c20><c1><a href="#33_13_refs">:&nbsp;</a></c1><c8><a href="../../libstd/rt/thread_local_storage.rs.html#20">Key</a></c8><c4>)</c4><c1><a href="#33_13_refs">&nbsp;</a></c1><c4>-&gt;</c4><c1><a href="#33_13_refs">&nbsp;</a></c1><c8><a href="#33_13_refs">*mut&nbsp;u8</a></c8><c1><a href="#33_13_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#33_13_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[242868, 242870, 242869]">&nbsp;</a><c22><a href="#33_13_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="c=0 n=243034">pthread_getspecific</a></c26><c4>(</c4><c26><a href="../../libstd/rt/thread_local_storage.rs.html#34">key</a></c26><c4>)</c4><c22><a href="#33_13_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[242871]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[242876, 243009, 242874, 242875]">&nbsp;</a><c21>pub</c21><c1><a href="#38_13_refs">&nbsp;</a></c1><c21>unsafe</c21><c1><a href="#38_13_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#38_13_refs">&nbsp;destroy</a></c30><c4>(</c4><c20><a href="#39_22_refs">key</a></c20><c1><a href="#38_13_refs">:&nbsp;</a></c1><c8><a href="../../libstd/rt/thread_local_storage.rs.html#20">Key</a></c8><c4>)</c4><c1><a href="#38_13_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#38_13_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[242889, 242888, 242887, 242880]">&nbsp;</a><c22><a href="#38_13_refs">&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</a></c22><c4>(</c4><c12><a href="#38_13_refs">0</a></c12><c3>,</c3><c22><a href="#38_13_refs">&nbsp;</a></c22><c26><a href="c=0 n=243027">pthread_key_delete</a></c26><c4>(</c4><c26><a href="../../libstd/rt/thread_local_storage.rs.html#39">key</a></c26><c4>))</c4><c3>;</c3><c22><a href="#38_13_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os="macos"</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>non_camel_case_types</c50><c4>)</c4><c3>]</c3><c50>&nbsp;</c50><c40>//&nbsp;foreign&nbsp;type
+</c40><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[]">&nbsp;</a><c35>type&nbsp;pthread_key_t&nbsp;=&nbsp;::libc::c_ulong;
+</c35><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os="linux"</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os="freebsd"</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os="android"</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[243010]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>non_camel_case_types</c50><c4>)</c4><c3>]</c3><c50>&nbsp;</c50><c40>//&nbsp;foreign&nbsp;type
+</c40><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[243012]">&nbsp;</a><c35>type</c35><c35><a href="#50_47_refs">&nbsp;pthread_key_t&nbsp;=&nbsp;</a></c35><c35><a href="../../libstd/libc.rs.html#525">::libc::c_uint</a></c35><c35>;
+</c35><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a id="n[243013]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a id="n[]">&nbsp;</a><c21>extern</c21><c1>&nbsp;</c1><c3>{</c3><c1>
+</c1><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a id="n[243024, 243019, 243023, 243026, 243018, 243022, 243017]">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;pthread_key_create</c30><c4>(</c4><c20>key</c20><c1>:&nbsp;</c1><c8>*mut&nbsp;</c8><c8><a href="../../libstd/rt/thread_local_storage.rs.html#50">pthread_key_t</a></c8><c3>,</c3><c1>&nbsp;</c1><c20>dtor</c20><c1>:&nbsp;</c1><c8>*u8</c8><c4>)</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8><a href="../../libstd/libc.rs.html#524">c_int</a></c8><c3>;</c3><c1>
+</c1><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n[243033, 243030, 243031]">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;pthread_key_delete</c30><c4>(</c4><c20>key</c20><c1>:&nbsp;</c1><c8><a href="../../libstd/rt/thread_local_storage.rs.html#50">pthread_key_t</a></c8><c4>)</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8><a href="../../libstd/libc.rs.html#524">c_int</a></c8><c3>;</c3><c1>
+</c1><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n[243038, 243040, 243037, 243041]">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;pthread_getspecific</c30><c4>(</c4><c20>key</c20><c1>:&nbsp;</c1><c8><a href="../../libstd/rt/thread_local_storage.rs.html#50">pthread_key_t</a></c8><c4>)</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8>*mut&nbsp;u8</c8><c3>;</c3><c1>
+</c1><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a id="n[243046, 243053, 243045, 243050, 243051, 243049]">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;pthread_setspecific</c30><c4>(</c4><c20>key</c20><c1>:&nbsp;</c1><c8><a href="../../libstd/rt/thread_local_storage.rs.html#50">pthread_key_t</a></c8><c3>,</c3><c1>&nbsp;</c1><c20>value</c20><c1>:&nbsp;</c1><c8>*mut&nbsp;u8</c8><c4>)</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8><a href="../../libstd/libc.rs.html#524">c_int</a></c8><c3>;</c3><c1>
+</c1><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c35>type&nbsp;Key&nbsp;=&nbsp;DWORD;
+</c35><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>unsafe</c21><c0>&nbsp;</c0><c30>fn&nbsp;create</c30><c4>(</c4><c0>key:&nbsp;&amp;mut&nbsp;Key</c0><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c36>static&nbsp;TLS_OUT_OF_INDEXES:&nbsp;DWORD&nbsp;=&nbsp;0xFFFFFFFF;
+</c36><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;*key&nbsp;=&nbsp;TlsAlloc</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>*key&nbsp;!=&nbsp;TLS_OUT_OF_INDEXES</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>unsafe</c21><c0>&nbsp;</c0><c30>fn&nbsp;set</c30><c4>(</c4><c0>key:&nbsp;Key</c0><c3>,</c3><c0>&nbsp;value:&nbsp;*mut&nbsp;u8</c0><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>0&nbsp;!=&nbsp;TlsSetValue</c0><c4>(</c4><c0>key</c0><c3>,</c3><c0>&nbsp;value&nbsp;as&nbsp;*mut&nbsp;::libc::c_void</c0><c4>))</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>unsafe</c21><c0>&nbsp;</c0><c30>fn&nbsp;get</c30><c4>(</c4><c0>key:&nbsp;Key</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;*mut&nbsp;u8&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;TlsGetValue</c0><c4>(</c4><c0>key</c0><c4>)</c4><c0>&nbsp;as&nbsp;*mut&nbsp;u8
+</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>unsafe</c21><c0>&nbsp;</c0><c30>fn&nbsp;destroy</c30><c4>(</c4><c0>key:&nbsp;Key</c0><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>TlsFree</c0><c4>(</c4><c0>key</c0><c4>)</c4><c0>&nbsp;!=&nbsp;0</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>windows</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a id="n[]">&nbsp;</a><c21>extern</c21><c0>&nbsp;"system"&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;TlsAlloc</c30><c4>()</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;DWORD</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;TlsFree</c30><c4>(</c4><c0>dwTlsIndex:&nbsp;DWORD</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;BOOL</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;TlsGetValue</c30><c4>(</c4><c0>dwTlsIndex:&nbsp;DWORD</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;LPVOID</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;TlsSetValue</c30><c4>(</c4><c0>dwTlsIndex:&nbsp;DWORD</c0><c3>,</c3><c0>&nbsp;lpTlsvalue:&nbsp;LPVOID</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;BOOL</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;tls_smoke_test</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;cast::transmute</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>unsafe</c21><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;key&nbsp;=&nbsp;0</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;value&nbsp;=&nbsp;~20</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create</c0><c4>(</c4><c0>&amp;mut&nbsp;key</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c4>(</c4><c0>key</c0><c3>,</c3><c0>&nbsp;transmute</c0><c4>(</c4><c0>value</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;value:&nbsp;~int&nbsp;=&nbsp;transmute</c0><c4>(</c4><c0>get</c0><c4>(</c4><c0>key</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>value</c0><c3>,</c3><c0>&nbsp;~20</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;value&nbsp;=&nbsp;~30</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set</c0><c4>(</c4><c0>key</c0><c3>,</c3><c0>&nbsp;transmute</c0><c4>(</c4><c0>value</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;value:&nbsp;~int&nbsp;=&nbsp;transmute</c0><c4>(</c4><c0>get</c0><c4>(</c4><c0>key</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>value</c0><c3>,</c3><c0>&nbsp;~30</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="50_47_refs"><a href="#50"><c40>libstd/rt/thread_local_storage.rs:50:47-50:47&nbsp;-ty-&nbsp;definition:<br/></c40><pr>#[allow(non_camel_case_types)]&nbsp;//&nbsp;foreign&nbsp;type
 <br/>type&nbsp;pthread_key_t&nbsp;=&nbsp;::libc::c_uint;
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/thread_local_storage.rs.html#60"><c40>60:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_getspecific(key:&nbsp;pthread_key_t)&nbsp;-&gt;&nbsp;*mut&nbsp;c_void;
-<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_key_create(key:&nbsp;*mut&nbsp;pthread_key_t,&nbsp;dtor:&nbsp;*u8)&nbsp;-&gt;&nbsp;c_int;
-<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#20"><c40>20:&nbsp;</c40>pub&nbsp;type&nbsp;Key&nbsp;=&nbsp;pthread_key_t;
-<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#58"><c40>58:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_setspecific(key:&nbsp;pthread_key_t,&nbsp;value:&nbsp;*mut&nbsp;c_void)&nbsp;-&gt;&nbsp;c_int;
-<br/></a><br/><br/><a id="38_17_refs"><a href="#38"><c40>libstd/rt/thread_local_storage.rs:38:17-38:17&nbsp;-fn-&nbsp;definition:<br/></c40><pr>#[inline(never)]
-<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;get(key:&nbsp;Key)&nbsp;-&gt;&nbsp;*mut&nbsp;c_void&nbsp;{
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/local_ptr.rs.html"><c40>libstd/rt/local_ptr.rs:<br/></c40></a><a href="../../libstd/rt/local_ptr.rs.html#133"><c40>133:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;void_ptr&nbsp;=&nbsp;tls::get(key);
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#78"><c40>78:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;void_ptr:&nbsp;*mut&nbsp;c_void&nbsp;=&nbsp;tls::get(key);
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#60"><c40>60:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;void_ptr:&nbsp;*mut&nbsp;c_void&nbsp;=&nbsp;tls::get(key);
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#124"><c40>124:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;void_ptr&nbsp;=&nbsp;tls::get(key);
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#90"><c40>90:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(key)&nbsp;=&gt;&nbsp;tls::get(key).is_not_null(),
-<br/></a><br/><br/><a id="19_13_refs"><a href="#19"><c40>libstd/rt/thread_local_storage.rs:19:13-19:13&nbsp;-ty-&nbsp;definition:<br/></c40><pr>#[cfg(unix)]
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/thread_local_storage.rs.html#58"><c40>58:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_setspecific(key:&nbsp;pthread_key_t,&nbsp;value:&nbsp;*mut&nbsp;u8)&nbsp;-&gt;&nbsp;c_int;
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#57"><c40>57:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_getspecific(key:&nbsp;pthread_key_t)&nbsp;-&gt;&nbsp;*mut&nbsp;u8;
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#55"><c40>55:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_key_create(key:&nbsp;*mut&nbsp;pthread_key_t,&nbsp;dtor:&nbsp;*u8)&nbsp;-&gt;&nbsp;c_int;
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#21"><c40>21:&nbsp;</c40>pub&nbsp;type&nbsp;Key&nbsp;=&nbsp;pthread_key_t;
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;pthread_key_delete(key:&nbsp;pthread_key_t)&nbsp;-&gt;&nbsp;c_int;
+<br/></a><br/><br/><a id="23_13_refs"><a href="#23"><c40>libstd/rt/thread_local_storage.rs:23:13-23:13&nbsp;-fn-&nbsp;definition:<br/></c40><pr>#[cfg(unix)]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;create(key:&nbsp;&amp;mut&nbsp;Key)&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/local_ptr.rs.html"><c40>libstd/rt/local_ptr.rs:<br/></c40></a><a href="../../libstd/rt/local_ptr.rs.html#243"><c40>243:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tls::create(&amp;mut&nbsp;RT_TLS_KEY);
+<br/></a><br/><br/><a id="28_13_refs"><a href="#28"><c40>libstd/rt/thread_local_storage.rs:28:13-28:13&nbsp;-fn-&nbsp;definition:<br/></c40><pr>#[cfg(unix)]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;set(key:&nbsp;Key,&nbsp;value:&nbsp;*mut&nbsp;u8)&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/local_ptr.rs.html"><c40>libstd/rt/local_ptr.rs:<br/></c40></a><a href="../../libstd/rt/local_ptr.rs.html#261"><c40>261:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tls::set(key,&nbsp;void_ptr);
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#277"><c40>277:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tls::set(key,&nbsp;ptr::mut_null());
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#295"><c40>295:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tls::set(key,&nbsp;ptr::mut_null());
+<br/></a><br/><br/><a id="38_13_refs"><a href="#38"><c40>libstd/rt/thread_local_storage.rs:38:13-38:13&nbsp;-fn-&nbsp;definition:<br/></c40><pr>#[cfg(unix)]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;destroy(key:&nbsp;Key)&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/local_ptr.rs.html"><c40>libstd/rt/local_ptr.rs:<br/></c40></a><a href="../../libstd/rt/local_ptr.rs.html#249"><c40>249:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tls::destroy(RT_TLS_KEY);
+<br/></a><br/><br/><a id="33_13_refs"><a href="#33"><c40>libstd/rt/thread_local_storage.rs:33:13-33:13&nbsp;-fn-&nbsp;definition:<br/></c40><pr>#[cfg(unix)]
+<br/>pub&nbsp;unsafe&nbsp;fn&nbsp;get(key:&nbsp;Key)&nbsp;-&gt;&nbsp;*mut&nbsp;u8&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/local_ptr.rs.html"><c40>libstd/rt/local_ptr.rs:<br/></c40></a><a href="../../libstd/rt/local_ptr.rs.html#290"><c40>290:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;void_ptr:&nbsp;*mut&nbsp;u8&nbsp;=&nbsp;tls::get(key);
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#348"><c40>348:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;void_ptr&nbsp;=&nbsp;tls::get(key);
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#272"><c40>272:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;void_ptr:&nbsp;*mut&nbsp;u8&nbsp;=&nbsp;tls::get(key);
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#324"><c40>324:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(key)&nbsp;=&gt;&nbsp;tls::get(key).is_not_null(),
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#312"><c40>312:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;void_ptr:&nbsp;*mut&nbsp;u8&nbsp;=&nbsp;tls::get(key);
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#338"><c40>338:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;void_ptr&nbsp;=&nbsp;tls::get(key);
+<br/></a><br/><br/><a id="20_13_refs"><a href="#20"><c40>libstd/rt/thread_local_storage.rs:20:13-20:13&nbsp;-ty-&nbsp;definition:<br/></c40><pr>#[cfg(unix)]
 <br/>pub&nbsp;type&nbsp;Key&nbsp;=&nbsp;pthread_key_t;
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/thread_local_storage.rs.html#39"><c40>39:&nbsp;</c40>pub&nbsp;unsafe&nbsp;fn&nbsp;get(key:&nbsp;Key)&nbsp;-&gt;&nbsp;*mut&nbsp;c_void&nbsp;{
-<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#32"><c40>32:&nbsp;</c40>pub&nbsp;unsafe&nbsp;fn&nbsp;set(key:&nbsp;Key,&nbsp;value:&nbsp;*mut&nbsp;c_void)&nbsp;{
-<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#25"><c40>25:&nbsp;</c40>pub&nbsp;unsafe&nbsp;fn&nbsp;create(key:&nbsp;&amp;mut&nbsp;Key)&nbsp;{
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html"><c40>libstd/rt/local_ptr.rs:<br/></c40></a><a href="../../libstd/rt/local_ptr.rs.html#26"><c40>26:&nbsp;</c40>static&nbsp;mut&nbsp;RT_TLS_KEY:&nbsp;tls::Key&nbsp;=&nbsp;-1;
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#142"><c40>142:&nbsp;</c40>fn&nbsp;tls_key()&nbsp;-&gt;&nbsp;tls::Key&nbsp;{
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#35"><c40>35:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;rust_initialize_rt_tls_key(key:&nbsp;*mut&nbsp;tls::Key);
-<br/></a><a href="../../libstd/rt/local_ptr.rs.html#151"><c40>151:&nbsp;</c40>pub&nbsp;fn&nbsp;maybe_tls_key()&nbsp;-&gt;&nbsp;Option&lt;tls::Key&gt;&nbsp;{
-<br/></a><br/></div></c0></fileblock></div></maintext>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/thread_local_storage.rs.html#24"><c40>24:&nbsp;</c40>pub&nbsp;unsafe&nbsp;fn&nbsp;create(key:&nbsp;&amp;mut&nbsp;Key)&nbsp;{
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#29"><c40>29:&nbsp;</c40>pub&nbsp;unsafe&nbsp;fn&nbsp;set(key:&nbsp;Key,&nbsp;value:&nbsp;*mut&nbsp;u8)&nbsp;{
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#34"><c40>34:&nbsp;</c40>pub&nbsp;unsafe&nbsp;fn&nbsp;get(key:&nbsp;Key)&nbsp;-&gt;&nbsp;*mut&nbsp;u8&nbsp;{
+<br/></a><a href="../../libstd/rt/thread_local_storage.rs.html#39"><c40>39:&nbsp;</c40>pub&nbsp;unsafe&nbsp;fn&nbsp;destroy(key:&nbsp;Key)&nbsp;{
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html"><c40>libstd/rt/local_ptr.rs:<br/></c40></a><a href="../../libstd/rt/local_ptr.rs.html#370"><c40>370:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;maybe_tls_key()&nbsp;-&gt;&nbsp;Option&lt;tls::Key&gt;&nbsp;{
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#360"><c40>360:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;tls_key()&nbsp;-&gt;&nbsp;tls::Key&nbsp;{
+<br/></a><a href="../../libstd/rt/local_ptr.rs.html#237"><c40>237:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;mut&nbsp;RT_TLS_KEY:&nbsp;tls::Key&nbsp;=&nbsp;-1;
+<br/></a><br/></div></maintext></div></body>

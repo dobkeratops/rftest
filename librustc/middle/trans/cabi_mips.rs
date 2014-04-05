@@ -8,16 +8,14 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#[allow(non_uppercase_pattern_statics)];
 
 use std::libc::c_uint;
-use std::num;
-use std::vec;
+use std::cmp;
 use lib::llvm::{llvm, Integer, Pointer, Float, Double, Struct, Array};
-use lib::llvm::{Attribute, StructRetAttribute};
+use lib::llvm::StructRetAttribute;
 use middle::trans::context::CrateContext;
-use middle::trans::context::task_llcx;
 use middle::trans::cabi::*;
-
 use middle::trans::type_::Type;
 
 fn align_up_to(off: uint, a: uint) -> uint {
@@ -44,7 +42,7 @@ fn ty_align(ty: Type) -> uint {
             1
           } else {
             let str_tys = ty.field_types();
-            str_tys.iter().fold(1, |a, t| num::max(a, ty_align(*t)))
+            str_tys.iter().fold(1, |a, t| cmp::max(a, ty_align(*t)))
           }
         }
         Array => {
@@ -85,37 +83,33 @@ fn ty_size(ty: Type) -> uint {
     }
 }
 
-fn classify_ret_ty(ty: Type) -> (LLVMType, Option<Attribute>) {
-    return if is_reg_ty(ty) {
-        (LLVMType { cast: false, ty: ty }, None)
+fn classify_ret_ty(ty: Type) -> ArgType {
+    if is_reg_ty(ty) {
+        ArgType::direct(ty, None, None, None)
     } else {
-        (LLVMType { cast: false, ty: ty.ptr_to() }, Some(StructRetAttribute))
-    };
+        ArgType::indirect(ty, Some(StructRetAttribute))
+    }
 }
 
-fn classify_arg_ty(ty: Type, offset: &mut uint) -> (LLVMType, Option<Attribute>) {
+fn classify_arg_ty(ccx: &CrateContext, ty: Type, offset: &mut uint) -> ArgType {
     let orig_offset = *offset;
     let size = ty_size(ty) * 8;
     let mut align = ty_align(ty);
 
-    align = num::min(num::max(align, 4), 8);
+    align = cmp::min(cmp::max(align, 4), 8);
     *offset = align_up_to(*offset, align);
     *offset += align_up_to(size, align * 8) / 8;
 
-    let padding = padding_ty(align, orig_offset);
-    return if !is_reg_ty(ty) {
-        (LLVMType {
-            cast: true,
-            ty: struct_ty(ty, padding, true)
-        }, None)
-    } else if padding.is_some() {
-        (LLVMType {
-            cast: true,
-            ty: struct_ty(ty, padding, false)
-        }, None)
+    if is_reg_ty(ty) {
+        ArgType::direct(ty, None, None, None)
     } else {
-        (LLVMType { cast: false, ty: ty }, None)
-    };
+        ArgType::direct(
+            ty,
+            Some(struct_ty(ccx, ty)),
+            padding_ty(ccx, align, orig_offset),
+            None
+        )
+    }
 }
 
 fn is_reg_ty(ty: Type) -> bool {
@@ -128,17 +122,17 @@ fn is_reg_ty(ty: Type) -> bool {
     };
 }
 
-fn padding_ty(align: uint, offset: uint) -> Option<Type> {
+fn padding_ty(ccx: &CrateContext, align: uint, offset: uint) -> Option<Type> {
     if ((align - 1 ) & offset) > 0 {
-        return Some(Type::i32());
+        Some(Type::i32(ccx))
+    } else {
+        None
     }
-
-    return None;
 }
 
-fn coerce_to_int(size: uint) -> ~[Type] {
-    let int_ty = Type::i32();
-    let mut args = ~[];
+fn coerce_to_int(ccx: &CrateContext, size: uint) -> Vec<Type> {
+    let int_ty = Type::i32(ccx);
+    let mut args = Vec::new();
 
     let mut n = size / 32;
     while n > 0 {
@@ -149,61 +143,39 @@ fn coerce_to_int(size: uint) -> ~[Type] {
     let r = size % 32;
     if r > 0 {
         unsafe {
-            args.push(Type::from_ref(llvm::LLVMIntTypeInContext(task_llcx(), r as c_uint)));
+            args.push(Type::from_ref(llvm::LLVMIntTypeInContext(ccx.llcx, r as c_uint)));
         }
     }
 
     args
 }
 
-fn struct_ty(ty: Type,
-             padding: Option<Type>,
-             coerce: bool) -> Type {
+fn struct_ty(ccx: &CrateContext, ty: Type) -> Type {
     let size = ty_size(ty) * 8;
-    let mut fields = padding.map_move_default(~[], |p| ~[p]);
-
-    if coerce {
-        fields = vec::append(fields, coerce_to_int(size));
-    } else {
-        fields.push(ty);
-    }
-
-    return Type::struct_(fields, false);
+    Type::struct_(ccx, coerce_to_int(ccx, size).as_slice(), false)
 }
 
-pub fn compute_abi_info(_ccx: &mut CrateContext,
+pub fn compute_abi_info(ccx: &CrateContext,
                         atys: &[Type],
                         rty: Type,
                         ret_def: bool) -> FnType {
-    let (ret_ty, ret_attr) = if ret_def {
+    let ret_ty = if ret_def {
         classify_ret_ty(rty)
     } else {
-        (LLVMType { cast: false, ty: Type::void() }, None)
+        ArgType::direct(Type::void(ccx), None, None, None)
     };
 
-    let mut ret_ty = ret_ty;
-
-    let sret = ret_attr.is_some();
-    let mut arg_tys = ~[];
-    let mut attrs = ~[];
+    let sret = ret_ty.is_indirect();
+    let mut arg_tys = Vec::new();
     let mut offset = if sret { 4 } else { 0 };
 
     for aty in atys.iter() {
-        let (ty, attr) = classify_arg_ty(*aty, &mut offset);
+        let ty = classify_arg_ty(ccx, *aty, &mut offset);
         arg_tys.push(ty);
-        attrs.push(attr);
     };
-
-    if sret {
-        arg_tys = vec::append(~[ret_ty], arg_tys);
-        attrs = vec::append(~[ret_attr], attrs);
-        ret_ty = LLVMType { cast: false, ty: Type::void() };
-    }
 
     return FnType {
         arg_tys: arg_tys,
         ret_ty: ret_ty,
-        attrs: attrs,
-        sret: sret
     };
 }

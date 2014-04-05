@@ -10,25 +10,12 @@
 
 //! Operations on managed box types
 
-use ptr::to_unsafe_ptr;
-
 #[cfg(not(test))] use cmp::*;
-
-pub static RC_MANAGED_UNIQUE : uint = (-2) as uint;
-pub static RC_IMMORTAL : uint = 0x77777777;
 
 /// Determine if two shared boxes point to the same object
 #[inline]
 pub fn ptr_eq<T>(a: @T, b: @T) -> bool {
-    let (a_ptr, b_ptr): (*T, *T) = (to_unsafe_ptr(&*a), to_unsafe_ptr(&*b));
-    a_ptr == b_ptr
-}
-
-/// Determine if two mutable shared boxes point to the same object
-#[inline]
-pub fn mut_ptr_eq<T>(a: @mut T, b: @mut T) -> bool {
-    let (a_ptr, b_ptr): (*T, *T) = (to_unsafe_ptr(&*a), to_unsafe_ptr(&*b));
-    a_ptr == b_ptr
+    &*a as *T == &*b as *T
 }
 
 #[cfg(not(test))]
@@ -37,14 +24,6 @@ impl<T:Eq> Eq for @T {
     fn eq(&self, other: &@T) -> bool { *(*self) == *(*other) }
     #[inline]
     fn ne(&self, other: &@T) -> bool { *(*self) != *(*other) }
-}
-
-#[cfg(not(test))]
-impl<T:Eq> Eq for @mut T {
-    #[inline]
-    fn eq(&self, other: &@mut T) -> bool { *(*self) == *(*other) }
-    #[inline]
-    fn ne(&self, other: &@mut T) -> bool { *(*self) != *(*other) }
 }
 
 #[cfg(not(test))]
@@ -60,40 +39,14 @@ impl<T:Ord> Ord for @T {
 }
 
 #[cfg(not(test))]
-impl<T:Ord> Ord for @mut T {
-    #[inline]
-    fn lt(&self, other: &@mut T) -> bool { *(*self) < *(*other) }
-    #[inline]
-    fn le(&self, other: &@mut T) -> bool { *(*self) <= *(*other) }
-    #[inline]
-    fn ge(&self, other: &@mut T) -> bool { *(*self) >= *(*other) }
-    #[inline]
-    fn gt(&self, other: &@mut T) -> bool { *(*self) > *(*other) }
-}
-
-#[cfg(not(test))]
 impl<T: TotalOrd> TotalOrd for @T {
     #[inline]
     fn cmp(&self, other: &@T) -> Ordering { (**self).cmp(*other) }
 }
 
 #[cfg(not(test))]
-impl<T: TotalOrd> TotalOrd for @mut T {
-    #[inline]
-    fn cmp(&self, other: &@mut T) -> Ordering { (**self).cmp(*other) }
-}
+impl<T: TotalEq> TotalEq for @T {}
 
-#[cfg(not(test))]
-impl<T: TotalEq> TotalEq for @T {
-    #[inline]
-    fn equals(&self, other: &@T) -> bool { (**self).equals(*other) }
-}
-
-#[cfg(not(test))]
-impl<T: TotalEq> TotalEq for @mut T {
-    #[inline]
-    fn equals(&self, other: &@mut T) -> bool { (**self).equals(*other) }
-}
 #[test]
 fn test() {
     let x = @3;

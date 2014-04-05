@@ -8,6 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+pub mod doc;
 pub mod macros;
 pub mod inline;
 pub mod monomorphize;
@@ -25,7 +26,6 @@ pub mod build;
 pub mod builder;
 pub mod base;
 pub mod _match;
-pub mod uniq;
 pub mod closure;
 pub mod tvec;
 pub mod meth;
@@ -38,7 +38,6 @@ pub mod foreign;
 pub mod intrinsic;
 pub mod reflect;
 pub mod debuginfo;
-pub mod type_use;
 pub mod machine;
 pub mod adt;
 pub mod asm;
@@ -46,3 +45,4 @@ pub mod type_;
 pub mod value;
 pub mod basic_block;
 pub mod llrepr;
+pub mod cleanup;

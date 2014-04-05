@@ -8,57 +8,47 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-
-use syntax::fold::ast_fold;
+use syntax::fold::Folder;
 use syntax::{ast, fold, attr};
+use syntax::codemap;
 
-struct Context<'self> {
-    in_cfg: &'self fn(attrs: &[ast::Attribute]) -> bool,
+struct Context<'a> {
+    in_cfg: 'a |attrs: &[ast::Attribute]| -> bool,
 }
 
 // Support conditional compilation by transforming the AST, stripping out
 // any items that do not belong in the current configuration
-pub fn strip_unconfigured_items(crate: @ast::Crate) -> @ast::Crate {
-    do strip_items(crate) |attrs| {
-        in_cfg(crate.config, attrs)
-    }
+pub fn strip_unconfigured_items(krate: ast::Crate) -> ast::Crate {
+    let config = krate.config.clone();
+    strip_items(krate, |attrs| in_cfg(config.as_slice(), attrs))
 }
 
-impl<'self> fold::ast_fold for Context<'self> {
-    fn fold_mod(&self, module: &ast::_mod) -> ast::_mod {
+impl<'a> fold::Folder for Context<'a> {
+    fn fold_mod(&mut self, module: &ast::Mod) -> ast::Mod {
         fold_mod(self, module)
     }
-    fn fold_block(&self, block: &ast::Block) -> ast::Block {
+    fn fold_block(&mut self, block: ast::P<ast::Block>) -> ast::P<ast::Block> {
         fold_block(self, block)
     }
-    fn fold_foreign_mod(&self, foreign_module: &ast::foreign_mod)
-                        -> ast::foreign_mod {
-        fold_foreign_mod(self, foreign_module)
+    fn fold_foreign_mod(&mut self, foreign_mod: &ast::ForeignMod) -> ast::ForeignMod {
+        fold_foreign_mod(self, foreign_mod)
     }
-    fn fold_item_underscore(&self, item: &ast::item_) -> ast::item_ {
+    fn fold_item_underscore(&mut self, item: &ast::Item_) -> ast::Item_ {
         fold_item_underscore(self, item)
     }
 }
 
-pub fn strip_items(crate: &ast::Crate,
-                   in_cfg: &fn(attrs: &[ast::Attribute]) -> bool)
-                   -> @ast::Crate {
-    let ctxt = Context {
+pub fn strip_items(krate: ast::Crate,
+                   in_cfg: |attrs: &[ast::Attribute]| -> bool)
+                   -> ast::Crate {
+    let mut ctxt = Context {
         in_cfg: in_cfg,
     };
-    @ctxt.fold_crate(crate)
+    ctxt.fold_crate(krate)
 }
 
-fn filter_item(cx: &Context, item: @ast::item) -> Option<@ast::item> {
-    if item_in_cfg(cx, item) {
-        Some(item)
-    } else {
-        None
-    }
-}
-
-fn filter_view_item<'r>(cx: &Context, view_item: &'r ast::view_item)
-                        -> Option<&'r ast::view_item> {
+fn filter_view_item<'r>(cx: &Context, view_item: &'r ast::ViewItem)
+                        -> Option<&'r ast::ViewItem> {
     if view_item_in_cfg(cx, view_item) {
         Some(view_item)
     } else {
@@ -66,23 +56,24 @@ fn filter_view_item<'r>(cx: &Context, view_item: &'r ast::view_item)
     }
 }
 
-fn fold_mod(cx: &Context, m: &ast::_mod) -> ast::_mod {
-    let filtered_items = do m.items.iter().filter_map |a| {
-        filter_item(cx, *a).and_then(|x| cx.fold_item(x))
-    }.collect();
-    let filtered_view_items = do m.view_items.iter().filter_map |a| {
-        do filter_view_item(cx, a).map_move |x| {
-            cx.fold_view_item(x)
-        }
-    }.collect();
-    ast::_mod {
+fn fold_mod(cx: &mut Context, m: &ast::Mod) -> ast::Mod {
+    let filtered_items: Vec<&@ast::Item> = m.items.iter()
+            .filter(|&a| item_in_cfg(cx, *a))
+            .collect();
+    let flattened_items = filtered_items.move_iter()
+            .flat_map(|&x| cx.fold_item(x).move_iter())
+            .collect();
+    let filtered_view_items = m.view_items.iter().filter_map(|a| {
+        filter_view_item(cx, a).map(|x| cx.fold_view_item(x))
+    }).collect();
+    ast::Mod {
         view_items: filtered_view_items,
-        items: filtered_items
+        items: flattened_items
     }
 }
 
-fn filter_foreign_item(cx: &Context, item: @ast::foreign_item)
-                       -> Option<@ast::foreign_item> {
+fn filter_foreign_item(cx: &Context, item: @ast::ForeignItem)
+                       -> Option<@ast::ForeignItem> {
     if foreign_item_in_cfg(cx, item) {
         Some(item)
     } else {
@@ -90,99 +81,132 @@ fn filter_foreign_item(cx: &Context, item: @ast::foreign_item)
     }
 }
 
-fn fold_foreign_mod(cx: &Context, nm: &ast::foreign_mod) -> ast::foreign_mod {
+fn fold_foreign_mod(cx: &mut Context, nm: &ast::ForeignMod) -> ast::ForeignMod {
     let filtered_items = nm.items
                            .iter()
                            .filter_map(|a| filter_foreign_item(cx, *a))
                            .collect();
-    let filtered_view_items = do nm.view_items.iter().filter_map |a| {
-        do filter_view_item(cx, a).map_move |x| {
-            cx.fold_view_item(x)
-        }
-    }.collect();
-    ast::foreign_mod {
-        sort: nm.sort,
+    let filtered_view_items = nm.view_items.iter().filter_map(|a| {
+        filter_view_item(cx, a).map(|x| cx.fold_view_item(x))
+    }).collect();
+    ast::ForeignMod {
         abis: nm.abis,
         view_items: filtered_view_items,
         items: filtered_items
     }
 }
 
-fn fold_item_underscore(cx: &Context, item: &ast::item_) -> ast::item_ {
+fn fold_item_underscore(cx: &mut Context, item: &ast::Item_) -> ast::Item_ {
     let item = match *item {
-        ast::item_impl(ref a, ref b, ref c, ref methods) => {
+        ast::ItemImpl(ref a, ref b, c, ref methods) => {
             let methods = methods.iter().filter(|m| method_in_cfg(cx, **m))
                 .map(|x| *x).collect();
-            ast::item_impl((*a).clone(), (*b).clone(), (*c).clone(), methods)
+            ast::ItemImpl((*a).clone(), (*b).clone(), c, methods)
         }
-        ast::item_trait(ref a, ref b, ref methods) => {
+        ast::ItemTrait(ref a, ref b, ref methods) => {
             let methods = methods.iter()
                                  .filter(|m| trait_method_in_cfg(cx, *m) )
                                  .map(|x| (*x).clone())
                                  .collect();
-            ast::item_trait((*a).clone(), (*b).clone(), methods)
+            ast::ItemTrait((*a).clone(), (*b).clone(), methods)
         }
-        ref item => (*item).clone(),
+        ast::ItemStruct(def, ref generics) => {
+            ast::ItemStruct(fold_struct(cx, def), generics.clone())
+        }
+        ast::ItemEnum(ref def, ref generics) => {
+            let mut variants = def.variants.iter().map(|c| c.clone()).
+            filter_map(|v| {
+                if !(cx.in_cfg)(v.node.attrs.as_slice()) {
+                    None
+                } else {
+                    Some(match v.node.kind {
+                                ast::TupleVariantKind(..) => v,
+                                ast::StructVariantKind(def) => {
+                                    let def = fold_struct(cx, def);
+                                    @codemap::Spanned {
+                                        node: ast::Variant_ {
+                                            kind: ast::StructVariantKind(def),
+                                            ..v.node.clone()
+                                        },
+                                        ..*v
+                                    }
+                                }
+                            })
+                    }
+                });
+            ast::ItemEnum(ast::EnumDef {
+                variants: variants.collect(),
+            }, generics.clone())
+        }
+        ref item => item.clone(),
     };
 
     fold::noop_fold_item_underscore(&item, cx)
 }
 
-fn filter_stmt(cx: &Context, stmt: @ast::Stmt) -> Option<@ast::Stmt> {
+fn fold_struct(cx: &Context, def: &ast::StructDef) -> @ast::StructDef {
+    let mut fields = def.fields.iter().map(|c| c.clone()).filter(|m| {
+        (cx.in_cfg)(m.node.attrs.as_slice())
+    });
+    @ast::StructDef {
+        fields: fields.collect(),
+        ctor_id: def.ctor_id,
+    }
+}
+
+fn retain_stmt(cx: &Context, stmt: @ast::Stmt) -> bool {
     match stmt.node {
       ast::StmtDecl(decl, _) => {
         match decl.node {
           ast::DeclItem(item) => {
-            if item_in_cfg(cx, item) {
-                Some(stmt)
-            } else {
-                None
-            }
+            item_in_cfg(cx, item)
           }
-          _ => Some(stmt)
+          _ => true
         }
       }
-      _ => Some(stmt),
+      _ => true
     }
 }
 
-fn fold_block(cx: &Context, b: &ast::Block) -> ast::Block {
-    let resulting_stmts = do b.stmts.iter().filter_map |a| {
-        filter_stmt(cx, *a).and_then(|stmt| cx.fold_stmt(stmt))
-    }.collect();
-    let filtered_view_items = do b.view_items.iter().filter_map |a| {
-        filter_view_item(cx, a).map(|x| cx.fold_view_item(*x))
-    }.collect();
-    ast::Block {
+fn fold_block(cx: &mut Context, b: ast::P<ast::Block>) -> ast::P<ast::Block> {
+    let resulting_stmts: Vec<&@ast::Stmt> =
+        b.stmts.iter().filter(|&a| retain_stmt(cx, *a)).collect();
+    let resulting_stmts = resulting_stmts.move_iter()
+        .flat_map(|&stmt| cx.fold_stmt(stmt).move_iter())
+        .collect();
+    let filtered_view_items = b.view_items.iter().filter_map(|a| {
+        filter_view_item(cx, a).map(|x| cx.fold_view_item(x))
+    }).collect();
+    ast::P(ast::Block {
         view_items: filtered_view_items,
         stmts: resulting_stmts,
-        expr: b.expr.map(|x| cx.fold_expr(*x)),
+        expr: b.expr.map(|x| cx.fold_expr(x)),
         id: b.id,
         rules: b.rules,
         span: b.span,
-    }
+    })
 }
 
-fn item_in_cfg(cx: &Context, item: @ast::item) -> bool {
-    return (cx.in_cfg)(item.attrs);
+fn item_in_cfg(cx: &Context, item: &ast::Item) -> bool {
+    return (cx.in_cfg)(item.attrs.as_slice());
 }
 
-fn foreign_item_in_cfg(cx: &Context, item: @ast::foreign_item) -> bool {
-    return (cx.in_cfg)(item.attrs);
+fn foreign_item_in_cfg(cx: &Context, item: &ast::ForeignItem) -> bool {
+    return (cx.in_cfg)(item.attrs.as_slice());
 }
 
-fn view_item_in_cfg(cx: &Context, item: &ast::view_item) -> bool {
-    return (cx.in_cfg)(item.attrs);
+fn view_item_in_cfg(cx: &Context, item: &ast::ViewItem) -> bool {
+    return (cx.in_cfg)(item.attrs.as_slice());
 }
 
-fn method_in_cfg(cx: &Context, meth: @ast::method) -> bool {
-    return (cx.in_cfg)(meth.attrs);
+fn method_in_cfg(cx: &Context, meth: &ast::Method) -> bool {
+    return (cx.in_cfg)(meth.attrs.as_slice());
 }
 
-fn trait_method_in_cfg(cx: &Context, meth: &ast::trait_method) -> bool {
+fn trait_method_in_cfg(cx: &Context, meth: &ast::TraitMethod) -> bool {
     match *meth {
-        ast::required(ref meth) => (cx.in_cfg)(meth.attrs),
-        ast::provided(@ref meth) => (cx.in_cfg)(meth.attrs)
+        ast::Required(ref meth) => (cx.in_cfg)(meth.attrs.as_slice()),
+        ast::Provided(meth) => (cx.in_cfg)(meth.attrs.as_slice())
     }
 }
 

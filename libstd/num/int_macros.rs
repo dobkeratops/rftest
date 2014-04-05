@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,33 +8,30 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// FIXME(#4375): this shouldn't have to be a nested module named 'generated'
-
 #[macro_escape];
 #[doc(hidden)];
 
-macro_rules! int_module (($T:ty, $bits:expr) => (mod generated {
+macro_rules! int_module (($T:ty, $bits:expr) => (
 
-#[allow(non_uppercase_statics)];
+// FIXME(#11621): Should be deprecated once CTFE is implemented in favour of
+// calling the `mem::size_of` function.
+pub static BITS : uint = $bits;
+// FIXME(#11621): Should be deprecated once CTFE is implemented in favour of
+// calling the `mem::size_of` function.
+pub static BYTES : uint = ($bits / 8);
 
-use default::Default;
-use num::{ToStrRadix, FromStrRadix};
-use num::{CheckedDiv, Zero, One, strconv};
-use prelude::*;
-use str;
-
-pub use cmp::{min, max};
-
-pub static bits : uint = $bits;
-pub static bytes : uint = ($bits / 8);
-
-pub static min_value: $T = (-1 as $T) << (bits - 1);
-pub static max_value: $T = min_value - 1 as $T;
+// FIXME(#11621): Should be deprecated once CTFE is implemented in favour of
+// calling the `Bounded::min_value` function.
+pub static MIN: $T = (-1 as $T) << (BITS - 1);
+// FIXME(#9837): Compute MIN like this so the high bits that shouldn't exist are 0.
+// FIXME(#11621): Should be deprecated once CTFE is implemented in favour of
+// calling the `Bounded::max_value` function.
+pub static MAX: $T = !MIN;
 
 impl CheckedDiv for $T {
     #[inline]
     fn checked_div(&self, v: &$T) -> Option<$T> {
-        if *v == 0 || (*self == min_value && *v == -1) {
+        if *v == 0 || (*self == MIN && *v == -1) {
             None
         } else {
             Some(self / *v)
@@ -54,24 +51,6 @@ impl Ord for $T {
 impl Eq for $T {
     #[inline]
     fn eq(&self, other: &$T) -> bool { return (*self) == (*other); }
-}
-
-impl Orderable for $T {
-    #[inline]
-    fn min(&self, other: &$T) -> $T {
-        if *self < *other { *self } else { *other }
-    }
-
-    #[inline]
-    fn max(&self, other: &$T) -> $T {
-        if *self > *other { *self } else { *other }
-    }
-
-    #[inline]
-    fn clamp(&self, mn: &$T, mx: &$T) -> $T {
-        if *self > *mx { *mx } else
-        if *self < *mn { *mn } else { *self }
-    }
 }
 
 impl Default for $T {
@@ -112,9 +91,7 @@ impl Mul<$T,$T> for $T {
 
 #[cfg(not(test))]
 impl Div<$T,$T> for $T {
-    ///
-    /// Integer division, truncated towards 0. As this behaviour reflects the underlying
-    /// machine implementation it is more efficient than `Integer::div_floor`.
+    /// Integer division, truncated towards 0.
     ///
     /// # Examples
     ///
@@ -123,23 +100,23 @@ impl Div<$T,$T> for $T {
     /// assert!( 8 / -3 == -2);
     /// assert!(-8 /  3 == -2);
     /// assert!(-8 / -3 ==  2);
-
+    ///
     /// assert!( 1 /  2 ==  0);
     /// assert!( 1 / -2 ==  0);
     /// assert!(-1 /  2 ==  0);
     /// assert!(-1 / -2 ==  0);
     /// ~~~
-    ///
     #[inline]
     fn div(&self, other: &$T) -> $T { *self / *other }
 }
 
 #[cfg(not(test))]
 impl Rem<$T,$T> for $T {
-    ///
     /// Returns the integer remainder after division, satisfying:
     ///
     /// ~~~
+    /// # let n = 1;
+    /// # let d = 2;
     /// assert!((n / d) * d + (n % d) == n)
     /// ~~~
     ///
@@ -150,13 +127,12 @@ impl Rem<$T,$T> for $T {
     /// assert!( 8 % -3 ==  2);
     /// assert!(-8 %  3 == -2);
     /// assert!(-8 % -3 == -2);
-
+    ///
     /// assert!( 1 %  2 ==  1);
     /// assert!( 1 % -2 ==  1);
     /// assert!(-1 %  2 == -1);
     /// assert!(-1 % -2 == -1);
     /// ~~~
-    ///
     #[inline]
     fn rem(&self, other: &$T) -> $T { *self % *other }
 }
@@ -208,126 +184,6 @@ impl Signed for $T {
     fn is_negative(&self) -> bool { *self < 0 }
 }
 
-impl Integer for $T {
-    ///
-    /// Floored integer division
-    ///
-    /// # Examples
-    ///
-    /// ~~~
-    /// assert!(( 8).div_floor( 3) ==  2);
-    /// assert!(( 8).div_floor(-3) == -3);
-    /// assert!((-8).div_floor( 3) == -3);
-    /// assert!((-8).div_floor(-3) ==  2);
-    ///
-    /// assert!(( 1).div_floor( 2) ==  0);
-    /// assert!(( 1).div_floor(-2) == -1);
-    /// assert!((-1).div_floor( 2) == -1);
-    /// assert!((-1).div_floor(-2) ==  0);
-    /// ~~~
-    ///
-    #[inline]
-    fn div_floor(&self, other: &$T) -> $T {
-        // Algorithm from [Daan Leijen. _Division and Modulus for Computer Scientists_,
-        // December 2001](http://research.microsoft.com/pubs/151917/divmodnote-letter.pdf)
-        match self.div_rem(other) {
-            (d, r) if (r > 0 && *other < 0)
-                   || (r < 0 && *other > 0) => d - 1,
-            (d, _)                          => d,
-        }
-    }
-
-    ///
-    /// Integer modulo, satisfying:
-    ///
-    /// ~~~
-    /// assert!(n.div_floor(d) * d + n.mod_floor(d) == n)
-    /// ~~~
-    ///
-    /// # Examples
-    ///
-    /// ~~~
-    /// assert!(( 8).mod_floor( 3) ==  2);
-    /// assert!(( 8).mod_floor(-3) == -1);
-    /// assert!((-8).mod_floor( 3) ==  1);
-    /// assert!((-8).mod_floor(-3) == -2);
-    ///
-    /// assert!(( 1).mod_floor( 2) ==  1);
-    /// assert!(( 1).mod_floor(-2) == -1);
-    /// assert!((-1).mod_floor( 2) ==  1);
-    /// assert!((-1).mod_floor(-2) == -1);
-    /// ~~~
-    ///
-    #[inline]
-    fn mod_floor(&self, other: &$T) -> $T {
-        // Algorithm from [Daan Leijen. _Division and Modulus for Computer Scientists_,
-        // December 2001](http://research.microsoft.com/pubs/151917/divmodnote-letter.pdf)
-        match *self % *other {
-            r if (r > 0 && *other < 0)
-              || (r < 0 && *other > 0) => r + *other,
-            r                          => r,
-        }
-    }
-
-    /// Calculates `div_floor` and `mod_floor` simultaneously
-    #[inline]
-    fn div_mod_floor(&self, other: &$T) -> ($T,$T) {
-        // Algorithm from [Daan Leijen. _Division and Modulus for Computer Scientists_,
-        // December 2001](http://research.microsoft.com/pubs/151917/divmodnote-letter.pdf)
-        match self.div_rem(other) {
-            (d, r) if (r > 0 && *other < 0)
-                   || (r < 0 && *other > 0) => (d - 1, r + *other),
-            (d, r)                          => (d, r),
-        }
-    }
-
-    /// Calculates `div` (`\`) and `rem` (`%`) simultaneously
-    #[inline]
-    fn div_rem(&self, other: &$T) -> ($T,$T) {
-        (*self / *other, *self % *other)
-    }
-
-    ///
-    /// Calculates the Greatest Common Divisor (GCD) of the number and `other`
-    ///
-    /// The result is always positive
-    ///
-    #[inline]
-    fn gcd(&self, other: &$T) -> $T {
-        // Use Euclid's algorithm
-        let mut m = *self;
-        let mut n = *other;
-        while m != 0 {
-            let temp = m;
-            m = n % temp;
-            n = temp;
-        }
-        n.abs()
-    }
-
-    ///
-    /// Calculates the Lowest Common Multiple (LCM) of the number and `other`
-    ///
-    #[inline]
-    fn lcm(&self, other: &$T) -> $T {
-        ((*self * *other) / self.gcd(other)).abs() // should not have to recaluculate abs
-    }
-
-    /// Returns `true` if the number can be divided by `other` without leaving a remainder
-    #[inline]
-    fn is_multiple_of(&self, other: &$T) -> bool { *self % *other == 0 }
-
-    /// Returns `true` if the number is divisible by `2`
-    #[inline]
-    fn is_even(&self) -> bool { self.is_multiple_of(&2) }
-
-    /// Returns `true` if the number is not divisible by `2`
-    #[inline]
-    fn is_odd(&self) -> bool { !self.is_even() }
-}
-
-impl Bitwise for $T {}
-
 #[cfg(not(test))]
 impl BitOr<$T,$T> for $T {
     #[inline]
@@ -366,21 +222,15 @@ impl Not<$T> for $T {
 
 impl Bounded for $T {
     #[inline]
-    fn min_value() -> $T { min_value }
+    fn min_value() -> $T { MIN }
 
     #[inline]
-    fn max_value() -> $T { max_value }
+    fn max_value() -> $T { MAX }
 }
 
 impl Int for $T {}
 
-impl Primitive for $T {
-    #[inline]
-    fn bits(_: Option<$T>) -> uint { bits }
-
-    #[inline]
-    fn bytes(_: Option<$T>) -> uint { bits / 8 }
-}
+impl Primitive for $T {}
 
 // String conversion functions and impl str -> num
 
@@ -411,24 +261,16 @@ impl FromStrRadix for $T {
 
 /// Convert to a string as a byte slice in a given base.
 #[inline]
-pub fn to_str_bytes<U>(n: $T, radix: uint, f: &fn(v: &[u8]) -> U) -> U {
+pub fn to_str_bytes<U>(n: $T, radix: uint, f: |v: &[u8]| -> U) -> U {
     // The radix can be as low as 2, so we need at least 64 characters for a
     // base 2 number, and then we need another for a possible '-' character.
     let mut buf = [0u8, ..65];
     let mut cur = 0;
-    do strconv::int_to_str_bytes_common(n, radix, strconv::SignNeg) |i| {
+    strconv::int_to_str_bytes_common(n, radix, strconv::SignNeg, |i| {
         buf[cur] = i;
         cur += 1;
-    }
+    });
     f(buf.slice(0, cur))
-}
-
-impl ToStr for $T {
-    /// Convert to a string in base 10.
-    #[inline]
-    fn to_str(&self) -> ~str {
-        self.to_str_radix(10)
-    }
 }
 
 impl ToStrRadix for $T {
@@ -436,9 +278,9 @@ impl ToStrRadix for $T {
     #[inline]
     fn to_str_radix(&self, radix: uint) -> ~str {
         let mut buf: ~[u8] = ~[];
-        do strconv::int_to_str_bytes_common(*self, radix, strconv::SignNeg) |i| {
+        strconv::int_to_str_bytes_common(*self, radix, strconv::SignNeg, |i| {
             buf.push(i);
-        }
+        });
         // We know we generated valid utf-8, so we don't need to go through that
         // check.
         unsafe { str::raw::from_utf8_owned(buf) }
@@ -453,22 +295,20 @@ mod tests {
     use int;
     use i32;
     use num;
-    use sys;
+    use num::Bitwise;
+    use num::CheckedDiv;
+    use num::ToStrRadix;
+
+    #[test]
+    fn test_overflows() {
+        assert!(MAX > 0);
+        assert!(MIN <= 0);
+        assert_eq!(MIN + MAX + 1, 0);
+    }
 
     #[test]
     fn test_num() {
         num::test_num(10 as $T, 2 as $T);
-    }
-
-    #[test]
-    fn test_orderable() {
-        assert_eq!((1 as $T).min(&(2 as $T)), 1 as $T);
-        assert_eq!((2 as $T).min(&(1 as $T)), 1 as $T);
-        assert_eq!((1 as $T).max(&(2 as $T)), 2 as $T);
-        assert_eq!((2 as $T).max(&(1 as $T)), 2 as $T);
-        assert_eq!((1 as $T).clamp(&(2 as $T), &(4 as $T)), 2 as $T);
-        assert_eq!((8 as $T).clamp(&(2 as $T), &(4 as $T)), 4 as $T);
-        assert_eq!((3 as $T).clamp(&(2 as $T), &(4 as $T)), 3 as $T);
     }
 
     #[test]
@@ -510,92 +350,6 @@ mod tests {
         assert!((-1 as $T).is_negative());
     }
 
-    ///
-    /// Checks that the division rule holds for:
-    ///
-    /// - `n`: numerator (dividend)
-    /// - `d`: denominator (divisor)
-    /// - `qr`: quotient and remainder
-    ///
-    #[cfg(test)]
-    fn test_division_rule((n,d): ($T,$T), (q,r): ($T,$T)) {
-        assert_eq!(d * q + r, n);
-    }
-
-    #[test]
-    fn test_div_rem() {
-        fn test_nd_dr(nd: ($T,$T), qr: ($T,$T)) {
-            let (n,d) = nd;
-            let separate_div_rem = (n / d, n % d);
-            let combined_div_rem = n.div_rem(&d);
-
-            assert_eq!(separate_div_rem, qr);
-            assert_eq!(combined_div_rem, qr);
-
-            test_division_rule(nd, separate_div_rem);
-            test_division_rule(nd, combined_div_rem);
-        }
-
-        test_nd_dr(( 8,  3), ( 2,  2));
-        test_nd_dr(( 8, -3), (-2,  2));
-        test_nd_dr((-8,  3), (-2, -2));
-        test_nd_dr((-8, -3), ( 2, -2));
-
-        test_nd_dr(( 1,  2), ( 0,  1));
-        test_nd_dr(( 1, -2), ( 0,  1));
-        test_nd_dr((-1,  2), ( 0, -1));
-        test_nd_dr((-1, -2), ( 0, -1));
-    }
-
-    #[test]
-    fn test_div_mod_floor() {
-        fn test_nd_dm(nd: ($T,$T), dm: ($T,$T)) {
-            let (n,d) = nd;
-            let separate_div_mod_floor = (n.div_floor(&d), n.mod_floor(&d));
-            let combined_div_mod_floor = n.div_mod_floor(&d);
-
-            assert_eq!(separate_div_mod_floor, dm);
-            assert_eq!(combined_div_mod_floor, dm);
-
-            test_division_rule(nd, separate_div_mod_floor);
-            test_division_rule(nd, combined_div_mod_floor);
-        }
-
-        test_nd_dm(( 8,  3), ( 2,  2));
-        test_nd_dm(( 8, -3), (-3, -1));
-        test_nd_dm((-8,  3), (-3,  1));
-        test_nd_dm((-8, -3), ( 2, -2));
-
-        test_nd_dm(( 1,  2), ( 0,  1));
-        test_nd_dm(( 1, -2), (-1, -1));
-        test_nd_dm((-1,  2), (-1,  1));
-        test_nd_dm((-1, -2), ( 0, -1));
-    }
-
-    #[test]
-    fn test_gcd() {
-        assert_eq!((10 as $T).gcd(&2), 2 as $T);
-        assert_eq!((10 as $T).gcd(&3), 1 as $T);
-        assert_eq!((0 as $T).gcd(&3), 3 as $T);
-        assert_eq!((3 as $T).gcd(&3), 3 as $T);
-        assert_eq!((56 as $T).gcd(&42), 14 as $T);
-        assert_eq!((3 as $T).gcd(&-3), 3 as $T);
-        assert_eq!((-6 as $T).gcd(&3), 3 as $T);
-        assert_eq!((-4 as $T).gcd(&-2), 2 as $T);
-    }
-
-    #[test]
-    fn test_lcm() {
-        assert_eq!((1 as $T).lcm(&0), 0 as $T);
-        assert_eq!((0 as $T).lcm(&1), 0 as $T);
-        assert_eq!((1 as $T).lcm(&1), 1 as $T);
-        assert_eq!((-1 as $T).lcm(&1), 1 as $T);
-        assert_eq!((1 as $T).lcm(&-1), 1 as $T);
-        assert_eq!((-1 as $T).lcm(&-1), 1 as $T);
-        assert_eq!((8 as $T).lcm(&9), 72 as $T);
-        assert_eq!((11 as $T).lcm(&5), 55 as $T);
-    }
-
     #[test]
     fn test_bitwise() {
         assert_eq!(0b1110 as $T, (0b1100 as $T).bitor(&(0b1010 as $T)));
@@ -607,51 +361,17 @@ mod tests {
     }
 
     #[test]
-    fn test_multiple_of() {
-        assert!((6 as $T).is_multiple_of(&(6 as $T)));
-        assert!((6 as $T).is_multiple_of(&(3 as $T)));
-        assert!((6 as $T).is_multiple_of(&(1 as $T)));
-        assert!((-8 as $T).is_multiple_of(&(4 as $T)));
-        assert!((8 as $T).is_multiple_of(&(-1 as $T)));
-        assert!((-8 as $T).is_multiple_of(&(-2 as $T)));
+    fn test_count_ones() {
+        assert_eq!((0b0101100 as $T).count_ones(), 3);
+        assert_eq!((0b0100001 as $T).count_ones(), 2);
+        assert_eq!((0b1111001 as $T).count_ones(), 5);
     }
 
     #[test]
-    fn test_even() {
-        assert_eq!((-4 as $T).is_even(), true);
-        assert_eq!((-3 as $T).is_even(), false);
-        assert_eq!((-2 as $T).is_even(), true);
-        assert_eq!((-1 as $T).is_even(), false);
-        assert_eq!((0 as $T).is_even(), true);
-        assert_eq!((1 as $T).is_even(), false);
-        assert_eq!((2 as $T).is_even(), true);
-        assert_eq!((3 as $T).is_even(), false);
-        assert_eq!((4 as $T).is_even(), true);
-    }
-
-    #[test]
-    fn test_odd() {
-        assert_eq!((-4 as $T).is_odd(), false);
-        assert_eq!((-3 as $T).is_odd(), true);
-        assert_eq!((-2 as $T).is_odd(), false);
-        assert_eq!((-1 as $T).is_odd(), true);
-        assert_eq!((0 as $T).is_odd(), false);
-        assert_eq!((1 as $T).is_odd(), true);
-        assert_eq!((2 as $T).is_odd(), false);
-        assert_eq!((3 as $T).is_odd(), true);
-        assert_eq!((4 as $T).is_odd(), false);
-    }
-
-    #[test]
-    fn test_bitcount() {
-        assert_eq!((0b010101 as $T).population_count(), 3);
-    }
-
-    #[test]
-    fn test_primitive() {
-        let none: Option<$T> = None;
-        assert_eq!(Primitive::bits(none), sys::size_of::<$T>() * 8);
-        assert_eq!(Primitive::bytes(none), sys::size_of::<$T>());
+    fn test_count_zeros() {
+        assert_eq!((0b0101100 as $T).count_zeros(), BITS as $T - 3);
+        assert_eq!((0b0100001 as $T).count_zeros(), BITS as $T - 2);
+        assert_eq!((0b1111001 as $T).count_zeros(), BITS as $T - 5);
     }
 
     #[test]
@@ -773,8 +493,8 @@ mod tests {
     fn test_signed_checked_div() {
         assert_eq!(10i.checked_div(&2), Some(5));
         assert_eq!(5i.checked_div(&0), None);
-        assert_eq!(int::min_value.checked_div(&-1), None);
+        assert_eq!(int::MIN.checked_div(&-1), None);
     }
 }
 
-}))
+))

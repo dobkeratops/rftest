@@ -8,42 +8,47 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-//! This module implements the check that the lifetime of a borrow
-//! does not exceed the lifetime of the value being borrowed.
-
+/*!
+ * This module implements the check that the lifetime of a borrow
+ * does not exceed the lifetime of the value being borrowed.
+ */
 
 use middle::borrowck::*;
 use mc = middle::mem_categorization;
 use middle::ty;
-use syntax::ast::{MutImmutable, MutMutable};
+use util::ppaux::Repr;
 use syntax::ast;
 use syntax::codemap::Span;
-use util::ppaux::{note_and_explain_region};
+
+type R = Result<(),()>;
 
 pub fn guarantee_lifetime(bccx: &BorrowckCtxt,
                           item_scope_id: ast::NodeId,
                           root_scope_id: ast::NodeId,
                           span: Span,
+                          cause: LoanCause,
                           cmt: mc::cmt,
                           loan_region: ty::Region,
-                          loan_mutbl: LoanMutability) {
-    debug!("guarantee_lifetime(cmt=%s, loan_region=%s)",
+                          loan_kind: ty::BorrowKind)
+                          -> Result<(),()> {
+    debug!("guarantee_lifetime(cmt={}, loan_region={})",
            cmt.repr(bccx.tcx), loan_region.repr(bccx.tcx));
     let ctxt = GuaranteeLifetimeContext {bccx: bccx,
                                          item_scope_id: item_scope_id,
                                          span: span,
+                                         cause: cause,
                                          loan_region: loan_region,
-                                         loan_mutbl: loan_mutbl,
+                                         loan_kind: loan_kind,
                                          cmt_original: cmt,
                                          root_scope_id: root_scope_id};
-    ctxt.check(cmt, None);
+    ctxt.check(cmt, None)
 }
 
 ///////////////////////////////////////////////////////////////////////////
 // Private
 
-struct GuaranteeLifetimeContext<'self> {
-    bccx: &'self BorrowckCtxt,
+struct GuaranteeLifetimeContext<'a> {
+    bccx: &'a BorrowckCtxt<'a>,
 
     // the node id of the function body for the enclosing item
     item_scope_id: ast::NodeId,
@@ -53,61 +58,61 @@ struct GuaranteeLifetimeContext<'self> {
     root_scope_id: ast::NodeId,
 
     span: Span,
+    cause: LoanCause,
     loan_region: ty::Region,
-    loan_mutbl: LoanMutability,
+    loan_kind: ty::BorrowKind,
     cmt_original: mc::cmt
 }
 
-impl<'self> GuaranteeLifetimeContext<'self> {
-    fn tcx(&self) -> ty::ctxt {
+impl<'a> GuaranteeLifetimeContext<'a> {
+    fn tcx(&self) -> &'a ty::ctxt {
         self.bccx.tcx
     }
 
-    fn check(&self, cmt: mc::cmt, discr_scope: Option<ast::NodeId>) {
+    fn check(&self, cmt: mc::cmt, discr_scope: Option<ast::NodeId>) -> R {
         //! Main routine. Walks down `cmt` until we find the "guarantor".
+        debug!("guarantee_lifetime.check(cmt={}, loan_region={})",
+               cmt.repr(self.bccx.tcx),
+               self.loan_region.repr(self.bccx.tcx));
 
         match cmt.cat {
-            mc::cat_rvalue(*) |
-            mc::cat_copied_upvar(*) |                  // L-Local
-            mc::cat_local(*) |                         // L-Local
-            mc::cat_arg(*) |                           // L-Local
-            mc::cat_self(*) |                          // L-Local
-            mc::cat_deref(_, _, mc::region_ptr(*)) |   // L-Deref-Borrowed
-            mc::cat_deref(_, _, mc::unsafe_ptr(*)) => {
+            mc::cat_rvalue(..) |
+            mc::cat_copied_upvar(..) |                  // L-Local
+            mc::cat_local(..) |                         // L-Local
+            mc::cat_arg(..) |                           // L-Local
+            mc::cat_upvar(..) |
+            mc::cat_deref(_, _, mc::BorrowedPtr(..)) |  // L-Deref-Borrowed
+            mc::cat_deref(_, _, mc::UnsafePtr(..)) => {
                 let scope = self.scope(cmt);
                 self.check_scope(scope)
             }
 
-            mc::cat_stack_upvar(cmt) => {
-                self.check(cmt, discr_scope)
-            }
-
             mc::cat_static_item => {
+                Ok(())
             }
 
-            mc::cat_deref(base, derefs, mc::gc_ptr(ptr_mutbl)) => {
+            mc::cat_deref(base, derefs, mc::GcPtr) => {
                 let base_scope = self.scope(base);
 
                 // L-Deref-Managed-Imm-User-Root
-                let omit_root = (
-                    ptr_mutbl == MutImmutable &&
+                let omit_root =
                     self.bccx.is_subregion_of(self.loan_region, base_scope) &&
                     self.is_rvalue_or_immutable(base) &&
-                    !self.is_moved(base)
-                );
+                    !self.is_moved(base);
 
                 if !omit_root {
                     // L-Deref-Managed-Imm-Compiler-Root
                     // L-Deref-Managed-Mut-Compiler-Root
-                    self.check_root(cmt, base, derefs, ptr_mutbl, discr_scope);
+                    self.check_root(cmt, base, derefs, discr_scope)
                 } else {
-                    debug!("omitting root, base=%s, base_scope=%?",
+                    debug!("omitting root, base={}, base_scope={:?}",
                            base.repr(self.tcx()), base_scope);
+                    Ok(())
                 }
             }
 
             mc::cat_downcast(base) |
-            mc::cat_deref(base, _, mc::uniq_ptr) |     // L-Deref-Send
+            mc::cat_deref(base, _, mc::OwnedPtr) |     // L-Deref-Send
             mc::cat_interior(base, _) => {             // L-Field
                 self.check(base, discr_scope)
             }
@@ -120,7 +125,7 @@ impl<'self> GuaranteeLifetimeContext<'self> {
                 // for one arm.  Therefore, we insert a cat_discr(),
                 // basically a special kind of category that says "if this
                 // value must be dynamically rooted, root it for the scope
-                // `match_id`.
+                // `match_id`".
                 //
                 // As an example, consider this scenario:
                 //
@@ -134,7 +139,7 @@ impl<'self> GuaranteeLifetimeContext<'self> {
                 //
                 // As a second example, consider *this* scenario:
                 //
-                //    let x = @mut @Some(3);
+                //    let x = @@Some(3);
                 //    match x { @@Some(y) {...} @@None {...} }
                 //
                 // Here again, `x` need only be rooted in the `some` arm.
@@ -153,7 +158,7 @@ impl<'self> GuaranteeLifetimeContext<'self> {
                 // with a second basic block.  However, the naive approach
                 // also yielded suboptimal results for patterns like:
                 //
-                //    let x = @mut @...;
+                //    let x = @@...;
                 //    match x { @@some_variant(y) | @@some_other_variant(y) =>
                 //
                 // The reason is that we would root the value once for
@@ -178,7 +183,7 @@ impl<'self> GuaranteeLifetimeContext<'self> {
         //! lvalue.
 
         cmt.mutbl.is_immutable() || match cmt.guarantor().cat {
-            mc::cat_rvalue(*) => true,
+            mc::cat_rvalue(..) => true,
             _ => false
         }
     }
@@ -187,40 +192,37 @@ impl<'self> GuaranteeLifetimeContext<'self> {
                   cmt_deref: mc::cmt,
                   cmt_base: mc::cmt,
                   derefs: uint,
-                  ptr_mutbl: ast::Mutability,
-                  discr_scope: Option<ast::NodeId>) {
-        debug!("check_root(cmt_deref=%s, cmt_base=%s, derefs=%?, ptr_mutbl=%?, \
-                discr_scope=%?)",
+                  discr_scope: Option<ast::NodeId>) -> R {
+        debug!("check_root(cmt_deref={}, cmt_base={}, derefs={:?}, \
+                discr_scope={:?})",
                cmt_deref.repr(self.tcx()),
                cmt_base.repr(self.tcx()),
                derefs,
-               ptr_mutbl,
                discr_scope);
 
         // Make sure that the loan does not exceed the maximum time
         // that we can root the value, dynamically.
-        let root_region = ty::re_scope(self.root_scope_id);
+        let root_region = ty::ReScope(self.root_scope_id);
         if !self.bccx.is_subregion_of(self.loan_region, root_region) {
-            self.report_error(
-                err_out_of_root_scope(root_region, self.loan_region));
-            return;
+            return Err(self.report_error(
+                err_out_of_root_scope(root_region, self.loan_region)));
         }
 
         // Extract the scope id that indicates how long the rooting is required
         let root_scope = match self.loan_region {
-            ty::re_scope(id) => id,
+            ty::ReScope(id) => id,
             _ => {
-                // the check above should fail for anything is not re_scope
+                // the check above should fail for anything is not ReScope
                 self.bccx.tcx.sess.span_bug(
                     cmt_base.span,
-                    fmt!("Cannot issue root for scope region: %?",
+                    format!("cannot issue root for scope region: {:?}",
                          self.loan_region));
             }
         };
 
         // If inside of a match arm, expand the rooting to the entire
         // match. See the detailed discussion in `check()` above.
-        let mut root_scope = match discr_scope {
+        let root_scope = match discr_scope {
             None => root_scope,
             Some(id) => {
                 if self.bccx.is_subscope_of(root_scope, id) {
@@ -231,60 +233,23 @@ impl<'self> GuaranteeLifetimeContext<'self> {
             }
         };
 
-        // If we are borrowing the inside of an `@mut` box,
-        // we need to dynamically mark it to prevent incompatible
-        // borrows from happening later.
-        let opt_dyna = match ptr_mutbl {
-            MutImmutable => None,
-            MutMutable => {
-                match self.loan_mutbl {
-                    MutableMutability => Some(DynaMut),
-                    ImmutableMutability | ConstMutability => Some(DynaImm)
-                }
-            }
-        };
-
-        // FIXME(#3511) grow to the nearest cleanup scope---this can
-        // cause observable errors if freezing!
-        if !self.bccx.tcx.region_maps.is_cleanup_scope(root_scope) {
-            debug!("%? is not a cleanup scope, adjusting", root_scope);
-
-            let cleanup_scope =
-                self.bccx.tcx.region_maps.cleanup_scope(root_scope);
-
-            if opt_dyna.is_some() {
-                self.tcx().sess.span_warn(
-                    self.span,
-                    fmt!("Dynamic freeze scope artifically extended \
-                          (see Issue #6248)"));
-                note_and_explain_region(
-                    self.bccx.tcx,
-                    "managed value only needs to be frozen for ",
-                    ty::re_scope(root_scope),
-                    "...");
-                note_and_explain_region(
-                    self.bccx.tcx,
-                    "...but due to Issue #6248, it will be frozen for ",
-                    ty::re_scope(cleanup_scope),
-                    "");
-            }
-
-            root_scope = cleanup_scope;
-        }
-
         // Add a record of what is required
         let rm_key = root_map_key {id: cmt_deref.id, derefs: derefs};
-        let root_info = RootInfo {scope: root_scope, freeze: opt_dyna};
-        self.bccx.root_map.insert(rm_key, root_info);
+        let root_info = RootInfo {scope: root_scope};
 
-        debug!("root_key: %? root_info: %?", rm_key, root_info);
+        self.bccx.root_map.borrow_mut().insert(rm_key, root_info);
+
+        debug!("root_key: {:?} root_info: {:?}", rm_key, root_info);
+        Ok(())
     }
 
-    fn check_scope(&self, max_scope: ty::Region) {
+    fn check_scope(&self, max_scope: ty::Region) -> R {
         //! Reports an error if `loan_region` is larger than `valid_scope`
 
         if !self.bccx.is_subregion_of(self.loan_region, max_scope) {
-            self.report_error(err_out_of_scope(max_scope, self.loan_region));
+            Err(self.report_error(err_out_of_scope(max_scope, self.loan_region)))
+        } else {
+            Ok(())
         }
     }
 
@@ -294,23 +259,22 @@ impl<'self> GuaranteeLifetimeContext<'self> {
 
         match cmt.guarantor().cat {
             mc::cat_local(id) |
-            mc::cat_self(id) |
             mc::cat_arg(id) => {
                 self.bccx.moved_variables_set.contains(&id)
             }
-            mc::cat_rvalue(*) |
+            mc::cat_rvalue(..) |
             mc::cat_static_item |
-            mc::cat_copied_upvar(*) |
-            mc::cat_deref(*) => {
+            mc::cat_copied_upvar(..) |
+            mc::cat_deref(..) |
+            mc::cat_upvar(..) => {
                 false
             }
-            r @ mc::cat_downcast(*) |
-            r @ mc::cat_interior(*) |
-            r @ mc::cat_stack_upvar(*) |
-            r @ mc::cat_discr(*) => {
+            r @ mc::cat_downcast(..) |
+            r @ mc::cat_interior(..) |
+            r @ mc::cat_discr(..) => {
                 self.tcx().sess.span_bug(
                     cmt.span,
-                    fmt!("illegal guarantor category: %?", r));
+                    format!("illegal guarantor category: {:?}", r));
             }
         }
     }
@@ -323,31 +287,30 @@ impl<'self> GuaranteeLifetimeContext<'self> {
         // See the SCOPE(LV) function in doc.rs
 
         match cmt.cat {
-            mc::cat_rvalue(cleanup_scope_id) => {
-                ty::re_scope(cleanup_scope_id)
+            mc::cat_rvalue(temp_scope) => {
+                temp_scope
             }
+            mc::cat_upvar(..) |
             mc::cat_copied_upvar(_) => {
-                ty::re_scope(self.item_scope_id)
+                ty::ReScope(self.item_scope_id)
             }
             mc::cat_static_item => {
-                ty::re_static
+                ty::ReStatic
             }
             mc::cat_local(local_id) |
-            mc::cat_arg(local_id) |
-            mc::cat_self(local_id) => {
-                self.bccx.tcx.region_maps.encl_region(local_id)
+            mc::cat_arg(local_id) => {
+                ty::ReScope(self.bccx.tcx.region_maps.var_scope(local_id))
             }
-            mc::cat_deref(_, _, mc::unsafe_ptr(*)) => {
-                ty::re_static
+            mc::cat_deref(_, _, mc::UnsafePtr(..)) => {
+                ty::ReStatic
             }
-            mc::cat_deref(_, _, mc::region_ptr(_, r)) => {
+            mc::cat_deref(_, _, mc::BorrowedPtr(_, r)) => {
                 r
             }
             mc::cat_downcast(cmt) |
-            mc::cat_deref(cmt, _, mc::uniq_ptr) |
-            mc::cat_deref(cmt, _, mc::gc_ptr(*)) |
+            mc::cat_deref(cmt, _, mc::OwnedPtr) |
+            mc::cat_deref(cmt, _, mc::GcPtr) |
             mc::cat_interior(cmt, _) |
-            mc::cat_stack_upvar(cmt) |
             mc::cat_discr(cmt, _) => {
                 self.scope(cmt)
             }
@@ -355,10 +318,9 @@ impl<'self> GuaranteeLifetimeContext<'self> {
     }
 
     fn report_error(&self, code: bckerr_code) {
-        self.bccx.report(BckError {
-            cmt: self.cmt_original,
-            span: self.span,
-            code: code
-        });
+        self.bccx.report(BckError { cmt: self.cmt_original,
+                                    span: self.span,
+                                    cause: self.cause,
+                                    code: code });
     }
 }

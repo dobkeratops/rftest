@@ -9,28 +9,22 @@
 // except according to those terms.
 
 
-use driver::session::{OsWin32, OsMacos};
+use syntax::abi::{OsWin32, OsMacos};
 use lib::llvm::*;
 use super::cabi::*;
 use super::common::*;
 use super::machine::*;
 use middle::trans::type_::Type;
 
-pub fn compute_abi_info(ccx: &mut CrateContext,
+pub fn compute_abi_info(ccx: &CrateContext,
                         atys: &[Type],
                         rty: Type,
                         ret_def: bool) -> FnType {
-    let mut arg_tys = ~[];
-    let mut attrs = ~[];
+    let mut arg_tys = Vec::new();
 
     let ret_ty;
-    let sret;
     if !ret_def {
-        ret_ty = LLVMType {
-            cast: false,
-            ty: Type::void(),
-        };
-        sret = false;
+        ret_ty = ArgType::direct(Type::void(ccx), None, None, None);
     } else if rty.kind() == Struct {
         // Returning a structure. Most often, this will use
         // a hidden first argument. On some platforms, though,
@@ -41,13 +35,13 @@ pub fn compute_abi_info(ccx: &mut CrateContext,
         // Clang's ABI handling is in lib/CodeGen/TargetInfo.cpp
 
         enum Strategy { RetValue(Type), RetPointer }
-        let strategy = match ccx.sess.targ_cfg.os {
+        let strategy = match ccx.sess().targ_cfg.os {
             OsWin32 | OsMacos => {
                 match llsize_of_alloc(ccx, rty) {
-                    1 => RetValue(Type::i8()),
-                    2 => RetValue(Type::i16()),
-                    4 => RetValue(Type::i32()),
-                    8 => RetValue(Type::i64()),
+                    1 => RetValue(Type::i8(ccx)),
+                    2 => RetValue(Type::i16(ccx)),
+                    4 => RetValue(Type::i32(ccx)),
+                    8 => RetValue(Type::i64(ccx)),
                     _ => RetPointer
                 }
             }
@@ -58,43 +52,33 @@ pub fn compute_abi_info(ccx: &mut CrateContext,
 
         match strategy {
             RetValue(t) => {
-                ret_ty = LLVMType {
-                    cast: true,
-                    ty: t
-                };
-                sret = false;
+                ret_ty = ArgType::direct(rty, Some(t), None, None);
             }
             RetPointer => {
-                arg_tys.push(LLVMType {
-                    cast: false,
-                    ty: rty.ptr_to()
-                });
-                attrs.push(Some(StructRetAttribute));
-
-                ret_ty = LLVMType {
-                    cast: false,
-                    ty: Type::void(),
-                };
-                sret = true;
+                ret_ty = ArgType::indirect(rty, Some(StructRetAttribute));
             }
         }
     } else {
-        ret_ty = LLVMType {
-            cast: false,
-            ty: rty
-        };
-        sret = false;
+        ret_ty = ArgType::direct(rty, None, None, None);
     }
 
-    for &a in atys.iter() {
-        arg_tys.push(LLVMType { cast: false, ty: a });
-        attrs.push(None);
+    for &t in atys.iter() {
+        let ty = match t.kind() {
+            Struct => {
+                let size = llsize_of_alloc(ccx, t);
+                if size == 0 {
+                    ArgType::ignore(t)
+                } else {
+                    ArgType::indirect(t, Some(ByValAttribute))
+                }
+            }
+            _ => ArgType::direct(t, None, None, None),
+        };
+        arg_tys.push(ty);
     }
 
     return FnType {
         arg_tys: arg_tys,
         ret_ty: ret_ty,
-        attrs: attrs,
-        sret: sret
     };
 }

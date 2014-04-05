@@ -9,29 +9,28 @@
 // except according to those terms.
 
 /*!
-The compiler code necessary to implement the #[deriving] extensions.
+The compiler code necessary to implement the `#[deriving]` extensions.
 
 
-FIXME (#2810)--Hygiene. Search for "__" strings (in other files too).
+FIXME (#2810): hygiene. Search for "__" strings (in other files too).
 We also assume "extra" is the standard library, and "std" is the core
 library.
 
 */
 
-use ast::{enum_def, Ident, item, Generics, struct_def};
-use ast::{MetaItem, MetaList, MetaNameValue, MetaWord};
+use ast::{Item, MetaItem, MetaList, MetaNameValue, MetaWord};
 use ext::base::ExtCtxt;
-use ext::build::AstBuilder;
 use codemap::Span;
 
 pub mod clone;
-pub mod iter_bytes;
 pub mod encodable;
 pub mod decodable;
+pub mod hash;
 pub mod rand;
-pub mod to_str;
+pub mod show;
 pub mod zero;
 pub mod default;
+pub mod primitive;
 
 #[path="cmp/eq.rs"]
 pub mod eq;
@@ -45,46 +44,34 @@ pub mod totalord;
 
 pub mod generic;
 
-pub type ExpandDerivingStructDefFn<'self> = &'self fn(@ExtCtxt,
-                                                       Span,
-                                                       x: &struct_def,
-                                                       Ident,
-                                                       y: &Generics)
-                                                 -> @item;
-pub type ExpandDerivingEnumDefFn<'self> = &'self fn(@ExtCtxt,
-                                                    Span,
-                                                    x: &enum_def,
-                                                    Ident,
-                                                    y: &Generics)
-                                                 -> @item;
-
-pub fn expand_meta_deriving(cx: @ExtCtxt,
+pub fn expand_meta_deriving(cx: &mut ExtCtxt,
                             _span: Span,
                             mitem: @MetaItem,
-                            in_items: ~[@item])
-                         -> ~[@item] {
+                            item: @Item,
+                            push: |@Item|) {
     match mitem.node {
         MetaNameValue(_, ref l) => {
             cx.span_err(l.span, "unexpected value in `deriving`");
-            in_items
         }
-        MetaWord(_) | MetaList(_, []) => {
+        MetaWord(_) => {
             cx.span_warn(mitem.span, "empty trait list in `deriving`");
-            in_items
+        }
+        MetaList(_, ref titems) if titems.len() == 0 => {
+            cx.span_warn(mitem.span, "empty trait list in `deriving`");
         }
         MetaList(_, ref titems) => {
-            do titems.rev_iter().fold(in_items) |in_items, &titem| {
+            for &titem in titems.iter().rev() {
                 match titem.node {
-                    MetaNameValue(tname, _) |
-                    MetaList(tname, _) |
-                    MetaWord(tname) => {
+                    MetaNameValue(ref tname, _) |
+                    MetaList(ref tname, _) |
+                    MetaWord(ref tname) => {
                         macro_rules! expand(($func:path) => ($func(cx, titem.span,
-                                                                   titem, in_items)));
-                        match tname.as_slice() {
+                                                                   titem, item,
+                                                                   |i| push(i))));
+                        match tname.get() {
                             "Clone" => expand!(clone::expand_deriving_clone),
-                            "DeepClone" => expand!(clone::expand_deriving_deep_clone),
 
-                            "IterBytes" => expand!(iter_bytes::expand_deriving_iter_bytes),
+                            "Hash" => expand!(hash::expand_deriving_hash),
 
                             "Encodable" => expand!(encodable::expand_deriving_encodable),
                             "Decodable" => expand!(decodable::expand_deriving_decodable),
@@ -96,16 +83,18 @@ pub fn expand_meta_deriving(cx: @ExtCtxt,
 
                             "Rand" => expand!(rand::expand_deriving_rand),
 
-                            "ToStr" => expand!(to_str::expand_deriving_to_str),
+                            "Show" => expand!(show::expand_deriving_show),
+
                             "Zero" => expand!(zero::expand_deriving_zero),
                             "Default" => expand!(default::expand_deriving_default),
 
+                            "FromPrimitive" => expand!(primitive::expand_deriving_from_primitive),
+
                             ref tname => {
-                                cx.span_err(titem.span, fmt!("unknown \
-                                    `deriving` trait: `%s`", *tname));
-                                in_items
+                                cx.span_err(titem.span, format!("unknown \
+                                    `deriving` trait: `{}`", *tname));
                             }
-                        }
+                        };
                     }
                 }
             }

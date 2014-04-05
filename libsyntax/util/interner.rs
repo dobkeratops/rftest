@@ -12,20 +12,27 @@
 // allows bidirectional lookup; i.e. given a value, one can easily find the
 // type, and vice versa.
 
+use ast::Name;
+
+use collections::HashMap;
+use std::cast;
+use std::cell::RefCell;
 use std::cmp::Equiv;
-use std::hashmap::HashMap;
+use std::fmt;
+use std::hash::Hash;
+use std::rc::Rc;
 
 pub struct Interner<T> {
-    priv map: @mut HashMap<T, uint>,
-    priv vect: @mut ~[T],
+    priv map: RefCell<HashMap<T, Name>>,
+    priv vect: RefCell<Vec<T> >,
 }
 
-// when traits can extend traits, we should extend index<uint,T> to get []
-impl<T:Eq + IterBytes + Hash + Freeze + Clone + 'static> Interner<T> {
+// when traits can extend traits, we should extend index<Name,T> to get []
+impl<T: TotalEq + Hash + Clone + 'static> Interner<T> {
     pub fn new() -> Interner<T> {
         Interner {
-            map: @mut HashMap::new(),
-            vect: @mut ~[],
+            map: RefCell::new(HashMap::new()),
+            vect: RefCell::new(Vec::new()),
         }
     }
 
@@ -37,57 +44,106 @@ impl<T:Eq + IterBytes + Hash + Freeze + Clone + 'static> Interner<T> {
         rv
     }
 
-    pub fn intern(&self, val: T) -> uint {
-        match self.map.find(&val) {
+    pub fn intern(&self, val: T) -> Name {
+        let mut map = self.map.borrow_mut();
+        match (*map).find(&val) {
             Some(&idx) => return idx,
             None => (),
         }
 
-        let vect = &mut *self.vect;
-        let new_idx = vect.len();
-        self.map.insert(val.clone(), new_idx);
-        vect.push(val);
+        let mut vect = self.vect.borrow_mut();
+        let new_idx = (*vect).len() as Name;
+        (*map).insert(val.clone(), new_idx);
+        (*vect).push(val);
         new_idx
     }
 
-    pub fn gensym(&self, val: T) -> uint {
-        let new_idx = {
-            let vect = &*self.vect;
-            vect.len()
-        };
+    pub fn gensym(&self, val: T) -> Name {
+        let mut vect = self.vect.borrow_mut();
+        let new_idx = (*vect).len() as Name;
         // leave out of .map to avoid colliding
-        self.vect.push(val);
+        (*vect).push(val);
         new_idx
     }
 
-    pub fn get(&self, idx: uint) -> T {
-        self.vect[idx].clone()
+    pub fn get(&self, idx: Name) -> T {
+        let vect = self.vect.borrow();
+        (*(*vect).get(idx as uint)).clone()
     }
 
-    pub fn len(&self) -> uint { let vect = &*self.vect; vect.len() }
+    pub fn len(&self) -> uint {
+        let vect = self.vect.borrow();
+        (*vect).len()
+    }
 
-    pub fn find_equiv<Q:Hash + IterBytes + Equiv<T>>(&self, val: &Q)
-                                              -> Option<uint> {
-        match self.map.find_equiv(val) {
+    pub fn find_equiv<Q:Hash + Equiv<T>>(&self, val: &Q) -> Option<Name> {
+        let map = self.map.borrow();
+        match (*map).find_equiv(val) {
             Some(v) => Some(*v),
             None => None,
+        }
+    }
+
+    pub fn clear(&self) {
+        *self.map.borrow_mut() = HashMap::new();
+        *self.vect.borrow_mut() = Vec::new();
+    }
+}
+
+#[deriving(Clone, Eq, Hash, Ord)]
+pub struct RcStr {
+    priv string: Rc<~str>,
+}
+
+impl TotalEq for RcStr {}
+
+impl TotalOrd for RcStr {
+    fn cmp(&self, other: &RcStr) -> Ordering {
+        self.as_slice().cmp(&other.as_slice())
+    }
+}
+
+impl Str for RcStr {
+    #[inline]
+    fn as_slice<'a>(&'a self) -> &'a str {
+        let s: &'a str = *self.string;
+        s
+    }
+
+    #[inline]
+    fn into_owned(self) -> ~str {
+        self.string.to_owned()
+    }
+}
+
+impl fmt::Show for RcStr {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        use std::fmt::Show;
+        self.as_slice().fmt(f)
+    }
+}
+
+impl RcStr {
+    pub fn new(string: &str) -> RcStr {
+        RcStr {
+            string: Rc::new(string.to_owned()),
         }
     }
 }
 
 // A StrInterner differs from Interner<String> in that it accepts
-// borrowed pointers rather than @ ones, resulting in less allocation.
+// &str rather than RcStr, resulting in less allocation.
 pub struct StrInterner {
-    priv map: @mut HashMap<@str, uint>,
-    priv vect: @mut ~[@str],
+    priv map: RefCell<HashMap<RcStr, Name>>,
+    priv vect: RefCell<Vec<RcStr> >,
 }
 
-// when traits can extend traits, we should extend index<uint,T> to get []
+// when traits can extend traits, we should extend index<Name,T> to get []
 impl StrInterner {
     pub fn new() -> StrInterner {
         StrInterner {
-            map: @mut HashMap::new(),
-            vect: @mut ~[],
+            map: RefCell::new(HashMap::new()),
+            vect: RefCell::new(Vec::new()),
         }
     }
 
@@ -97,23 +153,24 @@ impl StrInterner {
         rv
     }
 
-    pub fn intern(&self, val: &str) -> uint {
-        match self.map.find_equiv(&val) {
+    pub fn intern(&self, val: &str) -> Name {
+        let mut map = self.map.borrow_mut();
+        match map.find_equiv(&val) {
             Some(&idx) => return idx,
             None => (),
         }
 
-        let new_idx = self.len();
-        let val = val.to_managed();
-        self.map.insert(val, new_idx);
-        self.vect.push(val);
+        let new_idx = self.len() as Name;
+        let val = RcStr::new(val);
+        map.insert(val.clone(), new_idx);
+        self.vect.borrow_mut().push(val);
         new_idx
     }
 
-    pub fn gensym(&self, val: &str) -> uint {
-        let new_idx = self.len();
+    pub fn gensym(&self, val: &str) -> Name {
+        let new_idx = self.len() as Name;
         // leave out of .map to avoid colliding
-        self.vect.push(val.to_managed());
+        self.vect.borrow_mut().push(RcStr::new(val));
         new_idx
     }
 
@@ -127,26 +184,43 @@ impl StrInterner {
 
     // create a gensym with the same name as an existing
     // entry.
-    pub fn gensym_copy(&self, idx : uint) -> uint {
-        let new_idx = self.len();
+    pub fn gensym_copy(&self, idx : Name) -> Name {
+        let new_idx = self.len() as Name;
         // leave out of map to avoid colliding
-        self.vect.push(self.vect[idx]);
+        let mut vect = self.vect.borrow_mut();
+        let existing = (*vect.get(idx as uint)).clone();
+        vect.push(existing);
         new_idx
     }
 
-    // this isn't "pure" in the traditional sense, because it can go from
-    // failing to returning a value as items are interned. But for typestate,
-    // where we first check a pred and then rely on it, ceasing to fail is ok.
-    pub fn get(&self, idx: uint) -> @str { self.vect[idx] }
+    pub fn get(&self, idx: Name) -> RcStr {
+        (*self.vect.borrow().get(idx as uint)).clone()
+    }
 
-    pub fn len(&self) -> uint { let vect = &*self.vect; vect.len() }
+    /// Returns this string with lifetime tied to the interner. Since
+    /// strings may never be removed from the interner, this is safe.
+    pub fn get_ref<'a>(&'a self, idx: Name) -> &'a str {
+        let vect = self.vect.borrow();
+        let s: &str = vect.get(idx as uint).as_slice();
+        unsafe {
+            cast::transmute(s)
+        }
+    }
 
-    pub fn find_equiv<Q:Hash + IterBytes + Equiv<@str>>(&self, val: &Q)
-                                                         -> Option<uint> {
-        match self.map.find_equiv(val) {
+    pub fn len(&self) -> uint {
+        self.vect.borrow().len()
+    }
+
+    pub fn find_equiv<Q:Hash + Equiv<RcStr>>(&self, val: &Q) -> Option<Name> {
+        match (*self.map.borrow()).find_equiv(val) {
             Some(v) => Some(*v),
             None => None,
         }
+    }
+
+    pub fn clear(&self) {
+        *self.map.borrow_mut() = HashMap::new();
+        *self.vect.borrow_mut() = Vec::new();
     }
 }
 
@@ -156,42 +230,46 @@ mod tests {
     #[test]
     #[should_fail]
     fn i1 () {
-        let i : Interner<@str> = Interner::new();
+        let i : Interner<RcStr> = Interner::new();
         i.get(13);
     }
 
     #[test]
     fn interner_tests () {
-        let i : Interner<@str> = Interner::new();
+        let i : Interner<RcStr> = Interner::new();
         // first one is zero:
-        assert_eq!(i.intern(@"dog"), 0);
+        assert_eq!(i.intern(RcStr::new("dog")), 0);
         // re-use gets the same entry:
-        assert_eq!(i.intern(@"dog"), 0);
+        assert_eq!(i.intern(RcStr::new("dog")), 0);
         // different string gets a different #:
-        assert_eq!(i.intern(@"cat"), 1);
-        assert_eq!(i.intern(@"cat"), 1);
+        assert_eq!(i.intern(RcStr::new("cat")), 1);
+        assert_eq!(i.intern(RcStr::new("cat")), 1);
         // dog is still at zero
-        assert_eq!(i.intern(@"dog"), 0);
+        assert_eq!(i.intern(RcStr::new("dog")), 0);
         // gensym gets 3
-        assert_eq!(i.gensym(@"zebra" ), 2);
+        assert_eq!(i.gensym(RcStr::new("zebra") ), 2);
         // gensym of same string gets new number :
-        assert_eq!(i.gensym (@"zebra" ), 3);
+        assert_eq!(i.gensym (RcStr::new("zebra") ), 3);
         // gensym of *existing* string gets new number:
-        assert_eq!(i.gensym(@"dog"), 4);
-        assert_eq!(i.get(0), @"dog");
-        assert_eq!(i.get(1), @"cat");
-        assert_eq!(i.get(2), @"zebra");
-        assert_eq!(i.get(3), @"zebra");
-        assert_eq!(i.get(4), @"dog");
+        assert_eq!(i.gensym(RcStr::new("dog")), 4);
+        assert_eq!(i.get(0), RcStr::new("dog"));
+        assert_eq!(i.get(1), RcStr::new("cat"));
+        assert_eq!(i.get(2), RcStr::new("zebra"));
+        assert_eq!(i.get(3), RcStr::new("zebra"));
+        assert_eq!(i.get(4), RcStr::new("dog"));
     }
 
     #[test]
     fn i3 () {
-        let i : Interner<@str> = Interner::prefill([@"Alan",@"Bob",@"Carol"]);
-        assert_eq!(i.get(0), @"Alan");
-        assert_eq!(i.get(1), @"Bob");
-        assert_eq!(i.get(2), @"Carol");
-        assert_eq!(i.intern(@"Bob"), 1);
+        let i : Interner<RcStr> = Interner::prefill([
+            RcStr::new("Alan"),
+            RcStr::new("Bob"),
+            RcStr::new("Carol")
+        ]);
+        assert_eq!(i.get(0), RcStr::new("Alan"));
+        assert_eq!(i.get(1), RcStr::new("Bob"));
+        assert_eq!(i.get(2), RcStr::new("Carol"));
+        assert_eq!(i.intern(RcStr::new("Bob")), 1);
     }
 
     #[test]
@@ -214,13 +292,13 @@ mod tests {
         assert_eq!(i.gensym("dog"), 4);
         // gensym tests again with gensym_copy:
         assert_eq!(i.gensym_copy(2), 5);
-        assert_eq!(i.get(5), @"zebra");
+        assert_eq!(i.get(5), RcStr::new("zebra"));
         assert_eq!(i.gensym_copy(2), 6);
-        assert_eq!(i.get(6), @"zebra");
-        assert_eq!(i.get(0), @"dog");
-        assert_eq!(i.get(1), @"cat");
-        assert_eq!(i.get(2), @"zebra");
-        assert_eq!(i.get(3), @"zebra");
-        assert_eq!(i.get(4), @"dog");
+        assert_eq!(i.get(6), RcStr::new("zebra"));
+        assert_eq!(i.get(0), RcStr::new("dog"));
+        assert_eq!(i.get(1), RcStr::new("cat"));
+        assert_eq!(i.get(2), RcStr::new("zebra"));
+        assert_eq!(i.get(3), RcStr::new("zebra"));
+        assert_eq!(i.get(4), RcStr::new("dog"));
     }
 }

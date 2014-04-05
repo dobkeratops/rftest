@@ -1,76 +1,414 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg12><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/kinds.rs.html">kinds.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
-</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c41>/*!
-</c41><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c41>The&nbsp;kind&nbsp;traits
-</c41><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c41>Rust&nbsp;types&nbsp;can&nbsp;be&nbsp;classified&nbsp;in&nbsp;various&nbsp;useful&nbsp;ways&nbsp;according&nbsp;to
-</c41><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c41>intrinsic&nbsp;properties&nbsp;of&nbsp;the&nbsp;type.&nbsp;These&nbsp;classifications,&nbsp;often&nbsp;called
-</c41><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c41>'kinds',&nbsp;are&nbsp;represented&nbsp;as&nbsp;traits.
-</c41><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c41>They&nbsp;cannot&nbsp;be&nbsp;implemented&nbsp;by&nbsp;user&nbsp;code,&nbsp;but&nbsp;are&nbsp;instead&nbsp;implemented
-</c41><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c41>by&nbsp;the&nbsp;compiler&nbsp;automatically&nbsp;for&nbsp;the&nbsp;types&nbsp;to&nbsp;which&nbsp;they&nbsp;apply.
-</c41><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c41>*/
-</c41><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c42>///&nbsp;Types&nbsp;able&nbsp;to&nbsp;be&nbsp;transferred&nbsp;across&nbsp;task&nbsp;boundaries.
-</c42><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n72620">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="send"</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c21>pub</c21><c32><a href="#24_15_refs">&nbsp;</a></c32><c32>trait</c32><c32><a href="#24_15_refs">&nbsp;Send&nbsp;</a></c32><c3>{</c3><c32><a href="#24_15_refs">
-</a></c32><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c32><a href="#24_15_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;empty.
-</c40><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c42>///&nbsp;Types&nbsp;that&nbsp;are&nbsp;either&nbsp;immutable&nbsp;or&nbsp;have&nbsp;inherited&nbsp;mutability.
-</c42><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n72621">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="freeze"</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c21>pub</c21><c32><a href="#30_17_refs">&nbsp;</a></c32><c32>trait</c32><c32><a href="#30_17_refs">&nbsp;Freeze&nbsp;</a></c32><c3>{</c3><c32><a href="#30_17_refs">
-</a></c32><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c32><a href="#30_17_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;empty.
-</c40><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c42>///&nbsp;Types&nbsp;with&nbsp;a&nbsp;constant&nbsp;size&nbsp;known&nbsp;at&nbsp;compile-time.
-</c42><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n72622">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="sized"</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c21>pub</c21><c32>&nbsp;trait&nbsp;Sized&nbsp;</c32><c3>{</c3><c32>
-</c32><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c40>//&nbsp;Empty.
-</c40><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><div class="refblock"><br/><a id="24_15_refs"><a href="#24"><c40>libstd/kinds.rs:24:15-24:15&nbsp;-trait-&nbsp;definition:<br/></c40><pr>#[lang="send"]
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../libstd/kinds.rs.html">kinds.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/*!
+</c41><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Primitive&nbsp;traits&nbsp;representing&nbsp;basic&nbsp;'kinds'&nbsp;of&nbsp;types
+</c41><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Rust&nbsp;types&nbsp;can&nbsp;be&nbsp;classified&nbsp;in&nbsp;various&nbsp;useful&nbsp;ways&nbsp;according&nbsp;to
+</c41><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[]">&nbsp;</a><c41>intrinsic&nbsp;properties&nbsp;of&nbsp;the&nbsp;type.&nbsp;These&nbsp;classifications,&nbsp;often&nbsp;called
+</c41><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c41>'kinds',&nbsp;are&nbsp;represented&nbsp;as&nbsp;traits.
+</c41><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[]">&nbsp;</a><c41>They&nbsp;cannot&nbsp;be&nbsp;implemented&nbsp;by&nbsp;user&nbsp;code,&nbsp;but&nbsp;are&nbsp;instead&nbsp;implemented
+</c41><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[]">&nbsp;</a><c41>by&nbsp;the&nbsp;compiler&nbsp;automatically&nbsp;for&nbsp;the&nbsp;types&nbsp;to&nbsp;which&nbsp;they&nbsp;apply.
+</c41><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[]">&nbsp;</a><c41>*/
+</c41><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Types&nbsp;able&nbsp;to&nbsp;be&nbsp;transferred&nbsp;across&nbsp;task&nbsp;boundaries.
+</c42><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[74367]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="send"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c32><a href="#24_15_refs">&nbsp;</a></c32><c32>trait</c32><c32><a href="#24_15_refs">&nbsp;Send&nbsp;</a></c32><c3>{</c3><c32><a href="#24_15_refs">
+</a></c32><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c32><a href="#24_15_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;empty.
+</c40><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Types&nbsp;with&nbsp;a&nbsp;constant&nbsp;size&nbsp;known&nbsp;at&nbsp;compile-time.
+</c42><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[74368]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="sized"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c32>&nbsp;trait&nbsp;Sized&nbsp;</c32><c3>{</c3><c32>
+</c32><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[]">&nbsp;</a><c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c40>//&nbsp;Empty.
+</c40><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Types&nbsp;that&nbsp;can&nbsp;be&nbsp;copied&nbsp;by&nbsp;simply&nbsp;copying&nbsp;bits&nbsp;(i.e.&nbsp;`memcpy`).
+</c42><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;The&nbsp;name&nbsp;"POD"&nbsp;stands&nbsp;for&nbsp;"Plain&nbsp;Old&nbsp;Data"&nbsp;and&nbsp;is&nbsp;borrowed&nbsp;from&nbsp;C++.
+</c42><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[74369]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="pod"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c32><a href="#38_14_refs">&nbsp;</a></c32><c32>trait</c32><c32><a href="#38_14_refs">&nbsp;Pod&nbsp;</a></c32><c3>{</c3><c32><a href="#38_14_refs">
+</a></c32><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[]">&nbsp;</a><c32><a href="#38_14_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;Empty.
+</c40><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Types&nbsp;that&nbsp;can&nbsp;be&nbsp;safely&nbsp;shared&nbsp;between&nbsp;tasks&nbsp;when&nbsp;aliased.
+</c42><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;The&nbsp;precise&nbsp;definition&nbsp;is:&nbsp;a&nbsp;type&nbsp;`T`&nbsp;is&nbsp;`Share`&nbsp;if&nbsp;`&amp;T`&nbsp;is
+</c42><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;thread-safe.&nbsp;In&nbsp;other&nbsp;words,&nbsp;there&nbsp;is&nbsp;no&nbsp;possibility&nbsp;of&nbsp;data&nbsp;races
+</c42><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;when&nbsp;passing&nbsp;`&amp;T`&nbsp;references&nbsp;between&nbsp;tasks.
+</c42><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;As&nbsp;one&nbsp;would&nbsp;expect,&nbsp;primitive&nbsp;types&nbsp;like&nbsp;`u8`&nbsp;and&nbsp;`f64`&nbsp;are&nbsp;all
+</c42><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;`Share`,&nbsp;and&nbsp;so&nbsp;are&nbsp;simple&nbsp;aggregate&nbsp;types&nbsp;containing&nbsp;them&nbsp;(like
+</c42><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;tuples,&nbsp;structs&nbsp;and&nbsp;enums).&nbsp;More&nbsp;instances&nbsp;of&nbsp;basic&nbsp;`Share`&nbsp;types
+</c42><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;include&nbsp;"immutable"&nbsp;types&nbsp;like&nbsp;`&amp;T`&nbsp;and&nbsp;those&nbsp;with&nbsp;simple
+</c42><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;inherited&nbsp;mutability,&nbsp;such&nbsp;as&nbsp;`~T`,&nbsp;`Vec&lt;T&gt;`&nbsp;and&nbsp;most&nbsp;other
+</c42><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;collection&nbsp;types.&nbsp;(Generic&nbsp;parameters&nbsp;need&nbsp;to&nbsp;be&nbsp;`Share`&nbsp;for&nbsp;their
+</c42><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;container&nbsp;to&nbsp;be&nbsp;`Share`.)
+</c42><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;A&nbsp;somewhat&nbsp;surprising&nbsp;consequence&nbsp;of&nbsp;the&nbsp;definition&nbsp;is&nbsp;`&amp;mut&nbsp;T`&nbsp;is
+</c42><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;`Share`&nbsp;(if&nbsp;`T`&nbsp;is&nbsp;`Share`)&nbsp;even&nbsp;though&nbsp;it&nbsp;seems&nbsp;that&nbsp;it&nbsp;might
+</c42><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;provide&nbsp;unsynchronised&nbsp;mutation.&nbsp;The&nbsp;trick&nbsp;is&nbsp;a&nbsp;mutable&nbsp;reference
+</c42><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;stored&nbsp;in&nbsp;an&nbsp;aliasable&nbsp;reference&nbsp;(that&nbsp;is,&nbsp;`&amp;&nbsp;&amp;mut&nbsp;T`)&nbsp;becomes
+</c42><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;read-only,&nbsp;as&nbsp;if&nbsp;it&nbsp;were&nbsp;a&nbsp;`&amp;&nbsp;&amp;T`,&nbsp;hence&nbsp;there&nbsp;is&nbsp;no&nbsp;risk&nbsp;of&nbsp;a&nbsp;data
+</c42><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;race.
+</c42><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Types&nbsp;that&nbsp;are&nbsp;not&nbsp;`Share`&nbsp;are&nbsp;those&nbsp;that&nbsp;have&nbsp;"interior
+</c42><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;mutability"&nbsp;in&nbsp;a&nbsp;non-thread-safe&nbsp;way,&nbsp;such&nbsp;as&nbsp;`Cell`&nbsp;and&nbsp;`RefCell`
+</c42><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;in&nbsp;`std::cell`.&nbsp;These&nbsp;types&nbsp;allow&nbsp;for&nbsp;mutation&nbsp;of&nbsp;their&nbsp;contents
+</c42><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;even&nbsp;when&nbsp;in&nbsp;an&nbsp;immutable,&nbsp;aliasable&nbsp;slot,&nbsp;e.g.&nbsp;the&nbsp;contents&nbsp;of
+</c42><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;`&amp;Cell&lt;T&gt;`&nbsp;can&nbsp;be&nbsp;`.set`,&nbsp;and&nbsp;do&nbsp;not&nbsp;ensure&nbsp;data&nbsp;races&nbsp;are
+</c42><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;impossible,&nbsp;hence&nbsp;they&nbsp;cannot&nbsp;be&nbsp;`Share`.&nbsp;A&nbsp;higher&nbsp;level&nbsp;example
+</c42><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;of&nbsp;a&nbsp;non-`Share`&nbsp;type&nbsp;is&nbsp;the&nbsp;reference&nbsp;counted&nbsp;pointer
+</c42><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;`std::rc::Rc`,&nbsp;because&nbsp;any&nbsp;reference&nbsp;`&amp;Rc&lt;T&gt;`&nbsp;can&nbsp;clone&nbsp;a&nbsp;new
+</c42><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;reference,&nbsp;which&nbsp;modifies&nbsp;the&nbsp;reference&nbsp;counts&nbsp;in&nbsp;a&nbsp;non-atomic
+</c42><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;way.
+</c42><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;For&nbsp;cases&nbsp;when&nbsp;one&nbsp;does&nbsp;need&nbsp;thread-safe&nbsp;interior&nbsp;mutability,
+</c42><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;types&nbsp;like&nbsp;the&nbsp;atomics&nbsp;in&nbsp;`std::sync`&nbsp;and&nbsp;`Mutex`&nbsp;&amp;&nbsp;`RWLock`&nbsp;in
+</c42><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;the&nbsp;`sync`&nbsp;crate&nbsp;do&nbsp;ensure&nbsp;that&nbsp;any&nbsp;mutation&nbsp;cannot&nbsp;cause&nbsp;data
+</c42><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;races.&nbsp;&nbsp;Hence&nbsp;these&nbsp;types&nbsp;are&nbsp;`Share`.
+</c42><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Users&nbsp;writing&nbsp;their&nbsp;own&nbsp;types&nbsp;with&nbsp;interior&nbsp;mutability&nbsp;(or&nbsp;anything
+</c42><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;else&nbsp;that&nbsp;is&nbsp;not&nbsp;thread-safe)&nbsp;should&nbsp;use&nbsp;the&nbsp;`NoShare`&nbsp;marker&nbsp;type
+</c42><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;(from&nbsp;`std::kinds::marker`)&nbsp;to&nbsp;ensure&nbsp;that&nbsp;the&nbsp;compiler&nbsp;doesn't
+</c42><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;consider&nbsp;the&nbsp;user-defined&nbsp;type&nbsp;to&nbsp;be&nbsp;`Share`.&nbsp;&nbsp;Any&nbsp;types&nbsp;with
+</c42><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;interior&nbsp;mutability&nbsp;must&nbsp;also&nbsp;use&nbsp;the&nbsp;`std::ty::Unsafe`&nbsp;wrapper
+</c42><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;around&nbsp;the&nbsp;value(s)&nbsp;which&nbsp;can&nbsp;be&nbsp;mutated&nbsp;when&nbsp;behind&nbsp;a&nbsp;`&amp;`
+</c42><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;reference;&nbsp;not&nbsp;doing&nbsp;this&nbsp;is&nbsp;undefined&nbsp;behaviour&nbsp;(for&nbsp;example,
+</c42><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;`transmute`-ing&nbsp;from&nbsp;`&amp;T`&nbsp;to&nbsp;`&amp;mut&nbsp;T`&nbsp;is&nbsp;illegal).
+</c42><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a id="n[74370]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="share"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c32>&nbsp;trait&nbsp;Share&nbsp;</c32><c3>{</c3><c32>
+</c32><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a id="n[]">&nbsp;</a><c32>&nbsp;&nbsp;&nbsp;&nbsp;</c32><c40>//&nbsp;Empty
+</c40><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Marker&nbsp;types&nbsp;are&nbsp;special&nbsp;types&nbsp;that&nbsp;are&nbsp;used&nbsp;with&nbsp;unsafe&nbsp;code&nbsp;to
+</c42><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;inform&nbsp;the&nbsp;compiler&nbsp;of&nbsp;special&nbsp;constraints.&nbsp;Marker&nbsp;types&nbsp;should
+</c42><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;only&nbsp;be&nbsp;needed&nbsp;when&nbsp;you&nbsp;are&nbsp;creating&nbsp;an&nbsp;abstraction&nbsp;that&nbsp;is
+</c42><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;implemented&nbsp;using&nbsp;unsafe&nbsp;code.&nbsp;In&nbsp;that&nbsp;case,&nbsp;you&nbsp;may&nbsp;want&nbsp;to&nbsp;embed
+</c42><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a id="n[74371]">&nbsp;</a><c42>///&nbsp;some&nbsp;of&nbsp;the&nbsp;marker&nbsp;types&nbsp;below&nbsp;into&nbsp;your&nbsp;type.
+</c42><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;marker&nbsp;</c38><c3>{</c3><c38>
+</c38><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n[]">&nbsp;</a><c38>
+</c38><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;A&nbsp;marker&nbsp;type&nbsp;whose&nbsp;type&nbsp;parameter&nbsp;`T`&nbsp;is&nbsp;considered&nbsp;to&nbsp;be
+</c42><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;covariant&nbsp;with&nbsp;respect&nbsp;to&nbsp;the&nbsp;type&nbsp;itself.&nbsp;This&nbsp;is&nbsp;(typically)
+</c42><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;used&nbsp;to&nbsp;indicate&nbsp;that&nbsp;an&nbsp;instance&nbsp;of&nbsp;the&nbsp;type&nbsp;`T`&nbsp;is&nbsp;being&nbsp;stored
+</c42><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;into&nbsp;memory&nbsp;and&nbsp;read&nbsp;from,&nbsp;even&nbsp;though&nbsp;that&nbsp;may&nbsp;not&nbsp;be&nbsp;apparent.
+</c42><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;For&nbsp;more&nbsp;information&nbsp;about&nbsp;variance,&nbsp;refer&nbsp;to&nbsp;this&nbsp;Wikipedia
+</c42><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;article&nbsp;&lt;http://en.wikipedia.org/wiki/Variance_%28computer_science%29&gt;.
+</c42><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;*Note:*&nbsp;It&nbsp;is&nbsp;very&nbsp;unusual&nbsp;to&nbsp;have&nbsp;to&nbsp;add&nbsp;a&nbsp;covariant&nbsp;constraint.
+</c42><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;If&nbsp;you&nbsp;are&nbsp;not&nbsp;sure,&nbsp;you&nbsp;probably&nbsp;want&nbsp;to&nbsp;use&nbsp;`InvariantType`.
+</c42><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;#&nbsp;Example
+</c42><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;Given&nbsp;a&nbsp;struct&nbsp;`S`&nbsp;that&nbsp;includes&nbsp;a&nbsp;type&nbsp;parameter&nbsp;`T`
+</c42><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;but&nbsp;does&nbsp;not&nbsp;actually&nbsp;*reference*&nbsp;that&nbsp;type&nbsp;parameter:
+</c42><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;```ignore
+</c42><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;use&nbsp;std::cast;
+</c42><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;struct&nbsp;S&lt;T&gt;&nbsp;{&nbsp;x:&nbsp;*()&nbsp;}
+</c42><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;fn&nbsp;get&lt;T&gt;(s:&nbsp;&amp;S&lt;T&gt;)&nbsp;-&gt;&nbsp;T&nbsp;{
+</c42><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;{
+</c42><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;x:&nbsp;*T&nbsp;=&nbsp;cast::transmute(s.x);
+</c42><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*x
+</c42><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;&nbsp;&nbsp;&nbsp;}
+</c42><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;}
+</c42><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;The&nbsp;type&nbsp;system&nbsp;would&nbsp;currently&nbsp;infer&nbsp;that&nbsp;the&nbsp;value&nbsp;of
+</c42><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;the&nbsp;type&nbsp;parameter&nbsp;`T`&nbsp;is&nbsp;irrelevant,&nbsp;and&nbsp;hence&nbsp;a&nbsp;`S&lt;int&gt;`&nbsp;is
+</c42><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;a&nbsp;subtype&nbsp;of&nbsp;`S&lt;~[int]&gt;`&nbsp;(or,&nbsp;for&nbsp;that&nbsp;matter,&nbsp;`S&lt;U&gt;`&nbsp;for
+</c42><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;any&nbsp;`U`).&nbsp;But&nbsp;this&nbsp;is&nbsp;incorrect&nbsp;because&nbsp;`get()`&nbsp;converts&nbsp;the
+</c42><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;`*()`&nbsp;into&nbsp;a&nbsp;`*T`&nbsp;and&nbsp;reads&nbsp;from&nbsp;it.&nbsp;Therefore,&nbsp;we&nbsp;should&nbsp;include&nbsp;the
+</c42><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;a&nbsp;marker&nbsp;field&nbsp;`CovariantType&lt;T&gt;`&nbsp;to&nbsp;inform&nbsp;the&nbsp;type&nbsp;checker&nbsp;that
+</c42><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;`S&lt;T&gt;`&nbsp;is&nbsp;a&nbsp;subtype&nbsp;of&nbsp;`S&lt;U&gt;`&nbsp;if&nbsp;`T`&nbsp;is&nbsp;a&nbsp;subtype&nbsp;of&nbsp;`U`
+</c42><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;(for&nbsp;example,&nbsp;`S&lt;&amp;'static&nbsp;int&gt;`&nbsp;is&nbsp;a&nbsp;subtype&nbsp;of&nbsp;`S&lt;&amp;'a&nbsp;int&gt;`
+</c42><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;for&nbsp;some&nbsp;lifetime&nbsp;`'a`,&nbsp;but&nbsp;not&nbsp;the&nbsp;other&nbsp;way&nbsp;around).
+</c42><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>lang="covariant_type"</c38><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><a id="n[74402, 74443, 74375, 74399, 74422, 74394, 74440, 74434, 74397, 74442, 74380, 74449, 74396, 74437, 74390, 74400, 74436, 74415, 74445, 74418, 74404, 74395, 74392, 74417, 74431, 74411, 74427, 74447, 74393, 74446, 74450, 74438, 74378, 74426, 74382, 74424, 74386, 74383, 74441, 74405, 74425, 74444, 74423, 74428, 74448, 74421, 74419, 74377, 74413, 74414, 74391, 74408, 74420, 74388]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>deriving</c38><c4>(</c4><c5><a href="#138_15_refs">Eq</a></c5><c3>,</c3><c8><a href="c=0 n=74376">Clone</a></c8><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><a id="n[74372]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c31><a href="#139_4_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#139_4_refs">&nbsp;CovariantType</a></c31><c5><a href="#139_4_refs">&lt;T&gt;</a></c5><c31>;
+</c31><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><a id="n[]">&nbsp;</a><c38>
+</c38><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;A&nbsp;marker&nbsp;type&nbsp;whose&nbsp;type&nbsp;parameter&nbsp;`T`&nbsp;is&nbsp;considered&nbsp;to&nbsp;be
+</c42><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;contravariant&nbsp;with&nbsp;respect&nbsp;to&nbsp;the&nbsp;type&nbsp;itself.&nbsp;This&nbsp;is&nbsp;(typically)
+</c42><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;used&nbsp;to&nbsp;indicate&nbsp;that&nbsp;an&nbsp;instance&nbsp;of&nbsp;the&nbsp;type&nbsp;`T`&nbsp;will&nbsp;be&nbsp;consumed
+</c42><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;(but&nbsp;not&nbsp;read&nbsp;from),&nbsp;even&nbsp;though&nbsp;that&nbsp;may&nbsp;not&nbsp;be&nbsp;apparent.
+</c42><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;For&nbsp;more&nbsp;information&nbsp;about&nbsp;variance,&nbsp;refer&nbsp;to&nbsp;this&nbsp;Wikipedia
+</c42><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;article&nbsp;&lt;http://en.wikipedia.org/wiki/Variance_%28computer_science%29&gt;.
+</c42><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;*Note:*&nbsp;It&nbsp;is&nbsp;very&nbsp;unusual&nbsp;to&nbsp;have&nbsp;to&nbsp;add&nbsp;a&nbsp;contravariant&nbsp;constraint.
+</c42><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;If&nbsp;you&nbsp;are&nbsp;not&nbsp;sure,&nbsp;you&nbsp;probably&nbsp;want&nbsp;to&nbsp;use&nbsp;`InvariantType`.
+</c42><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;#&nbsp;Example
+</c42><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;Given&nbsp;a&nbsp;struct&nbsp;`S`&nbsp;that&nbsp;includes&nbsp;a&nbsp;type&nbsp;parameter&nbsp;`T`
+</c42><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;but&nbsp;does&nbsp;not&nbsp;actually&nbsp;*reference*&nbsp;that&nbsp;type&nbsp;parameter:
+</c42><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;use&nbsp;std::cast;
+</c42><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;struct&nbsp;S&lt;T&gt;&nbsp;{&nbsp;x:&nbsp;*()&nbsp;}
+</c42><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;fn&nbsp;get&lt;T&gt;(s:&nbsp;&amp;S&lt;T&gt;,&nbsp;v:&nbsp;T)&nbsp;{
+</c42><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;&nbsp;&nbsp;&nbsp;unsafe&nbsp;{
+</c42><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;x:&nbsp;fn(T)&nbsp;=&nbsp;cast::transmute(s.x);
+</c42><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x(v)
+</c42><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;&nbsp;&nbsp;&nbsp;}
+</c42><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;}
+</c42><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;The&nbsp;type&nbsp;system&nbsp;would&nbsp;currently&nbsp;infer&nbsp;that&nbsp;the&nbsp;value&nbsp;of
+</c42><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;the&nbsp;type&nbsp;parameter&nbsp;`T`&nbsp;is&nbsp;irrelevant,&nbsp;and&nbsp;hence&nbsp;a&nbsp;`S&lt;int&gt;`&nbsp;is
+</c42><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;a&nbsp;subtype&nbsp;of&nbsp;`S&lt;~[int]&gt;`&nbsp;(or,&nbsp;for&nbsp;that&nbsp;matter,&nbsp;`S&lt;U&gt;`&nbsp;for
+</c42><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;any&nbsp;`U`).&nbsp;But&nbsp;this&nbsp;is&nbsp;incorrect&nbsp;because&nbsp;`get()`&nbsp;converts&nbsp;the
+</c42><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;`*()`&nbsp;into&nbsp;a&nbsp;`fn(T)`&nbsp;and&nbsp;then&nbsp;passes&nbsp;a&nbsp;value&nbsp;of&nbsp;type&nbsp;`T`&nbsp;to&nbsp;it.
+</c42><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;Supplying&nbsp;a&nbsp;`ContravariantType`&nbsp;marker&nbsp;would&nbsp;correct&nbsp;the
+</c42><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;problem,&nbsp;because&nbsp;it&nbsp;would&nbsp;mark&nbsp;`S`&nbsp;so&nbsp;that&nbsp;`S&lt;T&gt;`&nbsp;is&nbsp;only&nbsp;a
+</c42><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;subtype&nbsp;of&nbsp;`S&lt;U&gt;`&nbsp;if&nbsp;`U`&nbsp;is&nbsp;a&nbsp;subtype&nbsp;of&nbsp;`T`;&nbsp;given&nbsp;that&nbsp;the
+</c42><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;function&nbsp;requires&nbsp;arguments&nbsp;of&nbsp;type&nbsp;`T`,&nbsp;it&nbsp;must&nbsp;also&nbsp;accept
+</c42><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;arguments&nbsp;of&nbsp;type&nbsp;`U`,&nbsp;hence&nbsp;such&nbsp;a&nbsp;conversion&nbsp;is&nbsp;safe.
+</c42><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>lang="contravariant_type"</c38><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><a id="n[74476, 74493, 74522, 74517, 74462, 74475, 74525, 74506, 74519, 74484, 74459, 74513, 74515, 74461, 74472, 74481, 74478, 74496, 74479, 74521, 74502, 74470, 74490, 74524, 74483, 74494, 74505, 74528, 74510, 74500, 74529, 74456, 74499, 74457, 74516, 74523, 74497, 74503, 74471, 74527, 74501, 74469, 74454, 74492, 74498, 74487, 74507, 74473, 74465, 74504, 74474, 74467, 74526, 74520]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>deriving</c38><c4>(</c4><c22><a href="c=0 n=74452">Eq</a></c22><c3>,</c3><c8><a href="c=0 n=74455">Clone</a></c8><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><a id="n[74451]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c31><a href="#182_4_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#182_4_refs">&nbsp;ContravariantType</a></c31><c5><a href="#182_4_refs">&lt;T&gt;</a></c5><c31>;
+</c31><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><a id="n[]">&nbsp;</a><c38>
+</c38><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;A&nbsp;marker&nbsp;type&nbsp;whose&nbsp;type&nbsp;parameter&nbsp;`T`&nbsp;is&nbsp;considered&nbsp;to&nbsp;be
+</c42><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;invariant&nbsp;with&nbsp;respect&nbsp;to&nbsp;the&nbsp;type&nbsp;itself.&nbsp;This&nbsp;is&nbsp;(typically)
+</c42><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;used&nbsp;to&nbsp;indicate&nbsp;that&nbsp;instances&nbsp;of&nbsp;the&nbsp;type&nbsp;`T`&nbsp;may&nbsp;be&nbsp;read&nbsp;or
+</c42><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;written,&nbsp;even&nbsp;though&nbsp;that&nbsp;may&nbsp;not&nbsp;be&nbsp;apparent.
+</c42><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;For&nbsp;more&nbsp;information&nbsp;about&nbsp;variance,&nbsp;refer&nbsp;to&nbsp;this&nbsp;Wikipedia
+</c42><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;article&nbsp;&lt;http://en.wikipedia.org/wiki/Variance_%28computer_science%29&gt;.
+</c42><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;#&nbsp;Example
+</c42><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;The&nbsp;Cell&nbsp;type&nbsp;is&nbsp;an&nbsp;example&nbsp;which&nbsp;uses&nbsp;unsafe&nbsp;code&nbsp;to&nbsp;achieve
+</c42><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;"interior"&nbsp;mutability:
+</c42><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;pub&nbsp;struct&nbsp;Cell&lt;T&gt;&nbsp;{&nbsp;priv&nbsp;value:&nbsp;T&nbsp;}
+</c42><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{}
+</c42><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;The&nbsp;type&nbsp;system&nbsp;would&nbsp;infer&nbsp;that&nbsp;`value`&nbsp;is&nbsp;only&nbsp;read&nbsp;here&nbsp;and
+</c42><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;never&nbsp;written,&nbsp;but&nbsp;in&nbsp;fact&nbsp;`Cell`&nbsp;uses&nbsp;unsafe&nbsp;code&nbsp;to&nbsp;achieve
+</c42><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;interior&nbsp;mutability.
+</c42><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>lang="invariant_type"</c38><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><a id="n[74560, 74581, 74575, 74572, 74585, 74578, 74541, 74552, 74582, 74584, 74583, 74608, 74536, 74546, 74555, 74607, 74595, 74573, 74602, 74605, 74589, 74562, 74600, 74579, 74535, 74566, 74538, 74549, 74594, 74550, 74563, 74554, 74533, 74576, 74598, 74586, 74580, 74548, 74577, 74571, 74558, 74540, 74603, 74596, 74601, 74569, 74553, 74557, 74604, 74592, 74551, 74599, 74544, 74606]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>deriving</c38><c4>(</c4><c12><a href="c=0 n=74556">Eq</a></c12><c3>,</c3><c20><a href="#206_18_refs">Clone</a></c20><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><a id="n[74530]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c31><a href="#207_4_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#207_4_refs">&nbsp;InvariantType</a></c31><c5><a href="#207_4_refs">&lt;T&gt;</a></c5><c31>;
+</c31><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><a id="n[]">&nbsp;</a><c38>
+</c38><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;As&nbsp;`CovariantType`,&nbsp;but&nbsp;for&nbsp;lifetime&nbsp;parameters.&nbsp;Using
+</c42><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;`CovariantLifetime&lt;'a&gt;`&nbsp;indicates&nbsp;that&nbsp;it&nbsp;is&nbsp;ok&nbsp;to&nbsp;substitute
+</c42><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;a&nbsp;*longer*&nbsp;lifetime&nbsp;for&nbsp;`'a`&nbsp;than&nbsp;the&nbsp;one&nbsp;you&nbsp;originally
+</c42><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;started&nbsp;with&nbsp;(e.g.,&nbsp;you&nbsp;could&nbsp;convert&nbsp;any&nbsp;lifetime&nbsp;`'foo`&nbsp;to
+</c42><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;`'static`).&nbsp;You&nbsp;almost&nbsp;certainly&nbsp;want&nbsp;`ContravariantLifetime`
+</c42><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;instead,&nbsp;or&nbsp;possibly&nbsp;`InvariantLifetime`.&nbsp;The&nbsp;only&nbsp;case&nbsp;where
+</c42><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;it&nbsp;would&nbsp;be&nbsp;appropriate&nbsp;is&nbsp;that&nbsp;you&nbsp;have&nbsp;a&nbsp;(type-casted,&nbsp;and
+</c42><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;hence&nbsp;hidden&nbsp;from&nbsp;the&nbsp;type&nbsp;system)&nbsp;function&nbsp;pointer&nbsp;with&nbsp;a
+</c42><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;signature&nbsp;like&nbsp;`fn(&amp;'a&nbsp;T)`&nbsp;(and&nbsp;no&nbsp;other&nbsp;uses&nbsp;of&nbsp;`'a`).&nbsp;In
+</c42><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;this&nbsp;case,&nbsp;it&nbsp;is&nbsp;ok&nbsp;to&nbsp;substitute&nbsp;a&nbsp;larger&nbsp;lifetime&nbsp;for&nbsp;`'a`
+</c42><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;(e.g.,&nbsp;`fn(&amp;'static&nbsp;T)`),&nbsp;because&nbsp;the&nbsp;function&nbsp;is&nbsp;only
+</c42><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;becoming&nbsp;more&nbsp;selective&nbsp;in&nbsp;terms&nbsp;of&nbsp;what&nbsp;it&nbsp;accepts&nbsp;as
+</c42><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;argument.
+</c42><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;For&nbsp;more&nbsp;information&nbsp;about&nbsp;variance,&nbsp;refer&nbsp;to&nbsp;this&nbsp;Wikipedia
+</c42><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;article&nbsp;&lt;http://en.wikipedia.org/wiki/Variance_%28computer_science%29&gt;.
+</c42><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>lang="covariant_lifetime"</c38><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><a id="n[74612, 74646, 74648, 74630, 74645, 74618, 74675, 74629, 74659, 74631, 74676, 74671, 74633, 74673, 74667, 74640, 74668, 74672, 74617, 74627, 74653, 74655, 74656, 74654, 74624, 74644, 74636, 74621, 74658, 74679, 74637, 74614, 74670, 74680, 74651, 74649, 74652, 74674, 74662, 74678, 74666, 74650, 74677, 74657, 74628, 74626, 74625]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>deriving</c38><c4>(</c4><c21><a href="c=0 n=74610">Eq</a></c21><c3>,</c3><c22><a href="../libstd/kinds.rs.html#226">Clone</a></c22><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><a id="n[74609]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c31><a href="#227_4_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#227_4_refs">&nbsp;CovariantLifetime</a></c31><c5><a href="#227_4_refs">&lt;'a&gt;</a></c5><c31>;
+</c31><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a><a id="n[]">&nbsp;</a><c38>
+</c38><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;As&nbsp;`ContravariantType`,&nbsp;but&nbsp;for&nbsp;lifetime&nbsp;parameters.&nbsp;Using
+</c42><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;`ContravariantLifetime&lt;'a&gt;`&nbsp;indicates&nbsp;that&nbsp;it&nbsp;is&nbsp;ok&nbsp;to
+</c42><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;substitute&nbsp;a&nbsp;*shorter*&nbsp;lifetime&nbsp;for&nbsp;`'a`&nbsp;than&nbsp;the&nbsp;one&nbsp;you
+</c42><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;originally&nbsp;started&nbsp;with&nbsp;(e.g.,&nbsp;you&nbsp;could&nbsp;convert&nbsp;`'static`&nbsp;to
+</c42><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;any&nbsp;lifetime&nbsp;`'foo`).&nbsp;This&nbsp;is&nbsp;appropriate&nbsp;for&nbsp;cases&nbsp;where&nbsp;you
+</c42><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;have&nbsp;an&nbsp;unsafe&nbsp;pointer&nbsp;that&nbsp;is&nbsp;actually&nbsp;a&nbsp;pointer&nbsp;into&nbsp;some
+</c42><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;memory&nbsp;with&nbsp;lifetime&nbsp;`'a`,&nbsp;and&nbsp;thus&nbsp;you&nbsp;want&nbsp;to&nbsp;limit&nbsp;the
+</c42><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;lifetime&nbsp;of&nbsp;your&nbsp;data&nbsp;structure&nbsp;to&nbsp;`'a`.&nbsp;An&nbsp;example&nbsp;of&nbsp;where
+</c42><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;this&nbsp;is&nbsp;used&nbsp;is&nbsp;the&nbsp;iterator&nbsp;for&nbsp;vectors.
+</c42><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///
+</c42><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;For&nbsp;more&nbsp;information&nbsp;about&nbsp;variance,&nbsp;refer&nbsp;to&nbsp;this&nbsp;Wikipedia
+</c42><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;article&nbsp;&lt;http://en.wikipedia.org/wiki/Variance_%28computer_science%29&gt;.
+</c42><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>lang="contravariant_lifetime"</c38><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a><a id="n[74721, 74725, 74716, 74722, 74700, 74734, 74718, 74728, 74699, 74746, 74740, 74745, 74749, 74701, 74717, 74703, 74731, 74743, 74698, 74693, 74705, 74748, 74712, 74684, 74723, 74730, 74747, 74744, 74686, 74709, 74724, 74702, 74738, 74729, 74696, 74727, 74742, 74739, 74689, 74720, 74726, 74750, 74708, 74752, 74697, 74751, 74690]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>deriving</c38><c4>(</c4><c21><a href="../libstd/kinds.rs.html#243">Eq</a></c21><c3>,</c3><c18><a href="../libstd/kinds.rs.html#243">Clone</a></c18><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><a id="n[74681]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c31><a href="#243_4_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#243_4_refs">&nbsp;ContravariantLifetime</a></c31><c5><a href="#243_4_refs">&lt;'a&gt;</a></c5><c31>;
+</c31><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><a id="n[]">&nbsp;</a><c38>
+</c38><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;As&nbsp;`InvariantType`,&nbsp;but&nbsp;for&nbsp;lifetime&nbsp;parameters.&nbsp;Using
+</c42><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;`InvariantLifetime&lt;'a&gt;`&nbsp;indicates&nbsp;that&nbsp;it&nbsp;is&nbsp;not&nbsp;ok&nbsp;to
+</c42><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;substitute&nbsp;any&nbsp;other&nbsp;lifetime&nbsp;for&nbsp;`'a`&nbsp;besides&nbsp;its&nbsp;original
+</c42><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;value.&nbsp;This&nbsp;is&nbsp;appropriate&nbsp;for&nbsp;cases&nbsp;where&nbsp;you&nbsp;have&nbsp;an&nbsp;unsafe
+</c42><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;pointer&nbsp;that&nbsp;is&nbsp;actually&nbsp;a&nbsp;pointer&nbsp;into&nbsp;memory&nbsp;with&nbsp;lifetime&nbsp;`'a`,
+</c42><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;and&nbsp;this&nbsp;pointer&nbsp;is&nbsp;itself&nbsp;stored&nbsp;in&nbsp;an&nbsp;inherently&nbsp;mutable
+</c42><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;location&nbsp;(such&nbsp;as&nbsp;a&nbsp;`Cell`).
+</c42><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>lang="invariant_lifetime"</c38><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><a id="n[74771, 74801, 74756, 74817, 74800, 74781, 74812, 74810, 74799, 74811, 74773, 74770, 74761, 74793, 74814, 74768, 74816, 74790, 74774, 74806, 74795, 74775, 74821, 74777, 74798, 74780, 74772, 74797, 74822, 74824, 74762, 74794, 74769, 74819, 74784, 74802, 74820, 74818, 74803, 74758, 74788, 74815, 74765, 74823, 74789, 74792, 74796]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>deriving</c38><c4>(</c4><c20><a href="c=0 n=74754">Eq</a></c20><c3>,</c3><c20><a href="#253_18_refs">Clone</a></c20><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><a id="n[74753]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c31><a href="#254_4_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#254_4_refs">&nbsp;InvariantLifetime</a></c31><c5><a href="#254_4_refs">&lt;'a&gt;</a></c5><c31>;
+</c31><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><a id="n[]">&nbsp;</a><c38>
+</c38><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;A&nbsp;type&nbsp;which&nbsp;is&nbsp;considered&nbsp;"not&nbsp;sendable",&nbsp;meaning&nbsp;that&nbsp;it&nbsp;cannot
+</c42><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;be&nbsp;safely&nbsp;sent&nbsp;between&nbsp;tasks,&nbsp;even&nbsp;if&nbsp;it&nbsp;is&nbsp;owned.&nbsp;This&nbsp;is
+</c42><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;typically&nbsp;embedded&nbsp;in&nbsp;other&nbsp;types,&nbsp;such&nbsp;as&nbsp;`Gc`,&nbsp;to&nbsp;ensure&nbsp;that
+</c42><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;their&nbsp;instances&nbsp;remain&nbsp;thread-local.
+</c42><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>lang="no_send_bound"</c38><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><a id="n[74836, 74866, 74864, 74885, 74854, 74828, 74834, 74850, 74884, 74883, 74878, 74888, 74840, 74830, 74865, 74861, 74863, 74860, 74879, 74868, 74844, 74881, 74855, 74876, 74867, 74842, 74853, 74887, 74847, 74880, 74841, 74831, 74827, 74875, 74857, 74837, 74871, 74858, 74846, 74859, 74862, 74839, 74874, 74843, 74882, 74886, 74838]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>deriving</c38><c4>(</c4><c12><a href="c=0 n=74826">Eq</a></c12><c3>,</c3><c26><a href="../libstd/kinds.rs.html#261">Clone</a></c26><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><a id="n[74825]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c31><a href="#262_4_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#262_4_refs">&nbsp;NoSend</a></c31><c31>;
+</c31><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><a id="n[]">&nbsp;</a><c38>
+</c38><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;A&nbsp;type&nbsp;which&nbsp;is&nbsp;considered&nbsp;"not&nbsp;POD",&nbsp;meaning&nbsp;that&nbsp;it&nbsp;is&nbsp;not
+</c42><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;implicitly&nbsp;copyable.&nbsp;This&nbsp;is&nbsp;typically&nbsp;embedded&nbsp;in&nbsp;other&nbsp;types&nbsp;to
+</c42><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;ensure&nbsp;that&nbsp;they&nbsp;are&nbsp;never&nbsp;copied,&nbsp;even&nbsp;if&nbsp;they&nbsp;lack&nbsp;a&nbsp;destructor.
+</c42><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>lang="no_pod_bound"</c38><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><a id="n[74950, 74926, 74927, 74895, 74917, 74901, 74949, 74906, 74919, 74938, 74952, 74903, 74914, 74924, 74911, 74925, 74904, 74892, 74935, 74923, 74940, 74891, 74931, 74929, 74921, 74898, 74900, 74932, 74930, 74918, 74922, 74939, 74905, 74948, 74944, 74946, 74943, 74894, 74942, 74951, 74910, 74928, 74947, 74945, 74907, 74908, 74902]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>deriving</c38><c4>(</c4><c1><a href="../libstd/cmp.rs.html#36">Eq</a></c1><c3>,</c3><c26><a href="../libstd/kinds.rs.html#268">Clone</a></c26><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><a id="n[74889]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c31><a href="#269_4_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#269_4_refs">&nbsp;NoPod</a></c31><c31>;
+</c31><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a><a id="n[]">&nbsp;</a><c38>
+</c38><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;A&nbsp;type&nbsp;which&nbsp;is&nbsp;considered&nbsp;"not&nbsp;sharable",&nbsp;meaning&nbsp;that
+</c42><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;its&nbsp;contents&nbsp;are&nbsp;not&nbsp;threadsafe,&nbsp;hence&nbsp;they&nbsp;cannot&nbsp;be
+</c42><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;shared&nbsp;between&nbsp;tasks.
+</c42><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>lang="no_share_bound"</c38><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a><a id="n[74981, 74969, 74962, 74975, 74987, 74978, 74955, 74985, 74958, 74995, 74983, 74974, 75015, 74968, 74991, 75007, 74965, 74972, 74970, 75009, 75004, 75013, 75008, 74964, 75002, 74982, 74999, 74956, 74989, 75003, 74992, 75010, 74986, 75006, 75011, 74996, 75016, 75014, 74967, 74959, 74988, 74990, 75012, 74993, 74994, 74966, 74971]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>deriving</c38><c4>(</c4><c33><a href="../libstd/kinds.rs.html#275">Eq</a></c33><c3>,</c3><c26><a href="../libstd/kinds.rs.html#275">Clone</a></c26><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a><a id="n[74953]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c31><a href="#276_4_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#276_4_refs">&nbsp;NoShare</a></c31><c31>;
+</c31><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a><a id="n[]">&nbsp;</a><c38>
+</c38><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;A&nbsp;type&nbsp;which&nbsp;is&nbsp;considered&nbsp;managed&nbsp;by&nbsp;the&nbsp;GC.&nbsp;This&nbsp;is&nbsp;typically
+</c42><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c42>///&nbsp;embedded&nbsp;in&nbsp;other&nbsp;types.
+</c42><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a><a id="n[]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>lang="managed_bound"</c38><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a><a id="n[75033, 75020, 75035, 75034, 75055, 75058, 75070, 75031, 75026, 75032, 75049, 75038, 75059, 75060, 75046, 75028, 75052, 75051, 75054, 75075, 75074, 75076, 75030, 75063, 75057, 75042, 75023, 75056, 75047, 75068, 75066, 75077, 75053, 75071, 75022, 75073, 75080, 75029, 75067, 75072, 75079, 75039, 75050, 75045, 75036, 75019, 75078]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>deriving</c38><c4>(</c4><c12><a href="../libstd/cmp.rs.html#36">Eq</a></c12><c3>,</c3><c33><a href="../libstd/kinds.rs.html#282">Clone</a></c33><c4>)</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><a id="n[75017]">&nbsp;</a><c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c31><a href="#282_4_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#282_4_refs">&nbsp;Managed</a></c31><c31>;
+</c31><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="243_4_refs"><a href="#243"><c40>libstd/kinds.rs:243:4-243:4&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;struct&nbsp;ContravariantLifetime&lt;'a&gt;;
+<br/>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/kinds.rs.html#242"><c40>242:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#242"><c40>242:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#242"><c40>242:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#242"><c40>242:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/c_str.rs.html"><c40>libstd/c_str.rs:<br/></c40></a><a href="../libstd/c_str.rs.html#377"><c40>377:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;marker:&nbsp;marker::ContravariantLifetime&lt;'a&gt;,
+<br/></a><a href="../libstd/slice.rs.html"><c40>libstd/slice.rs:<br/></c40></a><a href="../libstd/slice.rs.html#2665"><c40>2665:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;marker:&nbsp;marker::ContravariantLifetime&lt;'a&gt;
+<br/></a><a href="../libstd/slice.rs.html#2672"><c40>2672:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;marker:&nbsp;marker::ContravariantLifetime&lt;'a&gt;,
+<br/></a><a href="../libstd/kinds.rs.html"><c40>libstd/kinds.rs:<br/></c40></a><a href="../libstd/kinds.rs.html#242"><c40>242:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><br/><br/><a id="139_4_refs"><a href="#139"><c40>libstd/kinds.rs:139:4-139:4&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;struct&nbsp;CovariantType&lt;T&gt;;
+<br/>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/kinds.rs.html#138"><c40>138:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#138"><c40>138:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#138"><c40>138:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#138"><c40>138:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#138"><c40>138:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><br/><br/><a id="269_4_refs"><a href="#269"><c40>libstd/kinds.rs:269:4-269:4&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;struct&nbsp;NoPod;
+<br/>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/kinds.rs.html#268"><c40>268:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#268"><c40>268:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#268"><c40>268:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#268"><c40>268:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/cell.rs.html"><c40>libstd/cell.rs:<br/></c40></a><a href="../libstd/cell.rs.html#74"><c40>74:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;nopod:&nbsp;marker::NoPod,
+<br/></a><a href="../libstd/task.rs.html"><c40>libstd/task.rs:<br/></c40></a><a href="../libstd/task.rs.html#90"><c40>90:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;nopod:&nbsp;Option&lt;marker::NoPod&gt;,
+<br/></a><a href="../libstd/sync/atomics.rs.html"><c40>libstd/sync/atomics.rs:<br/></c40></a><a href="../libstd/sync/atomics.rs.html#120"><c40>120:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;nopod:&nbsp;marker::NoPod
+<br/></a><a href="../libstd/sync/atomics.rs.html#126"><c40>126:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;nopod:&nbsp;marker::NoPod
+<br/></a><a href="../libstd/sync/atomics.rs.html#138"><c40>138:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;nopod:&nbsp;marker::NoPod
+<br/></a><a href="../libstd/sync/atomics.rs.html#132"><c40>132:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;nopod:&nbsp;marker::NoPod
+<br/></a><a href="../libstd/slice.rs.html"><c40>libstd/slice.rs:<br/></c40></a><a href="../libstd/slice.rs.html#2673"><c40>2673:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;marker2:&nbsp;marker::NoPod
+<br/></a><a href="../libstd/kinds.rs.html"><c40>libstd/kinds.rs:<br/></c40></a><a href="../libstd/kinds.rs.html#268"><c40>268:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><br/><br/><a id="182_4_refs"><a href="#182"><c40>libstd/kinds.rs:182:4-182:4&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;struct&nbsp;ContravariantType&lt;T&gt;;
+<br/>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/kinds.rs.html#181"><c40>181:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#181"><c40>181:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#181"><c40>181:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#181"><c40>181:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#181"><c40>181:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><br/><br/><a id="24_15_refs"><a href="#24"><c40>libstd/kinds.rs:24:15-24:15&nbsp;-trait-&nbsp;definition:<br/></c40><pr>#[lang="send"]
 <br/>pub&nbsp;trait&nbsp;Send&nbsp;{
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/task/mod.rs.html"><c40>libstd/task/mod.rs:<br/></c40></a><a href="../libstd/task/mod.rs.html#474"><c40>474:&nbsp;</c40>pub&nbsp;fn&nbsp;spawn_with&lt;A:Send&gt;(arg:&nbsp;A,&nbsp;f:&nbsp;~fn(v:&nbsp;A))&nbsp;{
-<br/></a><a href="../libstd/task/mod.rs.html#388"><c40>388:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(&amp;mut&nbsp;self,&nbsp;f:&nbsp;~fn()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,()&gt;&nbsp;{
-<br/></a><a href="../libstd/task/mod.rs.html#368"><c40>368:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;spawn_with&lt;A:Send&gt;(&amp;mut&nbsp;self,&nbsp;arg:&nbsp;A,&nbsp;f:&nbsp;~fn(v:&nbsp;A))&nbsp;{
-<br/></a><a href="../libstd/task/mod.rs.html#507"><c40>507:&nbsp;</c40>pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(f:&nbsp;~fn()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,()&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html"><c40>libstd/comm.rs:<br/></c40></a><a href="../libstd/comm.rs.html#158"><c40>158:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#136"><c40>136:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericPort&lt;T&gt;&nbsp;for&nbsp;Port&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#207"><c40>207:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericPort&lt;T&gt;&nbsp;for&nbsp;SharedPort&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#64"><c40>64:&nbsp;</c40>pub&nbsp;fn&nbsp;stream&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(Port&lt;T&gt;,&nbsp;Chan&lt;T&gt;)&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#165"><c40>165:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#117"><c40>117:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#69"><c40>69:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;ChanOne&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#124"><c40>124:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#91"><c40>91:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;PortOne&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#103"><c40>103:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Peekable&lt;T&gt;&nbsp;&nbsp;for&nbsp;PortOne&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#200"><c40>200:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SharedPort&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#172"><c40>172:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericSmartChan&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#56"><c40>56:&nbsp;</c40>pub&nbsp;fn&nbsp;oneshot&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(PortOne&lt;T&gt;,&nbsp;ChanOne&lt;T&gt;)&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#110"><c40>110:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;GenericChan&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#148"><c40>148:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Peekable&lt;T&gt;&nbsp;for&nbsp;Port&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/comm.rs.html#179"><c40>179:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;SharedChan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html"><c40>libstd/unstable/sync.rs:<br/></c40></a><a href="../libstd/unstable/sync.rs.html#52"><c40>52:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;UnsafeArc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#210"><c40>210:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Clone&nbsp;for&nbsp;UnsafeArc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#366"><c40>366:&nbsp;</c40>impl&lt;T:Send&gt;&nbsp;Exclusive&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#359"><c40>359:&nbsp;</c40>impl&lt;T:Send&gt;&nbsp;Clone&nbsp;for&nbsp;Exclusive&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/unstable/sync.rs.html#45"><c40>45:&nbsp;</c40>unsafe&nbsp;fn&nbsp;new_inner&lt;T:&nbsp;Send&gt;(data:&nbsp;T,&nbsp;refcount:&nbsp;uint)&nbsp;-&gt;&nbsp;*mut&nbsp;ArcData&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/work_queue.rs.html"><c40>libstd/rt/work_queue.rs:<br/></c40></a><a href="../libstd/rt/work_queue.rs.html#24"><c40>24:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;WorkQueue&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/message_queue.rs.html"><c40>libstd/rt/message_queue.rs:<br/></c40></a><a href="../libstd/rt/message_queue.rs.html#32"><c40>32:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;MessageQueue&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/message_queue.rs.html#87"><c40>87:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Clone&nbsp;for&nbsp;MessageQueue&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html"><c40>libstd/rt/comm.rs:<br/></c40></a><a href="../libstd/rt/comm.rs.html#445"><c40>445:&nbsp;</c40>pub&nbsp;fn&nbsp;stream&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(Port&lt;T&gt;,&nbsp;Chan&lt;T&gt;)&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#473"><c40>473:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SendDeferred&lt;T&gt;&nbsp;for&nbsp;Chan&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/rt/comm.rs.html#467"><c40>(467)</c40></a><a href="../libstd/rt/comm.rs.html#684"><c40>(684)</c40></a><a href="../libstd/rt/comm.rs.html#452"><c40>(452)</c40></a><a href="../libstd/rt/comm.rs.html#461"><c40>(461)</c40></a><a href="../libstd/rt/comm.rs.html#637"><c40>(637)</c40></a><a href="../libstd/rt/comm.rs.html#61"><c40>(61)</c40></a><a href="../libstd/rt/comm.rs.html#581"><c40>(581)</c40></a><a href="../libstd/rt/comm.rs.html#706"><c40>(706)</c40></a><a href="../libstd/rt/comm.rs.html#598"><c40>(598)</c40></a><a href="../libstd/rt/comm.rs.html#696"><c40>(696)</c40></a><a href="../libstd/rt/comm.rs.html#592"><c40>(592)</c40></a><a href="../libstd/rt/comm.rs.html#679"><c40>(679)</c40></a><a href="../libstd/rt/comm.rs.html#690"><c40>(690)</c40></a><a href="../libstd/rt/comm.rs.html#604"><c40>(604)</c40></a><br/><br/><a id="30_17_refs"><a href="#30"><c40>libstd/kinds.rs:30:17-30:17&nbsp;-trait-&nbsp;definition:<br/></c40><pr>#[lang="freeze"]
-<br/>pub&nbsp;trait&nbsp;Freeze&nbsp;{
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/clone.rs.html"><c40>libstd/clone.rs:<br/></c40></a><a href="../libstd/clone.rs.html#135"><c40>135:&nbsp;</c40>impl&lt;T:&nbsp;Freeze&nbsp;+&nbsp;DeepClone&nbsp;+&nbsp;'static&gt;&nbsp;DeepClone&nbsp;for&nbsp;@T&nbsp;{
-<br/></a><a href="../libstd/clone.rs.html#143"><c40>143:&nbsp;</c40>impl&lt;T:&nbsp;Freeze&nbsp;+&nbsp;DeepClone&nbsp;+&nbsp;'static&gt;&nbsp;DeepClone&nbsp;for&nbsp;@mut&nbsp;T&nbsp;{
-<br/></a><br/></div></fileblock></div></maintext></bg12>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/option.rs.html"><c40>libstd/option.rs:<br/></c40></a><a href="../libstd/option.rs.html#242"><c40>242:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;expect&lt;M:&nbsp;Any&nbsp;+&nbsp;Send&gt;(self,&nbsp;msg:&nbsp;M)&nbsp;-&gt;&nbsp;T&nbsp;{
+<br/></a><a href="../libstd/task.rs.html"><c40>libstd/task.rs:<br/></c40></a><a href="../libstd/task.rs.html#249"><c40>249:&nbsp;</c40>pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(f:&nbsp;proc()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,&nbsp;~Any&gt;&nbsp;{
+<br/></a><a href="../libstd/task.rs.html#202"><c40>202:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;try&lt;T:Send&gt;(mut&nbsp;self,&nbsp;f:&nbsp;proc()&nbsp;-&gt;&nbsp;T)&nbsp;-&gt;&nbsp;Result&lt;T,&nbsp;~Any&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html"><c40>libstd/comm/mod.rs:<br/></c40></a><a href="../libstd/comm/mod.rs.html#880"><c40>880:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Drop&nbsp;for&nbsp;Receiver&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#541"><c40>541:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Drop&nbsp;for&nbsp;Sender&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#506"><c40>506:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Clone&nbsp;for&nbsp;Sender&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#788"><c40>788:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;select::Packet&nbsp;for&nbsp;Receiver&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#623"><c40>623:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Clone&nbsp;for&nbsp;SyncSender&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#631"><c40>631:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Drop&nbsp;for&nbsp;SyncSender&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#556"><c40>556:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;SyncSender&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#366"><c40>366:&nbsp;</c40>pub&nbsp;fn&nbsp;channel&lt;T:&nbsp;Send&gt;()&nbsp;-&gt;&nbsp;(Sender&lt;T&gt;,&nbsp;Receiver&lt;T&gt;)&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#402"><c40>402:&nbsp;</c40>pub&nbsp;fn&nbsp;sync_channel&lt;T:&nbsp;Send&gt;(bound:&nbsp;uint)&nbsp;-&gt;&nbsp;(SyncSender&lt;T&gt;,&nbsp;Receiver&lt;T&gt;)&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#411"><c40>411:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Sender&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#875"><c40>875:&nbsp;</c40>impl&lt;'a,&nbsp;T:&nbsp;Send&gt;&nbsp;Iterator&lt;T&gt;&nbsp;for&nbsp;Messages&lt;'a,&nbsp;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/mod.rs.html#641"><c40>641:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Receiver&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/select.rs.html"><c40>libstd/comm/select.rs:<br/></c40></a><a href="../libstd/comm/select.rs.html#228"><c40>228:&nbsp;</c40>impl&lt;'rx,&nbsp;T:&nbsp;Send&gt;&nbsp;Handle&lt;'rx,&nbsp;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/select.rs.html#302"><c40>302:&nbsp;</c40>impl&lt;'rx,&nbsp;T:&nbsp;Send&gt;&nbsp;Drop&nbsp;for&nbsp;Handle&lt;'rx,&nbsp;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/select.rs.html#116"><c40>116:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;handle&lt;'a,&nbsp;T:&nbsp;Send&gt;(&amp;'a&nbsp;self,&nbsp;rx:&nbsp;&amp;'a&nbsp;Receiver&lt;T&gt;)&nbsp;-&gt;&nbsp;Handle&lt;'a,&nbsp;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/oneshot.rs.html"><c40>libstd/comm/oneshot.rs:<br/></c40></a><a href="../libstd/comm/oneshot.rs.html#370"><c40>370:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Drop&nbsp;for&nbsp;Packet&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/oneshot.rs.html#84"><c40>84:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Packet&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/stream.rs.html"><c40>libstd/comm/stream.rs:<br/></c40></a><a href="../libstd/comm/stream.rs.html#76"><c40>76:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Packet&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/stream.rs.html#472"><c40>472:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Drop&nbsp;for&nbsp;Packet&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/shared.rs.html"><c40>libstd/comm/shared.rs:<br/></c40></a><a href="../libstd/comm/shared.rs.html#68"><c40>68:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Packet&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/shared.rs.html#487"><c40>487:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Drop&nbsp;for&nbsp;Packet&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/sync.rs.html"><c40>libstd/comm/sync.rs:<br/></c40></a><a href="../libstd/comm/sync.rs.html#134"><c40>134:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Packet&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/comm/sync.rs.html#409"><c40>409:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Drop&nbsp;for&nbsp;Packet&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/sync/arc.rs.html"><c40>libstd/sync/arc.rs:<br/></c40></a><a href="../libstd/sync/arc.rs.html#113"><c40>113:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Clone&nbsp;for&nbsp;UnsafeArc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/sync/arc.rs.html#54"><c40>54:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;UnsafeArc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/sync/arc.rs.html#46"><c40>46:&nbsp;</c40>unsafe&nbsp;fn&nbsp;new_inner&lt;T:&nbsp;Send&gt;(data:&nbsp;T,&nbsp;refcount:&nbsp;uint)&nbsp;-&gt;&nbsp;*mut&nbsp;ArcData&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/sync/deque.rs.html"><c40>libstd/sync/deque.rs:<br/></c40></a><a href="../libstd/sync/deque.rs.html#181"><c40>181:&nbsp;</c40>impl&lt;T:&nbsp;Send&gt;&nbsp;Clone&nbsp;for&nbsp;BufferPool&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/sync/deque.rs.html#331"><c40>(331)</c40></a><a href="../libstd/sync/deque.rs.html#225"><c40>(225)</c40></a><a href="../libstd/sync/deque.rs.html#204"><c40>(204)</c40></a><a href="../libstd/sync/deque.rs.html#185"><c40>(185)</c40></a><a href="../libstd/sync/deque.rs.html#218"><c40>(218)</c40></a><a href="../libstd/sync/deque.rs.html#345"><c40>(345)</c40></a><a href="../libstd/sync/deque.rs.html#389"><c40>(389)</c40></a><a href="../libstd/sync/deque.rs.html#142"><c40>(142)</c40></a><br/><a href="../libstd/sync/mpmc_bounded_queue.rs.html"><c40>libstd/sync/mpmc_bounded_queue.rs:<br/></c40></a><a href="../libstd/sync/mpmc_bounded_queue.rs.html#138"><c40>(138)</c40></a><a href="../libstd/sync/mpmc_bounded_queue.rs.html#60"><c40>(60)</c40></a><a href="../libstd/sync/mpmc_bounded_queue.rs.html#154"><c40>(154)</c40></a><br/><a href="../libstd/sync/mpsc_queue.rs.html"><c40>libstd/sync/mpsc_queue.rs:<br/></c40></a><a href="../libstd/sync/mpsc_queue.rs.html#142"><c40>(142)</c40></a><a href="../libstd/sync/mpsc_queue.rs.html#83"><c40>(83)</c40></a><br/><a href="../libstd/sync/spsc_queue.rs.html"><c40>libstd/sync/spsc_queue.rs:<br/></c40></a><a href="../libstd/sync/spsc_queue.rs.html#84"><c40>(84)</c40></a><a href="../libstd/sync/spsc_queue.rs.html#212"><c40>(212)</c40></a><br/><a href="../libstd/unstable/sync.rs.html"><c40>libstd/unstable/sync.rs:<br/></c40></a><a href="../libstd/unstable/sync.rs.html#36"><c40>(36)</c40></a><a href="../libstd/unstable/sync.rs.html#43"><c40>(43)</c40></a><br/><a href="../libstd/rt/thread.rs.html"><c40>libstd/rt/thread.rs:<br/></c40></a><a href="../libstd/rt/thread.rs.html#77"><c40>(77)</c40></a><a href="../libstd/rt/thread.rs.html#135"><c40>(135)</c40></a><a href="../libstd/rt/thread.rs.html#122"><c40>(122)</c40></a><a href="../libstd/rt/thread.rs.html#71"><c40>(71)</c40></a><br/><a href="../libstd/rt/unwind.rs.html"><c40>libstd/rt/unwind.rs:<br/></c40></a><a href="../libstd/rt/unwind.rs.html#352"><c40>(352)</c40></a><br/><a href="../libstd/sync/spsc_queue.rs.html"><c40>libstd/sync/spsc_queue.rs:<br/></c40></a><a href="../libstd/sync/spsc_queue.rs.html#73"><c40>(73)</c40></a><br/><br/><a id="276_4_refs"><a href="#276"><c40>libstd/kinds.rs:276:4-276:4&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;struct&nbsp;NoShare;
+<br/>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/kinds.rs.html#275"><c40>275:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#275"><c40>275:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#275"><c40>275:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#275"><c40>275:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/cell.rs.html"><c40>libstd/cell.rs:<br/></c40></a><a href="../libstd/cell.rs.html#75"><c40>75:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;noshare:&nbsp;marker::NoShare,
+<br/></a><a href="../libstd/cell.rs.html#25"><c40>25:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;noshare:&nbsp;marker::NoShare,
+<br/></a><a href="../libstd/comm/mod.rs.html"><c40>libstd/comm/mod.rs:<br/></c40></a><a href="../libstd/comm/mod.rs.html#311"><c40>311:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;marker:&nbsp;marker::NoShare,
+<br/></a><a href="../libstd/comm/mod.rs.html#319"><c40>319:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;marker:&nbsp;marker::NoShare,
+<br/></a><a href="../libstd/comm/mod.rs.html#295"><c40>295:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;marker:&nbsp;marker::NoShare,
+<br/></a><a href="../libstd/rc.rs.html"><c40>libstd/rc.rs:<br/></c40></a><a href="../libstd/rc.rs.html#156"><c40>156:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;noshare:&nbsp;marker::NoShare
+<br/></a><a href="../libstd/rc.rs.html#48"><c40>48:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;noshare:&nbsp;marker::NoShare
+<br/></a><a href="../libstd/kinds.rs.html"><c40>libstd/kinds.rs:<br/></c40></a><a href="../libstd/kinds.rs.html#275"><c40>275:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><br/><br/><a id="38_14_refs"><a href="#38"><c40>libstd/kinds.rs:38:14-38:14&nbsp;-trait-&nbsp;definition:<br/></c40><pr>#[lang="pod"]
+<br/>pub&nbsp;trait&nbsp;Pod&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/cell.rs.html"><c40>libstd/cell.rs:<br/></c40></a><a href="../libstd/cell.rs.html#28"><c40>28:&nbsp;</c40>impl&lt;T:Pod&gt;&nbsp;Cell&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/cell.rs.html#52"><c40>52:&nbsp;</c40>impl&lt;T:Pod&gt;&nbsp;Clone&nbsp;for&nbsp;Cell&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/cell.rs.html#58"><c40>58:&nbsp;</c40>impl&lt;T:Eq&nbsp;+&nbsp;Pod&gt;&nbsp;Eq&nbsp;for&nbsp;Cell&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/num/mod.rs.html"><c40>libstd/num/mod.rs:<br/></c40></a><a href="../libstd/num/mod.rs.html#248"><c40>248:&nbsp;</c40>pub&nbsp;trait&nbsp;Primitive:&nbsp;Pod
+<br/></a><br/><br/><a id="262_4_refs"><a href="#262"><c40>libstd/kinds.rs:262:4-262:4&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;struct&nbsp;NoSend;
+<br/>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/kinds.rs.html#261"><c40>261:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#261"><c40>261:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#261"><c40>261:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#261"><c40>261:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/comm/select.rs.html"><c40>libstd/comm/select.rs:<br/></c40></a><a href="../libstd/comm/select.rs.html#68"><c40>68:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;marker1:&nbsp;marker::NoSend,
+<br/></a><a href="../libstd/rc.rs.html"><c40>libstd/rc.rs:<br/></c40></a><a href="../libstd/rc.rs.html#155"><c40>155:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;nosend:&nbsp;marker::NoSend,
+<br/></a><a href="../libstd/rc.rs.html#47"><c40>47:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;nosend:&nbsp;marker::NoSend,
+<br/></a><a href="../libstd/gc.rs.html"><c40>libstd/gc.rs:<br/></c40></a><a href="../libstd/gc.rs.html#33"><c40>33:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;marker:&nbsp;marker::NoSend,
+<br/></a><a href="../libstd/kinds.rs.html"><c40>libstd/kinds.rs:<br/></c40></a><a href="../libstd/kinds.rs.html#261"><c40>261:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><br/><br/><a id="282_4_refs"><a href="#282"><c40>libstd/kinds.rs:282:4-282:4&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;struct&nbsp;Managed;
+<br/>}
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/kinds.rs.html#281"><c40>281:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#281"><c40>281:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#281"><c40>281:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#281"><c40>281:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#281"><c40>281:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><br/><br/><a id="207_4_refs"><a href="#207"><c40>libstd/kinds.rs:207:4-207:4&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;struct&nbsp;InvariantType&lt;T&gt;;
+<br/>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/kinds.rs.html#206"><c40>206:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#206"><c40>206:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#206"><c40>206:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#206"><c40>206:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/ty.rs.html"><c40>libstd/ty.rs:<br/></c40></a><a href="../libstd/ty.rs.html#54"><c40>54:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;marker1:&nbsp;marker::InvariantType&lt;T&gt;
+<br/></a><a href="../libstd/kinds.rs.html"><c40>libstd/kinds.rs:<br/></c40></a><a href="../libstd/kinds.rs.html#206"><c40>206:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><br/><br/><a id="254_4_refs"><a href="#254"><c40>libstd/kinds.rs:254:4-254:4&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;struct&nbsp;InvariantLifetime&lt;'a&gt;;
+<br/>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/kinds.rs.html#253"><c40>253:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#253"><c40>253:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#253"><c40>253:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#253"><c40>253:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#253"><c40>253:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><br/><br/><a id="227_4_refs"><a href="#227"><c40>libstd/kinds.rs:227:4-227:4&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;struct&nbsp;CovariantLifetime&lt;'a&gt;;
+<br/>
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/kinds.rs.html#226"><c40>226:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#226"><c40>226:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#226"><c40>226:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#226"><c40>226:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><a href="../libstd/kinds.rs.html#226"><c40>226:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;#[deriving(Eq,Clone)]
+<br/></a><br/></div></maintext></div></body>

@@ -8,123 +8,325 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-//! A mutable, nullable memory location
+//! Types dealing with dynamic mutability
 
-#[missing_doc];
+use cast;
+use clone::Clone;
+use cmp::Eq;
+use fmt;
+use kinds::{marker, Pod};
+use ops::{Deref, DerefMut, Drop};
+use option::{None, Option, Some};
+use ty::Unsafe;
 
-use cast::transmute_mut;
-use unstable::finally::Finally;
-use prelude::*;
-
-/*
-A dynamic, mutable location.
-
-Similar to a mutable option type, but friendlier.
-*/
-
-#[no_freeze]
-#[deriving(Clone, DeepClone, Eq)]
-#[allow(missing_doc)]
+/// A mutable memory location that admits only `Pod` data.
 pub struct Cell<T> {
-    priv value: Option<T>
+    priv value: Unsafe<T>,
+    priv noshare: marker::NoShare,
 }
 
-impl<T> Cell<T> {
-    /// Creates a new full cell with the given value.
+impl<T:Pod> Cell<T> {
+    /// Creates a new `Cell` containing the given value.
     pub fn new(value: T) -> Cell<T> {
-        Cell { value: Some(value) }
-    }
-
-    /// Creates a new empty cell with no value inside.
-    pub fn new_empty() -> Cell<T> {
-        Cell { value: None }
-    }
-
-    /// Yields the value, failing if the cell is empty.
-    pub fn take(&self) -> T {
-        let this = unsafe { transmute_mut(self) };
-        if this.is_empty() {
-            fail!("attempt to take an empty cell");
+        Cell {
+            value: Unsafe::new(value),
+            noshare: marker::NoShare,
         }
-
-        this.value.take_unwrap()
     }
 
-    /// Yields the value if the cell is full, or `None` if it is empty.
-    pub fn take_opt(&self) -> Option<T> {
-        let this = unsafe { transmute_mut(self) };
-        this.value.take()
+    /// Returns a copy of the contained value.
+    #[inline]
+    pub fn get(&self) -> T {
+        unsafe{ *self.value.get() }
     }
 
-    /// Returns the value, failing if the cell is full.
-    pub fn put_back(&self, value: T) {
-        let this = unsafe { transmute_mut(self) };
-        if !this.is_empty() {
-            fail!("attempt to put a value back into a full cell");
-        }
-        this.value = Some(value);
-    }
-
-    /// Returns true if the cell is empty and false if the cell is full.
-    pub fn is_empty(&self) -> bool {
-        self.value.is_none()
-    }
-
-    /// Calls a closure with a reference to the value.
-    pub fn with_ref<R>(&self, op: &fn(v: &T) -> R) -> R {
-        do self.with_mut_ref |ptr| { op(ptr) }
-    }
-
-    /// Calls a closure with a mutable reference to the value.
-    pub fn with_mut_ref<R>(&self, op: &fn(v: &mut T) -> R) -> R {
-        let mut v = Some(self.take());
-        do (|| {
-            op(v.get_mut_ref())
-        }).finally {
-            self.put_back(v.take_unwrap());
+    /// Sets the contained value.
+    #[inline]
+    pub fn set(&self, value: T) {
+        unsafe {
+            *self.value.get() = value;
         }
     }
 }
 
-#[test]
-fn test_basic() {
-    let value_cell = Cell::new(~10);
-    assert!(!value_cell.is_empty());
-    let value = value_cell.take();
-    assert!(value == ~10);
-    assert!(value_cell.is_empty());
-    value_cell.put_back(value);
-    assert!(!value_cell.is_empty());
+impl<T:Pod> Clone for Cell<T> {
+    fn clone(&self) -> Cell<T> {
+        Cell::new(self.get())
+    }
 }
 
-#[test]
-#[should_fail]
-fn test_take_empty() {
-    let value_cell: Cell<~int> = Cell::new_empty();
-    value_cell.take();
+impl<T:Eq + Pod> Eq for Cell<T> {
+    fn eq(&self, other: &Cell<T>) -> bool {
+        self.get() == other.get()
+    }
 }
 
-#[test]
-#[should_fail]
-fn test_put_back_non_empty() {
-    let value_cell = Cell::new(~10);
-    value_cell.put_back(~20);
+impl<T: fmt::Show> fmt::Show for Cell<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f.buf, r"Cell \{ value: {} \}", unsafe{*&self.value.get()})
+    }
 }
 
-#[test]
-fn test_with_ref() {
-    let good = 6;
-    let c = Cell::new(~[1, 2, 3, 4, 5, 6]);
-    let l = do c.with_ref() |v| { v.len() };
-    assert_eq!(l, good);
+/// A mutable memory location with dynamically checked borrow rules
+pub struct RefCell<T> {
+    priv value: Unsafe<T>,
+    priv borrow: BorrowFlag,
+    priv nopod: marker::NoPod,
+    priv noshare: marker::NoShare,
 }
 
-#[test]
-fn test_with_mut_ref() {
-    let good = ~[1, 2, 3];
-    let v = ~[1, 2];
-    let c = Cell::new(v);
-    do c.with_mut_ref() |v| { v.push(3); }
-    let v = c.take();
-    assert_eq!(v, good);
+// Values [1, MAX-1] represent the number of `Ref` active
+// (will not outgrow its range since `uint` is the size of the address space)
+type BorrowFlag = uint;
+static UNUSED: BorrowFlag = 0;
+static WRITING: BorrowFlag = -1;
+
+impl<T> RefCell<T> {
+    /// Create a new `RefCell` containing `value`
+    pub fn new(value: T) -> RefCell<T> {
+        RefCell {
+            value: Unsafe::new(value),
+            nopod: marker::NoPod,
+            noshare: marker::NoShare,
+            borrow: UNUSED,
+        }
+    }
+
+    /// Consumes the `RefCell`, returning the wrapped value.
+    pub fn unwrap(self) -> T {
+        assert!(self.borrow == UNUSED);
+        unsafe{self.value.unwrap()}
+    }
+
+    unsafe fn as_mut<'a>(&'a self) -> &'a mut RefCell<T> {
+        cast::transmute_mut(self)
+    }
+
+    /// Attempts to immutably borrow the wrapped value.
+    ///
+    /// The borrow lasts until the returned `Ref` exits scope. Multiple
+    /// immutable borrows can be taken out at the same time.
+    ///
+    /// Returns `None` if the value is currently mutably borrowed.
+    pub fn try_borrow<'a>(&'a self) -> Option<Ref<'a, T>> {
+        match self.borrow {
+            WRITING => None,
+            _ => {
+                unsafe { self.as_mut().borrow += 1; }
+                Some(Ref { parent: self })
+            }
+        }
+    }
+
+    /// Immutably borrows the wrapped value.
+    ///
+    /// The borrow lasts until the returned `Ref` exits scope. Multiple
+    /// immutable borrows can be taken out at the same time.
+    ///
+    /// # Failure
+    ///
+    /// Fails if the value is currently mutably borrowed.
+    pub fn borrow<'a>(&'a self) -> Ref<'a, T> {
+        match self.try_borrow() {
+            Some(ptr) => ptr,
+            None => fail!("RefCell<T> already mutably borrowed")
+        }
+    }
+
+    /// Mutably borrows the wrapped value.
+    ///
+    /// The borrow lasts until the returned `RefMut` exits scope. The value
+    /// cannot be borrowed while this borrow is active.
+    ///
+    /// Returns `None` if the value is currently borrowed.
+    pub fn try_borrow_mut<'a>(&'a self) -> Option<RefMut<'a, T>> {
+        match self.borrow {
+            UNUSED => unsafe {
+                let mut_self = self.as_mut();
+                mut_self.borrow = WRITING;
+                Some(RefMut { parent: mut_self })
+            },
+            _ => None
+        }
+    }
+
+    /// Mutably borrows the wrapped value.
+    ///
+    /// The borrow lasts until the returned `RefMut` exits scope. The value
+    /// cannot be borrowed while this borrow is active.
+    ///
+    /// # Failure
+    ///
+    /// Fails if the value is currently borrowed.
+    pub fn borrow_mut<'a>(&'a self) -> RefMut<'a, T> {
+        match self.try_borrow_mut() {
+            Some(ptr) => ptr,
+            None => fail!("RefCell<T> already borrowed")
+        }
+    }
+
+    /// Sets the value, replacing what was there.
+    ///
+    /// # Failure
+    ///
+    /// Fails if the value is currently borrowed.
+    #[inline]
+    pub fn set(&self, value: T) {
+        *self.borrow_mut() = value;
+    }
+}
+
+impl<T:Clone> RefCell<T> {
+    /// Returns a copy of the contained value.
+    ///
+    /// # Failure
+    ///
+    /// Fails if the value is currently mutably borrowed.
+    #[inline]
+    pub fn get(&self) -> T {
+        (*self.borrow()).clone()
+    }
+}
+
+impl<T: Clone> Clone for RefCell<T> {
+    fn clone(&self) -> RefCell<T> {
+        RefCell::new(self.get())
+    }
+}
+
+impl<T: Eq> Eq for RefCell<T> {
+    fn eq(&self, other: &RefCell<T>) -> bool {
+        *self.borrow() == *other.borrow()
+    }
+}
+
+/// Wraps a borrowed reference to a value in a `RefCell` box.
+pub struct Ref<'b, T> {
+    priv parent: &'b RefCell<T>
+}
+
+#[unsafe_destructor]
+impl<'b, T> Drop for Ref<'b, T> {
+    fn drop(&mut self) {
+        assert!(self.parent.borrow != WRITING && self.parent.borrow != UNUSED);
+        unsafe { self.parent.as_mut().borrow -= 1; }
+    }
+}
+
+impl<'b, T> Deref<T> for Ref<'b, T> {
+    #[inline]
+    fn deref<'a>(&'a self) -> &'a T {
+        unsafe{ &*self.parent.value.get() }
+    }
+}
+
+/// Wraps a mutable borrowed reference to a value in a `RefCell` box.
+pub struct RefMut<'b, T> {
+    priv parent: &'b mut RefCell<T>
+}
+
+#[unsafe_destructor]
+impl<'b, T> Drop for RefMut<'b, T> {
+    fn drop(&mut self) {
+        assert!(self.parent.borrow == WRITING);
+        self.parent.borrow = UNUSED;
+    }
+}
+
+impl<'b, T> Deref<T> for RefMut<'b, T> {
+    #[inline]
+    fn deref<'a>(&'a self) -> &'a T {
+        unsafe{ &*self.parent.value.get() }
+    }
+}
+
+impl<'b, T> DerefMut<T> for RefMut<'b, T> {
+    #[inline]
+    fn deref_mut<'a>(&'a mut self) -> &'a mut T {
+        unsafe{ &mut *self.parent.value.get() }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn smoketest_cell() {
+        let x = Cell::new(10);
+        assert_eq!(x, Cell::new(10));
+        assert_eq!(x.get(), 10);
+        x.set(20);
+        assert_eq!(x, Cell::new(20));
+        assert_eq!(x.get(), 20);
+
+        let y = Cell::new((30, 40));
+        assert_eq!(y, Cell::new((30, 40)));
+        assert_eq!(y.get(), (30, 40));
+    }
+
+    #[test]
+    fn double_imm_borrow() {
+        let x = RefCell::new(0);
+        let _b1 = x.borrow();
+        x.borrow();
+    }
+
+    #[test]
+    fn no_mut_then_imm_borrow() {
+        let x = RefCell::new(0);
+        let _b1 = x.borrow_mut();
+        assert!(x.try_borrow().is_none());
+    }
+
+    #[test]
+    fn no_imm_then_borrow_mut() {
+        let x = RefCell::new(0);
+        let _b1 = x.borrow();
+        assert!(x.try_borrow_mut().is_none());
+    }
+
+    #[test]
+    fn no_double_borrow_mut() {
+        let x = RefCell::new(0);
+        let _b1 = x.borrow_mut();
+        assert!(x.try_borrow_mut().is_none());
+    }
+
+    #[test]
+    fn imm_release_borrow_mut() {
+        let x = RefCell::new(0);
+        {
+            let _b1 = x.borrow();
+        }
+        x.borrow_mut();
+    }
+
+    #[test]
+    fn mut_release_borrow_mut() {
+        let x = RefCell::new(0);
+        {
+            let _b1 = x.borrow_mut();
+        }
+        x.borrow();
+    }
+
+    #[test]
+    fn double_borrow_single_release_no_borrow_mut() {
+        let x = RefCell::new(0);
+        let _b1 = x.borrow();
+        {
+            let _b2 = x.borrow();
+        }
+        assert!(x.try_borrow_mut().is_none());
+    }
+
+    #[test]
+    #[should_fail]
+    fn discard_doesnt_unborrow() {
+        let x = RefCell::new(0);
+        let _b = x.borrow();
+        let _ = _b;
+        let _b = x.borrow_mut();
+    }
 }

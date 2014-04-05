@@ -12,33 +12,21 @@ use ast;
 use codemap::Span;
 use ext::base::ExtCtxt;
 use ext::base;
-use parse::lexer::{new_tt_reader, reader};
-use parse::parser::Parser;
-use parse::token::keywords;
+use parse::token::{keywords, is_keyword};
 
-pub fn expand_trace_macros(cx: @ExtCtxt,
+pub fn expand_trace_macros(cx: &mut ExtCtxt,
                            sp: Span,
-                           tt: &[ast::token_tree])
+                           tt: &[ast::TokenTree])
                         -> base::MacResult {
-    let sess = cx.parse_sess();
-    let cfg = cx.cfg();
-    let tt_rdr = new_tt_reader(cx.parse_sess().span_diagnostic,
-                               None,
-                               tt.to_owned());
-    let rdr = tt_rdr as @mut reader;
-    let rust_parser = Parser(sess, cfg.clone(), rdr.dup());
-
-    if rust_parser.is_keyword(keywords::True) {
-        cx.set_trace_macros(true);
-    } else if rust_parser.is_keyword(keywords::False) {
-        cx.set_trace_macros(false);
-    } else {
-        cx.span_fatal(sp, "trace_macros! only accepts `true` or `false`")
+    match tt {
+        [ast::TTTok(_, ref tok)] if is_keyword(keywords::True, tok) => {
+            cx.set_trace_macros(true);
+        }
+        [ast::TTTok(_, ref tok)] if is_keyword(keywords::False, tok) => {
+            cx.set_trace_macros(false);
+        }
+        _ => cx.span_err(sp, "trace_macros! accepts only `true` or `false`"),
     }
 
-    rust_parser.bump();
-
-    let rust_parser = Parser(sess, cfg, rdr.dup());
-    let result = rust_parser.parse_expr();
-    base::MRExpr(result)
+    base::MacResult::dummy_any(sp)
 }

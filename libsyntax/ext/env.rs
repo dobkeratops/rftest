@@ -19,38 +19,87 @@ use codemap::Span;
 use ext::base::*;
 use ext::base;
 use ext::build::AstBuilder;
+use parse::token;
 
 use std::os;
 
-pub fn expand_option_env(cx: @ExtCtxt, sp: Span, tts: &[ast::token_tree])
+pub fn expand_option_env(cx: &mut ExtCtxt, sp: Span, tts: &[ast::TokenTree])
     -> base::MacResult {
-    let var = get_single_str_from_tts(cx, sp, tts, "option_env!");
+    let var = match get_single_str_from_tts(cx, sp, tts, "option_env!") {
+        None => return MacResult::dummy_expr(sp),
+        Some(v) => v
+    };
 
     let e = match os::getenv(var) {
-      None => quote_expr!(cx, ::std::option::None::<&'static str>),
-      Some(s) => quote_expr!(cx, ::std::option::Some($s))
+      None => {
+          cx.expr_path(cx.path_all(sp,
+                                   true,
+                                   vec!(cx.ident_of("std"),
+                                        cx.ident_of("option"),
+                                        cx.ident_of("None")),
+                                   Vec::new(),
+                                   vec!(cx.ty_rptr(sp,
+                                                   cx.ty_ident(sp,
+                                                        cx.ident_of("str")),
+                                                   Some(cx.lifetime(sp,
+                                                        cx.ident_of(
+                                                            "static").name)),
+                                                   ast::MutImmutable))))
+      }
+      Some(s) => {
+          cx.expr_call_global(sp,
+                              vec!(cx.ident_of("std"),
+                                   cx.ident_of("option"),
+                                   cx.ident_of("Some")),
+                              vec!(cx.expr_str(sp,
+                                               token::intern_and_get_ident(
+                                          s))))
+      }
     };
     MRExpr(e)
 }
 
-pub fn expand_env(cx: @ExtCtxt, sp: Span, tts: &[ast::token_tree])
+pub fn expand_env(cx: &mut ExtCtxt, sp: Span, tts: &[ast::TokenTree])
     -> base::MacResult {
-    let exprs = get_exprs_from_tts(cx, sp, tts);
-
-    if exprs.len() == 0 {
-        cx.span_fatal(sp, "env! takes 1 or 2 arguments");
-    }
-
-    let var = expr_to_str(cx, exprs[0], "expected string literal");
-    let msg = match exprs.len() {
-        1 => fmt!("Environment variable %s not defined", var).to_managed(),
-        2 => expr_to_str(cx, exprs[1], "expected string literal"),
-        _ => cx.span_fatal(sp, "env! takes 1 or 2 arguments")
+    let exprs = match get_exprs_from_tts(cx, sp, tts) {
+        Some(ref exprs) if exprs.len() == 0 => {
+            cx.span_err(sp, "env! takes 1 or 2 arguments");
+            return MacResult::dummy_expr(sp);
+        }
+        None => return MacResult::dummy_expr(sp),
+        Some(exprs) => exprs
     };
 
-    let e = match os::getenv(var) {
-        None => cx.span_fatal(sp, msg),
-        Some(s) => cx.expr_str(sp, s.to_managed())
+    let var = match expr_to_str(cx,
+                                *exprs.get(0),
+                                "expected string literal") {
+        None => return MacResult::dummy_expr(sp),
+        Some((v, _style)) => v
+    };
+    let msg = match exprs.len() {
+        1 => {
+            token::intern_and_get_ident(format!("environment variable `{}` \
+                                                 not defined",
+                                                var))
+        }
+        2 => {
+            match expr_to_str(cx, *exprs.get(1), "expected string literal") {
+                None => return MacResult::dummy_expr(sp),
+                Some((s, _style)) => s
+            }
+        }
+        _ => {
+            cx.span_err(sp, "env! takes 1 or 2 arguments");
+            return MacResult::dummy_expr(sp);
+        }
+    };
+
+    let e = match os::getenv(var.get()) {
+        None => {
+            cx.span_err(sp, msg.get());
+            cx.expr_uint(sp, 0)
+        }
+        Some(s) => cx.expr_str(sp, token::intern_and_get_ident(s))
     };
     MRExpr(e)
 }

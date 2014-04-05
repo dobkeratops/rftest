@@ -23,25 +23,19 @@ use ast;
 // isn't parsed as (if true {...} else {...} | x) | 5
 pub fn expr_requires_semi_to_be_stmt(e: @ast::Expr) -> bool {
     match e.node {
-      ast::ExprIf(*)
-      | ast::ExprMatch(*)
-      | ast::ExprBlock(_)
-      | ast::ExprWhile(*)
-      | ast::ExprLoop(*)
-      | ast::ExprForLoop(*)
-      | ast::ExprCall(_, _, ast::DoSugar)
-      | ast::ExprCall(_, _, ast::ForSugar)
-      | ast::ExprMethodCall(_, _, _, _, _, ast::DoSugar)
-      | ast::ExprMethodCall(_, _, _, _, _, ast::ForSugar) => false,
-      _ => true
+        ast::ExprIf(..)
+        | ast::ExprMatch(..)
+        | ast::ExprBlock(_)
+        | ast::ExprWhile(..)
+        | ast::ExprLoop(..)
+        | ast::ExprForLoop(..) => false,
+        _ => true
     }
 }
 
 pub fn expr_is_simple_block(e: @ast::Expr) -> bool {
     match e.node {
-        ast::ExprBlock(
-            ast::Block { rules: ast::DefaultBlock, _ }
-        ) => true,
+        ast::ExprBlock(block) => block.rules == ast::DefaultBlock,
       _ => false
     }
 }
@@ -58,7 +52,7 @@ pub fn stmt_ends_with_semi(stmt: &ast::Stmt) -> bool {
             }
         }
         ast::StmtExpr(e, _) => { expr_requires_semi_to_be_stmt(e) }
-        ast::StmtSemi(*) => { false }
-        ast::StmtMac(*) => { false }
+        ast::StmtSemi(..) => { false }
+        ast::StmtMac(..) => { false }
     }
 }

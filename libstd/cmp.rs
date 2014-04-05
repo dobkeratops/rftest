@@ -42,16 +42,32 @@ pub trait Eq {
 }
 
 /// Trait for equality comparisons where `a == b` and `a != b` are strict inverses.
-pub trait TotalEq {
-    fn equals(&self, other: &Self) -> bool;
+#[cfg(not(stage0))]
+pub trait TotalEq: Eq {
+    // FIXME #13101: this method is used solely by #[deriving] to
+    // assert that every component of a type implements #[deriving]
+    // itself, the current deriving infrastructure means doing this
+    // assertion without using a method on this trait is nearly
+    // impossible.
+    //
+    // This should never be implemented by hand.
+    #[doc(hidden)]
+    #[inline(always)]
+    fn assert_receiver_is_total_eq(&self) {}
+}
+
+#[cfg(stage0)]
+pub trait TotalEq: Eq {
+    /// This method must return the same value as `eq`. It exists to prevent
+    /// deriving `TotalEq` from fields not implementing the `TotalEq` trait.
+    fn equals(&self, other: &Self) -> bool {
+        self.eq(other)
+    }
 }
 
 macro_rules! totaleq_impl(
     ($t:ty) => {
-        impl TotalEq for $t {
-            #[inline]
-            fn equals(&self, other: &$t) -> bool { *self == *other }
-        }
+        impl TotalEq for $t {}
     }
 )
 
@@ -72,27 +88,15 @@ totaleq_impl!(uint)
 
 totaleq_impl!(char)
 
-/// Trait for testing approximate equality
-pub trait ApproxEq<Eps> {
-    fn approx_epsilon() -> Eps;
-    fn approx_eq(&self, other: &Self) -> bool;
-    fn approx_eq_eps(&self, other: &Self, approx_epsilon: &Eps) -> bool;
-}
-
-#[deriving(Clone, Eq)]
+#[deriving(Clone, Eq, Show)]
 pub enum Ordering { Less = -1, Equal = 0, Greater = 1 }
 
 /// Trait for types that form a total order
-pub trait TotalOrd: TotalEq {
+pub trait TotalOrd: TotalEq + Ord {
     fn cmp(&self, other: &Self) -> Ordering;
 }
 
-impl TotalEq for Ordering {
-    #[inline]
-    fn equals(&self, other: &Ordering) -> bool {
-        *self == *other
-    }
-}
+impl TotalEq for Ordering {}
 impl TotalOrd for Ordering {
     #[inline]
     fn cmp(&self, other: &Ordering) -> Ordering {
@@ -133,18 +137,6 @@ totalord_impl!(uint)
 
 totalord_impl!(char)
 
-/// Compares (a1, b1) against (a2, b2), where the a values are more significant.
-pub fn cmp2<A:TotalOrd,B:TotalOrd>(
-    a1: &A, b1: &B,
-    a2: &A, b2: &B) -> Ordering
-{
-    match a1.cmp(a2) {
-        Less => Less,
-        Greater => Greater,
-        Equal => b1.cmp(b2)
-    }
-}
-
 /**
 Return `o1` if it is not `Equal`, otherwise `o2`. Simulates the
 lexical ordering on a type `(int, int)`.
@@ -168,7 +160,7 @@ pub fn lexical_ordering(o1: Ordering, o2: Ordering) -> Ordering {
 * (cf. IEEE 754-2008 section 5.11).
 */
 #[lang="ord"]
-pub trait Ord {
+pub trait Ord: Eq {
     fn lt(&self, other: &Self) -> bool;
     #[inline]
     fn le(&self, other: &Self) -> bool { !other.lt(self) }
@@ -187,12 +179,12 @@ pub trait Equiv<T> {
 }
 
 #[inline]
-pub fn min<T:Ord>(v1: T, v2: T) -> T {
+pub fn min<T: TotalOrd>(v1: T, v2: T) -> T {
     if v1 < v2 { v1 } else { v2 }
 }
 
 #[inline]
-pub fn max<T:Ord>(v1: T, v2: T) -> T {
+pub fn max<T: TotalOrd>(v1: T, v2: T) -> T {
     if v1 > v2 { v1 } else { v2 }
 }
 
@@ -207,20 +199,6 @@ mod test {
         assert_eq!(5.cmp(&5), Equal);
         assert_eq!((-5).cmp(&12), Less);
         assert_eq!(12.cmp(-5), Greater);
-    }
-
-    #[test]
-    fn test_cmp2() {
-        assert_eq!(cmp2(1, 2, 3, 4), Less);
-        assert_eq!(cmp2(3, 2, 3, 4), Less);
-        assert_eq!(cmp2(5, 2, 3, 4), Greater);
-        assert_eq!(cmp2(5, 5, 5, 4), Greater);
-    }
-
-    #[test]
-    fn test_int_totaleq() {
-        assert!(5.equals(&5));
-        assert!(!2.equals(&17));
     }
 
     #[test]

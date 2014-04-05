@@ -14,38 +14,37 @@ explicit `Self` type to use when specifying impls to be derived.
 */
 
 use ast;
-use ast::{Expr,Generics,Ident};
+use ast::{P,Expr,Generics,Ident};
 use ext::base::ExtCtxt;
 use ext::build::AstBuilder;
 use codemap::{Span,respan};
-use opt_vec;
+use owned_slice::OwnedSlice;
 
 /// The types of pointers
-pub enum PtrTy<'self> {
+pub enum PtrTy<'a> {
     Send, // ~
-    Managed(ast::Mutability), // @[mut]
-    Borrowed(Option<&'self str>, ast::Mutability), // &['lifetime] [mut]
+    Borrowed(Option<&'a str>, ast::Mutability), // &['lifetime] [mut]
 }
 
 /// A path, e.g. `::std::option::Option::<int>` (global). Has support
 /// for type parameters and a lifetime.
-pub struct Path<'self> {
-    path: ~[&'self str],
-    lifetime: Option<&'self str>,
-    params: ~[~Ty<'self>],
+pub struct Path<'a> {
+    path: Vec<&'a str> ,
+    lifetime: Option<&'a str>,
+    params: Vec<~Ty<'a>> ,
     global: bool
 }
 
-impl<'self> Path<'self> {
-    pub fn new<'r>(path: ~[&'r str]) -> Path<'r> {
-        Path::new_(path, None, ~[], true)
+impl<'a> Path<'a> {
+    pub fn new<'r>(path: Vec<&'r str> ) -> Path<'r> {
+        Path::new_(path, None, Vec::new(), true)
     }
     pub fn new_local<'r>(path: &'r str) -> Path<'r> {
-        Path::new_(~[ path ], None, ~[], false)
+        Path::new_(vec!( path ), None, Vec::new(), false)
     }
-    pub fn new_<'r>(path: ~[&'r str],
+    pub fn new_<'r>(path: Vec<&'r str> ,
                     lifetime: Option<&'r str>,
-                    params: ~[~Ty<'r>],
+                    params: Vec<~Ty<'r>> ,
                     global: bool)
                     -> Path<'r> {
         Path {
@@ -57,21 +56,21 @@ impl<'self> Path<'self> {
     }
 
     pub fn to_ty(&self,
-                 cx: @ExtCtxt,
+                 cx: &ExtCtxt,
                  span: Span,
                  self_ty: Ident,
                  self_generics: &Generics)
-                 -> ast::Ty {
+                 -> P<ast::Ty> {
         cx.ty_path(self.to_path(cx, span, self_ty, self_generics), None)
     }
     pub fn to_path(&self,
-                   cx: @ExtCtxt,
+                   cx: &ExtCtxt,
                    span: Span,
                    self_ty: Ident,
                    self_generics: &Generics)
                    -> ast::Path {
         let idents = self.path.map(|s| cx.ident_of(*s) );
-        let lt = mk_lifetime(cx, span, &self.lifetime);
+        let lt = mk_lifetimes(cx, span, &self.lifetime);
         let tys = self.params.map(|t| t.to_ty(cx, span, self_ty, self_generics));
 
         cx.path_all(span, self.global, idents, lt, tys)
@@ -79,15 +78,15 @@ impl<'self> Path<'self> {
 }
 
 /// A type. Supports pointers (except for *), Self, and literals
-pub enum Ty<'self> {
+pub enum Ty<'a> {
     Self,
     // &/~/@ Ty
-    Ptr(~Ty<'self>, PtrTy<'self>),
+    Ptr(~Ty<'a>, PtrTy<'a>),
     // mod::mod::Type<[lifetime], [Params...]>, including a plain type
     // parameter, and things like `int`
-    Literal(Path<'self>),
+    Literal(Path<'a>),
     // includes nil
-    Tuple(~[Ty<'self>])
+    Tuple(Vec<Ty<'a>> )
 }
 
 pub fn borrowed_ptrty<'r>() -> PtrTy<'r> {
@@ -106,32 +105,36 @@ pub fn borrowed_self<'r>() -> Ty<'r> {
 }
 
 pub fn nil_ty() -> Ty<'static> {
-    Tuple(~[])
+    Tuple(Vec::new())
 }
 
-fn mk_lifetime(cx: @ExtCtxt, span: Span, lt: &Option<&str>) -> Option<ast::Lifetime> {
+fn mk_lifetime(cx: &ExtCtxt, span: Span, lt: &Option<&str>) -> Option<ast::Lifetime> {
     match *lt {
-        Some(ref s) => Some(cx.lifetime(span, cx.ident_of(*s))),
+        Some(ref s) => Some(cx.lifetime(span, cx.ident_of(*s).name)),
         None => None
     }
 }
 
-impl<'self> Ty<'self> {
+fn mk_lifetimes(cx: &ExtCtxt, span: Span, lt: &Option<&str>) -> Vec<ast::Lifetime> {
+    match *lt {
+        Some(ref s) => vec!(cx.lifetime(span, cx.ident_of(*s).name)),
+        None => vec!()
+    }
+}
+
+impl<'a> Ty<'a> {
     pub fn to_ty(&self,
-                 cx: @ExtCtxt,
+                 cx: &ExtCtxt,
                  span: Span,
                  self_ty: Ident,
                  self_generics: &Generics)
-                 -> ast::Ty {
+                 -> P<ast::Ty> {
         match *self {
             Ptr(ref ty, ref ptr) => {
                 let raw_ty = ty.to_ty(cx, span, self_ty, self_generics);
                 match *ptr {
                     Send => {
                         cx.ty_uniq(span, raw_ty)
-                    }
-                    Managed(mutbl) => {
-                        cx.ty_box(span, raw_ty, mutbl)
                     }
                     Borrowed(ref lt, mutbl) => {
                         let lt = mk_lifetime(cx, span, lt);
@@ -145,9 +148,9 @@ impl<'self> Ty<'self> {
             }
             Tuple(ref fields) => {
                 let ty = if fields.is_empty() {
-                    ast::ty_nil
+                    ast::TyNil
                 } else {
-                    ast::ty_tup(fields.map(|f| f.to_ty(cx, span, self_ty, self_generics)))
+                    ast::TyTup(fields.map(|f| f.to_ty(cx, span, self_ty, self_generics)))
                 };
 
                 cx.ty(span, ty)
@@ -156,101 +159,101 @@ impl<'self> Ty<'self> {
     }
 
     pub fn to_path(&self,
-                   cx: @ExtCtxt,
+                   cx: &ExtCtxt,
                    span: Span,
                    self_ty: Ident,
                    self_generics: &Generics)
                    -> ast::Path {
         match *self {
             Self => {
-                let self_params = do self_generics.ty_params.map |ty_param| {
+                let self_params = self_generics.ty_params.map(|ty_param| {
                     cx.ty_ident(span, ty_param.ident)
-                };
-                let lifetime = if self_generics.lifetimes.is_empty() {
-                    None
-                } else {
-                    Some(*self_generics.lifetimes.get(0))
-                };
+                });
+                let lifetimes = self_generics.lifetimes.clone();
 
-                cx.path_all(span, false, ~[self_ty], lifetime,
-                            opt_vec::take_vec(self_params))
+                cx.path_all(span, false, vec!(self_ty), lifetimes,
+                            self_params.into_vec())
             }
             Literal(ref p) => {
                 p.to_path(cx, span, self_ty, self_generics)
             }
-            Ptr(*) => { cx.span_bug(span, "Pointer in a path in generic `deriving`") }
-            Tuple(*) => { cx.span_bug(span, "Tuple in a path in generic `deriving`") }
+            Ptr(..) => { cx.span_bug(span, "pointer in a path in generic `deriving`") }
+            Tuple(..) => { cx.span_bug(span, "tuple in a path in generic `deriving`") }
         }
     }
 }
 
 
-fn mk_ty_param(cx: @ExtCtxt, span: Span, name: &str, bounds: &[Path],
+fn mk_ty_param(cx: &ExtCtxt, span: Span, name: &str, bounds: &[Path],
                self_ident: Ident, self_generics: &Generics) -> ast::TyParam {
-    let bounds = opt_vec::from(
-        do bounds.map |b| {
+    let bounds =
+        bounds.iter().map(|b| {
             let path = b.to_path(cx, span, self_ident, self_generics);
             cx.typarambound(path)
-        });
-    cx.typaram(cx.ident_of(name), bounds)
+        }).collect();
+    cx.typaram(cx.ident_of(name), bounds, None)
 }
 
-fn mk_generics(lifetimes: ~[ast::Lifetime],  ty_params: ~[ast::TyParam]) -> Generics {
+fn mk_generics(lifetimes: Vec<ast::Lifetime> ,  ty_params: Vec<ast::TyParam> ) -> Generics {
     Generics {
-        lifetimes: opt_vec::from(lifetimes),
-        ty_params: opt_vec::from(ty_params)
+        lifetimes: lifetimes,
+        ty_params: OwnedSlice::from_vec(ty_params)
     }
 }
 
 /// Lifetimes and bounds on type parameters
-pub struct LifetimeBounds<'self> {
-    lifetimes: ~[&'self str],
-    bounds: ~[(&'self str, ~[Path<'self>])]
+pub struct LifetimeBounds<'a> {
+    lifetimes: Vec<&'a str>,
+    bounds: Vec<(&'a str, Vec<Path<'a>>)>,
 }
 
-impl<'self> LifetimeBounds<'self> {
+impl<'a> LifetimeBounds<'a> {
     pub fn empty() -> LifetimeBounds<'static> {
         LifetimeBounds {
-            lifetimes: ~[], bounds: ~[]
+            lifetimes: Vec::new(), bounds: Vec::new()
         }
     }
     pub fn to_generics(&self,
-                       cx: @ExtCtxt,
+                       cx: &ExtCtxt,
                        span: Span,
                        self_ty: Ident,
                        self_generics: &Generics)
                        -> Generics {
-        let lifetimes = do self.lifetimes.map |lt| {
-            cx.lifetime(span, cx.ident_of(*lt))
-        };
-        let ty_params = do self.bounds.map |t| {
+        let lifetimes = self.lifetimes.map(|lt| {
+            cx.lifetime(span, cx.ident_of(*lt).name)
+        });
+        let ty_params = self.bounds.map(|t| {
             match t {
                 &(ref name, ref bounds) => {
-                    mk_ty_param(cx, span, *name, *bounds, self_ty, self_generics)
+                    mk_ty_param(cx,
+                                span,
+                                *name,
+                                bounds.as_slice(),
+                                self_ty,
+                                self_generics)
                 }
             }
-        };
+        });
         mk_generics(lifetimes, ty_params)
     }
 }
 
 
-pub fn get_explicit_self(cx: @ExtCtxt, span: Span, self_ptr: &Option<PtrTy>)
-    -> (@Expr, ast::explicit_self) {
+pub fn get_explicit_self(cx: &ExtCtxt, span: Span, self_ptr: &Option<PtrTy>)
+    -> (@Expr, ast::ExplicitSelf) {
     let self_path = cx.expr_self(span);
     match *self_ptr {
         None => {
-            (self_path, respan(span, ast::sty_value))
+            (self_path, respan(span, ast::SelfValue))
         }
         Some(ref ptr) => {
             let self_ty = respan(
                 span,
                 match *ptr {
-                    Send => ast::sty_uniq,
-                    Managed(mutbl) => ast::sty_box(mutbl),
+                    Send => ast::SelfUniq,
                     Borrowed(ref lt, mutbl) => {
-                        let lt = lt.map(|s| cx.lifetime(span, cx.ident_of(*s)));
-                        ast::sty_region(lt, mutbl)
+                        let lt = lt.map(|s| cx.lifetime(span, cx.ident_of(s).name));
+                        ast::SelfRegion(lt, mutbl)
                     }
                 });
             let self_expr = cx.expr_deref(span, self_path);

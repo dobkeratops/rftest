@@ -8,30 +8,31 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use ast::{MetaItem, item, Expr};
+use ast::{MetaItem, Item, Expr};
 use codemap::Span;
 use ext::base::ExtCtxt;
 use ext::build::AstBuilder;
 use ext::deriving::generic::*;
 
-use std::vec;
-
-pub fn expand_deriving_zero(cx: @ExtCtxt,
+pub fn expand_deriving_zero(cx: &mut ExtCtxt,
                             span: Span,
                             mitem: @MetaItem,
-                            in_items: ~[@item])
-    -> ~[@item] {
+                            item: @Item,
+                            push: |@Item|) {
     let trait_def = TraitDef {
-        path: Path::new(~["std", "num", "Zero"]),
-        additional_bounds: ~[],
+        span: span,
+        attributes: Vec::new(),
+        path: Path::new(vec!("std", "num", "Zero")),
+        additional_bounds: Vec::new(),
         generics: LifetimeBounds::empty(),
-        methods: ~[
+        methods: vec!(
             MethodDef {
                 name: "zero",
                 generics: LifetimeBounds::empty(),
                 explicit_self: None,
-                args: ~[],
+                args: Vec::new(),
                 ret_ty: Self,
+                inline: true,
                 const_nonmatching: false,
                 combine_substructure: zero_substructure
             },
@@ -39,8 +40,9 @@ pub fn expand_deriving_zero(cx: @ExtCtxt,
                 name: "is_zero",
                 generics: LifetimeBounds::empty(),
                 explicit_self: borrowed_explicit_self(),
-                args: ~[],
-                ret_ty: Literal(Path::new(~["bool"])),
+                args: Vec::new(),
+                ret_ty: Literal(Path::new(vec!("bool"))),
+                inline: true,
                 const_nonmatching: false,
                 combine_substructure: |cx, span, substr| {
                     cs_and(|cx, span, _, _| cx.span_bug(span,
@@ -50,42 +52,43 @@ pub fn expand_deriving_zero(cx: @ExtCtxt,
                            cx, span, substr)
                 }
             }
-        ]
+        )
     };
-    trait_def.expand(cx, span, mitem, in_items)
+    trait_def.expand(cx, mitem, item, push)
 }
 
-fn zero_substructure(cx: @ExtCtxt, span: Span, substr: &Substructure) -> @Expr {
-    let zero_ident = ~[
+fn zero_substructure(cx: &mut ExtCtxt, trait_span: Span, substr: &Substructure) -> @Expr {
+    let zero_ident = vec!(
         cx.ident_of("std"),
         cx.ident_of("num"),
         cx.ident_of("Zero"),
         cx.ident_of("zero")
-    ];
-    let zero_call = cx.expr_call_global(span, zero_ident.clone(), ~[]);
+    );
+    let zero_call = |span| cx.expr_call_global(span, zero_ident.clone(), Vec::new());
 
     return match *substr.fields {
         StaticStruct(_, ref summary) => {
             match *summary {
-                Left(count) => {
-                    if count == 0 {
-                        cx.expr_ident(span, substr.type_ident)
+                Unnamed(ref fields) => {
+                    if fields.is_empty() {
+                        cx.expr_ident(trait_span, substr.type_ident)
                     } else {
-                        let exprs = vec::from_elem(count, zero_call);
-                        cx.expr_call_ident(span, substr.type_ident, exprs)
+                        let exprs = fields.map(|sp| zero_call(*sp));
+                        cx.expr_call_ident(trait_span, substr.type_ident, exprs)
                     }
                 }
-                Right(ref fields) => {
-                    let zero_fields = do fields.map |ident| {
-                        cx.field_imm(span, *ident, zero_call)
-                    };
-                    cx.expr_struct_ident(span, substr.type_ident, zero_fields)
+                Named(ref fields) => {
+                    let zero_fields = fields.map(|&(ident, span)| {
+                        cx.field_imm(span, ident, zero_call(span))
+                    });
+                    cx.expr_struct_ident(trait_span, substr.type_ident, zero_fields)
                 }
             }
         }
-        StaticEnum(*) => {
-            cx.span_fatal(span, "`Zero` cannot be derived for enums, \
-                                 only structs")
+        StaticEnum(..) => {
+            cx.span_err(trait_span, "`Zero` cannot be derived for enums, only structs");
+            // let compilation continue
+            cx.expr_uint(trait_span, 0)
         }
         _ => cx.bug("Non-static method in `deriving(Zero)`")
     };

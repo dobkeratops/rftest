@@ -23,18 +23,15 @@ use middle::lang_items::{LanguageItems, language_items};
 use middle::ty::{FnTyBase, FnMeta, FnSig};
 use util::ppaux::ty_to_str;
 
-use extra::getopts::groups::{optopt, optmulti, optflag, optflagopt, getopts};
-use extra::getopts::groups;
-use extra::getopts::{opt_present};
-use extra::getopts;
-use extra::getopts;
 use extra::oldmap::HashMap;
-use syntax::codemap::dummy_sp;
+use getopts::{optopt, optmulti, optflag, optflagopt, getopts};
+use getopts::opt_present;
+use syntax::codemap::DUMMY_SP;
 use syntax::parse::parse_crate_from_source_str;
 use syntax::{ast, attr, parse};
 
 struct Env {
-    crate: @ast::Crate,
+    krate: @ast::Crate,
     tcx: ty::ctxt,
     infcx: infer::infer_ctxt,
     err_messages: @DVec<~str>
@@ -49,10 +46,10 @@ static EMPTY_SOURCE_STR: &str = "/* Hello, world! */";
 
 fn setup_env(test_name: &str, source_string: &str) -> Env {
     let messages = @DVec();
-    let matches = getopts(~[~"-Z", ~"verbose"], optgroups()).get();
+    let matches = getopts(vec!(~"-Z", ~"verbose"), optgroups()).get();
     let diag = diagnostic::collect(messages);
     let sessopts = build_session_options(~"rustc", &matches, diag);
-    let sess = build_session(sessopts, diag);
+    let sess = build_session(sessopts, None, diag);
     let cfg = build_configuration(sess, ~"whatever", str_input(~""));
     let dm = HashMap();
     let amap = HashMap();
@@ -62,7 +59,7 @@ fn setup_env(test_name: &str, source_string: &str) -> Env {
     let lang_items = LanguageItems::new();
 
     let parse_sess = parse::new_parse_sess(None);
-    let crate = parse_crate_from_source_str(
+    let krate = parse_crate_from_source_str(
         test_name.to_str(), @source_string.to_str(),
         cfg, parse_sess);
 
@@ -71,7 +68,7 @@ fn setup_env(test_name: &str, source_string: &str) -> Env {
 
     let infcx = infer::new_infer_ctxt(tcx);
 
-    return Env {crate: crate,
+    return Env {krate: krate,
                 tcx: tcx,
                 infcx: infcx,
                 err_messages: messages};
@@ -97,15 +94,15 @@ impl Env {
     }
 
     pub fn lookup_item(&self, names: &[~str]) -> ast::node_id {
-        return match search_mod(self, &self.crate.node.module, 0, names) {
+        return match search_mod(self, &self.krate.node.module, 0, names) {
             Some(id) => id,
             None => {
-                fail!("No item found: `%s`", names.connect("::"));
+                fail!("no item found: `%s`", names.connect("::"));
             }
         };
 
         fn search_mod(self: &Env,
-                      m: &ast::_mod,
+                      m: &ast::Mod,
                       idx: uint,
                       names: &[~str]) -> Option<ast::node_id> {
             assert!(idx < names.len());
@@ -118,7 +115,7 @@ impl Env {
         }
 
         fn search(self: &Env,
-                  it: @ast::item,
+                  it: @ast::Item,
                   idx: uint,
                   names: &[~str]) -> Option<ast::node_id> {
             if idx == names.len() {
@@ -126,18 +123,18 @@ impl Env {
             }
 
             return match it.node {
-                ast::item_const(*) | ast::item_fn(*) |
-                ast::item_foreign_mod(*) | ast::item_ty(*) => {
+                ast::ItemConst(..) | ast::ItemFn(..) |
+                ast::ItemForeignMod(..) | ast::ItemTy(..) => {
                     None
                 }
 
-                ast::item_enum(*) | ast::item_struct(*) |
-                ast::item_trait(*) | ast::item_impl(*) |
-                ast::item_mac(*) => {
+                ast::ItemEnum(..) | ast::ItemStruct(..) |
+                ast::ItemTrait(..) | ast::ItemImpl(..) |
+                ast::ItemMac(..) => {
                     None
                 }
 
-                ast::item_mod(ref m) => {
+                ast::ItemMod(ref m) => {
                     search_mod(self, m, idx, names)
                 }
             };
@@ -185,13 +182,16 @@ impl Env {
         let inputs = input_tys.map(|t| {mode: ast::expl(ast::by_copy),
                                         ty: *t});
         ty::mk_fn(self.tcx, FnTyBase {
-            meta: FnMeta {purity: ast::impure_fn,
+            meta: FnMeta {purity: ast::ImpureFn,
                           proto: ast::ProtoBare,
                           onceness: ast::Many,
-                          region: ty::re_static,
-                          bounds: @~[]},
-            sig: FnSig {inputs: inputs,
-                        output: output_ty}
+                          region: ty::ReStatic,
+                          bounds: @Vec::new()},
+            sig: FnSig {
+                inputs: inputs,
+                output: output_ty,
+                variadic: false
+            }
         })
     }
 
@@ -200,27 +200,27 @@ impl Env {
     }
 
     pub fn t_rptr_bound(&self, id: uint) -> ty::t {
-        ty::mk_imm_rptr(self.tcx, ty::re_bound(ty::br_anon(id)), self.t_int())
+        ty::mk_imm_rptr(self.tcx, ty::re_bound(ty::BrAnon(id)), self.t_int())
     }
 
     pub fn t_rptr_scope(&self, id: ast::node_id) -> ty::t {
-        ty::mk_imm_rptr(self.tcx, ty::re_scope(id), self.t_int())
+        ty::mk_imm_rptr(self.tcx, ty::ReScope(id), self.t_int())
     }
 
     pub fn t_rptr_free(&self, nid: ast::node_id, id: uint) -> ty::t {
         ty::mk_imm_rptr(self.tcx,
-                        ty::re_free(ty::FreeRegion {scope_id: nid,
-                                                    bound_region: ty::br_anon(id)}),
+                        ty::ReFree(ty::FreeRegion {scope_id: nid,
+                                                    bound_region: ty::BrAnon(id)}),
                         self.t_int())
     }
 
     pub fn t_rptr_static(&self) -> ty::t {
-        ty::mk_imm_rptr(self.tcx, ty::re_static, self.t_int())
+        ty::mk_imm_rptr(self.tcx, ty::ReStatic, self.t_int())
     }
 
-    pub fn lub() -> Lub { Lub(self.infcx.combine_fields(true, dummy_sp())) }
+    pub fn lub() -> Lub { Lub(self.infcx.combine_fields(true, DUMMY_SP)) }
 
-    pub fn glb() -> Glb { Glb(self.infcx.combine_fields(true, dummy_sp())) }
+    pub fn glb() -> Glb { Glb(self.infcx.combine_fields(true, DUMMY_SP)) }
 
     pub fn resolve_regions(exp_count: uint) {
         debug!("resolve_regions(%u)", exp_count);
@@ -230,7 +230,7 @@ impl Env {
             for msg in self.err_messages.iter() {
                 debug!("Error encountered: %s", *msg);
             }
-            fmt!("Resolving regions encountered %u errors but expected %u!",
+            format!("resolving regions encountered %u errors but expected %u!",
                  self.err_messages.len(),
                  exp_count);
         }
@@ -240,7 +240,7 @@ impl Env {
     pub fn check_lub(&self, t1: ty::t, t2: ty::t, t_lub: ty::t) {
         match self.lub().tys(t1, t2) {
             Err(e) => {
-                fail!("Unexpected error computing LUB: %?", e)
+                fail!("unexpected error computing LUB: %?", e)
             }
             Ok(t) => {
                 self.assert_eq(t, t_lub);
@@ -262,7 +262,7 @@ impl Env {
                self.ty_to_str(t_glb));
         match self.glb().tys(t1, t2) {
             Err(e) => {
-                fail!("Unexpected error computing LUB: %?", e)
+                fail!("unexpected error computing LUB: %?", e)
             }
             Ok(t) => {
                 self.assert_eq(t, t_glb);
@@ -281,7 +281,7 @@ impl Env {
         match self.lub().tys(t1, t2) {
             Err(_) => {}
             Ok(t) => {
-                fail!("Unexpected success computing LUB: %?", self.ty_to_str(t))
+                fail!("unexpected success computing LUB: %?", self.ty_to_str(t))
             }
         }
     }
@@ -291,7 +291,7 @@ impl Env {
         match self.glb().tys(t1, t2) {
             Err(_) => {}
             Ok(t) => {
-                fail!("Unexpected success computing GLB: %?", self.ty_to_str(t))
+                fail!("unexpected success computing GLB: %?", self.ty_to_str(t))
             }
         }
     }

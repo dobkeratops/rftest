@@ -10,31 +10,18 @@
 
 use ast;
 use codemap;
-use ext::base::*;
 use ext::base;
 use print;
-use parse::token::{get_ident_interner};
 
-use std::io;
-
-pub fn expand_syntax_ext(cx: @ExtCtxt,
+pub fn expand_syntax_ext(cx: &mut base::ExtCtxt,
                          sp: codemap::Span,
-                         tt: &[ast::token_tree])
+                         tt: &[ast::TokenTree])
                       -> base::MacResult {
 
     cx.print_backtrace();
-    io::stdout().write_line(
-        print::pprust::tt_to_str(
-            &ast::tt_delim(@mut tt.to_owned()),
-            get_ident_interner()));
+    println!("{}", print::pprust::tt_to_str(&ast::TTDelim(
+                @tt.iter().map(|x| (*x).clone()).collect())));
 
-    //trivial expression
-    MRExpr(@ast::Expr {
-        id: ast::DUMMY_NODE_ID,
-        node: ast::ExprLit(@codemap::Spanned {
-            node: ast::lit_nil,
-            span: sp
-        }),
-        span: sp,
-    })
+    // any so that `log_syntax` can be invoked as an expression and item.
+    base::MacResult::dummy_any(sp)
 }

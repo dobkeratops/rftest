@@ -8,13 +8,21 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-//! Operations and constants for `u16`
+//! Operations and constants for unsigned 16-bits integers (`u16` type)
 
+#[allow(non_uppercase_statics)];
+
+use prelude::*;
+
+use default::Default;
+use from_str::FromStr;
+use num::{Bitwise, Bounded};
 use num::{CheckedAdd, CheckedSub, CheckedMul};
+use num::{CheckedDiv, Zero, One, strconv};
+use num::{ToStrRadix, FromStrRadix};
 use option::{Option, Some, None};
-use unstable::intrinsics;
-
-pub use self::generated::*;
+use str;
+use intrinsics;
 
 uint_module!(u16, i16, 16)
 

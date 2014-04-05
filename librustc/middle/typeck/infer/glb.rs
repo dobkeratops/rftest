@@ -12,6 +12,7 @@
 use middle::ty::{BuiltinBounds};
 use middle::ty::RegionVid;
 use middle::ty;
+use middle::typeck::infer::then;
 use middle::typeck::infer::combine::*;
 use middle::typeck::infer::lattice::*;
 use middle::typeck::infer::lub::Lub;
@@ -20,31 +21,33 @@ use middle::typeck::infer::to_str::InferStr;
 use middle::typeck::infer::{cres, InferCtxt};
 use middle::typeck::infer::{TypeTrace, Subtype};
 use middle::typeck::infer::fold_regions_in_sig;
-use middle::typeck::isr_alist;
-use syntax::ast::{Many, Once, extern_fn, impure_fn, MutImmutable, MutMutable};
-use syntax::ast::{unsafe_fn};
-use syntax::ast::{Onceness, purity};
+use syntax::ast::{Many, Once, MutImmutable, MutMutable};
+use syntax::ast::{ExternFn, ImpureFn, UnsafeFn, NodeId};
+use syntax::ast::{Onceness, Purity};
+use collections::HashMap;
 use util::common::{indenter};
 use util::ppaux::mt_to_str;
 
-use extra::list;
+pub struct Glb<'f>(CombineFields<'f>);  // "greatest lower bound" (common subtype)
 
-pub struct Glb(CombineFields);  // "greatest lower bound" (common subtype)
+impl<'f> Glb<'f> {
+    pub fn get_ref<'a>(&'a self) -> &'a CombineFields<'f> { let Glb(ref v) = *self; v }
+}
 
-impl Combine for Glb {
-    fn infcx(&self) -> @mut InferCtxt { self.infcx }
+impl<'f> Combine for Glb<'f> {
+    fn infcx<'a>(&'a self) -> &'a InferCtxt<'a> { self.get_ref().infcx }
     fn tag(&self) -> ~str { ~"glb" }
-    fn a_is_expected(&self) -> bool { self.a_is_expected }
-    fn trace(&self) -> TypeTrace { self.trace }
+    fn a_is_expected(&self) -> bool { self.get_ref().a_is_expected }
+    fn trace(&self) -> TypeTrace { self.get_ref().trace }
 
-    fn sub(&self) -> Sub { Sub(**self) }
-    fn lub(&self) -> Lub { Lub(**self) }
-    fn glb(&self) -> Glb { Glb(**self) }
+    fn sub<'a>(&'a self) -> Sub<'a> { Sub(*self.get_ref()) }
+    fn lub<'a>(&'a self) -> Lub<'a> { Lub(*self.get_ref()) }
+    fn glb<'a>(&'a self) -> Glb<'a> { Glb(*self.get_ref()) }
 
     fn mts(&self, a: &ty::mt, b: &ty::mt) -> cres<ty::mt> {
-        let tcx = self.infcx.tcx;
+        let tcx = self.get_ref().infcx.tcx;
 
-        debug!("%s.mts(%s, %s)",
+        debug!("{}.mts({}, {})",
                self.tag(),
                mt_to_str(tcx, a),
                mt_to_str(tcx, b));
@@ -75,14 +78,14 @@ impl Combine for Glb {
     }
 
     fn contratys(&self, a: ty::t, b: ty::t) -> cres<ty::t> {
-        Lub(**self).tys(a, b)
+        Lub(*self.get_ref()).tys(a, b)
     }
 
-    fn purities(&self, a: purity, b: purity) -> cres<purity> {
+    fn purities(&self, a: Purity, b: Purity) -> cres<Purity> {
         match (a, b) {
-          (extern_fn, _) | (_, extern_fn) => Ok(extern_fn),
-          (impure_fn, _) | (_, impure_fn) => Ok(impure_fn),
-          (unsafe_fn, unsafe_fn) => Ok(unsafe_fn)
+          (ExternFn, _) | (_, ExternFn) => Ok(ExternFn),
+          (ImpureFn, _) | (_, ImpureFn) => Ok(ImpureFn),
+          (UnsafeFn, UnsafeFn) => Ok(UnsafeFn)
         }
     }
 
@@ -100,17 +103,17 @@ impl Combine for Glb {
     }
 
     fn regions(&self, a: ty::Region, b: ty::Region) -> cres<ty::Region> {
-        debug!("%s.regions(%?, %?)",
+        debug!("{}.regions({:?}, {:?})",
                self.tag(),
-               a.inf_str(self.infcx),
-               b.inf_str(self.infcx));
+               a.inf_str(self.get_ref().infcx),
+               b.inf_str(self.get_ref().infcx));
 
-        Ok(self.infcx.region_vars.glb_regions(Subtype(self.trace), a, b))
+        Ok(self.get_ref().infcx.region_vars.glb_regions(Subtype(self.get_ref().trace), a, b))
     }
 
     fn contraregions(&self, a: ty::Region, b: ty::Region)
                     -> cres<ty::Region> {
-        Lub(**self).regions(a, b)
+        Lub(*self.get_ref()).regions(a, b)
     }
 
     fn tys(&self, a: ty::t, b: ty::t) -> cres<ty::t> {
@@ -121,55 +124,64 @@ impl Combine for Glb {
         // Note: this is a subtle algorithm.  For a full explanation,
         // please see the large comment in `region_inference.rs`.
 
-        debug!("%s.fn_sigs(%?, %?)",
-               self.tag(), a.inf_str(self.infcx), b.inf_str(self.infcx));
+        debug!("{}.fn_sigs({:?}, {:?})",
+               self.tag(), a.inf_str(self.get_ref().infcx), b.inf_str(self.get_ref().infcx));
         let _indenter = indenter();
 
         // Take a snapshot.  We'll never roll this back, but in later
         // phases we do want to be able to examine "all bindings that
         // were created as part of this type comparison", and making a
         // snapshot is a convenient way to do that.
-        let snapshot = self.infcx.region_vars.start_snapshot();
+        let snapshot = self.get_ref().infcx.region_vars.start_snapshot();
 
         // Instantiate each bound region with a fresh region variable.
-        let (a_with_fresh, a_isr) =
-            self.infcx.replace_bound_regions_with_fresh_regions(
-                self.trace, a);
-        let a_vars = var_ids(self, a_isr);
-        let (b_with_fresh, b_isr) =
-            self.infcx.replace_bound_regions_with_fresh_regions(
-                self.trace, b);
-        let b_vars = var_ids(self, b_isr);
+        let (a_with_fresh, a_map) =
+            self.get_ref().infcx.replace_late_bound_regions_with_fresh_regions(
+                self.get_ref().trace, a);
+        let a_vars = var_ids(self, &a_map);
+        let (b_with_fresh, b_map) =
+            self.get_ref().infcx.replace_late_bound_regions_with_fresh_regions(
+                self.get_ref().trace, b);
+        let b_vars = var_ids(self, &b_map);
 
         // Collect constraints.
         let sig0 = if_ok!(super_fn_sigs(self, &a_with_fresh, &b_with_fresh));
-        debug!("sig0 = %s", sig0.inf_str(self.infcx));
+        debug!("sig0 = {}", sig0.inf_str(self.get_ref().infcx));
 
         // Generalize the regions appearing in fn_ty0 if possible
         let new_vars =
-            self.infcx.region_vars.vars_created_since_snapshot(snapshot);
+            self.get_ref().infcx.region_vars.vars_created_since_snapshot(snapshot);
         let sig1 =
             fold_regions_in_sig(
-                self.infcx.tcx,
+                self.get_ref().infcx.tcx,
                 &sig0,
-                |r, _in_fn| generalize_region(self, snapshot,
-                                              new_vars, a_isr, a_vars, b_vars,
-                                              r));
-        debug!("sig1 = %s", sig1.inf_str(self.infcx));
+                |r| {
+                generalize_region(self,
+                                  snapshot,
+                                  new_vars.as_slice(),
+                                  sig0.binder_id,
+                                  &a_map,
+                                  a_vars.as_slice(),
+                                  b_vars.as_slice(),
+                                  r)
+            });
+        debug!("sig1 = {}", sig1.inf_str(self.get_ref().infcx));
         return Ok(sig1);
 
         fn generalize_region(this: &Glb,
                              snapshot: uint,
                              new_vars: &[RegionVid],
-                             a_isr: isr_alist,
+                             new_binder_id: NodeId,
+                             a_map: &HashMap<ty::BoundRegion, ty::Region>,
                              a_vars: &[RegionVid],
                              b_vars: &[RegionVid],
                              r0: ty::Region) -> ty::Region {
             if !is_var_in_set(new_vars, r0) {
+                assert!(!r0.is_bound());
                 return r0;
             }
 
-            let tainted = this.infcx.region_vars.tainted(snapshot, r0);
+            let tainted = this.get_ref().infcx.region_vars.tainted(snapshot, r0);
 
             let mut a_r = None;
             let mut b_r = None;
@@ -177,13 +189,13 @@ impl Combine for Glb {
             for r in tainted.iter() {
                 if is_var_in_set(a_vars, *r) {
                     if a_r.is_some() {
-                        return fresh_bound_variable(this);
+                        return fresh_bound_variable(this, new_binder_id);
                     } else {
                         a_r = Some(*r);
                     }
                 } else if is_var_in_set(b_vars, *r) {
                     if b_r.is_some() {
-                        return fresh_bound_variable(this);
+                        return fresh_bound_variable(this, new_binder_id);
                     } else {
                         b_r = Some(*r);
                     }
@@ -192,57 +204,57 @@ impl Combine for Glb {
                 }
             }
 
-                // NB---I do not believe this algorithm computes
-                // (necessarily) the GLB.  As written it can
-                // spuriously fail.  In particular, if there is a case
-                // like: &fn(fn(&a)) and fn(fn(&b)), where a and b are
-                // free, it will return fn(&c) where c = GLB(a,b).  If
-                // however this GLB is not defined, then the result is
-                // an error, even though something like
-                // "fn<X>(fn(&X))" where X is bound would be a
-                // subtype of both of those.
-                //
-                // The problem is that if we were to return a bound
-                // variable, we'd be computing a lower-bound, but not
-                // necessarily the *greatest* lower-bound.
+            // NB---I do not believe this algorithm computes
+            // (necessarily) the GLB.  As written it can
+            // spuriously fail.  In particular, if there is a case
+            // like: |fn(&a)| and fn(fn(&b)), where a and b are
+            // free, it will return fn(&c) where c = GLB(a,b).  If
+            // however this GLB is not defined, then the result is
+            // an error, even though something like
+            // "fn<X>(fn(&X))" where X is bound would be a
+            // subtype of both of those.
+            //
+            // The problem is that if we were to return a bound
+            // variable, we'd be computing a lower-bound, but not
+            // necessarily the *greatest* lower-bound.
+            //
+            // Unfortunately, this problem is non-trivial to solve,
+            // because we do not know at the time of computing the GLB
+            // whether a GLB(a,b) exists or not, because we haven't
+            // run region inference (or indeed, even fully computed
+            // the region hierarchy!). The current algorithm seems to
+            // works ok in practice.
 
             if a_r.is_some() && b_r.is_some() && only_new_vars {
                 // Related to exactly one bound variable from each fn:
-                return rev_lookup(this, a_isr, a_r.unwrap());
+                return rev_lookup(this, a_map, new_binder_id, a_r.unwrap());
             } else if a_r.is_none() && b_r.is_none() {
                 // Not related to bound variables from either fn:
+                assert!(!r0.is_bound());
                 return r0;
             } else {
                 // Other:
-                return fresh_bound_variable(this);
+                return fresh_bound_variable(this, new_binder_id);
             }
         }
 
         fn rev_lookup(this: &Glb,
-                      a_isr: isr_alist,
+                      a_map: &HashMap<ty::BoundRegion, ty::Region>,
+                      new_binder_id: NodeId,
                       r: ty::Region) -> ty::Region
         {
-            let mut ret = None;
-            do list::each(a_isr) |pair| {
-                let (a_br, a_r) = *pair;
-                if a_r == r {
-                    ret = Some(ty::re_bound(a_br));
-                    false
-                } else {
-                    true
+            for (a_br, a_r) in a_map.iter() {
+                if *a_r == r {
+                    return ty::ReLateBound(new_binder_id, *a_br);
                 }
-            };
-
-            match ret {
-                Some(x) => x,
-                None => this.infcx.tcx.sess.span_bug(
-                            this.trace.origin.span(),
-                            fmt!("could not find original bound region for %?", r))
             }
+            this.get_ref().infcx.tcx.sess.span_bug(
+                this.get_ref().trace.origin.span(),
+                format!("could not find original bound region for {:?}", r))
         }
 
-        fn fresh_bound_variable(this: &Glb) -> ty::Region {
-            this.infcx.region_vars.new_bound()
+        fn fresh_bound_variable(this: &Glb, binder_id: NodeId) -> ty::Region {
+            this.get_ref().infcx.region_vars.new_bound(binder_id)
         }
     }
 }

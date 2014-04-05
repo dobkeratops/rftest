@@ -10,23 +10,15 @@
 
 #[doc(hidden)];
 
-use comm::{GenericChan, GenericPort};
-use comm;
 use prelude::*;
-use task;
 use libc::uintptr_t;
 
 pub mod dynamic_lib;
 
 pub mod finally;
-pub mod intrinsics;
 pub mod simd;
-pub mod extfmt;
-#[cfg(not(test))]
-pub mod lang;
 pub mod sync;
-pub mod atomics;
-pub mod raw;
+pub mod mutex;
 
 /**
 
@@ -36,36 +28,26 @@ for it to terminate.
 The executing thread has no access to a task pointer and will be using
 a normal large stack.
 */
-pub fn run_in_bare_thread(f: ~fn()) {
-    use cell::Cell;
+pub fn run_in_bare_thread(f: proc()) {
     use rt::thread::Thread;
-
-    let f_cell = Cell::new(f);
-    let (port, chan) = comm::stream();
-    // FIXME #4525: Unfortunate that this creates an extra scheduler but it's
-    // necessary since rust_raw_thread_join is blocking
-    do task::spawn_sched(task::SingleThreaded) {
-        Thread::start(f_cell.take()).join();
-        chan.send(());
-    }
-    port.recv();
+    Thread::start(f).join()
 }
 
 #[test]
 fn test_run_in_bare_thread() {
     let i = 100;
-    do run_in_bare_thread {
+    run_in_bare_thread(proc() {
         assert_eq!(i, 100);
-    }
+    });
 }
 
 #[test]
 fn test_run_in_bare_thread_exchange() {
     // Does the exchange heap work without the runtime?
     let i = ~100;
-    do run_in_bare_thread {
+    run_in_bare_thread(proc() {
         assert!(i == ~100);
-    }
+    });
 }
 
 /// Dynamically inquire about whether we're running under V.
@@ -73,7 +55,6 @@ fn test_run_in_bare_thread_exchange() {
 /// can't run correctly un-altered. Valgrind is there to help
 /// you notice weirdness in normal, un-doctored code paths!
 pub fn running_on_valgrind() -> bool {
-    #[fixed_stack_segment]; #[inline(never)];
     unsafe { rust_running_on_valgrind() != 0 }
 }
 

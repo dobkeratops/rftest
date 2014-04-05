@@ -19,9 +19,8 @@
 * C bindings as appropriate for the target platform. The exact
 * set of functions available are platform specific.
 *
-* *Note* Rustdoc does not indicate reexports currently. Also, because these
-* definitions are platform-specific, some may not
-* appear in the generated documentation.
+* *Note* Because these definitions are platform-specific, some may not appear in
+* the generated documentation.
 *
 * We consider the following specs reasonably normative with respect
 * to interoperating with the C standard library (libc/msvcrt):
@@ -66,6 +65,7 @@
 #[allow(non_camel_case_types)];
 #[allow(non_uppercase_statics)];
 #[allow(missing_doc)];
+#[allow(uppercase_variables)];
 
 // Initial glob-exports mean that all the contents of all the modules
 // wind up exported, if you're interested in writing platform-specific code.
@@ -77,6 +77,7 @@ pub use libc::types::common::posix01::*;
 pub use libc::types::common::posix08::*;
 pub use libc::types::common::bsd44::*;
 pub use libc::types::os::common::posix01::*;
+pub use libc::types::os::common::bsd44::*;
 pub use libc::types::os::arch::c95::*;
 pub use libc::types::os::arch::c99::*;
 pub use libc::types::os::arch::posix88::*;
@@ -112,6 +113,7 @@ pub use libc::funcs::posix01::glob::*;
 pub use libc::funcs::posix01::mman::*;
 pub use libc::funcs::posix08::unistd::*;
 
+pub use libc::funcs::bsd43::*;
 pub use libc::funcs::bsd44::*;
 pub use libc::funcs::extra::*;
 
@@ -143,7 +145,7 @@ pub use libc::consts::os::c95::{SEEK_SET, TMP_MAX};
 pub use libc::consts::os::posix88::{F_OK, O_APPEND, O_CREAT, O_EXCL};
 pub use libc::consts::os::posix88::{O_RDONLY, O_RDWR, O_TRUNC, O_WRONLY};
 pub use libc::consts::os::posix88::{R_OK, S_IEXEC, S_IFBLK, S_IFCHR};
-pub use libc::consts::os::posix88::{S_IFDIR, S_IFIFO, S_IFMT, S_IFREG};
+pub use libc::consts::os::posix88::{S_IFDIR, S_IFIFO, S_IFMT, S_IFREG, S_IFLNK};
 pub use libc::consts::os::posix88::{S_IREAD, S_IRUSR, S_IRWXU, S_IWUSR};
 pub use libc::consts::os::posix88::{STDERR_FILENO, STDIN_FILENO};
 pub use libc::consts::os::posix88::{STDOUT_FILENO, W_OK, X_OK};
@@ -158,7 +160,7 @@ pub use libc::funcs::c95::stdio::{fread, freopen, fseek, fsetpos, ftell};
 pub use libc::funcs::c95::stdio::{fwrite, perror, puts, remove, rewind};
 pub use libc::funcs::c95::stdio::{setbuf, setvbuf, tmpfile, ungetc};
 
-pub use libc::funcs::c95::stdlib::{abort, abs, atof, atoi, calloc, exit};
+pub use libc::funcs::c95::stdlib::{abs, atof, atoi, calloc, exit, _exit};
 pub use libc::funcs::c95::stdlib::{free, getenv, labs, malloc, rand};
 pub use libc::funcs::c95::stdlib::{realloc, srand, strtod, strtol};
 pub use libc::funcs::c95::stdlib::{strtoul, system};
@@ -193,8 +195,19 @@ pub mod types {
             This type is only useful as a pointer target. Do not use it as a
             return type for FFI functions which have the `void` return type in
             C. Use the unit type `()` or omit the return type instead.
+
+            For LLVM to recognize the void pointer type and by extension
+            functions like malloc(), we need to have it represented as i8* in
+            LLVM bitcode. The enum used here ensures this and prevents misuse
+            of the "raw" type by only having private variants.. We need two
+            variants, because the compiler complains about the repr attribute
+            otherwise.
             */
-            pub enum c_void {}
+            #[repr(u8)]
+            pub enum c_void {
+                priv variant1,
+                priv variant2
+            }
             pub enum FILE {}
             pub enum fpos_t {}
         }
@@ -225,7 +238,11 @@ pub mod types {
         pub mod common {
             pub mod posix01 {
                 use libc::types::common::c95::{c_void};
-                use libc::types::os::arch::c95::{c_char, size_t};
+                use libc::types::os::arch::c95::{c_char, c_ulong, size_t,
+                                                 time_t, suseconds_t, c_long};
+
+                pub type pthread_t = c_ulong;
+
                 pub struct glob_t {
                     gl_pathc: size_t,
                     gl_pathv: **c_char,
@@ -236,6 +253,76 @@ pub mod types {
                     __unused3: *c_void,
                     __unused4: *c_void,
                     __unused5: *c_void,
+                }
+
+                pub struct timeval {
+                    tv_sec: time_t,
+                    tv_usec: suseconds_t,
+                }
+
+                pub struct timespec {
+                    tv_sec: time_t,
+                    tv_nsec: c_long,
+                }
+
+                pub enum timezone {}
+            }
+            pub mod bsd44 {
+                use libc::types::os::arch::c95::{c_char, c_int, c_uint};
+
+                pub type socklen_t = u32;
+                pub type sa_family_t = u16;
+                pub type in_port_t = u16;
+                pub type in_addr_t = u32;
+                pub struct sockaddr {
+                    sa_family: sa_family_t,
+                    sa_data: [u8, ..14],
+                }
+                pub struct sockaddr_storage {
+                    ss_family: sa_family_t,
+                    __ss_align: i64,
+                    __ss_pad2: [u8, ..112],
+                }
+                pub struct sockaddr_in {
+                    sin_family: sa_family_t,
+                    sin_port: in_port_t,
+                    sin_addr: in_addr,
+                    sin_zero: [u8, ..8],
+                }
+                pub struct in_addr {
+                    s_addr: in_addr_t,
+                }
+                pub struct sockaddr_in6 {
+                    sin6_family: sa_family_t,
+                    sin6_port: in_port_t,
+                    sin6_flowinfo: u32,
+                    sin6_addr: in6_addr,
+                    sin6_scope_id: u32,
+                }
+                pub struct in6_addr {
+                    s6_addr: [u16, ..8]
+                }
+                pub struct ip_mreq {
+                    imr_multiaddr: in_addr,
+                    imr_interface: in_addr,
+                }
+                pub struct ip6_mreq {
+                    ipv6mr_multiaddr: in6_addr,
+                    ipv6mr_interface: c_uint,
+                }
+                pub struct addrinfo {
+                    ai_flags: c_int,
+                    ai_family: c_int,
+                    ai_socktype: c_int,
+                    ai_protocol: c_int,
+                    ai_addrlen: socklen_t,
+                    ai_addr: *sockaddr,
+                    ai_canonname: *c_char,
+                    ai_next: *addrinfo
+                }
+                pub struct sockaddr_un {
+                    sun_family: sa_family_t,
+                    sun_path: [c_char, ..108]
                 }
             }
         }
@@ -260,6 +347,7 @@ pub mod types {
                 pub type ptrdiff_t = i32;
                 pub type clock_t = i32;
                 pub type time_t = i32;
+                pub type suseconds_t = i32;
                 pub type wchar_t = i32;
             }
             pub mod c99 {
@@ -326,6 +414,15 @@ pub mod types {
                     __unused4: c_long,
                     __unused5: c_long,
                 }
+
+                pub struct utimbuf {
+                    actime: time_t,
+                    modtime: time_t,
+                }
+
+                pub struct pthread_attr_t {
+                    __size: [u32, ..9]
+                }
             }
             #[cfg(target_arch = "arm")]
             pub mod posix01 {
@@ -357,6 +454,15 @@ pub mod types {
                     st_ctime: time_t,
                     st_ctime_nsec: c_ulong,
                     st_ino: c_ulonglong
+                }
+
+                pub struct utimbuf {
+                    actime: time_t,
+                    modtime: time_t,
+                }
+
+                pub struct pthread_attr_t {
+                    __size: [u32, ..9]
                 }
             }
             #[cfg(target_arch = "mips")]
@@ -392,6 +498,15 @@ pub mod types {
                     st_blocks: blkcnt_t,
                     st_pad5: [c_long, ..14],
                 }
+
+                pub struct utimbuf {
+                    actime: time_t,
+                    modtime: time_t,
+                }
+
+                pub struct pthread_attr_t {
+                    __size: [u32, ..9]
+                }
             }
             pub mod posix08 {}
             pub mod bsd44 {}
@@ -416,6 +531,7 @@ pub mod types {
                 pub type ptrdiff_t = i64;
                 pub type clock_t = i64;
                 pub type time_t = i64;
+                pub type suseconds_t = i64;
                 pub type wchar_t = i32;
             }
             pub mod c99 {
@@ -464,6 +580,15 @@ pub mod types {
                     st_ctime_nsec: c_long,
                     __unused: [c_long, ..3],
                 }
+
+                pub struct utimbuf {
+                    actime: time_t,
+                    modtime: time_t,
+                }
+
+                pub struct pthread_attr_t {
+                    __size: [u64, ..7]
+                }
             }
             pub mod posix08 {
             }
@@ -479,7 +604,12 @@ pub mod types {
         pub mod common {
             pub mod posix01 {
                 use libc::types::common::c95::{c_void};
-                use libc::types::os::arch::c95::{c_char, c_int, size_t};
+                use libc::types::os::arch::c95::{c_char, c_int, size_t,
+                                                 time_t, suseconds_t, c_long};
+                use libc::types::os::arch::c99::{uintptr_t};
+
+                pub type pthread_t = uintptr_t;
+
                 pub struct glob_t {
                     gl_pathc:  size_t,
                     __unused1: size_t,
@@ -494,6 +624,82 @@ pub mod types {
                     __unused6: *c_void,
                     __unused7: *c_void,
                     __unused8: *c_void,
+                }
+
+                pub struct timeval {
+                    tv_sec: time_t,
+                    tv_usec: suseconds_t,
+                }
+
+                pub struct timespec {
+                    tv_sec: time_t,
+                    tv_nsec: c_long,
+                }
+
+                pub enum timezone {}
+            }
+            pub mod bsd44 {
+                use libc::types::os::arch::c95::{c_char, c_int, c_uint};
+
+                pub type socklen_t = u32;
+                pub type sa_family_t = u8;
+                pub type in_port_t = u16;
+                pub type in_addr_t = u32;
+                pub struct sockaddr {
+                    sa_len: u8,
+                    sa_family: sa_family_t,
+                    sa_data: [u8, ..14],
+                }
+                pub struct sockaddr_storage {
+                    ss_len: u8,
+                    ss_family: sa_family_t,
+                    __ss_pad1: [u8, ..6],
+                    __ss_align: i64,
+                    __ss_pad2: [u8, ..112],
+                }
+                pub struct sockaddr_in {
+                    sin_len: u8,
+                    sin_family: sa_family_t,
+                    sin_port: in_port_t,
+                    sin_addr: in_addr,
+                    sin_zero: [u8, ..8],
+                }
+                pub struct in_addr {
+                    s_addr: in_addr_t,
+                }
+                pub struct sockaddr_in6 {
+                    sin6_len: u8,
+                    sin6_family: sa_family_t,
+                    sin6_port: in_port_t,
+                    sin6_flowinfo: u32,
+                    sin6_addr: in6_addr,
+                    sin6_scope_id: u32,
+                }
+                pub struct in6_addr {
+                    s6_addr: [u16, ..8]
+                }
+                pub struct ip_mreq {
+                    imr_multiaddr: in_addr,
+                    imr_interface: in_addr,
+                }
+                pub struct ip6_mreq {
+                    ipv6mr_multiaddr: in6_addr,
+                    ipv6mr_interface: c_uint,
+                }
+                pub struct addrinfo {
+                    ai_flags: c_int,
+                    ai_family: c_int,
+                    ai_socktype: c_int,
+                    ai_protocol: c_int,
+                    ai_addrlen: socklen_t,
+                    ai_canonname: *c_char,
+                    ai_addr: *sockaddr,
+                    ai_next: *addrinfo
+                }
+                pub struct sockaddr_un {
+                    sun_len: u8,
+                    sun_family: sa_family_t,
+                    sun_path: [c_char, ..104]
                 }
             }
         }
@@ -516,6 +722,7 @@ pub mod types {
                 pub type ptrdiff_t = i64;
                 pub type clock_t = i32;
                 pub type time_t = i64;
+                pub type suseconds_t = i64;
                 pub type wchar_t = i32;
             }
             pub mod c99 {
@@ -536,6 +743,7 @@ pub mod types {
                 pub type ssize_t = i64;
             }
             pub mod posix01 {
+                use libc::types::common::c95::{c_void};
                 use libc::types::common::c99::{uint8_t, uint32_t, int32_t};
                 use libc::types::os::arch::c95::{c_long, time_t};
                 use libc::types::os::arch::posix88::{dev_t, gid_t, ino_t};
@@ -570,6 +778,13 @@ pub mod types {
                     st_birthtime_nsec: c_long,
                     __unused: [uint8_t, ..2],
                 }
+
+                pub struct utimbuf {
+                    actime: time_t,
+                    modtime: time_t,
+                }
+
+                pub type pthread_attr_t = *c_void;
             }
             pub mod posix08 {
             }
@@ -584,7 +799,8 @@ pub mod types {
     pub mod os {
         pub mod common {
             pub mod posix01 {
-                use libc::types::os::arch::c95::c_short;
+                use libc::types::os::arch::c95::{c_short, time_t, suseconds_t,
+                                                 c_long};
                 use libc::types::os::arch::extra::{int64, time64_t};
                 use libc::types::os::arch::posix88::{dev_t, ino_t};
                 use libc::types::os::arch::posix88::mode_t;
@@ -604,10 +820,87 @@ pub mod types {
                     st_mtime: time64_t,
                     st_ctime: time64_t,
                 }
+
+                // note that this is called utimbuf64 in win32
+                pub struct utimbuf {
+                    actime: time64_t,
+                    modtime: time64_t,
+                }
+
+                pub struct timeval {
+                    tv_sec: time_t,
+                    tv_usec: suseconds_t,
+                }
+
+                pub struct timespec {
+                    tv_sec: time_t,
+                    tv_nsec: c_long,
+                }
+
+                pub enum timezone {}
+            }
+
+            pub mod bsd44 {
+                use libc::types::os::arch::c95::{c_char, c_int, c_uint, size_t};
+
+                pub type SOCKET = c_uint;
+                pub type socklen_t = c_int;
+                pub type sa_family_t = u16;
+                pub type in_port_t = u16;
+                pub type in_addr_t = u32;
+                pub struct sockaddr {
+                    sa_family: sa_family_t,
+                    sa_data: [u8, ..14],
+                }
+                pub struct sockaddr_storage {
+                    ss_family: sa_family_t,
+                    __ss_align: i64,
+                    __ss_pad2: [u8, ..112],
+                }
+                pub struct sockaddr_in {
+                    sin_family: sa_family_t,
+                    sin_port: in_port_t,
+                    sin_addr: in_addr,
+                    sin_zero: [u8, ..8],
+                }
+                pub struct in_addr {
+                    s_addr: in_addr_t,
+                }
+                pub struct sockaddr_in6 {
+                    sin6_family: sa_family_t,
+                    sin6_port: in_port_t,
+                    sin6_flowinfo: u32,
+                    sin6_addr: in6_addr,
+                    sin6_scope_id: u32,
+                }
+                pub struct in6_addr {
+                    s6_addr: [u16, ..8]
+                }
+                pub struct ip_mreq {
+                    imr_multiaddr: in_addr,
+                    imr_interface: in_addr,
+                }
+                pub struct ip6_mreq {
+                    ipv6mr_multiaddr: in6_addr,
+                    ipv6mr_interface: c_uint,
+                }
+                pub struct addrinfo {
+                    ai_flags: c_int,
+                    ai_family: c_int,
+                    ai_socktype: c_int,
+                    ai_protocol: c_int,
+                    ai_addrlen: size_t,
+                    ai_canonname: *c_char,
+                    ai_addr: *sockaddr,
+                    ai_next: *addrinfo
+                }
+                pub struct sockaddr_un {
+                    sun_family: sa_family_t,
+                    sun_path: [c_char, ..108]
+                }
             }
         }
 
-        #[cfg(target_arch = "x86")]
         pub mod arch {
             pub mod c95 {
                 pub type c_char = i8;
@@ -621,27 +914,58 @@ pub mod types {
                 pub type c_ulong = u32;
                 pub type c_float = f32;
                 pub type c_double = f64;
+
+                #[cfg(target_arch = "x86")]
                 pub type size_t = u32;
+                #[cfg(target_arch = "x86_64")]
+                pub type size_t = u64;
+
+                #[cfg(target_arch = "x86")]
                 pub type ptrdiff_t = i32;
+                #[cfg(target_arch = "x86_64")]
+                pub type ptrdiff_t = i64;
+
                 pub type clock_t = i32;
+
+                #[cfg(target_arch = "x86")]
                 pub type time_t = i32;
+                #[cfg(target_arch = "x86_64")]
+                pub type time_t = i64;
+
+                #[cfg(target_arch = "x86")]
+                pub type suseconds_t = i32;
+                #[cfg(target_arch = "x86_64")]
+                pub type suseconds_t = i64;
+
                 pub type wchar_t = u16;
             }
+
             pub mod c99 {
                 pub type c_longlong = i64;
                 pub type c_ulonglong = u64;
                 pub type intptr_t = int;
                 pub type uintptr_t = uint;
             }
+
             pub mod posix88 {
                 pub type off_t = i32;
                 pub type dev_t = u32;
                 pub type ino_t = i16;
+
+                #[cfg(target_arch = "x86")]
                 pub type pid_t = i32;
+                #[cfg(target_arch = "x86_64")]
+                pub type pid_t = i64;
+
                 pub type useconds_t = u32;
                 pub type mode_t = u16;
+
+                #[cfg(target_arch = "x86")]
                 pub type ssize_t = i32;
+                #[cfg(target_arch = "x86_64")]
+                pub type ssize_t = i64;
             }
+
             pub mod posix01 {
             }
             pub mod posix08 {
@@ -650,14 +974,17 @@ pub mod types {
             }
             pub mod extra {
                 use ptr;
+                use libc::consts::os::extra::{MAX_PROTOCOL_CHAIN,
+                                              WSAPROTOCOL_LEN};
                 use libc::types::common::c95::c_void;
                 use libc::types::os::arch::c95::{c_char, c_int, c_uint, size_t};
                 use libc::types::os::arch::c95::{c_long, c_ulong};
                 use libc::types::os::arch::c95::{wchar_t};
-                use libc::types::os::arch::c99::{c_ulonglong};
+                use libc::types::os::arch::c99::{c_ulonglong, c_longlong};
 
                 pub type BOOL = c_int;
                 pub type BYTE = u8;
+                pub type BOOLEAN = BYTE;
                 pub type CCHAR = c_char;
                 pub type CHAR = c_char;
 
@@ -667,16 +994,25 @@ pub mod types {
                 pub type HANDLE = LPVOID;
                 pub type HMODULE = c_uint;
 
+                pub type LONG = c_long;
+                pub type PLONG = *mut c_long;
+
+                #[cfg(target_arch = "x86")]
                 pub type LONG_PTR = c_long;
+                #[cfg(target_arch = "x86_64")]
+                pub type LONG_PTR = i64;
+
+                pub type LARGE_INTEGER = c_longlong;
+                pub type PLARGE_INTEGER = *mut c_longlong;
 
                 pub type LPCWSTR = *WCHAR;
                 pub type LPCSTR = *CHAR;
-                pub type LPCTSTR = *CHAR;
-                pub type LPTCH = *CHAR;
 
                 pub type LPWSTR = *mut WCHAR;
                 pub type LPSTR = *mut CHAR;
-                pub type LPTSTR = *mut CHAR;
+
+                pub type LPWCH = *mut WCHAR;
+                pub type LPCH = *mut CHAR;
 
                 // Not really, but opaque to us.
                 pub type LPSECURITY_ATTRIBUTES = LPVOID;
@@ -699,9 +1035,9 @@ pub mod types {
 
                 pub struct STARTUPINFO {
                     cb: DWORD,
-                    lpReserved: LPTSTR,
-                    lpDesktop: LPTSTR,
-                    lpTitle: LPTSTR,
+                    lpReserved: LPWSTR,
+                    lpDesktop: LPWSTR,
+                    lpTitle: LPWSTR,
                     dwX: DWORD,
                     dwY: DWORD,
                     dwXSize: DWORD,
@@ -770,172 +1106,64 @@ pub mod types {
                     Type: DWORD
                 }
                 pub type LPMEMORY_BASIC_INFORMATION = *mut MEMORY_BASIC_INFORMATION;
-            }
-        }
 
-        #[cfg(target_arch = "x86_64")]
-        pub mod arch {
-            pub mod c95 {
-                pub type c_char = i8;
-                pub type c_schar = i8;
-                pub type c_uchar = u8;
-                pub type c_short = i16;
-                pub type c_ushort = u16;
-                pub type c_int = i32;
-                pub type c_uint = u32;
-                pub type c_long = i32;
-                pub type c_ulong = u32;
-                pub type c_float = f32;
-                pub type c_double = f64;
-                pub type size_t = u64;
-                pub type ptrdiff_t = i64;
-                pub type clock_t = i32;
-                pub type time_t = i64;
-                pub type wchar_t = u16;
-            }
-            pub mod c99 {
-                pub type c_longlong = i64;
-                pub type c_ulonglong = u64;
-                pub type intptr_t = int;
-                pub type uintptr_t = uint;
-            }
-            pub mod posix88 {
-                pub type off_t = i32; // XXX unless _FILE_OFFSET_BITS == 64
-                pub type dev_t = u32;
-                pub type ino_t = i16;
-                pub type pid_t = i64;
-                pub type useconds_t = u32;
-                pub type mode_t = u16;
-                pub type ssize_t = i64;
-            }
-            pub mod posix01 {
-            }
-            pub mod posix08 {
-            }
-            pub mod bsd44 {
-            }
-            pub mod extra {
-                use ptr;
-                use libc::types::common::c95::c_void;
-                use libc::types::os::arch::c95::{c_char, c_int, c_uint, size_t};
-                use libc::types::os::arch::c95::{c_ulong};
-                use libc::types::os::arch::c95::{wchar_t};
-                use libc::types::os::arch::c99::{c_ulonglong};
-
-                pub type BOOL = c_int;
-                pub type BYTE = u8;
-                pub type CCHAR = c_char;
-                pub type CHAR = c_char;
-
-                pub type DWORD = c_ulong;
-                pub type DWORDLONG = c_ulonglong;
-
-                pub type HANDLE = LPVOID;
-                pub type HMODULE = c_uint;
-
-                pub type LONG_PTR = i64; // changed
-
-                pub type LPCWSTR = *WCHAR;
-                pub type LPCSTR = *CHAR;
-                pub type LPCTSTR = *CHAR;
-                pub type LPTCH = *CHAR;
-
-                pub type LPWSTR = *mut WCHAR;
-                pub type LPSTR = *mut CHAR;
-                pub type LPTSTR = *mut CHAR;
-
-                // Not really, but opaque to us.
-                pub type LPSECURITY_ATTRIBUTES = LPVOID;
-
-                pub type LPVOID = *mut c_void;
-                pub type LPCVOID = *c_void;
-                pub type LPBYTE = *mut BYTE;
-                pub type LPWORD = *mut WORD;
-                pub type LPDWORD = *mut DWORD;
-                pub type LPHANDLE = *mut HANDLE;
-
-                pub type LRESULT = LONG_PTR;
-                pub type PBOOL = *mut BOOL;
-                pub type WCHAR = wchar_t;
-                pub type WORD = u16;
-                pub type SIZE_T = size_t;
-
-                pub type time64_t = i64;
-                pub type int64 = i64;
-
-                pub struct STARTUPINFO {
-                    cb: DWORD,
-                    lpReserved: LPTSTR,
-                    lpDesktop: LPTSTR,
-                    lpTitle: LPTSTR,
-                    dwX: DWORD,
-                    dwY: DWORD,
-                    dwXSize: DWORD,
-                    dwYSize: DWORD,
-                    dwXCountChars: DWORD,
-                    dwYCountCharts: DWORD,
-                    dwFillAttribute: DWORD,
-                    dwFlags: DWORD,
-                    wShowWindow: WORD,
-                    cbReserved2: WORD,
-                    lpReserved2: LPBYTE,
-                    hStdInput: HANDLE,
-                    hStdOutput: HANDLE,
-                    hStdError: HANDLE
-                }
-                pub type LPSTARTUPINFO = *mut STARTUPINFO;
-
-                pub struct PROCESS_INFORMATION {
-                    hProcess: HANDLE,
-                    hThread: HANDLE,
-                    dwProcessId: DWORD,
-                    dwThreadId: DWORD
-                }
-                pub type LPPROCESS_INFORMATION = *mut PROCESS_INFORMATION;
-
-                pub struct SYSTEM_INFO {
-                    wProcessorArchitecture: WORD,
-                    wReserved: WORD,
-                    dwPageSize: DWORD,
-                    lpMinimumApplicationAddress: LPVOID,
-                    lpMaximumApplicationAddress: LPVOID,
-                    dwActiveProcessorMask: DWORD,
-                    dwNumberOfProcessors: DWORD,
-                    dwProcessorType: DWORD,
-                    dwAllocationGranularity: DWORD,
-                    wProcessorLevel: WORD,
-                    wProcessorRevision: WORD
-                }
-                pub type LPSYSTEM_INFO = *mut SYSTEM_INFO;
-
-                impl SYSTEM_INFO {
-                    pub fn new() -> SYSTEM_INFO {
-                        SYSTEM_INFO {
-                            wProcessorArchitecture: 0,
-                            wReserved: 0,
-                            dwPageSize: 0,
-                            lpMinimumApplicationAddress: ptr::mut_null(),
-                            lpMaximumApplicationAddress: ptr::mut_null(),
-                            dwActiveProcessorMask: 0,
-                            dwNumberOfProcessors: 0,
-                            dwProcessorType: 0,
-                            dwAllocationGranularity: 0,
-                            wProcessorLevel: 0,
-                            wProcessorRevision: 0
-                        }
-                    }
+                pub struct OVERLAPPED {
+                    Internal: *c_ulong,
+                    InternalHigh: *c_ulong,
+                    Offset: DWORD,
+                    OffsetHigh: DWORD,
+                    hEvent: HANDLE,
                 }
 
-                pub struct MEMORY_BASIC_INFORMATION {
-                    BaseAddress: LPVOID,
-                    AllocationBase: LPVOID,
-                    AllocationProtect: DWORD,
-                    RegionSize: SIZE_T,
-                    State: DWORD,
-                    Protect: DWORD,
-                    Type: DWORD
+                pub type LPOVERLAPPED = *mut OVERLAPPED;
+
+                pub struct FILETIME {
+                    dwLowDateTime: DWORD,
+                    dwHighDateTime: DWORD,
                 }
-                pub type LPMEMORY_BASIC_INFORMATION = *mut MEMORY_BASIC_INFORMATION;
+
+                pub type LPFILETIME = *mut FILETIME;
+
+                pub struct GUID {
+                    Data1: DWORD,
+                    Data2: DWORD,
+                    Data3: DWORD,
+                    Data4: [BYTE, ..8],
+                }
+
+                pub struct WSAPROTOCOLCHAIN {
+                    ChainLen: c_int,
+                    ChainEntries: [DWORD, ..MAX_PROTOCOL_CHAIN],
+                }
+
+                pub type LPWSAPROTOCOLCHAIN = *mut WSAPROTOCOLCHAIN;
+
+                pub struct WSAPROTOCOL_INFO {
+                    dwServiceFlags1: DWORD,
+                    dwServiceFlags2: DWORD,
+                    dwServiceFlags3: DWORD,
+                    dwServiceFlags4: DWORD,
+                    dwProviderFlags: DWORD,
+                    ProviderId: GUID,
+                    dwCatalogEntryId: DWORD,
+                    ProtocolChain: WSAPROTOCOLCHAIN,
+                    iVersion: c_int,
+                    iAddressFamily: c_int,
+                    iMaxSockAddr: c_int,
+                    iMinSockAddr: c_int,
+                    iSocketType: c_int,
+                    iProtocol: c_int,
+                    iProtocolMaxOffset: c_int,
+                    iNetworkByteOrder: c_int,
+                    iSecurityScheme: c_int,
+                    dwMessageSize: DWORD,
+                    dwProviderReserved: DWORD,
+                    szProtocol: [u8, ..WSAPROTOCOL_LEN+1],
+                }
+
+                pub type LPWSAPROTOCOL_INFO = *mut WSAPROTOCOL_INFO;
+
+                pub type GROUP = c_uint;
             }
         }
     }
@@ -944,8 +1172,13 @@ pub mod types {
     pub mod os {
         pub mod common {
             pub mod posix01 {
-                use libc::types::common::c95::{c_void};
-                use libc::types::os::arch::c95::{c_char, c_int, size_t};
+                use libc::types::common::c95::c_void;
+                use libc::types::os::arch::c95::{c_char, c_int, size_t,
+                                                 time_t, suseconds_t, c_long};
+                use libc::types::os::arch::c99::{uintptr_t};
+
+                pub type pthread_t = uintptr_t;
+
                 pub struct glob_t {
                     gl_pathc:  size_t,
                     __unused1: c_int,
@@ -961,9 +1194,87 @@ pub mod types {
                     __unused7: *c_void,
                     __unused8: *c_void,
                 }
+
+                pub struct timeval {
+                    tv_sec: time_t,
+                    tv_usec: suseconds_t,
+                }
+
+                pub struct timespec {
+                    tv_sec: time_t,
+                    tv_nsec: c_long,
+                }
+
+                pub enum timezone {}
+            }
+
+            pub mod bsd44 {
+                use libc::types::os::arch::c95::{c_char, c_int, c_uint};
+
+                pub type socklen_t = c_int;
+                pub type sa_family_t = u8;
+                pub type in_port_t = u16;
+                pub type in_addr_t = u32;
+                pub struct sockaddr {
+                    sa_len: u8,
+                    sa_family: sa_family_t,
+                    sa_data: [u8, ..14],
+                }
+                pub struct sockaddr_storage {
+                    ss_len: u8,
+                    ss_family: sa_family_t,
+                    __ss_pad1: [u8, ..6],
+                    __ss_align: i64,
+                    __ss_pad2: [u8, ..112],
+                }
+                pub struct sockaddr_in {
+                    sin_len: u8,
+                    sin_family: sa_family_t,
+                    sin_port: in_port_t,
+                    sin_addr: in_addr,
+                    sin_zero: [u8, ..8],
+                }
+                pub struct in_addr {
+                    s_addr: in_addr_t,
+                }
+                pub struct sockaddr_in6 {
+                    sin6_len: u8,
+                    sin6_family: sa_family_t,
+                    sin6_port: in_port_t,
+                    sin6_flowinfo: u32,
+                    sin6_addr: in6_addr,
+                    sin6_scope_id: u32,
+                }
+                pub struct in6_addr {
+                    s6_addr: [u16, ..8]
+                }
+                pub struct ip_mreq {
+                    imr_multiaddr: in_addr,
+                    imr_interface: in_addr,
+                }
+                pub struct ip6_mreq {
+                    ipv6mr_multiaddr: in6_addr,
+                    ipv6mr_interface: c_uint,
+                }
+                pub struct addrinfo {
+                    ai_flags: c_int,
+                    ai_family: c_int,
+                    ai_socktype: c_int,
+                    ai_protocol: c_int,
+                    ai_addrlen: socklen_t,
+                    ai_canonname: *c_char,
+                    ai_addr: *sockaddr,
+                    ai_next: *addrinfo
+                }
+                pub struct sockaddr_un {
+                    sun_len: u8,
+                    sun_family: sa_family_t,
+                    sun_path: [c_char, ..104]
+                }
             }
         }
 
+        #[cfg(target_arch = "arm")]
         #[cfg(target_arch = "x86")]
         pub mod arch {
             pub mod c95 {
@@ -982,6 +1293,7 @@ pub mod types {
                 pub type ptrdiff_t = i32;
                 pub type clock_t = u32;
                 pub type time_t = i32;
+                pub type suseconds_t = i32;
                 pub type wchar_t = i32;
             }
             pub mod c99 {
@@ -1003,7 +1315,7 @@ pub mod types {
             }
             pub mod posix01 {
                 use libc::types::common::c99::{int32_t, int64_t, uint32_t};
-                use libc::types::os::arch::c95::{c_long, time_t};
+                use libc::types::os::arch::c95::{c_char, c_long, time_t};
                 use libc::types::os::arch::posix88::{dev_t, gid_t, ino_t,
                                                      mode_t, off_t, uid_t};
 
@@ -1035,12 +1347,28 @@ pub mod types {
                     st_lspare: int32_t,
                     st_qspare: [int64_t, ..2],
                 }
+
+                pub struct utimbuf {
+                    actime: time_t,
+                    modtime: time_t,
+                }
+
+                pub struct pthread_attr_t {
+                    __sig: c_long,
+                    __opaque: [c_char, ..36]
+                }
             }
             pub mod posix08 {
             }
             pub mod bsd44 {
             }
             pub mod extra {
+                pub struct mach_timebase_info {
+                    numer: u32,
+                    denom: u32,
+                }
+
+                pub type mach_timebase_info_data_t = mach_timebase_info;
             }
         }
 
@@ -1062,6 +1390,7 @@ pub mod types {
                 pub type ptrdiff_t = i64;
                 pub type clock_t = u64;
                 pub type time_t = i64;
+                pub type suseconds_t = i32;
                 pub type wchar_t = i32;
             }
             pub mod c99 {
@@ -1084,7 +1413,7 @@ pub mod types {
             pub mod posix01 {
                 use libc::types::common::c99::{int32_t, int64_t};
                 use libc::types::common::c99::{uint32_t};
-                use libc::types::os::arch::c95::{c_long, time_t};
+                use libc::types::os::arch::c95::{c_char, c_long, time_t};
                 use libc::types::os::arch::posix88::{dev_t, gid_t, ino_t};
                 use libc::types::os::arch::posix88::{mode_t, off_t, uid_t};
 
@@ -1116,12 +1445,28 @@ pub mod types {
                     st_lspare: int32_t,
                     st_qspare: [int64_t, ..2],
                 }
+
+                pub struct utimbuf {
+                    actime: time_t,
+                    modtime: time_t,
+                }
+
+                pub struct pthread_attr_t {
+                    __sig: c_long,
+                    __opaque: [c_char, ..56]
+                }
             }
             pub mod posix08 {
             }
             pub mod bsd44 {
             }
             pub mod extra {
+                pub struct mach_timebase_info {
+                    numer: u32,
+                    denom: u32,
+                }
+
+                pub type mach_timebase_info_data_t = mach_timebase_info;
             }
         }
     }
@@ -1151,6 +1496,59 @@ pub mod consts {
             pub static FILENAME_MAX : c_uint = 260_u32;
             pub static L_tmpnam : c_uint = 16_u32;
             pub static TMP_MAX : c_uint = 32767_u32;
+
+            pub static WSAEINTR: c_int = 10004;
+            pub static WSAEBADF: c_int = 10009;
+            pub static WSAEACCES: c_int = 10013;
+            pub static WSAEFAULT: c_int = 10014;
+            pub static WSAEINVAL: c_int = 10022;
+            pub static WSAEMFILE: c_int = 10024;
+            pub static WSAEWOULDBLOCK: c_int = 10035;
+            pub static WSAEINPROGRESS: c_int = 10036;
+            pub static WSAEALREADY: c_int = 10037;
+            pub static WSAENOTSOCK: c_int = 10038;
+            pub static WSAEDESTADDRREQ: c_int = 10039;
+            pub static WSAEMSGSIZE: c_int = 10040;
+            pub static WSAEPROTOTYPE: c_int = 10041;
+            pub static WSAENOPROTOOPT: c_int = 10042;
+            pub static WSAEPROTONOSUPPORT: c_int = 10043;
+            pub static WSAESOCKTNOSUPPORT: c_int = 10044;
+            pub static WSAEOPNOTSUPP: c_int = 10045;
+            pub static WSAEPFNOSUPPORT: c_int = 10046;
+            pub static WSAEAFNOSUPPORT: c_int = 10047;
+            pub static WSAEADDRINUSE: c_int = 10048;
+            pub static WSAEADDRNOTAVAIL: c_int = 10049;
+            pub static WSAENETDOWN: c_int = 10050;
+            pub static WSAENETUNREACH: c_int = 10051;
+            pub static WSAENETRESET: c_int = 10052;
+            pub static WSAECONNABORTED: c_int = 10053;
+            pub static WSAECONNRESET: c_int = 10054;
+            pub static WSAENOBUFS: c_int = 10055;
+            pub static WSAEISCONN: c_int = 10056;
+            pub static WSAENOTCONN: c_int = 10057;
+            pub static WSAESHUTDOWN: c_int = 10058;
+            pub static WSAETOOMANYREFS: c_int = 10059;
+            pub static WSAETIMEDOUT: c_int = 10060;
+            pub static WSAECONNREFUSED: c_int = 10061;
+            pub static WSAELOOP: c_int = 10062;
+            pub static WSAENAMETOOLONG: c_int = 10063;
+            pub static WSAEHOSTDOWN: c_int = 10064;
+            pub static WSAEHOSTUNREACH: c_int = 10065;
+            pub static WSAENOTEMPTY: c_int = 10066;
+            pub static WSAEPROCLIM: c_int = 10067;
+            pub static WSAEUSERS: c_int = 10068;
+            pub static WSAEDQUOT: c_int = 10069;
+            pub static WSAESTALE: c_int = 10070;
+            pub static WSAEREMOTE: c_int = 10071;
+            pub static WSASYSNOTREADY: c_int = 10091;
+            pub static WSAVERNOTSUPPORTED: c_int = 10092;
+            pub static WSANOTINITIALISED: c_int = 10093;
+            pub static WSAEDISCON: c_int = 10101;
+            pub static WSAENOMORE: c_int = 10102;
+            pub static WSAECANCELLED: c_int = 10103;
+            pub static WSAEINVALIDPROCTABLE: c_int = 10104;
+            pub static WSAEINVALIDPROVIDER: c_int = 10105;
+            pub static WSAEPROVIDERFAILEDINIT: c_int = 10106;
         }
         pub mod c99 {
         }
@@ -1169,6 +1567,7 @@ pub mod consts {
             pub static S_IFBLK : c_int = 12288;
             pub static S_IFDIR : c_int = 16384;
             pub static S_IFREG : c_int = 32768;
+            pub static S_IFLNK : c_int = 40960;
             pub static S_IFMT : c_int = 61440;
             pub static S_IEXEC : c_int = 64;
             pub static S_IWRITE : c_int = 128;
@@ -1190,6 +1589,32 @@ pub mod consts {
         pub mod posix08 {
         }
         pub mod bsd44 {
+            use libc::types::os::arch::c95::c_int;
+
+            pub static AF_INET: c_int = 2;
+            pub static AF_INET6: c_int = 23;
+            pub static SOCK_STREAM: c_int = 1;
+            pub static SOCK_DGRAM: c_int = 2;
+            pub static IPPROTO_TCP: c_int = 6;
+            pub static IPPROTO_IP: c_int = 0;
+            pub static IPPROTO_IPV6: c_int = 41;
+            pub static IP_MULTICAST_TTL: c_int = 3;
+            pub static IP_MULTICAST_LOOP: c_int = 4;
+            pub static IP_ADD_MEMBERSHIP: c_int = 5;
+            pub static IP_DROP_MEMBERSHIP: c_int = 6;
+            pub static IPV6_ADD_MEMBERSHIP: c_int = 5;
+            pub static IPV6_DROP_MEMBERSHIP: c_int = 6;
+            pub static IP_TTL: c_int = 4;
+
+            pub static TCP_NODELAY: c_int = 0x0001;
+            pub static SOL_SOCKET: c_int = 0xffff;
+            pub static SO_KEEPALIVE: c_int = 8;
+            pub static SO_BROADCAST: c_int = 32;
+            pub static SO_REUSEADDR: c_int = 4;
+
+            pub static SHUT_RD: c_int = 0;
+            pub static SHUT_WR: c_int = 1;
+            pub static SHUT_RDWR: c_int = 2;
         }
         pub mod extra {
             use libc::types::os::arch::c95::c_int;
@@ -1203,13 +1628,22 @@ pub mod consts {
             pub static O_NOINHERIT: c_int = 128;
 
             pub static ERROR_SUCCESS : c_int = 0;
+            pub static ERROR_INVALID_FUNCTION: c_int = 1;
+            pub static ERROR_FILE_NOT_FOUND: c_int = 2;
+            pub static ERROR_ACCESS_DENIED: c_int = 5;
             pub static ERROR_INVALID_HANDLE : c_int = 6;
+            pub static ERROR_BROKEN_PIPE: c_int = 109;
             pub static ERROR_DISK_FULL : c_int = 112;
             pub static ERROR_INSUFFICIENT_BUFFER : c_int = 122;
+            pub static ERROR_INVALID_NAME : c_int = 123;
             pub static ERROR_ALREADY_EXISTS : c_int = 183;
+            pub static ERROR_PIPE_BUSY: c_int = 231;
+            pub static ERROR_NO_DATA: c_int = 232;
             pub static ERROR_INVALID_ADDRESS : c_int = 487;
+            pub static ERROR_PIPE_CONNECTED: c_int = 535;
+            pub static ERROR_IO_PENDING: c_int = 997;
             pub static ERROR_FILE_INVALID : c_int = 1006;
-            pub static INVALID_HANDLE_VALUE: c_int = -1;
+            pub static INVALID_HANDLE_VALUE : c_int = -1;
 
             pub static DELETE : DWORD = 0x00010000;
             pub static READ_CONTROL : DWORD = 0x00020000;
@@ -1297,6 +1731,111 @@ pub mod consts {
             pub static PROCESSOR_ARCHITECTURE_IA64 : WORD = 6;
             pub static PROCESSOR_ARCHITECTURE_AMD64 : WORD = 9;
             pub static PROCESSOR_ARCHITECTURE_UNKNOWN : WORD = 0xffff;
+
+            pub static MOVEFILE_COPY_ALLOWED: DWORD = 2;
+            pub static MOVEFILE_CREATE_HARDLINK: DWORD = 16;
+            pub static MOVEFILE_DELAY_UNTIL_REBOOT: DWORD = 4;
+            pub static MOVEFILE_FAIL_IF_NOT_TRACKABLE: DWORD = 32;
+            pub static MOVEFILE_REPLACE_EXISTING: DWORD = 1;
+            pub static MOVEFILE_WRITE_THROUGH: DWORD = 8;
+
+            pub static SYMBOLIC_LINK_FLAG_DIRECTORY: DWORD = 1;
+
+            pub static FILE_SHARE_DELETE: DWORD = 0x4;
+            pub static FILE_SHARE_READ: DWORD = 0x1;
+            pub static FILE_SHARE_WRITE: DWORD = 0x2;
+
+            pub static CREATE_ALWAYS: DWORD = 2;
+            pub static CREATE_NEW: DWORD = 1;
+            pub static OPEN_ALWAYS: DWORD = 4;
+            pub static OPEN_EXISTING: DWORD = 3;
+            pub static TRUNCATE_EXISTING: DWORD = 5;
+
+            pub static FILE_APPEND_DATA: DWORD = 0x00000004;
+            pub static FILE_READ_DATA: DWORD = 0x00000001;
+            pub static FILE_WRITE_DATA: DWORD = 0x00000002;
+
+            pub static FILE_ATTRIBUTE_ARCHIVE: DWORD = 0x20;
+            pub static FILE_ATTRIBUTE_COMPRESSED: DWORD = 0x800;
+            pub static FILE_ATTRIBUTE_DEVICE: DWORD = 0x40;
+            pub static FILE_ATTRIBUTE_DIRECTORY: DWORD = 0x10;
+            pub static FILE_ATTRIBUTE_ENCRYPTED: DWORD = 0x4000;
+            pub static FILE_ATTRIBUTE_HIDDEN: DWORD = 0x2;
+            pub static FILE_ATTRIBUTE_INTEGRITY_STREAM: DWORD = 0x8000;
+            pub static FILE_ATTRIBUTE_NORMAL: DWORD = 0x80;
+            pub static FILE_ATTRIBUTE_NOT_CONTENT_INDEXED: DWORD = 0x2000;
+            pub static FILE_ATTRIBUTE_NO_SCRUB_DATA: DWORD = 0x20000;
+            pub static FILE_ATTRIBUTE_OFFLINE: DWORD = 0x1000;
+            pub static FILE_ATTRIBUTE_READONLY: DWORD = 0x1;
+            pub static FILE_ATTRIBUTE_REPARSE_POINT: DWORD = 0x400;
+            pub static FILE_ATTRIBUTE_SPARSE_FILE: DWORD = 0x200;
+            pub static FILE_ATTRIBUTE_SYSTEM: DWORD = 0x4;
+            pub static FILE_ATTRIBUTE_TEMPORARY: DWORD = 0x100;
+            pub static FILE_ATTRIBUTE_VIRTUAL: DWORD = 0x10000;
+
+            pub static FILE_FLAG_BACKUP_SEMANTICS: DWORD = 0x02000000;
+            pub static FILE_FLAG_DELETE_ON_CLOSE: DWORD = 0x04000000;
+            pub static FILE_FLAG_NO_BUFFERING: DWORD = 0x20000000;
+            pub static FILE_FLAG_OPEN_NO_RECALL: DWORD = 0x00100000;
+            pub static FILE_FLAG_OPEN_REPARSE_POINT: DWORD = 0x00200000;
+            pub static FILE_FLAG_OVERLAPPED: DWORD = 0x40000000;
+            pub static FILE_FLAG_POSIX_SEMANTICS: DWORD = 0x0100000;
+            pub static FILE_FLAG_RANDOM_ACCESS: DWORD = 0x10000000;
+            pub static FILE_FLAG_SESSION_AWARE: DWORD = 0x00800000;
+            pub static FILE_FLAG_SEQUENTIAL_SCAN: DWORD = 0x08000000;
+            pub static FILE_FLAG_WRITE_THROUGH: DWORD = 0x80000000;
+            pub static FILE_FLAG_FIRST_PIPE_INSTANCE: DWORD = 0x00080000;
+
+            pub static FILE_NAME_NORMALIZED: DWORD = 0x0;
+            pub static FILE_NAME_OPENED: DWORD = 0x8;
+
+            pub static VOLUME_NAME_DOS: DWORD = 0x0;
+            pub static VOLUME_NAME_GUID: DWORD = 0x1;
+            pub static VOLUME_NAME_NONE: DWORD = 0x4;
+            pub static VOLUME_NAME_NT: DWORD = 0x2;
+
+            pub static GENERIC_READ: DWORD = 0x80000000;
+            pub static GENERIC_WRITE: DWORD = 0x40000000;
+            pub static GENERIC_EXECUTE: DWORD = 0x20000000;
+            pub static GENERIC_ALL: DWORD = 0x10000000;
+            pub static FILE_WRITE_ATTRIBUTES: DWORD = 0x00000100;
+            pub static FILE_READ_ATTRIBUTES: DWORD = 0x00000080;
+
+            pub static STANDARD_RIGHTS_READ: DWORD = 0x20000;
+            pub static STANDARD_RIGHTS_WRITE: DWORD = 0x20000;
+            pub static FILE_WRITE_EA: DWORD = 0x00000010;
+            pub static FILE_READ_EA: DWORD = 0x00000008;
+            pub static FILE_GENERIC_READ: DWORD =
+                STANDARD_RIGHTS_READ | FILE_READ_DATA |
+                FILE_READ_ATTRIBUTES | FILE_READ_EA | SYNCHRONIZE;
+            pub static FILE_GENERIC_WRITE: DWORD =
+                STANDARD_RIGHTS_WRITE | FILE_WRITE_DATA |
+                FILE_WRITE_ATTRIBUTES | FILE_WRITE_EA | FILE_APPEND_DATA |
+                SYNCHRONIZE;
+
+            pub static FILE_BEGIN: DWORD = 0;
+            pub static FILE_CURRENT: DWORD = 1;
+            pub static FILE_END: DWORD = 2;
+
+            pub static MAX_PROTOCOL_CHAIN: DWORD = 7;
+            pub static WSAPROTOCOL_LEN: DWORD = 255;
+            pub static INVALID_SOCKET: DWORD = !0;
+
+            pub static DETACHED_PROCESS: DWORD = 0x00000008;
+            pub static CREATE_NEW_PROCESS_GROUP: DWORD = 0x00000200;
+
+            pub static PIPE_ACCESS_DUPLEX: DWORD = 0x00000003;
+            pub static PIPE_ACCESS_INBOUND: DWORD = 0x00000001;
+            pub static PIPE_ACCESS_OUTBOUND: DWORD = 0x00000002;
+            pub static PIPE_TYPE_BYTE: DWORD = 0x00000000;
+            pub static PIPE_TYPE_MESSAGE: DWORD = 0x00000004;
+            pub static PIPE_READMODE_BYTE: DWORD = 0x00000000;
+            pub static PIPE_READMODE_MESSAGE: DWORD = 0x00000002;
+            pub static PIPE_WAIT: DWORD = 0x00000000;
+            pub static PIPE_NOWAIT: DWORD = 0x00000001;
+            pub static PIPE_ACCEPT_REMOTE_CLIENTS: DWORD = 0x00000000;
+            pub static PIPE_REJECT_REMOTE_CLIENTS: DWORD = 0x00000008;
+            pub static PIPE_UNLIMITED_INSTANCES: DWORD = 255;
         }
         pub mod sysconf {
         }
@@ -1346,6 +1885,7 @@ pub mod consts {
             pub static S_IFBLK : c_int = 24576;
             pub static S_IFDIR : c_int = 16384;
             pub static S_IFREG : c_int = 32768;
+            pub static S_IFLNK : c_int = 40960;
             pub static S_IFMT : c_int = 61440;
             pub static S_IEXEC : c_int = 64;
             pub static S_IWRITE : c_int = 128;
@@ -1556,6 +2096,7 @@ pub mod consts {
             pub static S_IFBLK : c_int = 24576;
             pub static S_IFDIR : c_int = 16384;
             pub static S_IFREG : c_int = 32768;
+            pub static S_IFLNK : c_int = 40960;
             pub static S_IFMT : c_int = 61440;
             pub static S_IEXEC : c_int = 64;
             pub static S_IWRITE : c_int = 128;
@@ -1596,7 +2137,7 @@ pub mod consts {
             pub static MAP_SHARED : c_int = 0x0001;
             pub static MAP_PRIVATE : c_int = 0x0002;
             pub static MAP_FIXED : c_int = 0x0010;
-            pub static MAP_ANON : c_int = 0x0020;
+            pub static MAP_ANON : c_int = 0x0800;
 
             pub static MAP_FAILED : *c_void = -1 as *c_void;
 
@@ -1748,7 +2289,7 @@ pub mod consts {
             pub static EDQUOT: c_int = 1133;
         }
         pub mod posix01 {
-            use libc::types::os::arch::c95::c_int;
+            use libc::types::os::arch::c95::{c_int, size_t};
 
             pub static SIGTRAP : c_int = 5;
 
@@ -1798,6 +2339,23 @@ pub mod consts {
             pub static _SC_XOPEN_LEGACY : c_int = 129;
             pub static _SC_XOPEN_REALTIME : c_int = 130;
             pub static _SC_XOPEN_REALTIME_THREADS : c_int = 131;
+
+            pub static PTHREAD_CREATE_JOINABLE: c_int = 0;
+            pub static PTHREAD_CREATE_DETACHED: c_int = 1;
+
+            #[cfg(target_os = "android")]
+            pub static PTHREAD_STACK_MIN: size_t = 8192;
+
+            #[cfg(target_arch = "arm", target_os = "linux")]
+            #[cfg(target_arch = "x86", target_os = "linux")]
+            #[cfg(target_arch = "x86_64", target_os = "linux")]
+            pub static PTHREAD_STACK_MIN: size_t = 16384;
+
+            #[cfg(target_arch = "mips", target_os = "linux")]
+            pub static PTHREAD_STACK_MIN: size_t = 131072;
+
+            pub static CLOCK_REALTIME: c_int = 0;
+            pub static CLOCK_MONOTONIC: c_int = 1;
         }
         pub mod posix08 {
         }
@@ -1815,6 +2373,32 @@ pub mod consts {
             pub static MADV_MERGEABLE : c_int = 12;
             pub static MADV_UNMERGEABLE : c_int = 13;
             pub static MADV_HWPOISON : c_int = 100;
+
+            pub static AF_UNIX: c_int = 1;
+            pub static AF_INET: c_int = 2;
+            pub static AF_INET6: c_int = 10;
+            pub static SOCK_STREAM: c_int = 1;
+            pub static SOCK_DGRAM: c_int = 2;
+            pub static IPPROTO_TCP: c_int = 6;
+            pub static IPPROTO_IP: c_int = 0;
+            pub static IPPROTO_IPV6: c_int = 41;
+            pub static IP_MULTICAST_TTL: c_int = 33;
+            pub static IP_MULTICAST_LOOP: c_int = 34;
+            pub static IP_TTL: c_int = 2;
+            pub static IP_ADD_MEMBERSHIP: c_int = 35;
+            pub static IP_DROP_MEMBERSHIP: c_int = 36;
+            pub static IPV6_ADD_MEMBERSHIP: c_int = 20;
+            pub static IPV6_DROP_MEMBERSHIP: c_int = 21;
+
+            pub static TCP_NODELAY: c_int = 1;
+            pub static SOL_SOCKET: c_int = 1;
+            pub static SO_KEEPALIVE: c_int = 9;
+            pub static SO_BROADCAST: c_int = 6;
+            pub static SO_REUSEADDR: c_int = 2;
+
+            pub static SHUT_RD: c_int = 0;
+            pub static SHUT_WR: c_int = 1;
+            pub static SHUT_RDWR: c_int = 2;
         }
         #[cfg(target_arch = "x86")]
         #[cfg(target_arch = "x86_64")]
@@ -1849,20 +2433,19 @@ pub mod consts {
             pub static O_DSYNC : c_int = 16;
             pub static O_SYNC : c_int = 16400;
 
-            pub static PROT_GROWSDOWN : c_int = 0x010000000;
-            pub static PROT_GROWSUP : c_int = 0x020000000;
+            pub static PROT_GROWSDOWN : c_int = 0x01000000;
+            pub static PROT_GROWSUP : c_int = 0x02000000;
 
             pub static MAP_TYPE : c_int = 0x000f;
-            pub static MAP_ANONONYMOUS : c_int = 0x0020;
-            pub static MAP_32BIT : c_int = 0x0040;
-            pub static MAP_GROWSDOWN : c_int = 0x0100;
-            pub static MAP_DENYWRITE : c_int = 0x0800;
-            pub static MAP_EXECUTABLE : c_int = 0x01000;
-            pub static MAP_LOCKED : c_int = 0x02000;
-            pub static MAP_NONRESERVE : c_int = 0x04000;
-            pub static MAP_POPULATE : c_int = 0x08000;
-            pub static MAP_NONBLOCK : c_int = 0x010000;
-            pub static MAP_STACK : c_int = 0x020000;
+            pub static MAP_ANONONYMOUS : c_int = 0x0800;
+            pub static MAP_GROWSDOWN : c_int = 0x01000;
+            pub static MAP_DENYWRITE : c_int = 0x02000;
+            pub static MAP_EXECUTABLE : c_int = 0x04000;
+            pub static MAP_LOCKED : c_int = 0x08000;
+            pub static MAP_NONRESERVE : c_int = 0x0400;
+            pub static MAP_POPULATE : c_int = 0x010000;
+            pub static MAP_NONBLOCK : c_int = 0x020000;
+            pub static MAP_STACK : c_int = 0x040000;
         }
         #[cfg(target_os = "linux")]
         pub mod sysconf {
@@ -2000,6 +2583,7 @@ pub mod consts {
             pub static S_IFBLK : c_int = 24576;
             pub static S_IFDIR : c_int = 16384;
             pub static S_IFREG : c_int = 32768;
+            pub static S_IFLNK : c_int = 40960;
             pub static S_IFMT : c_int = 61440;
             pub static S_IEXEC : c_int = 64;
             pub static S_IWRITE : c_int = 128;
@@ -2154,7 +2738,7 @@ pub mod consts {
             pub static ELAST : c_int = 99;
         }
         pub mod posix01 {
-            use libc::types::os::arch::c95::c_int;
+            use libc::types::os::arch::c95::{c_int, size_t};
 
             pub static SIGTRAP : c_int = 5;
 
@@ -2204,6 +2788,20 @@ pub mod consts {
             pub static _SC_XOPEN_UNIX : c_int = 115;
             pub static _SC_XOPEN_VERSION : c_int = 116;
             pub static _SC_XOPEN_XCU_VERSION : c_int = 117;
+
+            pub static PTHREAD_CREATE_JOINABLE: c_int = 0;
+            pub static PTHREAD_CREATE_DETACHED: c_int = 1;
+
+            #[cfg(target_arch = "arm")]
+            pub static PTHREAD_STACK_MIN: size_t = 4096;
+
+            #[cfg(target_arch = "mips")]
+            #[cfg(target_arch = "x86")]
+            #[cfg(target_arch = "x86_64")]
+            pub static PTHREAD_STACK_MIN: size_t = 2048;
+
+            pub static CLOCK_REALTIME: c_int = 0;
+            pub static CLOCK_MONOTONIC: c_int = 4;
         }
         pub mod posix08 {
         }
@@ -2228,6 +2826,33 @@ pub mod consts {
             pub static MINCORE_REFERENCED_OTHER : c_int = 0x8;
             pub static MINCORE_MODIFIED_OTHER : c_int = 0x10;
             pub static MINCORE_SUPER : c_int = 0x20;
+
+            pub static AF_INET: c_int = 2;
+            pub static AF_INET6: c_int = 28;
+            pub static AF_UNIX: c_int = 1;
+            pub static SOCK_STREAM: c_int = 1;
+            pub static SOCK_DGRAM: c_int = 2;
+            pub static IPPROTO_TCP: c_int = 6;
+            pub static IPPROTO_IP: c_int = 0;
+            pub static IPPROTO_IPV6: c_int = 41;
+            pub static IP_MULTICAST_TTL: c_int = 10;
+            pub static IP_MULTICAST_LOOP: c_int = 11;
+            pub static IP_TTL: c_int = 4;
+            pub static IP_ADD_MEMBERSHIP: c_int = 12;
+            pub static IP_DROP_MEMBERSHIP: c_int = 13;
+            pub static IPV6_ADD_MEMBERSHIP: c_int = 12;
+            pub static IPV6_DROP_MEMBERSHIP: c_int = 13;
+
+            pub static TCP_NODELAY: c_int = 1;
+            pub static TCP_KEEPIDLE: c_int = 256;
+            pub static SOL_SOCKET: c_int = 0xffff;
+            pub static SO_KEEPALIVE: c_int = 0x0008;
+            pub static SO_BROADCAST: c_int = 0x0020;
+            pub static SO_REUSEADDR: c_int = 0x0004;
+
+            pub static SHUT_RD: c_int = 0;
+            pub static SHUT_WR: c_int = 1;
+            pub static SHUT_RDWR: c_int = 2;
         }
         pub mod extra {
             use libc::types::os::arch::c95::c_int;
@@ -2342,6 +2967,7 @@ pub mod consts {
             pub static S_IFBLK : c_int = 24576;
             pub static S_IFDIR : c_int = 16384;
             pub static S_IFREG : c_int = 32768;
+            pub static S_IFLNK : c_int = 40960;
             pub static S_IFMT : c_int = 61440;
             pub static S_IEXEC : c_int = 64;
             pub static S_IWRITE : c_int = 128;
@@ -2383,6 +3009,7 @@ pub mod consts {
             pub static MAP_PRIVATE : c_int = 0x0002;
             pub static MAP_FIXED : c_int = 0x0010;
             pub static MAP_ANON : c_int = 0x1000;
+            pub static MAP_STACK : c_int = 0;
 
             pub static MAP_FAILED : *c_void = -1 as *c_void;
 
@@ -2506,7 +3133,7 @@ pub mod consts {
             pub static ELAST : c_int = 106;
         }
         pub mod posix01 {
-            use libc::types::os::arch::c95::c_int;
+            use libc::types::os::arch::c95::{c_int, size_t};
 
             pub static SIGTRAP : c_int = 5;
 
@@ -2556,6 +3183,10 @@ pub mod consts {
             pub static _SC_XOPEN_UNIX : c_int = 115;
             pub static _SC_XOPEN_VERSION : c_int = 116;
             pub static _SC_XOPEN_XCU_VERSION : c_int = 121;
+
+            pub static PTHREAD_CREATE_JOINABLE: c_int = 1;
+            pub static PTHREAD_CREATE_DETACHED: c_int = 2;
+            pub static PTHREAD_STACK_MIN: size_t = 8192;
         }
         pub mod posix08 {
         }
@@ -2578,6 +3209,33 @@ pub mod consts {
             pub static MINCORE_MODIFIED : c_int = 0x4;
             pub static MINCORE_REFERENCED_OTHER : c_int = 0x8;
             pub static MINCORE_MODIFIED_OTHER : c_int = 0x10;
+
+            pub static AF_UNIX: c_int = 1;
+            pub static AF_INET: c_int = 2;
+            pub static AF_INET6: c_int = 30;
+            pub static SOCK_STREAM: c_int = 1;
+            pub static SOCK_DGRAM: c_int = 2;
+            pub static IPPROTO_TCP: c_int = 6;
+            pub static IPPROTO_IP: c_int = 0;
+            pub static IPPROTO_IPV6: c_int = 41;
+            pub static IP_MULTICAST_TTL: c_int = 10;
+            pub static IP_MULTICAST_LOOP: c_int = 11;
+            pub static IP_TTL: c_int = 4;
+            pub static IP_ADD_MEMBERSHIP: c_int = 12;
+            pub static IP_DROP_MEMBERSHIP: c_int = 13;
+            pub static IPV6_ADD_MEMBERSHIP: c_int = 12;
+            pub static IPV6_DROP_MEMBERSHIP: c_int = 13;
+
+            pub static TCP_NODELAY: c_int = 0x01;
+            pub static TCP_KEEPALIVE: c_int = 0x10;
+            pub static SOL_SOCKET: c_int = 0xffff;
+            pub static SO_KEEPALIVE: c_int = 0x0008;
+            pub static SO_BROADCAST: c_int = 0x0020;
+            pub static SO_REUSEADDR: c_int = 0x0004;
+
+            pub static SHUT_RD: c_int = 0;
+            pub static SHUT_WR: c_int = 1;
+            pub static SHUT_RDWR: c_int = 2;
         }
         pub mod extra {
             use libc::types::os::arch::c95::c_int;
@@ -2663,8 +3321,6 @@ pub mod funcs {
     // or anything. The same is not true of POSIX.
 
     pub mod c95 {
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod ctype {
             use libc::types::os::arch::c95::{c_char, c_int};
 
@@ -2685,8 +3341,6 @@ pub mod funcs {
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod stdio {
             use libc::types::common::c95::{FILE, c_void, fpos_t};
             use libc::types::os::arch::c95::{c_char, c_int, c_long, size_t};
@@ -2708,12 +3362,9 @@ pub mod funcs {
                 pub fn setbuf(stream: *FILE, buf: *c_char);
                 // Omitted: printf and scanf variants.
                 pub fn fgetc(stream: *FILE) -> c_int;
-                #[fast_ffi]
                 pub fn fgets(buf: *mut c_char, n: c_int, stream: *FILE)
                              -> *c_char;
-                #[fast_ffi]
                 pub fn fputc(c: c_int, stream: *FILE) -> c_int;
-                #[fast_ffi]
                 pub fn fputs(s: *c_char, stream: *FILE) -> *c_char;
                 // Omitted: getc, getchar (might be macros).
 
@@ -2723,13 +3374,11 @@ pub mod funcs {
                 // Omitted: putc, putchar (might be macros).
                 pub fn puts(s: *c_char) -> c_int;
                 pub fn ungetc(c: c_int, stream: *FILE) -> c_int;
-                #[fast_ffi]
                 pub fn fread(ptr: *mut c_void,
                              size: size_t,
                              nobj: size_t,
                              stream: *FILE)
                              -> size_t;
-                #[fast_ffi]
                 pub fn fwrite(ptr: *c_void,
                               size: size_t,
                               nobj: size_t,
@@ -2747,8 +3396,6 @@ pub mod funcs {
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod stdlib {
             use libc::types::common::c95::c_void;
             use libc::types::os::arch::c95::{c_char, c_double, c_int};
@@ -2766,16 +3413,12 @@ pub mod funcs {
                               -> c_long;
                 pub fn strtoul(s: *c_char, endp: **c_char, base: c_int)
                                -> c_ulong;
-                #[fast_ffi]
                 pub fn calloc(nobj: size_t, size: size_t) -> *c_void;
-                #[fast_ffi]
-                pub fn malloc(size: size_t) -> *c_void;
-                #[fast_ffi]
+                pub fn malloc(size: size_t) -> *mut c_void;
                 pub fn realloc(p: *mut c_void, size: size_t) -> *mut c_void;
-                #[fast_ffi]
-                pub fn free(p: *c_void);
-                pub fn abort() -> !;
+                pub fn free(p: *mut c_void);
                 pub fn exit(status: c_int) -> !;
+                pub fn _exit(status: c_int) -> !;
                 // Omitted: atexit.
                 pub fn system(s: *c_char) -> c_int;
                 pub fn getenv(s: *c_char) -> *c_char;
@@ -2785,8 +3428,6 @@ pub mod funcs {
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod string {
             use libc::types::common::c95::c_void;
             use libc::types::os::arch::c95::{c_char, c_int, size_t};
@@ -2817,11 +3458,7 @@ pub mod funcs {
 
                 // These are fine to execute on the Rust stack. They must be,
                 // in fact, because LLVM generates calls to them!
-                #[rust_stack]
-                #[inline]
                 pub fn memcmp(cx: *c_void, ct: *c_void, n: size_t) -> c_int;
-                #[rust_stack]
-                #[inline]
                 pub fn memchr(cx: *c_void, c: c_int, n: size_t) -> *c_void;
             }
         }
@@ -2835,26 +3472,30 @@ pub mod funcs {
 
     #[cfg(target_os = "win32")]
     pub mod posix88 {
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod stat_ {
-            use libc::types::os::common::posix01::stat;
-            use libc::types::os::arch::c95::{c_int, c_char};
+            use libc::types::os::common::posix01::{stat, utimbuf};
+            use libc::types::os::arch::c95::{c_int, c_char, wchar_t};
 
             extern {
                 #[link_name = "_chmod"]
                 pub fn chmod(path: *c_char, mode: c_int) -> c_int;
+                #[link_name = "_wchmod"]
+                pub fn wchmod(path: *wchar_t, mode: c_int) -> c_int;
                 #[link_name = "_mkdir"]
                 pub fn mkdir(path: *c_char) -> c_int;
+                #[link_name = "_wrmdir"]
+                pub fn wrmdir(path: *wchar_t) -> c_int;
                 #[link_name = "_fstat64"]
                 pub fn fstat(fildes: c_int, buf: *mut stat) -> c_int;
                 #[link_name = "_stat64"]
                 pub fn stat(path: *c_char, buf: *mut stat) -> c_int;
+                #[link_name = "_wstat64"]
+                pub fn wstat(path: *wchar_t, buf: *mut stat) -> c_int;
+                #[link_name = "_wutime64"]
+                pub fn wutime(file: *wchar_t, buf: *utimbuf) -> c_int;
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod stdio {
             use libc::types::common::c95::FILE;
             use libc::types::os::arch::c95::{c_int, c_char};
@@ -2865,34 +3506,30 @@ pub mod funcs {
                 #[link_name = "_pclose"]
                 pub fn pclose(stream: *FILE) -> c_int;
                 #[link_name = "_fdopen"]
-                #[fast_ffi]
                 pub fn fdopen(fd: c_int, mode: *c_char) -> *FILE;
                 #[link_name = "_fileno"]
                 pub fn fileno(stream: *FILE) -> c_int;
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod fcntl {
-            use libc::types::os::arch::c95::{c_int, c_char};
+            use libc::types::os::arch::c95::{c_int, c_char, wchar_t};
             extern {
                 #[link_name = "_open"]
                 pub fn open(path: *c_char, oflag: c_int, mode: c_int)
+                            -> c_int;
+                #[link_name = "_wopen"]
+                pub fn wopen(path: *wchar_t, oflag: c_int, mode: c_int)
                             -> c_int;
                 #[link_name = "_creat"]
                 pub fn creat(path: *c_char, mode: c_int) -> c_int;
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod dirent {
             // Not supplied at all.
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod unistd {
             use libc::types::common::c95::c_void;
             use libc::types::os::arch::c95::{c_int, c_uint, c_char,
@@ -2933,7 +3570,6 @@ pub mod funcs {
                 pub fn pipe(fds: *mut c_int, psize: c_uint, textmode: c_int)
                             -> c_int;
                 #[link_name = "_read"]
-                #[fast_ffi]
                 pub fn read(fd: c_int, buf: *mut c_void, count: c_uint)
                             -> c_int;
                 #[link_name = "_rmdir"]
@@ -2941,7 +3577,6 @@ pub mod funcs {
                 #[link_name = "_unlink"]
                 pub fn unlink(c: *c_char) -> c_int;
                 #[link_name = "_write"]
-                #[fast_ffi]
                 pub fn write(fd: c_int, buf: *c_void, count: c_uint) -> c_int;
             }
         }
@@ -2961,8 +3596,6 @@ pub mod funcs {
             use libc::types::os::arch::posix01::stat;
             use libc::types::os::arch::posix88::mode_t;
 
-            #[nolink]
-            #[abi = "cdecl"]
             extern {
                 pub fn chmod(path: *c_char, mode: mode_t) -> c_int;
                 pub fn fchmod(fd: c_int, mode: mode_t) -> c_int;
@@ -2990,8 +3623,6 @@ pub mod funcs {
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod stdio {
             use libc::types::common::c95::FILE;
             use libc::types::os::arch::c95::{c_char, c_int};
@@ -3004,8 +3635,6 @@ pub mod funcs {
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod fcntl {
             use libc::types::os::arch::c95::{c_char, c_int};
             use libc::types::os::arch::posix88::mode_t;
@@ -3014,12 +3643,10 @@ pub mod funcs {
                 pub fn open(path: *c_char, oflag: c_int, mode: c_int)
                             -> c_int;
                 pub fn creat(path: *c_char, mode: mode_t) -> c_int;
-                pub fn fcntl(fd: c_int, cmd: c_int) -> c_int;
+                pub fn fcntl(fd: c_int, cmd: c_int, ...) -> c_int;
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod dirent {
             use libc::types::common::posix88::{DIR, dirent_t};
             use libc::types::os::arch::c95::{c_char, c_int, c_long};
@@ -3031,17 +3658,18 @@ pub mod funcs {
             // doesn't link it correctly on i686, so we're going
             // through a C function that mysteriously does work.
             pub unsafe fn opendir(dirname: *c_char) -> *DIR {
-                #[fixed_stack_segment]; #[inline(never)];
                 rust_opendir(dirname)
             }
-            pub unsafe fn readdir(dirp: *DIR) -> *dirent_t {
-                #[fixed_stack_segment]; #[inline(never)];
-                rust_readdir(dirp)
+            pub unsafe fn readdir_r(dirp: *DIR,
+                                    entry: *mut dirent_t,
+                                    result: *mut *mut dirent_t) -> c_int {
+                rust_readdir_r(dirp, entry, result)
             }
 
             extern {
                 fn rust_opendir(dirname: *c_char) -> *DIR;
-                fn rust_readdir(dirp: *DIR) -> *dirent_t;
+                fn rust_readdir_r(dirp: *DIR, entry: *mut dirent_t,
+                                  result: *mut *mut dirent_t) -> c_int;
             }
 
             extern {
@@ -3052,14 +3680,16 @@ pub mod funcs {
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod unistd {
             use libc::types::common::c95::c_void;
             use libc::types::os::arch::c95::{c_char, c_int, c_long, c_uint};
             use libc::types::os::arch::c95::{size_t};
+            use libc::types::os::common::posix01::timespec;
+            use libc::types::os::arch::posix01::utimbuf;
             use libc::types::os::arch::posix88::{gid_t, off_t, pid_t};
             use libc::types::os::arch::posix88::{ssize_t, uid_t};
+
+            pub static _PC_NAME_MAX: c_int = 4;
 
             extern {
                 pub fn access(path: *c_char, amode: c_int) -> c_int;
@@ -3095,7 +3725,6 @@ pub mod funcs {
                 pub fn pathconf(path: *c_char, name: c_int) -> c_long;
                 pub fn pause() -> c_int;
                 pub fn pipe(fds: *mut c_int) -> c_int;
-                #[fast_ffi]
                 pub fn read(fd: c_int, buf: *mut c_void, count: size_t)
                             -> ssize_t;
                 pub fn rmdir(path: *c_char) -> c_int;
@@ -3104,18 +3733,22 @@ pub mod funcs {
                 pub fn setsid() -> pid_t;
                 pub fn setuid(uid: uid_t) -> c_int;
                 pub fn sleep(secs: c_uint) -> c_uint;
+                pub fn usleep(secs: c_uint) -> c_int;
+                pub fn nanosleep(rqtp: *timespec, rmtp: *mut timespec) -> c_int;
                 pub fn sysconf(name: c_int) -> c_long;
                 pub fn tcgetpgrp(fd: c_int) -> pid_t;
                 pub fn ttyname(fd: c_int) -> *c_char;
                 pub fn unlink(c: *c_char) -> c_int;
-                #[fast_ffi]
                 pub fn write(fd: c_int, buf: *c_void, count: size_t)
                              -> ssize_t;
+                pub fn pread(fd: c_int, buf: *c_void, count: size_t,
+                             offset: off_t) -> ssize_t;
+                pub fn pwrite(fd: c_int, buf: *c_void, count: size_t,
+                              offset: off_t) -> ssize_t;
+                pub fn utime(file: *c_char, buf: *utimbuf) -> c_int;
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod signal {
             use libc::types::os::arch::c95::{c_int};
             use libc::types::os::arch::posix88::{pid_t};
@@ -3125,8 +3758,6 @@ pub mod funcs {
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod mman {
             use libc::types::common::c95::{c_void};
             use libc::types::os::arch::c95::{size_t, c_int, c_char};
@@ -3164,8 +3795,6 @@ pub mod funcs {
     #[cfg(target_os = "macos")]
     #[cfg(target_os = "freebsd")]
     pub mod posix01 {
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod stat_ {
             use libc::types::os::arch::c95::{c_char, c_int};
             use libc::types::os::arch::posix01::stat;
@@ -3182,11 +3811,9 @@ pub mod funcs {
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod unistd {
             use libc::types::os::arch::c95::{c_char, c_int, size_t};
-            use libc::types::os::arch::posix88::{ssize_t};
+            use libc::types::os::arch::posix88::{ssize_t, off_t};
 
             extern {
                 pub fn readlink(path: *c_char,
@@ -3206,11 +3833,11 @@ pub mod funcs {
                 pub fn putenv(string: *c_char) -> c_int;
 
                 pub fn symlink(path1: *c_char, path2: *c_char) -> c_int;
+
+                pub fn ftruncate(fd: c_int, length: off_t) -> c_int;
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod wait {
             use libc::types::os::arch::c95::{c_int};
             use libc::types::os::arch::posix88::{pid_t};
@@ -3221,24 +3848,20 @@ pub mod funcs {
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod glob {
-            use libc::types::common::c95::{c_void};
             use libc::types::os::arch::c95::{c_char, c_int};
             use libc::types::os::common::posix01::{glob_t};
+            use option::Option;
 
             extern {
                 pub fn glob(pattern: *c_char,
                             flags: c_int,
-                            errfunc: *c_void, // XXX callback
+                            errfunc: Option<extern "C" fn(epath: *c_char, errno: int) -> int>,
                             pglob: *mut glob_t);
                 pub fn globfree(pglob: *mut glob_t);
             }
         }
 
-        #[nolink]
-        #[abi = "cdecl"]
         pub mod mman {
             use libc::types::common::c95::{c_void};
             use libc::types::os::arch::c95::{c_int, size_t};
@@ -3278,15 +3901,85 @@ pub mod funcs {
         }
     }
 
+    #[cfg(not(windows))]
+    pub mod bsd43 {
+        use libc::types::common::c95::{c_void};
+        use libc::types::os::common::bsd44::{socklen_t, sockaddr};
+        use libc::types::os::arch::c95::{c_int, size_t};
+        use libc::types::os::arch::posix88::ssize_t;
+
+        extern "system" {
+            pub fn socket(domain: c_int, ty: c_int, protocol: c_int) -> c_int;
+            pub fn connect(socket: c_int, address: *sockaddr,
+                           len: socklen_t) -> c_int;
+            pub fn bind(socket: c_int, address: *sockaddr,
+                        address_len: socklen_t) -> c_int;
+            pub fn listen(socket: c_int, backlog: c_int) -> c_int;
+            pub fn accept(socket: c_int, address: *mut sockaddr,
+                          address_len: *mut socklen_t) -> c_int;
+            pub fn getpeername(socket: c_int, address: *mut sockaddr,
+                               address_len: *mut socklen_t) -> c_int;
+            pub fn getsockname(socket: c_int, address: *mut sockaddr,
+                               address_len: *mut socklen_t) -> c_int;
+            pub fn setsockopt(socket: c_int, level: c_int, name: c_int,
+                              value: *c_void, option_len: socklen_t) -> c_int;
+            pub fn recv(socket: c_int, buf: *mut c_void, len: size_t,
+                        flags: c_int) -> ssize_t;
+            pub fn send(socket: c_int, buf: *mut c_void, len: size_t,
+                        flags: c_int) -> ssize_t;
+            pub fn recvfrom(socket: c_int, buf: *mut c_void, len: size_t,
+                            flags: c_int, addr: *mut sockaddr,
+                            addrlen: *mut socklen_t) -> ssize_t;
+            pub fn sendto(socket: c_int, buf: *c_void, len: size_t,
+                          flags: c_int, addr: *sockaddr,
+                          addrlen: socklen_t) -> ssize_t;
+            pub fn shutdown(socket: c_int, how: c_int) -> c_int;
+        }
+    }
+
+    #[cfg(windows)]
+    pub mod bsd43 {
+        use libc::types::common::c95::{c_void};
+        use libc::types::os::common::bsd44::{socklen_t, sockaddr, SOCKET};
+        use libc::types::os::arch::c95::c_int;
+        use libc::types::os::arch::posix88::ssize_t;
+
+        extern "system" {
+            pub fn socket(domain: c_int, ty: c_int, protocol: c_int) -> SOCKET;
+            pub fn connect(socket: SOCKET, address: *sockaddr,
+                           len: socklen_t) -> c_int;
+            pub fn bind(socket: SOCKET, address: *sockaddr,
+                        address_len: socklen_t) -> c_int;
+            pub fn listen(socket: SOCKET, backlog: c_int) -> c_int;
+            pub fn accept(socket: SOCKET, address: *mut sockaddr,
+                          address_len: *mut socklen_t) -> SOCKET;
+            pub fn getpeername(socket: SOCKET, address: *mut sockaddr,
+                               address_len: *mut socklen_t) -> c_int;
+            pub fn getsockname(socket: SOCKET, address: *mut sockaddr,
+                               address_len: *mut socklen_t) -> c_int;
+            pub fn setsockopt(socket: SOCKET, level: c_int, name: c_int,
+                              value: *c_void, option_len: socklen_t) -> c_int;
+            pub fn closesocket(socket: SOCKET) -> c_int;
+            pub fn recv(socket: SOCKET, buf: *mut c_void, len: c_int,
+                        flags: c_int) -> c_int;
+            pub fn send(socket: SOCKET, buf: *mut c_void, len: c_int,
+                        flags: c_int) -> c_int;
+            pub fn recvfrom(socket: SOCKET, buf: *mut c_void, len: c_int,
+                            flags: c_int, addr: *mut sockaddr,
+                            addrlen: *mut c_int) -> ssize_t;
+            pub fn sendto(socket: SOCKET, buf: *c_void, len: c_int,
+                          flags: c_int, addr: *sockaddr,
+                          addrlen: c_int) -> c_int;
+            pub fn shutdown(socket: SOCKET, how: c_int) -> c_int;
+        }
+    }
 
     #[cfg(target_os = "macos")]
     #[cfg(target_os = "freebsd")]
     pub mod bsd44 {
         use libc::types::common::c95::{c_void};
-        use libc::types::os::arch::c95::{c_char, c_uchar, c_int, c_uint,
-                                         size_t};
+        use libc::types::os::arch::c95::{c_char, c_uchar, c_int, c_uint, size_t};
 
-        #[abi = "cdecl"]
         extern {
             pub fn sysctl(name: *c_int,
                           namelen: c_uint,
@@ -3320,7 +4013,6 @@ pub mod funcs {
         use libc::types::common::c95::{c_void};
         use libc::types::os::arch::c95::{c_uchar, c_int, size_t};
 
-        #[abi = "cdecl"]
         extern {
             pub fn getdtablesize() -> c_int;
             pub fn madvise(addr: *c_void, len: size_t, advice: c_int)
@@ -3336,11 +4028,9 @@ pub mod funcs {
     }
 
     #[cfg(target_os = "macos")]
-    #[nolink]
     pub mod extra {
         use libc::types::os::arch::c95::{c_char, c_int};
 
-        #[abi = "cdecl"]
         extern {
             pub fn _NSGetExecutablePath(buf: *mut c_char, bufsize: *mut u32)
                                         -> c_int;
@@ -3362,27 +4052,27 @@ pub mod funcs {
 
         pub mod kernel32 {
             use libc::types::os::arch::c95::{c_uint};
-            use libc::types::os::arch::extra::{BOOL, DWORD, SIZE_T, HMODULE};
-            use libc::types::os::arch::extra::{LPCWSTR, LPWSTR, LPCTSTR,
-                                               LPTSTR, LPTCH, LPDWORD, LPVOID,
-                                               LPCVOID};
-            use libc::types::os::arch::extra::{LPSECURITY_ATTRIBUTES, LPSTARTUPINFO,
+            use libc::types::os::arch::extra::{BOOL, DWORD, SIZE_T, HMODULE,
+                                               LPCWSTR, LPWSTR, LPCSTR, LPSTR,
+                                               LPCH, LPDWORD, LPVOID,
+                                               LPCVOID, LPOVERLAPPED,
+                                               LPSECURITY_ATTRIBUTES,
+                                               LPSTARTUPINFO,
                                                LPPROCESS_INFORMATION,
                                                LPMEMORY_BASIC_INFORMATION,
-                                               LPSYSTEM_INFO};
-            use libc::types::os::arch::extra::{HANDLE, LPHANDLE};
+                                               LPSYSTEM_INFO, BOOLEAN,
+                                               HANDLE, LPHANDLE, LARGE_INTEGER,
+                                               PLARGE_INTEGER, LPFILETIME};
 
-            #[cfg(target_arch = "x86")]
-            #[abi = "stdcall"]
-            extern "stdcall" {
+            extern "system" {
                 pub fn GetEnvironmentVariableW(n: LPCWSTR,
                                                v: LPWSTR,
                                                nsize: DWORD)
                                                -> DWORD;
                 pub fn SetEnvironmentVariableW(n: LPCWSTR, v: LPCWSTR)
                                                -> BOOL;
-                pub fn GetEnvironmentStringsA() -> LPTCH;
-                pub fn FreeEnvironmentStringsA(env_ptr: LPTCH) -> BOOL;
+                pub fn GetEnvironmentStringsA() -> LPCH;
+                pub fn FreeEnvironmentStringsA(env_ptr: LPCH) -> BOOL;
                 pub fn GetModuleFileNameW(hModule: HMODULE,
                                           lpFilename: LPWSTR,
                                           nSize: DWORD)
@@ -3392,11 +4082,14 @@ pub mod funcs {
                                         LPSECURITY_ATTRIBUTES)
                                         -> BOOL;
                 pub fn CopyFileW(lpExistingFileName: LPCWSTR,
-                                        lpNewFileName: LPCWSTR,
-                                        bFailIfExists: BOOL)
-                                        -> BOOL;
+                                 lpNewFileName: LPCWSTR,
+                                 bFailIfExists: BOOL)
+                                 -> BOOL;
                 pub fn DeleteFileW(lpPathName: LPCWSTR) -> BOOL;
                 pub fn RemoveDirectoryW(lpPathName: LPCWSTR) -> BOOL;
+                pub fn GetCurrentDirectoryW(nBufferLength: DWORD,
+                                            lpBuffer: LPWSTR)
+                                            -> DWORD;
                 pub fn SetCurrentDirectoryW(lpPathName: LPCWSTR) -> BOOL;
                 pub fn GetLastError() -> DWORD;
                 pub fn FindFirstFileW(fileName: *u16, findFileData: HANDLE)
@@ -3418,8 +4111,8 @@ pub mod funcs {
                                    dwProcessId: DWORD)
                                    -> HANDLE;
                 pub fn GetCurrentProcess() -> HANDLE;
-                pub fn CreateProcessA(lpApplicationName: LPCTSTR,
-                                      lpCommandLine: LPTSTR,
+                pub fn CreateProcessA(lpApplicationName: LPCSTR,
+                                      lpCommandLine: LPSTR,
                                       lpProcessAttributes:
                                       LPSECURITY_ATTRIBUTES,
                                       lpThreadAttributes:
@@ -3427,7 +4120,7 @@ pub mod funcs {
                                       bInheritHandles: BOOL,
                                       dwCreationFlags: DWORD,
                                       lpEnvironment: LPVOID,
-                                      lpCurrentDirectory: LPCTSTR,
+                                      lpCurrentDirectory: LPCSTR,
                                       lpStartupInfo: LPSTARTUPINFO,
                                       lpProcessInformation:
                                       LPPROCESS_INFORMATION)
@@ -3467,7 +4160,7 @@ pub mod funcs {
                                           flProtect: DWORD,
                                           dwMaximumSizeHigh: DWORD,
                                           dwMaximumSizeLow: DWORD,
-                                          lpName: LPCTSTR)
+                                          lpName: LPCWSTR)
                                           -> HANDLE;
                 pub fn MapViewOfFile(hFileMappingObject: HANDLE,
                                      dwDesiredAccess: DWORD,
@@ -3476,125 +4169,98 @@ pub mod funcs {
                                      dwNumberOfBytesToMap: SIZE_T)
                                      -> LPVOID;
                 pub fn UnmapViewOfFile(lpBaseAddress: LPCVOID) -> BOOL;
-            }
+                pub fn MoveFileExW(lpExistingFileName: LPCWSTR,
+                                   lpNewFileName: LPCWSTR,
+                                   dwFlags: DWORD) -> BOOL;
+                pub fn CreateSymbolicLinkW(lpSymlinkFileName: LPCWSTR,
+                                           lpTargetFileName: LPCWSTR,
+                                           dwFlags: DWORD) -> BOOLEAN;
+                pub fn CreateHardLinkW(lpSymlinkFileName: LPCWSTR,
+                                       lpTargetFileName: LPCWSTR,
+                                       lpSecurityAttributes: LPSECURITY_ATTRIBUTES)
+                                        -> BOOL;
+                pub fn FlushFileBuffers(hFile: HANDLE) -> BOOL;
+                pub fn CreateFileW(lpFileName: LPCWSTR,
+                                   dwDesiredAccess: DWORD,
+                                   dwShareMode: DWORD,
+                                   lpSecurityAttributes: LPSECURITY_ATTRIBUTES,
+                                   dwCreationDisposition: DWORD,
+                                   dwFlagsAndAttributes: DWORD,
+                                   hTemplateFile: HANDLE) -> HANDLE;
+                pub fn GetFinalPathNameByHandleW(hFile: HANDLE,
+                                                 lpszFilePath: LPCWSTR,
+                                                 cchFilePath: DWORD,
+                                                 dwFlags: DWORD) -> DWORD;
+                pub fn ReadFile(hFile: HANDLE,
+                                lpBuffer: LPVOID,
+                                nNumberOfBytesToRead: DWORD,
+                                lpNumberOfBytesRead: LPDWORD,
+                                lpOverlapped: LPOVERLAPPED) -> BOOL;
+                pub fn WriteFile(hFile: HANDLE,
+                                 lpBuffer: LPVOID,
+                                 nNumberOfBytesToRead: DWORD,
+                                 lpNumberOfBytesRead: LPDWORD,
+                                 lpOverlapped: LPOVERLAPPED) -> BOOL;
+                pub fn SetFilePointerEx(hFile: HANDLE,
+                                        liDistanceToMove: LARGE_INTEGER,
+                                        lpNewFilePointer: PLARGE_INTEGER,
+                                        dwMoveMethod: DWORD) -> BOOL;
+                pub fn SetEndOfFile(hFile: HANDLE) -> BOOL;
 
-            #[cfg(target_arch = "x86_64")]
-            extern {
-                pub fn GetEnvironmentVariableW(n: LPCWSTR,
-                                               v: LPWSTR,
-                                               nsize: DWORD)
-                                               -> DWORD;
-                pub fn SetEnvironmentVariableW(n: LPCWSTR, v: LPCWSTR)
-                                               -> BOOL;
-                pub fn GetEnvironmentStringsA() -> LPTCH;
-                pub fn FreeEnvironmentStringsA(env_ptr: LPTCH) -> BOOL;
-                pub fn GetModuleFileNameW(hModule: HMODULE,
-                                          lpFilename: LPWSTR,
-                                          nSize: DWORD)
-                                          -> DWORD;
-                pub fn CreateDirectoryW(lpPathName: LPCWSTR,
-                                        lpSecurityAttributes:
-                                        LPSECURITY_ATTRIBUTES)
-                                        -> BOOL;
-                pub fn CopyFileW(lpExistingFileName: LPCWSTR,
-                                        lpNewFileName: LPCWSTR,
-                                        bFailIfExists: BOOL)
-                                        -> BOOL;
-                pub fn DeleteFileW(lpPathName: LPCWSTR) -> BOOL;
-                pub fn RemoveDirectoryW(lpPathName: LPCWSTR) -> BOOL;
-                pub fn SetCurrentDirectoryW(lpPathName: LPCWSTR) -> BOOL;
-                pub fn GetLastError() -> DWORD;
-                pub fn FindFirstFileW(fileName: *u16, findFileData: HANDLE)
-                                      -> HANDLE;
-                pub fn FindNextFileW(findFile: HANDLE, findFileData: HANDLE)
-                                     -> BOOL;
-                pub fn FindClose(findFile: HANDLE) -> BOOL;
-                pub fn DuplicateHandle(hSourceProcessHandle: HANDLE,
-                                       hSourceHandle: HANDLE,
-                                       hTargetProcessHandle: HANDLE,
-                                       lpTargetHandle: LPHANDLE,
-                                       dwDesiredAccess: DWORD,
-                                       bInheritHandle: BOOL,
-                                       dwOptions: DWORD)
-                                       -> BOOL;
-                pub fn CloseHandle(hObject: HANDLE) -> BOOL;
-                pub fn OpenProcess(dwDesiredAccess: DWORD,
-                                   bInheritHandle: BOOL,
-                                   dwProcessId: DWORD)
-                                   -> HANDLE;
-                pub fn GetCurrentProcess() -> HANDLE;
-                pub fn CreateProcessA(lpApplicationName: LPCTSTR,
-                                      lpCommandLine: LPTSTR,
-                                      lpProcessAttributes:
-                                      LPSECURITY_ATTRIBUTES,
-                                      lpThreadAttributes:
-                                      LPSECURITY_ATTRIBUTES,
-                                      bInheritHandles: BOOL,
-                                      dwCreationFlags: DWORD,
-                                      lpEnvironment: LPVOID,
-                                      lpCurrentDirectory: LPCTSTR,
-                                      lpStartupInfo: LPSTARTUPINFO,
-                                      lpProcessInformation:
-                                      LPPROCESS_INFORMATION)
-                                      -> BOOL;
-                pub fn WaitForSingleObject(hHandle: HANDLE,
-                                           dwMilliseconds: DWORD)
-                                           -> DWORD;
-                pub fn TerminateProcess(hProcess: HANDLE, uExitCode: c_uint)
-                                        -> BOOL;
-                pub fn GetExitCodeProcess(hProcess: HANDLE,
-                                          lpExitCode: LPDWORD)
-                                          -> BOOL;
-                pub fn GetSystemInfo(lpSystemInfo: LPSYSTEM_INFO);
-                pub fn VirtualAlloc(lpAddress: LPVOID,
-                                    dwSize: SIZE_T,
-                                    flAllocationType: DWORD,
-                                    flProtect: DWORD)
-                                    -> LPVOID;
-                pub fn VirtualFree(lpAddress: LPVOID,
-                                   dwSize: SIZE_T,
-                                   dwFreeType: DWORD)
-                                   -> BOOL;
-                pub fn VirtualLock(lpAddress: LPVOID, dwSize: SIZE_T) -> BOOL;
-                pub fn VirtualUnlock(lpAddress: LPVOID, dwSize: SIZE_T)
-                                     -> BOOL;
-                pub fn VirtualProtect(lpAddress: LPVOID,
-                                      dwSize: SIZE_T,
-                                      flNewProtect: DWORD,
-                                      lpflOldProtect: LPDWORD)
-                                      -> BOOL;
-                pub fn VirtualQuery(lpAddress: LPCVOID,
-                                    lpBuffer: LPMEMORY_BASIC_INFORMATION,
-                                    dwLength: SIZE_T)
-                                    -> SIZE_T;
-                pub fn CreateFileMappingW(hFile: HANDLE,
-                                          lpAttributes: LPSECURITY_ATTRIBUTES,
-                                          flProtect: DWORD,
-                                          dwMaximumSizeHigh: DWORD,
-                                          dwMaximumSizeLow: DWORD,
-                                          lpName: LPCTSTR)
-                                          -> HANDLE;
-                pub fn MapViewOfFile(hFileMappingObject: HANDLE,
-                                     dwDesiredAccess: DWORD,
-                                     dwFileOffsetHigh: DWORD,
-                                     dwFileOffsetLow: DWORD,
-                                     dwNumberOfBytesToMap: SIZE_T)
-                                     -> LPVOID;
-                pub fn UnmapViewOfFile(lpBaseAddress: LPCVOID) -> BOOL;
+                pub fn GetSystemTimeAsFileTime(
+                            lpSystemTimeAsFileTime: LPFILETIME);
+
+                pub fn QueryPerformanceFrequency(
+                            lpFrequency: *mut LARGE_INTEGER) -> BOOL;
+                pub fn QueryPerformanceCounter(
+                            lpPerformanceCount: *mut LARGE_INTEGER) -> BOOL;
+
+                pub fn GetCurrentProcessId() -> DWORD;
+                pub fn CreateNamedPipeW(
+                            lpName: LPCWSTR,
+                            dwOpenMode: DWORD,
+                            dwPipeMode: DWORD,
+                            nMaxInstances: DWORD,
+                            nOutBufferSize: DWORD,
+                            nInBufferSize: DWORD,
+                            nDefaultTimeOut: DWORD,
+                            lpSecurityAttributes: LPSECURITY_ATTRIBUTES
+                            ) -> HANDLE;
+                pub fn ConnectNamedPipe(hNamedPipe: HANDLE,
+                                        lpOverlapped: LPOVERLAPPED) -> BOOL;
+                pub fn WaitNamedPipeW(lpNamedPipeName: LPCWSTR,
+                                      nTimeOut: DWORD) -> BOOL;
+                pub fn SetNamedPipeHandleState(hNamedPipe: HANDLE,
+                                               lpMode: LPDWORD,
+                                               lpMaxCollectionCount: LPDWORD,
+                                               lpCollectDataTimeout: LPDWORD)
+                                                            -> BOOL;
+                pub fn CreateEventW(lpEventAttributes: LPSECURITY_ATTRIBUTES,
+                                    bManualReset: BOOL,
+                                    bInitialState: BOOL,
+                                    lpName: LPCWSTR) -> HANDLE;
+                pub fn GetOverlappedResult(hFile: HANDLE,
+                                           lpOverlapped: LPOVERLAPPED,
+                                           lpNumberOfBytesTransferred: LPDWORD,
+                                           bWait: BOOL) -> BOOL;
+                pub fn DisconnectNamedPipe(hNamedPipe: HANDLE) -> BOOL;
             }
         }
 
         pub mod msvcrt {
             use libc::types::os::arch::c95::{c_int, c_long};
+            use libc::types::os::arch::c99::intptr_t;
 
-            #[abi = "cdecl"]
-            #[nolink]
             extern {
                 #[link_name = "_commit"]
                 pub fn commit(fd: c_int) -> c_int;
 
                 #[link_name = "_get_osfhandle"]
                 pub fn get_osfhandle(fd: c_int) -> c_long;
+
+                #[link_name = "_open_osfhandle"]
+                pub fn open_osfhandle(osfhandle: intptr_t,
+                                      flags: c_int) -> c_int;
             }
         }
     }

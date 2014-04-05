@@ -11,18 +11,21 @@
 
 use driver::session;
 use driver::session::Session;
-use syntax::ast::{Crate, NodeId, item, item_fn};
+use syntax::ast::{Crate, Name, NodeId, Item, ItemFn};
 use syntax::ast_map;
 use syntax::attr;
 use syntax::codemap::Span;
-use syntax::parse::token::special_idents;
+use syntax::parse::token;
 use syntax::visit;
 use syntax::visit::Visitor;
 
-struct EntryContext {
-    session: Session,
+struct EntryContext<'a> {
+    session: &'a Session,
 
-    ast_map: ast_map::map,
+    ast_map: &'a ast_map::Map,
+
+    // The interned Name for "main".
+    main_name: Name,
 
     // The top-level function called 'main'
     main_fn: Option<(NodeId, Span)>,
@@ -35,51 +38,48 @@ struct EntryContext {
 
     // The functions that one might think are 'main' but aren't, e.g.
     // main functions not defined at the top level. For diagnostics.
-    non_main_fns: ~[(NodeId, Span)],
+    non_main_fns: Vec<(NodeId, Span)> ,
 }
 
-impl Visitor<()> for EntryContext {
-    fn visit_item(&mut self, item:@item, _:()) {
+impl<'a> Visitor<()> for EntryContext<'a> {
+    fn visit_item(&mut self, item: &Item, _:()) {
         find_item(item, self);
     }
 }
 
-pub fn find_entry_point(session: Session, crate: &Crate, ast_map: ast_map::map) {
-
-    // FIXME #4404 android JNI hacks
-    if *session.building_library &&
-        session.targ_cfg.os != session::OsAndroid {
+pub fn find_entry_point(session: &Session, krate: &Crate, ast_map: &ast_map::Map) {
+    if session.building_library.get() {
         // No need to find a main function
         return;
     }
 
     // If the user wants no main function at all, then stop here.
-    if attr::contains_name(crate.attrs, "no_main") {
-        *session.entry_type = Some(session::EntryNone);
+    if attr::contains_name(krate.attrs.as_slice(), "no_main") {
+        session.entry_type.set(Some(session::EntryNone));
         return
     }
 
     let mut ctxt = EntryContext {
         session: session,
+        main_name: token::intern("main"),
         ast_map: ast_map,
         main_fn: None,
         attr_main_fn: None,
         start_fn: None,
-        non_main_fns: ~[],
+        non_main_fns: Vec::new(),
     };
 
-    visit::walk_crate(&mut ctxt, crate, ());
+    visit::walk_crate(&mut ctxt, krate, ());
 
     configure_main(&mut ctxt);
 }
 
-fn find_item(item: @item, ctxt: &mut EntryContext) {
+fn find_item(item: &Item, ctxt: &mut EntryContext) {
     match item.node {
-        item_fn(*) => {
-            if item.ident.name == special_idents::main.name {
-                match ctxt.ast_map.find(&item.id) {
-                    Some(&ast_map::node_item(_, path)) => {
-                        if path.len() == 0 {
+        ItemFn(..) => {
+            if item.ident.name == ctxt.main_name {
+                 ctxt.ast_map.with_path(item.id, |mut path| {
+                        if path.len() == 1 {
                             // This is a top-level function so can be 'main'
                             if ctxt.main_fn.is_none() {
                                 ctxt.main_fn = Some((item.id, item.span));
@@ -92,12 +92,10 @@ fn find_item(item: @item, ctxt: &mut EntryContext) {
                             // This isn't main
                             ctxt.non_main_fns.push((item.id, item.span));
                         }
-                    }
-                    _ => unreachable!()
-                }
+                });
             }
 
-            if attr::contains_name(item.attrs, "main") {
+            if attr::contains_name(item.attrs.as_slice(), "main") {
                 if ctxt.attr_main_fn.is_none() {
                     ctxt.attr_main_fn = Some((item.id, item.span));
                 } else {
@@ -107,7 +105,7 @@ fn find_item(item: @item, ctxt: &mut EntryContext) {
                 }
             }
 
-            if attr::contains_name(item.attrs, "start") {
+            if attr::contains_name(item.attrs.as_slice(), "start") {
                 if ctxt.start_fn.is_none() {
                     ctxt.start_fn = Some((item.id, item.span));
                 } else {
@@ -125,16 +123,16 @@ fn find_item(item: @item, ctxt: &mut EntryContext) {
 
 fn configure_main(this: &mut EntryContext) {
     if this.start_fn.is_some() {
-        *this.session.entry_fn = this.start_fn;
-        *this.session.entry_type = Some(session::EntryStart);
+        this.session.entry_fn.set(this.start_fn);
+        this.session.entry_type.set(Some(session::EntryStart));
     } else if this.attr_main_fn.is_some() {
-        *this.session.entry_fn = this.attr_main_fn;
-        *this.session.entry_type = Some(session::EntryMain);
+        this.session.entry_fn.set(this.attr_main_fn);
+        this.session.entry_type.set(Some(session::EntryMain));
     } else if this.main_fn.is_some() {
-        *this.session.entry_fn = this.main_fn;
-        *this.session.entry_type = Some(session::EntryMain);
+        this.session.entry_fn.set(this.main_fn);
+        this.session.entry_type.set(Some(session::EntryMain));
     } else {
-        if !*this.session.building_library {
+        if !this.session.building_library.get() {
             // No main function
             this.session.err("main function not found");
             if !this.non_main_fns.is_empty() {
@@ -148,10 +146,6 @@ fn configure_main(this: &mut EntryContext) {
                 }
             }
             this.session.abort_if_errors();
-        } else {
-            // If we *are* building a library, then we're on android where we still might
-            // optionally want to translate main $4404
-            assert_eq!(this.session.targ_cfg.os, session::OsAndroid);
         }
     }
 }

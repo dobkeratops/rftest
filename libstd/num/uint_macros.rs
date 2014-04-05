@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,29 +8,16 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// FIXME(#4375): this shouldn't have to be a nested module named 'generated'
-
 #[macro_escape];
 #[doc(hidden)];
 
-macro_rules! uint_module (($T:ty, $T_SIGNED:ty, $bits:expr) => (mod generated {
+macro_rules! uint_module (($T:ty, $T_SIGNED:ty, $bits:expr) => (
 
-#[allow(non_uppercase_statics)];
+pub static BITS : uint = $bits;
+pub static BYTES : uint = ($bits / 8);
 
-use default::Default;
-use num::BitCount;
-use num::{ToStrRadix, FromStrRadix};
-use num::{CheckedDiv, Zero, One, strconv};
-use prelude::*;
-use str;
-
-pub use cmp::{min, max};
-
-pub static bits : uint = $bits;
-pub static bytes : uint = ($bits / 8);
-
-pub static min_value: $T = 0 as $T;
-pub static max_value: $T = 0 as $T - 1 as $T;
+pub static MIN: $T = 0 as $T;
+pub static MAX: $T = 0 as $T - 1 as $T;
 
 impl CheckedDiv for $T {
     #[inline]
@@ -55,28 +42,6 @@ impl Ord for $T {
 impl Eq for $T {
     #[inline]
     fn eq(&self, other: &$T) -> bool { return (*self) == (*other); }
-}
-
-impl Orderable for $T {
-    #[inline]
-    fn min(&self, other: &$T) -> $T {
-        if *self < *other { *self } else { *other }
-    }
-
-    #[inline]
-    fn max(&self, other: &$T) -> $T {
-        if *self > *other { *self } else { *other }
-    }
-
-    /// Returns the number constrained within the range `mn <= self <= mx`.
-    #[inline]
-    fn clamp(&self, mn: &$T, mx: &$T) -> $T {
-        match () {
-            _ if (*self > *mx) => *mx,
-            _ if (*self < *mn) => *mn,
-            _                  => *self,
-        }
-    }
 }
 
 impl Default for $T {
@@ -135,62 +100,6 @@ impl Neg<$T> for $T {
 
 impl Unsigned for $T {}
 
-impl Integer for $T {
-    /// Calculates `div` (`\`) and `rem` (`%`) simultaneously
-    #[inline]
-    fn div_rem(&self, other: &$T) -> ($T,$T) {
-        (*self / *other, *self % *other)
-    }
-
-    /// Unsigned integer division. Returns the same result as `div` (`/`).
-    #[inline]
-    fn div_floor(&self, other: &$T) -> $T { *self / *other }
-
-    /// Unsigned integer modulo operation. Returns the same result as `rem` (`%`).
-    #[inline]
-    fn mod_floor(&self, other: &$T) -> $T { *self % *other }
-
-    /// Calculates `div_floor` and `mod_floor` simultaneously
-    #[inline]
-    fn div_mod_floor(&self, other: &$T) -> ($T,$T) {
-        (*self / *other, *self % *other)
-    }
-
-    /// Calculates the Greatest Common Divisor (GCD) of the number and `other`
-    #[inline]
-    fn gcd(&self, other: &$T) -> $T {
-        // Use Euclid's algorithm
-        let mut m = *self;
-        let mut n = *other;
-        while m != 0 {
-            let temp = m;
-            m = n % temp;
-            n = temp;
-        }
-        n
-    }
-
-    /// Calculates the Lowest Common Multiple (LCM) of the number and `other`
-    #[inline]
-    fn lcm(&self, other: &$T) -> $T {
-        (*self * *other) / self.gcd(other)
-    }
-
-    /// Returns `true` if the number can be divided by `other` without leaving a remainder
-    #[inline]
-    fn is_multiple_of(&self, other: &$T) -> bool { *self % *other == 0 }
-
-    /// Returns `true` if the number is divisible by `2`
-    #[inline]
-    fn is_even(&self) -> bool { self.is_multiple_of(&2) }
-
-    /// Returns `true` if the number is not divisible by `2`
-    #[inline]
-    fn is_odd(&self) -> bool { !self.is_even() }
-}
-
-impl Bitwise for $T {}
-
 #[cfg(not(test))]
 impl BitOr<$T,$T> for $T {
     #[inline]
@@ -229,10 +138,10 @@ impl Not<$T> for $T {
 
 impl Bounded for $T {
     #[inline]
-    fn min_value() -> $T { min_value }
+    fn min_value() -> $T { MIN }
 
     #[inline]
-    fn max_value() -> $T { max_value }
+    fn max_value() -> $T { MAX }
 }
 
 impl Int for $T {}
@@ -266,24 +175,16 @@ impl FromStrRadix for $T {
 
 /// Convert to a string as a byte slice in a given base.
 #[inline]
-pub fn to_str_bytes<U>(n: $T, radix: uint, f: &fn(v: &[u8]) -> U) -> U {
+pub fn to_str_bytes<U>(n: $T, radix: uint, f: |v: &[u8]| -> U) -> U {
     // The radix can be as low as 2, so we need at least 64 characters for a
     // base 2 number.
     let mut buf = [0u8, ..64];
     let mut cur = 0;
-    do strconv::int_to_str_bytes_common(n, radix, strconv::SignNone) |i| {
+    strconv::int_to_str_bytes_common(n, radix, strconv::SignNone, |i| {
         buf[cur] = i;
         cur += 1;
-    }
+    });
     f(buf.slice(0, cur))
-}
-
-impl ToStr for $T {
-    /// Convert to a string in base 10.
-    #[inline]
-    fn to_str(&self) -> ~str {
-        self.to_str_radix(10u)
-    }
 }
 
 impl ToStrRadix for $T {
@@ -291,37 +192,33 @@ impl ToStrRadix for $T {
     #[inline]
     fn to_str_radix(&self, radix: uint) -> ~str {
         let mut buf = ~[];
-        do strconv::int_to_str_bytes_common(*self, radix, strconv::SignNone) |i| {
+        strconv::int_to_str_bytes_common(*self, radix, strconv::SignNone, |i| {
             buf.push(i);
-        }
+        });
         // We know we generated valid utf-8, so we don't need to go through that
         // check.
         unsafe { str::raw::from_utf8_owned(buf) }
     }
 }
 
-impl Primitive for $T {
-    #[inline]
-    fn bits(_: Option<$T>) -> uint { bits }
+impl Primitive for $T {}
 
+impl Bitwise for $T {
+    /// Returns the number of ones in the binary representation of the number.
     #[inline]
-    fn bytes(_: Option<$T>) -> uint { bits / 8 }
-}
-
-impl BitCount for $T {
-    /// Counts the number of bits set. Wraps LLVM's `ctpop` intrinsic.
-    #[inline]
-    fn population_count(&self) -> $T {
-        (*self as $T_SIGNED).population_count() as $T
+    fn count_ones(&self) -> $T {
+        (*self as $T_SIGNED).count_ones() as $T
     }
 
-    /// Counts the number of leading zeros. Wraps LLVM's `ctlz` intrinsic.
+    /// Returns the number of leading zeros in the in the binary representation
+    /// of the number.
     #[inline]
     fn leading_zeros(&self) -> $T {
         (*self as $T_SIGNED).leading_zeros() as $T
     }
 
-    /// Counts the number of trailing zeros. Wraps LLVM's `cttz` intrinsic.
+    /// Returns the number of trailing zeros in the in the binary representation
+    /// of the number.
     #[inline]
     fn trailing_zeros(&self) -> $T {
         (*self as $T_SIGNED).trailing_zeros() as $T
@@ -334,80 +231,21 @@ mod tests {
     use super::*;
 
     use num;
-    use sys;
+    use num::CheckedDiv;
+    use num::Bitwise;
+    use num::ToStrRadix;
     use u16;
+
+    #[test]
+    fn test_overflows() {
+        assert!(MAX > 0);
+        assert!(MIN <= 0);
+        assert_eq!(MIN + MAX + 1, 0);
+    }
 
     #[test]
     fn test_num() {
         num::test_num(10 as $T, 2 as $T);
-    }
-
-    #[test]
-    fn test_orderable() {
-        assert_eq!((1 as $T).min(&(2 as $T)), 1 as $T);
-        assert_eq!((2 as $T).min(&(1 as $T)), 1 as $T);
-        assert_eq!((1 as $T).max(&(2 as $T)), 2 as $T);
-        assert_eq!((2 as $T).max(&(1 as $T)), 2 as $T);
-        assert_eq!((1 as $T).clamp(&(2 as $T), &(4 as $T)), 2 as $T);
-        assert_eq!((8 as $T).clamp(&(2 as $T), &(4 as $T)), 4 as $T);
-        assert_eq!((3 as $T).clamp(&(2 as $T), &(4 as $T)), 3 as $T);
-    }
-
-    #[test]
-    fn test_div_mod_floor() {
-        assert_eq!((10 as $T).div_floor(&(3 as $T)), 3 as $T);
-        assert_eq!((10 as $T).mod_floor(&(3 as $T)), 1 as $T);
-        assert_eq!((10 as $T).div_mod_floor(&(3 as $T)), (3 as $T, 1 as $T));
-        assert_eq!((5 as $T).div_floor(&(5 as $T)), 1 as $T);
-        assert_eq!((5 as $T).mod_floor(&(5 as $T)), 0 as $T);
-        assert_eq!((5 as $T).div_mod_floor(&(5 as $T)), (1 as $T, 0 as $T));
-        assert_eq!((3 as $T).div_floor(&(7 as $T)), 0 as $T);
-        assert_eq!((3 as $T).mod_floor(&(7 as $T)), 3 as $T);
-        assert_eq!((3 as $T).div_mod_floor(&(7 as $T)), (0 as $T, 3 as $T));
-    }
-
-    #[test]
-    fn test_gcd() {
-        assert_eq!((10 as $T).gcd(&2), 2 as $T);
-        assert_eq!((10 as $T).gcd(&3), 1 as $T);
-        assert_eq!((0 as $T).gcd(&3), 3 as $T);
-        assert_eq!((3 as $T).gcd(&3), 3 as $T);
-        assert_eq!((56 as $T).gcd(&42), 14 as $T);
-    }
-
-    #[test]
-    fn test_lcm() {
-        assert_eq!((1 as $T).lcm(&0), 0 as $T);
-        assert_eq!((0 as $T).lcm(&1), 0 as $T);
-        assert_eq!((1 as $T).lcm(&1), 1 as $T);
-        assert_eq!((8 as $T).lcm(&9), 72 as $T);
-        assert_eq!((11 as $T).lcm(&5), 55 as $T);
-        assert_eq!((99 as $T).lcm(&17), 1683 as $T);
-    }
-
-    #[test]
-    fn test_multiple_of() {
-        assert!((6 as $T).is_multiple_of(&(6 as $T)));
-        assert!((6 as $T).is_multiple_of(&(3 as $T)));
-        assert!((6 as $T).is_multiple_of(&(1 as $T)));
-    }
-
-    #[test]
-    fn test_even() {
-        assert_eq!((0 as $T).is_even(), true);
-        assert_eq!((1 as $T).is_even(), false);
-        assert_eq!((2 as $T).is_even(), true);
-        assert_eq!((3 as $T).is_even(), false);
-        assert_eq!((4 as $T).is_even(), true);
-    }
-
-    #[test]
-    fn test_odd() {
-        assert_eq!((0 as $T).is_odd(), false);
-        assert_eq!((1 as $T).is_odd(), true);
-        assert_eq!((2 as $T).is_odd(), false);
-        assert_eq!((3 as $T).is_odd(), true);
-        assert_eq!((4 as $T).is_odd(), false);
     }
 
     #[test]
@@ -417,19 +255,21 @@ mod tests {
         assert_eq!(0b0110 as $T, (0b1100 as $T).bitxor(&(0b1010 as $T)));
         assert_eq!(0b1110 as $T, (0b0111 as $T).shl(&(1 as $T)));
         assert_eq!(0b0111 as $T, (0b1110 as $T).shr(&(1 as $T)));
-        assert_eq!(max_value - (0b1011 as $T), (0b1011 as $T).not());
+        assert_eq!(MAX - (0b1011 as $T), (0b1011 as $T).not());
     }
 
     #[test]
-    fn test_bitcount() {
-        assert_eq!((0b010101 as $T).population_count(), 3);
+    fn test_count_ones() {
+        assert_eq!((0b0101100 as $T).count_ones(), 3);
+        assert_eq!((0b0100001 as $T).count_ones(), 2);
+        assert_eq!((0b1111001 as $T).count_ones(), 5);
     }
 
     #[test]
-    fn test_primitive() {
-        let none: Option<$T> = None;
-        assert_eq!(Primitive::bits(none), sys::size_of::<$T>() * 8);
-        assert_eq!(Primitive::bytes(none), sys::size_of::<$T>());
+    fn test_count_zeros() {
+        assert_eq!((0b0101100 as $T).count_zeros(), BITS as $T - 3);
+        assert_eq!((0b0100001 as $T).count_zeros(), BITS as $T - 2);
+        assert_eq!((0b1111001 as $T).count_zeros(), BITS as $T - 5);
     }
 
     #[test]
@@ -551,4 +391,4 @@ mod tests {
     }
 }
 
-}))
+))

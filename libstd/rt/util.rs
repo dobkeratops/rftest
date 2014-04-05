@@ -9,24 +9,25 @@
 // except according to those terms.
 
 use container::Container;
+use fmt;
 use from_str::FromStr;
+use io::IoResult;
+use io;
+use iter::Iterator;
 use libc;
 use option::{Some, None, Option};
 use os;
+use result::Ok;
 use str::StrSlice;
-use unstable::atomics::{AtomicInt, INIT_ATOMIC_INT, SeqCst};
-
-#[cfg(target_os="macos")]
 use unstable::running_on_valgrind;
+use slice::ImmutableVector;
 
 // Indicates whether we should perform expensive sanity checks, including rtassert!
-// XXX: Once the runtime matures remove the `true` below to turn off rtassert, etc.
+// FIXME: Once the runtime matures remove the `true` below to turn off rtassert, etc.
 pub static ENFORCE_SANITY: bool = true || !cfg!(rtopt) || cfg!(rtdebug) || cfg!(rtassert);
 
 /// Get the number of cores available
 pub fn num_cpus() -> uint {
-    #[fixed_stack_segment]; #[inline(never)];
-
     unsafe {
         return rust_get_num_cpus();
     }
@@ -36,21 +37,17 @@ pub fn num_cpus() -> uint {
     }
 }
 
-/// Valgrind has a fixed-sized array (size around 2000) of segment descriptors wired into it; this
-/// is a hard limit and requires rebuilding valgrind if you want to go beyond it. Normally this is
-/// not a problem, but in some tests, we produce a lot of threads casually. Making lots of threads
-/// alone might not be a problem _either_, except on OSX, the segments produced for new threads
-/// _take a while_ to get reclaimed by the OS. Combined with the fact that libuv schedulers fork off
-/// a separate thread for polling fsevents on OSX, we get a perfect storm of creating "too many
-/// mappings" for valgrind to handle when running certain stress tests in the runtime.
-#[cfg(target_os="macos")]
+/// Valgrind has a fixed-sized array (size around 2000) of segment descriptors
+/// wired into it; this is a hard limit and requires rebuilding valgrind if you
+/// want to go beyond it. Normally this is not a problem, but in some tests, we
+/// produce a lot of threads casually.  Making lots of threads alone might not
+/// be a problem _either_, except on OSX, the segments produced for new threads
+/// _take a while_ to get reclaimed by the OS. Combined with the fact that libuv
+/// schedulers fork off a separate thread for polling fsevents on OSX, we get a
+/// perfect storm of creating "too many mappings" for valgrind to handle when
+/// running certain stress tests in the runtime.
 pub fn limit_thread_creation_due_to_osx_and_valgrind() -> bool {
-    running_on_valgrind()
-}
-
-#[cfg(not(target_os="macos"))]
-pub fn limit_thread_creation_due_to_osx_and_valgrind() -> bool {
-    false
+    (cfg!(target_os="macos")) && running_on_valgrind()
 }
 
 /// Get's the number of scheduler threads requested by the environment
@@ -61,7 +58,7 @@ pub fn default_sched_threads() -> uint {
             let opt_n: Option<uint> = FromStr::from_str(nstr);
             match opt_n {
                 Some(n) if n > 0 => n,
-                _ => rtabort!("`RUST_THREADS` is `%s`, should be a positive integer", nstr)
+                _ => rtabort!("`RUST_THREADS` is `{}`, should be a positive integer", nstr)
             }
         }
         None => {
@@ -74,15 +71,27 @@ pub fn default_sched_threads() -> uint {
     }
 }
 
-pub fn dumb_println(s: &str) {
-    use io::WriterUtil;
-    let dbg = ::libc::STDERR_FILENO as ::io::fd_t;
-    dbg.write_str(s + "\n");
+pub struct Stderr;
+
+impl io::Writer for Stderr {
+    fn write(&mut self, data: &[u8]) -> IoResult<()> {
+        unsafe {
+            libc::write(libc::STDERR_FILENO,
+                        data.as_ptr() as *libc::c_void,
+                        data.len() as libc::size_t);
+        }
+        Ok(()) // yes, we're lying
+    }
+}
+
+pub fn dumb_println(args: &fmt::Arguments) {
+    let mut w = Stderr;
+    let _ = fmt::writeln(&mut w as &mut io::Writer, args);
 }
 
 pub fn abort(msg: &str) -> ! {
     let msg = if !msg.is_empty() { msg } else { "aborted" };
-    let hash = msg.iter().fold(0, |accum, val| accum + (val as uint) );
+    let hash = msg.chars().fold(0, |accum, val| accum + (val as uint) );
     let quote = match hash % 10 {
         0 => "
 It was from the artists and poets that the pertinent answers came, and I
@@ -121,31 +130,25 @@ weedy but not remembered; terrible spires and monoliths of lands that men never
 knew were lands...",
         4 => "
 There was a night when winds from unknown spaces whirled us irresistibly into
-limitless vacum beyond all thought and entity. Perceptions of the most
+limitless vacuum beyond all thought and entity. Perceptions of the most
 maddeningly untransmissible sort thronged upon us; perceptions of infinity
 which at the time convulsed us with joy, yet which are now partly lost to my
 memory and partly incapable of presentation to others.",
         _ => "You've met with a terrible fate, haven't you?"
     };
-    rterrln!("%s", "");
-    rterrln!("%s", quote);
-    rterrln!("%s", "");
-    rterrln!("fatal runtime error: %s", msg);
+    rterrln!("{}", "");
+    rterrln!("{}", quote);
+    rterrln!("{}", "");
+    rterrln!("fatal runtime error: {}", msg);
 
+    {
+        let mut err = Stderr;
+        let _err = ::rt::backtrace::write(&mut err);
+    }
     abort();
 
     fn abort() -> ! {
-        #[fixed_stack_segment]; #[inline(never)];
-        unsafe { libc::abort() }
+        use intrinsics;
+        unsafe { intrinsics::abort() }
     }
-}
-
-static mut EXIT_STATUS: AtomicInt = INIT_ATOMIC_INT;
-
-pub fn set_exit_status(code: int) {
-    unsafe { EXIT_STATUS.store(code, SeqCst) }
-}
-
-pub fn get_exit_status() -> int {
-    unsafe { EXIT_STATUS.load(SeqCst) }
 }

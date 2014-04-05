@@ -8,20 +8,15 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use libc::{c_void, c_char, size_t, uintptr_t, free, malloc, realloc};
-use unstable::intrinsics::TyDesc;
-use unstable::raw;
-use sys::size_of;
-
-extern {
-    #[rust_stack]
-    fn abort();
-}
+use libc::{c_void, size_t, free, malloc, realloc};
+use ptr::{RawPtr, mut_null};
+use intrinsics::abort;
+use raw;
+use mem::size_of;
 
 #[inline]
-fn get_box_size(body_size: uint, body_align: uint) -> uint {
+pub fn get_box_size(body_size: uint, body_align: uint) -> uint {
     let header_size = size_of::<raw::Box<()>>();
-    // FIXME (#2699): This alignment calculation is suspicious. Is it right?
     let total_size = align_to(header_size, body_align) + body_size;
     total_size
 }
@@ -35,59 +30,65 @@ fn align_to(size: uint, align: uint) -> uint {
 }
 
 /// A wrapper around libc::malloc, aborting on out-of-memory
-pub unsafe fn malloc_raw(size: uint) -> *c_void {
-    #[fixed_stack_segment]; #[inline(never)];
-
-    let p = malloc(size as size_t);
-    if p.is_null() {
-        // we need a non-allocating way to print an error here
-        abort();
+#[inline]
+pub unsafe fn malloc_raw(size: uint) -> *mut u8 {
+    // `malloc(0)` may allocate, but it may also return a null pointer
+    // http://pubs.opengroup.org/onlinepubs/9699919799/functions/malloc.html
+    if size == 0 {
+        mut_null()
+    } else {
+        let p = malloc(size as size_t);
+        if p.is_null() {
+            // we need a non-allocating way to print an error here
+            abort();
+        }
+        p as *mut u8
     }
-    p
 }
 
 /// A wrapper around libc::realloc, aborting on out-of-memory
-pub unsafe fn realloc_raw(ptr: *mut c_void, size: uint) -> *mut c_void {
-    #[fixed_stack_segment]; #[inline(never)];
-
-    let p = realloc(ptr, size as size_t);
-    if p.is_null() {
-        // we need a non-allocating way to print an error here
-        abort();
+#[inline]
+pub unsafe fn realloc_raw(ptr: *mut u8, size: uint) -> *mut u8 {
+    // `realloc(ptr, 0)` may allocate, but it may also return a null pointer
+    // http://pubs.opengroup.org/onlinepubs/9699919799/functions/realloc.html
+    if size == 0 {
+        free(ptr as *mut c_void);
+        mut_null()
+    } else {
+        let p = realloc(ptr as *mut c_void, size as size_t);
+        if p.is_null() {
+            // we need a non-allocating way to print an error here
+            abort();
+        }
+        p as *mut u8
     }
-    p
 }
 
 /// The allocator for unique pointers without contained managed pointers.
 #[cfg(not(test))]
 #[lang="exchange_malloc"]
 #[inline]
-pub unsafe fn exchange_malloc(size: uintptr_t) -> *c_char {
-    malloc_raw(size as uint) as *c_char
+pub unsafe fn exchange_malloc(size: uint) -> *u8 {
+    malloc_raw(size) as *u8
 }
 
 // FIXME: #7496
 #[cfg(not(test))]
 #[lang="closure_exchange_malloc"]
 #[inline]
-pub unsafe fn closure_exchange_malloc_(td: *c_char, size: uintptr_t) -> *c_char {
-    closure_exchange_malloc(td, size)
+pub unsafe fn closure_exchange_malloc_(drop_glue: fn(*mut u8), size: uint, align: uint) -> *u8 {
+    closure_exchange_malloc(drop_glue, size, align)
 }
 
 #[inline]
-pub unsafe fn closure_exchange_malloc(td: *c_char, size: uintptr_t) -> *c_char {
-    let td = td as *TyDesc;
-    let size = size as uint;
+pub unsafe fn closure_exchange_malloc(drop_glue: fn(*mut u8), size: uint, align: uint) -> *u8 {
+    let total_size = get_box_size(size, align);
+    let p = malloc_raw(total_size);
 
-    assert!(td.is_not_null());
+    let alloc = p as *mut raw::Box<()>;
+    (*alloc).drop_glue = drop_glue;
 
-    let total_size = get_box_size(size, (*td).align);
-    let p = malloc_raw(total_size as uint);
-
-    let box = p as *mut raw::Box<()>;
-    (*box).type_desc = td;
-
-    box as *c_char
+    alloc as *u8
 }
 
 // NB: Calls to free CANNOT be allowed to fail, as throwing an exception from
@@ -95,31 +96,31 @@ pub unsafe fn closure_exchange_malloc(td: *c_char, size: uintptr_t) -> *c_char {
 #[cfg(not(test))]
 #[lang="exchange_free"]
 #[inline]
-pub unsafe fn exchange_free_(ptr: *c_char) {
+pub unsafe fn exchange_free_(ptr: *u8) {
     exchange_free(ptr)
 }
 
-pub unsafe fn exchange_free(ptr: *c_char) {
-    #[fixed_stack_segment]; #[inline(never)];
-
-    free(ptr as *c_void);
+#[inline]
+pub unsafe fn exchange_free(ptr: *u8) {
+    free(ptr as *mut c_void);
 }
 
 #[cfg(test)]
 mod bench {
-    use extra::test::BenchHarness;
+    extern crate test;
+    use self::test::BenchHarness;
 
     #[bench]
     fn alloc_owned_small(bh: &mut BenchHarness) {
-        do bh.iter {
-            ~10;
-        }
+        bh.iter(|| {
+            ~10
+        })
     }
 
     #[bench]
     fn alloc_owned_big(bh: &mut BenchHarness) {
-        do bh.iter {
-            ~[10, ..1000];
-        }
+        bh.iter(|| {
+            ~[10, ..1000]
+        })
     }
 }

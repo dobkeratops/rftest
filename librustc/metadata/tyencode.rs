@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -10,25 +10,35 @@
 
 // Type encoding
 
+#[allow(unused_must_use)]; // as with encoding, everything is a no-fail MemWriter
+#[allow(non_camel_case_types)];
+
+use std::cell::RefCell;
+use collections::HashMap;
+use std::io;
+use std::io::MemWriter;
+use std::str;
+use std::fmt;
 
 use middle::ty::param_ty;
 use middle::ty;
 
-use std::hashmap::HashMap;
-use std::io::WriterUtil;
-use std::io;
 use syntax::abi::AbiSet;
 use syntax::ast;
 use syntax::ast::*;
-use syntax::diagnostic::span_handler;
-use syntax::print::pprust::*;
+use syntax::diagnostic::SpanHandler;
+use syntax::parse::token;
 
-pub struct ctxt {
-    diag: @mut span_handler,
+macro_rules! mywrite( ($wr:expr, $($arg:tt)*) => (
+    format_args!(|a| { mywrite($wr, a) }, $($arg)*)
+) )
+
+pub struct ctxt<'a> {
+    diag: &'a SpanHandler,
     // Def -> str Callback:
-    ds: extern "Rust" fn(DefId) -> ~str,
+    ds: fn(DefId) -> ~str,
     // The type context.
-    tcx: ty::ctxt,
+    tcx: &'a ty::ctxt,
     abbrevs: abbrev_ctxt
 }
 
@@ -38,400 +48,367 @@ pub struct ctxt {
 pub struct ty_abbrev {
     pos: uint,
     len: uint,
-    s: @str
+    s: ~str
 }
 
 pub enum abbrev_ctxt {
     ac_no_abbrevs,
-    ac_use_abbrevs(@mut HashMap<ty::t, ty_abbrev>),
+    ac_use_abbrevs(@RefCell<HashMap<ty::t, ty_abbrev>>),
 }
 
-fn cx_uses_abbrevs(cx: @ctxt) -> bool {
-    match cx.abbrevs {
-      ac_no_abbrevs => return false,
-      ac_use_abbrevs(_) => return true
-    }
+fn mywrite(w: &mut MemWriter, fmt: &fmt::Arguments) {
+    fmt::write(&mut *w as &mut io::Writer, fmt);
 }
 
-pub fn enc_ty(w: @io::Writer, cx: @ctxt, t: ty::t) {
+pub fn enc_ty(w: &mut MemWriter, cx: &ctxt, t: ty::t) {
     match cx.abbrevs {
       ac_no_abbrevs => {
-        let result_str = match cx.tcx.short_names_cache.find(&t) {
-            Some(&s) => s,
+          let result_str_opt = cx.tcx.short_names_cache.borrow()
+                                            .find(&t)
+                                            .map(|result| {
+                                                (*result).clone()
+                                            });
+          let result_str = match result_str_opt {
+            Some(s) => s,
             None => {
-                let s = do io::with_str_writer |wr| {
-                    enc_sty(wr, cx, &ty::get(t).sty);
-                }.to_managed();
-                cx.tcx.short_names_cache.insert(t, s);
-                s
-          }
-        };
-        w.write_str(result_str);
+                let wr = &mut MemWriter::new();
+                enc_sty(wr, cx, &ty::get(t).sty);
+                let s = str::from_utf8(wr.get_ref()).unwrap();
+                cx.tcx.short_names_cache.borrow_mut().insert(t, s.to_str());
+                s.to_str()
+            }
+          };
+          w.write(result_str.as_bytes());
       }
       ac_use_abbrevs(abbrevs) => {
-          match abbrevs.find(&t) {
-              Some(a) => { w.write_str(a.s); return; }
+          match abbrevs.borrow_mut().find(&t) {
+              Some(a) => { w.write(a.s.as_bytes()); return; }
               None => {}
           }
-          let pos = w.tell();
+          let pos = w.tell().unwrap();
           enc_sty(w, cx, &ty::get(t).sty);
-          let end = w.tell();
+          let end = w.tell().unwrap();
           let len = end - pos;
-          fn estimate_sz(u: uint) -> uint {
+          fn estimate_sz(u: u64) -> u64 {
               let mut n = u;
-              let mut len = 0u;
-              while n != 0u { len += 1u; n = n >> 4u; }
+              let mut len = 0;
+              while n != 0 { len += 1; n = n >> 4; }
               return len;
           }
-          let abbrev_len = 3u + estimate_sz(pos) + estimate_sz(len);
+          let abbrev_len = 3 + estimate_sz(pos) + estimate_sz(len);
           if abbrev_len < len {
               // I.e. it's actually an abbreviation.
-              let s = fmt!("#%x:%x#", pos, len).to_managed();
-              let a = ty_abbrev { pos: pos, len: len, s: s };
-              abbrevs.insert(t, a);
+              let s = format!("\\#{:x}:{:x}\\#", pos, len);
+              let a = ty_abbrev { pos: pos as uint,
+                                  len: len as uint,
+                                  s: s };
+              abbrevs.borrow_mut().insert(t, a);
           }
           return;
       }
     }
 }
 
-fn enc_mutability(w: @io::Writer, mt: ast::Mutability) {
+fn enc_mutability(w: &mut MemWriter, mt: ast::Mutability) {
     match mt {
-      MutImmutable => (),
-      MutMutable => w.write_char('m'),
+        MutImmutable => (),
+        MutMutable => mywrite!(w, "m"),
     }
 }
 
-fn enc_mt(w: @io::Writer, cx: @ctxt, mt: ty::mt) {
+fn enc_mt(w: &mut MemWriter, cx: &ctxt, mt: ty::mt) {
     enc_mutability(w, mt.mutbl);
     enc_ty(w, cx, mt.ty);
 }
 
-fn enc_opt<T>(w: @io::Writer, t: Option<T>, enc_f: &fn(T)) {
+fn enc_opt<T>(w: &mut MemWriter, t: Option<T>, enc_f: |&mut MemWriter, T|) {
     match t {
-      None => w.write_char('n'),
-      Some(v) => {
-        w.write_char('s');
-        enc_f(v);
-      }
+        None => mywrite!(w, "n"),
+        Some(v) => {
+            mywrite!(w, "s");
+            enc_f(w, v);
+        }
     }
 }
 
-fn enc_substs(w: @io::Writer, cx: @ctxt, substs: &ty::substs) {
+pub fn enc_substs(w: &mut MemWriter, cx: &ctxt, substs: &ty::substs) {
     enc_region_substs(w, cx, &substs.regions);
-    do enc_opt(w, substs.self_ty) |t| { enc_ty(w, cx, t) }
-    w.write_char('[');
+    enc_opt(w, substs.self_ty, |w, t| enc_ty(w, cx, t));
+    mywrite!(w, "[");
     for t in substs.tps.iter() { enc_ty(w, cx, *t); }
-    w.write_char(']');
+    mywrite!(w, "]");
 }
 
-fn enc_region_substs(w: @io::Writer, cx: @ctxt, substs: &ty::RegionSubsts) {
+fn enc_region_substs(w: &mut MemWriter, cx: &ctxt, substs: &ty::RegionSubsts) {
     match *substs {
         ty::ErasedRegions => {
-            w.write_char('e');
+            mywrite!(w, "e");
         }
         ty::NonerasedRegions(ref regions) => {
-            w.write_char('n');
+            mywrite!(w, "n");
             for &r in regions.iter() {
                 enc_region(w, cx, r);
             }
-            w.write_char('.');
+            mywrite!(w, ".");
         }
     }
 }
 
-fn enc_region(w: @io::Writer, cx: @ctxt, r: ty::Region) {
+fn enc_region(w: &mut MemWriter, cx: &ctxt, r: ty::Region) {
     match r {
-      ty::re_bound(br) => {
-        w.write_char('b');
-        enc_bound_region(w, cx, br);
-      }
-      ty::re_free(ref fr) => {
-        w.write_char('f');
-        w.write_char('[');
-        w.write_int(fr.scope_id);
-        w.write_char('|');
-        enc_bound_region(w, cx, fr.bound_region);
-        w.write_char(']');
-      }
-      ty::re_scope(nid) => {
-        w.write_char('s');
-        w.write_int(nid);
-        w.write_char('|');
-      }
-      ty::re_static => {
-        w.write_char('t');
-      }
-      ty::re_empty => {
-        w.write_char('e');
-      }
-      ty::re_infer(_) => {
-        // these should not crop up after typeck
-        cx.diag.handler().bug("Cannot encode region variables");
-      }
+        ty::ReLateBound(id, br) => {
+            mywrite!(w, "b[{}|", id);
+            enc_bound_region(w, cx, br);
+            mywrite!(w, "]");
+        }
+        ty::ReEarlyBound(node_id, index, name) => {
+            mywrite!(w, "B[{}|{}|{}]",
+                     node_id,
+                     index,
+                     token::get_name(name));
+        }
+        ty::ReFree(ref fr) => {
+            mywrite!(w, "f[{}|", fr.scope_id);
+            enc_bound_region(w, cx, fr.bound_region);
+            mywrite!(w, "]");
+        }
+        ty::ReScope(nid) => {
+            mywrite!(w, "s{}|", nid);
+        }
+        ty::ReStatic => {
+            mywrite!(w, "t");
+        }
+        ty::ReEmpty => {
+            mywrite!(w, "e");
+        }
+        ty::ReInfer(_) => {
+            // these should not crop up after typeck
+            cx.diag.handler().bug("cannot encode region variables");
+        }
     }
 }
 
-fn enc_bound_region(w: @io::Writer, cx: @ctxt, br: ty::bound_region) {
+fn enc_bound_region(w: &mut MemWriter, cx: &ctxt, br: ty::BoundRegion) {
     match br {
-      ty::br_self => w.write_char('s'),
-      ty::br_anon(idx) => {
-        w.write_char('a');
-        w.write_uint(idx);
-        w.write_char('|');
-      }
-      ty::br_named(s) => {
-        w.write_char('[');
-        w.write_str(cx.tcx.sess.str_of(s));
-        w.write_char(']')
-      }
-      ty::br_cap_avoid(id, br) => {
-        w.write_char('c');
-        w.write_int(id);
-        w.write_char('|');
-        enc_bound_region(w, cx, *br);
-      }
-      ty::br_fresh(id) => {
-        w.write_uint(id);
-      }
+        ty::BrAnon(idx) => {
+            mywrite!(w, "a{}|", idx);
+        }
+        ty::BrNamed(d, name) => {
+            mywrite!(w, "[{}|{}]",
+                     (cx.ds)(d),
+                     token::get_name(name));
+        }
+        ty::BrFresh(id) => {
+            mywrite!(w, "f{}|", id);
+        }
     }
 }
 
-pub fn enc_vstore(w: @io::Writer, cx: @ctxt, v: ty::vstore) {
-    w.write_char('/');
+pub fn enc_vstore(w: &mut MemWriter, cx: &ctxt, v: ty::vstore) {
+    mywrite!(w, "/");
     match v {
-      ty::vstore_fixed(u) => {
-        w.write_uint(u);
-        w.write_char('|');
-      }
-      ty::vstore_uniq => {
-        w.write_char('~');
-      }
-      ty::vstore_box => {
-        w.write_char('@');
-      }
-      ty::vstore_slice(r) => {
-        w.write_char('&');
-        enc_region(w, cx, r);
-      }
+        ty::vstore_fixed(u) => mywrite!(w, "{}|", u),
+        ty::vstore_uniq => mywrite!(w, "~"),
+        ty::vstore_slice(r) => {
+            mywrite!(w, "&");
+            enc_region(w, cx, r);
+        }
     }
 }
 
-pub fn enc_trait_ref(w: @io::Writer, cx: @ctxt, s: &ty::TraitRef) {
-    w.write_str((cx.ds)(s.def_id));
-    w.write_char('|');
+pub fn enc_trait_ref(w: &mut MemWriter, cx: &ctxt, s: &ty::TraitRef) {
+    mywrite!(w, "{}|", (cx.ds)(s.def_id));
     enc_substs(w, cx, &s.substs);
 }
 
-pub fn enc_trait_store(w: @io::Writer, cx: @ctxt, s: ty::TraitStore) {
+pub fn enc_trait_store(w: &mut MemWriter, cx: &ctxt, s: ty::TraitStore) {
     match s {
-        ty::UniqTraitStore => w.write_char('~'),
-        ty::BoxTraitStore => w.write_char('@'),
+        ty::UniqTraitStore => mywrite!(w, "~"),
         ty::RegionTraitStore(re) => {
-            w.write_char('&');
+            mywrite!(w, "&");
             enc_region(w, cx, re);
         }
     }
 }
 
-fn enc_sty(w: @io::Writer, cx: @ctxt, st: &ty::sty) {
+fn enc_sty(w: &mut MemWriter, cx: &ctxt, st: &ty::sty) {
     match *st {
-      ty::ty_nil => w.write_char('n'),
-      ty::ty_bot => w.write_char('z'),
-      ty::ty_bool => w.write_char('b'),
-      ty::ty_char => w.write_char('c'),
-      ty::ty_int(t) => {
-        match t {
-          ty_i => w.write_char('i'),
-          ty_i8 => w.write_str(&"MB"),
-          ty_i16 => w.write_str(&"MW"),
-          ty_i32 => w.write_str(&"ML"),
-          ty_i64 => w.write_str(&"MD")
+        ty::ty_nil => mywrite!(w, "n"),
+        ty::ty_bot => mywrite!(w, "z"),
+        ty::ty_bool => mywrite!(w, "b"),
+        ty::ty_char => mywrite!(w, "c"),
+        ty::ty_int(t) => {
+            match t {
+                TyI => mywrite!(w, "i"),
+                TyI8 => mywrite!(w, "MB"),
+                TyI16 => mywrite!(w, "MW"),
+                TyI32 => mywrite!(w, "ML"),
+                TyI64 => mywrite!(w, "MD")
+            }
         }
-      }
-      ty::ty_uint(t) => {
-        match t {
-          ty_u => w.write_char('u'),
-          ty_u8 => w.write_str(&"Mb"),
-          ty_u16 => w.write_str(&"Mw"),
-          ty_u32 => w.write_str(&"Ml"),
-          ty_u64 => w.write_str(&"Md")
+        ty::ty_uint(t) => {
+            match t {
+                TyU => mywrite!(w, "u"),
+                TyU8 => mywrite!(w, "Mb"),
+                TyU16 => mywrite!(w, "Mw"),
+                TyU32 => mywrite!(w, "Ml"),
+                TyU64 => mywrite!(w, "Md")
+            }
         }
-      }
-      ty::ty_float(t) => {
-        match t {
-          ty_f => w.write_char('l'),
-          ty_f32 => w.write_str(&"Mf"),
-          ty_f64 => w.write_str(&"MF"),
+        ty::ty_float(t) => {
+            match t {
+                TyF32 => mywrite!(w, "Mf"),
+                TyF64 => mywrite!(w, "MF"),
+            }
         }
-      }
-      ty::ty_enum(def, ref substs) => {
-        w.write_str(&"t[");
-        w.write_str((cx.ds)(def));
-        w.write_char('|');
-        enc_substs(w, cx, substs);
-        w.write_char(']');
-      }
-      ty::ty_trait(def, ref substs, store, mt, bounds) => {
-        w.write_str(&"x[");
-        w.write_str((cx.ds)(def));
-        w.write_char('|');
-        enc_substs(w, cx, substs);
-        enc_trait_store(w, cx, store);
-        enc_mutability(w, mt);
-        let bounds = ty::ParamBounds {builtin_bounds: bounds,
-                                      trait_bounds: ~[]};
-        enc_bounds(w, cx, &bounds);
-        w.write_char(']');
-      }
-      ty::ty_tup(ref ts) => {
-        w.write_str(&"T[");
-        for t in ts.iter() { enc_ty(w, cx, *t); }
-        w.write_char(']');
-      }
-      ty::ty_box(mt) => { w.write_char('@'); enc_mt(w, cx, mt); }
-      ty::ty_uniq(mt) => { w.write_char('~'); enc_mt(w, cx, mt); }
-      ty::ty_ptr(mt) => { w.write_char('*'); enc_mt(w, cx, mt); }
-      ty::ty_rptr(r, mt) => {
-        w.write_char('&');
-        enc_region(w, cx, r);
-        enc_mt(w, cx, mt);
-      }
-      ty::ty_evec(mt, v) => {
-        w.write_char('V');
-        enc_mt(w, cx, mt);
-        enc_vstore(w, cx, v);
-      }
-      ty::ty_estr(v) => {
-        w.write_char('v');
-        enc_vstore(w, cx, v);
-      }
-      ty::ty_unboxed_vec(mt) => { w.write_char('U'); enc_mt(w, cx, mt); }
-      ty::ty_closure(ref f) => {
-        w.write_char('f');
-        enc_closure_ty(w, cx, f);
-      }
-      ty::ty_bare_fn(ref f) => {
-        w.write_char('F');
-        enc_bare_fn_ty(w, cx, f);
-      }
-      ty::ty_infer(_) => {
-        cx.diag.handler().bug("Cannot encode inference variable types");
-      }
-      ty::ty_param(param_ty {idx: id, def_id: did}) => {
-        w.write_char('p');
-        w.write_str((cx.ds)(did));
-        w.write_char('|');
-        w.write_str(id.to_str());
-      }
-      ty::ty_self(did) => {
-        w.write_char('s');
-        w.write_str((cx.ds)(did));
-        w.write_char('|');
-      }
-      ty::ty_type => w.write_char('Y'),
-      ty::ty_opaque_closure_ptr(p) => {
-          w.write_str(&"C&");
-          enc_sigil(w, p);
-      }
-      ty::ty_opaque_box => w.write_char('B'),
-      ty::ty_struct(def, ref substs) => {
-          debug!("~~~~ %s", "a[");
-          w.write_str(&"a[");
-          let s = (cx.ds)(def);
-          debug!("~~~~ %s", s);
-          w.write_str(s);
-          debug!("~~~~ %s", "|");
-          w.write_char('|');
-          enc_substs(w, cx, substs);
-          debug!("~~~~ %s", "]");
-          w.write_char(']');
-      }
-      ty::ty_err => fail!("Shouldn't encode error type")
+        ty::ty_enum(def, ref substs) => {
+            mywrite!(w, "t[{}|", (cx.ds)(def));
+            enc_substs(w, cx, substs);
+            mywrite!(w, "]");
+        }
+        ty::ty_trait(~ty::TyTrait { def_id, ref substs, store, mutability, bounds }) => {
+            mywrite!(w, "x[{}|", (cx.ds)(def_id));
+            enc_substs(w, cx, substs);
+            enc_trait_store(w, cx, store);
+            enc_mutability(w, mutability);
+            let bounds = ty::ParamBounds {builtin_bounds: bounds,
+                                          trait_bounds: Vec::new()};
+            enc_bounds(w, cx, &bounds);
+            mywrite!(w, "]");
+        }
+        ty::ty_tup(ref ts) => {
+            mywrite!(w, "T[");
+            for t in ts.iter() { enc_ty(w, cx, *t); }
+            mywrite!(w, "]");
+        }
+        ty::ty_box(typ) => { mywrite!(w, "@"); enc_ty(w, cx, typ); }
+        ty::ty_uniq(typ) => { mywrite!(w, "~"); enc_ty(w, cx, typ); }
+        ty::ty_ptr(mt) => { mywrite!(w, "*"); enc_mt(w, cx, mt); }
+        ty::ty_rptr(r, mt) => {
+            mywrite!(w, "&");
+            enc_region(w, cx, r);
+            enc_mt(w, cx, mt);
+        }
+        ty::ty_vec(mt, v) => {
+            mywrite!(w, "V");
+            enc_mt(w, cx, mt);
+            enc_vstore(w, cx, v);
+        }
+        ty::ty_str(v) => {
+            mywrite!(w, "v");
+            enc_vstore(w, cx, v);
+        }
+        ty::ty_unboxed_vec(mt) => { mywrite!(w, "U"); enc_mt(w, cx, mt); }
+        ty::ty_closure(ref f) => {
+            mywrite!(w, "f");
+            enc_closure_ty(w, cx, *f);
+        }
+        ty::ty_bare_fn(ref f) => {
+            mywrite!(w, "F");
+            enc_bare_fn_ty(w, cx, f);
+        }
+        ty::ty_infer(_) => {
+            cx.diag.handler().bug("cannot encode inference variable types");
+        }
+        ty::ty_param(param_ty {idx: id, def_id: did}) => {
+            mywrite!(w, "p{}|{}", (cx.ds)(did), id);
+        }
+        ty::ty_self(did) => {
+            mywrite!(w, "s{}|", (cx.ds)(did));
+        }
+        ty::ty_struct(def, ref substs) => {
+            mywrite!(w, "a[{}|", (cx.ds)(def));
+            enc_substs(w, cx, substs);
+            mywrite!(w, "]");
+        }
+        ty::ty_err => fail!("shouldn't encode error type")
     }
 }
 
-fn enc_sigil(w: @io::Writer, sigil: Sigil) {
+fn enc_sigil(w: &mut MemWriter, sigil: Sigil) {
     match sigil {
-        ManagedSigil => w.write_str("@"),
-        OwnedSigil => w.write_str("~"),
-        BorrowedSigil => w.write_str("&"),
+        ManagedSigil => mywrite!(w, "@"),
+        OwnedSigil => mywrite!(w, "~"),
+        BorrowedSigil => mywrite!(w, "&"),
     }
 }
 
-fn enc_purity(w: @io::Writer, p: purity) {
+fn enc_purity(w: &mut MemWriter, p: Purity) {
     match p {
-      impure_fn => w.write_char('i'),
-      unsafe_fn => w.write_char('u'),
-      extern_fn => w.write_char('c')
+        ImpureFn => mywrite!(w, "i"),
+        UnsafeFn => mywrite!(w, "u"),
+        ExternFn => mywrite!(w, "c")
     }
 }
 
-fn enc_abi_set(w: @io::Writer, abis: AbiSet) {
-    w.write_char('[');
-    do abis.each |abi| {
-        w.write_str(abi.name());
-        w.write_char(',');
+fn enc_abi_set(w: &mut MemWriter, abis: AbiSet) {
+    mywrite!(w, "[");
+    abis.each(|abi| {
+        mywrite!(w, "{},", abi.name());
         true
-    };
-    w.write_char(']')
+    });
+    mywrite!(w, "]")
 }
 
-fn enc_onceness(w: @io::Writer, o: Onceness) {
+fn enc_onceness(w: &mut MemWriter, o: Onceness) {
     match o {
-        Once => w.write_char('o'),
-        Many => w.write_char('m')
+        Once => mywrite!(w, "o"),
+        Many => mywrite!(w, "m")
     }
 }
 
-pub fn enc_bare_fn_ty(w: @io::Writer, cx: @ctxt, ft: &ty::BareFnTy) {
+pub fn enc_bare_fn_ty(w: &mut MemWriter, cx: &ctxt, ft: &ty::BareFnTy) {
     enc_purity(w, ft.purity);
     enc_abi_set(w, ft.abis);
     enc_fn_sig(w, cx, &ft.sig);
 }
 
-fn enc_closure_ty(w: @io::Writer, cx: @ctxt, ft: &ty::ClosureTy) {
+fn enc_closure_ty(w: &mut MemWriter, cx: &ctxt, ft: &ty::ClosureTy) {
     enc_sigil(w, ft.sigil);
     enc_purity(w, ft.purity);
     enc_onceness(w, ft.onceness);
     enc_region(w, cx, ft.region);
     let bounds = ty::ParamBounds {builtin_bounds: ft.bounds,
-                                  trait_bounds: ~[]};
+                                  trait_bounds: Vec::new()};
     enc_bounds(w, cx, &bounds);
     enc_fn_sig(w, cx, &ft.sig);
 }
 
-fn enc_fn_sig(w: @io::Writer, cx: @ctxt, fsig: &ty::FnSig) {
-    w.write_char('[');
+fn enc_fn_sig(w: &mut MemWriter, cx: &ctxt, fsig: &ty::FnSig) {
+    mywrite!(w, "[{}|", fsig.binder_id);
     for ty in fsig.inputs.iter() {
         enc_ty(w, cx, *ty);
     }
-    w.write_char(']');
+    mywrite!(w, "]");
+    if fsig.variadic {
+        mywrite!(w, "V");
+    } else {
+        mywrite!(w, "N");
+    }
     enc_ty(w, cx, fsig.output);
 }
 
-fn enc_bounds(w: @io::Writer, cx: @ctxt, bs: &ty::ParamBounds) {
+fn enc_bounds(w: &mut MemWriter, cx: &ctxt, bs: &ty::ParamBounds) {
     for bound in bs.builtin_bounds.iter() {
         match bound {
-            ty::BoundSend => w.write_char('S'),
-            ty::BoundFreeze => w.write_char('K'),
-            ty::BoundStatic => w.write_char('O'),
-            ty::BoundSized => w.write_char('Z'),
+            ty::BoundSend => mywrite!(w, "S"),
+            ty::BoundStatic => mywrite!(w, "O"),
+            ty::BoundSized => mywrite!(w, "Z"),
+            ty::BoundPod => mywrite!(w, "P"),
+            ty::BoundShare => mywrite!(w, "T"),
         }
     }
 
     for &tp in bs.trait_bounds.iter() {
-        w.write_char('I');
+        mywrite!(w, "I");
         enc_trait_ref(w, cx, tp);
     }
 
-    w.write_char('.');
+    mywrite!(w, ".");
 }
 
-pub fn enc_type_param_def(w: @io::Writer, cx: @ctxt, v: &ty::TypeParameterDef) {
-    w.write_str(cx.tcx.sess.str_of(v.ident));
-    w.write_char(':');
-    w.write_str((cx.ds)(v.def_id));
-    w.write_char('|');
+pub fn enc_type_param_def(w: &mut MemWriter, cx: &ctxt, v: &ty::TypeParameterDef) {
+    mywrite!(w, "{}:{}|", token::get_ident(v.ident), (cx.ds)(v.def_id));
     enc_bounds(w, cx, v.bounds);
+    enc_opt(w, v.default, |w, t| enc_ty(w, cx, t));
 }

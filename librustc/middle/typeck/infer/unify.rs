@@ -9,13 +9,14 @@
 // except according to those terms.
 
 
-use extra::smallintmap::SmallIntMap;
+use collections::SmallIntMap;
 
 use middle::ty::{Vid, expected_found, IntVarValue};
 use middle::ty;
 use middle::typeck::infer::{Bounds, uok, ures};
 use middle::typeck::infer::InferCtxt;
 use middle::typeck::infer::to_str::InferStr;
+use std::cell::RefCell;
 use syntax::ast;
 
 #[deriving(Clone)]
@@ -26,7 +27,7 @@ pub enum VarValue<V, T> {
 
 pub struct ValsAndBindings<V, T> {
     vals: SmallIntMap<VarValue<V, T>>,
-    bindings: ~[(V, VarValue<V, T>)],
+    bindings: Vec<(V, VarValue<V, T>)> ,
 }
 
 pub struct Node<V, T> {
@@ -36,33 +37,33 @@ pub struct Node<V, T> {
 }
 
 pub trait UnifyVid<T> {
-    fn appropriate_vals_and_bindings<'v>(infcx: &'v mut InferCtxt)
-                                      -> &'v mut ValsAndBindings<Self, T>;
+    fn appropriate_vals_and_bindings<'v>(infcx: &'v InferCtxt)
+                                     -> &'v RefCell<ValsAndBindings<Self, T>>;
 }
 
 pub trait UnifyInferCtxtMethods {
     fn get<T:Clone,
            V:Clone + Eq + Vid + UnifyVid<T>>(
-           &mut self,
+           &self,
            vid: V)
            -> Node<V, T>;
     fn set<T:Clone + InferStr,
            V:Clone + Vid + ToStr + UnifyVid<T>>(
-           &mut self,
+           &self,
            vid: V,
            new_v: VarValue<V, T>);
     fn unify<T:Clone + InferStr,
              V:Clone + Vid + ToStr + UnifyVid<T>>(
-             &mut self,
+             &self,
              node_a: &Node<V, T>,
              node_b: &Node<V, T>)
              -> (V, uint);
 }
 
-impl UnifyInferCtxtMethods for InferCtxt {
+impl<'a> UnifyInferCtxtMethods for InferCtxt<'a> {
     fn get<T:Clone,
            V:Clone + Eq + Vid + UnifyVid<T>>(
-           &mut self,
+           &self,
            vid: V)
            -> Node<V, T> {
         /*!
@@ -74,10 +75,10 @@ impl UnifyInferCtxtMethods for InferCtxt {
 
         let tcx = self.tcx;
         let vb = UnifyVid::appropriate_vals_and_bindings(self);
-        return helper(tcx, vb, vid);
+        return helper(tcx, &mut *vb.borrow_mut(), vid);
 
         fn helper<T:Clone, V:Clone+Eq+Vid>(
-            tcx: ty::ctxt,
+            tcx: &ty::ctxt,
             vb: &mut ValsAndBindings<V,T>,
             vid: V) -> Node<V, T>
         {
@@ -85,8 +86,8 @@ impl UnifyInferCtxtMethods for InferCtxt {
             let var_val = match vb.vals.find(&vid_u) {
                 Some(&ref var_val) => (*var_val).clone(),
                 None => {
-                    tcx.sess.bug(fmt!(
-                        "failed lookup of vid `%u`", vid_u));
+                    tcx.sess.bug(format!(
+                        "failed lookup of vid `{}`", vid_u));
                 }
             };
             match var_val {
@@ -108,7 +109,7 @@ impl UnifyInferCtxtMethods for InferCtxt {
 
     fn set<T:Clone + InferStr,
            V:Clone + Vid + ToStr + UnifyVid<T>>(
-           &mut self,
+           &self,
            vid: V,
            new_v: VarValue<V, T>) {
         /*!
@@ -116,10 +117,11 @@ impl UnifyInferCtxtMethods for InferCtxt {
          * Sets the value for `vid` to `new_v`.  `vid` MUST be a root node!
          */
 
-        debug!("Updating variable %s to %s",
+        debug!("Updating variable {} to {}",
                vid.to_str(), new_v.inf_str(self));
 
         let vb = UnifyVid::appropriate_vals_and_bindings(self);
+        let mut vb = vb.borrow_mut();
         let old_v = (*vb.vals.get(&vid.to_uint())).clone();
         vb.bindings.push((vid.clone(), old_v));
         vb.vals.insert(vid.to_uint(), new_v);
@@ -127,15 +129,15 @@ impl UnifyInferCtxtMethods for InferCtxt {
 
     fn unify<T:Clone + InferStr,
              V:Clone + Vid + ToStr + UnifyVid<T>>(
-             &mut self,
+             &self,
              node_a: &Node<V, T>,
              node_b: &Node<V, T>)
              -> (V, uint) {
         // Rank optimization: if you don't know what it is, check
         // out <http://en.wikipedia.org/wiki/Disjoint-set_data_structure>
 
-        debug!("unify(node_a(id=%?, rank=%?), \
-                node_b(id=%?, rank=%?))",
+        debug!("unify(node_a(id={:?}, rank={:?}), \
+                node_b(id={:?}, rank={:?}))",
                node_a.root, node_a.rank,
                node_b.root, node_b.rank);
 
@@ -182,24 +184,24 @@ pub fn mk_err<T:SimplyUnifiable>(a_is_expected: bool,
 pub trait InferCtxtMethods {
     fn simple_vars<T:Clone + Eq + InferStr + SimplyUnifiable,
                    V:Clone + Eq + Vid + ToStr + UnifyVid<Option<T>>>(
-                   &mut self,
+                   &self,
                    a_is_expected: bool,
                    a_id: V,
                    b_id: V)
                    -> ures;
     fn simple_var_t<T:Clone + Eq + InferStr + SimplyUnifiable,
                     V:Clone + Eq + Vid + ToStr + UnifyVid<Option<T>>>(
-                    &mut self,
+                    &self,
                     a_is_expected: bool,
                     a_id: V,
                     b: T)
                     -> ures;
 }
 
-impl InferCtxtMethods for InferCtxt {
+impl<'a> InferCtxtMethods for InferCtxt<'a> {
     fn simple_vars<T:Clone + Eq + InferStr + SimplyUnifiable,
                    V:Clone + Eq + Vid + ToStr + UnifyVid<Option<T>>>(
-                   &mut self,
+                   &self,
                    a_is_expected: bool,
                    a_id: V,
                    b_id: V)
@@ -239,7 +241,7 @@ impl InferCtxtMethods for InferCtxt {
 
     fn simple_var_t<T:Clone + Eq + InferStr + SimplyUnifiable,
                     V:Clone + Eq + Vid + ToStr + UnifyVid<Option<T>>>(
-                    &mut self,
+                    &self,
                     a_is_expected: bool,
                     a_id: V,
                     b: T)
@@ -274,16 +276,16 @@ impl InferCtxtMethods for InferCtxt {
 // ______________________________________________________________________
 
 impl UnifyVid<Bounds<ty::t>> for ty::TyVid {
-    fn appropriate_vals_and_bindings<'v>(infcx: &'v mut InferCtxt)
-        -> &'v mut ValsAndBindings<ty::TyVid, Bounds<ty::t>> {
-        return &mut infcx.ty_var_bindings;
+    fn appropriate_vals_and_bindings<'v>(infcx: &'v InferCtxt)
+        -> &'v RefCell<ValsAndBindings<ty::TyVid, Bounds<ty::t>>> {
+        return &infcx.ty_var_bindings;
     }
 }
 
 impl UnifyVid<Option<IntVarValue>> for ty::IntVid {
-    fn appropriate_vals_and_bindings<'v>(infcx: &'v mut InferCtxt)
-        -> &'v mut ValsAndBindings<ty::IntVid, Option<IntVarValue>> {
-        return &mut infcx.int_var_bindings;
+    fn appropriate_vals_and_bindings<'v>(infcx: &'v InferCtxt)
+        -> &'v RefCell<ValsAndBindings<ty::IntVid, Option<IntVarValue>>> {
+        return &infcx.int_var_bindings;
     }
 }
 
@@ -293,15 +295,15 @@ impl SimplyUnifiable for IntVarValue {
     }
 }
 
-impl UnifyVid<Option<ast::float_ty>> for ty::FloatVid {
-    fn appropriate_vals_and_bindings<'v>(infcx: &'v mut InferCtxt)
-        -> &'v mut ValsAndBindings<ty::FloatVid, Option<ast::float_ty>> {
-        return &mut infcx.float_var_bindings;
+impl UnifyVid<Option<ast::FloatTy>> for ty::FloatVid {
+    fn appropriate_vals_and_bindings<'v>(infcx: &'v InferCtxt)
+        -> &'v RefCell<ValsAndBindings<ty::FloatVid, Option<ast::FloatTy>>> {
+        return &infcx.float_var_bindings;
     }
 }
 
-impl SimplyUnifiable for ast::float_ty {
-    fn to_type_err(err: expected_found<ast::float_ty>) -> ty::type_err {
+impl SimplyUnifiable for ast::FloatTy {
+    fn to_type_err(err: expected_found<ast::FloatTy>) -> ty::type_err {
         return ty::terr_float_mismatch(err);
     }
 }

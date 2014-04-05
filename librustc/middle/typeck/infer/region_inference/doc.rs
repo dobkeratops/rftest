@@ -149,7 +149,7 @@ In this example, there is a region for the fn body block as a whole,
 and then a subregion for the declaration of the local variable.
 Within that, there are sublifetimes for the assignment pattern and
 also the expression `x + y`. The expression itself has sublifetimes
-for evaluating `x` and and `y`.
+for evaluating `x` and `y`.
 
 ## Function calls
 
@@ -192,10 +192,10 @@ going on:
     fn weird() {
         let mut x: ~Foo = ~Foo { ... };
         'a: add(&mut (*x).f,
-                'b: inc(&mut (*x).f)) // (*)
+                'b: inc(&mut (*x).f)) // (..)
     }
 
-The important part is the line marked `(*)` which contains a call to
+The important part is the line marked `(..)` which contains a call to
 `add()`. The first argument is a mutable borrow of the field `f`.  The
 second argument also borrows the field `f`. Now, in the current borrow
 checker, the first borrow is given the lifetime of the call to
@@ -226,12 +226,12 @@ corresponds to the *actual execution of the function `add()`*, after
 all arguments have been evaluated. There is a corresponding lifetime
 `'b_call` for the execution of `inc()`. If we wanted to be precise
 about it, the lifetime of the two borrows should be `'a_call` and
-`'b_call` respectively, since the borrowed pointers that were created
+`'b_call` respectively, since the references that were created
 will not be dereferenced except during the execution itself.
 
 However, this model by itself is not sound. The reason is that
-while the two borrowed pointers that are created will never be used
-simultaneously, it is still true that the first borrowed pointer is
+while the two references that are created will never be used
+simultaneously, it is still true that the first reference is
 *created* before the second argument is evaluated, and so even though
 it will not be *dereferenced* during the evaluation of the second
 argument, it can still be *invalidated* by that evaluation. Consider
@@ -248,7 +248,7 @@ this similar but unsound example:
     }
     fn weird() {
         let mut x: ~Foo = ~Foo { ... };
-        'a: add(&mut (*x).f, consume(x)) // (*)
+        'a: add(&mut (*x).f, consume(x)) // (..)
     }
 
 In this case, the second argument to `add` actually consumes `x`, thus
@@ -257,7 +257,7 @@ invalidating the first argument.
 So, for now, we exclude the `call` lifetimes from our model.
 Eventually I would like to include them, but we will have to make the
 borrow checker handle this situation correctly. In particular, if
-there is a borrowed pointer created whose lifetime does not enclose
+there is a reference created whose lifetime does not enclose
 the borrow expression, we must issue sufficient restrictions to ensure
 that the pointee remains valid.
 
@@ -389,7 +389,7 @@ The problem we are addressing is that there is a kind of subtyping
 between functions with bound region parameters.  Consider, for
 example, whether the following relation holds:
 
-    fn(&'a int) <: &fn(&'b int)? (Yes, a => b)
+    fn(&'a int) <: |&'b int|? (Yes, a => b)
 
 The answer is that of course it does.  These two types are basically
 the same, except that in one we used the name `a` and one we used
@@ -406,7 +406,7 @@ Now let's consider two more function types.  Here, we assume that the
 `self` lifetime is defined somewhere outside and hence is not a
 lifetime parameter bound by the function type (it "appears free"):
 
-    fn<a>(&'a int) <: &fn(&'self int)? (Yes, a => self)
+    fn<a>(&'a int) <: |&'a int|? (Yes, a => self)
 
 This subtyping relation does in fact hold.  To see why, you have to
 consider what subtyping means.  One way to look at `T1 <: T2` is to
@@ -423,7 +423,7 @@ to the same thing: a function that accepts pointers with any lifetime
 
 So, what if we reverse the order of the two function types, like this:
 
-    fn(&'self int) <: &fn<a>(&'a int)? (No)
+    fn(&'a int) <: <a>|&'a int|? (No)
 
 Does the subtyping relationship still hold?  The answer of course is
 no.  In this case, the function accepts *only the lifetime `&self`*,
@@ -432,8 +432,8 @@ accepted any lifetime.
 
 What about these two examples:
 
-    fn<a,b>(&'a int, &'b int) <: &fn<a>(&'a int, &'a int)? (Yes)
-    fn<a>(&'a int, &'a int) <: &fn<a,b>(&'a int, &'b int)? (No)
+    fn<a,b>(&'a int, &'b int) <: <a>|&'a int, &'a int|? (Yes)
+    fn<a>(&'a int, &'a int) <: <a,b>|&'a int, &'b int|? (No)
 
 Here, it is true that functions which take two pointers with any two
 lifetimes can be treated as if they only accepted two pointers with
@@ -457,12 +457,12 @@ Let's walk through some examples and see how this algorithm plays out.
 
 We'll start with the first example, which was:
 
-    1. fn<a>(&'a T) <: &fn<b>(&'b T)?        Yes: a -> b
+    1. fn<a>(&'a T) <: <b>|&'b T|?        Yes: a -> b
 
 After steps 1 and 2 of the algorithm we will have replaced the types
 like so:
 
-    1. fn(&'A T) <: &fn(&'x T)?
+    1. fn(&'A T) <: |&'x T|?
 
 Here the upper case `&A` indicates a *region variable*, that is, a
 region whose value is being inferred by the system.  I also replaced
@@ -491,12 +491,12 @@ So far we have encountered no error, so the subtype check succeeds.
 
 Now let's look first at the third example, which was:
 
-    3. fn(&'self T)    <: &fn<b>(&'b T)?        No!
+    3. fn(&'a T)    <: <b>|&'b T|?        No!
 
 After steps 1 and 2 of the algorithm we will have replaced the types
 like so:
 
-    3. fn(&'self T) <: &fn(&'x T)?
+    3. fn(&'a T) <: |&'x T|?
 
 This looks pretty much the same as before, except that on the LHS
 `&self` was not bound, and hence was left as-is and not replaced with
@@ -511,7 +511,7 @@ You may be wondering about that mysterious last step in the algorithm.
 So far it has not been relevant.  The purpose of that last step is to
 catch something like *this*:
 
-    fn<a>() -> fn(&'a T) <: &fn() -> fn<b>(&'b T)?   No.
+    fn<a>() -> fn(&'a T) <: || -> fn<b>(&'b T)?   No.
 
 Here the function types are the same but for where the binding occurs.
 The subtype returns a function that expects a value in precisely one
@@ -525,15 +525,15 @@ So let's step through what happens when we perform this subtype check.
 We first replace the bound regions in the subtype (the supertype has
 no bound regions).  This gives us:
 
-    fn() -> fn(&'A T) <: &fn() -> fn<b>(&'b T)?
+    fn() -> fn(&'A T) <: || -> fn<b>(&'b T)?
 
 Now we compare the return types, which are covariant, and hence we have:
 
-    fn(&'A T) <: &fn<b>(&'b T)?
+    fn(&'A T) <: <b>|&'b T|?
 
 Here we skolemize the bound region in the supertype to yield:
 
-    fn(&'A T) <: &fn(&'x T)?
+    fn(&'A T) <: |&'x T|?
 
 And then proceed to compare the argument types:
 
@@ -550,7 +550,7 @@ The difference between this example and the first one is that the variable
 `A` already existed at the point where the skolemization occurred.  In
 the first example, you had two functions:
 
-    fn<a>(&'a T) <: &fn<b>(&'b T)
+    fn<a>(&'a T) <: <b>|&'b T|
 
 and hence `&A` and `&x` were created "together".  In general, the
 intention of the skolemized names is that they are supposed to be

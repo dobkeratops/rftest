@@ -8,9 +8,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use std::to_bytes;
+use std::fmt;
+use std::fmt::Show;
 
 #[deriving(Eq)]
+pub enum Os { OsWin32, OsMacos, OsLinux, OsAndroid, OsFreebsd, }
+
+#[deriving(Eq, TotalEq, Hash)]
 pub enum Abi {
     // NB: This ordering MUST match the AbiDatas array below.
     // (This is ensured by the test indices_are_correct().)
@@ -20,13 +24,16 @@ pub enum Abi {
     Stdcall,
     Fastcall,
     Aapcs,
+    Win64,
 
     // Multiplatform ABIs second
     Rust,
     C,
+    System,
     RustIntrinsic,
 }
 
+#[allow(non_camel_case_types)]
 #[deriving(Eq)]
 pub enum Architecture {
     // NB. You cannot change the ordering of these
@@ -41,7 +48,7 @@ pub enum Architecture {
 static IntelBits: u32 = (1 << (X86 as uint)) | (1 << (X86_64 as uint));
 static ArmBits: u32 = (1 << (Arm as uint));
 
-struct AbiData {
+pub struct AbiData {
     abi: Abi,
 
     // Name of this ABI as we like it called.
@@ -52,13 +59,13 @@ struct AbiData {
     abi_arch: AbiArchitecture
 }
 
-enum AbiArchitecture {
+pub enum AbiArchitecture {
     RustArch,   // Not a real ABI (e.g., intrinsic)
     AllArch,    // An ABI that specifies cross-platform defaults (e.g., "C")
     Archs(u32)  // Multiple architectures (bitset)
 }
 
-#[deriving(Clone, Eq, Encodable, Decodable)]
+#[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
 pub struct AbiSet {
     priv bits: u32   // each bit represents one of the abis below
 }
@@ -69,6 +76,8 @@ static AbiDatas: &'static [AbiData] = &[
     AbiData {abi: Stdcall, name: "stdcall", abi_arch: Archs(IntelBits)},
     AbiData {abi: Fastcall, name:"fastcall", abi_arch: Archs(IntelBits)},
     AbiData {abi: Aapcs, name: "aapcs", abi_arch: Archs(ArmBits)},
+    AbiData {abi: Win64, name: "win64",
+             abi_arch: Archs(1 << (X86_64 as uint))},
 
     // Cross-platform ABIs
     //
@@ -76,10 +85,11 @@ static AbiDatas: &'static [AbiData] = &[
     // adjusting the indices below.
     AbiData {abi: Rust, name: "Rust", abi_arch: RustArch},
     AbiData {abi: C, name: "C", abi_arch: AllArch},
+    AbiData {abi: System, name: "system", abi_arch: AllArch},
     AbiData {abi: RustIntrinsic, name: "rust-intrinsic", abi_arch: RustArch},
 ];
 
-fn each_abi(op: &fn(abi: Abi) -> bool) -> bool {
+fn each_abi(op: |abi: Abi| -> bool) -> bool {
     /*!
      *
      * Iterates through each of the defined ABIs.
@@ -96,19 +106,19 @@ pub fn lookup(name: &str) -> Option<Abi> {
 
     let mut res = None;
 
-    do each_abi |abi| {
+    each_abi(|abi| {
         if name == abi.data().name {
             res = Some(abi);
             false
         } else {
             true
         }
-    };
+    });
     res
 }
 
-pub fn all_names() -> ~[&'static str] {
-    AbiDatas.map(|d| d.name)
+pub fn all_names() -> Vec<&'static str> {
+    AbiDatas.iter().map(|d| d.name).collect()
 }
 
 impl Abi {
@@ -124,6 +134,14 @@ impl Abi {
 
     pub fn name(&self) -> &'static str {
         self.data().name
+    }
+
+    pub fn for_target(&self, os: Os, arch: Architecture) -> Abi {
+        match (*self, os, arch) {
+            (System, OsWin32, X86) => Stdcall,
+            (System, _, _) => C,
+            (me, _, _) => me,
+        }
     }
 }
 
@@ -185,10 +203,10 @@ impl AbiSet {
     }
 
     pub fn add(&mut self, abi: Abi) {
-        self.bits |= (1 << abi.index());
+        self.bits |= 1 << abi.index();
     }
 
-    pub fn each(&self, op: &fn(abi: Abi) -> bool) -> bool {
+    pub fn each(&self, op: |abi: Abi| -> bool) -> bool {
         each_abi(|abi| !self.contains(abi) || op(abi))
     }
 
@@ -196,32 +214,32 @@ impl AbiSet {
         self.bits == 0
     }
 
-    pub fn for_arch(&self, arch: Architecture) -> Option<Abi> {
+    pub fn for_target(&self, os: Os, arch: Architecture) -> Option<Abi> {
         // NB---Single platform ABIs come first
 
         let mut res = None;
 
-        do self.each |abi| {
+        self.each(|abi| {
             let data = abi.data();
             match data.abi_arch {
                 Archs(a) if (a & arch.bit()) != 0 => { res = Some(abi); false }
                 Archs(_) => { true }
                 RustArch | AllArch => { res = Some(abi); false }
             }
-        };
+        });
 
-        res
+        res.map(|r| r.for_target(os, arch))
     }
 
     pub fn check_valid(&self) -> Option<(Abi, Abi)> {
-        let mut abis = ~[];
-        do self.each |abi| { abis.push(abi); true };
+        let mut abis = Vec::new();
+        self.each(|abi| { abis.push(abi); true });
 
         for (i, abi) in abis.iter().enumerate() {
             let data = abi.data();
             for other_abi in abis.slice(0, i).iter() {
                 let other_data = other_abi.data();
-                debug!("abis=(%?,%?) datas=(%?,%?)",
+                debug!("abis=({:?},{:?}) datas=({:?},{:?})",
                        abi, data.abi_arch,
                        other_abi, other_data.abi_arch);
                 match (&data.abi_arch, &other_data.abi_arch) {
@@ -248,32 +266,23 @@ impl AbiSet {
     }
 }
 
-impl to_bytes::IterBytes for Abi {
-    fn iter_bytes(&self, lsb0: bool, f: to_bytes::Cb) -> bool {
-        self.index().iter_bytes(lsb0, f)
+impl fmt::Show for Abi {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.data().name.fmt(f)
     }
 }
 
-impl to_bytes::IterBytes for AbiSet {
-    fn iter_bytes(&self, lsb0: bool, f: to_bytes::Cb) -> bool {
-        self.bits.iter_bytes(lsb0, f)
-    }
-}
-
-impl ToStr for Abi {
-    fn to_str(&self) -> ~str {
-        self.data().name.to_str()
-    }
-}
-
-impl ToStr for AbiSet {
-    fn to_str(&self) -> ~str {
-        let mut strs = ~[];
-        do self.each |abi| {
-            strs.push(abi.data().name);
+impl fmt::Show for AbiSet {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        try!(write!(f.buf, "\""));
+        let mut first = true;
+        self.each(|abi| {
+            if first { first = false; }
+            else { let _ = write!(f.buf, " "); }
+            let _ = write!(f.buf, "{}", abi.data().name);
             true
-        };
-        fmt!("\"%s\"", strs.connect(" "))
+        });
+        write!(f.buf, "\"")
     }
 }
 
@@ -306,7 +315,7 @@ fn cannot_combine(n: Abi, m: Abi) {
                          (m == a && n == b));
         }
         None => {
-            fail!("Invalid match not detected");
+            fail!("invalid match not detected");
         }
     }
 }
@@ -318,7 +327,7 @@ fn can_combine(n: Abi, m: Abi) {
     set.add(m);
     match set.check_valid() {
         Some((_, _)) => {
-            fail!("Valid match declared invalid");
+            fail!("valid match declared invalid");
         }
         None => {}
     }
@@ -345,6 +354,11 @@ fn cannot_combine_rust_intrinsic_and_cdecl() {
 }
 
 #[test]
+fn can_combine_system_and_cdecl() {
+    can_combine(System, Cdecl);
+}
+
+#[test]
 fn can_combine_c_and_stdcall() {
     can_combine(C, Stdcall);
 }
@@ -367,7 +381,7 @@ fn abi_to_str_c_aaps() {
     let mut set = AbiSet::empty();
     set.add(Aapcs);
     set.add(C);
-    debug!("set = %s", set.to_str());
+    debug!("set = {}", set.to_str());
     assert!(set.to_str() == ~"\"aapcs C\"");
 }
 
@@ -375,43 +389,48 @@ fn abi_to_str_c_aaps() {
 fn abi_to_str_rust() {
     let mut set = AbiSet::empty();
     set.add(Rust);
-    debug!("set = %s", set.to_str());
+    debug!("set = {}", set.to_str());
     assert!(set.to_str() == ~"\"Rust\"");
 }
 
 #[test]
 fn indices_are_correct() {
     for (i, abi_data) in AbiDatas.iter().enumerate() {
-        assert!(i == abi_data.abi.index());
+        assert_eq!(i, abi_data.abi.index());
     }
 
     let bits = 1 << (X86 as u32);
     let bits = bits | 1 << (X86_64 as u32);
-    assert!(IntelBits == bits);
+    assert_eq!(IntelBits, bits);
 
     let bits = 1 << (Arm as u32);
-    assert!(ArmBits == bits);
+    assert_eq!(ArmBits, bits);
 }
 
 #[cfg(test)]
-fn check_arch(abis: &[Abi], arch: Architecture, expect: Option<Abi>) {
+fn get_arch(abis: &[Abi], os: Os, arch: Architecture) -> Option<Abi> {
     let mut set = AbiSet::empty();
     for &abi in abis.iter() {
         set.add(abi);
     }
-    let r = set.for_arch(arch);
-    assert!(r == expect);
+    set.for_target(os, arch)
 }
 
 #[test]
 fn pick_multiplatform() {
-    check_arch([C, Cdecl], X86, Some(Cdecl));
-    check_arch([C, Cdecl], X86_64, Some(Cdecl));
-    check_arch([C, Cdecl], Arm, Some(C));
+    assert_eq!(get_arch([C, Cdecl], OsLinux, X86), Some(Cdecl));
+    assert_eq!(get_arch([C, Cdecl], OsLinux, X86_64), Some(Cdecl));
+    assert_eq!(get_arch([C, Cdecl], OsLinux, Arm), Some(C));
 }
 
 #[test]
 fn pick_uniplatform() {
-    check_arch([Stdcall], X86, Some(Stdcall));
-    check_arch([Stdcall], Arm, None);
+    assert_eq!(get_arch([Stdcall], OsLinux, X86), Some(Stdcall));
+    assert_eq!(get_arch([Stdcall], OsLinux, Arm), None);
+    assert_eq!(get_arch([System], OsLinux, X86), Some(C));
+    assert_eq!(get_arch([System], OsWin32, X86), Some(Stdcall));
+    assert_eq!(get_arch([System], OsWin32, X86_64), Some(C));
+    assert_eq!(get_arch([System], OsWin32, Arm), Some(C));
+    assert_eq!(get_arch([Stdcall], OsWin32, X86), Some(Stdcall));
+    assert_eq!(get_arch([Stdcall], OsWin32, X86_64), Some(Stdcall));
 }

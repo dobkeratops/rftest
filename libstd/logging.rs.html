@@ -1,96 +1,150 @@
-<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg15><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/logging.rs.html">logging.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
-</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c40>//!&nbsp;Logging
-</c40><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::*</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;os</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt::logging::</c0><c3>{</c3><c0>Logger</c0><c3>,</c3><c0>&nbsp;StdErrLogger</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;send_str::SendStrOwned</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n152452">&nbsp;</a><c42>///&nbsp;Turns&nbsp;on&nbsp;logging&nbsp;to&nbsp;stdout&nbsp;globally
-</c42><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n152457"><a id="n152453">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;console_on</c30><c4>()</c4><c1>&nbsp;</c1><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n152454"><a id="n152456"><a id="n152455">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/rt/logging.rs.html#230">rt::logging::console_on</a></c26><c4>()</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c41>/**
-</c41><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;Turns&nbsp;off&nbsp;logging&nbsp;to&nbsp;stdout&nbsp;globally
-</c41><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c41>&nbsp;*
-</c41><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;Turns&nbsp;off&nbsp;the&nbsp;console&nbsp;unless&nbsp;the&nbsp;user&nbsp;has&nbsp;overridden&nbsp;the
-</c41><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;runtime&nbsp;environment's&nbsp;logging&nbsp;spec,&nbsp;e.g.&nbsp;by&nbsp;setting
-</c41><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;the&nbsp;RUST_LOG&nbsp;environment&nbsp;variable
-</c41><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n152458">&nbsp;</a><c42>&nbsp;*/
-</c42><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n152473"><a id="n152459">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;console_off</c30><c4>()</c4><c1>&nbsp;</c1><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;If&nbsp;RUST_LOG&nbsp;is&nbsp;set&nbsp;then&nbsp;the&nbsp;console&nbsp;can't&nbsp;be&nbsp;turned&nbsp;off
-</c40><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n152463"><a id="n152462"><a id="n152461"><a id="n152468"><a id="n152467"><a id="n152464"><a id="n152469">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>if</c21><c13>&nbsp;</c13><c26><a href="../libstd/os.rs.html#232">os::getenv</a></c26><c4>(</c4><c12><a href="../libstd/option.rs.html#130">"RUST_LOG"</a></c12><c4>)</c4><c27><a href="../libstd/option.rs.html#130">.</a></c27><c10><a href="../libstd/option.rs.html#130">is_some</a></c10><c4>()</c4><c10><a href="../libstd/option.rs.html#130">&nbsp;</a></c10><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n152466"><a id="n152465">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>return</c21><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
-</c22><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c22>
-</c22><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n152470"><a id="n152472"><a id="n152471">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/rt/logging.rs.html#233">rt::logging::console_off</a></c26><c4>()</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n152474">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n152529"><a id="n152476"><a id="n152478"><a id="n152477"><a id="n152480">&nbsp;</a></a></a></a></a><c30>fn</c30><c30><a href="#39_1_refs">&nbsp;newsched_log_str</a></c30><c4>(</c4><c20><a href="#40_20_refs">msg</a></c20><c1><a href="#39_1_refs">:&nbsp;</a></c1><c8><a href="#39_1_refs">~str</a></c8><c4>)</c4><c1><a href="#39_1_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>use</c21><c22><a href="#39_1_refs">&nbsp;rt::task::Task</a></c22><c3>;</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>use</c21><c22><a href="#39_1_refs">&nbsp;rt::local::Local</a></c22><c3>;</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n152527"><a id="n152528">&nbsp;</a></a><c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>unsafe</c21><c22><a href="#39_1_refs">&nbsp;</a></c22><c3>{</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n152485"><a id="n152490"><a id="n152492"><a id="n152491"><a id="n152487"><a id="n152489"><a id="n152488"><a id="n152484">&nbsp;</a></a></a></a></a></a></a></a><c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#39_1_refs">&nbsp;</a></c22><c20><a href="#45_12_refs">optional_task</a></c20><c16><a href="#39_1_refs">:&nbsp;</a></c16><c8><a href="../libstd/option.rs.html#58">Option&lt;</a></c8><c8><a href="#39_1_refs">*mut&nbsp;</a></c8><c8><a href="../libstd/rt/task.rs.html#42">Task</a></c8><c8><a href="../libstd/option.rs.html#58">&gt;</a></c8><c16><a href="#39_1_refs">&nbsp;=&nbsp;</a></c16><c26><a href="../libstd/rt/local.rs.html#26">Local::try_unsafe_borrow</a></c26><c4>()</c4><c3>;</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n152493"><a id="n152526">&nbsp;</a></a><c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>match</c21><c21><a href="#39_1_refs">&nbsp;</a></c21><c26><a href="../libstd/logging.rs.html#45">optional_task</a></c26><c21><a href="#39_1_refs">&nbsp;</a></c21><c3>{</c3><c21><a href="#39_1_refs">
-</a></c21><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n152508"><a id="n152494"><a id="n152509"><a id="n152507"><a id="n152495">&nbsp;</a></a></a></a></a><c21><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c20><a href="../libstd/option.rs.html#61">Some</a></c20><c4>(</c4><c20><a href="#47_17_refs">local</a></c20><c4>)</c4><c21><a href="#39_1_refs">&nbsp;</a></c21><c4>=&gt;</c4><c21><a href="#39_1_refs">&nbsp;</a></c21><c3>{</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c40>//&nbsp;Use&nbsp;the&nbsp;available&nbsp;logger
-</c40><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a id="n152503"><a id="n152506"><a id="n152499"><a id="n152502"><a id="n152500"><a id="n152501"><a id="n152504"><a id="n152498"><a id="n152505">&nbsp;</a></a></a></a></a></a></a></a></a><c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c4>(</c4><c5><a href="../libstd/rt/task.rs.html#47">*</a></c5><c26><a href="../libstd/logging.rs.html#47">local</a></c26><c4>)</c4><c1><a href="../libstd/rt/task.rs.html#47">.</a></c1><c24><a href="../libstd/rt/task.rs.html#47">logger</a></c24><c10><a href="../libstd/rt/logging.rs.html#180">.log</a></c10><c4>(</c4><c26><a href="../libstd/send_str.rs.html#26">SendStrOwned</a></c26><c4>(</c4><c26><a href="../libstd/logging.rs.html#40">msg</a></c26><c4>))</c4><c3>;</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c21><a href="#39_1_refs">
-</a></c21><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><a id="n152523"><a id="n152525"><a id="n152524"><a id="n152510">&nbsp;</a></a></a></a><c21><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c20><a href="../libstd/option.rs.html#60">None</a></c20><c21><a href="#39_1_refs">&nbsp;</a></c21><c4>=&gt;</c4><c21><a href="#39_1_refs">&nbsp;</a></c21><c3>{</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c40>//&nbsp;There&nbsp;is&nbsp;no&nbsp;logger&nbsp;anywhere,&nbsp;just&nbsp;write&nbsp;to&nbsp;stderr
-</c40><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n152511"><a id="n152513"><a id="n152515"><a id="n152514"><a id="n152512">&nbsp;</a></a></a></a></a><c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#39_1_refs">&nbsp;</a></c22><c21>mut</c21><c22><a href="#39_1_refs">&nbsp;</a></c22><c20><a href="#53_24_refs">logger</a></c20><c16><a href="#39_1_refs">&nbsp;=&nbsp;</a></c16><c26><a href="c=0 n=255407">StdErrLogger</a></c26><c3>;</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n152517"><a id="n152520"><a id="n152522"><a id="n152518"><a id="n152521"><a id="n152519">&nbsp;</a></a></a></a></a></a><c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../libstd/logging.rs.html#53">logger</a></c26><c10><a href="../libstd/rt/logging.rs.html#180">.log</a></c10><c4>(</c4><c26><a href="../libstd/send_str.rs.html#26">SendStrOwned</a></c26><c4>(</c4><c26><a href="../libstd/logging.rs.html#40">msg</a></c26><c4>))</c4><c3>;</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c21><a href="#39_1_refs">
-</a></c21><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c21><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c3>}</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c22><a href="#39_1_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c22><a href="#39_1_refs">
-</a></c22><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c40>//&nbsp;XXX:&nbsp;This&nbsp;will&nbsp;change&nbsp;soon&nbsp;to&nbsp;not&nbsp;require&nbsp;an&nbsp;allocation.&nbsp;This&nbsp;is&nbsp;an&nbsp;unstable
-</c40><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c40>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;api&nbsp;which&nbsp;should&nbsp;not&nbsp;be&nbsp;used&nbsp;outside&nbsp;of&nbsp;the&nbsp;macros&nbsp;in&nbsp;ext/expand.
-</c40><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><a id="n152530">&nbsp;</a><c50>#</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>hidden</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><a id="n152538"><a id="n152545"><a id="n152537"><a id="n152540"><a id="n152536"><a id="n152533"><a id="n152532">&nbsp;</a></a></a></a></a></a></a><c21>pub</c21><c1><a href="#62_15_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#62_15_refs">&nbsp;log</a></c30><c4>(</c4><c20><a href="#62_15_refs">_level</a></c20><c1><a href="#62_15_refs">:&nbsp;</a></c1><c8><a href="#62_15_refs">u32</a></c8><c3>,</c3><c1><a href="#62_15_refs">&nbsp;</a></c1><c20><a href="#63_24_refs">msg</a></c20><c1><a href="#62_15_refs">:&nbsp;</a></c1><c8><a href="#62_15_refs">~str</a></c8><c4>)</c4><c1><a href="#62_15_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#62_15_refs">
-</a></c22><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><a id="n152541"><a id="n152542"><a id="n152543"><a id="n152544">&nbsp;</a></a></a></a><c22><a href="#62_15_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../libstd/logging.rs.html#39">newsched_log_str</a></c26><c4>(</c4><c26><a href="../libstd/logging.rs.html#63">msg</a></c26><c4>)</c4><c3>;</c3><c22><a href="#62_15_refs">
-</a></c22><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><div class="refblock"><br/><a id="39_1_refs"><a href="#39"><c40>libstd/logging.rs:39:1-39:1&nbsp;-fn-&nbsp;definition:<br/></c40><pr>
-<br/>fn&nbsp;newsched_log_str(msg:&nbsp;~str)&nbsp;{
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/logging.rs.html#64"><c40>64:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;newsched_log_str(msg);
-<br/></a><br/><br/><a id="62_15_refs"><a href="#62"><c40>libstd/logging.rs:62:15-62:15&nbsp;-fn-&nbsp;definition:<br/></c40><pr>#[doc(hidden)]
-<br/>pub&nbsp;fn&nbsp;log(_level:&nbsp;u32,&nbsp;msg:&nbsp;~str)&nbsp;{
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../<std-macros>.html"><c40>&lt;std-macros&gt;:<br/></c40></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#17"><c40>17:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!($($arg),+))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#17"><c40>17:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!($($arg),+))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#17"><c40>17:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!($($arg),+))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#17"><c40>17:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!($($arg),+))
-<br/></a><a href="../<std-macros>.html#17"><c40>17:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!($($arg),+))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#17"><c40>17:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!($($arg),+))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#17"><c40>17:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!($($arg),+))
-<br/></a><a href="../<std-macros>.html#11"><c40>11:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!("%?",&nbsp;$arg))
-<br/></a><a href="../<std-macros>.html#17"><c40>17:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;fmt!($($arg),+))
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg15><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a><c1>/</c1><c0><a href="./../libstd/logging.rs.html">logging.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c41>/*!
+</c41><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c41>Logging
+</c41><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c41>This&nbsp;module&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;compiler&nbsp;when&nbsp;emitting&nbsp;output&nbsp;for&nbsp;the&nbsp;logging&nbsp;family
+</c41><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c41>of&nbsp;macros.&nbsp;The&nbsp;methods&nbsp;of&nbsp;this&nbsp;module&nbsp;shouldn't&nbsp;necessarily&nbsp;be&nbsp;used&nbsp;directly,
+</c41><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c41>but&nbsp;rather&nbsp;through&nbsp;the&nbsp;logging&nbsp;macros&nbsp;defined.
+</c41><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c41>There&nbsp;are&nbsp;five&nbsp;macros&nbsp;that&nbsp;the&nbsp;logging&nbsp;subsystem&nbsp;uses:
+</c41><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c41>*&nbsp;`log!(level,&nbsp;...)`&nbsp;-&nbsp;the&nbsp;generic&nbsp;logging&nbsp;macro,&nbsp;takes&nbsp;a&nbsp;level&nbsp;as&nbsp;a&nbsp;u32&nbsp;and&nbsp;any
+</c41><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;related&nbsp;`format!`&nbsp;arguments
+</c41><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c41>*&nbsp;`debug!(...)`&nbsp;-&nbsp;a&nbsp;macro&nbsp;hard-wired&nbsp;to&nbsp;the&nbsp;log&nbsp;level&nbsp;of&nbsp;4
+</c41><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c41>*&nbsp;`info!(...)`&nbsp;-&nbsp;a&nbsp;macro&nbsp;hard-wired&nbsp;to&nbsp;the&nbsp;log&nbsp;level&nbsp;of&nbsp;3
+</c41><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c41>*&nbsp;`warn!(...)`&nbsp;-&nbsp;a&nbsp;macro&nbsp;hard-wired&nbsp;to&nbsp;the&nbsp;log&nbsp;level&nbsp;of&nbsp;2
+</c41><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c41>*&nbsp;`error!(...)`&nbsp;-&nbsp;a&nbsp;macro&nbsp;hard-wired&nbsp;to&nbsp;the&nbsp;log&nbsp;level&nbsp;of&nbsp;1
+</c41><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c41>All&nbsp;of&nbsp;these&nbsp;macros&nbsp;use&nbsp;the&nbsp;same&nbsp;style&nbsp;of&nbsp;syntax&nbsp;as&nbsp;the&nbsp;`format!`&nbsp;syntax
+</c41><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c41>extension.&nbsp;Details&nbsp;about&nbsp;the&nbsp;syntax&nbsp;can&nbsp;be&nbsp;found&nbsp;in&nbsp;the&nbsp;documentation&nbsp;of
+</c41><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c41>`std::fmt`&nbsp;along&nbsp;with&nbsp;the&nbsp;Rust&nbsp;tutorial/manual
+</c41><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c41>##&nbsp;Enabling&nbsp;logging
+</c41><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c41>Log&nbsp;levels&nbsp;are&nbsp;controlled&nbsp;on&nbsp;a&nbsp;per-module&nbsp;basis,&nbsp;and&nbsp;by&nbsp;default&nbsp;all&nbsp;logging&nbsp;is
+</c41><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c41>disabled&nbsp;except&nbsp;for&nbsp;`error!`&nbsp;(a&nbsp;log&nbsp;level&nbsp;of&nbsp;1).&nbsp;Logging&nbsp;is&nbsp;controlled&nbsp;via&nbsp;the
+</c41><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c41>`RUST_LOG`&nbsp;environment&nbsp;variable.&nbsp;The&nbsp;value&nbsp;of&nbsp;this&nbsp;environment&nbsp;variable&nbsp;is&nbsp;a
+</c41><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c41>comma-separated&nbsp;list&nbsp;of&nbsp;logging&nbsp;directives.&nbsp;A&nbsp;logging&nbsp;directive&nbsp;is&nbsp;of&nbsp;the&nbsp;form:
+</c41><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c41>```
+</c41><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c41>path::to::module=log_level
+</c41><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c41>```
+</c41><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c41>The&nbsp;path&nbsp;to&nbsp;the&nbsp;module&nbsp;is&nbsp;rooted&nbsp;in&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;crate&nbsp;it&nbsp;was&nbsp;compiled&nbsp;for,
+</c41><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c41>so&nbsp;if&nbsp;your&nbsp;program&nbsp;is&nbsp;contained&nbsp;in&nbsp;a&nbsp;file&nbsp;`hello.rs`,&nbsp;for&nbsp;example,&nbsp;to&nbsp;turn&nbsp;on
+</c41><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c41>logging&nbsp;for&nbsp;this&nbsp;file&nbsp;you&nbsp;would&nbsp;use&nbsp;a&nbsp;value&nbsp;of&nbsp;`RUST_LOG=hello`.&nbsp;Furthermore,
+</c41><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c41>this&nbsp;path&nbsp;is&nbsp;a&nbsp;prefix-search,&nbsp;so&nbsp;all&nbsp;modules&nbsp;nested&nbsp;in&nbsp;the&nbsp;specified&nbsp;module&nbsp;will
+</c41><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c41>also&nbsp;have&nbsp;logging&nbsp;enabled.
+</c41><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c41>The&nbsp;actual&nbsp;`log_level`&nbsp;is&nbsp;optional&nbsp;to&nbsp;specify.&nbsp;If&nbsp;omitted,&nbsp;all&nbsp;logging&nbsp;will&nbsp;be
+</c41><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c41>enabled.&nbsp;If&nbsp;specified,&nbsp;the&nbsp;it&nbsp;must&nbsp;be&nbsp;either&nbsp;a&nbsp;numeric&nbsp;in&nbsp;the&nbsp;range&nbsp;of&nbsp;1-255,&nbsp;or
+</c41><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c41>it&nbsp;must&nbsp;be&nbsp;one&nbsp;of&nbsp;the&nbsp;strings&nbsp;`debug`,&nbsp;`error`,&nbsp;`info`,&nbsp;or&nbsp;`warn`.&nbsp;If&nbsp;a&nbsp;numeric
+</c41><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c41>is&nbsp;specified,&nbsp;then&nbsp;all&nbsp;logging&nbsp;less&nbsp;than&nbsp;or&nbsp;equal&nbsp;to&nbsp;that&nbsp;numeral&nbsp;is&nbsp;enabled.
+</c41><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c41>For&nbsp;example,&nbsp;if&nbsp;logging&nbsp;level&nbsp;3&nbsp;is&nbsp;active,&nbsp;error,&nbsp;warn,&nbsp;and&nbsp;info&nbsp;logs&nbsp;will&nbsp;be
+</c41><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c41>printed,&nbsp;but&nbsp;debug&nbsp;will&nbsp;be&nbsp;omitted.
+</c41><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c41>As&nbsp;the&nbsp;log&nbsp;level&nbsp;for&nbsp;a&nbsp;module&nbsp;is&nbsp;optional,&nbsp;the&nbsp;module&nbsp;to&nbsp;enable&nbsp;logging&nbsp;for&nbsp;is
+</c41><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c41>also&nbsp;optional.&nbsp;If&nbsp;only&nbsp;a&nbsp;`log_level`&nbsp;is&nbsp;provided,&nbsp;then&nbsp;the&nbsp;global&nbsp;log&nbsp;level&nbsp;for
+</c41><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c41>all&nbsp;modules&nbsp;is&nbsp;set&nbsp;to&nbsp;this&nbsp;value.
+</c41><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c41>Some&nbsp;examples&nbsp;of&nbsp;valid&nbsp;values&nbsp;of&nbsp;`RUST_LOG`&nbsp;are:
+</c41><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c41>```
+</c41><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c41>hello&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;turns&nbsp;on&nbsp;all&nbsp;logging&nbsp;for&nbsp;the&nbsp;'hello'&nbsp;module
+</c41><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c41>info&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;turns&nbsp;on&nbsp;all&nbsp;info&nbsp;logging
+</c41><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c41>hello=debug&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;turns&nbsp;on&nbsp;debug&nbsp;logging&nbsp;for&nbsp;'hello'
+</c41><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c41>hello=3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;turns&nbsp;on&nbsp;info&nbsp;logging&nbsp;for&nbsp;'hello'
+</c41><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c41>hello,std::hashmap&nbsp;&nbsp;&nbsp;//&nbsp;turns&nbsp;on&nbsp;hello,&nbsp;and&nbsp;std's&nbsp;hashmap&nbsp;logging
+</c41><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c41>error,hello=warn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;turn&nbsp;on&nbsp;global&nbsp;error&nbsp;logging&nbsp;and&nbsp;also&nbsp;warn&nbsp;for&nbsp;hello
+</c41><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c41>```
+</c41><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c41>##&nbsp;Performance&nbsp;and&nbsp;Side&nbsp;Effects
+</c41><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c41>Each&nbsp;of&nbsp;these&nbsp;macros&nbsp;will&nbsp;expand&nbsp;to&nbsp;code&nbsp;similar&nbsp;to:
+</c41><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a>&nbsp;<c41>```rust
+</c41><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c41>if&nbsp;log_level&nbsp;&lt;=&nbsp;my_module_log_level()&nbsp;{
+</c41><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(log_level,&nbsp;format!(...));
+</c41><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c41>}
+</c41><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c41>```
+</c41><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c41>What&nbsp;this&nbsp;means&nbsp;is&nbsp;that&nbsp;each&nbsp;of&nbsp;these&nbsp;macros&nbsp;are&nbsp;very&nbsp;cheap&nbsp;at&nbsp;runtime&nbsp;if
+</c41><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c41>they're&nbsp;turned&nbsp;off&nbsp;(just&nbsp;a&nbsp;load&nbsp;and&nbsp;an&nbsp;integer&nbsp;comparison).&nbsp;This&nbsp;also&nbsp;means&nbsp;that
+</c41><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c41>if&nbsp;logging&nbsp;is&nbsp;disabled,&nbsp;none&nbsp;of&nbsp;the&nbsp;components&nbsp;of&nbsp;the&nbsp;log&nbsp;will&nbsp;be&nbsp;executed.
+</c41><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c41>##&nbsp;Useful&nbsp;Values
+</c41><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c41>For&nbsp;convenience,&nbsp;if&nbsp;a&nbsp;value&nbsp;of&nbsp;`::help`&nbsp;is&nbsp;set&nbsp;for&nbsp;`RUST_LOG`,&nbsp;a&nbsp;program&nbsp;will
+</c41><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a>&nbsp;<c41>start,&nbsp;print&nbsp;out&nbsp;all&nbsp;modules&nbsp;registered&nbsp;for&nbsp;logging,&nbsp;and&nbsp;then&nbsp;exit.
+</c41><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c41>*/
+</c41><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;fmt</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::*</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt::local::Local</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt::logging::</c0><c3>{</c3><c0>Logger</c0><c3>,</c3><c0>&nbsp;StdErrLogger</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt::task::Task</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;function&nbsp;is&nbsp;called&nbsp;directly&nbsp;by&nbsp;the&nbsp;compiler&nbsp;when&nbsp;using&nbsp;the&nbsp;logging
+</c42><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a>&nbsp;<c42>///&nbsp;macros.&nbsp;This&nbsp;function&nbsp;does&nbsp;not&nbsp;take&nbsp;into&nbsp;account&nbsp;whether&nbsp;the&nbsp;log&nbsp;level
+</c42><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c42>///&nbsp;specified&nbsp;is&nbsp;active&nbsp;or&nbsp;not,&nbsp;it&nbsp;will&nbsp;always&nbsp;log&nbsp;something&nbsp;if&nbsp;this&nbsp;method&nbsp;is
+</c42><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a>&nbsp;<c42>///&nbsp;called.
+</c42><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a>&nbsp;<c42>///&nbsp;It&nbsp;is&nbsp;not&nbsp;recommended&nbsp;to&nbsp;call&nbsp;this&nbsp;function&nbsp;directly,&nbsp;rather&nbsp;it&nbsp;should&nbsp;be
+</c42><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a id="n169754">&nbsp;</a><c42>///&nbsp;invoked&nbsp;through&nbsp;the&nbsp;logging&nbsp;family&nbsp;of&nbsp;macros.
+</c42><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n169764"><a id="n169762"><a id="n169760"><a id="n169761"><a id="n169757"><a id="n169756"><a id="n169807">&nbsp;</a></a></a></a></a></a></a><c21>pub</c21><c1><a href="#104_50_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#104_50_refs">&nbsp;log</a></c30><c4>(</c4><c20><a href="#104_50_refs">_level</a></c20><c1><a href="#104_50_refs">:&nbsp;</a></c1><c8><a href="#104_50_refs">u32</a></c8><c3>,</c3><c1><a href="#104_50_refs">&nbsp;</a></c1><c20><a href="#105_24_refs">args</a></c20><c1><a href="#104_50_refs">:&nbsp;</a></c1><c8><a href="#104_50_refs">&amp;</a></c8><c8><a href="../libstd/fmt/mod.rs.html#482">fmt::Arguments</a></c8><c4>)</c4><c1><a href="#104_50_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#104_50_refs">
+</a></c22><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n169806"><a id="n169805">&nbsp;</a></a><c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>unsafe</c21><c22><a href="#104_50_refs">&nbsp;</a></c22><c3>{</c3><c22><a href="#104_50_refs">
+</a></c22><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a id="n169772"><a id="n169770"><a id="n169773"><a id="n169769"><a id="n169767"><a id="n169774"><a id="n169771"><a id="n169766">&nbsp;</a></a></a></a></a></a></a></a><c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#104_50_refs">&nbsp;</a></c22><c20><a href="#107_12_refs">optional_task</a></c20><c13><a href="#104_50_refs">:&nbsp;</a></c13><c8><a href="../libstd/option.rs.html#59">Option&lt;*mut&nbsp;</a></c8><c8><a href="../libstd/rt/task.rs.html#43">Task</a></c8><c8><a href="../libstd/option.rs.html#59">&gt;</a></c8><c13><a href="#104_50_refs">&nbsp;=&nbsp;</a></c13><c26><a href="../libstd/rt/local.rs.html#26">Local::try_unsafe_borrow</a></c26><c4>()</c4><c3>;</c3><c22><a href="#104_50_refs">
+</a></c22><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n169775"><a id="n169804">&nbsp;</a></a><c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>match</c21><c21><a href="#104_50_refs">&nbsp;</a></c21><c26><a href="../libstd/logging.rs.html#107">optional_task</a></c26><c21><a href="#104_50_refs">&nbsp;</a></c21><c3>{</c3><c21><a href="#104_50_refs">
+</a></c21><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a id="n169788"><a id="n169777"><a id="n169789"><a id="n169787"><a id="n169776">&nbsp;</a></a></a></a></a><c21><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c20><a href="../libstd/option.rs.html#62">Some</a></c20><c4>(</c4><c20><a href="#109_17_refs">local</a></c20><c4>)</c4><c21><a href="#104_50_refs">&nbsp;</a></c21><c4>=&gt;</c4><c21><a href="#104_50_refs">&nbsp;</a></c21><c3>{</c3><c22><a href="#104_50_refs">
+</a></c22><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c40>//&nbsp;Use&nbsp;the&nbsp;available&nbsp;logger
+</c40><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a id="n169781"><a id="n169784"><a id="n169780"><a id="n169786"><a id="n169783"><a id="n169785"><a id="n169782">&nbsp;</a></a></a></a></a></a></a><c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c4>(</c4><c5><a href="#104_50_refs">*</a></c5><c26><a href="../libstd/logging.rs.html#109">local</a></c26><c4>)</c4><c1><a href="../libstd/rt/task.rs.html#48">.</a></c1><c24><a href="../libstd/rt/task.rs.html#48">logger</a></c24><c10><a href="../libstd/rt/logging.rs.html#172">.log</a></c10><c4>(</c4><c26><a href="../libstd/logging.rs.html#105">args</a></c26><c4>)</c4><c3>;</c3><c22><a href="#104_50_refs">
+</a></c22><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c21><a href="#104_50_refs">
+</a></c21><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a id="n169801"><a id="n169802"><a id="n169790"><a id="n169803">&nbsp;</a></a></a></a><c21><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c20><a href="../libstd/option.rs.html#61">None</a></c20><c21><a href="#104_50_refs">&nbsp;</a></c21><c4>=&gt;</c4><c21><a href="#104_50_refs">&nbsp;</a></c21><c3>{</c3><c22><a href="#104_50_refs">
+</a></c22><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a>&nbsp;<c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c40>//&nbsp;There&nbsp;is&nbsp;no&nbsp;logger&nbsp;anywhere,&nbsp;just&nbsp;write&nbsp;to&nbsp;stderr
+</c40><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a id="n169791"><a id="n169793"><a id="n169792"><a id="n169794"><a id="n169795">&nbsp;</a></a></a></a></a><c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#104_50_refs">&nbsp;</a></c22><c21>mut</c21><c22><a href="#104_50_refs">&nbsp;</a></c22><c20><a href="#115_24_refs">logger</a></c20><c13><a href="#104_50_refs">&nbsp;=&nbsp;</a></c13><c26><a href="c=0 n=279501">StdErrLogger</a></c26><c3>;</c3><c22><a href="#104_50_refs">
+</a></c22><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n169799"><a id="n169797"><a id="n169798"><a id="n169800">&nbsp;</a></a></a></a><c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../libstd/logging.rs.html#115">logger</a></c26><c13><a href="../libstd/rt/logging.rs.html#172">.log</a></c13><c4>(</c4><c26><a href="../libstd/logging.rs.html#105">args</a></c26><c4>)</c4><c3>;</c3><c22><a href="#104_50_refs">
+</a></c22><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c21><a href="#104_50_refs">
+</a></c21><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c21><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c3>}</c3><c22><a href="#104_50_refs">
+</a></c22><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a>&nbsp;<c22><a href="#104_50_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c22><a href="#104_50_refs">
+</a></c22><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="104_50_refs"><a href="#104"><c40>libstd/logging.rs:104:50-104:50&nbsp;-fn-&nbsp;definition:<br/></c40><pr>///&nbsp;invoked&nbsp;through&nbsp;the&nbsp;logging&nbsp;family&nbsp;of&nbsp;macros.
+<br/>pub&nbsp;fn&nbsp;log(_level:&nbsp;u32,&nbsp;args:&nbsp;&amp;fmt::Arguments)&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../<std-macros>.html"><c40>&lt;std-macros&gt;:<br/></c40></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
+<br/></a><a href="../<std-macros>.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::std::logging::log(lvl,&nbsp;args)
 <br/></a><br/></div></fileblock></div></maintext></bg15>

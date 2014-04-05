@@ -8,7 +8,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use libc::c_void;
+#[allow(dead_code)];
+
 #[cfg(unix)]
 use libc::c_int;
 #[cfg(unix)]
@@ -20,24 +21,23 @@ use libc::types::os::arch::extra::{DWORD, LPVOID, BOOL};
 pub type Key = pthread_key_t;
 
 #[cfg(unix)]
-#[fixed_stack_segment]
-#[inline(never)]
 pub unsafe fn create(key: &mut Key) {
     assert_eq!(0, pthread_key_create(key, null()));
 }
 
 #[cfg(unix)]
-#[fixed_stack_segment]
-#[inline(never)]
-pub unsafe fn set(key: Key, value: *mut c_void) {
+pub unsafe fn set(key: Key, value: *mut u8) {
     assert_eq!(0, pthread_setspecific(key, value));
 }
 
 #[cfg(unix)]
-#[fixed_stack_segment]
-#[inline(never)]
-pub unsafe fn get(key: Key) -> *mut c_void {
+pub unsafe fn get(key: Key) -> *mut u8 {
     pthread_getspecific(key)
+}
+
+#[cfg(unix)]
+pub unsafe fn destroy(key: Key) {
+    assert_eq!(0, pthread_key_delete(key));
 }
 
 #[cfg(target_os="macos")]
@@ -52,20 +52,16 @@ type pthread_key_t = ::libc::c_uint;
 
 #[cfg(unix)]
 extern {
-    #[fast_ffi]
     fn pthread_key_create(key: *mut pthread_key_t, dtor: *u8) -> c_int;
-    #[fast_ffi]
-    fn pthread_setspecific(key: pthread_key_t, value: *mut c_void) -> c_int;
-    #[fast_ffi]
-    fn pthread_getspecific(key: pthread_key_t) -> *mut c_void;
+    fn pthread_key_delete(key: pthread_key_t) -> c_int;
+    fn pthread_getspecific(key: pthread_key_t) -> *mut u8;
+    fn pthread_setspecific(key: pthread_key_t, value: *mut u8) -> c_int;
 }
 
 #[cfg(windows)]
 pub type Key = DWORD;
 
 #[cfg(windows)]
-#[fixed_stack_segment]
-#[inline(never)]
 pub unsafe fn create(key: &mut Key) {
     static TLS_OUT_OF_INDEXES: DWORD = 0xFFFFFFFF;
     *key = TlsAlloc();
@@ -73,32 +69,26 @@ pub unsafe fn create(key: &mut Key) {
 }
 
 #[cfg(windows)]
-#[fixed_stack_segment]
-#[inline(never)]
-pub unsafe fn set(key: Key, value: *mut c_void) {
-    assert!(0 != TlsSetValue(key, value))
+pub unsafe fn set(key: Key, value: *mut u8) {
+    assert!(0 != TlsSetValue(key, value as *mut ::libc::c_void))
 }
 
 #[cfg(windows)]
-#[fixed_stack_segment]
-#[inline(never)]
-pub unsafe fn get(key: Key) -> *mut c_void {
-    TlsGetValue(key)
+pub unsafe fn get(key: Key) -> *mut u8 {
+    TlsGetValue(key) as *mut u8
 }
 
-#[cfg(windows, target_arch = "x86")]
-#[abi = "stdcall"]
-extern "stdcall" {
-       fn TlsAlloc() -> DWORD;
-       fn TlsSetValue(dwTlsIndex: DWORD, lpTlsvalue: LPVOID) -> BOOL;
-       fn TlsGetValue(dwTlsIndex: DWORD) -> LPVOID;
+#[cfg(windows)]
+pub unsafe fn destroy(key: Key) {
+    assert!(TlsFree(key) != 0);
 }
 
-#[cfg(windows, target_arch = "x86_64")]
-extern {
-       fn TlsAlloc() -> DWORD;
-       fn TlsSetValue(dwTlsIndex: DWORD, lpTlsvalue: LPVOID) -> BOOL;
-       fn TlsGetValue(dwTlsIndex: DWORD) -> LPVOID;
+#[cfg(windows)]
+extern "system" {
+    fn TlsAlloc() -> DWORD;
+    fn TlsFree(dwTlsIndex: DWORD) -> BOOL;
+    fn TlsGetValue(dwTlsIndex: DWORD) -> LPVOID;
+    fn TlsSetValue(dwTlsIndex: DWORD, lpTlsvalue: LPVOID) -> BOOL;
 }
 
 #[test]

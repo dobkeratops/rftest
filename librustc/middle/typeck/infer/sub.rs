@@ -12,37 +12,40 @@
 use middle::ty::{BuiltinBounds};
 use middle::ty;
 use middle::ty::TyVar;
-use middle::typeck::check::regionmanip::replace_bound_regions_in_fn_sig;
+use middle::typeck::check::regionmanip::replace_late_bound_regions_in_fn_sig;
 use middle::typeck::infer::combine::*;
-use middle::typeck::infer::cres;
+use middle::typeck::infer::{cres, CresCompare};
 use middle::typeck::infer::glb::Glb;
 use middle::typeck::infer::InferCtxt;
 use middle::typeck::infer::lattice::CombineFieldsLatticeMethods;
 use middle::typeck::infer::lub::Lub;
+use middle::typeck::infer::then;
 use middle::typeck::infer::to_str::InferStr;
 use middle::typeck::infer::{TypeTrace, Subtype};
 use util::common::{indenter};
 use util::ppaux::bound_region_to_str;
 
-use extra::list::Nil;
-use extra::list;
-use syntax::ast::{Onceness, purity};
+use syntax::ast::{Onceness, Purity};
 
-pub struct Sub(CombineFields);  // "subtype", "subregion" etc
+pub struct Sub<'f>(CombineFields<'f>);  // "subtype", "subregion" etc
 
-impl Combine for Sub {
-    fn infcx(&self) -> @mut InferCtxt { self.infcx }
+impl<'f> Sub<'f> {
+    pub fn get_ref<'a>(&'a self) -> &'a CombineFields<'f> { let Sub(ref v) = *self; v }
+}
+
+impl<'f> Combine for Sub<'f> {
+    fn infcx<'a>(&'a self) -> &'a InferCtxt<'a> { self.get_ref().infcx }
     fn tag(&self) -> ~str { ~"sub" }
-    fn a_is_expected(&self) -> bool { self.a_is_expected }
-    fn trace(&self) -> TypeTrace { self.trace }
+    fn a_is_expected(&self) -> bool { self.get_ref().a_is_expected }
+    fn trace(&self) -> TypeTrace { self.get_ref().trace }
 
-    fn sub(&self) -> Sub { Sub(**self) }
-    fn lub(&self) -> Lub { Lub(**self) }
-    fn glb(&self) -> Glb { Glb(**self) }
+    fn sub<'a>(&'a self) -> Sub<'a> { Sub(*self.get_ref()) }
+    fn lub<'a>(&'a self) -> Lub<'a> { Lub(*self.get_ref()) }
+    fn glb<'a>(&'a self) -> Glb<'a> { Glb(*self.get_ref()) }
 
     fn contratys(&self, a: ty::t, b: ty::t) -> cres<ty::t> {
         let opp = CombineFields {
-            a_is_expected: !self.a_is_expected,.. **self
+            a_is_expected: !self.get_ref().a_is_expected,.. *self.get_ref()
         };
         Sub(opp).tys(b, a)
     }
@@ -50,22 +53,22 @@ impl Combine for Sub {
     fn contraregions(&self, a: ty::Region, b: ty::Region)
                     -> cres<ty::Region> {
         let opp = CombineFields {
-            a_is_expected: !self.a_is_expected,.. **self
+            a_is_expected: !self.get_ref().a_is_expected,.. *self.get_ref()
         };
         Sub(opp).regions(b, a)
     }
 
     fn regions(&self, a: ty::Region, b: ty::Region) -> cres<ty::Region> {
-        debug!("%s.regions(%s, %s)",
+        debug!("{}.regions({}, {})",
                self.tag(),
-               a.inf_str(self.infcx),
-               b.inf_str(self.infcx));
-        self.infcx.region_vars.make_subregion(Subtype(self.trace), a, b);
+               a.inf_str(self.get_ref().infcx),
+               b.inf_str(self.get_ref().infcx));
+        self.get_ref().infcx.region_vars.make_subregion(Subtype(self.get_ref().trace), a, b);
         Ok(a)
     }
 
     fn mts(&self, a: &ty::mt, b: &ty::mt) -> cres<ty::mt> {
-        debug!("mts(%s <: %s)", a.inf_str(self.infcx), b.inf_str(self.infcx));
+        debug!("mts({} <: {})", a.inf_str(self.get_ref().infcx), b.inf_str(self.get_ref().infcx));
 
         if a.mutbl != b.mutbl {
             return Err(ty::terr_mutability);
@@ -84,7 +87,7 @@ impl Combine for Sub {
         }
     }
 
-    fn purities(&self, a: purity, b: purity) -> cres<purity> {
+    fn purities(&self, a: Purity, b: Purity) -> cres<Purity> {
         self.lub().purities(a, b).compare(b, || {
             ty::terr_purity_mismatch(expected_found(self, a, b))
         })
@@ -110,8 +113,8 @@ impl Combine for Sub {
     }
 
     fn tys(&self, a: ty::t, b: ty::t) -> cres<ty::t> {
-        debug!("%s.tys(%s, %s)", self.tag(),
-               a.inf_str(self.infcx), b.inf_str(self.infcx));
+        debug!("{}.tys({}, {})", self.tag(),
+               a.inf_str(self.get_ref().infcx), b.inf_str(self.get_ref().infcx));
         if a == b { return Ok(a); }
         let _indenter = indenter();
         match (&ty::get(a).sty, &ty::get(b).sty) {
@@ -120,15 +123,15 @@ impl Combine for Sub {
             }
 
             (&ty::ty_infer(TyVar(a_id)), &ty::ty_infer(TyVar(b_id))) => {
-                if_ok!(self.var_sub_var(a_id, b_id));
+                if_ok!(self.get_ref().var_sub_var(a_id, b_id));
                 Ok(a)
             }
             (&ty::ty_infer(TyVar(a_id)), _) => {
-                if_ok!(self.var_sub_t(a_id, b));
+                if_ok!(self.get_ref().var_sub_t(a_id, b));
                 Ok(a)
             }
             (_, &ty::ty_infer(TyVar(b_id))) => {
-                if_ok!(self.t_sub_var(a, b_id));
+                if_ok!(self.get_ref().t_sub_var(a, b_id));
                 Ok(a)
             }
 
@@ -143,8 +146,8 @@ impl Combine for Sub {
     }
 
     fn fn_sigs(&self, a: &ty::FnSig, b: &ty::FnSig) -> cres<ty::FnSig> {
-        debug!("fn_sigs(a=%s, b=%s)",
-               a.inf_str(self.infcx), b.inf_str(self.infcx));
+        debug!("fn_sigs(a={}, b={})",
+               a.inf_str(self.get_ref().infcx), b.inf_str(self.get_ref().infcx));
         let _indenter = indenter();
 
         // Rather than checking the subtype relationship between `a` and `b`
@@ -158,29 +161,28 @@ impl Combine for Sub {
         // phases we do want to be able to examine "all bindings that
         // were created as part of this type comparison", and making a
         // snapshot is a convenient way to do that.
-        let snapshot = self.infcx.region_vars.start_snapshot();
+        let snapshot = self.get_ref().infcx.region_vars.start_snapshot();
 
         // First, we instantiate each bound region in the subtype with a fresh
         // region variable.
         let (a_sig, _) =
-            self.infcx.replace_bound_regions_with_fresh_regions(
-                self.trace, a);
+            self.get_ref().infcx.replace_late_bound_regions_with_fresh_regions(
+                self.get_ref().trace, a);
 
         // Second, we instantiate each bound region in the supertype with a
         // fresh concrete region.
-        let (skol_isr, _, b_sig) = {
-            do replace_bound_regions_in_fn_sig(self.infcx.tcx, @Nil,
-                                              None, b) |br| {
-                let skol = self.infcx.region_vars.new_skolemized(br);
-                debug!("Bound region %s skolemized to %?",
-                       bound_region_to_str(self.infcx.tcx, "", false, br),
+        let (skol_map, b_sig) = {
+            replace_late_bound_regions_in_fn_sig(self.get_ref().infcx.tcx, b, |br| {
+                let skol = self.get_ref().infcx.region_vars.new_skolemized(br);
+                debug!("Bound region {} skolemized to {:?}",
+                       bound_region_to_str(self.get_ref().infcx.tcx, "", false, br),
                        skol);
                 skol
-            }
+            })
         };
 
-        debug!("a_sig=%s", a_sig.inf_str(self.infcx));
-        debug!("b_sig=%s", b_sig.inf_str(self.infcx));
+        debug!("a_sig={}", a_sig.inf_str(self.get_ref().infcx));
+        debug!("b_sig={}", b_sig.inf_str(self.get_ref().infcx));
 
         // Compare types now that bound regions have been replaced.
         let sig = if_ok!(super_fn_sigs(self, &a_sig, &b_sig));
@@ -188,39 +190,33 @@ impl Combine for Sub {
         // Presuming type comparison succeeds, we need to check
         // that the skolemized regions do not "leak".
         let new_vars =
-            self.infcx.region_vars.vars_created_since_snapshot(snapshot);
-
-        let mut ret = Ok(sig);
-        do list::each(skol_isr) |pair| {
-            let (skol_br, skol) = *pair;
-            let tainted = self.infcx.region_vars.tainted(snapshot, skol);
+            self.get_ref().infcx.region_vars.vars_created_since_snapshot(snapshot);
+        for (&skol_br, &skol) in skol_map.iter() {
+            let tainted = self.get_ref().infcx.region_vars.tainted(snapshot, skol);
             for tainted_region in tainted.iter() {
                 // Each skolemized should only be relatable to itself
                 // or new variables:
                 match *tainted_region {
-                    ty::re_infer(ty::ReVar(ref vid)) => {
-                        if new_vars.iter().any(|x| x == vid) { loop; }
+                    ty::ReInfer(ty::ReVar(ref vid)) => {
+                        if new_vars.iter().any(|x| x == vid) { continue; }
                     }
                     _ => {
-                        if *tainted_region == skol { loop; }
+                        if *tainted_region == skol { continue; }
                     }
                 };
 
                 // A is not as polymorphic as B:
-                if self.a_is_expected {
-                    ret = Err(ty::terr_regions_insufficiently_polymorphic(
-                        skol_br, *tainted_region));
-                    break
+                if self.a_is_expected() {
+                    return Err(ty::terr_regions_insufficiently_polymorphic(
+                            skol_br, *tainted_region));
                 } else {
-                    ret = Err(ty::terr_regions_overly_polymorphic(
-                        skol_br, *tainted_region));
-                    break
+                    return Err(ty::terr_regions_overly_polymorphic(
+                            skol_br, *tainted_region));
                 }
             }
-            ret.is_ok()
-        };
+        }
 
-        ret
+        return Ok(sig);
     }
 
 }

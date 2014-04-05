@@ -1,4 +1,4 @@
-// Copyright 2012-2013 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,18 +8,24 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#[allow(non_camel_case_types)];
 
 use metadata::csearch;
 use middle::astencode;
+
 use middle::ty;
-use middle;
+use middle::typeck::astconv;
+use util::nodemap::{DefIdMap, FnvHashMap, NodeMap};
 
-use syntax::{ast, ast_map, ast_util};
-use syntax::visit;
-use syntax::visit::Visitor;
 use syntax::ast::*;
+use syntax::parse::token::InternedString;
+use syntax::visit::Visitor;
+use syntax::visit;
+use syntax::{ast, ast_map, ast_util};
 
-use std::hashmap::{HashMap, HashSet};
+use std::cell::RefCell;
+use collections::HashMap;
+use std::rc::Rc;
 
 //
 // This pass classifies expressions by their constant-ness.
@@ -60,6 +66,8 @@ pub enum constness {
     non_const
 }
 
+type constness_cache = DefIdMap<constness>;
+
 pub fn join(a: constness, b: constness) -> constness {
     match (a, b) {
       (integral_const, integral_const) => integral_const,
@@ -74,111 +82,24 @@ pub fn join_all<It: Iterator<constness>>(mut cs: It) -> constness {
     cs.fold(integral_const, |a, b| join(a, b))
 }
 
-pub fn classify(e: &Expr,
-                tcx: ty::ctxt)
-             -> constness {
-    let did = ast_util::local_def(e.id);
-    match tcx.ccache.find(&did) {
-      Some(&x) => x,
-      None => {
-        let cn =
-            match e.node {
-              ast::ExprLit(lit) => {
-                match lit.node {
-                  ast::lit_str(*) |
-                  ast::lit_float(*) => general_const,
-                  _ => integral_const
-                }
-              }
-
-              ast::ExprUnary(_, _, inner) |
-              ast::ExprParen(inner) => {
-                classify(inner, tcx)
-              }
-
-              ast::ExprBinary(_, _, a, b) => {
-                join(classify(a, tcx),
-                     classify(b, tcx))
-              }
-
-              ast::ExprTup(ref es) |
-              ast::ExprVec(ref es, ast::MutImmutable) => {
-                join_all(es.iter().map(|e| classify(*e, tcx)))
-              }
-
-              ast::ExprVstore(e, vstore) => {
-                  match vstore {
-                      ast::ExprVstoreSlice => classify(e, tcx),
-                      ast::ExprVstoreUniq |
-                      ast::ExprVstoreBox |
-                      ast::ExprVstoreMutBox |
-                      ast::ExprVstoreMutSlice => non_const
-                  }
-              }
-
-              ast::ExprStruct(_, ref fs, None) => {
-                let cs = do fs.iter().map |f| {
-                    classify(f.expr, tcx)
-                };
-                join_all(cs)
-              }
-
-              ast::ExprCast(base, _) => {
-                let ty = ty::expr_ty(tcx, e);
-                let base = classify(base, tcx);
-                if ty::type_is_integral(ty) {
-                    join(integral_const, base)
-                } else if ty::type_is_fp(ty) {
-                    join(general_const, base)
-                } else {
-                    non_const
-                }
-              }
-
-              ast::ExprField(base, _, _) => {
-                classify(base, tcx)
-              }
-
-              ast::ExprIndex(_, base, idx) => {
-                join(classify(base, tcx),
-                     classify(idx, tcx))
-              }
-
-              ast::ExprAddrOf(ast::MutImmutable, base) => {
-                classify(base, tcx)
-              }
-
-              // FIXME: (#3728) we can probably do something CCI-ish
-              // surrounding nonlocal constants. But we don't yet.
-              ast::ExprPath(_) => {
-                lookup_constness(tcx, e)
-              }
-
-              ast::ExprRepeat(*) => general_const,
-
-              _ => non_const
-            };
-        tcx.ccache.insert(did, cn);
-        cn
-      }
-    }
-}
-
-pub fn lookup_const(tcx: ty::ctxt, e: &Expr) -> Option<@Expr> {
-    match tcx.def_map.find(&e.id) {
-        Some(&ast::DefStatic(def_id, false)) => lookup_const_by_id(tcx, def_id),
-        Some(&ast::DefVariant(enum_def, variant_def, _)) => lookup_variant_by_id(tcx,
-                                                                               enum_def,
-                                                                               variant_def),
+pub fn lookup_const(tcx: &ty::ctxt, e: &Expr) -> Option<@Expr> {
+    let opt_def = tcx.def_map.borrow().find_copy(&e.id);
+    match opt_def {
+        Some(ast::DefStatic(def_id, false)) => {
+            lookup_const_by_id(tcx, def_id)
+        }
+        Some(ast::DefVariant(enum_def, variant_def, _)) => {
+            lookup_variant_by_id(tcx, enum_def, variant_def)
+        }
         _ => None
     }
 }
 
-pub fn lookup_variant_by_id(tcx: ty::ctxt,
+pub fn lookup_variant_by_id(tcx: &ty::ctxt,
                             enum_def: ast::DefId,
                             variant_def: ast::DefId)
                        -> Option<@Expr> {
-    fn variant_expr(variants: &[ast::variant], id: ast::NodeId) -> Option<@Expr> {
+    fn variant_expr(variants: &[ast::P<ast::Variant>], id: ast::NodeId) -> Option<@Expr> {
         for variant in variants.iter() {
             if variant.node.id == id {
                 return variant.node.disr_expr;
@@ -188,98 +109,186 @@ pub fn lookup_variant_by_id(tcx: ty::ctxt,
     }
 
     if ast_util::is_local(enum_def) {
-        match tcx.items.find(&enum_def.node) {
-            None => None,
-            Some(&ast_map::node_item(it, _)) => match it.node {
-                item_enum(ast::enum_def { variants: ref variants }, _) => {
-                    variant_expr(*variants, variant_def.node)
-                }
-                _ => None
-            },
-            Some(_) => None
-        }
-    } else {
-        let maps = astencode::Maps {
-            root_map: @mut HashMap::new(),
-            method_map: @mut HashMap::new(),
-            vtable_map: @mut HashMap::new(),
-            write_guard_map: @mut HashSet::new(),
-            capture_map: @mut HashMap::new()
-        };
-        match csearch::maybe_get_item_ast(tcx, enum_def,
-            |a, b, c, d| astencode::decode_inlined_item(a,
-                                                        b,
-                                                        maps,
-                                                        /*bad*/ c.clone(),
-                                                        d)) {
-            csearch::found(ast::ii_item(item)) => match item.node {
-                item_enum(ast::enum_def { variants: ref variants }, _) => {
-                    variant_expr(*variants, variant_def.node)
-                }
-                _ => None
-            },
-            _ => None
-        }
-    }
-}
-
-pub fn lookup_const_by_id(tcx: ty::ctxt,
-                          def_id: ast::DefId)
-                       -> Option<@Expr> {
-    if ast_util::is_local(def_id) {
-        match tcx.items.find(&def_id.node) {
-            None => None,
-            Some(&ast_map::node_item(it, _)) => match it.node {
-                item_static(_, ast::MutImmutable, const_expr) => Some(const_expr),
-                _ => None
-            },
-            Some(_) => None
-        }
-    } else {
-        let maps = astencode::Maps {
-            root_map: @mut HashMap::new(),
-            method_map: @mut HashMap::new(),
-            vtable_map: @mut HashMap::new(),
-            write_guard_map: @mut HashSet::new(),
-            capture_map: @mut HashMap::new()
-        };
-        match csearch::maybe_get_item_ast(tcx, def_id,
-            |a, b, c, d| astencode::decode_inlined_item(a, b, maps, c, d)) {
-            csearch::found(ast::ii_item(item)) => match item.node {
-                item_static(_, ast::MutImmutable, const_expr) => Some(const_expr),
-                _ => None
-            },
-            _ => None
-        }
-    }
-}
-
-pub fn lookup_constness(tcx: ty::ctxt, e: &Expr) -> constness {
-    match lookup_const(tcx, e) {
-        Some(rhs) => {
-            let ty = ty::expr_ty(tcx, rhs);
-            if ty::type_is_integral(ty) {
-                integral_const
-            } else {
-                general_const
+        {
+            match tcx.map.find(enum_def.node) {
+                None => None,
+                Some(ast_map::NodeItem(it)) => match it.node {
+                    ItemEnum(ast::EnumDef { variants: ref variants }, _) => {
+                        variant_expr(variants.as_slice(), variant_def.node)
+                    }
+                    _ => None
+                },
+                Some(_) => None
             }
         }
-        None => non_const
+    } else {
+        match tcx.extern_const_variants.borrow().find(&variant_def) {
+            Some(&e) => return e,
+            None => {}
+        }
+        let maps = astencode::Maps {
+            root_map: @RefCell::new(HashMap::new()),
+            method_map: @RefCell::new(FnvHashMap::new()),
+            vtable_map: @RefCell::new(FnvHashMap::new()),
+            capture_map: RefCell::new(NodeMap::new())
+        };
+        let e = match csearch::maybe_get_item_ast(tcx, enum_def,
+            |a, b, c, d| astencode::decode_inlined_item(a, b, &maps, c, d)) {
+            csearch::found(ast::IIItem(item)) => match item.node {
+                ItemEnum(ast::EnumDef { variants: ref variants }, _) => {
+                    variant_expr(variants.as_slice(), variant_def.node)
+                }
+                _ => None
+            },
+            _ => None
+        };
+        tcx.extern_const_variants.borrow_mut().insert(variant_def, e);
+        return e;
     }
 }
 
-struct ConstEvalVisitor { tcx: ty::ctxt }
-
-impl Visitor<()> for ConstEvalVisitor {
-    fn visit_expr_post(&mut self, e:@Expr, _:()) {
-        classify(e, self.tcx);
+pub fn lookup_const_by_id(tcx: &ty::ctxt, def_id: ast::DefId)
+                          -> Option<@Expr> {
+    if ast_util::is_local(def_id) {
+        {
+            match tcx.map.find(def_id.node) {
+                None => None,
+                Some(ast_map::NodeItem(it)) => match it.node {
+                    ItemStatic(_, ast::MutImmutable, const_expr) => {
+                        Some(const_expr)
+                    }
+                    _ => None
+                },
+                Some(_) => None
+            }
+        }
+    } else {
+        match tcx.extern_const_statics.borrow().find(&def_id) {
+            Some(&e) => return e,
+            None => {}
+        }
+        let maps = astencode::Maps {
+            root_map: @RefCell::new(HashMap::new()),
+            method_map: @RefCell::new(FnvHashMap::new()),
+            vtable_map: @RefCell::new(FnvHashMap::new()),
+            capture_map: RefCell::new(NodeMap::new())
+        };
+        let e = match csearch::maybe_get_item_ast(tcx, def_id,
+            |a, b, c, d| astencode::decode_inlined_item(a, b, &maps, c, d)) {
+            csearch::found(ast::IIItem(item)) => match item.node {
+                ItemStatic(_, ast::MutImmutable, const_expr) => Some(const_expr),
+                _ => None
+            },
+            _ => None
+        };
+        tcx.extern_const_statics.borrow_mut().insert(def_id, e);
+        return e;
     }
 }
 
-pub fn process_crate(crate: &ast::Crate,
-                     tcx: ty::ctxt) {
-    let mut v = ConstEvalVisitor { tcx: tcx };
-    visit::walk_crate(&mut v, crate, ());
+struct ConstEvalVisitor<'a> {
+    tcx: &'a ty::ctxt,
+    ccache: constness_cache,
+}
+
+impl<'a> ConstEvalVisitor<'a> {
+    fn classify(&mut self, e: &Expr) -> constness {
+        let did = ast_util::local_def(e.id);
+        match self.ccache.find(&did) {
+            Some(&x) => return x,
+            None => {}
+        }
+        let cn = match e.node {
+            ast::ExprLit(lit) => {
+                match lit.node {
+                    ast::LitStr(..) | ast::LitFloat(..) => general_const,
+                    _ => integral_const
+                }
+            }
+
+            ast::ExprUnary(_, inner) | ast::ExprParen(inner) =>
+                self.classify(inner),
+
+            ast::ExprBinary(_, a, b) =>
+                join(self.classify(a), self.classify(b)),
+
+            ast::ExprTup(ref es) |
+            ast::ExprVec(ref es, ast::MutImmutable) =>
+                join_all(es.iter().map(|e| self.classify(*e))),
+
+            ast::ExprVstore(e, vstore) => {
+                match vstore {
+                    ast::ExprVstoreSlice => self.classify(e),
+                    ast::ExprVstoreUniq |
+                    ast::ExprVstoreMutSlice => non_const
+                }
+            }
+
+            ast::ExprStruct(_, ref fs, None) => {
+                let cs = fs.iter().map(|f| self.classify(f.expr));
+                join_all(cs)
+            }
+
+            ast::ExprCast(base, _) => {
+                let ty = ty::expr_ty(self.tcx, e);
+                let base = self.classify(base);
+                if ty::type_is_integral(ty) {
+                    join(integral_const, base)
+                } else if ty::type_is_fp(ty) {
+                    join(general_const, base)
+                } else {
+                    non_const
+                }
+            }
+
+            ast::ExprField(base, _, _) => self.classify(base),
+
+            ast::ExprIndex(base, idx) =>
+                join(self.classify(base), self.classify(idx)),
+
+            ast::ExprAddrOf(ast::MutImmutable, base) => self.classify(base),
+
+            // FIXME: (#3728) we can probably do something CCI-ish
+            // surrounding nonlocal constants. But we don't yet.
+            ast::ExprPath(_) => self.lookup_constness(e),
+
+            ast::ExprRepeat(..) => general_const,
+
+            _ => non_const
+        };
+        self.ccache.insert(did, cn);
+        cn
+    }
+
+    fn lookup_constness(&self, e: &Expr) -> constness {
+        match lookup_const(self.tcx, e) {
+            Some(rhs) => {
+                let ty = ty::expr_ty(self.tcx, rhs);
+                if ty::type_is_integral(ty) {
+                    integral_const
+                } else {
+                    general_const
+                }
+            }
+            None => non_const
+        }
+    }
+
+}
+
+impl<'a> Visitor<()> for ConstEvalVisitor<'a> {
+    fn visit_expr_post(&mut self, e: &Expr, _: ()) {
+        self.classify(e);
+    }
+}
+
+pub fn process_crate(krate: &ast::Crate,
+                     tcx: &ty::ctxt) {
+    let mut v = ConstEvalVisitor {
+        tcx: tcx,
+        ccache: DefIdMap::new(),
+    };
+    visit::walk_crate(&mut v, krate, ());
     tcx.sess.abort_if_errors();
 }
 
@@ -291,12 +300,13 @@ pub enum const_val {
     const_float(f64),
     const_int(i64),
     const_uint(u64),
-    const_str(@str),
+    const_str(InternedString),
+    const_binary(Rc<Vec<u8> >),
     const_bool(bool)
 }
 
-pub fn eval_const_expr(tcx: middle::ty::ctxt, e: &Expr) -> const_val {
-    match eval_const_expr_partial(&tcx, e) {
+pub fn eval_const_expr(tcx: &ty::ctxt, e: &Expr) -> const_val {
+    match eval_const_expr_partial(tcx, e) {
         Ok(r) => r,
         Err(s) => tcx.sess.span_fatal(e.span, s)
     }
@@ -304,28 +314,27 @@ pub fn eval_const_expr(tcx: middle::ty::ctxt, e: &Expr) -> const_val {
 
 pub fn eval_const_expr_partial<T: ty::ExprTyProvider>(tcx: &T, e: &Expr)
                             -> Result<const_val, ~str> {
-    use middle::ty;
     fn fromb(b: bool) -> Result<const_val, ~str> { Ok(const_int(b as i64)) }
     match e.node {
-      ExprUnary(_, UnNeg, inner) => {
+      ExprUnary(UnNeg, inner) => {
         match eval_const_expr_partial(tcx, inner) {
           Ok(const_float(f)) => Ok(const_float(-f)),
           Ok(const_int(i)) => Ok(const_int(-i)),
           Ok(const_uint(i)) => Ok(const_uint(-i)),
-          Ok(const_str(_)) => Err(~"Negate on string"),
-          Ok(const_bool(_)) => Err(~"Negate on boolean"),
+          Ok(const_str(_)) => Err(~"negate on string"),
+          Ok(const_bool(_)) => Err(~"negate on boolean"),
           ref err => ((*err).clone())
         }
       }
-      ExprUnary(_, UnNot, inner) => {
+      ExprUnary(UnNot, inner) => {
         match eval_const_expr_partial(tcx, inner) {
           Ok(const_int(i)) => Ok(const_int(!i)),
           Ok(const_uint(i)) => Ok(const_uint(!i)),
           Ok(const_bool(b)) => Ok(const_bool(!b)),
-          _ => Err(~"Not on float or string")
+          _ => Err(~"not on float or string")
         }
       }
-      ExprBinary(_, op, a, b) => {
+      ExprBinary(op, a, b) => {
         match (eval_const_expr_partial(tcx, a),
                eval_const_expr_partial(tcx, b)) {
           (Ok(const_float(a)), Ok(const_float(b))) => {
@@ -341,7 +350,7 @@ pub fn eval_const_expr_partial<T: ty::ExprTyProvider>(tcx: &T, e: &Expr)
               BiNe => fromb(a != b),
               BiGe => fromb(a >= b),
               BiGt => fromb(a > b),
-              _ => Err(~"Can't do this op on floats")
+              _ => Err(~"can't do this op on floats")
             }
           }
           (Ok(const_int(a)), Ok(const_int(b))) => {
@@ -393,14 +402,14 @@ pub fn eval_const_expr_partial<T: ty::ExprTyProvider>(tcx: &T, e: &Expr)
             match op {
               BiShl => Ok(const_int(a << b)),
               BiShr => Ok(const_int(a >> b)),
-              _ => Err(~"Can't do this op on an int and uint")
+              _ => Err(~"can't do this op on an int and uint")
             }
           }
           (Ok(const_uint(a)), Ok(const_int(b))) => {
             match op {
               BiShl => Ok(const_uint(a << b)),
               BiShr => Ok(const_uint(a >> b)),
-              _ => Err(~"Can't do this op on a uint and int")
+              _ => Err(~"can't do this op on a uint and int")
             }
           }
           (Ok(const_bool(a)), Ok(const_bool(b))) => {
@@ -412,14 +421,23 @@ pub fn eval_const_expr_partial<T: ty::ExprTyProvider>(tcx: &T, e: &Expr)
               BiBitOr => a | b,
               BiEq => a == b,
               BiNe => a != b,
-              _ => return Err(~"Can't do this op on bools")
+              _ => return Err(~"can't do this op on bools")
              }))
           }
-          _ => Err(~"Bad operands for binary")
+          _ => Err(~"bad operands for binary")
         }
       }
-      ExprCast(base, _) => {
-        let ety = tcx.expr_ty(e);
+      ExprCast(base, target_ty) => {
+        // This tends to get called w/o the type actually having been
+        // populated in the ctxt, which was causing things to blow up
+        // (#5900). Fall back to doing a limited lookup to get past it.
+        let ety = ty::expr_ty_opt(tcx.ty_ctxt(), e)
+                .or_else(|| astconv::ast_ty_to_prim_ty(tcx.ty_ctxt(), target_ty))
+                .unwrap_or_else(|| tcx.ty_ctxt().sess.span_fatal(
+                    target_ty.span,
+                    format!("target type not found for const cast")
+                ));
+
         let base = eval_const_expr_partial(tcx, base);
         match base {
             Err(_) => base,
@@ -430,7 +448,7 @@ pub fn eval_const_expr_partial<T: ty::ExprTyProvider>(tcx: &T, e: &Expr)
                             const_uint(u) => Ok(const_float(u as f64)),
                             const_int(i) => Ok(const_float(i as f64)),
                             const_float(f) => Ok(const_float(f)),
-                            _ => Err(~"Can't cast float to str"),
+                            _ => Err(~"can't cast float to str"),
                         }
                     }
                     ty::ty_uint(_) => {
@@ -438,7 +456,7 @@ pub fn eval_const_expr_partial<T: ty::ExprTyProvider>(tcx: &T, e: &Expr)
                             const_uint(u) => Ok(const_uint(u)),
                             const_int(i) => Ok(const_uint(i as u64)),
                             const_float(f) => Ok(const_uint(f as u64)),
-                            _ => Err(~"Can't cast str to uint"),
+                            _ => Err(~"can't cast str to uint"),
                         }
                     }
                     ty::ty_int(_) | ty::ty_bool => {
@@ -446,44 +464,47 @@ pub fn eval_const_expr_partial<T: ty::ExprTyProvider>(tcx: &T, e: &Expr)
                             const_uint(u) => Ok(const_int(u as i64)),
                             const_int(i) => Ok(const_int(i)),
                             const_float(f) => Ok(const_int(f as i64)),
-                            _ => Err(~"Can't cast str to int"),
+                            _ => Err(~"can't cast str to int"),
                         }
                     }
-                    _ => Err(~"Can't cast this type")
+                    _ => Err(~"can't cast this type")
                 }
             }
         }
       }
       ExprPath(_) => {
           match lookup_const(tcx.ty_ctxt(), e) {
-              Some(actual_e) => eval_const_expr_partial(&tcx.ty_ctxt(), actual_e),
-              None => Err(~"Non-constant path in constant expr")
+              Some(actual_e) => eval_const_expr_partial(tcx.ty_ctxt(), actual_e),
+              None => Err(~"non-constant path in constant expr")
           }
       }
       ExprLit(lit) => Ok(lit_to_const(lit)),
       // If we have a vstore, just keep going; it has to be a string
       ExprVstore(e, _) => eval_const_expr_partial(tcx, e),
       ExprParen(e)     => eval_const_expr_partial(tcx, e),
-      _ => Err(~"Unsupported constant expr")
+      _ => Err(~"unsupported constant expr")
     }
 }
 
-pub fn lit_to_const(lit: &lit) -> const_val {
+pub fn lit_to_const(lit: &Lit) -> const_val {
     match lit.node {
-      lit_str(s) => const_str(s),
-      lit_char(n) => const_uint(n as u64),
-      lit_int(n, _) => const_int(n),
-      lit_uint(n, _) => const_uint(n),
-      lit_int_unsuffixed(n) => const_int(n),
-      lit_float(n, _) => const_float(from_str::<float>(n).unwrap() as f64),
-      lit_float_unsuffixed(n) =>
-        const_float(from_str::<float>(n).unwrap() as f64),
-      lit_nil => const_int(0i64),
-      lit_bool(b) => const_bool(b)
+        LitStr(ref s, _) => const_str((*s).clone()),
+        LitBinary(ref data) => {
+            const_binary(Rc::new(data.iter().map(|x| *x).collect()))
+        }
+        LitChar(n) => const_uint(n as u64),
+        LitInt(n, _) => const_int(n),
+        LitUint(n, _) => const_uint(n),
+        LitIntUnsuffixed(n) => const_int(n),
+        LitFloat(ref n, _) | LitFloatUnsuffixed(ref n) => {
+            const_float(from_str::<f64>(n.get()).unwrap() as f64)
+        }
+        LitNil => const_int(0i64),
+        LitBool(b) => const_bool(b)
     }
 }
 
-fn compare_vals<T : Eq + Ord>(a: T, b: T) -> Option<int> {
+fn compare_vals<T: Ord>(a: T, b: T) -> Option<int> {
     Some(if a == b { 0 } else if a < b { -1 } else { 1 })
 }
 pub fn compare_const_vals(a: &const_val, b: &const_val) -> Option<int> {
@@ -491,20 +512,20 @@ pub fn compare_const_vals(a: &const_val, b: &const_val) -> Option<int> {
         (&const_int(a), &const_int(b)) => compare_vals(a, b),
         (&const_uint(a), &const_uint(b)) => compare_vals(a, b),
         (&const_float(a), &const_float(b)) => compare_vals(a, b),
-        (&const_str(a), &const_str(b)) => compare_vals(a, b),
+        (&const_str(ref a), &const_str(ref b)) => compare_vals(a, b),
         (&const_bool(a), &const_bool(b)) => compare_vals(a, b),
         _ => None
     }
 }
 
-pub fn compare_lit_exprs(tcx: middle::ty::ctxt, a: &Expr, b: &Expr) -> Option<int> {
+pub fn compare_lit_exprs(tcx: &ty::ctxt, a: &Expr, b: &Expr) -> Option<int> {
     compare_const_vals(&eval_const_expr(tcx, a), &eval_const_expr(tcx, b))
 }
 
-pub fn lit_expr_eq(tcx: middle::ty::ctxt, a: &Expr, b: &Expr) -> Option<bool> {
-    compare_lit_exprs(tcx, a, b).map_move(|val| val == 0)
+pub fn lit_expr_eq(tcx: &ty::ctxt, a: &Expr, b: &Expr) -> Option<bool> {
+    compare_lit_exprs(tcx, a, b).map(|val| val == 0)
 }
 
-pub fn lit_eq(a: &lit, b: &lit) -> Option<bool> {
-    compare_const_vals(&lit_to_const(a), &lit_to_const(b)).map_move(|val| val == 0)
+pub fn lit_eq(a: &Lit, b: &Lit) -> Option<bool> {
+    compare_const_vals(&lit_to_const(a), &lit_to_const(b)).map(|val| val == 0)
 }

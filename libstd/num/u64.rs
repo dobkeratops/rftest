@@ -8,15 +8,23 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-//! Operations and constants for `u64`
+//! Operations and constants for unsigned 64-bits integer (`u64` type)
 
-use num::{CheckedAdd, CheckedSub};
+#[allow(non_uppercase_statics)];
+
+use prelude::*;
+
+use default::Default;
+use from_str::FromStr;
+use num::{Bitwise, Bounded};
 #[cfg(target_word_size = "64")]
 use num::CheckedMul;
+use num::{CheckedAdd, CheckedSub};
+use num::{CheckedDiv, Zero, One, strconv};
+use num::{ToStrRadix, FromStrRadix};
 use option::{Option, Some, None};
-use unstable::intrinsics;
-
-pub use self::generated::*;
+use str;
+use intrinsics;
 
 uint_module!(u64, i64, 64)
 
@@ -40,8 +48,6 @@ impl CheckedSub for u64 {
     }
 }
 
-// FIXME: #8449: should not be disabled on 32-bit
-#[cfg(target_word_size = "64")]
 impl CheckedMul for u64 {
     #[inline]
     fn checked_mul(&self, v: &u64) -> Option<u64> {

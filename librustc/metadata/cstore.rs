@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,166 +8,216 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#[allow(non_camel_case_types)];
 
 // The crate store - a central repo for information collected about external
 // crates and libraries
 
-
-use metadata::cstore;
+use back::svh::Svh;
 use metadata::decoder;
+use metadata::loader;
 
-use std::hashmap::HashMap;
-use extra;
+use std::cell::RefCell;
+use std::c_vec::CVec;
+use collections::HashMap;
 use syntax::ast;
-use syntax::parse::token::ident_interner;
+use syntax::parse::token::IdentInterner;
+use syntax::crateid::CrateId;
 
 // A map from external crate numbers (as decoded from some crate file) to
 // local crate numbers (as generated during this session). Each external
 // crate may refer to types in other external crates, and each has their
 // own crate numbers.
-pub type cnum_map = @mut HashMap<ast::CrateNum, ast::CrateNum>;
+pub type cnum_map = @RefCell<HashMap<ast::CrateNum, ast::CrateNum>>;
+
+pub enum MetadataBlob {
+    MetadataVec(CVec<u8>),
+    MetadataArchive(loader::ArchiveMetadata),
+}
 
 pub struct crate_metadata {
-    name: @str,
-    data: @~[u8],
+    name: ~str,
+    data: MetadataBlob,
     cnum_map: cnum_map,
     cnum: ast::CrateNum
 }
 
-pub struct CStore {
-    priv metas: HashMap <ast::CrateNum, @crate_metadata>,
-    priv extern_mod_crate_map: extern_mod_crate_map,
-    priv used_crate_files: ~[Path],
-    priv used_libraries: ~[@str],
-    priv used_link_args: ~[@str],
-    intr: @ident_interner
+#[deriving(Eq)]
+pub enum LinkagePreference {
+    RequireDynamic,
+    RequireStatic,
 }
 
-// Map from NodeId's of local extern mod statements to crate numbers
+#[deriving(Eq, FromPrimitive)]
+pub enum NativeLibaryKind {
+    NativeStatic,    // native static library (.a archive)
+    NativeFramework, // OSX-specific
+    NativeUnknown,   // default way to specify a dynamic library
+}
+
+// Where a crate came from on the local filesystem. One of these two options
+// must be non-None.
+#[deriving(Eq, Clone)]
+pub struct CrateSource {
+    dylib: Option<Path>,
+    rlib: Option<Path>,
+    cnum: ast::CrateNum,
+}
+
+pub struct CStore {
+    priv metas: RefCell<HashMap<ast::CrateNum, @crate_metadata>>,
+    priv extern_mod_crate_map: RefCell<extern_mod_crate_map>,
+    priv used_crate_sources: RefCell<Vec<CrateSource> >,
+    priv used_libraries: RefCell<Vec<(~str, NativeLibaryKind)> >,
+    priv used_link_args: RefCell<Vec<~str> >,
+    intr: @IdentInterner
+}
+
+// Map from NodeId's of local extern crate statements to crate numbers
 type extern_mod_crate_map = HashMap<ast::NodeId, ast::CrateNum>;
 
-pub fn mk_cstore(intr: @ident_interner) -> CStore {
-    return CStore {
-        metas: HashMap::new(),
-        extern_mod_crate_map: HashMap::new(),
-        used_crate_files: ~[],
-        used_libraries: ~[],
-        used_link_args: ~[],
-        intr: intr
-    };
-}
-
-pub fn get_crate_data(cstore: &CStore, cnum: ast::CrateNum)
-                   -> @crate_metadata {
-    return *cstore.metas.get(&cnum);
-}
-
-pub fn get_crate_hash(cstore: &CStore, cnum: ast::CrateNum) -> @str {
-    let cdata = get_crate_data(cstore, cnum);
-    decoder::get_crate_hash(cdata.data)
-}
-
-pub fn get_crate_vers(cstore: &CStore, cnum: ast::CrateNum) -> @str {
-    let cdata = get_crate_data(cstore, cnum);
-    decoder::get_crate_vers(cdata.data)
-}
-
-pub fn set_crate_data(cstore: &mut CStore,
-                      cnum: ast::CrateNum,
-                      data: @crate_metadata) {
-    cstore.metas.insert(cnum, data);
-}
-
-pub fn have_crate_data(cstore: &CStore, cnum: ast::CrateNum) -> bool {
-    cstore.metas.contains_key(&cnum)
-}
-
-pub fn iter_crate_data(cstore: &CStore,
-                       i: &fn(ast::CrateNum, @crate_metadata)) {
-    for (&k, &v) in cstore.metas.iter() {
-        i(k, v);
+impl CStore {
+    pub fn new(intr: @IdentInterner) -> CStore {
+        CStore {
+            metas: RefCell::new(HashMap::new()),
+            extern_mod_crate_map: RefCell::new(HashMap::new()),
+            used_crate_sources: RefCell::new(Vec::new()),
+            used_libraries: RefCell::new(Vec::new()),
+            used_link_args: RefCell::new(Vec::new()),
+            intr: intr
+        }
     }
-}
 
-pub fn add_used_crate_file(cstore: &mut CStore, lib: &Path) {
-    if !cstore.used_crate_files.contains(lib) {
-        cstore.used_crate_files.push((*lib).clone());
+    pub fn get_crate_data(&self, cnum: ast::CrateNum) -> @crate_metadata {
+        *self.metas.borrow().get(&cnum)
     }
-}
 
-pub fn get_used_crate_files(cstore: &CStore) -> ~[Path] {
-    // XXX(pcwalton): Bad copy.
-    return cstore.used_crate_files.clone();
-}
-
-pub fn add_used_library(cstore: &mut CStore, lib: @str) -> bool {
-    assert!(!lib.is_empty());
-
-    if cstore.used_libraries.iter().any(|x| x == &lib) { return false; }
-    cstore.used_libraries.push(lib);
-    true
-}
-
-pub fn get_used_libraries<'a>(cstore: &'a CStore) -> &'a [@str] {
-    let slice: &'a [@str] = cstore.used_libraries;
-    slice
-}
-
-pub fn add_used_link_args(cstore: &mut CStore, args: &str) {
-    for s in args.split_iter(' ') {
-        cstore.used_link_args.push(s.to_managed());
+    pub fn get_crate_hash(&self, cnum: ast::CrateNum) -> Svh {
+        let cdata = self.get_crate_data(cnum);
+        decoder::get_crate_hash(cdata.data())
     }
-}
 
-pub fn get_used_link_args<'a>(cstore: &'a CStore) -> &'a [@str] {
-    let slice: &'a [@str] = cstore.used_link_args;
-    slice
-}
+    pub fn get_crate_id(&self, cnum: ast::CrateNum) -> CrateId {
+        let cdata = self.get_crate_data(cnum);
+        decoder::get_crate_id(cdata.data())
+    }
 
-pub fn add_extern_mod_stmt_cnum(cstore: &mut CStore,
-                                emod_id: ast::NodeId,
-                                cnum: ast::CrateNum) {
-    cstore.extern_mod_crate_map.insert(emod_id, cnum);
-}
+    pub fn set_crate_data(&self, cnum: ast::CrateNum, data: @crate_metadata) {
+        self.metas.borrow_mut().insert(cnum, data);
+    }
 
-pub fn find_extern_mod_stmt_cnum(cstore: &CStore,
-                                 emod_id: ast::NodeId)
-                       -> Option<ast::CrateNum> {
-    cstore.extern_mod_crate_map.find(&emod_id).map_move(|x| *x)
-}
+    pub fn have_crate_data(&self, cnum: ast::CrateNum) -> bool {
+        self.metas.borrow().contains_key(&cnum)
+    }
 
-#[deriving(Clone)]
-struct crate_hash {
-    name: @str,
-    vers: @str,
-    hash: @str,
-}
+    pub fn iter_crate_data(&self, i: |ast::CrateNum, @crate_metadata|) {
+        for (&k, &v) in self.metas.borrow().iter() {
+            i(k, v);
+        }
+    }
 
-// returns hashes of crates directly used by this crate. Hashes are sorted by
-// (crate name, crate version, crate hash) in lexicographic order (not semver)
-pub fn get_dep_hashes(cstore: &CStore) -> ~[@str] {
-    let mut result = ~[];
+    pub fn add_used_crate_source(&self, src: CrateSource) {
+        let mut used_crate_sources = self.used_crate_sources.borrow_mut();
+        if !used_crate_sources.contains(&src) {
+            used_crate_sources.push(src);
+        }
+    }
 
-    for (_, &cnum) in cstore.extern_mod_crate_map.iter() {
-        let cdata = cstore::get_crate_data(cstore, cnum);
-        let hash = decoder::get_crate_hash(cdata.data);
-        let vers = decoder::get_crate_vers(cdata.data);
-        debug!("Add hash[%s]: %s %s", cdata.name, vers, hash);
-        result.push(crate_hash {
-            name: cdata.name,
-            vers: vers,
-            hash: hash
+    pub fn get_used_crate_source(&self, cnum: ast::CrateNum)
+                                     -> Option<CrateSource> {
+        self.used_crate_sources.borrow_mut()
+            .iter().find(|source| source.cnum == cnum)
+            .map(|source| source.clone())
+    }
+
+    pub fn reset(&self) {
+        self.metas.borrow_mut().clear();
+        self.extern_mod_crate_map.borrow_mut().clear();
+        self.used_crate_sources.borrow_mut().clear();
+        self.used_libraries.borrow_mut().clear();
+        self.used_link_args.borrow_mut().clear();
+    }
+
+    // This method is used when generating the command line to pass through to
+    // system linker. The linker expects undefined symbols on the left of the
+    // command line to be defined in libraries on the right, not the other way
+    // around. For more info, see some comments in the add_used_library function
+    // below.
+    //
+    // In order to get this left-to-right dependency ordering, we perform a
+    // topological sort of all crates putting the leaves at the right-most
+    // positions.
+    pub fn get_used_crates(&self, prefer: LinkagePreference)
+                           -> Vec<(ast::CrateNum, Option<Path>)> {
+        let mut ordering = Vec::new();
+        fn visit(cstore: &CStore, cnum: ast::CrateNum,
+                 ordering: &mut Vec<ast::CrateNum>) {
+            if ordering.as_slice().contains(&cnum) { return }
+            let meta = cstore.get_crate_data(cnum);
+            for (_, &dep) in meta.cnum_map.borrow().iter() {
+                visit(cstore, dep, ordering);
+            }
+            ordering.push(cnum);
+        };
+        for (&num, _) in self.metas.borrow().iter() {
+            visit(self, num, &mut ordering);
+        }
+        ordering.as_mut_slice().reverse();
+        let ordering = ordering.as_slice();
+        let mut libs = self.used_crate_sources.borrow()
+            .iter()
+            .map(|src| (src.cnum, match prefer {
+                RequireDynamic => src.dylib.clone(),
+                RequireStatic => src.rlib.clone(),
+            }))
+            .collect::<Vec<(ast::CrateNum, Option<Path>)>>();
+        libs.sort_by(|&(a, _), &(b, _)| {
+            ordering.position_elem(&a).cmp(&ordering.position_elem(&b))
         });
+        libs
     }
 
-    let sorted = do extra::sort::merge_sort(result) |a, b| {
-        (a.name, a.vers, a.hash) <= (b.name, b.vers, b.hash)
-    };
-
-    debug!("sorted:");
-    for x in sorted.iter() {
-        debug!("  hash[%s]: %s", x.name, x.hash);
+    pub fn add_used_library(&self, lib: ~str, kind: NativeLibaryKind) {
+        assert!(!lib.is_empty());
+        self.used_libraries.borrow_mut().push((lib, kind));
     }
 
-    sorted.map(|ch| ch.hash)
+    pub fn get_used_libraries<'a>(&'a self)
+                              -> &'a RefCell<Vec<(~str, NativeLibaryKind)> > {
+        &self.used_libraries
+    }
+
+    pub fn add_used_link_args(&self, args: &str) {
+        for s in args.split(' ') {
+            self.used_link_args.borrow_mut().push(s.to_owned());
+        }
+    }
+
+    pub fn get_used_link_args<'a>(&'a self) -> &'a RefCell<Vec<~str> > {
+        &self.used_link_args
+    }
+
+    pub fn add_extern_mod_stmt_cnum(&self,
+                                    emod_id: ast::NodeId,
+                                    cnum: ast::CrateNum) {
+        self.extern_mod_crate_map.borrow_mut().insert(emod_id, cnum);
+    }
+
+    pub fn find_extern_mod_stmt_cnum(&self, emod_id: ast::NodeId)
+                                     -> Option<ast::CrateNum> {
+        self.extern_mod_crate_map.borrow().find(&emod_id).map(|x| *x)
+    }
+}
+
+impl crate_metadata {
+    pub fn data<'a>(&'a self) -> &'a [u8] { self.data.as_slice() }
+}
+
+impl MetadataBlob {
+    pub fn as_slice<'a>(&'a self) -> &'a [u8] {
+        match *self {
+            MetadataVec(ref vec) => vec.as_slice(),
+            MetadataArchive(ref ar) => ar.as_slice(),
+        }
+    }
 }

@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -19,16 +19,23 @@ The type checker is responsible for:
 3. Guaranteeing that most type rules are met ("most?", you say, "why most?"
    Well, dear reader, read on)
 
-The main entry point is `check_crate()`.  Type checking operates in two major
-phases: collect and check.  The collect phase passes over all items and
-determines their type, without examining their "innards".  The check phase
-then checks function bodies and so forth.
+The main entry point is `check_crate()`.  Type checking operates in
+several major phases:
 
-Within the check phase, we check each function body one at a time (bodies of
-function expressions are checked as part of the containing function).
-Inference is used to supply types wherever they are unknown. The actual
-checking of a function itself has several phases (check, regionck, writeback),
-as discussed in the documentation for the `check` module.
+1. The collect phase first passes over all items and determines their
+   type, without examining their "innards".
+
+2. Variance inference then runs to compute the variance of each parameter
+
+3. Coherence checks for overlapping or orphaned impls
+
+4. Finally, the check phase then checks function bodies and so forth.
+   Within the check phase, we check each function body one at a time
+   (bodies of function expressions are checked as part of the
+   containing function).  Inference is used to supply types wherever
+   they are unknown. The actual checking of a function itself has
+   several phases (check, regionck, writeback), as discussed in the
+   documentation for the `check` module.
 
 The type checker is defined into various submodules which are documented
 independently:
@@ -39,6 +46,10 @@ independently:
 - collect: computes the types of each top-level item and enters them into
   the `cx.tcache` table for later use
 
+- coherence: enforces coherence rules, builds some tables
+
+- variance: variance inference
+
 - check: walks over function bodies and type checks them, inferring types for
   local variables, type parameters, etc as necessary.
 
@@ -48,6 +59,7 @@ independently:
 
 */
 
+#[allow(non_camel_case_types)];
 
 use driver::session;
 
@@ -56,15 +68,14 @@ use middle::ty;
 use util::common::time;
 use util::ppaux::Repr;
 use util::ppaux;
+use util::nodemap::{DefIdMap, FnvHashMap};
 
-use std::hashmap::HashMap;
-use std::result;
-use extra::list::List;
-use extra::list;
+use std::cell::RefCell;
+use std::rc::Rc;
+use collections::List;
 use syntax::codemap::Span;
 use syntax::print::pprust::*;
 use syntax::{ast, ast_map, abi};
-use syntax::opt_vec;
 
 pub mod check;
 pub mod rscope;
@@ -72,6 +83,7 @@ pub mod astconv;
 pub mod infer;
 pub mod collect;
 pub mod coherence;
+pub mod variance;
 
 #[deriving(Clone, Encodable, Decodable, Eq, Ord)]
 pub enum param_index {
@@ -80,22 +92,22 @@ pub enum param_index {
 }
 
 #[deriving(Clone, Encodable, Decodable)]
-pub enum method_origin {
+pub enum MethodOrigin {
     // fully statically resolved method
-    method_static(ast::DefId),
+    MethodStatic(ast::DefId),
 
     // method invoked on a type parameter with a bounded trait
-    method_param(method_param),
+    MethodParam(MethodParam),
 
     // method invoked on a trait instance
-    method_object(method_object),
+    MethodObject(MethodObject),
 
 }
 
 // details for a method invoked with a receiver whose type is a type parameter
 // with a bounded trait.
 #[deriving(Clone, Encodable, Decodable)]
-pub struct method_param {
+pub struct MethodParam {
     // the trait containing the method to be invoked
     trait_id: ast::DefId,
 
@@ -112,7 +124,7 @@ pub struct method_param {
 
 // details for a method invoked with a receiver whose type is an object
 #[deriving(Clone, Encodable, Decodable)]
-pub struct method_object {
+pub struct MethodObject {
     // the (super)trait containing the method to be invoked
     trait_id: ast::DefId,
 
@@ -129,30 +141,42 @@ pub struct method_object {
     real_index: uint,
 }
 
-
 #[deriving(Clone)]
-pub struct method_map_entry {
-    // the type of the self parameter, which is not reflected in the fn type
-    // (FIXME #3446)
-    self_ty: ty::t,
+pub struct MethodCallee {
+    origin: MethodOrigin,
+    ty: ty::t,
+    substs: ty::substs
+}
 
-    // the mode of `self`
-    self_mode: ty::SelfMode,
+#[deriving(Clone, Eq, TotalEq, Hash, Show)]
+pub struct MethodCall {
+    expr_id: ast::NodeId,
+    autoderef: u32
+}
 
-    // the type of explicit self on the method
-    explicit_self: ast::explicit_self_,
+impl MethodCall {
+    pub fn expr(id: ast::NodeId) -> MethodCall {
+        MethodCall {
+            expr_id: id,
+            autoderef: 0
+        }
+    }
 
-    // method details being invoked
-    origin: method_origin,
+    pub fn autoderef(expr_id: ast::NodeId, autoderef: u32) -> MethodCall {
+        MethodCall {
+            expr_id: expr_id,
+            autoderef: 1 + autoderef
+        }
+    }
 }
 
 // maps from an expression id that corresponds to a method call to the details
 // of the method to be invoked
-pub type method_map = @mut HashMap<ast::NodeId, method_map_entry>;
+pub type MethodMap = @RefCell<FnvHashMap<MethodCall, MethodCallee>>;
 
-pub type vtable_param_res = @~[vtable_origin];
+pub type vtable_param_res = @Vec<vtable_origin> ;
 // Resolutions for bounds of all parameters, left to right, for a given path.
-pub type vtable_res = @~[vtable_param_res];
+pub type vtable_res = @Vec<vtable_param_res> ;
 
 #[deriving(Clone)]
 pub enum vtable_origin {
@@ -161,7 +185,7 @@ pub enum vtable_origin {
       from whence comes the vtable, and tys are the type substs.
       vtable_res is the vtable itself
      */
-    vtable_static(ast::DefId, ~[ty::t], vtable_res),
+    vtable_static(ast::DefId, Vec<ty::t> , vtable_res),
 
     /*
       Dynamic vtable, comes from a parameter that has a bound on it:
@@ -175,10 +199,10 @@ pub enum vtable_origin {
 }
 
 impl Repr for vtable_origin {
-    fn repr(&self, tcx: ty::ctxt) -> ~str {
+    fn repr(&self, tcx: &ty::ctxt) -> ~str {
         match *self {
             vtable_static(def_id, ref tys, ref vtable_res) => {
-                fmt!("vtable_static(%?:%s, %s, %s)",
+                format!("vtable_static({:?}:{}, {}, {})",
                      def_id,
                      ty::item_path_str(tcx, def_id),
                      tys.repr(tcx),
@@ -186,16 +210,16 @@ impl Repr for vtable_origin {
             }
 
             vtable_param(x, y) => {
-                fmt!("vtable_param(%?, %?)", x, y)
+                format!("vtable_param({:?}, {:?})", x, y)
             }
         }
     }
 }
 
-pub type vtable_map = @mut HashMap<ast::NodeId, vtable_res>;
+pub type vtable_map = @RefCell<FnvHashMap<MethodCall, vtable_res>>;
 
 
-// Information about the vtable resolutions for for a trait impl.
+// Information about the vtable resolutions for a trait impl.
 // Mostly the information is important for implementing default
 // methods.
 #[deriving(Clone)]
@@ -207,40 +231,41 @@ pub struct impl_res {
 }
 
 impl Repr for impl_res {
-    fn repr(&self, tcx: ty::ctxt) -> ~str {
-        fmt!("impl_res {trait_vtables=%s, self_vtables=%s}",
+    fn repr(&self, tcx: &ty::ctxt) -> ~str {
+        format!("impl_res \\{trait_vtables={}, self_vtables={}\\}",
              self.trait_vtables.repr(tcx),
              self.self_vtables.repr(tcx))
     }
 }
 
-pub type impl_vtable_map = @mut HashMap<ast::DefId, impl_res>;
+pub type impl_vtable_map = RefCell<DefIdMap<impl_res>>;
 
-pub struct CrateCtxt {
+pub struct CrateCtxt<'a> {
     // A mapping from method call sites to traits that have that method.
     trait_map: resolve::TraitMap,
-    method_map: method_map,
+    method_map: MethodMap,
     vtable_map: vtable_map,
-    tcx: ty::ctxt
+    tcx: &'a ty::ctxt
 }
 
 // Functions that write types into the node type table
-pub fn write_ty_to_tcx(tcx: ty::ctxt, node_id: ast::NodeId, ty: ty::t) {
-    debug!("write_ty_to_tcx(%d, %s)", node_id, ppaux::ty_to_str(tcx, ty));
+pub fn write_ty_to_tcx(tcx: &ty::ctxt, node_id: ast::NodeId, ty: ty::t) {
+    debug!("write_ty_to_tcx({}, {})", node_id, ppaux::ty_to_str(tcx, ty));
     assert!(!ty::type_needs_infer(ty));
-    tcx.node_types.insert(node_id as uint, ty);
+    tcx.node_types.borrow_mut().insert(node_id as uint, ty);
 }
-pub fn write_substs_to_tcx(tcx: ty::ctxt,
+pub fn write_substs_to_tcx(tcx: &ty::ctxt,
                            node_id: ast::NodeId,
-                           substs: ~[ty::t]) {
+                           substs: Vec<ty::t> ) {
     if substs.len() > 0u {
-        debug!("write_substs_to_tcx(%d, %?)", node_id,
+        debug!("write_substs_to_tcx({}, {:?})", node_id,
                substs.map(|t| ppaux::ty_to_str(tcx, *t)));
         assert!(substs.iter().all(|t| !ty::type_needs_infer(*t)));
-        tcx.node_type_substs.insert(node_id, substs);
+
+        tcx.node_type_substs.borrow_mut().insert(node_id, substs);
     }
 }
-pub fn write_tpt_to_tcx(tcx: ty::ctxt,
+pub fn write_tpt_to_tcx(tcx: &ty::ctxt,
                         node_id: ast::NodeId,
                         tpt: &ty::ty_param_substs_and_ty) {
     write_ty_to_tcx(tcx, node_id, tpt.ty);
@@ -249,12 +274,12 @@ pub fn write_tpt_to_tcx(tcx: ty::ctxt,
     }
 }
 
-pub fn lookup_def_tcx(tcx: ty::ctxt, sp: Span, id: ast::NodeId) -> ast::Def {
-    match tcx.def_map.find(&id) {
-      Some(&x) => x,
-      _ => {
-        tcx.sess.span_fatal(sp, "internal error looking up a definition")
-      }
+pub fn lookup_def_tcx(tcx:&ty::ctxt, sp: Span, id: ast::NodeId) -> ast::Def {
+    match tcx.def_map.borrow().find(&id) {
+        Some(&x) => x,
+        _ => {
+            tcx.sess.span_fatal(sp, "internal error looking up a definition")
+        }
     }
 }
 
@@ -265,40 +290,36 @@ pub fn lookup_def_ccx(ccx: &CrateCtxt, sp: Span, id: ast::NodeId)
 
 pub fn no_params(t: ty::t) -> ty::ty_param_bounds_and_ty {
     ty::ty_param_bounds_and_ty {
-        generics: ty::Generics {type_param_defs: @~[],
-                                region_param: None},
+        generics: ty::Generics {type_param_defs: Rc::new(Vec::new()),
+                                region_param_defs: Rc::new(Vec::new())},
         ty: t
     }
 }
 
-pub fn require_same_types(
-    tcx: ty::ctxt,
-    maybe_infcx: Option<@mut infer::InferCtxt>,
-    t1_is_expected: bool,
-    span: Span,
-    t1: ty::t,
-    t2: ty::t,
-    msg: &fn() -> ~str) -> bool {
+pub fn require_same_types(tcx: &ty::ctxt,
+                          maybe_infcx: Option<&infer::InferCtxt>,
+                          t1_is_expected: bool,
+                          span: Span,
+                          t1: ty::t,
+                          t2: ty::t,
+                          msg: || -> ~str)
+                          -> bool {
+    let result = match maybe_infcx {
+        None => {
+            let infcx = infer::new_infer_ctxt(tcx);
+            infer::mk_eqty(&infcx, t1_is_expected, infer::Misc(span), t1, t2)
+        }
+        Some(infcx) => {
+            infer::mk_eqty(infcx, t1_is_expected, infer::Misc(span), t1, t2)
+        }
+    };
 
-    let l_tcx;
-    let l_infcx;
-    match maybe_infcx {
-      None => {
-        l_tcx = tcx;
-        l_infcx = infer::new_infer_ctxt(tcx);
-      }
-      Some(i) => {
-        l_tcx = i.tcx;
-        l_infcx = i;
-      }
-    }
-
-    match infer::mk_eqty(l_infcx, t1_is_expected, infer::Misc(span), t1, t2) {
-        result::Ok(()) => true,
-        result::Err(ref terr) => {
-            l_tcx.sess.span_err(span, msg() + ": " +
-                                ty::type_err_to_str(l_tcx, terr));
-            ty::note_and_explain_type_err(l_tcx, terr);
+    match result {
+        Ok(_) => true,
+        Err(ref terr) => {
+            tcx.sess.span_err(span, msg() + ": " +
+                              ty::type_err_to_str(tcx, terr));
+            ty::note_and_explain_type_err(tcx, terr);
             false
         }
     }
@@ -306,25 +327,20 @@ pub fn require_same_types(
 
 // a list of mapping from in-scope-region-names ("isr") to the
 // corresponding ty::Region
-pub type isr_alist = @List<(ty::bound_region, ty::Region)>;
+pub type isr_alist = @List<(ty::BoundRegion, ty::Region)>;
 
-trait get_and_find_region {
-    fn get(&self, br: ty::bound_region) -> ty::Region;
-    fn find(&self, br: ty::bound_region) -> Option<ty::Region>;
+trait get_region<'a, T:'static> {
+    fn get(&'a self, br: ty::BoundRegion) -> ty::Region;
 }
 
-impl get_and_find_region for isr_alist {
-    fn get(&self, br: ty::bound_region) -> ty::Region {
-        self.find(br).unwrap()
-    }
-
-    fn find(&self, br: ty::bound_region) -> Option<ty::Region> {
-        let mut ret = None;
-        do list::each(*self) |isr| {
+impl<'a, T:'static> get_region <'a, T> for isr_alist {
+    fn get(&'a self, br: ty::BoundRegion) -> ty::Region {
+        let mut region = None;
+        for isr in self.iter() {
             let (isr_br, isr_r) = *isr;
-            if isr_br == br { ret = Some(isr_r); false } else { true }
+            if isr_br == br { region = Some(isr_r); break; }
         };
-        ret
+        region.unwrap()
     }
 }
 
@@ -334,11 +350,11 @@ fn check_main_fn_ty(ccx: &CrateCtxt,
     let tcx = ccx.tcx;
     let main_t = ty::node_id_to_type(tcx, main_id);
     match ty::get(main_t).sty {
-        ty::ty_bare_fn(*) => {
-            match tcx.items.find(&main_id) {
-                Some(&ast_map::node_item(it,_)) => {
+        ty::ty_bare_fn(..) => {
+            match tcx.map.find(main_id) {
+                Some(ast_map::NodeItem(it)) => {
                     match it.node {
-                        ast::item_fn(_, _, _, ref ps, _)
+                        ast::ItemFn(_, _, _, ref ps, _)
                         if ps.is_parameterized() => {
                             tcx.sess.span_err(
                                 main_span,
@@ -351,22 +367,23 @@ fn check_main_fn_ty(ccx: &CrateCtxt,
                 _ => ()
             }
             let se_ty = ty::mk_bare_fn(tcx, ty::BareFnTy {
-                purity: ast::impure_fn,
+                purity: ast::ImpureFn,
                 abis: abi::AbiSet::Rust(),
                 sig: ty::FnSig {
-                    bound_lifetime_names: opt_vec::Empty,
-                    inputs: ~[],
-                    output: ty::mk_nil()
+                    binder_id: main_id,
+                    inputs: Vec::new(),
+                    output: ty::mk_nil(),
+                    variadic: false
                 }
             });
 
             require_same_types(tcx, None, false, main_span, main_t, se_ty,
-                || fmt!("main function expects type: `%s`",
+                || format!("main function expects type: `{}`",
                         ppaux::ty_to_str(ccx.tcx, se_ty)));
         }
         _ => {
             tcx.sess.span_bug(main_span,
-                              fmt!("main has a non-function type: found `%s`",
+                              format!("main has a non-function type: found `{}`",
                                    ppaux::ty_to_str(tcx, main_t)));
         }
     }
@@ -379,10 +396,10 @@ fn check_start_fn_ty(ccx: &CrateCtxt,
     let start_t = ty::node_id_to_type(tcx, start_id);
     match ty::get(start_t).sty {
         ty::ty_bare_fn(_) => {
-            match tcx.items.find(&start_id) {
-                Some(&ast_map::node_item(it,_)) => {
+            match tcx.map.find(start_id) {
+                Some(ast_map::NodeItem(it)) => {
                     match it.node {
-                        ast::item_fn(_,_,_,ref ps,_)
+                        ast::ItemFn(_,_,_,ref ps,_)
                         if ps.is_parameterized() => {
                             tcx.sess.span_err(
                                 start_span,
@@ -396,25 +413,26 @@ fn check_start_fn_ty(ccx: &CrateCtxt,
             }
 
             let se_ty = ty::mk_bare_fn(tcx, ty::BareFnTy {
-                purity: ast::impure_fn,
+                purity: ast::ImpureFn,
                 abis: abi::AbiSet::Rust(),
                 sig: ty::FnSig {
-                    bound_lifetime_names: opt_vec::Empty,
-                    inputs: ~[
+                    binder_id: start_id,
+                    inputs: vec!(
                         ty::mk_int(),
                         ty::mk_imm_ptr(tcx, ty::mk_imm_ptr(tcx, ty::mk_u8()))
-                    ],
-                    output: ty::mk_int()
+                    ),
+                    output: ty::mk_int(),
+                    variadic: false
                 }
             });
 
             require_same_types(tcx, None, false, start_span, start_t, se_ty,
-                || fmt!("start function expects type: `%s`", ppaux::ty_to_str(ccx.tcx, se_ty)));
+                || format!("start function expects type: `{}`", ppaux::ty_to_str(ccx.tcx, se_ty)));
 
         }
         _ => {
             tcx.sess.span_bug(start_span,
-                              fmt!("start has a non-function type: found `%s`",
+                              format!("start has a non-function type: found `{}`",
                                    ppaux::ty_to_str(tcx, start_t)));
         }
     }
@@ -422,9 +440,9 @@ fn check_start_fn_ty(ccx: &CrateCtxt,
 
 fn check_for_entry_fn(ccx: &CrateCtxt) {
     let tcx = ccx.tcx;
-    if !*tcx.sess.building_library {
-        match *tcx.sess.entry_fn {
-          Some((id, sp)) => match *tcx.sess.entry_type {
+    if !tcx.sess.building_library.get() {
+        match tcx.sess.entry_fn.get() {
+          Some((id, sp)) => match tcx.sess.entry_type.get() {
               Some(session::EntryMain) => check_main_fn_ty(ccx, id, sp),
               Some(session::EntryStart) => check_start_fn_ty(ccx, id, sp),
               Some(session::EntryNone) => {}
@@ -435,32 +453,35 @@ fn check_for_entry_fn(ccx: &CrateCtxt) {
     }
 }
 
-pub fn check_crate(tcx: ty::ctxt,
+pub fn check_crate(tcx: &ty::ctxt,
                    trait_map: resolve::TraitMap,
-                   crate: &ast::Crate)
-                -> (method_map, vtable_map) {
+                   krate: &ast::Crate)
+                -> (MethodMap, vtable_map) {
     let time_passes = tcx.sess.time_passes();
-    let ccx = @mut CrateCtxt {
+    let ccx = CrateCtxt {
         trait_map: trait_map,
-        method_map: @mut HashMap::new(),
-        vtable_map: @mut HashMap::new(),
+        method_map: @RefCell::new(FnvHashMap::new()),
+        vtable_map: @RefCell::new(FnvHashMap::new()),
         tcx: tcx
     };
 
-    time(time_passes, ~"type collecting", ||
-        collect::collect_item_types(ccx, crate));
+    time(time_passes, "type collecting", (), |_|
+        collect::collect_item_types(&ccx, krate));
 
     // this ensures that later parts of type checking can assume that items
     // have valid types and not error
     tcx.sess.abort_if_errors();
 
-    time(time_passes, ~"coherence checking", ||
-        coherence::check_coherence(ccx, crate));
+    time(time_passes, "variance inference", (), |_|
+         variance::infer_variance(tcx, krate));
 
-    time(time_passes, ~"type checking", ||
-        check::check_item_types(ccx, crate));
+    time(time_passes, "coherence checking", (), |_|
+        coherence::check_coherence(&ccx, krate));
 
-    check_for_entry_fn(ccx);
+    time(time_passes, "type checking", (), |_|
+        check::check_item_types(&ccx, krate));
+
+    check_for_entry_fn(&ccx);
     tcx.sess.abort_if_errors();
     (ccx.method_map, ccx.vtable_map)
 }

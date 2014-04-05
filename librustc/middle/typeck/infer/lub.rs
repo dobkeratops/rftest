@@ -12,6 +12,7 @@
 use middle::ty::{BuiltinBounds};
 use middle::ty::RegionVid;
 use middle::ty;
+use middle::typeck::infer::then;
 use middle::typeck::infer::combine::*;
 use middle::typeck::infer::glb::Glb;
 use middle::typeck::infer::lattice::*;
@@ -20,37 +21,36 @@ use middle::typeck::infer::to_str::InferStr;
 use middle::typeck::infer::{cres, InferCtxt};
 use middle::typeck::infer::fold_regions_in_sig;
 use middle::typeck::infer::{TypeTrace, Subtype};
-use middle::typeck::isr_alist;
+use collections::HashMap;
+use syntax::ast::{Many, Once, NodeId};
+use syntax::ast::{ExternFn, ImpureFn, UnsafeFn};
+use syntax::ast::{Onceness, Purity};
 use util::ppaux::mt_to_str;
 
-use extra::list;
-use syntax::ast::{Many, Once, extern_fn, impure_fn};
-use syntax::ast::{unsafe_fn};
-use syntax::ast::{Onceness, purity};
+pub struct Lub<'f>(CombineFields<'f>);  // least-upper-bound: common supertype
 
-pub struct Lub(CombineFields);  // least-upper-bound: common supertype
-
-impl Lub {
+impl<'f> Lub<'f> {
+    pub fn get_ref<'a>(&'a self) -> &'a CombineFields<'f> { let Lub(ref v) = *self; v }
     pub fn bot_ty(&self, b: ty::t) -> cres<ty::t> { Ok(b) }
     pub fn ty_bot(&self, b: ty::t) -> cres<ty::t> {
         self.bot_ty(b) // commutative
     }
 }
 
-impl Combine for Lub {
-    fn infcx(&self) -> @mut InferCtxt { self.infcx }
+impl<'f> Combine for Lub<'f> {
+    fn infcx<'a>(&'a self) -> &'a InferCtxt<'a> { self.get_ref().infcx }
     fn tag(&self) -> ~str { ~"lub" }
-    fn a_is_expected(&self) -> bool { self.a_is_expected }
-    fn trace(&self) -> TypeTrace { self.trace }
+    fn a_is_expected(&self) -> bool { self.get_ref().a_is_expected }
+    fn trace(&self) -> TypeTrace { self.get_ref().trace }
 
-    fn sub(&self) -> Sub { Sub(**self) }
-    fn lub(&self) -> Lub { Lub(**self) }
-    fn glb(&self) -> Glb { Glb(**self) }
+    fn sub<'a>(&'a self) -> Sub<'a> { Sub(*self.get_ref()) }
+    fn lub<'a>(&'a self) -> Lub<'a> { Lub(*self.get_ref()) }
+    fn glb<'a>(&'a self) -> Glb<'a> { Glb(*self.get_ref()) }
 
     fn mts(&self, a: &ty::mt, b: &ty::mt) -> cres<ty::mt> {
-        let tcx = self.infcx.tcx;
+        let tcx = self.get_ref().infcx.tcx;
 
-        debug!("%s.mts(%s, %s)",
+        debug!("{}.mts({}, {})",
                self.tag(),
                mt_to_str(tcx, a),
                mt_to_str(tcx, b));
@@ -66,7 +66,7 @@ impl Combine for Lub {
           }
 
           MutMutable => {
-            self.infcx.try(|| {
+            self.get_ref().infcx.try(|| {
                 eq_tys(self, a.ty, b.ty).then(|| {
                     Ok(ty::mt {ty: a.ty, mutbl: m})
                 })
@@ -76,14 +76,14 @@ impl Combine for Lub {
     }
 
     fn contratys(&self, a: ty::t, b: ty::t) -> cres<ty::t> {
-        Glb(**self).tys(a, b)
+        Glb(*self.get_ref()).tys(a, b)
     }
 
-    fn purities(&self, a: purity, b: purity) -> cres<purity> {
+    fn purities(&self, a: Purity, b: Purity) -> cres<Purity> {
         match (a, b) {
-          (unsafe_fn, _) | (_, unsafe_fn) => Ok(unsafe_fn),
-          (impure_fn, _) | (_, impure_fn) => Ok(impure_fn),
-          (extern_fn, extern_fn) => Ok(extern_fn),
+          (UnsafeFn, _) | (_, UnsafeFn) => Ok(UnsafeFn),
+          (ImpureFn, _) | (_, ImpureFn) => Ok(ImpureFn),
+          (ExternFn, ExternFn) => Ok(ExternFn),
         }
     }
 
@@ -102,16 +102,16 @@ impl Combine for Lub {
 
     fn contraregions(&self, a: ty::Region, b: ty::Region)
                     -> cres<ty::Region> {
-        return Glb(**self).regions(a, b);
+        return Glb(*self.get_ref()).regions(a, b);
     }
 
     fn regions(&self, a: ty::Region, b: ty::Region) -> cres<ty::Region> {
-        debug!("%s.regions(%?, %?)",
+        debug!("{}.regions({:?}, {:?})",
                self.tag(),
-               a.inf_str(self.infcx),
-               b.inf_str(self.infcx));
+               a.inf_str(self.get_ref().infcx),
+               b.inf_str(self.get_ref().infcx));
 
-        Ok(self.infcx.region_vars.lub_regions(Subtype(self.trace), a, b))
+        Ok(self.get_ref().infcx.region_vars.lub_regions(Subtype(self.get_ref().trace), a, b))
     }
 
     fn fn_sigs(&self, a: &ty::FnSig, b: &ty::FnSig) -> cres<ty::FnSig> {
@@ -122,51 +122,55 @@ impl Combine for Lub {
         // phases we do want to be able to examine "all bindings that
         // were created as part of this type comparison", and making a
         // snapshot is a convenient way to do that.
-        let snapshot = self.infcx.region_vars.start_snapshot();
+        let snapshot = self.get_ref().infcx.region_vars.start_snapshot();
 
         // Instantiate each bound region with a fresh region variable.
-        let (a_with_fresh, a_isr) =
-            self.infcx.replace_bound_regions_with_fresh_regions(
-                self.trace, a);
+        let (a_with_fresh, a_map) =
+            self.get_ref().infcx.replace_late_bound_regions_with_fresh_regions(
+                self.get_ref().trace, a);
         let (b_with_fresh, _) =
-            self.infcx.replace_bound_regions_with_fresh_regions(
-                self.trace, b);
+            self.get_ref().infcx.replace_late_bound_regions_with_fresh_regions(
+                self.get_ref().trace, b);
 
         // Collect constraints.
         let sig0 = if_ok!(super_fn_sigs(self, &a_with_fresh, &b_with_fresh));
-        debug!("sig0 = %s", sig0.inf_str(self.infcx));
+        debug!("sig0 = {}", sig0.inf_str(self.get_ref().infcx));
 
         // Generalize the regions appearing in sig0 if possible
         let new_vars =
-            self.infcx.region_vars.vars_created_since_snapshot(snapshot);
+            self.get_ref().infcx.region_vars.vars_created_since_snapshot(snapshot);
         let sig1 =
             fold_regions_in_sig(
-                self.infcx.tcx,
+                self.get_ref().infcx.tcx,
                 &sig0,
-                |r, _in_fn| generalize_region(self, snapshot, new_vars,
-                                              a_isr, r));
+                |r| generalize_region(self, snapshot, new_vars.as_slice(),
+                                      sig0.binder_id, &a_map, r));
         return Ok(sig1);
 
         fn generalize_region(this: &Lub,
                              snapshot: uint,
                              new_vars: &[RegionVid],
-                             a_isr: isr_alist,
-                             r0: ty::Region) -> ty::Region {
+                             new_scope: NodeId,
+                             a_map: &HashMap<ty::BoundRegion, ty::Region>,
+                             r0: ty::Region)
+                             -> ty::Region {
             // Regions that pre-dated the LUB computation stay as they are.
             if !is_var_in_set(new_vars, r0) {
-                debug!("generalize_region(r0=%?): not new variable", r0);
+                assert!(!r0.is_bound());
+                debug!("generalize_region(r0={:?}): not new variable", r0);
                 return r0;
             }
 
-            let tainted = this.infcx.region_vars.tainted(snapshot, r0);
+            let tainted = this.get_ref().infcx.region_vars.tainted(snapshot, r0);
 
             // Variables created during LUB computation which are
             // *related* to regions that pre-date the LUB computation
             // stay as they are.
             if !tainted.iter().all(|r| is_var_in_set(new_vars, *r)) {
-                debug!("generalize_region(r0=%?): \
-                        non-new-variables found in %?",
+                debug!("generalize_region(r0={:?}): \
+                        non-new-variables found in {:?}",
                        r0, tainted);
+                assert!(!r0.is_bound());
                 return r0;
             }
 
@@ -175,27 +179,19 @@ impl Combine for Lub {
             // in both A and B.  Replace the variable with the "first"
             // bound region from A that we find it to be associated
             // with.
-            let mut ret = None;
-            do list::each(a_isr) |pair| {
-                let (a_br, a_r) = *pair;
-                if tainted.iter().any(|x| x == &a_r) {
-                    debug!("generalize_region(r0=%?): \
-                            replacing with %?, tainted=%?",
-                           r0, a_br, tainted);
-                    ret = Some(ty::re_bound(a_br));
-                    false
-                } else {
-                    true
+            for (a_br, a_r) in a_map.iter() {
+                if tainted.iter().any(|x| x == a_r) {
+                    debug!("generalize_region(r0={:?}): \
+                            replacing with {:?}, tainted={:?}",
+                           r0, *a_br, tainted);
+                    return ty::ReLateBound(new_scope, *a_br);
                 }
-            };
-
-            match ret {
-                Some(x) => x,
-                None => this.infcx.tcx.sess.span_bug(
-                            this.trace.origin.span(),
-                            fmt!("Region %? is not associated with \
-                                  any bound region from A!", r0))
             }
+
+            this.get_ref().infcx.tcx.sess.span_bug(
+                this.get_ref().trace.origin.span(),
+                format!("Region {:?} is not associated with \
+                        any bound region from A!", r0))
         }
     }
 

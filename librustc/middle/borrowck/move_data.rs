@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -15,9 +15,9 @@ comments in the section "Moves and initialization" and in `doc.rs`.
 
 */
 
-
-use std::hashmap::{HashMap, HashSet};
+use std::cell::RefCell;
 use std::uint;
+use collections::{HashMap, HashSet};
 use middle::borrowck::*;
 use middle::dataflow::DataFlowContext;
 use middle::dataflow::DataFlowOperator;
@@ -26,66 +26,74 @@ use middle::typeck;
 use syntax::ast;
 use syntax::ast_util;
 use syntax::codemap::Span;
-use syntax::opt_vec::OptVec;
-use syntax::opt_vec;
 use util::ppaux::Repr;
 
 pub struct MoveData {
     /// Move paths. See section "Move paths" in `doc.rs`.
-    paths: ~[MovePath],
+    paths: RefCell<Vec<MovePath>>,
 
     /// Cache of loan path to move path index, for easy lookup.
-    path_map: HashMap<@LoanPath, MovePathIndex>,
+    path_map: RefCell<HashMap<@LoanPath, MovePathIndex>>,
 
     /// Each move or uninitialized variable gets an entry here.
-    moves: ~[Move],
+    moves: RefCell<Vec<Move>>,
 
     /// Assignments to a variable, like `x = foo`. These are assigned
     /// bits for dataflow, since we must track them to ensure that
     /// immutable variables are assigned at most once along each path.
-    var_assignments: ~[Assignment],
+    var_assignments: RefCell<Vec<Assignment>>,
 
     /// Assignments to a path, like `x.f = foo`. These are not
     /// assigned dataflow bits, but we track them because they still
     /// kill move bits.
-    path_assignments: ~[Assignment],
-    assignee_ids: HashSet<ast::NodeId>,
+    path_assignments: RefCell<Vec<Assignment>>,
+
+    /// Assignments to a variable or path, like `x = foo`, but not `x += foo`.
+    assignee_ids: RefCell<HashSet<ast::NodeId>>,
 }
 
-pub struct FlowedMoveData {
-    move_data: @mut MoveData,
-    //         ^~~~~~~~~~~~~
-    // It makes me sad to use @mut here, except that due to
-    // the visitor design, this is what gather_loans
-    // must produce.
+pub struct FlowedMoveData<'a> {
+    move_data: MoveData,
 
-    dfcx_moves: MoveDataFlow,
+    dfcx_moves: MoveDataFlow<'a>,
 
     // We could (and maybe should, for efficiency) combine both move
     // and assign data flow into one, but this way it's easier to
     // distinguish the bits that correspond to moves and assignments.
-    dfcx_assign: AssignDataFlow
+    dfcx_assign: AssignDataFlow<'a>
 }
 
 /// Index into `MoveData.paths`, used like a pointer
 #[deriving(Eq)]
 pub struct MovePathIndex(uint);
 
+impl MovePathIndex {
+    fn get(&self) -> uint {
+        let MovePathIndex(v) = *self; v
+    }
+}
+
 impl Clone for MovePathIndex {
     fn clone(&self) -> MovePathIndex {
-        MovePathIndex(**self)
+        MovePathIndex(self.get())
     }
 }
 
 static InvalidMovePathIndex: MovePathIndex =
-    MovePathIndex(uint::max_value);
+    MovePathIndex(uint::MAX);
 
 /// Index into `MoveData.moves`, used like a pointer
 #[deriving(Eq)]
 pub struct MoveIndex(uint);
 
+impl MoveIndex {
+    fn get(&self) -> uint {
+        let MoveIndex(v) = *self; v
+    }
+}
+
 static InvalidMoveIndex: MoveIndex =
-    MoveIndex(uint::max_value);
+    MoveIndex(uint::MAX);
 
 pub struct MovePath {
     /// Loan path corresponding to this move path
@@ -107,10 +115,10 @@ pub struct MovePath {
 }
 
 pub enum MoveKind {
-    Declared,               // When declared, variables start out "moved".
-    MoveExpr(@ast::Expr),   // Expression or binding that moves a variable
-    MovePat(@ast::Pat),     // By-move binding
-    Captured(@ast::Expr),   // Closure creation that moves a value
+    Declared,   // When declared, variables start out "moved".
+    MoveExpr,   // Expression or binding that moves a variable
+    MovePat,    // By-move binding
+    Captured    // Closure creation that moves a value
 }
 
 pub struct Move {
@@ -124,7 +132,7 @@ pub struct Move {
     kind: MoveKind,
 
     /// Next node in linked list of moves from `path`, or `InvalidMoveIndex`
-    next_move: MoveIndex,
+    next_move: MoveIndex
 }
 
 pub struct Assignment {
@@ -140,7 +148,7 @@ pub struct Assignment {
 
 pub struct MoveDataFlowOperator;
 
-/// XXX(pcwalton): Should just be #[deriving(Clone)], but that doesn't work
+/// FIXME(pcwalton): Should just be #[deriving(Clone)], but that doesn't work
 /// yet on unit structs.
 impl Clone for MoveDataFlowOperator {
     fn clone(&self) -> MoveDataFlowOperator {
@@ -148,11 +156,11 @@ impl Clone for MoveDataFlowOperator {
     }
 }
 
-pub type MoveDataFlow = DataFlowContext<MoveDataFlowOperator>;
+pub type MoveDataFlow<'a> = DataFlowContext<'a, MoveDataFlowOperator>;
 
 pub struct AssignDataFlowOperator;
 
-/// XXX(pcwalton): Should just be #[deriving(Clone)], but that doesn't work
+/// FIXME(pcwalton): Should just be #[deriving(Clone)], but that doesn't work
 /// yet on unit structs.
 impl Clone for AssignDataFlowOperator {
     fn clone(&self) -> AssignDataFlowOperator {
@@ -160,42 +168,64 @@ impl Clone for AssignDataFlowOperator {
     }
 }
 
-pub type AssignDataFlow = DataFlowContext<AssignDataFlowOperator>;
+pub type AssignDataFlow<'a> = DataFlowContext<'a, AssignDataFlowOperator>;
 
 impl MoveData {
     pub fn new() -> MoveData {
         MoveData {
-            paths: ~[],
-            path_map: HashMap::new(),
-            moves: ~[],
-            path_assignments: ~[],
-            var_assignments: ~[],
-            assignee_ids: HashSet::new(),
+            paths: RefCell::new(Vec::new()),
+            path_map: RefCell::new(HashMap::new()),
+            moves: RefCell::new(Vec::new()),
+            path_assignments: RefCell::new(Vec::new()),
+            var_assignments: RefCell::new(Vec::new()),
+            assignee_ids: RefCell::new(HashSet::new()),
         }
     }
 
-    fn path<'a>(&'a self, index: MovePathIndex) -> &'a MovePath {
-        //! Type safe indexing operator
-        &self.paths[*index]
+    fn path_loan_path(&self, index: MovePathIndex) -> @LoanPath {
+        self.paths.borrow().get(index.get()).loan_path
     }
 
-    fn mut_path<'a>(&'a mut self, index: MovePathIndex) -> &'a mut MovePath {
-        //! Type safe indexing operator
-        &mut self.paths[*index]
+    fn path_parent(&self, index: MovePathIndex) -> MovePathIndex {
+        self.paths.borrow().get(index.get()).parent
     }
 
-    fn move<'a>(&'a self, index: MoveIndex) -> &'a Move {
+    fn path_first_move(&self, index: MovePathIndex) -> MoveIndex {
+        self.paths.borrow().get(index.get()).first_move
+    }
+
+    fn path_first_child(&self, index: MovePathIndex) -> MovePathIndex {
+        self.paths.borrow().get(index.get()).first_child
+    }
+
+    fn path_next_sibling(&self, index: MovePathIndex) -> MovePathIndex {
+        self.paths.borrow().get(index.get()).next_sibling
+    }
+
+    fn set_path_first_move(&self,
+                           index: MovePathIndex,
+                           first_move: MoveIndex) {
+        self.paths.borrow_mut().get_mut(index.get()).first_move = first_move
+    }
+
+    fn set_path_first_child(&self,
+                            index: MovePathIndex,
+                            first_child: MovePathIndex) {
+        self.paths.borrow_mut().get_mut(index.get()).first_child = first_child
+    }
+
+    fn move_next_move(&self, index: MoveIndex) -> MoveIndex {
         //! Type safe indexing operator
-        &self.moves[*index]
+        self.moves.borrow().get(index.get()).next_move
     }
 
     fn is_var_path(&self, index: MovePathIndex) -> bool {
         //! True if `index` refers to a variable
-        self.path(index).parent == InvalidMovePathIndex
+        self.path_parent(index) == InvalidMovePathIndex
     }
 
-    pub fn move_path(&mut self,
-                     tcx: ty::ctxt,
+    pub fn move_path(&self,
+                     tcx: &ty::ctxt,
                      lp: @LoanPath) -> MovePathIndex {
         /*!
          * Returns the existing move path index for `lp`, if any,
@@ -203,7 +233,7 @@ impl MoveData {
          * base paths that do not yet have an index.
          */
 
-        match self.path_map.find(&lp) {
+        match self.path_map.borrow().find(&lp) {
             Some(&index) => {
                 return index;
             }
@@ -211,10 +241,10 @@ impl MoveData {
         }
 
         let index = match *lp {
-            LpVar(*) => {
-                let index = MovePathIndex(self.paths.len());
+            LpVar(..) => {
+                let index = MovePathIndex(self.paths.borrow().len());
 
-                self.paths.push(MovePath {
+                self.paths.borrow_mut().push(MovePath {
                     loan_path: lp,
                     parent: InvalidMovePathIndex,
                     first_move: InvalidMoveIndex,
@@ -227,12 +257,13 @@ impl MoveData {
 
             LpExtend(base, _, _) => {
                 let parent_index = self.move_path(tcx, base);
-                let index = MovePathIndex(self.paths.len());
 
-                let next_sibling = self.path(parent_index).first_child;
-                self.mut_path(parent_index).first_child = index;
+                let index = MovePathIndex(self.paths.borrow().len());
 
-                self.paths.push(MovePath {
+                let next_sibling = self.path_first_child(parent_index);
+                self.set_path_first_child(parent_index, index);
+
+                self.paths.borrow_mut().push(MovePath {
                     loan_path: lp,
                     parent: parent_index,
                     first_move: InvalidMoveIndex,
@@ -244,47 +275,47 @@ impl MoveData {
             }
         };
 
-        debug!("move_path(lp=%s, index=%?)",
+        debug!("move_path(lp={}, index={:?})",
                lp.repr(tcx),
                index);
 
-        assert_eq!(*index, self.paths.len() - 1);
-        self.path_map.insert(lp, index);
+        assert_eq!(index.get(), self.paths.borrow().len() - 1);
+        self.path_map.borrow_mut().insert(lp, index);
         return index;
     }
 
     fn existing_move_path(&self,
                           lp: @LoanPath)
                           -> Option<MovePathIndex> {
-        self.path_map.find_copy(&lp)
+        self.path_map.borrow().find_copy(&lp)
     }
 
     fn existing_base_paths(&self,
                            lp: @LoanPath)
-                           -> OptVec<MovePathIndex> {
-        let mut result = opt_vec::Empty;
+                           -> Vec<MovePathIndex> {
+        let mut result = vec!();
         self.add_existing_base_paths(lp, &mut result);
         result
     }
 
     fn add_existing_base_paths(&self,
                                lp: @LoanPath,
-                               result: &mut OptVec<MovePathIndex>) {
+                               result: &mut Vec<MovePathIndex>) {
         /*!
          * Adds any existing move path indices for `lp` and any base
          * paths of `lp` to `result`, but does not add new move paths
          */
 
-        match self.path_map.find_copy(&lp) {
+        match self.path_map.borrow().find_copy(&lp) {
             Some(index) => {
-                do self.each_base_path(index) |p| {
+                self.each_base_path(index, |p| {
                     result.push(p);
                     true
-                };
+                });
             }
             None => {
                 match *lp {
-                    LpVar(*) => { }
+                    LpVar(..) => { }
                     LpExtend(b, _, _) => {
                         self.add_existing_base_paths(b, result);
                     }
@@ -294,8 +325,8 @@ impl MoveData {
 
     }
 
-    pub fn add_move(&mut self,
-                    tcx: ty::ctxt,
+    pub fn add_move(&self,
+                    tcx: &ty::ctxt,
                     lp: @LoanPath,
                     id: ast::NodeId,
                     kind: MoveKind) {
@@ -304,18 +335,18 @@ impl MoveData {
          * location `id` with kind `kind`.
          */
 
-        debug!("add_move(lp=%s, id=%?, kind=%?)",
+        debug!("add_move(lp={}, id={:?}, kind={:?})",
                lp.repr(tcx),
                id,
                kind);
 
         let path_index = self.move_path(tcx, lp);
-        let move_index = MoveIndex(self.moves.len());
+        let move_index = MoveIndex(self.moves.borrow().len());
 
-        let next_move = self.path(path_index).first_move;
-        self.mut_path(path_index).first_move = move_index;
+        let next_move = self.path_first_move(path_index);
+        self.set_path_first_move(path_index, move_index);
 
-        self.moves.push(Move {
+        self.moves.borrow_mut().push(Move {
             path: path_index,
             id: id,
             kind: kind,
@@ -323,23 +354,26 @@ impl MoveData {
         });
     }
 
-    pub fn add_assignment(&mut self,
-                          tcx: ty::ctxt,
+    pub fn add_assignment(&self,
+                          tcx: &ty::ctxt,
                           lp: @LoanPath,
                           assign_id: ast::NodeId,
                           span: Span,
-                          assignee_id: ast::NodeId) {
+                          assignee_id: ast::NodeId,
+                          is_also_move: bool) {
         /*!
          * Adds a new record for an assignment to `lp` that occurs at
          * location `id` with the given `span`.
          */
 
-        debug!("add_assignment(lp=%s, assign_id=%?, assignee_id=%?",
+        debug!("add_assignment(lp={}, assign_id={:?}, assignee_id={:?}",
                lp.repr(tcx), assign_id, assignee_id);
 
         let path_index = self.move_path(tcx, lp);
 
-        self.assignee_ids.insert(assignee_id);
+        if !is_also_move {
+            self.assignee_ids.borrow_mut().insert(assignee_id);
+        }
 
         let assignment = Assignment {
             path: path_index,
@@ -348,20 +382,20 @@ impl MoveData {
         };
 
         if self.is_var_path(path_index) {
-            debug!("add_assignment[var](lp=%s, assignment=%u, path_index=%?)",
-                   lp.repr(tcx), self.var_assignments.len(), path_index);
+            debug!("add_assignment[var](lp={}, assignment={}, path_index={:?})",
+                   lp.repr(tcx), self.var_assignments.borrow().len(), path_index);
 
-            self.var_assignments.push(assignment);
+            self.var_assignments.borrow_mut().push(assignment);
         } else {
-            debug!("add_assignment[path](lp=%s, path_index=%?)",
+            debug!("add_assignment[path](lp={}, path_index={:?})",
                    lp.repr(tcx), path_index);
 
-            self.path_assignments.push(assignment);
+            self.path_assignments.borrow_mut().push(assignment);
         }
     }
 
     fn add_gen_kills(&self,
-                     tcx: ty::ctxt,
+                     tcx: &ty::ctxt,
                      dfcx_moves: &mut MoveDataFlow,
                      dfcx_assign: &mut AssignDataFlow) {
         /*!
@@ -372,73 +406,73 @@ impl MoveData {
          * killed by scoping. See `doc.rs` for more details.
          */
 
-        for (i, move) in self.moves.iter().enumerate() {
+        for (i, move) in self.moves.borrow().iter().enumerate() {
             dfcx_moves.add_gen(move.id, i);
         }
 
-        for (i, assignment) in self.var_assignments.iter().enumerate() {
+        for (i, assignment) in self.var_assignments.borrow().iter().enumerate() {
             dfcx_assign.add_gen(assignment.id, i);
             self.kill_moves(assignment.path, assignment.id, dfcx_moves);
         }
 
-        for assignment in self.path_assignments.iter() {
+        for assignment in self.path_assignments.borrow().iter() {
             self.kill_moves(assignment.path, assignment.id, dfcx_moves);
         }
 
         // Kill all moves related to a variable `x` when it goes out
         // of scope:
-        for path in self.paths.iter() {
+        for path in self.paths.borrow().iter() {
             match *path.loan_path {
                 LpVar(id) => {
-                    let kill_id = tcx.region_maps.encl_scope(id);
-                    let path = *self.path_map.get(&path.loan_path);
+                    let kill_id = tcx.region_maps.var_scope(id);
+                    let path = *self.path_map.borrow().get(&path.loan_path);
                     self.kill_moves(path, kill_id, dfcx_moves);
                 }
-                LpExtend(*) => {}
+                LpExtend(..) => {}
             }
         }
 
         // Kill all assignments when the variable goes out of scope:
-        for (assignment_index, assignment) in self.var_assignments.iter().enumerate() {
-            match *self.path(assignment.path).loan_path {
+        for (assignment_index, assignment) in
+                self.var_assignments.borrow().iter().enumerate() {
+            match *self.path_loan_path(assignment.path) {
                 LpVar(id) => {
-                    let kill_id = tcx.region_maps.encl_scope(id);
+                    let kill_id = tcx.region_maps.var_scope(id);
                     dfcx_assign.add_kill(kill_id, assignment_index);
                 }
-                LpExtend(*) => {
-                    tcx.sess.bug("Var assignment for non var path");
+                LpExtend(..) => {
+                    tcx.sess.bug("var assignment for non var path");
                 }
             }
         }
     }
 
-    fn each_base_path(&self,
-                      index: MovePathIndex,
-                      f: &fn(MovePathIndex) -> bool)
+    fn each_base_path(&self, index: MovePathIndex, f: |MovePathIndex| -> bool)
                       -> bool {
         let mut p = index;
         while p != InvalidMovePathIndex {
             if !f(p) {
                 return false;
             }
-            p = self.path(p).parent;
+            p = self.path_parent(p);
         }
         return true;
     }
 
     fn each_extending_path(&self,
                            index: MovePathIndex,
-                           f: &fn(MovePathIndex) -> bool) -> bool {
+                           f: |MovePathIndex| -> bool)
+                           -> bool {
         if !f(index) {
             return false;
         }
 
-        let mut p = self.path(index).first_child;
+        let mut p = self.path_first_child(index);
         while p != InvalidMovePathIndex {
             if !self.each_extending_path(p, |x| f(x)) {
                 return false;
             }
-            p = self.path(p).next_sibling;
+            p = self.path_next_sibling(p);
         }
 
         return true;
@@ -446,19 +480,20 @@ impl MoveData {
 
     fn each_applicable_move(&self,
                             index0: MovePathIndex,
-                            f: &fn(MoveIndex) -> bool) -> bool {
+                            f: |MoveIndex| -> bool)
+                            -> bool {
         let mut ret = true;
-        do self.each_extending_path(index0) |index| {
-            let mut p = self.path(index).first_move;
+        self.each_extending_path(index0, |index| {
+            let mut p = self.path_first_move(index);
             while p != InvalidMoveIndex {
                 if !f(p) {
                     ret = false;
                     break;
                 }
-                p = self.move(p).next_move;
+                p = self.move_next_move(p);
             }
             ret
-        };
+        });
         ret
     }
 
@@ -466,33 +501,32 @@ impl MoveData {
                   path: MovePathIndex,
                   kill_id: ast::NodeId,
                   dfcx_moves: &mut MoveDataFlow) {
-        do self.each_applicable_move(path) |move_index| {
-            dfcx_moves.add_kill(kill_id, *move_index);
+        self.each_applicable_move(path, |move_index| {
+            dfcx_moves.add_kill(kill_id, move_index.get());
             true
-        };
+        });
     }
 }
 
-impl FlowedMoveData {
-    pub fn new(move_data: @mut MoveData,
-               tcx: ty::ctxt,
-               method_map: typeck::method_map,
-               id_range: ast_util::id_range,
+impl<'a> FlowedMoveData<'a> {
+    pub fn new(move_data: MoveData,
+               tcx: &'a ty::ctxt,
+               method_map: typeck::MethodMap,
+               id_range: ast_util::IdRange,
                body: &ast::Block)
-               -> FlowedMoveData
-    {
+               -> FlowedMoveData<'a> {
         let mut dfcx_moves =
             DataFlowContext::new(tcx,
                                  method_map,
                                  MoveDataFlowOperator,
                                  id_range,
-                                 move_data.moves.len());
+                                 move_data.moves.borrow().len());
         let mut dfcx_assign =
             DataFlowContext::new(tcx,
                                  method_map,
                                  AssignDataFlowOperator,
                                  id_range,
-                                 move_data.var_assignments.len());
+                                 move_data.var_assignments.borrow().len());
         move_data.add_gen_kills(tcx, &mut dfcx_moves, &mut dfcx_assign);
         dfcx_moves.propagate(body);
         dfcx_assign.propagate(body);
@@ -505,23 +539,24 @@ impl FlowedMoveData {
 
     pub fn each_path_moved_by(&self,
                               id: ast::NodeId,
-                              f: &fn(&Move, @LoanPath) -> bool)
+                              f: |&Move, @LoanPath| -> bool)
                               -> bool {
         /*!
          * Iterates through each path moved by `id`
          */
 
-        do self.dfcx_moves.each_gen_bit_frozen(id) |index| {
-            let move = &self.move_data.moves[index];
+        self.dfcx_moves.each_gen_bit_frozen(id, |index| {
+            let move = self.move_data.moves.borrow();
+            let move = move.get(index);
             let moved_path = move.path;
-            f(move, self.move_data.path(moved_path).loan_path)
-        }
+            f(move, self.move_data.path_loan_path(moved_path))
+        })
     }
 
     pub fn each_move_of(&self,
                         id: ast::NodeId,
                         loan_path: @LoanPath,
-                        f: &fn(&Move, @LoanPath) -> bool)
+                        f: |&Move, @LoanPath| -> bool)
                         -> bool {
         /*!
          * Iterates through each move of `loan_path` (or some base path
@@ -549,45 +584,45 @@ impl FlowedMoveData {
 
         let mut ret = true;
 
-        do self.dfcx_moves.each_bit_on_entry_frozen(id) |index| {
-            let move = &self.move_data.moves[index];
+        self.dfcx_moves.each_bit_on_entry_frozen(id, |index| {
+            let move = self.move_data.moves.borrow();
+            let move = move.get(index);
             let moved_path = move.path;
             if base_indices.iter().any(|x| x == &moved_path) {
                 // Scenario 1 or 2: `loan_path` or some base path of
                 // `loan_path` was moved.
-                if !f(move, self.move_data.path(moved_path).loan_path) {
+                if !f(move, self.move_data.path_loan_path(moved_path)) {
                     ret = false;
                 }
             } else {
                 for &loan_path_index in opt_loan_path_index.iter() {
-                    let cont = do self.move_data.each_base_path(moved_path) |p| {
+                    let cont = self.move_data.each_base_path(moved_path, |p| {
                         if p == loan_path_index {
                             // Scenario 3: some extension of `loan_path`
                             // was moved
-                            f(move, self.move_data.path(moved_path).loan_path)
+                            f(move, self.move_data.path_loan_path(moved_path))
                         } else {
                             true
                         }
-                    };
+                    });
                     if !cont { ret = false; break }
                 }
             }
             ret
-        }
+        })
     }
 
     pub fn is_assignee(&self,
                        id: ast::NodeId)
                        -> bool {
         //! True if `id` is the id of the LHS of an assignment
-
-        self.move_data.assignee_ids.iter().any(|x| x == &id)
+        self.move_data.assignee_ids.borrow().iter().any(|x| x == &id)
     }
 
     pub fn each_assignment_of(&self,
                               id: ast::NodeId,
                               loan_path: @LoanPath,
-                              f: &fn(&Assignment) -> bool)
+                              f: |&Assignment| -> bool)
                               -> bool {
         /*!
          * Iterates through every assignment to `loan_path` that
@@ -605,14 +640,15 @@ impl FlowedMoveData {
             }
         };
 
-        do self.dfcx_assign.each_bit_on_entry_frozen(id) |index| {
-            let assignment = &self.move_data.var_assignments[index];
+        self.dfcx_assign.each_bit_on_entry_frozen(id, |index| {
+            let assignment = self.move_data.var_assignments.borrow();
+            let assignment = assignment.get(index);
             if assignment.path == loan_path_index && !f(assignment) {
                 false
             } else {
                 true
             }
-        }
+        })
     }
 }
 
@@ -626,11 +662,6 @@ impl DataFlowOperator for MoveDataFlowOperator {
     fn join(&self, succ: uint, pred: uint) -> uint {
         succ | pred // moves from both preds are in scope
     }
-
-    #[inline]
-    fn walk_closures(&self) -> bool {
-        true
-    }
 }
 
 impl DataFlowOperator for AssignDataFlowOperator {
@@ -642,10 +673,5 @@ impl DataFlowOperator for AssignDataFlowOperator {
     #[inline]
     fn join(&self, succ: uint, pred: uint) -> uint {
         succ | pred // moves from both preds are in scope
-    }
-
-    #[inline]
-    fn walk_closures(&self) -> bool {
-        true
     }
 }

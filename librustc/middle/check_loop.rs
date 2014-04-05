@@ -8,68 +8,62 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-
 use middle::ty;
 
-use syntax::ast::*;
-use syntax::visit;
+use syntax::ast;
+use syntax::codemap::Span;
 use syntax::visit::Visitor;
+use syntax::visit;
 
-#[deriving(Clone)]
-pub struct Context {
-    in_loop: bool,
-    can_ret: bool
+#[deriving(Clone, Eq)]
+enum Context {
+    Normal, Loop, Closure
 }
 
-struct CheckLoopVisitor {
-    tcx: ty::ctxt,
+struct CheckLoopVisitor<'a> {
+    tcx: &'a ty::ctxt,
 }
 
-pub fn check_crate(tcx: ty::ctxt, crate: &Crate) {
-    visit::walk_crate(&mut CheckLoopVisitor { tcx: tcx },
-                      crate,
-                      Context { in_loop: false, can_ret: true });
+pub fn check_crate(tcx: &ty::ctxt, krate: &ast::Crate) {
+    visit::walk_crate(&mut CheckLoopVisitor { tcx: tcx }, krate, Normal)
 }
 
-impl Visitor<Context> for CheckLoopVisitor {
-    fn visit_item(&mut self, i:@item, _cx:Context) {
-        visit::walk_item(self, i, Context {
-                                    in_loop: false,
-                                    can_ret: true
-                                  });
+impl<'a> Visitor<Context> for CheckLoopVisitor<'a> {
+    fn visit_item(&mut self, i: &ast::Item, _cx: Context) {
+        visit::walk_item(self, i, Normal);
     }
 
-    fn visit_expr(&mut self, e:@Expr, cx:Context) {
-
-            match e.node {
-              ExprWhile(e, ref b) => {
+    fn visit_expr(&mut self, e: &ast::Expr, cx:Context) {
+        match e.node {
+            ast::ExprWhile(e, b) => {
                 self.visit_expr(e, cx);
-                self.visit_block(b, Context { in_loop: true,.. cx });
-              }
-              ExprLoop(ref b, _) => {
-                self.visit_block(b, Context { in_loop: true,.. cx });
-              }
-              ExprFnBlock(_, ref b) => {
-                self.visit_block(b, Context { in_loop: false, can_ret: false });
-              }
-              ExprBreak(_) => {
-                if !cx.in_loop {
-                    self.tcx.sess.span_err(e.span, "`break` outside of loop");
-                }
-              }
-              ExprAgain(_) => {
-                if !cx.in_loop {
-                    self.tcx.sess.span_err(e.span, "`loop` outside of loop");
-                }
-              }
-              ExprRet(oe) => {
-                if !cx.can_ret {
-                    self.tcx.sess.span_err(e.span, "`return` in block function");
-                }
-                visit::walk_expr_opt(self, oe, cx);
-              }
-              _ => visit::walk_expr(self, e, cx)
+                self.visit_block(b, Loop);
             }
+            ast::ExprLoop(b, _) => {
+                self.visit_block(b, Loop);
+            }
+            ast::ExprFnBlock(_, b) | ast::ExprProc(_, b) => {
+                self.visit_block(b, Closure);
+            }
+            ast::ExprBreak(_) => self.require_loop("break", cx, e.span),
+            ast::ExprAgain(_) => self.require_loop("continue", cx, e.span),
+            _ => visit::walk_expr(self, e, cx)
+        }
+    }
+}
 
+impl<'a> CheckLoopVisitor<'a> {
+    fn require_loop(&self, name: &str, cx: Context, span: Span) {
+        match cx {
+            Loop => {}
+            Closure => {
+                self.tcx.sess.span_err(span, format!("`{}` inside of a closure",
+                                                     name));
+            }
+            Normal => {
+                self.tcx.sess.span_err(span, format!("`{}` outside of loop",
+                                                     name));
+            }
+        }
     }
 }
