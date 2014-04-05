@@ -1,252 +1,252 @@
-<head><link href="../../../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../../librustc/">librustc</a></c0><c1>/</c1><c0><a href="./../../../../librustc/middle/">middle</a></c0><c1>/</c1><c0><a href="./../../../../librustc/middle/typeck/">typeck</a></c0><c1>/</c1><c0><a href="./../../../../librustc/middle/typeck/infer/">infer</a></c0><c1>/</c1><c0><a href="./../../../../librustc/middle/typeck/infer/doc.rs.html">doc.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/*!
-</c41><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c41>#&nbsp;Type&nbsp;inference&nbsp;engine
-</c41><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[]">&nbsp;</a><c41>This&nbsp;is&nbsp;loosely&nbsp;based&nbsp;on&nbsp;standard&nbsp;HM-type&nbsp;inference,&nbsp;but&nbsp;with&nbsp;an
-</c41><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c41>extension&nbsp;to&nbsp;try&nbsp;and&nbsp;accommodate&nbsp;subtyping.&nbsp;&nbsp;There&nbsp;is&nbsp;nothing
-</c41><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[]">&nbsp;</a><c41>principled&nbsp;about&nbsp;this&nbsp;extension;&nbsp;it's&nbsp;sound---I&nbsp;hope!---but&nbsp;it's&nbsp;a
-</c41><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[]">&nbsp;</a><c41>heuristic,&nbsp;ultimately,&nbsp;and&nbsp;does&nbsp;not&nbsp;guarantee&nbsp;that&nbsp;it&nbsp;finds&nbsp;a&nbsp;valid
-</c41><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[]">&nbsp;</a><c41>typing&nbsp;even&nbsp;if&nbsp;one&nbsp;exists&nbsp;(in&nbsp;fact,&nbsp;there&nbsp;are&nbsp;known&nbsp;scenarios&nbsp;where&nbsp;it
-</c41><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[]">&nbsp;</a><c41>fails,&nbsp;some&nbsp;of&nbsp;which&nbsp;may&nbsp;eventually&nbsp;become&nbsp;problematic).
-</c41><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[]">&nbsp;</a><c41>##&nbsp;Key&nbsp;idea
-</c41><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[]">&nbsp;</a><c41>The&nbsp;main&nbsp;change&nbsp;is&nbsp;that&nbsp;each&nbsp;type&nbsp;variable&nbsp;T&nbsp;is&nbsp;associated&nbsp;with&nbsp;a
-</c41><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[]">&nbsp;</a><c41>lower-bound&nbsp;L&nbsp;and&nbsp;an&nbsp;upper-bound&nbsp;U.&nbsp;&nbsp;L&nbsp;and&nbsp;U&nbsp;begin&nbsp;as&nbsp;bottom&nbsp;and&nbsp;top,
-</c41><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c41>respectively,&nbsp;but&nbsp;gradually&nbsp;narrow&nbsp;in&nbsp;response&nbsp;to&nbsp;new&nbsp;constraints
-</c41><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[]">&nbsp;</a><c41>being&nbsp;introduced.&nbsp;&nbsp;When&nbsp;a&nbsp;variable&nbsp;is&nbsp;finally&nbsp;resolved&nbsp;to&nbsp;a&nbsp;concrete
-</c41><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[]">&nbsp;</a><c41>type,&nbsp;it&nbsp;can&nbsp;(theoretically)&nbsp;select&nbsp;any&nbsp;type&nbsp;that&nbsp;is&nbsp;a&nbsp;supertype&nbsp;of&nbsp;L
-</c41><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[]">&nbsp;</a><c41>and&nbsp;a&nbsp;subtype&nbsp;of&nbsp;U.
-</c41><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[]">&nbsp;</a><c41>There&nbsp;are&nbsp;several&nbsp;critical&nbsp;invariants&nbsp;which&nbsp;we&nbsp;maintain:
-</c41><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[]">&nbsp;</a><c41>-&nbsp;the&nbsp;upper-bound&nbsp;of&nbsp;a&nbsp;variable&nbsp;only&nbsp;becomes&nbsp;lower&nbsp;and&nbsp;the&nbsp;lower-bound
-</c41><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;only&nbsp;becomes&nbsp;higher&nbsp;over&nbsp;time;
-</c41><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[]">&nbsp;</a><c41>-&nbsp;the&nbsp;lower-bound&nbsp;L&nbsp;is&nbsp;always&nbsp;a&nbsp;subtype&nbsp;of&nbsp;the&nbsp;upper&nbsp;bound&nbsp;U;
-</c41><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[]">&nbsp;</a><c41>-&nbsp;the&nbsp;lower-bound&nbsp;L&nbsp;and&nbsp;upper-bound&nbsp;U&nbsp;never&nbsp;refer&nbsp;to&nbsp;other&nbsp;type&nbsp;variables,
-</c41><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;but&nbsp;only&nbsp;to&nbsp;types&nbsp;(though&nbsp;those&nbsp;types&nbsp;may&nbsp;contain&nbsp;type&nbsp;variables).
-</c41><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;An&nbsp;aside:&nbsp;if&nbsp;the&nbsp;terms&nbsp;upper-&nbsp;and&nbsp;lower-bound&nbsp;confuse&nbsp;you,&nbsp;think&nbsp;of
-</c41><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;"supertype"&nbsp;and&nbsp;"subtype".&nbsp;&nbsp;The&nbsp;upper-bound&nbsp;is&nbsp;a&nbsp;"supertype"
-</c41><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;(super=upper&nbsp;in&nbsp;Latin,&nbsp;or&nbsp;something&nbsp;like&nbsp;that&nbsp;anyway)&nbsp;and&nbsp;the&nbsp;lower-bound
-</c41><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;is&nbsp;a&nbsp;"subtype"&nbsp;(sub=lower&nbsp;in&nbsp;Latin).&nbsp;&nbsp;I&nbsp;find&nbsp;it&nbsp;helps&nbsp;to&nbsp;visualize
-</c41><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;a&nbsp;simple&nbsp;class&nbsp;hierarchy,&nbsp;like&nbsp;Java&nbsp;minus&nbsp;interfaces&nbsp;and
-</c41><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;primitive&nbsp;types.&nbsp;&nbsp;The&nbsp;class&nbsp;Object&nbsp;is&nbsp;at&nbsp;the&nbsp;root&nbsp;(top)&nbsp;and&nbsp;other
-</c41><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;types&nbsp;lie&nbsp;in&nbsp;between.&nbsp;&nbsp;The&nbsp;bottom&nbsp;type&nbsp;is&nbsp;then&nbsp;the&nbsp;Null&nbsp;type.
-</c41><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;So&nbsp;the&nbsp;tree&nbsp;looks&nbsp;like:
-</c41><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;
-</c41><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;```notrust
-</c41><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object
-</c41><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;\
-</c41><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;&nbsp;&nbsp;Other
-</c41><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/
-</c41><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(null)
-</c41><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;```
-</c41><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;
-</c41><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;So&nbsp;the&nbsp;upper&nbsp;bound&nbsp;type&nbsp;is&nbsp;the&nbsp;"supertype"&nbsp;and&nbsp;the&nbsp;lower&nbsp;bound&nbsp;is&nbsp;the
-</c41><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;"subtype"&nbsp;(also,&nbsp;super&nbsp;and&nbsp;sub&nbsp;mean&nbsp;upper&nbsp;and&nbsp;lower&nbsp;in&nbsp;Latin,&nbsp;or&nbsp;something
-</c41><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&gt;&nbsp;like&nbsp;that&nbsp;anyway).
-</c41><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a id="n[]">&nbsp;</a><c41>##&nbsp;Satisfying&nbsp;constraints
-</c41><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a id="n[]">&nbsp;</a><c41>At&nbsp;a&nbsp;primitive&nbsp;level,&nbsp;there&nbsp;is&nbsp;only&nbsp;one&nbsp;form&nbsp;of&nbsp;constraint&nbsp;that&nbsp;the
-</c41><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a id="n[]">&nbsp;</a><c41>inference&nbsp;understands:&nbsp;a&nbsp;subtype&nbsp;relation.&nbsp;&nbsp;So&nbsp;the&nbsp;outside&nbsp;world&nbsp;can
-</c41><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a id="n[]">&nbsp;</a><c41>say&nbsp;"make&nbsp;type&nbsp;A&nbsp;a&nbsp;subtype&nbsp;of&nbsp;type&nbsp;B".&nbsp;&nbsp;If&nbsp;there&nbsp;are&nbsp;variables
-</c41><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a id="n[]">&nbsp;</a><c41>involved,&nbsp;the&nbsp;inferencer&nbsp;will&nbsp;adjust&nbsp;their&nbsp;upper-&nbsp;and&nbsp;lower-bounds&nbsp;as
-</c41><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a id="n[]">&nbsp;</a><c41>needed&nbsp;to&nbsp;ensure&nbsp;that&nbsp;this&nbsp;relation&nbsp;is&nbsp;satisfied.&nbsp;(We&nbsp;also&nbsp;allow&nbsp;"make
-</c41><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a id="n[]">&nbsp;</a><c41>type&nbsp;A&nbsp;equal&nbsp;to&nbsp;type&nbsp;B",&nbsp;but&nbsp;this&nbsp;is&nbsp;translated&nbsp;into&nbsp;"A&nbsp;&lt;:&nbsp;B"&nbsp;and&nbsp;"B
-</c41><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&lt;:&nbsp;A")
-</c41><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a id="n[]">&nbsp;</a><c41>As&nbsp;stated&nbsp;above,&nbsp;we&nbsp;always&nbsp;maintain&nbsp;the&nbsp;invariant&nbsp;that&nbsp;type&nbsp;bounds
-</c41><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a id="n[]">&nbsp;</a><c41>never&nbsp;refer&nbsp;to&nbsp;other&nbsp;variables.&nbsp;&nbsp;This&nbsp;keeps&nbsp;the&nbsp;inference&nbsp;relatively
-</c41><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a id="n[]">&nbsp;</a><c41>simple,&nbsp;avoiding&nbsp;the&nbsp;scenario&nbsp;of&nbsp;having&nbsp;a&nbsp;kind&nbsp;of&nbsp;graph&nbsp;where&nbsp;we&nbsp;have
-</c41><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a id="n[]">&nbsp;</a><c41>to&nbsp;pump&nbsp;constraints&nbsp;along&nbsp;and&nbsp;reach&nbsp;a&nbsp;fixed&nbsp;point,&nbsp;but&nbsp;it&nbsp;does&nbsp;impose
-</c41><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n[]">&nbsp;</a><c41>some&nbsp;heuristics&nbsp;in&nbsp;the&nbsp;case&nbsp;where&nbsp;the&nbsp;user&nbsp;is&nbsp;relating&nbsp;two&nbsp;type
-</c41><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n[]">&nbsp;</a><c41>variables&nbsp;A&nbsp;&lt;:&nbsp;B.
-</c41><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Combining&nbsp;two&nbsp;variables&nbsp;such&nbsp;that&nbsp;variable&nbsp;A&nbsp;will&nbsp;forever&nbsp;be&nbsp;a&nbsp;subtype
-</c41><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a id="n[]">&nbsp;</a><c41>of&nbsp;variable&nbsp;B&nbsp;is&nbsp;the&nbsp;trickiest&nbsp;part&nbsp;of&nbsp;the&nbsp;algorithm&nbsp;because&nbsp;there&nbsp;is
-</c41><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a id="n[]">&nbsp;</a><c41>often&nbsp;no&nbsp;right&nbsp;choice---that&nbsp;is,&nbsp;the&nbsp;right&nbsp;choice&nbsp;will&nbsp;depend&nbsp;on
-</c41><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a id="n[]">&nbsp;</a><c41>future&nbsp;constraints&nbsp;which&nbsp;we&nbsp;do&nbsp;not&nbsp;yet&nbsp;know.&nbsp;The&nbsp;problem&nbsp;comes&nbsp;about
-</c41><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a id="n[]">&nbsp;</a><c41>because&nbsp;both&nbsp;A&nbsp;and&nbsp;B&nbsp;have&nbsp;bounds&nbsp;that&nbsp;can&nbsp;be&nbsp;adjusted&nbsp;in&nbsp;the&nbsp;future.
-</c41><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Let's&nbsp;look&nbsp;at&nbsp;some&nbsp;of&nbsp;the&nbsp;cases&nbsp;that&nbsp;can&nbsp;come&nbsp;up.
-</c41><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Imagine,&nbsp;to&nbsp;start,&nbsp;the&nbsp;best&nbsp;case,&nbsp;where&nbsp;both&nbsp;A&nbsp;and&nbsp;B&nbsp;have&nbsp;an&nbsp;upper&nbsp;and
-</c41><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a id="n[]">&nbsp;</a><c41>lower&nbsp;bound&nbsp;(that&nbsp;is,&nbsp;the&nbsp;bounds&nbsp;are&nbsp;not&nbsp;top&nbsp;nor&nbsp;bot&nbsp;respectively).&nbsp;In
-</c41><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a id="n[]">&nbsp;</a><c41>that&nbsp;case,&nbsp;if&nbsp;we're&nbsp;lucky,&nbsp;A.ub&nbsp;&lt;:&nbsp;B.lb,&nbsp;and&nbsp;so&nbsp;we&nbsp;know&nbsp;that&nbsp;whatever
-</c41><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a id="n[]">&nbsp;</a><c41>A&nbsp;and&nbsp;B&nbsp;should&nbsp;become,&nbsp;they&nbsp;will&nbsp;forever&nbsp;have&nbsp;the&nbsp;desired&nbsp;subtyping
-</c41><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a id="n[]">&nbsp;</a><c41>relation.&nbsp;&nbsp;We&nbsp;can&nbsp;just&nbsp;leave&nbsp;things&nbsp;as&nbsp;they&nbsp;are.
-</c41><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a id="n[]">&nbsp;</a><c41>###&nbsp;Option&nbsp;1:&nbsp;Unify
-</c41><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n[]">&nbsp;</a><c41>However,&nbsp;suppose&nbsp;that&nbsp;A.ub&nbsp;is&nbsp;*not*&nbsp;a&nbsp;subtype&nbsp;of&nbsp;B.lb.&nbsp;&nbsp;In
-</c41><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a id="n[]">&nbsp;</a><c41>that&nbsp;case,&nbsp;we&nbsp;must&nbsp;make&nbsp;a&nbsp;decision.&nbsp;&nbsp;One&nbsp;option&nbsp;is&nbsp;to&nbsp;unify&nbsp;A
-</c41><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a id="n[]">&nbsp;</a><c41>and&nbsp;B&nbsp;so&nbsp;that&nbsp;they&nbsp;are&nbsp;one&nbsp;variable&nbsp;whose&nbsp;bounds&nbsp;are:
-</c41><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;UB&nbsp;=&nbsp;GLB(A.ub,&nbsp;B.ub)
-</c41><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;LB&nbsp;=&nbsp;LUB(A.lb,&nbsp;B.lb)
-</c41><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n[]">&nbsp;</a><c41>(Note&nbsp;that&nbsp;we&nbsp;will&nbsp;have&nbsp;to&nbsp;verify&nbsp;that&nbsp;LB&nbsp;&lt;:&nbsp;UB;&nbsp;if&nbsp;it&nbsp;does&nbsp;not,&nbsp;the
-</c41><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a id="n[]">&nbsp;</a><c41>types&nbsp;are&nbsp;not&nbsp;intersecting&nbsp;and&nbsp;there&nbsp;is&nbsp;an&nbsp;error)&nbsp;In&nbsp;that&nbsp;case,&nbsp;A&nbsp;&lt;:&nbsp;B
-</c41><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a id="n[]">&nbsp;</a><c41>holds&nbsp;trivially&nbsp;because&nbsp;A==B.&nbsp;&nbsp;However,&nbsp;we&nbsp;have&nbsp;now&nbsp;lost&nbsp;some
-</c41><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n[]">&nbsp;</a><c41>flexibility,&nbsp;because&nbsp;perhaps&nbsp;the&nbsp;user&nbsp;intended&nbsp;for&nbsp;A&nbsp;and&nbsp;B&nbsp;to&nbsp;end&nbsp;up
-</c41><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a id="n[]">&nbsp;</a><c41>as&nbsp;different&nbsp;types&nbsp;and&nbsp;not&nbsp;the&nbsp;same&nbsp;type.
-</c41><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Pictorally,&nbsp;what&nbsp;this&nbsp;does&nbsp;is&nbsp;to&nbsp;take&nbsp;two&nbsp;distinct&nbsp;variables&nbsp;with
-</c41><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n[]">&nbsp;</a><c41>(hopefully&nbsp;not&nbsp;completely)&nbsp;distinct&nbsp;type&nbsp;ranges&nbsp;and&nbsp;produce&nbsp;one&nbsp;with
-</c41><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a id="n[]">&nbsp;</a><c41>the&nbsp;intersection.
-</c41><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a id="n[]">&nbsp;</a><c41>```notrust
-</c41><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B.ub&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B.ub
-</c41><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/
-</c41><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.ub&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.ub&nbsp;&nbsp;&nbsp;/
-</c41><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;/
-</c41><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UB
-</c41><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\
-</c41><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;/
-</c41><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;/
-</c41><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LB
-</c41><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\
-</c41><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\
-</c41><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.lb&nbsp;&nbsp;&nbsp;&nbsp;B.lb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.lb&nbsp;&nbsp;&nbsp;&nbsp;B.lb
-</c41><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><a id="n[]">&nbsp;</a><c41>```
-</c41><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><a id="n[]">&nbsp;</a><c41>###&nbsp;Option&nbsp;2:&nbsp;Relate&nbsp;UB/LB
-</c41><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Another&nbsp;option&nbsp;is&nbsp;to&nbsp;keep&nbsp;A&nbsp;and&nbsp;B&nbsp;as&nbsp;distinct&nbsp;variables&nbsp;but&nbsp;set&nbsp;their
-</c41><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><a id="n[]">&nbsp;</a><c41>bounds&nbsp;in&nbsp;such&nbsp;a&nbsp;way&nbsp;that,&nbsp;whatever&nbsp;happens,&nbsp;we&nbsp;know&nbsp;that&nbsp;A&nbsp;&lt;:&nbsp;B&nbsp;will&nbsp;hold.
-</c41><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><a id="n[]">&nbsp;</a><c41>This&nbsp;can&nbsp;be&nbsp;achieved&nbsp;by&nbsp;ensuring&nbsp;that&nbsp;A.ub&nbsp;&lt;:&nbsp;B.lb.&nbsp;&nbsp;In&nbsp;practice&nbsp;there
-</c41><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><a id="n[]">&nbsp;</a><c41>are&nbsp;two&nbsp;ways&nbsp;to&nbsp;do&nbsp;that,&nbsp;depicted&nbsp;pictorally&nbsp;here:
-</c41><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><a id="n[]">&nbsp;</a><c41>```notrust
-</c41><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;Before&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Option&nbsp;#1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Option&nbsp;#2
-</c41><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B.ub&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B.ub&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B.ub
-</c41><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\
-</c41><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.ub&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.ub&nbsp;&nbsp;&nbsp;/(B')\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.ub&nbsp;&nbsp;&nbsp;/(B')\
-</c41><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/
-</c41><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__UB____/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UB&nbsp;&nbsp;&nbsp;&nbsp;/
-</c41><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;/
-</c41><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;/
-</c41><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;/(A')|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;/
-</c41><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;______LB/
-</c41><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;(A')/&nbsp;\
-</c41><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\
-</c41><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.lb&nbsp;&nbsp;&nbsp;&nbsp;B.lb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.lb&nbsp;&nbsp;&nbsp;&nbsp;B.lb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.lb&nbsp;&nbsp;&nbsp;&nbsp;B.lb
-</c41><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><a id="n[]">&nbsp;</a><c41>```
-</c41><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><a id="n[]">&nbsp;</a><c41>In&nbsp;these&nbsp;diagrams,&nbsp;UB&nbsp;and&nbsp;LB&nbsp;are&nbsp;defined&nbsp;as&nbsp;before.&nbsp;&nbsp;As&nbsp;you&nbsp;can&nbsp;see,
-</c41><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><a id="n[]">&nbsp;</a><c41>the&nbsp;new&nbsp;ranges&nbsp;`A'`&nbsp;and&nbsp;`B'`&nbsp;are&nbsp;quite&nbsp;different&nbsp;from&nbsp;the&nbsp;range&nbsp;that
-</c41><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><a id="n[]">&nbsp;</a><c41>would&nbsp;be&nbsp;produced&nbsp;by&nbsp;unifying&nbsp;the&nbsp;variables.
-</c41><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><a id="n[]">&nbsp;</a><c41>###&nbsp;What&nbsp;we&nbsp;do&nbsp;now
-</c41><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Our&nbsp;current&nbsp;technique&nbsp;is&nbsp;to&nbsp;*try*&nbsp;(transactionally)&nbsp;to&nbsp;relate&nbsp;the
-</c41><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><a id="n[]">&nbsp;</a><c41>existing&nbsp;bounds&nbsp;of&nbsp;A&nbsp;and&nbsp;B,&nbsp;if&nbsp;there&nbsp;are&nbsp;any&nbsp;(i.e.,&nbsp;if&nbsp;`UB(A)&nbsp;!=&nbsp;top
-</c41><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&amp;&amp;&nbsp;LB(B)&nbsp;!=&nbsp;bot`).&nbsp;&nbsp;If&nbsp;that&nbsp;succeeds,&nbsp;we're&nbsp;done.&nbsp;&nbsp;If&nbsp;it&nbsp;fails,&nbsp;then
-</c41><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><a id="n[]">&nbsp;</a><c41>we&nbsp;merge&nbsp;A&nbsp;and&nbsp;B&nbsp;into&nbsp;same&nbsp;variable.
-</c41><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><a id="n[]">&nbsp;</a><c41>This&nbsp;is&nbsp;not&nbsp;clearly&nbsp;the&nbsp;correct&nbsp;course.&nbsp;&nbsp;For&nbsp;example,&nbsp;if&nbsp;`UB(A)&nbsp;!=
-</c41><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><a id="n[]">&nbsp;</a><c41>top`&nbsp;but&nbsp;`LB(B)&nbsp;==&nbsp;bot`,&nbsp;we&nbsp;could&nbsp;conceivably&nbsp;set&nbsp;`LB(B)`&nbsp;to&nbsp;`UB(A)`
-</c41><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><a id="n[]">&nbsp;</a><c41>and&nbsp;leave&nbsp;the&nbsp;variables&nbsp;unmerged.&nbsp;&nbsp;This&nbsp;is&nbsp;sometimes&nbsp;the&nbsp;better
-</c41><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><a id="n[]">&nbsp;</a><c41>course,&nbsp;it&nbsp;depends&nbsp;on&nbsp;the&nbsp;program.
-</c41><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><a id="n[]">&nbsp;</a><c41>The&nbsp;main&nbsp;case&nbsp;which&nbsp;fails&nbsp;today&nbsp;that&nbsp;I&nbsp;would&nbsp;like&nbsp;to&nbsp;support&nbsp;is:
-</c41><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><a id="n[]">&nbsp;</a><c41>```notrust
-</c41><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><a id="n[]">&nbsp;</a><c41>fn&nbsp;foo&lt;T&gt;(x:&nbsp;T,&nbsp;y:&nbsp;T)&nbsp;{&nbsp;...&nbsp;}
-</c41><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><a id="n[]">&nbsp;</a><c41>fn&nbsp;bar()&nbsp;{
-</c41><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;x:&nbsp;@mut&nbsp;int&nbsp;=&nbsp;@mut&nbsp;3;
-</c41><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;y:&nbsp;@int&nbsp;=&nbsp;@3;
-</c41><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;foo(x,&nbsp;y);
-</c41><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><a id="n[]">&nbsp;</a><c41>}
-</c41><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><a id="n[]">&nbsp;</a><c41>```
-</c41><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><a id="n[]">&nbsp;</a><c41>In&nbsp;principle,&nbsp;the&nbsp;inferencer&nbsp;ought&nbsp;to&nbsp;find&nbsp;that&nbsp;the&nbsp;parameter&nbsp;`T`&nbsp;to
-</c41><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><a id="n[]">&nbsp;</a><c41>`foo(x,&nbsp;y)`&nbsp;is&nbsp;`@const&nbsp;int`.&nbsp;&nbsp;Today,&nbsp;however,&nbsp;it&nbsp;does&nbsp;not;&nbsp;this&nbsp;is
-</c41><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><a id="n[]">&nbsp;</a><c41>because&nbsp;the&nbsp;type&nbsp;variable&nbsp;`T`&nbsp;is&nbsp;merged&nbsp;with&nbsp;the&nbsp;type&nbsp;variable&nbsp;for
-</c41><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><a id="n[]">&nbsp;</a><c41>`X`,&nbsp;and&nbsp;thus&nbsp;inherits&nbsp;its&nbsp;UB/LB&nbsp;of&nbsp;`@mut&nbsp;int`.&nbsp;&nbsp;This&nbsp;leaves&nbsp;no
-</c41><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><a id="n[]">&nbsp;</a><c41>flexibility&nbsp;for&nbsp;`T`&nbsp;to&nbsp;later&nbsp;adjust&nbsp;to&nbsp;accommodate&nbsp;`@int`.
-</c41><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><a id="n[]">&nbsp;</a><c41>###&nbsp;What&nbsp;to&nbsp;do&nbsp;when&nbsp;not&nbsp;all&nbsp;bounds&nbsp;are&nbsp;present
-</c41><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><a id="n[]">&nbsp;</a><c41>In&nbsp;the&nbsp;prior&nbsp;discussion&nbsp;we&nbsp;assumed&nbsp;that&nbsp;A.ub&nbsp;was&nbsp;not&nbsp;top&nbsp;and&nbsp;B.lb&nbsp;was
-</c41><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><a id="n[]">&nbsp;</a><c41>not&nbsp;bot.&nbsp;&nbsp;Unfortunately&nbsp;this&nbsp;is&nbsp;rarely&nbsp;the&nbsp;case.&nbsp;&nbsp;Often&nbsp;type&nbsp;variables
-</c41><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><a id="n[]">&nbsp;</a><c41>have&nbsp;"lopsided"&nbsp;bounds.&nbsp;&nbsp;For&nbsp;example,&nbsp;if&nbsp;a&nbsp;variable&nbsp;in&nbsp;the&nbsp;program&nbsp;has
-</c41><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><a id="n[]">&nbsp;</a><c41>been&nbsp;initialized&nbsp;but&nbsp;has&nbsp;not&nbsp;been&nbsp;used,&nbsp;then&nbsp;its&nbsp;corresponding&nbsp;type
-</c41><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><a id="n[]">&nbsp;</a><c41>variable&nbsp;will&nbsp;have&nbsp;a&nbsp;lower&nbsp;bound&nbsp;but&nbsp;no&nbsp;upper&nbsp;bound.&nbsp;&nbsp;When&nbsp;that
-</c41><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><a id="n[]">&nbsp;</a><c41>variable&nbsp;is&nbsp;then&nbsp;used,&nbsp;we&nbsp;would&nbsp;like&nbsp;to&nbsp;know&nbsp;its&nbsp;upper&nbsp;bound---but&nbsp;we
-</c41><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><a id="n[]">&nbsp;</a><c41>don't&nbsp;have&nbsp;one!&nbsp;&nbsp;In&nbsp;this&nbsp;case&nbsp;we'll&nbsp;do&nbsp;different&nbsp;things&nbsp;depending&nbsp;on
-</c41><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><a id="n[]">&nbsp;</a><c41>how&nbsp;the&nbsp;variable&nbsp;is&nbsp;being&nbsp;used.
-</c41><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><a id="n[]">&nbsp;</a><c41>##&nbsp;Transactional&nbsp;support
-</c41><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Whenever&nbsp;we&nbsp;adjust&nbsp;merge&nbsp;variables&nbsp;or&nbsp;adjust&nbsp;their&nbsp;bounds,&nbsp;we&nbsp;always
-</c41><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><a id="n[]">&nbsp;</a><c41>keep&nbsp;a&nbsp;record&nbsp;of&nbsp;the&nbsp;old&nbsp;value.&nbsp;&nbsp;This&nbsp;allows&nbsp;the&nbsp;changes&nbsp;to&nbsp;be&nbsp;undone.
-</c41><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><a id="n[]">&nbsp;</a><c41>##&nbsp;Regions
-</c41><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><a id="n[]">&nbsp;</a><c41>I've&nbsp;only&nbsp;talked&nbsp;about&nbsp;type&nbsp;variables&nbsp;here,&nbsp;but&nbsp;region&nbsp;variables
-</c41><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><a id="n[]">&nbsp;</a><c41>follow&nbsp;the&nbsp;same&nbsp;principle.&nbsp;&nbsp;They&nbsp;have&nbsp;upper-&nbsp;and&nbsp;lower-bounds.&nbsp;&nbsp;A
-</c41><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><a id="n[]">&nbsp;</a><c41>region&nbsp;A&nbsp;is&nbsp;a&nbsp;subregion&nbsp;of&nbsp;a&nbsp;region&nbsp;B&nbsp;if&nbsp;A&nbsp;being&nbsp;valid&nbsp;implies&nbsp;that&nbsp;B
-</c41><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><a id="n[]">&nbsp;</a><c41>is&nbsp;valid.&nbsp;&nbsp;This&nbsp;basically&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;block&nbsp;nesting&nbsp;structure:
-</c41><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><a id="n[]">&nbsp;</a><c41>the&nbsp;regions&nbsp;for&nbsp;outer&nbsp;block&nbsp;scopes&nbsp;are&nbsp;superregions&nbsp;of&nbsp;those&nbsp;for&nbsp;inner
-</c41><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><a id="n[]">&nbsp;</a><c41>block&nbsp;scopes.
-</c41><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><a id="n[]">&nbsp;</a><c41>##&nbsp;Integral&nbsp;and&nbsp;floating-point&nbsp;type&nbsp;variables
-</c41><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><a id="n[]">&nbsp;</a><c41>There&nbsp;is&nbsp;a&nbsp;third&nbsp;variety&nbsp;of&nbsp;type&nbsp;variable&nbsp;that&nbsp;we&nbsp;use&nbsp;only&nbsp;for
-</c41><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><a id="n[]">&nbsp;</a><c41>inferring&nbsp;the&nbsp;types&nbsp;of&nbsp;unsuffixed&nbsp;integer&nbsp;literals.&nbsp;&nbsp;Integral&nbsp;type
-</c41><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><a id="n[]">&nbsp;</a><c41>variables&nbsp;differ&nbsp;from&nbsp;general-purpose&nbsp;type&nbsp;variables&nbsp;in&nbsp;that&nbsp;there's
-</c41><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><a id="n[]">&nbsp;</a><c41>no&nbsp;subtyping&nbsp;relationship&nbsp;among&nbsp;the&nbsp;various&nbsp;integral&nbsp;types,&nbsp;so&nbsp;instead
-</c41><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><a id="n[]">&nbsp;</a><c41>of&nbsp;associating&nbsp;each&nbsp;variable&nbsp;with&nbsp;an&nbsp;upper&nbsp;and&nbsp;lower&nbsp;bound,&nbsp;we&nbsp;just
-</c41><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><a id="n[]">&nbsp;</a><c41>use&nbsp;simple&nbsp;unification.&nbsp;&nbsp;Each&nbsp;integer&nbsp;variable&nbsp;is&nbsp;associated&nbsp;with&nbsp;at
-</c41><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a><a id="n[]">&nbsp;</a><c41>most&nbsp;one&nbsp;integer&nbsp;type.&nbsp;&nbsp;Floating&nbsp;point&nbsp;types&nbsp;are&nbsp;handled&nbsp;similarly&nbsp;to
-</c41><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a><a id="n[]">&nbsp;</a><c41>integral&nbsp;types.
-</c41><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a><a id="n[]">&nbsp;</a><c41>##&nbsp;GLB/LUB
-</c41><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Computing&nbsp;the&nbsp;greatest-lower-bound&nbsp;and&nbsp;least-upper-bound&nbsp;of&nbsp;two
-</c41><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><a id="n[]">&nbsp;</a><c41>types/regions&nbsp;is&nbsp;generally&nbsp;straightforward&nbsp;except&nbsp;when&nbsp;type&nbsp;variables
-</c41><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><a id="n[]">&nbsp;</a><c41>are&nbsp;involved.&nbsp;In&nbsp;that&nbsp;case,&nbsp;we&nbsp;follow&nbsp;a&nbsp;similar&nbsp;"try&nbsp;to&nbsp;use&nbsp;the&nbsp;bounds
-</c41><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><a id="n[]">&nbsp;</a><c41>when&nbsp;possible&nbsp;but&nbsp;otherwise&nbsp;merge&nbsp;the&nbsp;variables"&nbsp;strategy.&nbsp;&nbsp;In&nbsp;other
-</c41><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><a id="n[]">&nbsp;</a><c41>words,&nbsp;`GLB(A,&nbsp;B)`&nbsp;where&nbsp;`A`&nbsp;and&nbsp;`B`&nbsp;are&nbsp;variables&nbsp;will&nbsp;often&nbsp;result
-</c41><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><a id="n[]">&nbsp;</a><c41>in&nbsp;`A`&nbsp;and&nbsp;`B`&nbsp;being&nbsp;merged&nbsp;and&nbsp;the&nbsp;result&nbsp;being&nbsp;`A`.
-</c41><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a><a id="n[]">&nbsp;</a><c41>##&nbsp;Type&nbsp;coercion
-</c41><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a><a id="n[]">&nbsp;</a><c41>We&nbsp;have&nbsp;a&nbsp;notion&nbsp;of&nbsp;assignability&nbsp;which&nbsp;differs&nbsp;somewhat&nbsp;from
-</c41><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><a id="n[]">&nbsp;</a><c41>subtyping;&nbsp;in&nbsp;particular&nbsp;it&nbsp;may&nbsp;cause&nbsp;region&nbsp;borrowing&nbsp;to&nbsp;occur.&nbsp;&nbsp;See
-</c41><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><a id="n[]">&nbsp;</a><c41>the&nbsp;big&nbsp;comment&nbsp;later&nbsp;in&nbsp;this&nbsp;file&nbsp;on&nbsp;Type&nbsp;Coercion&nbsp;for&nbsp;specifics.
-</c41><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a><a id="n[]">&nbsp;</a><c41>###&nbsp;In&nbsp;conclusion
-</c41><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><a id="n[]">&nbsp;</a><c41>I&nbsp;showed&nbsp;you&nbsp;three&nbsp;ways&nbsp;to&nbsp;relate&nbsp;`A`&nbsp;and&nbsp;`B`.&nbsp;&nbsp;There&nbsp;are&nbsp;also&nbsp;more,
-</c41><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><a id="n[]">&nbsp;</a><c41>of&nbsp;course,&nbsp;though&nbsp;I'm&nbsp;not&nbsp;sure&nbsp;if&nbsp;there&nbsp;are&nbsp;any&nbsp;more&nbsp;sensible&nbsp;options.
-</c41><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><a id="n[]">&nbsp;</a><c41>The&nbsp;main&nbsp;point&nbsp;is&nbsp;that&nbsp;there&nbsp;are&nbsp;various&nbsp;options,&nbsp;each&nbsp;of&nbsp;which
-</c41><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><a id="n[]">&nbsp;</a><c41>produce&nbsp;a&nbsp;distinct&nbsp;range&nbsp;of&nbsp;types&nbsp;for&nbsp;`A`&nbsp;and&nbsp;`B`.&nbsp;&nbsp;Depending&nbsp;on&nbsp;what
-</c41><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a><a id="n[]">&nbsp;</a><c41>the&nbsp;correct&nbsp;values&nbsp;for&nbsp;A&nbsp;and&nbsp;B&nbsp;are,&nbsp;one&nbsp;of&nbsp;these&nbsp;options&nbsp;will&nbsp;be&nbsp;the
-</c41><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a><a id="n[]">&nbsp;</a><c41>right&nbsp;choice:&nbsp;but&nbsp;of&nbsp;course&nbsp;we&nbsp;don't&nbsp;know&nbsp;the&nbsp;right&nbsp;values&nbsp;for&nbsp;A&nbsp;and&nbsp;B
-</c41><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a><a id="n[]">&nbsp;</a><c41>yet,&nbsp;that's&nbsp;what&nbsp;we're&nbsp;trying&nbsp;to&nbsp;find!&nbsp;&nbsp;In&nbsp;our&nbsp;code,&nbsp;we&nbsp;opt&nbsp;to&nbsp;unify
-</c41><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><a id="n[]">&nbsp;</a><c41>(Option&nbsp;#1).
-</c41><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><a id="n[]">&nbsp;</a><c41>#&nbsp;Implementation&nbsp;details
-</c41><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><a id="n[]">&nbsp;</a><c41>We&nbsp;make&nbsp;use&nbsp;of&nbsp;a&nbsp;trait-like&nbsp;impementation&nbsp;strategy&nbsp;to&nbsp;consolidate
-</c41><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><a id="n[]">&nbsp;</a><c41>duplicated&nbsp;code&nbsp;between&nbsp;subtypes,&nbsp;GLB,&nbsp;and&nbsp;LUB&nbsp;computations.&nbsp;&nbsp;See&nbsp;the
-</c41><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><a id="n[]">&nbsp;</a><c41>section&nbsp;on&nbsp;"Type&nbsp;Combining"&nbsp;below&nbsp;for&nbsp;details.
-</c41><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><a id="n[]">&nbsp;</a><c41>*/
+<head><link href="../../../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../../librustc/">librustc</a></c0><c1>/</c1><c0><a href="./../../../../librustc/middle/">middle</a></c0><c1>/</c1><c0><a href="./../../../../librustc/middle/typeck/">typeck</a></c0><c1>/</c1><c0><a href="./../../../../librustc/middle/typeck/infer/">infer</a></c0><c1>/</c1><c0><a href="./../../../../librustc/middle/typeck/infer/doc.rs.html">doc.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c41>/*!
+</c41><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c41>#&nbsp;Type&nbsp;inference&nbsp;engine
+</c41><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c41>This&nbsp;is&nbsp;loosely&nbsp;based&nbsp;on&nbsp;standard&nbsp;HM-type&nbsp;inference,&nbsp;but&nbsp;with&nbsp;an
+</c41><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c41>extension&nbsp;to&nbsp;try&nbsp;and&nbsp;accommodate&nbsp;subtyping.&nbsp;&nbsp;There&nbsp;is&nbsp;nothing
+</c41><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c41>principled&nbsp;about&nbsp;this&nbsp;extension;&nbsp;it's&nbsp;sound---I&nbsp;hope!---but&nbsp;it's&nbsp;a
+</c41><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c41>heuristic,&nbsp;ultimately,&nbsp;and&nbsp;does&nbsp;not&nbsp;guarantee&nbsp;that&nbsp;it&nbsp;finds&nbsp;a&nbsp;valid
+</c41><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c41>typing&nbsp;even&nbsp;if&nbsp;one&nbsp;exists&nbsp;(in&nbsp;fact,&nbsp;there&nbsp;are&nbsp;known&nbsp;scenarios&nbsp;where&nbsp;it
+</c41><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c41>fails,&nbsp;some&nbsp;of&nbsp;which&nbsp;may&nbsp;eventually&nbsp;become&nbsp;problematic).
+</c41><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c41>##&nbsp;Key&nbsp;idea
+</c41><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c41>The&nbsp;main&nbsp;change&nbsp;is&nbsp;that&nbsp;each&nbsp;type&nbsp;variable&nbsp;T&nbsp;is&nbsp;associated&nbsp;with&nbsp;a
+</c41><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c41>lower-bound&nbsp;L&nbsp;and&nbsp;an&nbsp;upper-bound&nbsp;U.&nbsp;&nbsp;L&nbsp;and&nbsp;U&nbsp;begin&nbsp;as&nbsp;bottom&nbsp;and&nbsp;top,
+</c41><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c41>respectively,&nbsp;but&nbsp;gradually&nbsp;narrow&nbsp;in&nbsp;response&nbsp;to&nbsp;new&nbsp;constraints
+</c41><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c41>being&nbsp;introduced.&nbsp;&nbsp;When&nbsp;a&nbsp;variable&nbsp;is&nbsp;finally&nbsp;resolved&nbsp;to&nbsp;a&nbsp;concrete
+</c41><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c41>type,&nbsp;it&nbsp;can&nbsp;(theoretically)&nbsp;select&nbsp;any&nbsp;type&nbsp;that&nbsp;is&nbsp;a&nbsp;supertype&nbsp;of&nbsp;L
+</c41><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c41>and&nbsp;a&nbsp;subtype&nbsp;of&nbsp;U.
+</c41><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c41>There&nbsp;are&nbsp;several&nbsp;critical&nbsp;invariants&nbsp;which&nbsp;we&nbsp;maintain:
+</c41><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c41>-&nbsp;the&nbsp;upper-bound&nbsp;of&nbsp;a&nbsp;variable&nbsp;only&nbsp;becomes&nbsp;lower&nbsp;and&nbsp;the&nbsp;lower-bound
+</c41><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;only&nbsp;becomes&nbsp;higher&nbsp;over&nbsp;time;
+</c41><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c41>-&nbsp;the&nbsp;lower-bound&nbsp;L&nbsp;is&nbsp;always&nbsp;a&nbsp;subtype&nbsp;of&nbsp;the&nbsp;upper&nbsp;bound&nbsp;U;
+</c41><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c41>-&nbsp;the&nbsp;lower-bound&nbsp;L&nbsp;and&nbsp;upper-bound&nbsp;U&nbsp;never&nbsp;refer&nbsp;to&nbsp;other&nbsp;type&nbsp;variables,
+</c41><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;but&nbsp;only&nbsp;to&nbsp;types&nbsp;(though&nbsp;those&nbsp;types&nbsp;may&nbsp;contain&nbsp;type&nbsp;variables).
+</c41><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;An&nbsp;aside:&nbsp;if&nbsp;the&nbsp;terms&nbsp;upper-&nbsp;and&nbsp;lower-bound&nbsp;confuse&nbsp;you,&nbsp;think&nbsp;of
+</c41><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;"supertype"&nbsp;and&nbsp;"subtype".&nbsp;&nbsp;The&nbsp;upper-bound&nbsp;is&nbsp;a&nbsp;"supertype"
+</c41><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;(super=upper&nbsp;in&nbsp;Latin,&nbsp;or&nbsp;something&nbsp;like&nbsp;that&nbsp;anyway)&nbsp;and&nbsp;the&nbsp;lower-bound
+</c41><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;is&nbsp;a&nbsp;"subtype"&nbsp;(sub=lower&nbsp;in&nbsp;Latin).&nbsp;&nbsp;I&nbsp;find&nbsp;it&nbsp;helps&nbsp;to&nbsp;visualize
+</c41><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;a&nbsp;simple&nbsp;class&nbsp;hierarchy,&nbsp;like&nbsp;Java&nbsp;minus&nbsp;interfaces&nbsp;and
+</c41><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;primitive&nbsp;types.&nbsp;&nbsp;The&nbsp;class&nbsp;Object&nbsp;is&nbsp;at&nbsp;the&nbsp;root&nbsp;(top)&nbsp;and&nbsp;other
+</c41><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;types&nbsp;lie&nbsp;in&nbsp;between.&nbsp;&nbsp;The&nbsp;bottom&nbsp;type&nbsp;is&nbsp;then&nbsp;the&nbsp;Null&nbsp;type.
+</c41><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;So&nbsp;the&nbsp;tree&nbsp;looks&nbsp;like:
+</c41><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c41>&gt;
+</c41><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;```notrust
+</c41><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object
+</c41><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;\
+</c41><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;&nbsp;&nbsp;Other
+</c41><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/
+</c41><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(null)
+</c41><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;```
+</c41><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c41>&gt;
+</c41><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;So&nbsp;the&nbsp;upper&nbsp;bound&nbsp;type&nbsp;is&nbsp;the&nbsp;"supertype"&nbsp;and&nbsp;the&nbsp;lower&nbsp;bound&nbsp;is&nbsp;the
+</c41><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;"subtype"&nbsp;(also,&nbsp;super&nbsp;and&nbsp;sub&nbsp;mean&nbsp;upper&nbsp;and&nbsp;lower&nbsp;in&nbsp;Latin,&nbsp;or&nbsp;something
+</c41><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c41>&gt;&nbsp;like&nbsp;that&nbsp;anyway).
+</c41><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c41>##&nbsp;Satisfying&nbsp;constraints
+</c41><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c41>At&nbsp;a&nbsp;primitive&nbsp;level,&nbsp;there&nbsp;is&nbsp;only&nbsp;one&nbsp;form&nbsp;of&nbsp;constraint&nbsp;that&nbsp;the
+</c41><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c41>inference&nbsp;understands:&nbsp;a&nbsp;subtype&nbsp;relation.&nbsp;&nbsp;So&nbsp;the&nbsp;outside&nbsp;world&nbsp;can
+</c41><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c41>say&nbsp;"make&nbsp;type&nbsp;A&nbsp;a&nbsp;subtype&nbsp;of&nbsp;type&nbsp;B".&nbsp;&nbsp;If&nbsp;there&nbsp;are&nbsp;variables
+</c41><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c41>involved,&nbsp;the&nbsp;inferencer&nbsp;will&nbsp;adjust&nbsp;their&nbsp;upper-&nbsp;and&nbsp;lower-bounds&nbsp;as
+</c41><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c41>needed&nbsp;to&nbsp;ensure&nbsp;that&nbsp;this&nbsp;relation&nbsp;is&nbsp;satisfied.&nbsp;(We&nbsp;also&nbsp;allow&nbsp;"make
+</c41><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c41>type&nbsp;A&nbsp;equal&nbsp;to&nbsp;type&nbsp;B",&nbsp;but&nbsp;this&nbsp;is&nbsp;translated&nbsp;into&nbsp;"A&nbsp;&lt;:&nbsp;B"&nbsp;and&nbsp;"B
+</c41><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c41>&lt;:&nbsp;A")
+</c41><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c41>As&nbsp;stated&nbsp;above,&nbsp;we&nbsp;always&nbsp;maintain&nbsp;the&nbsp;invariant&nbsp;that&nbsp;type&nbsp;bounds
+</c41><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c41>never&nbsp;refer&nbsp;to&nbsp;other&nbsp;variables.&nbsp;&nbsp;This&nbsp;keeps&nbsp;the&nbsp;inference&nbsp;relatively
+</c41><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c41>simple,&nbsp;avoiding&nbsp;the&nbsp;scenario&nbsp;of&nbsp;having&nbsp;a&nbsp;kind&nbsp;of&nbsp;graph&nbsp;where&nbsp;we&nbsp;have
+</c41><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c41>to&nbsp;pump&nbsp;constraints&nbsp;along&nbsp;and&nbsp;reach&nbsp;a&nbsp;fixed&nbsp;point,&nbsp;but&nbsp;it&nbsp;does&nbsp;impose
+</c41><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a>&nbsp;<c41>some&nbsp;heuristics&nbsp;in&nbsp;the&nbsp;case&nbsp;where&nbsp;the&nbsp;user&nbsp;is&nbsp;relating&nbsp;two&nbsp;type
+</c41><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a>&nbsp;<c41>variables&nbsp;A&nbsp;&lt;:&nbsp;B.
+</c41><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c41>Combining&nbsp;two&nbsp;variables&nbsp;such&nbsp;that&nbsp;variable&nbsp;A&nbsp;will&nbsp;forever&nbsp;be&nbsp;a&nbsp;subtype
+</c41><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c41>of&nbsp;variable&nbsp;B&nbsp;is&nbsp;the&nbsp;trickiest&nbsp;part&nbsp;of&nbsp;the&nbsp;algorithm&nbsp;because&nbsp;there&nbsp;is
+</c41><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c41>often&nbsp;no&nbsp;right&nbsp;choice---that&nbsp;is,&nbsp;the&nbsp;right&nbsp;choice&nbsp;will&nbsp;depend&nbsp;on
+</c41><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c41>future&nbsp;constraints&nbsp;which&nbsp;we&nbsp;do&nbsp;not&nbsp;yet&nbsp;know.&nbsp;The&nbsp;problem&nbsp;comes&nbsp;about
+</c41><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c41>because&nbsp;both&nbsp;A&nbsp;and&nbsp;B&nbsp;have&nbsp;bounds&nbsp;that&nbsp;can&nbsp;be&nbsp;adjusted&nbsp;in&nbsp;the&nbsp;future.
+</c41><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c41>Let's&nbsp;look&nbsp;at&nbsp;some&nbsp;of&nbsp;the&nbsp;cases&nbsp;that&nbsp;can&nbsp;come&nbsp;up.
+</c41><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c41>Imagine,&nbsp;to&nbsp;start,&nbsp;the&nbsp;best&nbsp;case,&nbsp;where&nbsp;both&nbsp;A&nbsp;and&nbsp;B&nbsp;have&nbsp;an&nbsp;upper&nbsp;and
+</c41><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c41>lower&nbsp;bound&nbsp;(that&nbsp;is,&nbsp;the&nbsp;bounds&nbsp;are&nbsp;not&nbsp;top&nbsp;nor&nbsp;bot&nbsp;respectively).&nbsp;In
+</c41><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c41>that&nbsp;case,&nbsp;if&nbsp;we're&nbsp;lucky,&nbsp;A.ub&nbsp;&lt;:&nbsp;B.lb,&nbsp;and&nbsp;so&nbsp;we&nbsp;know&nbsp;that&nbsp;whatever
+</c41><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c41>A&nbsp;and&nbsp;B&nbsp;should&nbsp;become,&nbsp;they&nbsp;will&nbsp;forever&nbsp;have&nbsp;the&nbsp;desired&nbsp;subtyping
+</c41><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a>&nbsp;<c41>relation.&nbsp;&nbsp;We&nbsp;can&nbsp;just&nbsp;leave&nbsp;things&nbsp;as&nbsp;they&nbsp;are.
+</c41><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c41>###&nbsp;Option&nbsp;1:&nbsp;Unify
+</c41><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a>&nbsp;<c41>However,&nbsp;suppose&nbsp;that&nbsp;A.ub&nbsp;is&nbsp;*not*&nbsp;a&nbsp;subtype&nbsp;of&nbsp;B.lb.&nbsp;&nbsp;In
+</c41><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a>&nbsp;<c41>that&nbsp;case,&nbsp;we&nbsp;must&nbsp;make&nbsp;a&nbsp;decision.&nbsp;&nbsp;One&nbsp;option&nbsp;is&nbsp;to&nbsp;unify&nbsp;A
+</c41><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a>&nbsp;<c41>and&nbsp;B&nbsp;so&nbsp;that&nbsp;they&nbsp;are&nbsp;one&nbsp;variable&nbsp;whose&nbsp;bounds&nbsp;are:
+</c41><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;UB&nbsp;=&nbsp;GLB(A.ub,&nbsp;B.ub)
+</c41><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;LB&nbsp;=&nbsp;LUB(A.lb,&nbsp;B.lb)
+</c41><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a>&nbsp;<c41>(Note&nbsp;that&nbsp;we&nbsp;will&nbsp;have&nbsp;to&nbsp;verify&nbsp;that&nbsp;LB&nbsp;&lt;:&nbsp;UB;&nbsp;if&nbsp;it&nbsp;does&nbsp;not,&nbsp;the
+</c41><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c41>types&nbsp;are&nbsp;not&nbsp;intersecting&nbsp;and&nbsp;there&nbsp;is&nbsp;an&nbsp;error)&nbsp;In&nbsp;that&nbsp;case,&nbsp;A&nbsp;&lt;:&nbsp;B
+</c41><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a>&nbsp;<c41>holds&nbsp;trivially&nbsp;because&nbsp;A==B.&nbsp;&nbsp;However,&nbsp;we&nbsp;have&nbsp;now&nbsp;lost&nbsp;some
+</c41><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a>&nbsp;<c41>flexibility,&nbsp;because&nbsp;perhaps&nbsp;the&nbsp;user&nbsp;intended&nbsp;for&nbsp;A&nbsp;and&nbsp;B&nbsp;to&nbsp;end&nbsp;up
+</c41><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a>&nbsp;<c41>as&nbsp;different&nbsp;types&nbsp;and&nbsp;not&nbsp;the&nbsp;same&nbsp;type.
+</c41><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a>&nbsp;<c41>Pictorally,&nbsp;what&nbsp;this&nbsp;does&nbsp;is&nbsp;to&nbsp;take&nbsp;two&nbsp;distinct&nbsp;variables&nbsp;with
+</c41><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a>&nbsp;<c41>(hopefully&nbsp;not&nbsp;completely)&nbsp;distinct&nbsp;type&nbsp;ranges&nbsp;and&nbsp;produce&nbsp;one&nbsp;with
+</c41><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a>&nbsp;<c41>the&nbsp;intersection.
+</c41><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a>&nbsp;<c41>```notrust
+</c41><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B.ub&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B.ub
+</c41><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/
+</c41><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.ub&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.ub&nbsp;&nbsp;&nbsp;/
+</c41><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;/
+</c41><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UB
+</c41><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\
+</c41><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;/
+</c41><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;/
+</c41><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LB
+</c41><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\
+</c41><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\
+</c41><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.lb&nbsp;&nbsp;&nbsp;&nbsp;B.lb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.lb&nbsp;&nbsp;&nbsp;&nbsp;B.lb
+</c41><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a>&nbsp;<c41>```
+</c41><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a>&nbsp;<c41>###&nbsp;Option&nbsp;2:&nbsp;Relate&nbsp;UB/LB
+</c41><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a>&nbsp;<c41>Another&nbsp;option&nbsp;is&nbsp;to&nbsp;keep&nbsp;A&nbsp;and&nbsp;B&nbsp;as&nbsp;distinct&nbsp;variables&nbsp;but&nbsp;set&nbsp;their
+</c41><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a>&nbsp;<c41>bounds&nbsp;in&nbsp;such&nbsp;a&nbsp;way&nbsp;that,&nbsp;whatever&nbsp;happens,&nbsp;we&nbsp;know&nbsp;that&nbsp;A&nbsp;&lt;:&nbsp;B&nbsp;will&nbsp;hold.
+</c41><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a>&nbsp;<c41>This&nbsp;can&nbsp;be&nbsp;achieved&nbsp;by&nbsp;ensuring&nbsp;that&nbsp;A.ub&nbsp;&lt;:&nbsp;B.lb.&nbsp;&nbsp;In&nbsp;practice&nbsp;there
+</c41><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a>&nbsp;<c41>are&nbsp;two&nbsp;ways&nbsp;to&nbsp;do&nbsp;that,&nbsp;depicted&nbsp;pictorally&nbsp;here:
+</c41><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a>&nbsp;<c41>```notrust
+</c41><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;Before&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Option&nbsp;#1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Option&nbsp;#2
+</c41><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B.ub&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B.ub&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B.ub
+</c41><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\
+</c41><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.ub&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.ub&nbsp;&nbsp;&nbsp;/(B')\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.ub&nbsp;&nbsp;&nbsp;/(B')\
+</c41><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/
+</c41><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__UB____/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UB&nbsp;&nbsp;&nbsp;&nbsp;/
+</c41><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;/
+</c41><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;/
+</c41><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;/(A')|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;/
+</c41><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;______LB/
+</c41><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;(A')/&nbsp;\
+</c41><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\
+</c41><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.lb&nbsp;&nbsp;&nbsp;&nbsp;B.lb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.lb&nbsp;&nbsp;&nbsp;&nbsp;B.lb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A.lb&nbsp;&nbsp;&nbsp;&nbsp;B.lb
+</c41><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a>&nbsp;<c41>```
+</c41><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a>&nbsp;<c41>In&nbsp;these&nbsp;diagrams,&nbsp;UB&nbsp;and&nbsp;LB&nbsp;are&nbsp;defined&nbsp;as&nbsp;before.&nbsp;&nbsp;As&nbsp;you&nbsp;can&nbsp;see,
+</c41><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a>&nbsp;<c41>the&nbsp;new&nbsp;ranges&nbsp;`A'`&nbsp;and&nbsp;`B'`&nbsp;are&nbsp;quite&nbsp;different&nbsp;from&nbsp;the&nbsp;range&nbsp;that
+</c41><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a>&nbsp;<c41>would&nbsp;be&nbsp;produced&nbsp;by&nbsp;unifying&nbsp;the&nbsp;variables.
+</c41><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a>&nbsp;<c41>###&nbsp;What&nbsp;we&nbsp;do&nbsp;now
+</c41><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a>&nbsp;<c41>Our&nbsp;current&nbsp;technique&nbsp;is&nbsp;to&nbsp;*try*&nbsp;(transactionally)&nbsp;to&nbsp;relate&nbsp;the
+</c41><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a>&nbsp;<c41>existing&nbsp;bounds&nbsp;of&nbsp;A&nbsp;and&nbsp;B,&nbsp;if&nbsp;there&nbsp;are&nbsp;any&nbsp;(i.e.,&nbsp;if&nbsp;`UB(A)&nbsp;!=&nbsp;top
+</c41><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a>&nbsp;<c41>&amp;&amp;&nbsp;LB(B)&nbsp;!=&nbsp;bot`).&nbsp;&nbsp;If&nbsp;that&nbsp;succeeds,&nbsp;we're&nbsp;done.&nbsp;&nbsp;If&nbsp;it&nbsp;fails,&nbsp;then
+</c41><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a>&nbsp;<c41>we&nbsp;merge&nbsp;A&nbsp;and&nbsp;B&nbsp;into&nbsp;same&nbsp;variable.
+</c41><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a>&nbsp;<c41>This&nbsp;is&nbsp;not&nbsp;clearly&nbsp;the&nbsp;correct&nbsp;course.&nbsp;&nbsp;For&nbsp;example,&nbsp;if&nbsp;`UB(A)&nbsp;!=
+</c41><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a>&nbsp;<c41>top`&nbsp;but&nbsp;`LB(B)&nbsp;==&nbsp;bot`,&nbsp;we&nbsp;could&nbsp;conceivably&nbsp;set&nbsp;`LB(B)`&nbsp;to&nbsp;`UB(A)`
+</c41><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a>&nbsp;<c41>and&nbsp;leave&nbsp;the&nbsp;variables&nbsp;unmerged.&nbsp;&nbsp;This&nbsp;is&nbsp;sometimes&nbsp;the&nbsp;better
+</c41><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a>&nbsp;<c41>course,&nbsp;it&nbsp;depends&nbsp;on&nbsp;the&nbsp;program.
+</c41><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a>&nbsp;<c41>The&nbsp;main&nbsp;case&nbsp;which&nbsp;fails&nbsp;today&nbsp;that&nbsp;I&nbsp;would&nbsp;like&nbsp;to&nbsp;support&nbsp;is:
+</c41><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a>&nbsp;<c41>```notrust
+</c41><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a>&nbsp;<c41>fn&nbsp;foo&lt;T&gt;(x:&nbsp;T,&nbsp;y:&nbsp;T)&nbsp;{&nbsp;...&nbsp;}
+</c41><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a>&nbsp;<c41>fn&nbsp;bar()&nbsp;{
+</c41><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;x:&nbsp;@mut&nbsp;int&nbsp;=&nbsp;@mut&nbsp;3;
+</c41><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;y:&nbsp;@int&nbsp;=&nbsp;@3;
+</c41><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;foo(x,&nbsp;y);
+</c41><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a>&nbsp;<c41>}
+</c41><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a>&nbsp;<c41>```
+</c41><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a>&nbsp;<c41>In&nbsp;principle,&nbsp;the&nbsp;inferencer&nbsp;ought&nbsp;to&nbsp;find&nbsp;that&nbsp;the&nbsp;parameter&nbsp;`T`&nbsp;to
+</c41><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a>&nbsp;<c41>`foo(x,&nbsp;y)`&nbsp;is&nbsp;`@const&nbsp;int`.&nbsp;&nbsp;Today,&nbsp;however,&nbsp;it&nbsp;does&nbsp;not;&nbsp;this&nbsp;is
+</c41><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a>&nbsp;<c41>because&nbsp;the&nbsp;type&nbsp;variable&nbsp;`T`&nbsp;is&nbsp;merged&nbsp;with&nbsp;the&nbsp;type&nbsp;variable&nbsp;for
+</c41><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a>&nbsp;<c41>`X`,&nbsp;and&nbsp;thus&nbsp;inherits&nbsp;its&nbsp;UB/LB&nbsp;of&nbsp;`@mut&nbsp;int`.&nbsp;&nbsp;This&nbsp;leaves&nbsp;no
+</c41><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a>&nbsp;<c41>flexibility&nbsp;for&nbsp;`T`&nbsp;to&nbsp;later&nbsp;adjust&nbsp;to&nbsp;accommodate&nbsp;`@int`.
+</c41><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a>&nbsp;<c41>###&nbsp;What&nbsp;to&nbsp;do&nbsp;when&nbsp;not&nbsp;all&nbsp;bounds&nbsp;are&nbsp;present
+</c41><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a>&nbsp;<c41>In&nbsp;the&nbsp;prior&nbsp;discussion&nbsp;we&nbsp;assumed&nbsp;that&nbsp;A.ub&nbsp;was&nbsp;not&nbsp;top&nbsp;and&nbsp;B.lb&nbsp;was
+</c41><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a>&nbsp;<c41>not&nbsp;bot.&nbsp;&nbsp;Unfortunately&nbsp;this&nbsp;is&nbsp;rarely&nbsp;the&nbsp;case.&nbsp;&nbsp;Often&nbsp;type&nbsp;variables
+</c41><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a>&nbsp;<c41>have&nbsp;"lopsided"&nbsp;bounds.&nbsp;&nbsp;For&nbsp;example,&nbsp;if&nbsp;a&nbsp;variable&nbsp;in&nbsp;the&nbsp;program&nbsp;has
+</c41><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a>&nbsp;<c41>been&nbsp;initialized&nbsp;but&nbsp;has&nbsp;not&nbsp;been&nbsp;used,&nbsp;then&nbsp;its&nbsp;corresponding&nbsp;type
+</c41><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a>&nbsp;<c41>variable&nbsp;will&nbsp;have&nbsp;a&nbsp;lower&nbsp;bound&nbsp;but&nbsp;no&nbsp;upper&nbsp;bound.&nbsp;&nbsp;When&nbsp;that
+</c41><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a>&nbsp;<c41>variable&nbsp;is&nbsp;then&nbsp;used,&nbsp;we&nbsp;would&nbsp;like&nbsp;to&nbsp;know&nbsp;its&nbsp;upper&nbsp;bound---but&nbsp;we
+</c41><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a>&nbsp;<c41>don't&nbsp;have&nbsp;one!&nbsp;&nbsp;In&nbsp;this&nbsp;case&nbsp;we'll&nbsp;do&nbsp;different&nbsp;things&nbsp;depending&nbsp;on
+</c41><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a>&nbsp;<c41>how&nbsp;the&nbsp;variable&nbsp;is&nbsp;being&nbsp;used.
+</c41><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a>&nbsp;<c41>##&nbsp;Transactional&nbsp;support
+</c41><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a>&nbsp;<c41>Whenever&nbsp;we&nbsp;adjust&nbsp;merge&nbsp;variables&nbsp;or&nbsp;adjust&nbsp;their&nbsp;bounds,&nbsp;we&nbsp;always
+</c41><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a>&nbsp;<c41>keep&nbsp;a&nbsp;record&nbsp;of&nbsp;the&nbsp;old&nbsp;value.&nbsp;&nbsp;This&nbsp;allows&nbsp;the&nbsp;changes&nbsp;to&nbsp;be&nbsp;undone.
+</c41><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a>&nbsp;<c41>##&nbsp;Regions
+</c41><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a>&nbsp;<c41>I've&nbsp;only&nbsp;talked&nbsp;about&nbsp;type&nbsp;variables&nbsp;here,&nbsp;but&nbsp;region&nbsp;variables
+</c41><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a>&nbsp;<c41>follow&nbsp;the&nbsp;same&nbsp;principle.&nbsp;&nbsp;They&nbsp;have&nbsp;upper-&nbsp;and&nbsp;lower-bounds.&nbsp;&nbsp;A
+</c41><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a>&nbsp;<c41>region&nbsp;A&nbsp;is&nbsp;a&nbsp;subregion&nbsp;of&nbsp;a&nbsp;region&nbsp;B&nbsp;if&nbsp;A&nbsp;being&nbsp;valid&nbsp;implies&nbsp;that&nbsp;B
+</c41><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a>&nbsp;<c41>is&nbsp;valid.&nbsp;&nbsp;This&nbsp;basically&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;block&nbsp;nesting&nbsp;structure:
+</c41><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a>&nbsp;<c41>the&nbsp;regions&nbsp;for&nbsp;outer&nbsp;block&nbsp;scopes&nbsp;are&nbsp;superregions&nbsp;of&nbsp;those&nbsp;for&nbsp;inner
+</c41><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a>&nbsp;<c41>block&nbsp;scopes.
+</c41><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a>&nbsp;<c41>##&nbsp;Integral&nbsp;and&nbsp;floating-point&nbsp;type&nbsp;variables
+</c41><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a>&nbsp;<c41>There&nbsp;is&nbsp;a&nbsp;third&nbsp;variety&nbsp;of&nbsp;type&nbsp;variable&nbsp;that&nbsp;we&nbsp;use&nbsp;only&nbsp;for
+</c41><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a>&nbsp;<c41>inferring&nbsp;the&nbsp;types&nbsp;of&nbsp;unsuffixed&nbsp;integer&nbsp;literals.&nbsp;&nbsp;Integral&nbsp;type
+</c41><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a>&nbsp;<c41>variables&nbsp;differ&nbsp;from&nbsp;general-purpose&nbsp;type&nbsp;variables&nbsp;in&nbsp;that&nbsp;there's
+</c41><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a>&nbsp;<c41>no&nbsp;subtyping&nbsp;relationship&nbsp;among&nbsp;the&nbsp;various&nbsp;integral&nbsp;types,&nbsp;so&nbsp;instead
+</c41><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a>&nbsp;<c41>of&nbsp;associating&nbsp;each&nbsp;variable&nbsp;with&nbsp;an&nbsp;upper&nbsp;and&nbsp;lower&nbsp;bound,&nbsp;we&nbsp;just
+</c41><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a>&nbsp;<c41>use&nbsp;simple&nbsp;unification.&nbsp;&nbsp;Each&nbsp;integer&nbsp;variable&nbsp;is&nbsp;associated&nbsp;with&nbsp;at
+</c41><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a>&nbsp;<c41>most&nbsp;one&nbsp;integer&nbsp;type.&nbsp;&nbsp;Floating&nbsp;point&nbsp;types&nbsp;are&nbsp;handled&nbsp;similarly&nbsp;to
+</c41><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a>&nbsp;<c41>integral&nbsp;types.
+</c41><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a>&nbsp;<c41>##&nbsp;GLB/LUB
+</c41><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a>&nbsp;<c41>Computing&nbsp;the&nbsp;greatest-lower-bound&nbsp;and&nbsp;least-upper-bound&nbsp;of&nbsp;two
+</c41><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a>&nbsp;<c41>types/regions&nbsp;is&nbsp;generally&nbsp;straightforward&nbsp;except&nbsp;when&nbsp;type&nbsp;variables
+</c41><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a>&nbsp;<c41>are&nbsp;involved.&nbsp;In&nbsp;that&nbsp;case,&nbsp;we&nbsp;follow&nbsp;a&nbsp;similar&nbsp;"try&nbsp;to&nbsp;use&nbsp;the&nbsp;bounds
+</c41><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a>&nbsp;<c41>when&nbsp;possible&nbsp;but&nbsp;otherwise&nbsp;merge&nbsp;the&nbsp;variables"&nbsp;strategy.&nbsp;&nbsp;In&nbsp;other
+</c41><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a>&nbsp;<c41>words,&nbsp;`GLB(A,&nbsp;B)`&nbsp;where&nbsp;`A`&nbsp;and&nbsp;`B`&nbsp;are&nbsp;variables&nbsp;will&nbsp;often&nbsp;result
+</c41><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a>&nbsp;<c41>in&nbsp;`A`&nbsp;and&nbsp;`B`&nbsp;being&nbsp;merged&nbsp;and&nbsp;the&nbsp;result&nbsp;being&nbsp;`A`.
+</c41><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a>&nbsp;<c41>##&nbsp;Type&nbsp;coercion
+</c41><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a>&nbsp;<c41>We&nbsp;have&nbsp;a&nbsp;notion&nbsp;of&nbsp;assignability&nbsp;which&nbsp;differs&nbsp;somewhat&nbsp;from
+</c41><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a>&nbsp;<c41>subtyping;&nbsp;in&nbsp;particular&nbsp;it&nbsp;may&nbsp;cause&nbsp;region&nbsp;borrowing&nbsp;to&nbsp;occur.&nbsp;&nbsp;See
+</c41><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a>&nbsp;<c41>the&nbsp;big&nbsp;comment&nbsp;later&nbsp;in&nbsp;this&nbsp;file&nbsp;on&nbsp;Type&nbsp;Coercion&nbsp;for&nbsp;specifics.
+</c41><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a>&nbsp;<c41>###&nbsp;In&nbsp;conclusion
+</c41><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a>&nbsp;<c41>I&nbsp;showed&nbsp;you&nbsp;three&nbsp;ways&nbsp;to&nbsp;relate&nbsp;`A`&nbsp;and&nbsp;`B`.&nbsp;&nbsp;There&nbsp;are&nbsp;also&nbsp;more,
+</c41><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a>&nbsp;<c41>of&nbsp;course,&nbsp;though&nbsp;I'm&nbsp;not&nbsp;sure&nbsp;if&nbsp;there&nbsp;are&nbsp;any&nbsp;more&nbsp;sensible&nbsp;options.
+</c41><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a>&nbsp;<c41>The&nbsp;main&nbsp;point&nbsp;is&nbsp;that&nbsp;there&nbsp;are&nbsp;various&nbsp;options,&nbsp;each&nbsp;of&nbsp;which
+</c41><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a>&nbsp;<c41>produce&nbsp;a&nbsp;distinct&nbsp;range&nbsp;of&nbsp;types&nbsp;for&nbsp;`A`&nbsp;and&nbsp;`B`.&nbsp;&nbsp;Depending&nbsp;on&nbsp;what
+</c41><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a>&nbsp;<c41>the&nbsp;correct&nbsp;values&nbsp;for&nbsp;A&nbsp;and&nbsp;B&nbsp;are,&nbsp;one&nbsp;of&nbsp;these&nbsp;options&nbsp;will&nbsp;be&nbsp;the
+</c41><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a>&nbsp;<c41>right&nbsp;choice:&nbsp;but&nbsp;of&nbsp;course&nbsp;we&nbsp;don't&nbsp;know&nbsp;the&nbsp;right&nbsp;values&nbsp;for&nbsp;A&nbsp;and&nbsp;B
+</c41><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a>&nbsp;<c41>yet,&nbsp;that's&nbsp;what&nbsp;we're&nbsp;trying&nbsp;to&nbsp;find!&nbsp;&nbsp;In&nbsp;our&nbsp;code,&nbsp;we&nbsp;opt&nbsp;to&nbsp;unify
+</c41><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a>&nbsp;<c41>(Option&nbsp;#1).
+</c41><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a>&nbsp;<c41>#&nbsp;Implementation&nbsp;details
+</c41><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a>&nbsp;<c41>We&nbsp;make&nbsp;use&nbsp;of&nbsp;a&nbsp;trait-like&nbsp;impementation&nbsp;strategy&nbsp;to&nbsp;consolidate
+</c41><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a>&nbsp;<c41>duplicated&nbsp;code&nbsp;between&nbsp;subtypes,&nbsp;GLB,&nbsp;and&nbsp;LUB&nbsp;computations.&nbsp;&nbsp;See&nbsp;the
+</c41><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a>&nbsp;<c41>section&nbsp;on&nbsp;"Type&nbsp;Combining"&nbsp;below&nbsp;for&nbsp;details.
+</c41><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a>&nbsp;<c41>*/
 </c41><br/><div class="refblock"></div></maintext></div></body>

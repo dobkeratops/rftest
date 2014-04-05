@@ -1,48 +1,48 @@
-<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libsync/">libsync</a></c0><c1>/</c1><c0><a href="./../libsync/lib.rs.html">lib.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
-</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/*!
-</c41><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;Concurrency-enabled&nbsp;mechanisms&nbsp;and&nbsp;primitives.
-</c41><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c42>&nbsp;*/
-</c42><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>crate_id&nbsp;=&nbsp;"sync#0.10-pre"</c50><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>crate_type&nbsp;=&nbsp;"rlib"</c50><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>crate_type&nbsp;=&nbsp;"dylib"</c50><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>license&nbsp;=&nbsp;"MIT/ASL2"</c50><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>html_logo_url&nbsp;=&nbsp;"http:</c50><c40>//www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png",
-</c40><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;html_favicon_url&nbsp;=&nbsp;"http:</c0><c40>//www.rust-lang.org/favicon.ico",
-</c40><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;html_root_url&nbsp;=&nbsp;"http:</c0><c40>//static.rust-lang.org/doc/master")];
-</c40><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>feature</c50><c4>(</c4><c50>phase</c50><c4>)</c4><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>deny</c50><c4>(</c4><c50>missing_doc</c50><c3>,</c3><c50>&nbsp;deprecated_owned_vector</c50><c4>)</c4><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>phase</c50><c4>(</c4><c50>syntax</c50><c3>,</c3><c50>&nbsp;link</c50><c4>)</c4><c3>]</c3><c50>&nbsp;extern&nbsp;crate&nbsp;log</c50><c3>;</c3><c50>
-</c50><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;comm::</c0><c3>{</c3><c0>DuplexStream</c0><c3>,</c3><c0>&nbsp;duplex</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;task_pool::TaskPool</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;future::Future</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;arc::</c0><c3>{</c3><c0>Arc</c0><c3>,</c3><c0>&nbsp;Weak</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;lock::</c0><c3>{</c3><c0>Mutex</c0><c3>,</c3><c0>&nbsp;MutexGuard</c0><c3>,</c3><c0>&nbsp;Condvar</c0><c3>,</c3><c0>&nbsp;Barrier</c0><c3>,</c3><c0>
-</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RWLock</c0><c3>,</c3><c0>&nbsp;RWLockReadGuard</c0><c3>,</c3><c0>&nbsp;RWLockWriteGuard</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;The&nbsp;mutex/rwlock&nbsp;in&nbsp;this&nbsp;module&nbsp;are&nbsp;not&nbsp;meant&nbsp;for&nbsp;reexport
-</c40><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;raw::</c0><c3>{</c3><c0>Semaphore</c0><c3>,</c3><c0>&nbsp;SemaphoreGuard</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[22]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[468]">&nbsp;</a><c21>mod</c21><c38>&nbsp;arc;
-</c38><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[600]">&nbsp;</a><c21>mod</c21><c38>&nbsp;comm;
-</c38><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[828]">&nbsp;</a><c21>mod</c21><c38>&nbsp;future;
-</c38><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[1953]">&nbsp;</a><c21>mod</c21><c38>&nbsp;lock;
-</c38><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[2310]">&nbsp;</a><c21>mod</c21><c38>&nbsp;mpsc_intrusive;
-</c38><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[]">&nbsp;</a><c21>mod</c21><c38>&nbsp;task_pool;
-</c38><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[2592]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[4148]">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;raw;
-</c38><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[6516]">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;mutex;
-</c38><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;one;
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libsync/">libsync</a></c0><c1>/</c1><c0><a href="./../libsync/lib.rs.html">lib.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c41>/*!
+</c41><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;Concurrency-enabled&nbsp;mechanisms&nbsp;and&nbsp;primitives.
+</c41><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c42>&nbsp;*/
+</c42><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>crate_id&nbsp;=&nbsp;"sync#0.10-pre"</c50><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>crate_type&nbsp;=&nbsp;"rlib"</c50><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>crate_type&nbsp;=&nbsp;"dylib"</c50><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>license&nbsp;=&nbsp;"MIT/ASL2"</c50><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>html_logo_url&nbsp;=&nbsp;"http:</c50><c40>//www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png",
+</c40><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;html_favicon_url&nbsp;=&nbsp;"http:</c0><c40>//www.rust-lang.org/favicon.ico",
+</c40><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;html_root_url&nbsp;=&nbsp;"http:</c0><c40>//static.rust-lang.org/doc/master")];
+</c40><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>feature</c50><c4>(</c4><c50>phase</c50><c4>)</c4><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>deny</c50><c4>(</c4><c50>missing_doc</c50><c3>,</c3><c50>&nbsp;deprecated_owned_vector</c50><c4>)</c4><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>phase</c50><c4>(</c4><c50>syntax</c50><c3>,</c3><c50>&nbsp;link</c50><c4>)</c4><c3>]</c3><c50>&nbsp;extern&nbsp;crate&nbsp;log</c50><c3>;</c3><c50>
+</c50><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;comm::</c0><c3>{</c3><c0>DuplexStream</c0><c3>,</c3><c0>&nbsp;duplex</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;task_pool::TaskPool</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;future::Future</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;arc::</c0><c3>{</c3><c0>Arc</c0><c3>,</c3><c0>&nbsp;Weak</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;lock::</c0><c3>{</c3><c0>Mutex</c0><c3>,</c3><c0>&nbsp;MutexGuard</c0><c3>,</c3><c0>&nbsp;Condvar</c0><c3>,</c3><c0>&nbsp;Barrier</c0><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RWLock</c0><c3>,</c3><c0>&nbsp;RWLockReadGuard</c0><c3>,</c3><c0>&nbsp;RWLockWriteGuard</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c40>//&nbsp;The&nbsp;mutex/rwlock&nbsp;in&nbsp;this&nbsp;module&nbsp;are&nbsp;not&nbsp;meant&nbsp;for&nbsp;reexport
+</c40><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;raw::</c0><c3>{</c3><c0>Semaphore</c0><c3>,</c3><c0>&nbsp;SemaphoreGuard</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n22">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n468">&nbsp;</a><c21>mod</c21><c38>&nbsp;arc;
+</c38><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n600">&nbsp;</a><c21>mod</c21><c38>&nbsp;comm;
+</c38><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n828">&nbsp;</a><c21>mod</c21><c38>&nbsp;future;
+</c38><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n1953">&nbsp;</a><c21>mod</c21><c38>&nbsp;lock;
+</c38><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n2310">&nbsp;</a><c21>mod</c21><c38>&nbsp;mpsc_intrusive;
+</c38><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;task_pool;
+</c38><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n2592">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n4148">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;raw;
+</c38><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n6516">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;mutex;
+</c38><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;one;
 </c38><br/><div class="refblock"></div></maintext></div></body>

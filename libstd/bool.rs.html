@@ -1,308 +1,307 @@
-<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../libstd/bool.rs.html">bool.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;Operations&nbsp;on&nbsp;boolean&nbsp;values&nbsp;(`bool`&nbsp;type)
-</c40><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!
-</c40><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;A&nbsp;quick&nbsp;summary:
-</c40><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!
-</c40><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;Implementations&nbsp;of&nbsp;the&nbsp;following&nbsp;traits:
-</c40><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!
-</c40><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;*&nbsp;`FromStr`
-</c40><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;*&nbsp;`Not`
-</c40><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;*&nbsp;`Ord`
-</c40><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;*&nbsp;`TotalOrd`
-</c40><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;*&nbsp;`Eq`
-</c40><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;*&nbsp;`Default`
-</c40><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;*&nbsp;`Zero`
-</c40><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!
-</c40><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;A&nbsp;`to_bit`&nbsp;conversion&nbsp;function.
-</c40><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;from_str::FromStr</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;num::</c0><c3>{</c3><c0>Int</c0><c3>,</c3><c0>&nbsp;one</c0><c3>,</c3><c0>&nbsp;zero</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;option::</c0><c3>{</c3><c0>None</c0><c3>,</c3><c0>&nbsp;Option</c0><c3>,</c3><c0>&nbsp;Some</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>&nbsp;use&nbsp;cmp::</c50><c3>{</c3><c50>Eq</c50><c3>,</c3><c50>&nbsp;Ord</c50><c3>,</c3><c50>&nbsp;TotalOrd</c50><c3>,</c3><c50>&nbsp;Ordering</c50><c3>};</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>&nbsp;use&nbsp;ops::</c50><c3>{</c3><c50>Not</c50><c3>,</c3><c50>&nbsp;BitAnd</c50><c3>,</c3><c50>&nbsp;BitOr</c50><c3>,</c3><c50>&nbsp;BitXor</c50><c3>};</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>&nbsp;use&nbsp;default::Default</c50><c3>;</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[]">&nbsp;</a><c42>/////////////////////////////////////////////////////////////////////////////
-</c42><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Freestanding&nbsp;functions
-</c40><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[]">&nbsp;</a><c42>/////////////////////////////////////////////////////////////////////////////
-</c42><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Convert&nbsp;a&nbsp;`bool`&nbsp;to&nbsp;an&nbsp;integer.
-</c42><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;Examples
-</c42><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```rust
-</c42><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;use&nbsp;std::bool;
-</c42><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;assert_eq!(bool::to_bit::&lt;u8&gt;(true),&nbsp;1u8);
-</c42><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;assert_eq!(bool::to_bit::&lt;u8&gt;(false),&nbsp;0u8);
-</c42><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[14098]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>inline</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[14106, 14107, 14101, 14104, 14102]">&nbsp;</a><c21>pub</c21><c1><a href="#49_10_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#49_10_refs">&nbsp;to_bit</a></c30><c5><a href="#49_10_refs">&lt;N:&nbsp;</a></c5><c5><a href="../libstd/num/mod.rs.html#255">Int</a></c5><c5><a href="#49_10_refs">&gt;</a></c5><c4>(</c4><c20><a href="#50_22_refs">p</a></c20><c1><a href="#49_10_refs">:&nbsp;</a></c1><c8><a href="#49_10_refs">bool</a></c8><c4>)</c4><c1><a href="#49_10_refs">&nbsp;</a></c1><c4>-&gt;</c4><c1><a href="#49_10_refs">&nbsp;</a></c1><c8><a href="c=0 n=14105">N</a></c8><c1><a href="#49_10_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#49_10_refs">
-</a></c22><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[14116, 14109, 14110, 14111, 14112, 14108, 14113, 14115, 14114]">&nbsp;</a><c22><a href="#49_10_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>if</c21><c21><a href="#49_10_refs">&nbsp;</a></c21><c26><a href="../libstd/bool.rs.html#50">p</a></c26><c21><a href="#49_10_refs">&nbsp;</a></c21><c3>{</c3><c22><a href="#49_10_refs">&nbsp;</a></c22><c26><a href="../libstd/num/mod.rs.html#97">one</a></c26><c4>()</c4><c22><a href="#49_10_refs">&nbsp;</a></c22><c3>}</c3><c21><a href="#49_10_refs">&nbsp;else&nbsp;</a></c21><c3>{</c3><c22><a href="#49_10_refs">&nbsp;</a></c22><c26><a href="../libstd/num/mod.rs.html#74">zero</a></c26><c4>()</c4><c22><a href="#49_10_refs">&nbsp;</a></c22><c3>}</c3><c22><a href="#49_10_refs">
-</a></c22><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a id="n[]">&nbsp;</a><c42>/////////////////////////////////////////////////////////////////////////////
-</c42><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Trait&nbsp;impls&nbsp;on&nbsp;`bool`
-</c40><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n[]">&nbsp;</a><c42>/////////////////////////////////////////////////////////////////////////////
-</c42><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n[14117]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a id="n[14120, 14118]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/from_str.rs.html#16">FromStr</a></c33><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Parse&nbsp;a&nbsp;`bool`&nbsp;from&nbsp;a&nbsp;string.
-</c42><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Yields&nbsp;an&nbsp;`Option&lt;bool&gt;`,&nbsp;because&nbsp;`s`&nbsp;may&nbsp;or&nbsp;may&nbsp;not&nbsp;actually&nbsp;be&nbsp;parseable.
-</c42><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Examples
-</c42><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```rust
-</c42><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(from_str::&lt;bool&gt;("true"),&nbsp;Some(true));
-</c42><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(from_str::&lt;bool&gt;("false"),&nbsp;Some(false));
-</c42><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(from_str::&lt;bool&gt;("not&nbsp;even&nbsp;a&nbsp;boolean"),&nbsp;None);
-</c42><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a id="n[14131, 14124, 14128, 14121, 14126, 14125, 14130]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;from_str</c30><c4>(</c4><c20><a href="#71_16_refs">s</a></c20><c18>:&nbsp;</c18><c8>&amp;str</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/option.rs.html#151">Option&lt;bool&gt;</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a id="n[14145, 14132]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match&nbsp;</c21><c26><a href="../libstd/bool.rs.html#71">s</a></c26><c21>&nbsp;</c21><c3>{</c3><c21>
-</c21><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a id="n[14136, 14135, 14134, 14137, 14133]">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20>"true"</c20><c12>&nbsp;&nbsp;</c12><c4>=&gt;</c4><c21>&nbsp;</c21><c26><a href="../libstd/option.rs.html#156">Some</a></c26><c4>(</c4><c12>true</c12><c4>)</c4><c3>,</c3><c21>
-</c21><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n[14141, 14142, 14138, 14139, 14140]">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20>"false"</c20><c12>&nbsp;</c12><c4>=&gt;</c4><c21>&nbsp;</c21><c26><a href="../libstd/option.rs.html#156">Some</a></c26><c4>(</c4><c12>false</c12><c4>)</c4><c3>,</c3><c21>
-</c21><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n[14144, 14143]">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20>_</c20><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>=&gt;</c4><c21>&nbsp;</c21><c26><a href="../libstd/option.rs.html#154">None</a></c26><c3>,</c3><c21>
-</c21><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a id="n[]">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c3>}</c3><c22>
-</c22><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a id="n[14146]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a id="n[14151, 14148, 14149]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/ops.rs.html#291">Not</a></c33><c5><a href="../libstd/ops.rs.html#291">&lt;bool&gt;</a></c5><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;The&nbsp;logical&nbsp;complement&nbsp;of&nbsp;a&nbsp;boolean&nbsp;value.
-</c42><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Examples
-</c42><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```rust
-</c42><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(!true,&nbsp;false);
-</c42><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(!false,&nbsp;true);
-</c42><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n[14152, 14158, 14159, 14157, 14155, 14161, 14160]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;not</c30><c4>(</c4><c20><a href="#91_11_refs">&amp;self</a></c20><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c5>!*</c5><c26><a href="../libstd/bool.rs.html#91">self</a></c26><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a id="n[14162]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a id="n[14164, 14169, 14167, 14166]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/ops.rs.html#321">BitAnd</a></c33><c5><a href="../libstd/ops.rs.html#321">&lt;bool</a></c5><c5>,</c5><c5><a href="../libstd/ops.rs.html#321">&nbsp;bool&gt;</a></c5><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Conjunction&nbsp;of&nbsp;two&nbsp;boolean&nbsp;values.
-</c42><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Examples
-</c42><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```rust
-</c42><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitand(&amp;false),&nbsp;false);
-</c42><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitand(&amp;false),&nbsp;false);
-</c42><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitand(&amp;true),&nbsp;false);
-</c42><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitand(&amp;true),&nbsp;true);
-</c42><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;&amp;&nbsp;false,&nbsp;false);
-</c42><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;&amp;&nbsp;false,&nbsp;false);
-</c42><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;&amp;&nbsp;true,&nbsp;false);
-</c42><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;&amp;&nbsp;true,&nbsp;true);
-</c42><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><a id="n[14170, 14185, 14176, 14184, 14173, 14182, 14183, 14177, 14180, 14178, 14186, 14181]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;bitand</c30><c4>(</c4><c20><a href="#112_14_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#112_21_refs">b</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c5>*</c5><c26><a href="../libstd/bool.rs.html#112">self</a></c26><c5>&nbsp;&amp;&nbsp;*</c5><c26><a href="../libstd/bool.rs.html#112">b</a></c26><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a id="n[14187]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n[14191, 14194, 14189, 14192]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/ops.rs.html#351">BitOr</a></c33><c5><a href="../libstd/ops.rs.html#351">&lt;bool</a></c5><c5>,</c5><c5><a href="../libstd/ops.rs.html#351">&nbsp;bool&gt;</a></c5><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Disjunction&nbsp;of&nbsp;two&nbsp;boolean&nbsp;values.
-</c42><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Examples
-</c42><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```rust
-</c42><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitor(&amp;false),&nbsp;false);
-</c42><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitor(&amp;false),&nbsp;true);
-</c42><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitor(&amp;true),&nbsp;true);
-</c42><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitor(&amp;true),&nbsp;true);
-</c42><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;|&nbsp;false,&nbsp;false);
-</c42><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;|&nbsp;false,&nbsp;true);
-</c42><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;|&nbsp;true,&nbsp;true);
-</c42><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;|&nbsp;true,&nbsp;true);
-</c42><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a id="n[14206, 14205, 14203, 14207, 14211, 14210, 14198, 14195, 14208, 14209, 14201, 14202]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;bitor</c30><c4>(</c4><c20><a href="#133_13_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#133_20_refs">b</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c5>*</c5><c26><a href="../libstd/bool.rs.html#133">self</a></c26><c5>&nbsp;|&nbsp;*</c5><c26><a href="../libstd/bool.rs.html#133">b</a></c26><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><a id="n[14212]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><a id="n[14214, 14217, 14219, 14216]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/ops.rs.html#381">BitXor</a></c33><c5><a href="../libstd/ops.rs.html#381">&lt;bool</a></c5><c5>,</c5><c5><a href="../libstd/ops.rs.html#381">&nbsp;bool&gt;</a></c5><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;An&nbsp;'exclusive&nbsp;or'&nbsp;of&nbsp;two&nbsp;boolean&nbsp;values.
-</c42><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;'exclusive&nbsp;or'&nbsp;is&nbsp;identical&nbsp;to&nbsp;`or(and(a,&nbsp;not(b)),&nbsp;and(not(a),&nbsp;b))`.
-</c42><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Examples
-</c42><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```rust
-</c42><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitxor(&amp;false),&nbsp;false);
-</c42><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitxor(&amp;false),&nbsp;true);
-</c42><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitxor(&amp;true),&nbsp;true);
-</c42><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitxor(&amp;true),&nbsp;false);
-</c42><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
-</c42><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;^&nbsp;false,&nbsp;false);
-</c42><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;^&nbsp;false,&nbsp;true);
-</c42><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;^&nbsp;true,&nbsp;true);
-</c42><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;^&nbsp;true,&nbsp;false);
-</c42><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><a id="n[14232, 14234, 14227, 14228, 14231, 14226, 14235, 14236, 14223, 14220, 14230, 14233]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;bitxor</c30><c4>(</c4><c20><a href="#156_14_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#156_21_refs">b</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c5>*</c5><c26><a href="../libstd/bool.rs.html#156">self</a></c26><c5>&nbsp;^&nbsp;*</c5><c26><a href="../libstd/bool.rs.html#156">b</a></c26><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><a id="n[14237]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><a id="n[14240, 14238]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#162">Ord</a></c33><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><a id="n[14251, 14252, 14247, 14241, 14248, 14244, 14249]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;lt</c30><c4>(</c4><c20><a href="#162_10_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#162_17_refs">other</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><a id="n[14257, 14255, 14256, 14258, 14260, 14263, 14261, 14254, 14262, 14259]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/bool.rs.html#49">to_bit::&lt;</a></c26><c8><a href="../libstd/bool.rs.html#49">u8</a></c8><c26><a href="../libstd/bool.rs.html#49">&gt;</a></c26><c4>(</c4><c5>*</c5><c26><a href="../libstd/bool.rs.html#162">self</a></c26><c4>)</c4><c1>&nbsp;&lt;&nbsp;</c1><c26><a href="../libstd/bool.rs.html#49">to_bit</a></c26><c4>(</c4><c5>*</c5><c26><a href="../libstd/bool.rs.html#162">other</a></c26><c4>)</c4><c22>
-</c22><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><a id="n[14264]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><a id="n[14267, 14265]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#94">TotalOrd</a></c33><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><a id="n[14278, 14279, 14268, 14271, 14275, 14276, 14274]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;cmp</c30><c4>(</c4><c20><a href="#170_11_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#170_18_refs">other</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/cmp.rs.html#91">Ordering</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><a id="n[14286, 14282, 14281, 14289, 14288, 14285, 14287, 14291, 14284, 14283, 14290]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/bool.rs.html#49">to_bit::&lt;</a></c26><c8><a href="../libstd/bool.rs.html#49">u8</a></c8><c26><a href="../libstd/bool.rs.html#49">&gt;</a></c26><c4>(</c4><c5><a href="../libstd/cmp.rs.html#116">*</a></c5><c26><a href="../libstd/bool.rs.html#170">self</a></c26><c4>)</c4><c10><a href="../libstd/cmp.rs.html#116">.cmp</a></c10><c4>(</c4><c5><a href="../libstd/cmp.rs.html#116">&amp;</a></c5><c26><a href="../libstd/bool.rs.html#49">to_bit</a></c26><c4>(</c4><c5><a href="../libstd/cmp.rs.html#116">*</a></c5><c26><a href="../libstd/bool.rs.html#170">other</a></c26><c4>))</c4><c22>
-</c22><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Equality&nbsp;between&nbsp;two&nbsp;boolean&nbsp;values.
-</c42><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Two&nbsp;booleans&nbsp;are&nbsp;equal&nbsp;if&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;value.
-</c42><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;Examples
-</c42><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```rust
-</c42><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;assert_eq!(false.eq(&amp;true),&nbsp;false);
-</c42><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;assert_eq!(false&nbsp;==&nbsp;false,&nbsp;true);
-</c42><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;assert_eq!(false&nbsp;!=&nbsp;true,&nbsp;true);
-</c42><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;assert_eq!(false.ne(&amp;false),&nbsp;false);
-</c42><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><a id="n[14292]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><a id="n[14295, 14293]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#36">Eq</a></c33><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><a id="n[14312, 14311, 14313, 14302, 14308, 14314, 14307, 14306, 14309, 14296, 14310, 14299, 14304, 14303]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;eq</c30><c4>(</c4><c20><a href="#190_10_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#190_17_refs">other</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c4>(</c4><c5>*</c5><c26><a href="../libstd/bool.rs.html#190">self</a></c26><c4>)</c4><c5>&nbsp;==&nbsp;</c5><c4>(</c4><c5>*</c5><c26><a href="../libstd/bool.rs.html#190">other</a></c26><c4>)</c4><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><a id="n[14315]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><a id="n[14316, 14318]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/default.rs.html#13">Default</a></c33><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><a id="n[14323, 14322, 14321, 14319]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;default</c30><c4>()</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c12>false</c12><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><a id="n[]">&nbsp;</a><c21>mod</c21><c38>&nbsp;tests&nbsp;</c38><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;prelude::*</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::to_bit</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_to_bit</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>to_bit::&lt;u8&gt;</c0><c4>(</c4><c0>true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;1u8</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>to_bit::&lt;u8&gt;</c0><c4>(</c4><c0>false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;0u8</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_eq</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.eq</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;==&nbsp;false</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;!=&nbsp;true</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.ne</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_bitand</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitand</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitand</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitand</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitand</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;&amp;&nbsp;false</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;&amp;&nbsp;false</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;&amp;&nbsp;true</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;&amp;&nbsp;true</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_bitor</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitor</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitor</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitor</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitor</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;|&nbsp;false</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;|&nbsp;false</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;|&nbsp;true</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;|&nbsp;true</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_bitxor</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitxor</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitxor</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitxor</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitxor</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;^&nbsp;false</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;^&nbsp;false</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;^&nbsp;true</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;^&nbsp;true</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_not</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>!true</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>!false</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_from_str</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>from_str::&lt;bool&gt;</c0><c4>(</c4><c0>"true"</c0><c4>)</c4><c3>,</c3><c0>&nbsp;Some</c0><c4>(</c4><c0>true</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>from_str::&lt;bool&gt;</c0><c4>(</c4><c0>"false"</c0><c4>)</c4><c3>,</c3><c0>&nbsp;Some</c0><c4>(</c4><c0>false</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>from_str::&lt;bool&gt;</c0><c4>(</c4><c0>"not&nbsp;even&nbsp;a&nbsp;boolean"</c0><c4>)</c4><c3>,</c3><c0>&nbsp;None</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_to_str</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.to_str</c0><c4>()</c4><c3>,</c3><c0>&nbsp;~"false"</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.to_str</c0><c4>()</c4><c3>,</c3><c0>&nbsp;~"true"</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_ord</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true&nbsp;&gt;&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!</c0><c4>(</c4><c0>false&nbsp;&gt;&nbsp;true</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false&nbsp;&lt;&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!</c0><c4>(</c4><c0>true&nbsp;&lt;&nbsp;false</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false&nbsp;&lt;=&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false&nbsp;&gt;=&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true&nbsp;&lt;=&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true&nbsp;&gt;=&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false&nbsp;&lt;=&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!</c0><c4>(</c4><c0>false&nbsp;&gt;=&nbsp;true</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true&nbsp;&gt;=&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!</c0><c4>(</c4><c0>true&nbsp;&lt;=&nbsp;false</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_totalord</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true.cmp</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c0>&nbsp;==&nbsp;Equal</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false.cmp</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c0>&nbsp;==&nbsp;Equal</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true.cmp</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c0>&nbsp;==&nbsp;Greater</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false.cmp</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c0>&nbsp;==&nbsp;Less</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../libstd/bool.rs.html">bool.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c40>//!&nbsp;Operations&nbsp;on&nbsp;boolean&nbsp;values&nbsp;(`bool`&nbsp;type)
+</c40><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c40>//!
+</c40><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c40>//!&nbsp;A&nbsp;quick&nbsp;summary:
+</c40><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c40>//!
+</c40><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c40>//!&nbsp;Implementations&nbsp;of&nbsp;the&nbsp;following&nbsp;traits:
+</c40><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c40>//!
+</c40><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c40>//!&nbsp;*&nbsp;`FromStr`
+</c40><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c40>//!&nbsp;*&nbsp;`Not`
+</c40><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c40>//!&nbsp;*&nbsp;`Ord`
+</c40><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c40>//!&nbsp;*&nbsp;`TotalOrd`
+</c40><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c40>//!&nbsp;*&nbsp;`Eq`
+</c40><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c40>//!&nbsp;*&nbsp;`Default`
+</c40><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c40>//!&nbsp;*&nbsp;`Zero`
+</c40><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c40>//!
+</c40><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c40>//!&nbsp;A&nbsp;`to_bit`&nbsp;conversion&nbsp;function.
+</c40><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;from_str::FromStr</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;num::</c0><c3>{</c3><c0>Int</c0><c3>,</c3><c0>&nbsp;one</c0><c3>,</c3><c0>&nbsp;zero</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::</c0><c3>{</c3><c0>None</c0><c3>,</c3><c0>&nbsp;Option</c0><c3>,</c3><c0>&nbsp;Some</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>&nbsp;use&nbsp;cmp::</c50><c3>{</c3><c50>Eq</c50><c3>,</c3><c50>&nbsp;Ord</c50><c3>,</c3><c50>&nbsp;TotalOrd</c50><c3>,</c3><c50>&nbsp;Ordering</c50><c3>};</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>&nbsp;use&nbsp;ops::</c50><c3>{</c3><c50>Not</c50><c3>,</c3><c50>&nbsp;BitAnd</c50><c3>,</c3><c50>&nbsp;BitOr</c50><c3>,</c3><c50>&nbsp;BitXor</c50><c3>};</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>&nbsp;use&nbsp;default::Default</c50><c3>;</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c42>/////////////////////////////////////////////////////////////////////////////
+</c42><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c40>//&nbsp;Freestanding&nbsp;functions
+</c40><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c42>/////////////////////////////////////////////////////////////////////////////
+</c42><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c42>///&nbsp;Convert&nbsp;a&nbsp;`bool`&nbsp;to&nbsp;an&nbsp;integer.
+</c42><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;Examples
+</c42><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c42>///&nbsp;```rust
+</c42><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c42>///&nbsp;use&nbsp;std::bool;
+</c42><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c42>///&nbsp;assert_eq!(bool::to_bit::&lt;u8&gt;(true),&nbsp;1u8);
+</c42><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c42>///&nbsp;assert_eq!(bool::to_bit::&lt;u8&gt;(false),&nbsp;0u8);
+</c42><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a id="n14098">&nbsp;</a><c50>#</c50><c3>[</c3><c50>inline</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n14101"><a id="n14102"><a id="n14107"><a id="n14104"><a id="n14106">&nbsp;</a></a></a></a></a><c21>pub</c21><c1><a href="#49_10_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#49_10_refs">&nbsp;to_bit</a></c30><c5><a href="#49_10_refs">&lt;N:&nbsp;</a></c5><c5><a href="../libstd/num/mod.rs.html#255">Int</a></c5><c5><a href="#49_10_refs">&gt;</a></c5><c4>(</c4><c20><a href="#50_22_refs">p</a></c20><c1><a href="#49_10_refs">:&nbsp;</a></c1><c8><a href="#49_10_refs">bool</a></c8><c4>)</c4><c1><a href="#49_10_refs">&nbsp;</a></c1><c4>-&gt;</c4><c1><a href="#49_10_refs">&nbsp;</a></c1><c8><a href="c=0 n=14105">N</a></c8><c1><a href="#49_10_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#49_10_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n14111"><a id="n14109"><a id="n14116"><a id="n14113"><a id="n14115"><a id="n14114"><a id="n14110"><a id="n14112"><a id="n14108">&nbsp;</a></a></a></a></a></a></a></a></a><c22><a href="#49_10_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>if</c21><c21><a href="#49_10_refs">&nbsp;</a></c21><c26><a href="../libstd/bool.rs.html#50">p</a></c26><c21><a href="#49_10_refs">&nbsp;</a></c21><c3>{</c3><c22><a href="#49_10_refs">&nbsp;</a></c22><c26><a href="../libstd/num/mod.rs.html#97">one</a></c26><c4>()</c4><c22><a href="#49_10_refs">&nbsp;</a></c22><c3>}</c3><c21><a href="#49_10_refs">&nbsp;else&nbsp;</a></c21><c3>{</c3><c22><a href="#49_10_refs">&nbsp;</a></c22><c26><a href="../libstd/num/mod.rs.html#74">zero</a></c26><c4>()</c4><c22><a href="#49_10_refs">&nbsp;</a></c22><c3>}</c3><c22><a href="#49_10_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c42>/////////////////////////////////////////////////////////////////////////////
+</c42><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c40>//&nbsp;Trait&nbsp;impls&nbsp;on&nbsp;`bool`
+</c40><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c42>/////////////////////////////////////////////////////////////////////////////
+</c42><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n14117">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a id="n14120"><a id="n14118">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/from_str.rs.html#16">FromStr</a></c33><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Parse&nbsp;a&nbsp;`bool`&nbsp;from&nbsp;a&nbsp;string.
+</c42><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Yields&nbsp;an&nbsp;`Option&lt;bool&gt;`,&nbsp;because&nbsp;`s`&nbsp;may&nbsp;or&nbsp;may&nbsp;not&nbsp;actually&nbsp;be&nbsp;parseable.
+</c42><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Examples
+</c42><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```rust
+</c42><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(from_str::&lt;bool&gt;("true"),&nbsp;Some(true));
+</c42><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(from_str::&lt;bool&gt;("false"),&nbsp;Some(false));
+</c42><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(from_str::&lt;bool&gt;("not&nbsp;even&nbsp;a&nbsp;boolean"),&nbsp;None);
+</c42><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a id="n14125"><a id="n14128"><a id="n14126"><a id="n14121"><a id="n14131"><a id="n14124"><a id="n14130">&nbsp;</a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;from_str</c30><c4>(</c4><c20><a href="#71_16_refs">s</a></c20><c18>:&nbsp;</c18><c8>&amp;str</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/option.rs.html#151">Option&lt;bool&gt;</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a id="n14132"><a id="n14145">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match&nbsp;</c21><c26><a href="../libstd/bool.rs.html#71">s</a></c26><c21>&nbsp;</c21><c3>{</c3><c21>
+</c21><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a id="n14134"><a id="n14137"><a id="n14133"><a id="n14135"><a id="n14136">&nbsp;</a></a></a></a></a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20>"true"</c20><c12>&nbsp;&nbsp;</c12><c4>=&gt;</c4><c21>&nbsp;</c21><c26><a href="../libstd/option.rs.html#156">Some</a></c26><c4>(</c4><c12>true</c12><c4>)</c4><c3>,</c3><c21>
+</c21><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n14140"><a id="n14141"><a id="n14139"><a id="n14138"><a id="n14142">&nbsp;</a></a></a></a></a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20>"false"</c20><c12>&nbsp;</c12><c4>=&gt;</c4><c21>&nbsp;</c21><c26><a href="../libstd/option.rs.html#156">Some</a></c26><c4>(</c4><c12>false</c12><c4>)</c4><c3>,</c3><c21>
+</c21><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n14144"><a id="n14143">&nbsp;</a></a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20>_</c20><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c4>=&gt;</c4><c21>&nbsp;</c21><c26><a href="../libstd/option.rs.html#154">None</a></c26><c3>,</c3><c21>
+</c21><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a id="n14146">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a id="n14148"><a id="n14151"><a id="n14149">&nbsp;</a></a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/ops.rs.html#291">Not</a></c33><c5><a href="../libstd/ops.rs.html#291">&lt;bool&gt;</a></c5><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;The&nbsp;logical&nbsp;complement&nbsp;of&nbsp;a&nbsp;boolean&nbsp;value.
+</c42><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Examples
+</c42><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```rust
+</c42><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(!true,&nbsp;false);
+</c42><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(!false,&nbsp;true);
+</c42><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n14160"><a id="n14158"><a id="n14157"><a id="n14152"><a id="n14155"><a id="n14161"><a id="n14159">&nbsp;</a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;not</c30><c4>(</c4><c20><a href="#91_11_refs">&amp;self</a></c20><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c5>!*</c5><c26><a href="../libstd/bool.rs.html#91">self</a></c26><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a id="n14162">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a id="n14167"><a id="n14166"><a id="n14169"><a id="n14164">&nbsp;</a></a></a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/ops.rs.html#321">BitAnd</a></c33><c5><a href="../libstd/ops.rs.html#321">&lt;bool</a></c5><c5>,</c5><c5><a href="../libstd/ops.rs.html#321">&nbsp;bool&gt;</a></c5><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Conjunction&nbsp;of&nbsp;two&nbsp;boolean&nbsp;values.
+</c42><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Examples
+</c42><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```rust
+</c42><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitand(&amp;false),&nbsp;false);
+</c42><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitand(&amp;false),&nbsp;false);
+</c42><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitand(&amp;true),&nbsp;false);
+</c42><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitand(&amp;true),&nbsp;true);
+</c42><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;&amp;&nbsp;false,&nbsp;false);
+</c42><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;&amp;&nbsp;false,&nbsp;false);
+</c42><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;&amp;&nbsp;true,&nbsp;false);
+</c42><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;&amp;&nbsp;true,&nbsp;true);
+</c42><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><a id="n14178"><a id="n14186"><a id="n14183"><a id="n14173"><a id="n14182"><a id="n14170"><a id="n14181"><a id="n14176"><a id="n14184"><a id="n14177"><a id="n14185"><a id="n14180">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;bitand</c30><c4>(</c4><c20><a href="#112_14_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#112_21_refs">b</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c5>*</c5><c26><a href="../libstd/bool.rs.html#112">self</a></c26><c5>&nbsp;&amp;&nbsp;*</c5><c26><a href="../libstd/bool.rs.html#112">b</a></c26><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a id="n14187">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n14189"><a id="n14194"><a id="n14192"><a id="n14191">&nbsp;</a></a></a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/ops.rs.html#351">BitOr</a></c33><c5><a href="../libstd/ops.rs.html#351">&lt;bool</a></c5><c5>,</c5><c5><a href="../libstd/ops.rs.html#351">&nbsp;bool&gt;</a></c5><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Disjunction&nbsp;of&nbsp;two&nbsp;boolean&nbsp;values.
+</c42><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Examples
+</c42><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```rust
+</c42><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitor(&amp;false),&nbsp;false);
+</c42><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitor(&amp;false),&nbsp;true);
+</c42><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitor(&amp;true),&nbsp;true);
+</c42><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitor(&amp;true),&nbsp;true);
+</c42><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;|&nbsp;false,&nbsp;false);
+</c42><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;|&nbsp;false,&nbsp;true);
+</c42><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;|&nbsp;true,&nbsp;true);
+</c42><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;|&nbsp;true,&nbsp;true);
+</c42><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a id="n14207"><a id="n14198"><a id="n14208"><a id="n14205"><a id="n14211"><a id="n14209"><a id="n14210"><a id="n14201"><a id="n14195"><a id="n14203"><a id="n14202"><a id="n14206">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;bitor</c30><c4>(</c4><c20><a href="#133_13_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#133_20_refs">b</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c5>*</c5><c26><a href="../libstd/bool.rs.html#133">self</a></c26><c5>&nbsp;|&nbsp;*</c5><c26><a href="../libstd/bool.rs.html#133">b</a></c26><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><a id="n14212">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><a id="n14219"><a id="n14216"><a id="n14214"><a id="n14217">&nbsp;</a></a></a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/ops.rs.html#381">BitXor</a></c33><c5><a href="../libstd/ops.rs.html#381">&lt;bool</a></c5><c5>,</c5><c5><a href="../libstd/ops.rs.html#381">&nbsp;bool&gt;</a></c5><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;An&nbsp;'exclusive&nbsp;or'&nbsp;of&nbsp;two&nbsp;boolean&nbsp;values.
+</c42><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;'exclusive&nbsp;or'&nbsp;is&nbsp;identical&nbsp;to&nbsp;`or(and(a,&nbsp;not(b)),&nbsp;and(not(a),&nbsp;b))`.
+</c42><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Examples
+</c42><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```rust
+</c42><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitxor(&amp;false),&nbsp;false);
+</c42><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitxor(&amp;false),&nbsp;true);
+</c42><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false.bitxor(&amp;true),&nbsp;true);
+</c42><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true.bitxor(&amp;true),&nbsp;false);
+</c42><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;^&nbsp;false,&nbsp;false);
+</c42><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;^&nbsp;false,&nbsp;true);
+</c42><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(false&nbsp;^&nbsp;true,&nbsp;true);
+</c42><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;assert_eq!(true&nbsp;^&nbsp;true,&nbsp;false);
+</c42><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><a id="n14236"><a id="n14226"><a id="n14220"><a id="n14232"><a id="n14230"><a id="n14231"><a id="n14234"><a id="n14233"><a id="n14223"><a id="n14228"><a id="n14235"><a id="n14227">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;bitxor</c30><c4>(</c4><c20><a href="#156_14_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#156_21_refs">b</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c5>*</c5><c26><a href="../libstd/bool.rs.html#156">self</a></c26><c5>&nbsp;^&nbsp;*</c5><c26><a href="../libstd/bool.rs.html#156">b</a></c26><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><a id="n14237">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><a id="n14238"><a id="n14240">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#162">Ord</a></c33><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><a id="n14247"><a id="n14251"><a id="n14249"><a id="n14244"><a id="n14248"><a id="n14252"><a id="n14241">&nbsp;</a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;lt</c30><c4>(</c4><c20><a href="#162_10_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#162_17_refs">other</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><a id="n14255"><a id="n14260"><a id="n14261"><a id="n14258"><a id="n14254"><a id="n14257"><a id="n14262"><a id="n14263"><a id="n14259"><a id="n14256">&nbsp;</a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/bool.rs.html#49">to_bit::&lt;</a></c26><c8><a href="../libstd/bool.rs.html#49">u8</a></c8><c26><a href="../libstd/bool.rs.html#49">&gt;</a></c26><c4>(</c4><c5>*</c5><c26><a href="../libstd/bool.rs.html#162">self</a></c26><c4>)</c4><c1>&nbsp;&lt;&nbsp;</c1><c26><a href="../libstd/bool.rs.html#49">to_bit</a></c26><c4>(</c4><c5>*</c5><c26><a href="../libstd/bool.rs.html#162">other</a></c26><c4>)</c4><c22>
+</c22><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><a id="n14264">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><a id="n14267"><a id="n14265">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#94">TotalOrd</a></c33><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><a id="n14276"><a id="n14268"><a id="n14275"><a id="n14278"><a id="n14279"><a id="n14274"><a id="n14271">&nbsp;</a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;cmp</c30><c4>(</c4><c20><a href="#170_11_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#170_18_refs">other</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/cmp.rs.html#91">Ordering</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><a id="n14291"><a id="n14287"><a id="n14285"><a id="n14290"><a id="n14282"><a id="n14286"><a id="n14283"><a id="n14281"><a id="n14288"><a id="n14289"><a id="n14284">&nbsp;</a></a></a></a></a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/bool.rs.html#49">to_bit::&lt;</a></c26><c8><a href="../libstd/bool.rs.html#49">u8</a></c8><c26><a href="../libstd/bool.rs.html#49">&gt;</a></c26><c4>(</c4><c5><a href="../libstd/cmp.rs.html#116">*</a></c5><c26><a href="../libstd/bool.rs.html#170">self</a></c26><c4>)</c4><c10><a href="../libstd/cmp.rs.html#116">.cmp</a></c10><c4>(</c4><c5><a href="../libstd/cmp.rs.html#116">&amp;</a></c5><c26><a href="../libstd/bool.rs.html#49">to_bit</a></c26><c4>(</c4><c5><a href="../libstd/cmp.rs.html#116">*</a></c5><c26><a href="../libstd/bool.rs.html#170">other</a></c26><c4>))</c4><c22>
+</c22><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a>&nbsp;<c42>///&nbsp;Equality&nbsp;between&nbsp;two&nbsp;boolean&nbsp;values.
+</c42><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a>&nbsp;<c42>///&nbsp;Two&nbsp;booleans&nbsp;are&nbsp;equal&nbsp;if&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;value.
+</c42><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;Examples
+</c42><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a>&nbsp;<c42>///&nbsp;```rust
+</c42><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a>&nbsp;<c42>///&nbsp;assert_eq!(false.eq(&amp;true),&nbsp;false);
+</c42><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a>&nbsp;<c42>///&nbsp;assert_eq!(false&nbsp;==&nbsp;false,&nbsp;true);
+</c42><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a>&nbsp;<c42>///&nbsp;assert_eq!(false&nbsp;!=&nbsp;true,&nbsp;true);
+</c42><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a>&nbsp;<c42>///&nbsp;assert_eq!(false.ne(&amp;false),&nbsp;false);
+</c42><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><a id="n14292">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><a id="n14295"><a id="n14293">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#36">Eq</a></c33><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><a id="n14309"><a id="n14308"><a id="n14306"><a id="n14312"><a id="n14296"><a id="n14311"><a id="n14302"><a id="n14303"><a id="n14310"><a id="n14304"><a id="n14307"><a id="n14313"><a id="n14314"><a id="n14299">&nbsp;</a></a></a></a></a></a></a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;eq</c30><c4>(</c4><c20><a href="#190_10_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#190_17_refs">other</a></c20><c18>:&nbsp;</c18><c8>&amp;bool</c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c4>(</c4><c5>*</c5><c26><a href="../libstd/bool.rs.html#190">self</a></c26><c4>)</c4><c5>&nbsp;==&nbsp;</c5><c4>(</c4><c5>*</c5><c26><a href="../libstd/bool.rs.html#190">other</a></c26><c4>)</c4><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><a id="n14315">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><a id="n14316"><a id="n14318">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/default.rs.html#13">Default</a></c33><c33>&nbsp;for&nbsp;bool&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><a id="n14323"><a id="n14319"><a id="n14321"><a id="n14322">&nbsp;</a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;default</c30><c4>()</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c12>false</c12><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;tests&nbsp;</c38><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;prelude::*</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::to_bit</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_to_bit</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>to_bit::&lt;u8&gt;</c0><c4>(</c4><c0>true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;1u8</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>to_bit::&lt;u8&gt;</c0><c4>(</c4><c0>false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;0u8</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_eq</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.eq</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;==&nbsp;false</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;!=&nbsp;true</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.ne</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_bitand</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitand</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitand</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitand</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitand</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;&amp;&nbsp;false</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;&amp;&nbsp;false</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;&amp;&nbsp;true</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;&amp;&nbsp;true</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_bitor</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitor</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitor</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitor</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitor</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;|&nbsp;false</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;|&nbsp;false</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;|&nbsp;true</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;|&nbsp;true</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_bitxor</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitxor</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitxor</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.bitxor</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.bitxor</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;^&nbsp;false</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;^&nbsp;false</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false&nbsp;^&nbsp;true</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true&nbsp;^&nbsp;true</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_not</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>!true</c0><c3>,</c3><c0>&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>!false</c0><c3>,</c3><c0>&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_from_str</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>from_str::&lt;bool&gt;</c0><c4>(</c4><c0>"true"</c0><c4>)</c4><c3>,</c3><c0>&nbsp;Some</c0><c4>(</c4><c0>true</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>from_str::&lt;bool&gt;</c0><c4>(</c4><c0>"false"</c0><c4>)</c4><c3>,</c3><c0>&nbsp;Some</c0><c4>(</c4><c0>false</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>from_str::&lt;bool&gt;</c0><c4>(</c4><c0>"not&nbsp;even&nbsp;a&nbsp;boolean"</c0><c4>)</c4><c3>,</c3><c0>&nbsp;None</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_to_str</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>false.to_str</c0><c4>()</c4><c3>,</c3><c0>&nbsp;~"false"</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>true.to_str</c0><c4>()</c4><c3>,</c3><c0>&nbsp;~"true"</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_ord</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true&nbsp;&gt;&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!</c0><c4>(</c4><c0>false&nbsp;&gt;&nbsp;true</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false&nbsp;&lt;&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!</c0><c4>(</c4><c0>true&nbsp;&lt;&nbsp;false</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false&nbsp;&lt;=&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false&nbsp;&gt;=&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true&nbsp;&lt;=&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true&nbsp;&gt;=&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false&nbsp;&lt;=&nbsp;true</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!</c0><c4>(</c4><c0>false&nbsp;&gt;=&nbsp;true</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true&nbsp;&gt;=&nbsp;false</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!</c0><c4>(</c4><c0>true&nbsp;&lt;=&nbsp;false</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_totalord</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true.cmp</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c0>&nbsp;==&nbsp;Equal</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false.cmp</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c0>&nbsp;==&nbsp;Equal</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>true.cmp</c0><c4>(</c4><c0>&amp;false</c0><c4>)</c4><c0>&nbsp;==&nbsp;Greater</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>false.cmp</c0><c4>(</c4><c0>&amp;true</c0><c4>)</c4><c0>&nbsp;==&nbsp;Less</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><div class="refblock"><br/><a id="49_10_refs"><a href="#49"><c40>libstd/bool.rs:49:10-49:10&nbsp;-fn-&nbsp;definition:<br/></c40><pr>#[inline]
 <br/>pub&nbsp;fn&nbsp;to_bit&lt;N:&nbsp;Int&gt;(p:&nbsp;bool)&nbsp;-&gt;&nbsp;N&nbsp;{
 <br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/bool.rs.html#163"><c40>163:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to_bit::&lt;u8&gt;(*self)&nbsp;&lt;&nbsp;to_bit(*other)
 <br/></a><a href="../libstd/bool.rs.html#171"><c40>171:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to_bit::&lt;u8&gt;(*self).cmp(&amp;to_bit(*other))
-<br/></a><a href="../libstd/bool.rs.html#171"><c40>171:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to_bit::&lt;u8&gt;(*self).cmp(&amp;to_bit(*other))
-<br/></a><a href="../libstd/bool.rs.html#163"><c40>163:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to_bit::&lt;u8&gt;(*self)&nbsp;&lt;&nbsp;to_bit(*other)
-<br/></a><br/></div></maintext></div></body>
+<br/></a><a href="../libstd/bool.rs.html#171"></a><a href="../libstd/bool.rs.html#163"><c40>163:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to_bit::&lt;u8&gt;(*self)&nbsp;&lt;&nbsp;to_bit(*other)
+<br/></a><c40>..1more..<br/></c40><br/></div></maintext></div></body>

@@ -1,142 +1,142 @@
-<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../liblog/">liblog</a></c0><c1>/</c1><c0><a href="./../liblog/macros.rs.html">macros.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2014&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;Logging&nbsp;macros
-</c40><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_escape</c50><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;The&nbsp;standard&nbsp;logging&nbsp;macro
-</c42><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;This&nbsp;macro&nbsp;will&nbsp;generically&nbsp;log&nbsp;over&nbsp;a&nbsp;provided&nbsp;level&nbsp;(of&nbsp;type&nbsp;u32)&nbsp;with&nbsp;a
-</c42><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;format!-based&nbsp;argument&nbsp;list.&nbsp;See&nbsp;documentation&nbsp;in&nbsp;`std::fmt`&nbsp;for&nbsp;details&nbsp;on
-</c42><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;how&nbsp;to&nbsp;use&nbsp;the&nbsp;syntax.
-</c42><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;Example
-</c42><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[feature(phase)];
-</c42><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
-</c42><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
-</c42><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;log!(log::DEBUG,&nbsp;"this&nbsp;is&nbsp;a&nbsp;debug&nbsp;message");
-</c42><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;log!(log::WARN,&nbsp;"this&nbsp;is&nbsp;a&nbsp;warning&nbsp;{}",&nbsp;"message");
-</c42><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;log!(6,&nbsp;"this&nbsp;is&nbsp;a&nbsp;custom&nbsp;logging&nbsp;level:&nbsp;{level}",&nbsp;level=6);
-</c42><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;}
-</c42><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[17]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[]">&nbsp;</a><c37>macro_rules!&nbsp;log</c37><c4>(</c4><c10>
-</c10><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$lvl:expr</c10><c3>,</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg:tt</c10><c4>)</c4><c10>+</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c3>{</c3><c10>
-</c10><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c21>let</c21><c10>&nbsp;lvl&nbsp;=&nbsp;$lvl</c10><c3>;</c3><c10>
-</c10><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c21>if</c21><c10>&nbsp;log_enabled!</c10><c4>(</c4><c10>lvl</c10><c4>)</c4><c10>&nbsp;</c10><c3>{</c3><c10>
-</c10><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;format_args!</c10><c4>(</c4><c10>|args|&nbsp;</c10><c3>{</c3><c10>&nbsp;::log::log</c10><c4>(</c4><c10>lvl</c10><c3>,</c3><c10>&nbsp;args</c10><c4>)</c4><c10>&nbsp;</c10><c3>},</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg</c10><c4>)</c4><c10>+</c10><c4>)</c4><c10>
-</c10><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c3>}</c3><c10>
-</c10><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c3>}</c3><c4>)</c4><c10>
-</c10><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[]">&nbsp;</a><c4>)</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;A&nbsp;convenience&nbsp;macro&nbsp;for&nbsp;logging&nbsp;at&nbsp;the&nbsp;error&nbsp;log&nbsp;level.
-</c42><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;Example
-</c42><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[feature(phase)];
-</c42><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
-</c42><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
-</c42><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;let&nbsp;error&nbsp;=&nbsp;3;
-</c42><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;error!("the&nbsp;build&nbsp;has&nbsp;failed&nbsp;with&nbsp;error&nbsp;code:&nbsp;{}",&nbsp;error);
-</c42><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;}
-</c42><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n[18]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n[]">&nbsp;</a><c37>macro_rules!&nbsp;error</c37><c4>(</c4><c10>
-</c10><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$</c10><c4>(</c4><c10>$arg:tt</c10><c4>)</c4><c10>*</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c10>log!</c10><c4>(</c4><c10>::log::ERROR</c10><c3>,</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg</c10><c4>)</c4><c10>*</c10><c4>))</c4><c10>
-</c10><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a id="n[]">&nbsp;</a><c4>)</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;A&nbsp;convenience&nbsp;macro&nbsp;for&nbsp;logging&nbsp;at&nbsp;the&nbsp;warning&nbsp;log&nbsp;level.
-</c42><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;Example
-</c42><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[feature(phase)];
-</c42><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
-</c42><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
-</c42><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;let&nbsp;code&nbsp;=&nbsp;3;
-</c42><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;warn!("you&nbsp;may&nbsp;like&nbsp;to&nbsp;know&nbsp;that&nbsp;a&nbsp;process&nbsp;exited&nbsp;with:&nbsp;{}",&nbsp;code);
-</c42><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;}
-</c42><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n[19]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n[]">&nbsp;</a><c37>macro_rules!&nbsp;warn</c37><c4>(</c4><c10>
-</c10><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$</c10><c4>(</c4><c10>$arg:tt</c10><c4>)</c4><c10>*</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c10>log!</c10><c4>(</c4><c10>::log::WARN</c10><c3>,</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg</c10><c4>)</c4><c10>*</c10><c4>))</c4><c10>
-</c10><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a id="n[]">&nbsp;</a><c4>)</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;A&nbsp;convenience&nbsp;macro&nbsp;for&nbsp;logging&nbsp;at&nbsp;the&nbsp;info&nbsp;log&nbsp;level.
-</c42><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;Example
-</c42><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[feature(phase)];
-</c42><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
-</c42><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
-</c42><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;let&nbsp;ret&nbsp;=&nbsp;3;
-</c42><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;info!("this&nbsp;function&nbsp;is&nbsp;about&nbsp;to&nbsp;return:&nbsp;{}",&nbsp;ret);
-</c42><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;}
-</c42><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n[20]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a id="n[]">&nbsp;</a><c37>macro_rules!&nbsp;info</c37><c4>(</c4><c10>
-</c10><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$</c10><c4>(</c4><c10>$arg:tt</c10><c4>)</c4><c10>*</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c10>log!</c10><c4>(</c4><c10>::log::INFO</c10><c3>,</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg</c10><c4>)</c4><c10>*</c10><c4>))</c4><c10>
-</c10><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a id="n[]">&nbsp;</a><c4>)</c4><c0>
-</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;A&nbsp;convenience&nbsp;macro&nbsp;for&nbsp;logging&nbsp;at&nbsp;the&nbsp;debug&nbsp;log&nbsp;level.&nbsp;This&nbsp;macro&nbsp;can&nbsp;also
-</c42><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;be&nbsp;omitted&nbsp;at&nbsp;compile&nbsp;time&nbsp;by&nbsp;passing&nbsp;`--cfg&nbsp;ndebug`&nbsp;to&nbsp;the&nbsp;compiler.&nbsp;If
-</c42><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;this&nbsp;option&nbsp;is&nbsp;not&nbsp;passed,&nbsp;then&nbsp;debug&nbsp;statements&nbsp;will&nbsp;be&nbsp;compiled.
-</c42><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;Example
-</c42><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[feature(phase)];
-</c42><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
-</c42><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
-</c42><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;debug!("x&nbsp;=&nbsp;{x},&nbsp;y&nbsp;=&nbsp;{y}",&nbsp;x=10,&nbsp;y=20);
-</c42><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;}
-</c42><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a id="n[21]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><a id="n[]">&nbsp;</a><c37>macro_rules!&nbsp;debug</c37><c4>(</c4><c10>
-</c10><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$</c10><c4>(</c4><c10>$arg:tt</c10><c4>)</c4><c10>*</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c10>if&nbsp;cfg!</c10><c4>(</c4><c10>not</c10><c4>(</c4><c10>ndebug</c10><c4>))</c4><c10>&nbsp;</c10><c3>{</c3><c10>&nbsp;log!</c10><c4>(</c4><c10>::log::DEBUG</c10><c3>,</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg</c10><c4>)</c4><c10>*</c10><c4>)</c4><c10>&nbsp;</c10><c3>}</c3><c4>)</c4><c10>
-</c10><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a id="n[]">&nbsp;</a><c4>)</c4><c0>
-</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;A&nbsp;macro&nbsp;to&nbsp;test&nbsp;whether&nbsp;a&nbsp;log&nbsp;level&nbsp;is&nbsp;enabled&nbsp;for&nbsp;the&nbsp;current&nbsp;module.
-</c42><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;Example
-</c42><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[feature(phase)];
-</c42><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
-</c42><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
-</c42><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;struct&nbsp;Point&nbsp;{&nbsp;x:&nbsp;int,&nbsp;y:&nbsp;int&nbsp;}
-</c42><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;fn&nbsp;some_expensive_computation()&nbsp;-&gt;&nbsp;Point&nbsp;{&nbsp;Point&nbsp;{&nbsp;x:&nbsp;1,&nbsp;y:&nbsp;2&nbsp;}&nbsp;}
-</c42><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;if&nbsp;log_enabled!(log::DEBUG)&nbsp;{
-</c42><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;x&nbsp;=&nbsp;some_expensive_computation();
-</c42><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug!("x.x&nbsp;=&nbsp;{},&nbsp;x.y&nbsp;=&nbsp;{}",&nbsp;x.x,&nbsp;x.y);
-</c42><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;}
-</c42><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;}
-</c42><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
-</c42><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a id="n[22]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><a id="n[]">&nbsp;</a><c37>macro_rules!&nbsp;log_enabled</c37><c4>(</c4><c10>
-</c10><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$lvl:expr</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c3>{</c3><c10>
-</c10><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c21>let</c21><c10>&nbsp;lvl&nbsp;=&nbsp;$lvl</c10><c3>;</c3><c10>
-</c10><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>lvl&nbsp;!=&nbsp;::log::DEBUG&nbsp;||&nbsp;cfg!</c10><c4>(</c4><c10>not</c10><c4>(</c4><c10>ndebug</c10><c4>)))</c4><c10>&nbsp;&amp;&amp;
-</c10><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lvl&nbsp;&lt;=&nbsp;::log::log_level</c10><c4>()</c4><c10>&nbsp;&amp;&amp;
-</c10><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::log::mod_enabled</c10><c4>(</c4><c10>lvl</c10><c3>,</c3><c10>&nbsp;module_path!</c10><c4>())</c4><c10>
-</c10><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><a id="n[]">&nbsp;</a><c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c3>}</c3><c4>)</c4><c10>
-</c10><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><a id="n[]">&nbsp;</a><c4>)</c4><c0>
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../liblog/">liblog</a></c0><c1>/</c1><c0><a href="./../liblog/macros.rs.html">macros.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2014&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c40>//!&nbsp;Logging&nbsp;macros
+</c40><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>macro_escape</c50><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;standard&nbsp;logging&nbsp;macro
+</c42><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;macro&nbsp;will&nbsp;generically&nbsp;log&nbsp;over&nbsp;a&nbsp;provided&nbsp;level&nbsp;(of&nbsp;type&nbsp;u32)&nbsp;with&nbsp;a
+</c42><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c42>///&nbsp;format!-based&nbsp;argument&nbsp;list.&nbsp;See&nbsp;documentation&nbsp;in&nbsp;`std::fmt`&nbsp;for&nbsp;details&nbsp;on
+</c42><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c42>///&nbsp;how&nbsp;to&nbsp;use&nbsp;the&nbsp;syntax.
+</c42><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;Example
+</c42><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c42>///&nbsp;#[feature(phase)];
+</c42><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
+</c42><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
+</c42><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c42>///&nbsp;log!(log::DEBUG,&nbsp;"this&nbsp;is&nbsp;a&nbsp;debug&nbsp;message");
+</c42><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c42>///&nbsp;log!(log::WARN,&nbsp;"this&nbsp;is&nbsp;a&nbsp;warning&nbsp;{}",&nbsp;"message");
+</c42><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c42>///&nbsp;log!(6,&nbsp;"this&nbsp;is&nbsp;a&nbsp;custom&nbsp;logging&nbsp;level:&nbsp;{level}",&nbsp;level=6);
+</c42><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;}
+</c42><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n17">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c37>macro_rules!&nbsp;log</c37><c4>(</c4><c10>
+</c10><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$lvl:expr</c10><c3>,</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg:tt</c10><c4>)</c4><c10>+</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c3>{</c3><c10>
+</c10><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c21>let</c21><c10>&nbsp;lvl&nbsp;=&nbsp;$lvl</c10><c3>;</c3><c10>
+</c10><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c21>if</c21><c10>&nbsp;log_enabled!</c10><c4>(</c4><c10>lvl</c10><c4>)</c4><c10>&nbsp;</c10><c3>{</c3><c10>
+</c10><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;format_args!</c10><c4>(</c4><c10>|args|&nbsp;</c10><c3>{</c3><c10>&nbsp;::log::log</c10><c4>(</c4><c10>lvl</c10><c3>,</c3><c10>&nbsp;args</c10><c4>)</c4><c10>&nbsp;</c10><c3>},</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg</c10><c4>)</c4><c10>+</c10><c4>)</c4><c10>
+</c10><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c3>}</c3><c10>
+</c10><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c3>}</c3><c4>)</c4><c10>
+</c10><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c4>)</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c42>///&nbsp;A&nbsp;convenience&nbsp;macro&nbsp;for&nbsp;logging&nbsp;at&nbsp;the&nbsp;error&nbsp;log&nbsp;level.
+</c42><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;Example
+</c42><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c42>///&nbsp;#[feature(phase)];
+</c42><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
+</c42><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
+</c42><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;let&nbsp;error&nbsp;=&nbsp;3;
+</c42><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c42>///&nbsp;error!("the&nbsp;build&nbsp;has&nbsp;failed&nbsp;with&nbsp;error&nbsp;code:&nbsp;{}",&nbsp;error);
+</c42><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;}
+</c42><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n18">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c37>macro_rules!&nbsp;error</c37><c4>(</c4><c10>
+</c10><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$</c10><c4>(</c4><c10>$arg:tt</c10><c4>)</c4><c10>*</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c10>log!</c10><c4>(</c4><c10>::log::ERROR</c10><c3>,</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg</c10><c4>)</c4><c10>*</c10><c4>))</c4><c10>
+</c10><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c4>)</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c42>///&nbsp;A&nbsp;convenience&nbsp;macro&nbsp;for&nbsp;logging&nbsp;at&nbsp;the&nbsp;warning&nbsp;log&nbsp;level.
+</c42><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;Example
+</c42><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c42>///&nbsp;#[feature(phase)];
+</c42><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
+</c42><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
+</c42><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;let&nbsp;code&nbsp;=&nbsp;3;
+</c42><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c42>///&nbsp;warn!("you&nbsp;may&nbsp;like&nbsp;to&nbsp;know&nbsp;that&nbsp;a&nbsp;process&nbsp;exited&nbsp;with:&nbsp;{}",&nbsp;code);
+</c42><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;}
+</c42><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n19">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a>&nbsp;<c37>macro_rules!&nbsp;warn</c37><c4>(</c4><c10>
+</c10><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$</c10><c4>(</c4><c10>$arg:tt</c10><c4>)</c4><c10>*</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c10>log!</c10><c4>(</c4><c10>::log::WARN</c10><c3>,</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg</c10><c4>)</c4><c10>*</c10><c4>))</c4><c10>
+</c10><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c4>)</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c42>///&nbsp;A&nbsp;convenience&nbsp;macro&nbsp;for&nbsp;logging&nbsp;at&nbsp;the&nbsp;info&nbsp;log&nbsp;level.
+</c42><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;Example
+</c42><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c42>///&nbsp;#[feature(phase)];
+</c42><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
+</c42><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
+</c42><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;let&nbsp;ret&nbsp;=&nbsp;3;
+</c42><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c42>///&nbsp;info!("this&nbsp;function&nbsp;is&nbsp;about&nbsp;to&nbsp;return:&nbsp;{}",&nbsp;ret);
+</c42><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;}
+</c42><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n20">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a>&nbsp;<c37>macro_rules!&nbsp;info</c37><c4>(</c4><c10>
+</c10><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$</c10><c4>(</c4><c10>$arg:tt</c10><c4>)</c4><c10>*</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c10>log!</c10><c4>(</c4><c10>::log::INFO</c10><c3>,</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg</c10><c4>)</c4><c10>*</c10><c4>))</c4><c10>
+</c10><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a>&nbsp;<c4>)</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a>&nbsp;<c42>///&nbsp;A&nbsp;convenience&nbsp;macro&nbsp;for&nbsp;logging&nbsp;at&nbsp;the&nbsp;debug&nbsp;log&nbsp;level.&nbsp;This&nbsp;macro&nbsp;can&nbsp;also
+</c42><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a>&nbsp;<c42>///&nbsp;be&nbsp;omitted&nbsp;at&nbsp;compile&nbsp;time&nbsp;by&nbsp;passing&nbsp;`--cfg&nbsp;ndebug`&nbsp;to&nbsp;the&nbsp;compiler.&nbsp;If
+</c42><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a>&nbsp;<c42>///&nbsp;this&nbsp;option&nbsp;is&nbsp;not&nbsp;passed,&nbsp;then&nbsp;debug&nbsp;statements&nbsp;will&nbsp;be&nbsp;compiled.
+</c42><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;Example
+</c42><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a>&nbsp;<c42>///&nbsp;#[feature(phase)];
+</c42><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a>&nbsp;<c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
+</c42><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
+</c42><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a>&nbsp;<c42>///&nbsp;debug!("x&nbsp;=&nbsp;{x},&nbsp;y&nbsp;=&nbsp;{y}",&nbsp;x=10,&nbsp;y=20);
+</c42><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;}
+</c42><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a id="n21">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c37>macro_rules!&nbsp;debug</c37><c4>(</c4><c10>
+</c10><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$</c10><c4>(</c4><c10>$arg:tt</c10><c4>)</c4><c10>*</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c10>if&nbsp;cfg!</c10><c4>(</c4><c10>not</c10><c4>(</c4><c10>ndebug</c10><c4>))</c4><c10>&nbsp;</c10><c3>{</c3><c10>&nbsp;log!</c10><c4>(</c4><c10>::log::DEBUG</c10><c3>,</c3><c10>&nbsp;$</c10><c4>(</c4><c10>$arg</c10><c4>)</c4><c10>*</c10><c4>)</c4><c10>&nbsp;</c10><c3>}</c3><c4>)</c4><c10>
+</c10><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a>&nbsp;<c4>)</c4><c0>
+</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a>&nbsp;<c42>///&nbsp;A&nbsp;macro&nbsp;to&nbsp;test&nbsp;whether&nbsp;a&nbsp;log&nbsp;level&nbsp;is&nbsp;enabled&nbsp;for&nbsp;the&nbsp;current&nbsp;module.
+</c42><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;Example
+</c42><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a>&nbsp;<c42>///&nbsp;#[feature(phase)];
+</c42><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a>&nbsp;<c42>///&nbsp;#[phase(syntax,&nbsp;link)]&nbsp;extern&nbsp;crate&nbsp;log;
+</c42><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;fn&nbsp;main()&nbsp;{
+</c42><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;struct&nbsp;Point&nbsp;{&nbsp;x:&nbsp;int,&nbsp;y:&nbsp;int&nbsp;}
+</c42><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;fn&nbsp;some_expensive_computation()&nbsp;-&gt;&nbsp;Point&nbsp;{&nbsp;Point&nbsp;{&nbsp;x:&nbsp;1,&nbsp;y:&nbsp;2&nbsp;}&nbsp;}
+</c42><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a>&nbsp;<c42>///&nbsp;if&nbsp;log_enabled!(log::DEBUG)&nbsp;{
+</c42><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a>&nbsp;<c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;x&nbsp;=&nbsp;some_expensive_computation();
+</c42><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a>&nbsp;<c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug!("x.x&nbsp;=&nbsp;{},&nbsp;x.y&nbsp;=&nbsp;{}",&nbsp;x.x,&nbsp;x.y);
+</c42><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a>&nbsp;<c42>///&nbsp;}
+</c42><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a>&nbsp;<c42>///&nbsp;#&nbsp;}
+</c42><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a>&nbsp;<c42>///&nbsp;```
+</c42><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a id="n22">&nbsp;</a><c50>#</c50><c3>[</c3><c50>macro_export</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a>&nbsp;<c37>macro_rules!&nbsp;log_enabled</c37><c4>(</c4><c10>
+</c10><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>$lvl:expr</c10><c4>)</c4><c10>&nbsp;</c10><c4>=&gt;</c4><c10>&nbsp;</c10><c4>(</c4><c3>{</c3><c10>
+</c10><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c21>let</c21><c10>&nbsp;lvl&nbsp;=&nbsp;$lvl</c10><c3>;</c3><c10>
+</c10><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c10><c4>(</c4><c10>lvl&nbsp;!=&nbsp;::log::DEBUG&nbsp;||&nbsp;cfg!</c10><c4>(</c4><c10>not</c10><c4>(</c4><c10>ndebug</c10><c4>)))</c4><c10>&nbsp;&amp;&amp;
+</c10><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lvl&nbsp;&lt;=&nbsp;::log::log_level</c10><c4>()</c4><c10>&nbsp;&amp;&amp;
+</c10><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::log::mod_enabled</c10><c4>(</c4><c10>lvl</c10><c3>,</c3><c10>&nbsp;module_path!</c10><c4>())</c4><c10>
+</c10><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a>&nbsp;<c10>&nbsp;&nbsp;&nbsp;&nbsp;</c10><c3>}</c3><c4>)</c4><c10>
+</c10><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a>&nbsp;<c4>)</c4><c0>
 </c0><br/><div class="refblock"></div></maintext></div></body>

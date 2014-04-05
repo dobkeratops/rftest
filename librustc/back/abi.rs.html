@@ -1,69 +1,69 @@
-<head><link href="../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../librustc/">librustc</a></c0><c1>/</c1><c0><a href="./../../librustc/back/">back</a></c0><c1>/</c1><c0><a href="./../../librustc/back/abi.rs.html">abi.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
-</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[435200]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[435203, 435202]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;rc_base_field_refcnt:&nbsp;uint&nbsp;=&nbsp;0u;
-</c36><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[435204]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[435207, 435206]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_refcnt:&nbsp;uint&nbsp;=&nbsp;0u;
-</c36><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[435208]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[435211, 435210]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_stk:&nbsp;uint&nbsp;=&nbsp;2u;
-</c36><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[435212]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[435215, 435214]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_runtime_sp:&nbsp;uint&nbsp;=&nbsp;3u;
-</c36><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[435216]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[435219, 435218]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_rust_sp:&nbsp;uint&nbsp;=&nbsp;4u;
-</c36><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[435220]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[435222, 435223]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_gc_alloc_chain:&nbsp;uint&nbsp;=&nbsp;5u;
-</c36><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[435224]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[435226, 435227]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_dom:&nbsp;uint&nbsp;=&nbsp;6u;
-</c36><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[435228]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[435230, 435231]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;n_visible_task_fields:&nbsp;uint&nbsp;=&nbsp;7u;
-</c36><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[435232]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[435235, 435234]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;dom_field_interrupt_flag:&nbsp;uint&nbsp;=&nbsp;1u;
-</c36><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[435236]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[435238, 435239]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;frame_glue_fns_field_mark:&nbsp;uint&nbsp;=&nbsp;0u;
-</c36><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[435240]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[435242, 435243]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;frame_glue_fns_field_drop:&nbsp;uint&nbsp;=&nbsp;1u;
-</c36><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[435244]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[435246, 435247]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;frame_glue_fns_field_reloc:&nbsp;uint&nbsp;=&nbsp;2u;
-</c36><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[435248]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[435250, 435252, 435251]">&nbsp;</a><c21>pub</c21><c1><a href="#34_1_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#34_1_refs">&nbsp;box_field_refcnt:&nbsp;uint&nbsp;=&nbsp;0u</a></c36><c36>;
-</c36><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[435255, 435254, 435256]">&nbsp;</a><c21>pub</c21><c1><a href="#35_40_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#35_40_refs">&nbsp;box_field_tydesc:&nbsp;uint&nbsp;=&nbsp;1u</a></c36><c36>;
-</c36><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[435259, 435258, 435260]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;box_field_prev:&nbsp;uint&nbsp;=&nbsp;2u;
-</c36><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[435263, 435264, 435262]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;box_field_next:&nbsp;uint&nbsp;=&nbsp;3u;
-</c36><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[435266, 435267]">&nbsp;</a><c21>pub</c21><c1><a href="#38_38_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#38_38_refs">&nbsp;box_field_body:&nbsp;uint&nbsp;=&nbsp;4u</a></c36><c36>;
-</c36><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[435268]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[435270, 435271]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;general_code_alignment:&nbsp;uint&nbsp;=&nbsp;16u;
-</c36><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[435272]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[435276, 435275, 435274]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;tydesc_field_size:&nbsp;uint&nbsp;=&nbsp;0u;
-</c36><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[435279, 435280, 435278]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;tydesc_field_align:&nbsp;uint&nbsp;=&nbsp;1u;
-</c36><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[435283, 435284, 435282]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;tydesc_field_drop_glue:&nbsp;uint&nbsp;=&nbsp;2u;
-</c36><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[435287, 435288, 435286]">&nbsp;</a><c21>pub</c21><c1><a href="#45_46_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#45_46_refs">&nbsp;tydesc_field_visit_glue:&nbsp;uint&nbsp;=&nbsp;3u</a></c36><c36>;
-</c36><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[435292, 435290, 435291]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;tydesc_field_name_offset:&nbsp;uint&nbsp;=&nbsp;4u;
-</c36><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[435295, 435294]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;n_tydesc_fields:&nbsp;uint&nbsp;=&nbsp;5u;
-</c36><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[435296]">&nbsp;</a><c40>//&nbsp;The&nbsp;two&nbsp;halves&nbsp;of&nbsp;a&nbsp;closure:&nbsp;code&nbsp;and&nbsp;environment.
-</c40><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[435300, 435298, 435299]">&nbsp;</a><c21>pub</c21><c1><a href="#50_54_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#50_54_refs">&nbsp;fn_field_code:&nbsp;uint&nbsp;=&nbsp;0u</a></c36><c36>;
-</c36><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[435302, 435303]">&nbsp;</a><c21>pub</c21><c1><a href="#51_37_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#51_37_refs">&nbsp;fn_field_box:&nbsp;uint&nbsp;=&nbsp;1u</a></c36><c36>;
-</c36><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;The&nbsp;two&nbsp;fields&nbsp;of&nbsp;a&nbsp;trait&nbsp;object/trait&nbsp;instance:&nbsp;vtable&nbsp;and&nbsp;box.
-</c40><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n[435304]">&nbsp;</a><c40>//&nbsp;The&nbsp;vtable&nbsp;contains&nbsp;the&nbsp;type&nbsp;descriptor&nbsp;as&nbsp;first&nbsp;element.
-</c40><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n[435307, 435306, 435308]">&nbsp;</a><c21>pub</c21><c1><a href="#55_61_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#55_61_refs">&nbsp;trt_field_vtable:&nbsp;uint&nbsp;=&nbsp;0u</a></c36><c36>;
-</c36><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n[435310, 435311]">&nbsp;</a><c21>pub</c21><c1><a href="#56_40_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#56_40_refs">&nbsp;trt_field_box:&nbsp;uint&nbsp;=&nbsp;1u</a></c36><c36>;
-</c36><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><a id="n[435312]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><a id="n[435315, 435314]">&nbsp;</a><c21>pub</c21><c1><a href="#58_1_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#58_1_refs">&nbsp;vec_elt_fill:&nbsp;uint&nbsp;=&nbsp;0u</a></c36><c36>;
-</c36><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><a id="n[435316]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><a id="n[435319, 435318]">&nbsp;</a><c21>pub</c21><c1><a href="#60_1_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#60_1_refs">&nbsp;vec_elt_alloc:&nbsp;uint&nbsp;=&nbsp;1u</a></c36><c36>;
-</c36><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><a id="n[435320]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><a id="n[435323, 435322]">&nbsp;</a><c21>pub</c21><c1><a href="#62_1_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#62_1_refs">&nbsp;vec_elt_elems:&nbsp;uint&nbsp;=&nbsp;2u</a></c36><c36>;
-</c36><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><a id="n[435324]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><a id="n[435326, 435327, 435328]">&nbsp;</a><c21>pub</c21><c1><a href="#64_1_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#64_1_refs">&nbsp;slice_elt_base:&nbsp;uint&nbsp;=&nbsp;0u</a></c36><c36>;
-</c36><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><a id="n[435331, 435330]">&nbsp;</a><c21>pub</c21><c1><a href="#65_38_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#65_38_refs">&nbsp;slice_elt_len:&nbsp;uint&nbsp;=&nbsp;1u</a></c36><c36>;
-</c36><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><a id="n[435332]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><a id="n[435334, 435335]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;abi_version:&nbsp;uint&nbsp;=&nbsp;1u;
+<head><link href="../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../librustc/">librustc</a></c0><c1>/</c1><c0><a href="./../../librustc/back/">back</a></c0><c1>/</c1><c0><a href="./../../librustc/back/abi.rs.html">abi.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><a id="n435200">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><a id="n435203"><a id="n435202">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;rc_base_field_refcnt:&nbsp;uint&nbsp;=&nbsp;0u;
+</c36><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><a id="n435204">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><a id="n435206"><a id="n435207">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_refcnt:&nbsp;uint&nbsp;=&nbsp;0u;
+</c36><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n435208">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n435211"><a id="n435210">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_stk:&nbsp;uint&nbsp;=&nbsp;2u;
+</c36><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n435212">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n435214"><a id="n435215">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_runtime_sp:&nbsp;uint&nbsp;=&nbsp;3u;
+</c36><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n435216">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n435218"><a id="n435219">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_rust_sp:&nbsp;uint&nbsp;=&nbsp;4u;
+</c36><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n435220">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n435222"><a id="n435223">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_gc_alloc_chain:&nbsp;uint&nbsp;=&nbsp;5u;
+</c36><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n435224">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n435227"><a id="n435226">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;task_field_dom:&nbsp;uint&nbsp;=&nbsp;6u;
+</c36><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n435228">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n435230"><a id="n435231">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;n_visible_task_fields:&nbsp;uint&nbsp;=&nbsp;7u;
+</c36><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n435232">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n435234"><a id="n435235">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;dom_field_interrupt_flag:&nbsp;uint&nbsp;=&nbsp;1u;
+</c36><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n435236">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n435239"><a id="n435238">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;frame_glue_fns_field_mark:&nbsp;uint&nbsp;=&nbsp;0u;
+</c36><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n435240">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n435242"><a id="n435243">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;frame_glue_fns_field_drop:&nbsp;uint&nbsp;=&nbsp;1u;
+</c36><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n435244">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n435246"><a id="n435247">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;frame_glue_fns_field_reloc:&nbsp;uint&nbsp;=&nbsp;2u;
+</c36><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n435248">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n435250"><a id="n435251"><a id="n435252">&nbsp;</a></a></a><c21>pub</c21><c1><a href="#34_1_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#34_1_refs">&nbsp;box_field_refcnt:&nbsp;uint&nbsp;=&nbsp;0u</a></c36><c36>;
+</c36><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n435254"><a id="n435256"><a id="n435255">&nbsp;</a></a></a><c21>pub</c21><c1><a href="#35_40_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#35_40_refs">&nbsp;box_field_tydesc:&nbsp;uint&nbsp;=&nbsp;1u</a></c36><c36>;
+</c36><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n435258"><a id="n435259"><a id="n435260">&nbsp;</a></a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;box_field_prev:&nbsp;uint&nbsp;=&nbsp;2u;
+</c36><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n435262"><a id="n435264"><a id="n435263">&nbsp;</a></a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;box_field_next:&nbsp;uint&nbsp;=&nbsp;3u;
+</c36><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n435267"><a id="n435266">&nbsp;</a></a><c21>pub</c21><c1><a href="#38_38_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#38_38_refs">&nbsp;box_field_body:&nbsp;uint&nbsp;=&nbsp;4u</a></c36><c36>;
+</c36><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n435268">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n435271"><a id="n435270">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;general_code_alignment:&nbsp;uint&nbsp;=&nbsp;16u;
+</c36><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n435272">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n435274"><a id="n435275"><a id="n435276">&nbsp;</a></a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;tydesc_field_size:&nbsp;uint&nbsp;=&nbsp;0u;
+</c36><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n435280"><a id="n435278"><a id="n435279">&nbsp;</a></a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;tydesc_field_align:&nbsp;uint&nbsp;=&nbsp;1u;
+</c36><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n435284"><a id="n435282"><a id="n435283">&nbsp;</a></a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;tydesc_field_drop_glue:&nbsp;uint&nbsp;=&nbsp;2u;
+</c36><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n435288"><a id="n435286"><a id="n435287">&nbsp;</a></a></a><c21>pub</c21><c1><a href="#45_46_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#45_46_refs">&nbsp;tydesc_field_visit_glue:&nbsp;uint&nbsp;=&nbsp;3u</a></c36><c36>;
+</c36><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n435292"><a id="n435290"><a id="n435291">&nbsp;</a></a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;tydesc_field_name_offset:&nbsp;uint&nbsp;=&nbsp;4u;
+</c36><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n435295"><a id="n435294">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;n_tydesc_fields:&nbsp;uint&nbsp;=&nbsp;5u;
+</c36><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n435296">&nbsp;</a><c40>//&nbsp;The&nbsp;two&nbsp;halves&nbsp;of&nbsp;a&nbsp;closure:&nbsp;code&nbsp;and&nbsp;environment.
+</c40><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><a id="n435299"><a id="n435298"><a id="n435300">&nbsp;</a></a></a><c21>pub</c21><c1><a href="#50_54_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#50_54_refs">&nbsp;fn_field_code:&nbsp;uint&nbsp;=&nbsp;0u</a></c36><c36>;
+</c36><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n435302"><a id="n435303">&nbsp;</a></a><c21>pub</c21><c1><a href="#51_37_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#51_37_refs">&nbsp;fn_field_box:&nbsp;uint&nbsp;=&nbsp;1u</a></c36><c36>;
+</c36><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c40>//&nbsp;The&nbsp;two&nbsp;fields&nbsp;of&nbsp;a&nbsp;trait&nbsp;object/trait&nbsp;instance:&nbsp;vtable&nbsp;and&nbsp;box.
+</c40><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n435304">&nbsp;</a><c40>//&nbsp;The&nbsp;vtable&nbsp;contains&nbsp;the&nbsp;type&nbsp;descriptor&nbsp;as&nbsp;first&nbsp;element.
+</c40><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n435306"><a id="n435307"><a id="n435308">&nbsp;</a></a></a><c21>pub</c21><c1><a href="#55_61_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#55_61_refs">&nbsp;trt_field_vtable:&nbsp;uint&nbsp;=&nbsp;0u</a></c36><c36>;
+</c36><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n435311"><a id="n435310">&nbsp;</a></a><c21>pub</c21><c1><a href="#56_40_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#56_40_refs">&nbsp;trt_field_box:&nbsp;uint&nbsp;=&nbsp;1u</a></c36><c36>;
+</c36><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><a id="n435312">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><a id="n435315"><a id="n435314">&nbsp;</a></a><c21>pub</c21><c1><a href="#58_1_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#58_1_refs">&nbsp;vec_elt_fill:&nbsp;uint&nbsp;=&nbsp;0u</a></c36><c36>;
+</c36><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><a id="n435316">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><a id="n435319"><a id="n435318">&nbsp;</a></a><c21>pub</c21><c1><a href="#60_1_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#60_1_refs">&nbsp;vec_elt_alloc:&nbsp;uint&nbsp;=&nbsp;1u</a></c36><c36>;
+</c36><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><a id="n435320">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><a id="n435323"><a id="n435322">&nbsp;</a></a><c21>pub</c21><c1><a href="#62_1_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#62_1_refs">&nbsp;vec_elt_elems:&nbsp;uint&nbsp;=&nbsp;2u</a></c36><c36>;
+</c36><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><a id="n435324">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><a id="n435326"><a id="n435327"><a id="n435328">&nbsp;</a></a></a><c21>pub</c21><c1><a href="#64_1_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#64_1_refs">&nbsp;slice_elt_base:&nbsp;uint&nbsp;=&nbsp;0u</a></c36><c36>;
+</c36><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><a id="n435331"><a id="n435330">&nbsp;</a></a><c21>pub</c21><c1><a href="#65_38_refs">&nbsp;</a></c1><c36>static</c36><c36><a href="#65_38_refs">&nbsp;slice_elt_len:&nbsp;uint&nbsp;=&nbsp;1u</a></c36><c36>;
+</c36><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><a id="n435332">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><a id="n435334"><a id="n435335">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;abi_version:&nbsp;uint&nbsp;=&nbsp;1u;
 </c36><br/><div class="refblock"></div></maintext></div></body>

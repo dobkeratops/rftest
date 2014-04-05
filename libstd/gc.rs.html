@@ -1,133 +1,133 @@
-<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../libstd/gc.rs.html">gc.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/*!&nbsp;Task-local&nbsp;garbage-collected&nbsp;boxes
-</c41><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c41>The&nbsp;`Gc`&nbsp;type&nbsp;provides&nbsp;shared&nbsp;ownership&nbsp;of&nbsp;an&nbsp;immutable&nbsp;value.&nbsp;Destruction&nbsp;is&nbsp;not&nbsp;deterministic,&nbsp;and
-</c41><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c41>will&nbsp;occur&nbsp;some&nbsp;time&nbsp;between&nbsp;every&nbsp;`Gc`&nbsp;handle&nbsp;being&nbsp;gone&nbsp;and&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;task.&nbsp;The&nbsp;garbage
-</c41><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[]">&nbsp;</a><c41>collector&nbsp;is&nbsp;task-local&nbsp;so&nbsp;`Gc&lt;T&gt;`&nbsp;is&nbsp;not&nbsp;sendable.
-</c41><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[]">&nbsp;</a><c41>*/
-</c41><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>experimental</c50><c4>)</c4><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;kinds::marker</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;clone::Clone</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;managed</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Immutable&nbsp;garbage-collected&nbsp;pointer&nbsp;type
-</c42><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="gc"</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>experimental&nbsp;=&nbsp;"Gc&nbsp;is&nbsp;currently&nbsp;based&nbsp;on&nbsp;reference-counting&nbsp;and&nbsp;will&nbsp;not&nbsp;collect&nbsp;cycles&nbsp;until&nbsp;\
-</c50><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;task&nbsp;annihilation.&nbsp;For&nbsp;now</c0><c3>,</c3><c0>&nbsp;cycles&nbsp;need&nbsp;to&nbsp;be&nbsp;broken&nbsp;manually&nbsp;by&nbsp;using&nbsp;`Rc&lt;T&gt;`&nbsp;\
-</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[74279]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;a&nbsp;non-owning&nbsp;`Weak&lt;T&gt;`&nbsp;pointer.&nbsp;A&nbsp;tracing&nbsp;garbage&nbsp;collector&nbsp;is&nbsp;planned."</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c31><a href="#30_97_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#30_97_refs">&nbsp;Gc</a></c31><c5><a href="#30_97_refs">&lt;T&gt;</a></c5><c31><a href="#30_97_refs">&nbsp;</a></c31><c3>{</c3><c31><a href="#30_97_refs">
-</a></c31><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[74283, 74280, 74282]">&nbsp;</a><c31><a href="#30_97_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c21>priv</c21><c31><a href="#30_97_refs">&nbsp;</a></c31><c24><a href="#32_9_refs">ptr:&nbsp;</a></c24><c8><a href="#32_9_refs">@</a></c8><c8><a href="c=0 n=74287">T</a></c8><c3>,</c3><c31><a href="#30_97_refs">
-</a></c31><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[74284, 74286]">&nbsp;</a><c31><a href="#30_97_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c21>priv</c21><c31><a href="#30_97_refs">&nbsp;</a></c31><c24><a href="#30_97_refs">marker:&nbsp;</a></c24><c8><a href="../libstd/kinds.rs.html#262">marker::NoSend</a></c8><c3>,</c3><c31><a href="#30_97_refs">
-</a></c31><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c31>struct&nbsp;Gc</c31><c5>&lt;T&gt;</c5><c31>&nbsp;</c31><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>priv</c21><c0>&nbsp;ptr:&nbsp;@T</c0><c3>,</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>priv</c21><c0>&nbsp;marker:&nbsp;marker::NoSend</c0><c3>,</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[74288]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[74293, 74291]">&nbsp;</a><c33>impl</c33><c5>&lt;T:&nbsp;'static&gt;</c5><c33>&nbsp;</c33><c33><a href="../libstd/gc.rs.html#30">Gc</a></c33><c5><a href="../libstd/gc.rs.html#30">&lt;</a></c5><c5><a href="c=0 n=74289">T</a></c5><c5><a href="../libstd/gc.rs.html#30">&gt;</a></c5><c33>&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Construct&nbsp;a&nbsp;new&nbsp;garbage-collected&nbsp;box
-</c42><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[74298, 74302, 74297, 74303, 74294, 74300]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;new</c30><c4>(</c4><c20><a href="#45_15_refs">value</a></c20><c18>:&nbsp;</c18><c8><a href="c=0 n=74289">T</a></c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/gc.rs.html#30">Gc&lt;</a></c8><c8><a href="c=0 n=74289">T</a></c8><c8><a href="../libstd/gc.rs.html#30">&gt;</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[74304, 74307, 74305, 74306]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c1><a href="../libstd/gc.rs.html#30">Gc&nbsp;</a></c1><c3>{</c3><c1><a href="../libstd/gc.rs.html#30">&nbsp;ptr:&nbsp;</a></c1><c5><a href="../libstd/gc.rs.html#30">@</a></c5><c26><a href="../libstd/gc.rs.html#45">value</a></c26><c3>,</c3><c1><a href="../libstd/gc.rs.html#30">&nbsp;marker:&nbsp;</a></c1><c26><a href="c=0 n=74826">marker::NoSend</a></c26><c1><a href="../libstd/gc.rs.html#30">&nbsp;</a></c1><c3>}</c3><c22>
-</c22><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[]">&nbsp;</a><c33>
-</c33><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Borrow&nbsp;the&nbsp;value&nbsp;contained&nbsp;in&nbsp;the&nbsp;garbage-collected&nbsp;box
-</c42><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[74308, 74317, 74316, 74313, 74318]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;borrow</c30><c5>&lt;'r&gt;</c5><c4>(</c4><c20><a href="#51_22_refs">&amp;'r&nbsp;self</a></c20><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>&amp;'r&nbsp;</c8><c8><a href="c=0 n=74289">T</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[74322, 74321, 74319, 74320]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c5>&amp;*</c5><c26><a href="../libstd/gc.rs.html#51">self</a></c26><c24><a href="../libstd/gc.rs.html#32">.ptr</a></c24><c22>
-</c22><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a id="n[]">&nbsp;</a><c33>
-</c33><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Determine&nbsp;if&nbsp;two&nbsp;garbage-collected&nbsp;boxes&nbsp;point&nbsp;to&nbsp;the&nbsp;same&nbsp;object
-</c42><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n[74332, 74323, 74336, 74329, 74331, 74333, 74326, 74335]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;ptr_eq</c30><c4>(</c4><c20><a href="#57_18_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#57_25_refs">other</a></c20><c18>:&nbsp;</c18><c8>&amp;</c8><c8><a href="../libstd/gc.rs.html#30">Gc&lt;</a></c8><c8><a href="c=0 n=74289">T</a></c8><c8><a href="../libstd/gc.rs.html#30">&gt;</a></c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a id="n[74340, 74339, 74337, 74338, 74341, 74342]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/managed.rs.html#16">managed::ptr_eq</a></c26><c4>(</c4><c26><a href="../libstd/gc.rs.html#57">self</a></c26><c24><a href="../libstd/gc.rs.html#32">.ptr</a></c24><c3>,</c3><c27>&nbsp;</c27><c26><a href="../libstd/gc.rs.html#57">other</a></c26><c24><a href="../libstd/gc.rs.html#32">.ptr</a></c24><c4>)</c4><c22>
-</c22><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a id="n[74343]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a id="n[74349, 74347, 74345]">&nbsp;</a><c33>impl</c33><c5>&lt;T&gt;</c5><c33>&nbsp;</c33><c33><a href="../libstd/clone.rs.html#24">Clone</a></c33><c33>&nbsp;for&nbsp;</c33><c33><a href="../libstd/gc.rs.html#30">Gc</a></c33><c5><a href="../libstd/gc.rs.html#30">&lt;</a></c5><c5><a href="c=0 n=74344">T</a></c5><c5><a href="../libstd/gc.rs.html#30">&gt;</a></c5><c33>&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Clone&nbsp;the&nbsp;pointer&nbsp;only
-</c42><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a id="n[74353, 74357, 74350, 74358, 74355]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;clone</c30><c4>(</c4><c20><a href="#65_13_refs">&amp;self</a></c20><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/gc.rs.html#30">Gc&lt;</a></c8><c8><a href="c=0 n=74344">T</a></c8><c8><a href="../libstd/gc.rs.html#30">&gt;</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a id="n[74362, 74360, 74361, 74359]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c1><a href="../libstd/gc.rs.html#30">Gc</a></c1><c3>{</c3><c1><a href="../libstd/gc.rs.html#30">&nbsp;ptr:&nbsp;</a></c1><c26><a href="../libstd/gc.rs.html#65">self</a></c26><c24><a href="../libstd/gc.rs.html#32">.ptr</a></c24><c3>,</c3><c1><a href="../libstd/gc.rs.html#30">&nbsp;marker:&nbsp;</a></c1><c26><a href="c=0 n=74826">marker::NoSend</a></c26><c1><a href="../libstd/gc.rs.html#30">&nbsp;</a></c1><c3>}</c3><c22>
-</c22><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;An&nbsp;value&nbsp;that&nbsp;represents&nbsp;the&nbsp;task-local&nbsp;managed&nbsp;heap.
-</c42><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
-</c42><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Use&nbsp;this&nbsp;like&nbsp;`let&nbsp;foo&nbsp;=&nbsp;box(GC)&nbsp;Bar::new(...);`
-</c42><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="managed_heap"</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n[74363]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n[74364, 74365]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;GC:&nbsp;</c36><c4>()</c4><c1>&nbsp;=&nbsp;</c1><c4>()</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c0>&nbsp;</c0><c36>static&nbsp;GC:&nbsp;</c36><c4>()</c4><c0>&nbsp;=&nbsp;</c0><c4>()</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a id="n[]">&nbsp;</a><c21>mod</c21><c38>&nbsp;tests&nbsp;</c38><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;prelude::*</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;cell::RefCell</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_clone</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>RefCell::new</c0><c4>(</c4><c0>5</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c4>()</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*x.borrow</c0><c4>()</c4><c0>.borrow_mut</c0><c4>()</c4><c0>&nbsp;=&nbsp;20</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*y.borrow</c0><c4>()</c4><c0>.borrow</c0><c4>()</c4><c3>,</c3><c0>&nbsp;20</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_simple</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>5</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*x.borrow</c0><c4>()</c4><c3>,</c3><c0>&nbsp;5</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_simple_clone</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>5</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c4>()</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*x.borrow</c0><c4>()</c4><c3>,</c3><c0>&nbsp;5</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*y.borrow</c0><c4>()</c4><c3>,</c3><c0>&nbsp;5</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_ptr_eq</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>5</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c4>()</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;z&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>7</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>x.ptr_eq</c0><c4>(</c4><c0>&amp;x</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>x.ptr_eq</c0><c4>(</c4><c0>&amp;y</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!x.ptr_eq</c0><c4>(</c4><c0>&amp;z</c0><c4>))</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
-</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_destructor</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>~5</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>**x.borrow</c0><c4>()</c4><c3>,</c3><c0>&nbsp;5</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../libstd/gc.rs.html">gc.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c41>/*!&nbsp;Task-local&nbsp;garbage-collected&nbsp;boxes
+</c41><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c41>The&nbsp;`Gc`&nbsp;type&nbsp;provides&nbsp;shared&nbsp;ownership&nbsp;of&nbsp;an&nbsp;immutable&nbsp;value.&nbsp;Destruction&nbsp;is&nbsp;not&nbsp;deterministic,&nbsp;and
+</c41><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c41>will&nbsp;occur&nbsp;some&nbsp;time&nbsp;between&nbsp;every&nbsp;`Gc`&nbsp;handle&nbsp;being&nbsp;gone&nbsp;and&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;task.&nbsp;The&nbsp;garbage
+</c41><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c41>collector&nbsp;is&nbsp;task-local&nbsp;so&nbsp;`Gc&lt;T&gt;`&nbsp;is&nbsp;not&nbsp;sendable.
+</c41><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c41>*/
+</c41><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>experimental</c50><c4>)</c4><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;kinds::marker</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;clone::Clone</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;managed</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c42>///&nbsp;Immutable&nbsp;garbage-collected&nbsp;pointer&nbsp;type
+</c42><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>lang="gc"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>experimental&nbsp;=&nbsp;"Gc&nbsp;is&nbsp;currently&nbsp;based&nbsp;on&nbsp;reference-counting&nbsp;and&nbsp;will&nbsp;not&nbsp;collect&nbsp;cycles&nbsp;until&nbsp;\
+</c50><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;task&nbsp;annihilation.&nbsp;For&nbsp;now</c0><c3>,</c3><c0>&nbsp;cycles&nbsp;need&nbsp;to&nbsp;be&nbsp;broken&nbsp;manually&nbsp;by&nbsp;using&nbsp;`Rc&lt;T&gt;`&nbsp;\
+</c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a id="n74279">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;a&nbsp;non-owning&nbsp;`Weak&lt;T&gt;`&nbsp;pointer.&nbsp;A&nbsp;tracing&nbsp;garbage&nbsp;collector&nbsp;is&nbsp;planned."</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c21>pub</c21><c31><a href="#30_97_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#30_97_refs">&nbsp;Gc</a></c31><c5><a href="#30_97_refs">&lt;T&gt;</a></c5><c31><a href="#30_97_refs">&nbsp;</a></c31><c3>{</c3><c31><a href="#30_97_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a id="n74280"><a id="n74282"><a id="n74283">&nbsp;</a></a></a><c31><a href="#30_97_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c21>priv</c21><c31><a href="#30_97_refs">&nbsp;</a></c31><c24><a href="#32_9_refs">ptr:&nbsp;</a></c24><c8><a href="#32_9_refs">@</a></c8><c8><a href="c=0 n=74287">T</a></c8><c3>,</c3><c31><a href="#30_97_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n74286"><a id="n74284">&nbsp;</a></a><c31><a href="#30_97_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c21>priv</c21><c31><a href="#30_97_refs">&nbsp;</a></c31><c24><a href="#30_97_refs">marker:&nbsp;</a></c24><c8><a href="../libstd/kinds.rs.html#262">marker::NoSend</a></c8><c3>,</c3><c31><a href="#30_97_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c31>struct&nbsp;Gc</c31><c5>&lt;T&gt;</c5><c31>&nbsp;</c31><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>priv</c21><c0>&nbsp;ptr:&nbsp;@T</c0><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>priv</c21><c0>&nbsp;marker:&nbsp;marker::NoSend</c0><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a id="n74288">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n74293"><a id="n74291">&nbsp;</a></a><c33>impl</c33><c5>&lt;T:&nbsp;'static&gt;</c5><c33>&nbsp;</c33><c33><a href="../libstd/gc.rs.html#30">Gc</a></c33><c5><a href="../libstd/gc.rs.html#30">&lt;</a></c5><c5><a href="c=0 n=74289">T</a></c5><c5><a href="../libstd/gc.rs.html#30">&gt;</a></c5><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Construct&nbsp;a&nbsp;new&nbsp;garbage-collected&nbsp;box
+</c42><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a id="n74303"><a id="n74294"><a id="n74298"><a id="n74302"><a id="n74297"><a id="n74300">&nbsp;</a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;new</c30><c4>(</c4><c20><a href="#45_15_refs">value</a></c20><c18>:&nbsp;</c18><c8><a href="c=0 n=74289">T</a></c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/gc.rs.html#30">Gc&lt;</a></c8><c8><a href="c=0 n=74289">T</a></c8><c8><a href="../libstd/gc.rs.html#30">&gt;</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n74306"><a id="n74307"><a id="n74304"><a id="n74305">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c1><a href="../libstd/gc.rs.html#30">Gc&nbsp;</a></c1><c3>{</c3><c1><a href="../libstd/gc.rs.html#30">&nbsp;ptr:&nbsp;</a></c1><c5><a href="../libstd/gc.rs.html#30">@</a></c5><c26><a href="../libstd/gc.rs.html#45">value</a></c26><c3>,</c3><c1><a href="../libstd/gc.rs.html#30">&nbsp;marker:&nbsp;</a></c1><c26><a href="c=0 n=74826">marker::NoSend</a></c26><c1><a href="../libstd/gc.rs.html#30">&nbsp;</a></c1><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c33>
+</c33><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Borrow&nbsp;the&nbsp;value&nbsp;contained&nbsp;in&nbsp;the&nbsp;garbage-collected&nbsp;box
+</c42><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n74318"><a id="n74316"><a id="n74313"><a id="n74308"><a id="n74317">&nbsp;</a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;borrow</c30><c5>&lt;'r&gt;</c5><c4>(</c4><c20><a href="#51_22_refs">&amp;'r&nbsp;self</a></c20><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>&amp;'r&nbsp;</c8><c8><a href="c=0 n=74289">T</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a id="n74322"><a id="n74320"><a id="n74321"><a id="n74319">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c5>&amp;*</c5><c26><a href="../libstd/gc.rs.html#51">self</a></c26><c24><a href="../libstd/gc.rs.html#32">.ptr</a></c24><c22>
+</c22><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c33>
+</c33><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Determine&nbsp;if&nbsp;two&nbsp;garbage-collected&nbsp;boxes&nbsp;point&nbsp;to&nbsp;the&nbsp;same&nbsp;object
+</c42><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n74335"><a id="n74331"><a id="n74323"><a id="n74329"><a id="n74332"><a id="n74333"><a id="n74336"><a id="n74326">&nbsp;</a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;ptr_eq</c30><c4>(</c4><c20><a href="#57_18_refs">&amp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#57_25_refs">other</a></c20><c18>:&nbsp;</c18><c8>&amp;</c8><c8><a href="../libstd/gc.rs.html#30">Gc&lt;</a></c8><c8><a href="c=0 n=74289">T</a></c8><c8><a href="../libstd/gc.rs.html#30">&gt;</a></c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a id="n74341"><a id="n74337"><a id="n74338"><a id="n74340"><a id="n74339"><a id="n74342">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/managed.rs.html#16">managed::ptr_eq</a></c26><c4>(</c4><c26><a href="../libstd/gc.rs.html#57">self</a></c26><c24><a href="../libstd/gc.rs.html#32">.ptr</a></c24><c3>,</c3><c27>&nbsp;</c27><c26><a href="../libstd/gc.rs.html#57">other</a></c26><c24><a href="../libstd/gc.rs.html#32">.ptr</a></c24><c4>)</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a id="n74343">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a id="n74347"><a id="n74349"><a id="n74345">&nbsp;</a></a></a><c33>impl</c33><c5>&lt;T&gt;</c5><c33>&nbsp;</c33><c33><a href="../libstd/clone.rs.html#24">Clone</a></c33><c33>&nbsp;for&nbsp;</c33><c33><a href="../libstd/gc.rs.html#30">Gc</a></c33><c5><a href="../libstd/gc.rs.html#30">&lt;</a></c5><c5><a href="c=0 n=74344">T</a></c5><c5><a href="../libstd/gc.rs.html#30">&gt;</a></c5><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Clone&nbsp;the&nbsp;pointer&nbsp;only
+</c42><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a id="n74350"><a id="n74358"><a id="n74355"><a id="n74353"><a id="n74357">&nbsp;</a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;clone</c30><c4>(</c4><c20><a href="#65_13_refs">&amp;self</a></c20><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/gc.rs.html#30">Gc&lt;</a></c8><c8><a href="c=0 n=74344">T</a></c8><c8><a href="../libstd/gc.rs.html#30">&gt;</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a id="n74361"><a id="n74360"><a id="n74362"><a id="n74359">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c1><a href="../libstd/gc.rs.html#30">Gc</a></c1><c3>{</c3><c1><a href="../libstd/gc.rs.html#30">&nbsp;ptr:&nbsp;</a></c1><c26><a href="../libstd/gc.rs.html#65">self</a></c26><c24><a href="../libstd/gc.rs.html#32">.ptr</a></c24><c3>,</c3><c1><a href="../libstd/gc.rs.html#30">&nbsp;marker:&nbsp;</a></c1><c26><a href="c=0 n=74826">marker::NoSend</a></c26><c1><a href="../libstd/gc.rs.html#30">&nbsp;</a></c1><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c42>///&nbsp;An&nbsp;value&nbsp;that&nbsp;represents&nbsp;the&nbsp;task-local&nbsp;managed&nbsp;heap.
+</c42><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c42>///&nbsp;Use&nbsp;this&nbsp;like&nbsp;`let&nbsp;foo&nbsp;=&nbsp;box(GC)&nbsp;Bar::new(...);`
+</c42><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>lang="managed_heap"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n74363">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n74364"><a id="n74365">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;GC:&nbsp;</c36><c4>()</c4><c1>&nbsp;=&nbsp;</c1><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c36>static&nbsp;GC:&nbsp;</c36><c4>()</c4><c0>&nbsp;=&nbsp;</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;tests&nbsp;</c38><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;prelude::*</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;cell::RefCell</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_clone</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>RefCell::new</c0><c4>(</c4><c0>5</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*x.borrow</c0><c4>()</c4><c0>.borrow_mut</c0><c4>()</c4><c0>&nbsp;=&nbsp;20</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*y.borrow</c0><c4>()</c4><c0>.borrow</c0><c4>()</c4><c3>,</c3><c0>&nbsp;20</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_simple</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>5</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*x.borrow</c0><c4>()</c4><c3>,</c3><c0>&nbsp;5</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_simple_clone</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>5</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*x.borrow</c0><c4>()</c4><c3>,</c3><c0>&nbsp;5</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*y.borrow</c0><c4>()</c4><c3>,</c3><c0>&nbsp;5</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_ptr_eq</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>5</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;y&nbsp;=&nbsp;x.clone</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;z&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>7</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>x.ptr_eq</c0><c4>(</c4><c0>&amp;x</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>x.ptr_eq</c0><c4>(</c4><c0>&amp;y</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!x.ptr_eq</c0><c4>(</c4><c0>&amp;z</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_destructor</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;Gc::new</c0><c4>(</c4><c0>~5</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>**x.borrow</c0><c4>()</c4><c3>,</c3><c0>&nbsp;5</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><div class="refblock"><br/><a id="30_97_refs"><a href="#30"><c40>libstd/gc.rs:30:97-30:97&nbsp;-struct-&nbsp;definition:<br/></c40><pr>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;a&nbsp;non-owning&nbsp;`Weak&lt;T&gt;`&nbsp;pointer.&nbsp;A&nbsp;tracing&nbsp;garbage&nbsp;collector&nbsp;is&nbsp;planned."]
 <br/>pub&nbsp;struct&nbsp;Gc&lt;T&gt;&nbsp;{
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/gc.rs.html#42"><c40>42:&nbsp;</c40>impl&lt;T:&nbsp;'static&gt;&nbsp;Gc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/gc.rs.html#46"><c40>46:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gc&nbsp;{&nbsp;ptr:&nbsp;@value,&nbsp;marker:&nbsp;marker::NoSend&nbsp;}
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/gc.rs.html#46"><c40>46:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gc&nbsp;{&nbsp;ptr:&nbsp;@value,&nbsp;marker:&nbsp;marker::NoSend&nbsp;}
+<br/></a><a href="../libstd/gc.rs.html#42"><c40>42:&nbsp;</c40>impl&lt;T:&nbsp;'static&gt;&nbsp;Gc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/gc.rs.html#45"><c40>45:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(value:&nbsp;T)&nbsp;-&gt;&nbsp;Gc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/gc.rs.html#65"><c40>65:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;Gc&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/gc.rs.html#62"><c40>62:&nbsp;</c40>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;Gc&lt;T&gt;&nbsp;{
 <br/></a><a href="../libstd/gc.rs.html#57"><c40>57:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;ptr_eq(&amp;self,&nbsp;other:&nbsp;&amp;Gc&lt;T&gt;)&nbsp;-&gt;&nbsp;bool&nbsp;{
 <br/></a><a href="../libstd/gc.rs.html#66"><c40>66:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gc{&nbsp;ptr:&nbsp;self.ptr,&nbsp;marker:&nbsp;marker::NoSend&nbsp;}
-<br/></a><a href="../libstd/gc.rs.html#62"><c40>62:&nbsp;</c40>impl&lt;T&gt;&nbsp;Clone&nbsp;for&nbsp;Gc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/gc.rs.html#65"><c40>65:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone(&amp;self)&nbsp;-&gt;&nbsp;Gc&lt;T&gt;&nbsp;{
-<br/></a><a href="../libstd/gc.rs.html#45"><c40>45:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(value:&nbsp;T)&nbsp;-&gt;&nbsp;Gc&lt;T&gt;&nbsp;{
 <br/></a><br/></div></maintext></div></body>

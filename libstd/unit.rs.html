@@ -1,53 +1,53 @@
-<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../libstd/unit.rs.html">unit.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
-</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;Functions&nbsp;for&nbsp;the&nbsp;unit&nbsp;type.
-</c40><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;default::Default</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;cmp::</c0><c3>{</c3><c0>Eq</c0><c3>,</c3><c0>&nbsp;Equal</c0><c3>,</c3><c0>&nbsp;Ord</c0><c3>,</c3><c0>&nbsp;Ordering</c0><c3>,</c3><c0>&nbsp;TotalEq</c0><c3>,</c3><c0>&nbsp;TotalOrd</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;fmt</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[13992]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[13994, 13993]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#36">Eq</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[14004, 13998, 14006, 13995, 14002, 14001, 14000, 14005]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;eq</c30><c4>(</c4><c20>&amp;self</c20><c3>,</c3><c18>&nbsp;</c18><c20>_other</c20><c18>:&nbsp;</c18><c8>&amp;</c8><c4>())</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c12>true</c12><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[14007, 14017, 14018, 14016, 14014, 14010, 14012, 14013]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;ne</c30><c4>(</c4><c20>&amp;self</c20><c3>,</c3><c18>&nbsp;</c18><c20>_other</c20><c18>:&nbsp;</c18><c8>&amp;</c8><c4>())</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c12>false</c12><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[14019]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[14021, 14020]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#162">Ord</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[14027, 14029, 14033, 14032, 14028, 14025, 14022, 14031]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;lt</c30><c4>(</c4><c20>&amp;self</c20><c3>,</c3><c18>&nbsp;</c18><c20>_other</c20><c18>:&nbsp;</c18><c8>&amp;</c8><c4>())</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c12>false</c12><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[14034]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[14036, 14035]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#94">TotalOrd</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[14043, 14040, 14046, 14042, 14044, 14048, 14037, 14047]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;cmp</c30><c4>(</c4><c20>&amp;self</c20><c3>,</c3><c18>&nbsp;</c18><c20>_other</c20><c18>:&nbsp;</c18><c8>&amp;</c8><c4>())</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/cmp.rs.html#91">Ordering</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c26><a href="../libstd/cmp.rs.html#92">Equal</a></c26><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[14049]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[14051, 14050]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#45">TotalEq</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{}</c3><c0>
-</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[14052]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[14054, 14053]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/default.rs.html#13">Default</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
-</c33><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[14058, 14055, 14056, 14057]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;default</c30><c4>()</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c4>()</c4><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c4>()</c4><c22>&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[14059]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[14061, 14060]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/fmt/mod.rs.html#565">fmt::Show</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{</c3><c33>
-</c33><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[14065, 14070, 14062, 14069, 14073, 14068, 14072]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;fmt</c30><c4>(</c4><c20>&amp;self</c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#49_18_refs">f</a></c20><c18>:&nbsp;</c18><c8>&amp;mut&nbsp;</c8><c8><a href="../libstd/fmt/mod.rs.html#508">fmt::Formatter</a></c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/fmt/mod.rs.html#503">fmt::Result</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[14074, 14075, 14076]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/unit.rs.html#49">f</a></c26><c10><a href="../libstd/fmt/mod.rs.html#964">.pad</a></c10><c4>(</c4><c12><a href="../libstd/fmt/mod.rs.html#964">"</a></c12><c4>()</c4><c12><a href="../libstd/fmt/mod.rs.html#964">"</a></c12><c4>)</c4><c22>
-</c22><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
-</c33><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../libstd/unit.rs.html">unit.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c40>//!&nbsp;Functions&nbsp;for&nbsp;the&nbsp;unit&nbsp;type.
+</c40><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;default::Default</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;cmp::</c0><c3>{</c3><c0>Eq</c0><c3>,</c3><c0>&nbsp;Equal</c0><c3>,</c3><c0>&nbsp;Ord</c0><c3>,</c3><c0>&nbsp;Ordering</c0><c3>,</c3><c0>&nbsp;TotalEq</c0><c3>,</c3><c0>&nbsp;TotalOrd</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;fmt</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n13992">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n13994"><a id="n13993">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#36">Eq</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n14000"><a id="n14005"><a id="n14001"><a id="n14006"><a id="n13995"><a id="n13998"><a id="n14004"><a id="n14002">&nbsp;</a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;eq</c30><c4>(</c4><c20>&amp;self</c20><c3>,</c3><c18>&nbsp;</c18><c20>_other</c20><c18>:&nbsp;</c18><c8>&amp;</c8><c4>())</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c12>true</c12><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n14014"><a id="n14007"><a id="n14016"><a id="n14010"><a id="n14013"><a id="n14012"><a id="n14017"><a id="n14018">&nbsp;</a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;ne</c30><c4>(</c4><c20>&amp;self</c20><c3>,</c3><c18>&nbsp;</c18><c20>_other</c20><c18>:&nbsp;</c18><c8>&amp;</c8><c4>())</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c12>false</c12><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n14019">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n14021"><a id="n14020">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#162">Ord</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n14027"><a id="n14031"><a id="n14025"><a id="n14029"><a id="n14028"><a id="n14033"><a id="n14022"><a id="n14032">&nbsp;</a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;lt</c30><c4>(</c4><c20>&amp;self</c20><c3>,</c3><c18>&nbsp;</c18><c20>_other</c20><c18>:&nbsp;</c18><c8>&amp;</c8><c4>())</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8>bool</c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c12>false</c12><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n14034">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n14036"><a id="n14035">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#94">TotalOrd</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n14044"><a id="n14043"><a id="n14040"><a id="n14047"><a id="n14037"><a id="n14042"><a id="n14046"><a id="n14048">&nbsp;</a></a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;cmp</c30><c4>(</c4><c20>&amp;self</c20><c3>,</c3><c18>&nbsp;</c18><c20>_other</c20><c18>:&nbsp;</c18><c8>&amp;</c8><c4>())</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/cmp.rs.html#91">Ordering</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c26><a href="../libstd/cmp.rs.html#92">Equal</a></c26><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n14049">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n14050"><a id="n14051">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/cmp.rs.html#45">TotalEq</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{}</c3><c0>
+</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n14052">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n14053"><a id="n14054">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/default.rs.html#13">Default</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n14057"><a id="n14055"><a id="n14058"><a id="n14056">&nbsp;</a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;default</c30><c4>()</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c4>()</c4><c18>&nbsp;</c18><c3>{</c3><c22>&nbsp;</c22><c4>()</c4><c22>&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n14059">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n14061"><a id="n14060">&nbsp;</a></a><c33>impl&nbsp;</c33><c33><a href="../libstd/fmt/mod.rs.html#565">fmt::Show</a></c33><c33>&nbsp;for&nbsp;</c33><c4>()</c4><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a id="n14062"><a id="n14070"><a id="n14069"><a id="n14072"><a id="n14073"><a id="n14068"><a id="n14065">&nbsp;</a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;fmt</c30><c4>(</c4><c20>&amp;self</c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#49_18_refs">f</a></c20><c18>:&nbsp;</c18><c8>&amp;mut&nbsp;</c8><c8><a href="../libstd/fmt/mod.rs.html#508">fmt::Formatter</a></c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/fmt/mod.rs.html#503">fmt::Result</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n14076"><a id="n14074"><a id="n14075">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/unit.rs.html#49">f</a></c26><c10><a href="../libstd/fmt/mod.rs.html#964">.pad</a></c10><c4>(</c4><c12><a href="../libstd/fmt/mod.rs.html#964">"</a></c12><c4>()</c4><c12><a href="../libstd/fmt/mod.rs.html#964">"</a></c12><c4>)</c4><c22>
+</c22><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><div class="refblock"></div></maintext></div></body>

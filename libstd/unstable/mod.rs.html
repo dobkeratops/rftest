@@ -1,66 +1,66 @@
-<head><link href="../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../../libstd/unstable/">unstable</a></c0><c1>/</c1><c0><a href="./../../libstd/unstable/mod.rs.html">mod.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
-</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
-</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
-</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
-</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
-</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
-</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
-</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
-</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
-</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>hidden</c50><c4>)</c4><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;prelude::*</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;libc::uintptr_t</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[179791]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;dynamic_lib;
-</c38><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[180232]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[180430]">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;finally;
-</c38><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[180649]">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;simd;
-</c38><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[180974]">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;sync;
-</c38><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;mutex;
-</c38><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/**
-</c41><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[]">&nbsp;</a><c41>Start&nbsp;a&nbsp;new&nbsp;thread&nbsp;outside&nbsp;of&nbsp;the&nbsp;current&nbsp;runtime&nbsp;context&nbsp;and&nbsp;wait
-</c41><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c41>for&nbsp;it&nbsp;to&nbsp;terminate.
-</c41><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[]">&nbsp;</a><c41>The&nbsp;executing&nbsp;thread&nbsp;has&nbsp;no&nbsp;access&nbsp;to&nbsp;a&nbsp;task&nbsp;pointer&nbsp;and&nbsp;will&nbsp;be&nbsp;using
-</c41><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[]">&nbsp;</a><c41>a&nbsp;normal&nbsp;large&nbsp;stack.
-</c41><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[181545]">&nbsp;</a><c41>*/
-</c41><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[181552, 181550, 181547, 181548, 181549]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;run_in_bare_thread</c30><c4>(</c4><c20><a href="#31_26_refs">f</a></c20><c1>:&nbsp;</c1><c8>proc</c8><c4>())</c4><c1>&nbsp;</c1><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;rt::thread::Thread</c22><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[181553, 181554, 181556, 181555]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/thread.rs.html#71">Thread::start</a></c26><c4>(</c4><c26><a href="../../libstd/unstable/mod.rs.html#31">f</a></c26><c4>)</c4><c10><a href="../../libstd/rt/thread.rs.html#125">.join</a></c10><c4>()</c4><c22>
-</c22><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_run_in_bare_thread</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;i&nbsp;=&nbsp;100</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;run_in_bare_thread</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>i</c0><c3>,</c3><c0>&nbsp;100</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_run_in_bare_thread_exchange</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c40>//&nbsp;Does&nbsp;the&nbsp;exchange&nbsp;heap&nbsp;work&nbsp;without&nbsp;the&nbsp;runtime?
-</c40><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;i&nbsp;=&nbsp;~100</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;run_in_bare_thread</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>i&nbsp;==&nbsp;~100</c0><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Dynamically&nbsp;inquire&nbsp;about&nbsp;whether&nbsp;we're&nbsp;running&nbsp;under&nbsp;V.
-</c42><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;You&nbsp;should&nbsp;usually&nbsp;not&nbsp;use&nbsp;this&nbsp;unless&nbsp;your&nbsp;test&nbsp;definitely
-</c42><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;can't&nbsp;run&nbsp;correctly&nbsp;un-altered.&nbsp;Valgrind&nbsp;is&nbsp;there&nbsp;to&nbsp;help
-</c42><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n[181557]">&nbsp;</a><c42>///&nbsp;you&nbsp;notice&nbsp;weirdness&nbsp;in&nbsp;normal,&nbsp;un-doctored&nbsp;code&nbsp;paths!
-</c42><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n[181559, 181560]">&nbsp;</a><c21>pub</c21><c1><a href="#56_60_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#56_60_refs">&nbsp;running_on_valgrind</a></c30><c4>()</c4><c1><a href="#56_60_refs">&nbsp;</a></c1><c4>-&gt;</c4><c1><a href="#56_60_refs">&nbsp;</a></c1><c8><a href="#56_60_refs">bool</a></c8><c1><a href="#56_60_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#56_60_refs">
-</a></c22><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><a id="n[181566, 181565, 181563, 181562, 181564, 181561]">&nbsp;</a><c22><a href="#56_60_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>unsafe</c21><c22><a href="#56_60_refs">&nbsp;</a></c22><c3>{</c3><c22><a href="#56_60_refs">&nbsp;</a></c22><c26><a href="c=0 n=181568">rust_running_on_valgrind</a></c26><c4>()</c4><c5><a href="#56_60_refs">&nbsp;!=&nbsp;</a></c5><c12><a href="#56_60_refs">0</a></c12><c22><a href="#56_60_refs">&nbsp;</a></c22><c3>}</c3><c22><a href="#56_60_refs">
-</a></c22><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><a id="n[181567]">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><a id="n[]">&nbsp;</a><c21>extern</c21><c1>&nbsp;</c1><c3>{</c3><c1>
-</c1><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><a id="n[181570]">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;rust_running_on_valgrind</c30><c4>()</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8><a href="../../libstd/libc.rs.html#541">uintptr_t</a></c8><c3>;</c3><c1>
-</c1><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+<head><link href="../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../../libstd/unstable/">unstable</a></c0><c1>/</c1><c0><a href="./../../libstd/unstable/mod.rs.html">mod.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>hidden</c50><c4>)</c4><c3>];</c3><c50>
+</c50><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;prelude::*</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;libc::uintptr_t</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n179791">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;dynamic_lib;
+</c38><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n180232">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n180430">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;finally;
+</c38><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n180649">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;simd;
+</c38><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n180974">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;sync;
+</c38><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;mutex;
+</c38><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c41>/**
+</c41><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c41>Start&nbsp;a&nbsp;new&nbsp;thread&nbsp;outside&nbsp;of&nbsp;the&nbsp;current&nbsp;runtime&nbsp;context&nbsp;and&nbsp;wait
+</c41><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c41>for&nbsp;it&nbsp;to&nbsp;terminate.
+</c41><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c41>The&nbsp;executing&nbsp;thread&nbsp;has&nbsp;no&nbsp;access&nbsp;to&nbsp;a&nbsp;task&nbsp;pointer&nbsp;and&nbsp;will&nbsp;be&nbsp;using
+</c41><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c41>a&nbsp;normal&nbsp;large&nbsp;stack.
+</c41><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n181545">&nbsp;</a><c41>*/
+</c41><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n181548"><a id="n181552"><a id="n181549"><a id="n181550"><a id="n181547">&nbsp;</a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;run_in_bare_thread</c30><c4>(</c4><c20><a href="#31_26_refs">f</a></c20><c1>:&nbsp;</c1><c8>proc</c8><c4>())</c4><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;rt::thread::Thread</c22><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n181556"><a id="n181553"><a id="n181555"><a id="n181554">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/thread.rs.html#71">Thread::start</a></c26><c4>(</c4><c26><a href="../../libstd/unstable/mod.rs.html#31">f</a></c26><c4>)</c4><c10><a href="../../libstd/rt/thread.rs.html#125">.join</a></c10><c4>()</c4><c22>
+</c22><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c30>fn&nbsp;test_run_in_bare_thread</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;i&nbsp;=&nbsp;100</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;run_in_bare_thread</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>i</c0><c3>,</c3><c0>&nbsp;100</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c30>fn&nbsp;test_run_in_bare_thread_exchange</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c40>//&nbsp;Does&nbsp;the&nbsp;exchange&nbsp;heap&nbsp;work&nbsp;without&nbsp;the&nbsp;runtime?
+</c40><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;i&nbsp;=&nbsp;~100</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;run_in_bare_thread</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>i&nbsp;==&nbsp;~100</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c42>///&nbsp;Dynamically&nbsp;inquire&nbsp;about&nbsp;whether&nbsp;we're&nbsp;running&nbsp;under&nbsp;V.
+</c42><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c42>///&nbsp;You&nbsp;should&nbsp;usually&nbsp;not&nbsp;use&nbsp;this&nbsp;unless&nbsp;your&nbsp;test&nbsp;definitely
+</c42><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c42>///&nbsp;can't&nbsp;run&nbsp;correctly&nbsp;un-altered.&nbsp;Valgrind&nbsp;is&nbsp;there&nbsp;to&nbsp;help
+</c42><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n181557">&nbsp;</a><c42>///&nbsp;you&nbsp;notice&nbsp;weirdness&nbsp;in&nbsp;normal,&nbsp;un-doctored&nbsp;code&nbsp;paths!
+</c42><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n181559"><a id="n181560">&nbsp;</a></a><c21>pub</c21><c1><a href="#56_60_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#56_60_refs">&nbsp;running_on_valgrind</a></c30><c4>()</c4><c1><a href="#56_60_refs">&nbsp;</a></c1><c4>-&gt;</c4><c1><a href="#56_60_refs">&nbsp;</a></c1><c8><a href="#56_60_refs">bool</a></c8><c1><a href="#56_60_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#56_60_refs">
+</a></c22><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><a id="n181561"><a id="n181562"><a id="n181564"><a id="n181565"><a id="n181566"><a id="n181563">&nbsp;</a></a></a></a></a></a><c22><a href="#56_60_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>unsafe</c21><c22><a href="#56_60_refs">&nbsp;</a></c22><c3>{</c3><c22><a href="#56_60_refs">&nbsp;</a></c22><c26><a href="c=0 n=181568">rust_running_on_valgrind</a></c26><c4>()</c4><c5><a href="#56_60_refs">&nbsp;!=&nbsp;</a></c5><c12><a href="#56_60_refs">0</a></c12><c22><a href="#56_60_refs">&nbsp;</a></c22><c3>}</c3><c22><a href="#56_60_refs">
+</a></c22><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><a id="n181567">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c21>extern</c21><c1>&nbsp;</c1><c3>{</c3><c1>
+</c1><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><a id="n181570">&nbsp;</a><c1>&nbsp;&nbsp;&nbsp;&nbsp;</c1><c30>fn&nbsp;rust_running_on_valgrind</c30><c4>()</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8><a href="../../libstd/libc.rs.html#541">uintptr_t</a></c8><c3>;</c3><c1>
+</c1><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><div class="refblock"><br/><a id="56_60_refs"><a href="#56"><c40>libstd/unstable/mod.rs:56:60-56:60&nbsp;-fn-&nbsp;definition:<br/></c40><pr>///&nbsp;you&nbsp;notice&nbsp;weirdness&nbsp;in&nbsp;normal,&nbsp;un-doctored&nbsp;code&nbsp;paths!
 <br/>pub&nbsp;fn&nbsp;running_on_valgrind()&nbsp;-&gt;&nbsp;bool&nbsp;{
 <br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/util.rs.html"><c40>libstd/rt/util.rs:<br/></c40></a><a href="../../libstd/rt/util.rs.html#50"><c40>50:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;(cfg!(target_os="macos"))&nbsp;&amp;&amp;&nbsp;running_on_valgrind()
