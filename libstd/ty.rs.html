@@ -1,0 +1,93 @@
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../libstd/ty.rs.html">ty.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//!&nbsp;Types&nbsp;dealing&nbsp;with&nbsp;unsafe&nbsp;actions.
+</c40><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;cast</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;kinds::marker</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Unsafe&nbsp;type&nbsp;that&nbsp;wraps&nbsp;a&nbsp;type&nbsp;T&nbsp;and&nbsp;indicates&nbsp;unsafe&nbsp;interior&nbsp;operations&nbsp;on&nbsp;the
+</c42><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;wrapped&nbsp;type.&nbsp;Types&nbsp;with&nbsp;an&nbsp;`Unsafe&lt;T&gt;`&nbsp;field&nbsp;are&nbsp;considered&nbsp;to&nbsp;have&nbsp;an&nbsp;*unsafe
+</c42><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;interior*.&nbsp;The&nbsp;Unsafe&nbsp;type&nbsp;is&nbsp;the&nbsp;only&nbsp;legal&nbsp;way&nbsp;to&nbsp;obtain&nbsp;aliasable&nbsp;data&nbsp;that&nbsp;is
+</c42><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;considered&nbsp;mutable.&nbsp;In&nbsp;general,&nbsp;transmuting&nbsp;an&nbsp;&amp;T&nbsp;type&nbsp;into&nbsp;an&nbsp;&amp;mut&nbsp;T&nbsp;is&nbsp;considered
+</c42><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;undefined&nbsp;behavior.
+</c42><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Although&nbsp;it&nbsp;is&nbsp;possible&nbsp;to&nbsp;put&nbsp;an&nbsp;Unsafe&lt;T&gt;&nbsp;into&nbsp;static&nbsp;item,&nbsp;it&nbsp;is&nbsp;not&nbsp;permitted&nbsp;to
+</c42><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;take&nbsp;the&nbsp;address&nbsp;of&nbsp;the&nbsp;static&nbsp;item&nbsp;if&nbsp;the&nbsp;item&nbsp;is&nbsp;not&nbsp;declared&nbsp;as&nbsp;mutable.&nbsp;This&nbsp;rule
+</c42><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;exists&nbsp;because&nbsp;immutable&nbsp;static&nbsp;items&nbsp;are&nbsp;stored&nbsp;in&nbsp;read-only&nbsp;memory,&nbsp;and&nbsp;thus&nbsp;any
+</c42><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;attempt&nbsp;to&nbsp;mutate&nbsp;their&nbsp;interior&nbsp;can&nbsp;cause&nbsp;segfaults.&nbsp;Immutable&nbsp;static&nbsp;items&nbsp;containing
+</c42><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Unsafe&lt;T&gt;&nbsp;instances&nbsp;are&nbsp;still&nbsp;useful&nbsp;as&nbsp;read-only&nbsp;initializers,&nbsp;however,&nbsp;so&nbsp;we&nbsp;do&nbsp;not
+</c42><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;forbid&nbsp;them&nbsp;altogether.
+</c42><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Types&nbsp;like&nbsp;`Cell`&nbsp;and&nbsp;`RefCell`&nbsp;use&nbsp;this&nbsp;type&nbsp;to&nbsp;wrap&nbsp;their&nbsp;internal&nbsp;data.
+</c42><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Unsafe&nbsp;doesn't&nbsp;opt-out&nbsp;from&nbsp;any&nbsp;kind,&nbsp;instead,&nbsp;types&nbsp;with&nbsp;an&nbsp;`Unsafe`&nbsp;interior
+</c42><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;are&nbsp;expected&nbsp;to&nbsp;opt-out&nbsp;from&nbsp;kinds&nbsp;themselves.
+</c42><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;#&nbsp;Example:
+</c42><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```rust
+</c42><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;use&nbsp;std::ty::Unsafe;
+</c42><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;use&nbsp;std::kinds::marker;
+</c42><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;struct&nbsp;NotThreadSafe&lt;T&gt;&nbsp;{
+</c42><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value:&nbsp;Unsafe&lt;T&gt;,
+</c42><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;marker1:&nbsp;marker::NoShare
+</c42><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;}
+</c42><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;```
+</c42><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;**NOTE:**&nbsp;Unsafe&lt;T&gt;&nbsp;fields&nbsp;are&nbsp;public&nbsp;to&nbsp;allow&nbsp;static&nbsp;initializers.&nbsp;It&nbsp;is&nbsp;not&nbsp;recommended
+</c42><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;to&nbsp;access&nbsp;its&nbsp;fields&nbsp;directly,&nbsp;`get`&nbsp;should&nbsp;be&nbsp;used&nbsp;instead.
+</c42><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[76242]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>lang="unsafe"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c31><a href="#48_17_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#48_17_refs">&nbsp;Unsafe</a></c31><c5><a href="#48_17_refs">&lt;T&gt;</a></c5><c31><a href="#48_17_refs">&nbsp;</a></c31><c3>{</c3><c31><a href="#48_17_refs">
+</a></c31><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[]">&nbsp;</a><c31><a href="#48_17_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c42>///&nbsp;Wrapped&nbsp;value
+</c42><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[76243, 76245]">&nbsp;</a><c31><a href="#48_17_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c24><a href="#51_4_refs">value:&nbsp;</a></c24><c8><a href="c=0 n=76251">T</a></c8><c3>,</c3><c31><a href="#48_17_refs">
+</a></c31><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[]">&nbsp;</a><c31><a href="#48_17_refs">
+</a></c31><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n[]">&nbsp;</a><c31><a href="#48_17_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c42>///&nbsp;Invariance&nbsp;marker
+</c42><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n[76246, 76248, 76250]">&nbsp;</a><c31><a href="#48_17_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c24><a href="#48_17_refs">marker1:&nbsp;</a></c24><c8><a href="../libstd/kinds.rs.html#207">marker::InvariantType&lt;</a></c8><c8><a href="c=0 n=76251">T</a></c8><c8><a href="../libstd/kinds.rs.html#207">&gt;</a></c8><c31><a href="#48_17_refs">
+</a></c31><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a><a id="n[76252]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a><a id="n[76257, 76255]">&nbsp;</a><c33>impl</c33><c5>&lt;T&gt;</c5><c33>&nbsp;</c33><c33><a href="../libstd/ty.rs.html#48">Unsafe</a></c33><c5><a href="../libstd/ty.rs.html#48">&lt;</a></c5><c5><a href="c=0 n=76253">T</a></c5><c5><a href="../libstd/ty.rs.html#48">&gt;</a></c5><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a><a id="n[]">&nbsp;</a><c33>
+</c33><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Static&nbsp;constructor
+</c42><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a><a id="n[76266, 76261, 76264, 76262, 76267, 76258]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18><a href="#60_4_refs">&nbsp;</a></c18><c30>fn</c30><c30><a href="#60_4_refs">&nbsp;new</a></c30><c4>(</c4><c20><a href="#60_15_refs">value</a></c20><c18><a href="#60_4_refs">:&nbsp;</a></c18><c8><a href="c=0 n=76253">T</a></c8><c4>)</c4><c18><a href="#60_4_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#60_4_refs">&nbsp;</a></c18><c8><a href="../libstd/ty.rs.html#48">Unsafe&lt;</a></c8><c8><a href="c=0 n=76253">T</a></c8><c8><a href="../libstd/ty.rs.html#48">&gt;</a></c8><c18><a href="#60_4_refs">&nbsp;</a></c18><c3>{</c3><c22><a href="#60_4_refs">
+</a></c22><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a><a id="n[76270, 76269, 76268]">&nbsp;</a><c22><a href="#60_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c1><a href="../libstd/ty.rs.html#48">Unsafe</a></c1><c3>{</c3><c1><a href="../libstd/ty.rs.html#48">value:&nbsp;</a></c1><c26><a href="../libstd/ty.rs.html#60">value</a></c26><c3>,</c3><c1><a href="../libstd/ty.rs.html#48">&nbsp;marker1:&nbsp;</a></c1><c26><a href="c=0 n=74531">marker::InvariantType</a></c26><c3>}</c3><c22><a href="#60_4_refs">
+</a></c22><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#60_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;63</ln><a id="63">&nbsp;</a><a id="n[]">&nbsp;</a><c33>
+</c33><br/><ln>&nbsp;64</ln><a id="64">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Gets&nbsp;a&nbsp;mutable&nbsp;pointer&nbsp;to&nbsp;the&nbsp;wrapped&nbsp;value
+</c42><br/><ln>&nbsp;65</ln><a id="65">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;66</ln><a id="66">&nbsp;</a><a id="n[76271, 76281, 76276, 76274, 76278, 76283, 76282, 76280, 76279, 76277]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18><a href="#66_4_refs">&nbsp;</a></c18><c21>unsafe</c21><c18><a href="#66_4_refs">&nbsp;</a></c18><c30>fn</c30><c30><a href="#66_4_refs">&nbsp;get</a></c30><c4>(</c4><c20><a href="#66_22_refs">&amp;self</a></c20><c4>)</c4><c18><a href="#66_4_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#66_4_refs">&nbsp;</a></c18><c8><a href="#66_4_refs">*mut&nbsp;</a></c8><c8><a href="c=0 n=76253">T</a></c8><c18><a href="#66_4_refs">&nbsp;</a></c18><c3>{</c3><c22><a href="#66_4_refs">&nbsp;</a></c22><c26><a href="../libstd/cast.rs.html#57">cast::transmute</a></c26><c4>(</c4><c5><a href="#66_4_refs">&amp;</a></c5><c26><a href="../libstd/ty.rs.html#66">self</a></c26><c24><a href="../libstd/ty.rs.html#51">.value</a></c24><c4>)</c4><c22><a href="#66_4_refs">&nbsp;</a></c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;67</ln><a id="67">&nbsp;</a><a id="n[]">&nbsp;</a><c33>
+</c33><br/><ln>&nbsp;68</ln><a id="68">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Unwraps&nbsp;the&nbsp;value
+</c42><br/><ln>&nbsp;69</ln><a id="69">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;70</ln><a id="70">&nbsp;</a><a id="n[76287, 76292, 76291, 76290, 76289, 76284]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18><a href="#70_4_refs">&nbsp;</a></c18><c21>unsafe</c21><c18><a href="#70_4_refs">&nbsp;</a></c18><c30>fn</c30><c30><a href="#70_4_refs">&nbsp;unwrap</a></c30><c4>(</c4><c20><a href="#70_25_refs">self</a></c20><c4>)</c4><c18><a href="#70_4_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#70_4_refs">&nbsp;</a></c18><c8><a href="c=0 n=76253">T</a></c8><c18><a href="#70_4_refs">&nbsp;</a></c18><c3>{</c3><c22><a href="#70_4_refs">&nbsp;</a></c22><c26><a href="../libstd/ty.rs.html#70">self</a></c26><c24><a href="../libstd/ty.rs.html#51">.value</a></c24><c22><a href="#70_4_refs">&nbsp;</a></c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;71</ln><a id="71">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="48_17_refs"><a href="#48"><c40>libstd/ty.rs:48:17-48:17&nbsp;-struct-&nbsp;definition:<br/></c40><pr>#[lang="unsafe"]
+<br/>pub&nbsp;struct&nbsp;Unsafe&lt;T&gt;&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/ty.rs.html#57"><c40>57:&nbsp;</c40>impl&lt;T&gt;&nbsp;Unsafe&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/ty.rs.html#61"><c40>61:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Unsafe{value:&nbsp;value,&nbsp;marker1:&nbsp;marker::InvariantType}
+<br/></a><a href="../libstd/ty.rs.html#60"><c40>60:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new(value:&nbsp;T)&nbsp;-&gt;&nbsp;Unsafe&lt;T&gt;&nbsp;{
+<br/></a><a href="../libstd/cell.rs.html"><c40>libstd/cell.rs:<br/></c40></a><a href="../libstd/cell.rs.html#24"><c40>24:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;value:&nbsp;Unsafe&lt;T&gt;,
+<br/></a><a href="../libstd/cell.rs.html#72"><c40>72:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;value:&nbsp;Unsafe&lt;T&gt;,
+<br/></a><a href="../libstd/comm/sync.rs.html"><c40>libstd/comm/sync.rs:<br/></c40></a><a href="../libstd/comm/sync.rs.html#59"><c40>59:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;state:&nbsp;Unsafe&lt;State&lt;T&gt;&gt;,
+<br/></a><a href="../libstd/sync/arc.rs.html"><c40>libstd/sync/arc.rs:<br/></c40></a><a href="../libstd/sync/arc.rs.html#43"><c40>43:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Unsafe&lt;T&gt;,
+<br/></a><a href="../libstd/sync/atomics.rs.html"><c40>libstd/sync/atomics.rs:<br/></c40></a><a href="../libstd/sync/atomics.rs.html#189"><c40>189:&nbsp;</c40>pub&nbsp;static&nbsp;INIT_ATOMIC_UINT&nbsp;:&nbsp;AtomicUint&nbsp;=&nbsp;AtomicUint&nbsp;{&nbsp;v:&nbsp;Unsafe{value:&nbsp;0,
+<br/></a><a href="../libstd/sync/atomics.rs.html#181"><c40>181:&nbsp;</c40>pub&nbsp;static&nbsp;INIT_ATOMIC_BOOL&nbsp;:&nbsp;AtomicBool&nbsp;=&nbsp;AtomicBool&nbsp;{&nbsp;v:&nbsp;Unsafe{value:&nbsp;0,
+<br/></a><a href="../libstd/sync/atomics.rs.html#131"><c40>131:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;v:&nbsp;Unsafe&lt;uint&gt;,
+<br/></a><a href="../libstd/sync/atomics.rs.html#147"><c40>147:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;p:&nbsp;Unsafe&lt;uint&gt;,
+<br/></a><a href="../libstd/sync/atomics.rs.html#119"><c40>119:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;v:&nbsp;Unsafe&lt;uint&gt;,
+<br/></a><a href="../libstd/sync/atomics.rs.html#137"><c40>137:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;p:&nbsp;Unsafe&lt;uint&gt;,
+<br/></a><a href="../libstd/sync/atomics.rs.html#125"><c40>125:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;v:&nbsp;Unsafe&lt;int&gt;,
+<br/></a><a href="../libstd/sync/atomics.rs.html#185"><c40>185:&nbsp;</c40>pub&nbsp;static&nbsp;INIT_ATOMIC_INT&nbsp;&nbsp;:&nbsp;AtomicInt&nbsp;&nbsp;=&nbsp;AtomicInt&nbsp;&nbsp;{&nbsp;v:&nbsp;Unsafe{value:&nbsp;0,
+<br/></a><a href="../libstd/unstable/mutex.rs.html"><c40>libstd/unstable/mutex.rs:<br/></c40></a><a href="../libstd/unstable/mutex.rs.html#384"><c40>384:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cond:&nbsp;Unsafe&nbsp;{
+<br/></a><a href="../libstd/unstable/mutex.rs.html#375"><c40>375:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;lock:&nbsp;Unsafe&lt;pthread_mutex_t&gt;,
+<br/></a><a href="../libstd/unstable/mutex.rs.html#376"><c40>376:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;cond:&nbsp;Unsafe&lt;pthread_cond_t&gt;,
+<br/></a><a href="../libstd/unstable/mutex.rs.html#380"><c40>380:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lock:&nbsp;Unsafe&nbsp;{
+<br/></a><br/></div></maintext></div></body>

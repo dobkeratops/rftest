@@ -1,0 +1,581 @@
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libstd/">libstd</a></c0><c1>/</c1><c0><a href="./../libstd/task.rs.html">task.rs</a></c0><br/><br/></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/*!
+</c41><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;Utilities&nbsp;for&nbsp;managing&nbsp;and&nbsp;scheduling&nbsp;tasks
+</c41><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;An&nbsp;executing&nbsp;Rust&nbsp;program&nbsp;consists&nbsp;of&nbsp;a&nbsp;collection&nbsp;of&nbsp;tasks,&nbsp;each&nbsp;with&nbsp;their
+</c41><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;own&nbsp;stack,&nbsp;and&nbsp;sole&nbsp;ownership&nbsp;of&nbsp;their&nbsp;allocated&nbsp;heap&nbsp;data.&nbsp;Tasks&nbsp;communicate
+</c41><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;with&nbsp;each&nbsp;other&nbsp;using&nbsp;channels&nbsp;(see&nbsp;`std::comm`&nbsp;for&nbsp;more&nbsp;info&nbsp;about&nbsp;how
+</c41><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;communication&nbsp;works).
+</c41><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;Failure&nbsp;in&nbsp;one&nbsp;task&nbsp;does&nbsp;not&nbsp;propagate&nbsp;to&nbsp;any&nbsp;others&nbsp;(not&nbsp;to&nbsp;parent,&nbsp;not&nbsp;to
+</c41><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;child).&nbsp;&nbsp;Failure&nbsp;propagation&nbsp;is&nbsp;instead&nbsp;handled&nbsp;by&nbsp;using&nbsp;the&nbsp;channel&nbsp;send()
+</c41><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;and&nbsp;recv()&nbsp;methods&nbsp;which&nbsp;will&nbsp;fail&nbsp;if&nbsp;the&nbsp;other&nbsp;end&nbsp;has&nbsp;hung&nbsp;up&nbsp;already.
+</c41><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;Task&nbsp;Scheduling:
+</c41><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;By&nbsp;default,&nbsp;every&nbsp;task&nbsp;is&nbsp;created&nbsp;with&nbsp;the&nbsp;same&nbsp;"flavor"&nbsp;as&nbsp;the&nbsp;calling&nbsp;task.
+</c41><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;This&nbsp;flavor&nbsp;refers&nbsp;to&nbsp;the&nbsp;scheduling&nbsp;mode,&nbsp;with&nbsp;two&nbsp;possibilities&nbsp;currently
+</c41><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;being&nbsp;1:1&nbsp;and&nbsp;M:N&nbsp;modes.&nbsp;Green&nbsp;(M:N)&nbsp;tasks&nbsp;are&nbsp;cooperatively&nbsp;scheduled&nbsp;and
+</c41><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;native&nbsp;(1:1)&nbsp;tasks&nbsp;are&nbsp;scheduled&nbsp;by&nbsp;the&nbsp;OS&nbsp;kernel.
+</c41><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;#&nbsp;Example
+</c41><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;```rust
+</c41><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;spawn(proc()&nbsp;{
+</c41><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println!("Hello,&nbsp;World!");
+</c41><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;})
+</c41><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;```
+</c41><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a><a id="n[]">&nbsp;</a><c42>&nbsp;*/
+</c42><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;any::Any</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;comm::</c0><c3>{</c3><c0>Sender</c0><c3>,</c3><c0>&nbsp;Receiver</c0><c3>,</c3><c0>&nbsp;channel</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;io::Writer</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;kinds::</c0><c3>{</c3><c0>Send</c0><c3>,</c3><c0>&nbsp;marker</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;option::</c0><c3>{</c3><c0>None</c0><c3>,</c3><c0>&nbsp;Some</c0><c3>,</c3><c0>&nbsp;Option</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;result::</c0><c3>{</c3><c0>Result</c0><c3>,</c3><c0>&nbsp;Ok</c0><c3>,</c3><c0>&nbsp;Err</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;rt::local::Local</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;rt::task::Task</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a id="n[]">&nbsp;</a><c21>use</c21><c0>&nbsp;str::</c0><c3>{</c3><c0>Str</c0><c3>,</c3><c0>&nbsp;SendStr</c0><c3>,</c3><c0>&nbsp;IntoMaybeOwned</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>&nbsp;use&nbsp;any::</c50><c3>{</c3><c50>AnyOwnExt</c50><c3>,</c3><c50>&nbsp;AnyRefExt</c50><c3>};</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>&nbsp;use&nbsp;result</c50><c3>;</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Indicates&nbsp;the&nbsp;manner&nbsp;in&nbsp;which&nbsp;a&nbsp;task&nbsp;exited.
+</c42><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;A&nbsp;task&nbsp;that&nbsp;completes&nbsp;without&nbsp;failing&nbsp;is&nbsp;considered&nbsp;to&nbsp;exit&nbsp;successfully.
+</c42><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;If&nbsp;you&nbsp;wish&nbsp;for&nbsp;this&nbsp;result's&nbsp;delivery&nbsp;to&nbsp;block&nbsp;until&nbsp;all
+</c42><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n[108115]">&nbsp;</a><c42>///&nbsp;children&nbsp;tasks&nbsp;complete,&nbsp;recommend&nbsp;using&nbsp;a&nbsp;result&nbsp;future.
+</c42><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a><a id="n[108119, 108121, 108118, 108116]">&nbsp;</a><c21>pub</c21><c8><a href="#57_62_refs">&nbsp;</a></c8><c35>type</c35><c35><a href="#57_62_refs">&nbsp;TaskResult&nbsp;=&nbsp;</a></c35><c35><a href="../libstd/result.rs.html#20">Result</a></c35><c5><a href="../libstd/result.rs.html#20">&lt;</a></c5><c4>()</c4><c3>,</c3><c8><a href="../libstd/result.rs.html#20">&nbsp;~</a></c8><c8><a href="../libstd/any.rs.html#39">Any</a></c8><c8><a href="../libstd/result.rs.html#20">&gt;</a></c8><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a><a id="n[108122]">&nbsp;</a><c42>///&nbsp;Task&nbsp;configuration&nbsp;options
+</c42><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c31><a href="#60_31_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#60_31_refs">&nbsp;TaskOpts&nbsp;</a></c31><c3>{</c3><c31><a href="#60_31_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a><a id="n[]">&nbsp;</a><c31><a href="#60_31_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c42>///&nbsp;Enable&nbsp;lifecycle&nbsp;notifications&nbsp;on&nbsp;the&nbsp;given&nbsp;channel
+</c42><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a><a id="n[108123, 108127, 108129, 108125]">&nbsp;</a><c31><a href="#60_31_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c24><a href="#63_4_refs">notify_chan:&nbsp;</a></c24><c8><a href="../libstd/option.rs.html#151">Option&lt;</a></c8><c8><a href="../libstd/comm/mod.rs.html#306">Sender&lt;</a></c8><c8><a href="../libstd/task.rs.html#57">TaskResult</a></c8><c8><a href="../libstd/comm/mod.rs.html#306">&gt;</a></c8><c8><a href="../libstd/option.rs.html#151">&gt;</a></c8><c3>,</c3><c31><a href="#60_31_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a><a id="n[]">&nbsp;</a><c31><a href="#60_31_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c42>///&nbsp;A&nbsp;name&nbsp;for&nbsp;the&nbsp;task-to-be,&nbsp;for&nbsp;identification&nbsp;in&nbsp;failure&nbsp;messages
+</c42><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a><a id="n[108132, 108134, 108130]">&nbsp;</a><c31><a href="#60_31_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c24><a href="#65_4_refs">name:&nbsp;</a></c24><c8><a href="../libstd/option.rs.html#151">Option&lt;</a></c8><c8><a href="../libstd/str.rs.html#1218">SendStr</a></c8><c8><a href="../libstd/option.rs.html#151">&gt;</a></c8><c3>,</c3><c31><a href="#60_31_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a><a id="n[]">&nbsp;</a><c31><a href="#60_31_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c42>///&nbsp;The&nbsp;size&nbsp;of&nbsp;the&nbsp;stack&nbsp;for&nbsp;the&nbsp;spawned&nbsp;task
+</c42><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a><a id="n[108137, 108139, 108135]">&nbsp;</a><c31><a href="#60_31_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c24><a href="#60_31_refs">stack_size:&nbsp;</a></c24><c8><a href="../libstd/option.rs.html#151">Option&lt;uint&gt;</a></c8><c3>,</c3><c31><a href="#60_31_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a><a id="n[]">&nbsp;</a><c31><a href="#60_31_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c42>///&nbsp;Task-local&nbsp;stdout
+</c42><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a><a id="n[108145, 108142, 108143, 108140]">&nbsp;</a><c31><a href="#60_31_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c24><a href="#60_31_refs">stdout:&nbsp;</a></c24><c8><a href="../libstd/option.rs.html#151">Option&lt;~</a></c8><c8><a href="../libstd/io/mod.rs.html#756">Writer</a></c8><c8><a href="../libstd/option.rs.html#151">&gt;</a></c8><c3>,</c3><c31><a href="#60_31_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a><a id="n[]">&nbsp;</a><c31><a href="#60_31_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c42>///&nbsp;Task-local&nbsp;stderr
+</c42><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a><a id="n[108146, 108151, 108148, 108149]">&nbsp;</a><c31><a href="#60_31_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c24><a href="#60_31_refs">stderr:&nbsp;</a></c24><c8><a href="../libstd/option.rs.html#151">Option&lt;~</a></c8><c8><a href="../libstd/io/mod.rs.html#756">Writer</a></c8><c8><a href="../libstd/option.rs.html#151">&gt;</a></c8><c3>,</c3><c31><a href="#60_31_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/**
+</c41><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;The&nbsp;task&nbsp;builder&nbsp;type.
+</c41><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;Provides&nbsp;detailed&nbsp;control&nbsp;over&nbsp;the&nbsp;properties&nbsp;and&nbsp;behavior&nbsp;of&nbsp;new&nbsp;tasks.
+</c41><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a><a id="n[]">&nbsp;</a><c42>&nbsp;*/
+</c42><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;NB:&nbsp;Builders&nbsp;are&nbsp;designed&nbsp;to&nbsp;be&nbsp;single-use&nbsp;because&nbsp;they&nbsp;do&nbsp;stateful
+</c40><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;things&nbsp;that&nbsp;get&nbsp;weird&nbsp;when&nbsp;reusing&nbsp;-&nbsp;e.g.&nbsp;if&nbsp;you&nbsp;create&nbsp;a&nbsp;result&nbsp;future
+</c40><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;it&nbsp;only&nbsp;applies&nbsp;to&nbsp;a&nbsp;single&nbsp;task,&nbsp;so&nbsp;then&nbsp;you&nbsp;have&nbsp;to&nbsp;maintain&nbsp;Some
+</c40><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;potentially&nbsp;tricky&nbsp;state&nbsp;to&nbsp;ensure&nbsp;that&nbsp;everything&nbsp;behaves&nbsp;correctly
+</c40><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;when&nbsp;you&nbsp;try&nbsp;to&nbsp;reuse&nbsp;the&nbsp;builder&nbsp;to&nbsp;spawn&nbsp;a&nbsp;new&nbsp;task.&nbsp;We'll&nbsp;just
+</c40><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;sidestep&nbsp;that&nbsp;whole&nbsp;issue&nbsp;by&nbsp;making&nbsp;builders&nbsp;uncopyable&nbsp;and&nbsp;making
+</c40><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a id="n[108152]">&nbsp;</a><c40>//&nbsp;the&nbsp;run&nbsp;function&nbsp;move&nbsp;them&nbsp;in.
+</c40><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a id="n[]">&nbsp;</a><c21>pub</c21><c31><a href="#85_34_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#85_34_refs">&nbsp;TaskBuilder&nbsp;</a></c31><c3>{</c3><c31><a href="#85_34_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a><a id="n[]">&nbsp;</a><c31><a href="#85_34_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c42>///&nbsp;Options&nbsp;to&nbsp;spawn&nbsp;the&nbsp;new&nbsp;task&nbsp;with
+</c42><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a id="n[108155, 108153]">&nbsp;</a><c31><a href="#85_34_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c24><a href="#88_4_refs">opts:&nbsp;</a></c24><c8><a href="../libstd/task.rs.html#60">TaskOpts</a></c8><c3>,</c3><c31><a href="#85_34_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a id="n[108161, 108165, 108162, 108156, 108159, 108158, 108163]">&nbsp;</a><c31><a href="#85_34_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c21>priv</c21><c31><a href="#85_34_refs">&nbsp;</a></c31><c24><a href="#89_9_refs">gen_body:&nbsp;</a></c24><c8><a href="../libstd/option.rs.html#151">Option&lt;proc</a></c8><c4>(</c4><c8><a href="../libstd/option.rs.html#151">v:&nbsp;proc</a></c8><c4>())</c4><c8><a href="../libstd/option.rs.html#151">&nbsp;</a></c8><c4>-&gt;</c4><c8><a href="../libstd/option.rs.html#151">&nbsp;proc</a></c8><c4>()</c4><c8><a href="../libstd/option.rs.html#151">&gt;</a></c8><c3>,</c3><c31><a href="#85_34_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a><a id="n[108166, 108168, 108170]">&nbsp;</a><c31><a href="#85_34_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c21>priv</c21><c31><a href="#85_34_refs">&nbsp;</a></c31><c24><a href="#85_34_refs">nopod:&nbsp;</a></c24><c8><a href="../libstd/option.rs.html#151">Option&lt;</a></c8><c8><a href="../libstd/kinds.rs.html#269">marker::NoPod</a></c8><c8><a href="../libstd/option.rs.html#151">&gt;</a></c8><c3>,</c3><c31><a href="#85_34_refs">
+</a></c31><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/**
+</c41><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;Generate&nbsp;the&nbsp;base&nbsp;configuration&nbsp;for&nbsp;spawning&nbsp;a&nbsp;task,&nbsp;off&nbsp;of&nbsp;which&nbsp;more
+</c41><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;*&nbsp;configuration&nbsp;methods&nbsp;can&nbsp;be&nbsp;chained.
+</c41><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n[108171]">&nbsp;</a><c42>&nbsp;*/
+</c42><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a id="n[108173, 108174]">&nbsp;</a><c21>pub</c21><c1><a href="#96_4_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#96_4_refs">&nbsp;task</a></c30><c4>()</c4><c1><a href="#96_4_refs">&nbsp;</a></c1><c4>-&gt;</c4><c1><a href="#96_4_refs">&nbsp;</a></c1><c8><a href="../libstd/task.rs.html#85">TaskBuilder</a></c8><c1><a href="#96_4_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#96_4_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a id="n[108179]">&nbsp;</a><c22><a href="#96_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c1><a href="../libstd/task.rs.html#85">TaskBuilder&nbsp;</a></c1><c3>{</c3><c1><a href="../libstd/task.rs.html#85">
+</a></c1><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n[108175, 108176]">&nbsp;</a><c1><a href="../libstd/task.rs.html#85">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;opts:&nbsp;</a></c1><c26><a href="../libstd/task.rs.html#221">TaskOpts::new</a></c26><c4>()</c4><c3>,</c3><c1><a href="../libstd/task.rs.html#85">
+</a></c1><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a id="n[108177]">&nbsp;</a><c1><a href="../libstd/task.rs.html#85">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gen_body:&nbsp;</a></c1><c26><a href="../libstd/option.rs.html#154">None</a></c26><c3>,</c3><c1><a href="../libstd/task.rs.html#85">
+</a></c1><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a id="n[108178]">&nbsp;</a><c1><a href="../libstd/task.rs.html#85">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nopod:&nbsp;</a></c1><c26><a href="../libstd/option.rs.html#154">None</a></c26><c3>,</c3><c1><a href="../libstd/task.rs.html#85">
+</a></c1><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n[]">&nbsp;</a><c1><a href="../libstd/task.rs.html#85">&nbsp;&nbsp;&nbsp;&nbsp;</a></c1><c3>}</c3><c22><a href="#96_4_refs">
+</a></c22><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a id="n[108180]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n[108182]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/task.rs.html#85">TaskBuilder</a></c33><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Get&nbsp;a&nbsp;future&nbsp;representing&nbsp;the&nbsp;exit&nbsp;status&nbsp;of&nbsp;the&nbsp;task.
+</c42><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Taking&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;future&nbsp;will&nbsp;block&nbsp;until&nbsp;the&nbsp;child&nbsp;task
+</c42><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;terminates.&nbsp;The&nbsp;future&nbsp;result&nbsp;return&nbsp;value&nbsp;will&nbsp;be&nbsp;created&nbsp;*before*&nbsp;the&nbsp;task&nbsp;is
+</c42><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;spawned;&nbsp;as&nbsp;such,&nbsp;do&nbsp;not&nbsp;invoke&nbsp;.get()&nbsp;on&nbsp;it&nbsp;directly;
+</c42><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;rather,&nbsp;store&nbsp;it&nbsp;in&nbsp;an&nbsp;outer&nbsp;variable/list&nbsp;for&nbsp;later&nbsp;use.
+</c42><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///
+</c42><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;#&nbsp;Failure
+</c42><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Fails&nbsp;if&nbsp;a&nbsp;future_result&nbsp;was&nbsp;already&nbsp;set&nbsp;for&nbsp;this&nbsp;task.
+</c42><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a><a id="n[108183, 108188, 108190, 108186, 108220]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18><a href="#115_4_refs">&nbsp;</a></c18><c30>fn</c30><c30><a href="#115_4_refs">&nbsp;future_result</a></c30><c4>(</c4><c20><a href="#115_25_refs">&amp;mut&nbsp;self</a></c20><c4>)</c4><c18><a href="#115_4_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#115_4_refs">&nbsp;</a></c18><c8><a href="../libstd/comm/mod.rs.html#290">Receiver&lt;</a></c8><c8><a href="../libstd/task.rs.html#57">TaskResult</a></c8><c8><a href="../libstd/comm/mod.rs.html#290">&gt;</a></c8><c18><a href="#115_4_refs">&nbsp;</a></c18><c3>{</c3><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c40>//&nbsp;FIXME&nbsp;(#3725):&nbsp;Once&nbsp;linked&nbsp;failure&nbsp;and&nbsp;notification&nbsp;are
+</c40><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c40>//&nbsp;handled&nbsp;in&nbsp;the&nbsp;library,&nbsp;I&nbsp;can&nbsp;imagine&nbsp;implementing&nbsp;this&nbsp;by&nbsp;just
+</c40><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c40>//&nbsp;registering&nbsp;an&nbsp;arbitrary&nbsp;number&nbsp;of&nbsp;task::on_exit&nbsp;handlers&nbsp;and
+</c40><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c40>//&nbsp;sending&nbsp;out&nbsp;messages.
+</c40><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a><a id="n[108194, 108201, 108203, 108202, 108193, 108192, 108191]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>if</c21><c21><a href="#115_4_refs">&nbsp;</a></c21><c26><a href="../libstd/task.rs.html#115">self</a></c26><c24><a href="../libstd/task.rs.html#88">.opts</a></c24><c24><a href="../libstd/task.rs.html#63">.notify_chan</a></c24><c10><a href="../libstd/option.rs.html#170">.is_some</a></c10><c4>()</c4><c21><a href="#115_4_refs">&nbsp;</a></c21><c3>{</c3><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><a id="n[108196]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</a></c22><c4>(</c4><c12><a href="#115_4_refs">"Can't&nbsp;set&nbsp;multiple&nbsp;future_results&nbsp;for&nbsp;one&nbsp;task!"</a></c12><c4>)</c4><c3>;</c3><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c40>//&nbsp;Construct&nbsp;the&nbsp;future&nbsp;and&nbsp;give&nbsp;it&nbsp;to&nbsp;the&nbsp;caller.
+</c40><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><a id="n[108208, 108210, 108209, 108205, 108211, 108204, 108206, 108207]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#115_4_refs">&nbsp;</a></c22><c4>(</c4><c20><a href="#126_13_refs">tx</a></c20><c3>,</c3><c20><a href="#115_4_refs">&nbsp;</a></c20><c20><a href="#126_17_refs">rx</a></c20><c4>)</c4><c16><a href="#115_4_refs">&nbsp;=&nbsp;</a></c16><c26><a href="../libstd/comm/mod.rs.html#365">channel</a></c26><c4>()</c4><c3>;</c3><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c40>//&nbsp;Reconfigure&nbsp;self&nbsp;to&nbsp;use&nbsp;a&nbsp;notify&nbsp;channel.
+</c40><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><a id="n[108213, 108218, 108214, 108217, 108219, 108215, 108212, 108216]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../libstd/task.rs.html#115">self</a></c26><c24><a href="../libstd/task.rs.html#88">.opts</a></c24><c24><a href="../libstd/task.rs.html#63">.notify_chan</a></c24><c13><a href="#115_4_refs">&nbsp;=&nbsp;</a></c13><c26><a href="../libstd/option.rs.html#156">Some</a></c26><c4>(</c4><c26><a href="../libstd/task.rs.html#126">tx</a></c26><c4>)</c4><c3>;</c3><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><a id="n[108221]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../libstd/task.rs.html#126">rx</a></c26><c22><a href="#115_4_refs">
+</a></c22><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#115_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a><a id="n[]">&nbsp;</a><c33>
+</c33><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;Name&nbsp;the&nbsp;task-to-be.&nbsp;Currently&nbsp;the&nbsp;name&nbsp;is&nbsp;used&nbsp;for&nbsp;identification
+</c42><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c42>///&nbsp;only&nbsp;in&nbsp;failure&nbsp;messages.
+</c42><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a><a id="n[108225, 108228, 108232, 108222, 108244, 108231, 108234]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;named</c30><c5>&lt;S:&nbsp;</c5><c5><a href="../libstd/str.rs.html#1241">IntoMaybeOwned&lt;'static&gt;</a></c5><c5>&gt;</c5><c4>(</c4><c20><a href="#136_45_refs">mut&nbsp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#136_55_refs">name</a></c20><c18>:&nbsp;</c18><c8><a href="c=0 n=108223">S</a></c8><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/task.rs.html#85">TaskBuilder</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a><a id="n[108242, 108237, 108240, 108236, 108238, 108243, 108235, 108241, 108239]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/task.rs.html#136">self</a></c26><c24><a href="../libstd/task.rs.html#88">.opts</a></c24><c24><a href="../libstd/task.rs.html#65">.name</a></c24><c13>&nbsp;=&nbsp;</c13><c26><a href="../libstd/option.rs.html#156">Some</a></c26><c4>(</c4><c26><a href="../libstd/task.rs.html#136">name</a></c26><c10><a href="../libstd/str.rs.html#1244">.into_maybe_owned</a></c10><c4>())</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><a id="n[108245]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/task.rs.html#136">self</a></c26><c22>
+</c22><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><a id="n[]">&nbsp;</a><c33>
+</c33><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c41>/**
+</c41><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Add&nbsp;a&nbsp;wrapper&nbsp;to&nbsp;the&nbsp;body&nbsp;of&nbsp;the&nbsp;spawned&nbsp;task.
+</c41><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c41><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Before&nbsp;the&nbsp;task&nbsp;is&nbsp;spawned&nbsp;it&nbsp;is&nbsp;passed&nbsp;through&nbsp;a&nbsp;'body&nbsp;generator'
+</c41><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;function&nbsp;that&nbsp;may&nbsp;perform&nbsp;local&nbsp;setup&nbsp;operations&nbsp;as&nbsp;well&nbsp;as&nbsp;wrap
+</c41><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;the&nbsp;task&nbsp;body&nbsp;in&nbsp;remote&nbsp;setup&nbsp;operations.&nbsp;With&nbsp;this&nbsp;the&nbsp;behavior
+</c41><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;of&nbsp;tasks&nbsp;can&nbsp;be&nbsp;extended&nbsp;in&nbsp;simple&nbsp;ways.
+</c41><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c41><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;This&nbsp;function&nbsp;augments&nbsp;the&nbsp;current&nbsp;body&nbsp;generator&nbsp;with&nbsp;a&nbsp;new&nbsp;body
+</c41><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;generator&nbsp;by&nbsp;applying&nbsp;the&nbsp;task&nbsp;body&nbsp;which&nbsp;results&nbsp;from&nbsp;the
+</c41><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;existing&nbsp;body&nbsp;generator&nbsp;to&nbsp;the&nbsp;new&nbsp;body&nbsp;generator.
+</c41><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c41><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><a id="n[108257, 108335, 108252, 108258, 108249, 108246, 108255, 108260, 108253, 108256]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18>&nbsp;</c18><c30>fn&nbsp;with_wrapper</c30><c4>(</c4><c20><a href="#153_24_refs">mut&nbsp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="#153_34_refs">wrapper</a></c20><c18>:&nbsp;</c18><c8>proc</c8><c4>(</c4><c8>v:&nbsp;proc</c8><c4>())</c4><c8>&nbsp;</c8><c4>-&gt;</c4><c8>&nbsp;proc</c8><c4>())</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c8><a href="../libstd/task.rs.html#85">TaskBuilder</a></c8><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><a id="n[108264, 108267, 108263, 108261, 108265, 108262, 108266]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c20><a href="#154_12_refs">prev_gen_body</a></c20><c16>&nbsp;=&nbsp;</c16><c26><a href="../libstd/task.rs.html#153">self</a></c26><c24><a href="../libstd/task.rs.html#89">.gen_body</a></c24><c10><a href="../libstd/option.rs.html#403">.take</a></c10><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><a id="n[108297, 108271, 108270, 108296, 108269, 108268]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c20><a href="#155_12_refs">prev_gen_body</a></c20><c16>&nbsp;=&nbsp;</c16><c21>match&nbsp;</c21><c26><a href="../libstd/task.rs.html#154">prev_gen_body</a></c26><c21>&nbsp;</c21><c3>{</c3><c21>
+</c21><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><a id="n[108272, 108273, 108274]">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20><a href="../libstd/option.rs.html#156">Some</a></c20><c4>(</c4><c20><a href="#156_17_refs">gen</a></c20><c4>)</c4><c21>&nbsp;</c21><c4>=&gt;</c4><c21>&nbsp;</c21><c26><a href="../libstd/task.rs.html#156">gen</a></c26><c3>,</c3><c21>
+</c21><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a><a id="n[108293, 108295, 108275]">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20><a href="../libstd/option.rs.html#154">None</a></c20><c21>&nbsp;</c21><c4>=&gt;</c4><c21>&nbsp;</c21><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a><a id="n[108286, 108287, 108288, 108289, 108290, 108281, 108282, 108278, 108283, 108279, 108284, 108276, 108291, 108292]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c20><a href="#158_20_refs">f</a></c20><c13>:&nbsp;</c13><c8>proc</c8><c4>(</c4><c8>proc</c8><c4>())</c4><c8>&nbsp;</c8><c4>-&gt;</c4><c8>&nbsp;proc</c8><c4>()</c4><c13>&nbsp;=&nbsp;</c13><c1>proc</c1><c4>(</c4><c20><a href="#158_53_refs">body</a></c20><c4>)</c4><c1>&nbsp;</c1><c26><a href="../libstd/task.rs.html#158">body</a></c26><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><a id="n[108294]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/task.rs.html#158">f</a></c26><c22>
+</c22><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c21>
+</c21><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><a id="n[]">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c3>};</c3><c22>
+</c22><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><a id="n[108324, 108326, 108327, 108299, 108298, 108300]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c20><a href="#162_12_refs">next_gen_body</a></c20><c16>&nbsp;=&nbsp;</c16><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><a id="n[108307, 108303, 108322, 108312, 108306, 108323, 108304, 108321, 108313, 108309, 108311, 108314, 108308, 108301, 108315]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c20><a href="#163_16_refs">f</a></c20><c16>:&nbsp;</c16><c8>proc</c8><c4>(</c4><c8>proc</c8><c4>())</c4><c8>&nbsp;</c8><c4>-&gt;</c4><c8>&nbsp;proc</c8><c4>()</c4><c16>&nbsp;=&nbsp;</c16><c1>proc</c1><c4>(</c4><c20><a href="#163_49_refs">body</a></c20><c4>)</c4><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><a id="n[108317, 108316, 108318, 108320, 108319]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/task.rs.html#153">wrapper</a></c26><c4>(</c4><c26><a href="../libstd/task.rs.html#155">prev_gen_body</a></c26><c4>(</c4><c26><a href="../libstd/task.rs.html#163">body</a></c26><c4>))</c4><c22>
+</c22><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>};</c3><c22>
+</c22><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><a id="n[108325]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/task.rs.html#163">f</a></c26><c22>
+</c22><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>};</c3><c22>
+</c22><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a><a id="n[108328, 108329, 108333, 108332, 108331, 108334, 108330]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/task.rs.html#153">self</a></c26><c24><a href="../libstd/task.rs.html#89">.gen_body</a></c24><c13>&nbsp;=&nbsp;</c13><c26><a href="../libstd/option.rs.html#156">Some</a></c26><c4>(</c4><c26><a href="../libstd/task.rs.html#162">next_gen_body</a></c26><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a><a id="n[108336]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/task.rs.html#153">self</a></c26><c22>
+</c22><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a><a id="n[]">&nbsp;</a><c33>
+</c33><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c41>/**
+</c41><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Creates&nbsp;and&nbsp;executes&nbsp;a&nbsp;new&nbsp;child&nbsp;task
+</c41><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c41><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Sets&nbsp;up&nbsp;a&nbsp;new&nbsp;task&nbsp;with&nbsp;its&nbsp;own&nbsp;call&nbsp;stack&nbsp;and&nbsp;schedules&nbsp;it&nbsp;to&nbsp;run
+</c41><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;the&nbsp;provided&nbsp;unique&nbsp;closure.&nbsp;The&nbsp;task&nbsp;has&nbsp;the&nbsp;properties&nbsp;and&nbsp;behavior
+</c41><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;specified&nbsp;by&nbsp;the&nbsp;task_builder.
+</c41><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c41><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><a id="n[108337, 108342, 108343, 108340, 108344, 108380, 108345]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18><a href="#179_4_refs">&nbsp;</a></c18><c30>fn</c30><c30><a href="#179_4_refs">&nbsp;spawn</a></c30><c4>(</c4><c20><a href="#179_17_refs">mut&nbsp;self</a></c20><c3>,</c3><c18><a href="#179_4_refs">&nbsp;</a></c18><c20><a href="#179_27_refs">f</a></c20><c18><a href="#179_4_refs">:&nbsp;</a></c18><c8><a href="#179_4_refs">proc</a></c8><c4>())</c4><c18><a href="#179_4_refs">&nbsp;</a></c18><c3>{</c3><c22><a href="#179_4_refs">
+</a></c22><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><a id="n[108351, 108349, 108350, 108347, 108352, 108348, 108346]">&nbsp;</a><c22><a href="#179_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#179_4_refs">&nbsp;</a></c22><c20><a href="#180_12_refs">gen_body</a></c20><c16><a href="#179_4_refs">&nbsp;=&nbsp;</a></c16><c26><a href="../libstd/task.rs.html#179">self</a></c26><c24><a href="../libstd/task.rs.html#89">.gen_body</a></c24><c10><a href="../libstd/option.rs.html#403">.take</a></c10><c4>()</c4><c3>;</c3><c22><a href="#179_4_refs">
+</a></c22><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><a id="n[108365, 108355, 108364, 108354, 108353, 108356]">&nbsp;</a><c22><a href="#179_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#179_4_refs">&nbsp;</a></c22><c20><a href="#181_12_refs">f</a></c20><c16><a href="#179_4_refs">&nbsp;=&nbsp;</a></c16><c21><a href="#179_4_refs">match&nbsp;</a></c21><c26><a href="../libstd/task.rs.html#180">gen_body</a></c26><c21><a href="#179_4_refs">&nbsp;</a></c21><c3>{</c3><c21><a href="#179_4_refs">
+</a></c21><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><a id="n[108359, 108358, 108360, 108361, 108357]">&nbsp;</a><c21><a href="#179_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c20><a href="../libstd/option.rs.html#156">Some</a></c20><c4>(</c4><c20><a href="#182_17_refs">gen</a></c20><c4>)</c4><c21><a href="#179_4_refs">&nbsp;</a></c21><c4>=&gt;</c4><c21><a href="#179_4_refs">&nbsp;</a></c21><c26><a href="../libstd/task.rs.html#182">gen</a></c26><c4>(</c4><c26><a href="../libstd/task.rs.html#179">f</a></c26><c4>)</c4><c3>,</c3><c21><a href="#179_4_refs">
+</a></c21><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a><a id="n[108363, 108362]">&nbsp;</a><c21><a href="#179_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c20><a href="../libstd/option.rs.html#154">None</a></c20><c21><a href="#179_4_refs">&nbsp;</a></c21><c4>=&gt;</c4><c21><a href="#179_4_refs">&nbsp;</a></c21><c26><a href="../libstd/task.rs.html#179">f</a></c26><c21><a href="#179_4_refs">
+</a></c21><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a><a id="n[]">&nbsp;</a><c21><a href="#179_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c3>};</c3><c22><a href="#179_4_refs">
+</a></c22><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a><a id="n[108369, 108370, 108366, 108371, 108373, 108372, 108368]">&nbsp;</a><c22><a href="#179_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#179_4_refs">&nbsp;</a></c22><c20><a href="#185_12_refs">t</a></c20><c13><a href="#179_4_refs">:&nbsp;</a></c13><c8><a href="#179_4_refs">~</a></c8><c8><a href="../libstd/rt/task.rs.html#43">Task</a></c8><c13><a href="#179_4_refs">&nbsp;=&nbsp;</a></c13><c26><a href="../libstd/rt/local.rs.html#18">Local::take</a></c26><c4>()</c4><c3>;</c3><c22><a href="#179_4_refs">
+</a></c22><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a><a id="n[108379, 108376, 108375, 108374, 108377, 108378]">&nbsp;</a><c22><a href="#179_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../libstd/task.rs.html#185">t</a></c26><c10><a href="../libstd/rt/task.rs.html#238">.spawn_sibling</a></c10><c4>(</c4><c26><a href="../libstd/task.rs.html#179">self</a></c26><c24><a href="../libstd/task.rs.html#88">.opts</a></c24><c3>,</c3><c10><a href="../libstd/rt/task.rs.html#238">&nbsp;</a></c10><c26><a href="../libstd/task.rs.html#181">f</a></c26><c4>)</c4><c3>;</c3><c22><a href="#179_4_refs">
+</a></c22><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#179_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a><a id="n[]">&nbsp;</a><c33>
+</c33><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a><a id="n[]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c41>/**
+</c41><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Execute&nbsp;a&nbsp;function&nbsp;in&nbsp;another&nbsp;task&nbsp;and&nbsp;return&nbsp;either&nbsp;the&nbsp;return&nbsp;value
+</c41><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;of&nbsp;the&nbsp;function&nbsp;or&nbsp;result::err.
+</c41><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c41><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;#&nbsp;Return&nbsp;value
+</c41><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c41><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;If&nbsp;the&nbsp;function&nbsp;executed&nbsp;successfully&nbsp;then&nbsp;try&nbsp;returns&nbsp;result::ok
+</c41><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;containing&nbsp;the&nbsp;value&nbsp;returned&nbsp;by&nbsp;the&nbsp;function.&nbsp;If&nbsp;the&nbsp;function&nbsp;fails
+</c41><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;then&nbsp;try&nbsp;returns&nbsp;result::err&nbsp;containing&nbsp;nil.
+</c41><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c41><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;#&nbsp;Failure
+</c41><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Fails&nbsp;if&nbsp;a&nbsp;future_result&nbsp;was&nbsp;already&nbsp;set&nbsp;for&nbsp;this&nbsp;task.
+</c41><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c41><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a><a id="n[108426, 108395, 108390, 108389, 108386, 108396, 108381, 108398, 108393, 108391, 108383]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18><a href="#202_4_refs">&nbsp;</a></c18><c30>fn</c30><c30><a href="#202_4_refs">&nbsp;try</a></c30><c5><a href="#202_4_refs">&lt;T:</a></c5><c5><a href="../libstd/kinds.rs.html#24">Send</a></c5><c5><a href="#202_4_refs">&gt;</a></c5><c4>(</c4><c20><a href="#202_23_refs">mut&nbsp;self</a></c20><c3>,</c3><c18><a href="#202_4_refs">&nbsp;</a></c18><c20><a href="#202_33_refs">f</a></c20><c18><a href="#202_4_refs">:&nbsp;</a></c18><c8><a href="#202_4_refs">proc</a></c8><c4>()</c4><c8><a href="#202_4_refs">&nbsp;</a></c8><c4>-&gt;</c4><c8><a href="#202_4_refs">&nbsp;</a></c8><c8><a href="c=0 n=108382">T</a></c8><c4>)</c4><c18><a href="#202_4_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#202_4_refs">&nbsp;</a></c18><c8><a href="../libstd/result.rs.html#20">Result&lt;</a></c8><c8><a href="c=0 n=108382">T</a></c8><c3>,</c3><c8><a href="../libstd/result.rs.html#20">&nbsp;</a></c8><c8><a href="#202_4_refs">~</a></c8><c8><a href="../libstd/any.rs.html#39">Any</a></c8><c8><a href="../libstd/result.rs.html#20">&gt;</a></c8><c18><a href="#202_4_refs">&nbsp;</a></c18><c3>{</c3><c22><a href="#202_4_refs">
+</a></c22><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a><a id="n[108405, 108400, 108403, 108401, 108406, 108404, 108402, 108399]">&nbsp;</a><c22><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#202_4_refs">&nbsp;</a></c22><c4>(</c4><c20><a href="#203_13_refs">tx</a></c20><c3>,</c3><c20><a href="#202_4_refs">&nbsp;</a></c20><c20><a href="#203_17_refs">rx</a></c20><c4>)</c4><c16><a href="#202_4_refs">&nbsp;=&nbsp;</a></c16><c26><a href="../libstd/comm/mod.rs.html#365">channel</a></c26><c4>()</c4><c3>;</c3><c22><a href="#202_4_refs">
+</a></c22><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#202_4_refs">
+</a></c22><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a><a id="n[108412, 108411, 108407, 108409, 108408, 108410]">&nbsp;</a><c22><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#202_4_refs">&nbsp;</a></c22><c20><a href="#205_12_refs">result</a></c20><c16><a href="#202_4_refs">&nbsp;=&nbsp;</a></c16><c26><a href="../libstd/task.rs.html#202">self</a></c26><c10><a href="../libstd/task.rs.html#115">.future_result</a></c10><c4>()</c4><c3>;</c3><c22><a href="#202_4_refs">
+</a></c22><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#202_4_refs">
+</a></c22><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a><a id="n[108425, 108413, 108422, 108423, 108414, 108424, 108421, 108415]">&nbsp;</a><c22><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../libstd/task.rs.html#202">self</a></c26><c10><a href="../libstd/task.rs.html#179">.spawn</a></c10><c4>(</c4><c1><a href="#202_4_refs">proc</a></c1><c4>()</c4><c1><a href="#202_4_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#202_4_refs">
+</a></c22><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a><a id="n[108420, 108417, 108418, 108419, 108416]">&nbsp;</a><c22><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../libstd/task.rs.html#203">tx</a></c26><c10><a href="../libstd/comm/mod.rs.html#435">.send</a></c10><c4>(</c4><c26><a href="../libstd/task.rs.html#202">f</a></c26><c4>())</c4><c3>;</c3><c22><a href="#202_4_refs">
+</a></c22><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c4>)</c4><c3>;</c3><c22><a href="#202_4_refs">
+</a></c22><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#202_4_refs">
+</a></c22><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><a id="n[108441, 108428, 108427]">&nbsp;</a><c22><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>match</c21><c21><a href="#202_4_refs">&nbsp;</a></c21><c26><a href="../libstd/task.rs.html#205">result</a></c26><c10><a href="../libstd/comm/mod.rs.html#665">.recv</a></c10><c4>()</c4><c21><a href="#202_4_refs">&nbsp;</a></c21><c3>{</c3><c21><a href="#202_4_refs">
+</a></c21><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><a id="n[108433, 108435, 108432, 108430, 108434, 108431, 108429]">&nbsp;</a><c21><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c20><a href="../libstd/result.rs.html#23">Ok</a></c20><c4>(())</c4><c21><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c4>=&gt;</c4><c21><a href="#202_4_refs">&nbsp;</a></c21><c26><a href="../libstd/result.rs.html#23">Ok</a></c26><c4>(</c4><c26><a href="../libstd/task.rs.html#203">rx</a></c26><c10><a href="../libstd/comm/mod.rs.html#665">.recv</a></c10><c4>())</c4><c3>,</c3><c21><a href="#202_4_refs">
+</a></c21><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><a id="n[108437, 108440, 108436, 108439, 108438]">&nbsp;</a><c21><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c20><a href="../libstd/result.rs.html#26">Err</a></c20><c4>(</c4><c20><a href="#213_16_refs">cause</a></c20><c4>)</c4><c21><a href="#202_4_refs">&nbsp;</a></c21><c4>=&gt;</c4><c21><a href="#202_4_refs">&nbsp;</a></c21><c26><a href="../libstd/result.rs.html#26">Err</a></c26><c4>(</c4><c26><a href="../libstd/task.rs.html#213">cause</a></c26><c4>)</c4><c21><a href="#202_4_refs">
+</a></c21><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><a id="n[]">&nbsp;</a><c21><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c21><c3>}</c3><c22><a href="#202_4_refs">
+</a></c22><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#202_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;218</ln><a id="218">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/*&nbsp;Task&nbsp;construction&nbsp;*/</c41><c0>
+</c0><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a><a id="n[108442]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a><a id="n[108444]">&nbsp;</a><c33>impl&nbsp;</c33><c33><a href="../libstd/task.rs.html#60">TaskOpts</a></c33><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a><a id="n[108445, 108448, 108447]">&nbsp;</a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c21>pub</c21><c18><a href="#221_4_refs">&nbsp;</a></c18><c30>fn</c30><c30><a href="#221_4_refs">&nbsp;new</a></c30><c4>()</c4><c18><a href="#221_4_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#221_4_refs">&nbsp;</a></c18><c8><a href="../libstd/task.rs.html#60">TaskOpts</a></c8><c18><a href="#221_4_refs">&nbsp;</a></c18><c3>{</c3><c22><a href="#221_4_refs">
+</a></c22><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#221_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c41>/*!
+</c41><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;The&nbsp;default&nbsp;task&nbsp;options
+</c41><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c41><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#221_4_refs">
+</a></c22><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a><a id="n[108454]">&nbsp;</a><c22><a href="#221_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c1><a href="../libstd/task.rs.html#60">TaskOpts&nbsp;</a></c1><c3>{</c3><c1><a href="../libstd/task.rs.html#60">
+</a></c1><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a><a id="n[108449]">&nbsp;</a><c1><a href="../libstd/task.rs.html#60">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;notify_chan:&nbsp;</a></c1><c26><a href="../libstd/option.rs.html#154">None</a></c26><c3>,</c3><c1><a href="../libstd/task.rs.html#60">
+</a></c1><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a><a id="n[108450]">&nbsp;</a><c1><a href="../libstd/task.rs.html#60">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:&nbsp;</a></c1><c26><a href="../libstd/option.rs.html#154">None</a></c26><c3>,</c3><c1><a href="../libstd/task.rs.html#60">
+</a></c1><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a><a id="n[108451]">&nbsp;</a><c1><a href="../libstd/task.rs.html#60">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stack_size:&nbsp;</a></c1><c26><a href="../libstd/option.rs.html#154">None</a></c26><c3>,</c3><c1><a href="../libstd/task.rs.html#60">
+</a></c1><br/><ln>&nbsp;230</ln><a id="230">&nbsp;</a><a id="n[108452]">&nbsp;</a><c1><a href="../libstd/task.rs.html#60">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stdout:&nbsp;</a></c1><c26><a href="../libstd/option.rs.html#154">None</a></c26><c3>,</c3><c1><a href="../libstd/task.rs.html#60">
+</a></c1><br/><ln>&nbsp;231</ln><a id="231">&nbsp;</a><a id="n[108453]">&nbsp;</a><c1><a href="../libstd/task.rs.html#60">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stderr:&nbsp;</a></c1><c26><a href="../libstd/option.rs.html#154">None</a></c26><c3>,</c3><c1><a href="../libstd/task.rs.html#60">
+</a></c1><br/><ln>&nbsp;232</ln><a id="232">&nbsp;</a><a id="n[]">&nbsp;</a><c1><a href="../libstd/task.rs.html#60">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c1><c3>}</c3><c22><a href="#221_4_refs">
+</a></c22><br/><ln>&nbsp;233</ln><a id="233">&nbsp;</a><a id="n[]">&nbsp;</a><c22><a href="#221_4_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;234</ln><a id="234">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;235</ln><a id="235">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;236</ln><a id="236">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/*&nbsp;Spawn&nbsp;convenience&nbsp;functions&nbsp;*/</c41><c0>
+</c0><br/><ln>&nbsp;237</ln><a id="237">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;238</ln><a id="238">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Creates&nbsp;and&nbsp;executes&nbsp;a&nbsp;new&nbsp;child&nbsp;task
+</c42><br/><ln>&nbsp;239</ln><a id="239">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;240</ln><a id="240">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;Sets&nbsp;up&nbsp;a&nbsp;new&nbsp;task&nbsp;with&nbsp;its&nbsp;own&nbsp;call&nbsp;stack&nbsp;and&nbsp;schedules&nbsp;it&nbsp;to&nbsp;run
+</c42><br/><ln>&nbsp;241</ln><a id="241">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///&nbsp;the&nbsp;provided&nbsp;unique&nbsp;closure.
+</c42><br/><ln>&nbsp;242</ln><a id="242">&nbsp;</a><a id="n[]">&nbsp;</a><c42>///
+</c42><br/><ln>&nbsp;243</ln><a id="243">&nbsp;</a><a id="n[108455]">&nbsp;</a><c42>///&nbsp;This&nbsp;function&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;`task().spawn(f)`.
+</c42><br/><ln>&nbsp;244</ln><a id="244">&nbsp;</a><a id="n[108459, 108460, 108467, 108457, 108458]">&nbsp;</a><c21>pub</c21><c1><a href="#243_54_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#243_54_refs">&nbsp;spawn</a></c30><c4>(</c4><c20><a href="#244_13_refs">f</a></c20><c1><a href="#243_54_refs">:&nbsp;</a></c1><c8><a href="#243_54_refs">proc</a></c8><c4>())</c4><c1><a href="#243_54_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#243_54_refs">
+</a></c22><br/><ln>&nbsp;245</ln><a id="245">&nbsp;</a><a id="n[108461, 108464, 108466, 108465, 108462, 108463]">&nbsp;</a><c22><a href="#243_54_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#243_54_refs">&nbsp;</a></c22><c20><a href="#245_8_refs">task</a></c20><c13><a href="#243_54_refs">&nbsp;=&nbsp;</a></c13><c26><a href="../libstd/task.rs.html#96">task</a></c26><c4>()</c4><c3>;</c3><c22><a href="#243_54_refs">
+</a></c22><br/><ln>&nbsp;246</ln><a id="246">&nbsp;</a><a id="n[108468, 108469, 108470]">&nbsp;</a><c22><a href="#243_54_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../libstd/task.rs.html#245">task</a></c26><c10><a href="../libstd/task.rs.html#179">.spawn</a></c10><c4>(</c4><c26><a href="../libstd/task.rs.html#244">f</a></c26><c4>)</c4><c22><a href="#243_54_refs">
+</a></c22><br/><ln>&nbsp;247</ln><a id="247">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;248</ln><a id="248">&nbsp;</a><a id="n[108471]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;249</ln><a id="249">&nbsp;</a><a id="n[108483, 108478, 108480, 108475, 108492, 108476, 108481, 108485, 108474]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;try</c30><c5>&lt;T:</c5><c5><a href="../libstd/kinds.rs.html#24">Send</a></c5><c5>&gt;</c5><c4>(</c4><c20><a href="#249_19_refs">f</a></c20><c1>:&nbsp;</c1><c8>proc</c8><c4>()</c4><c8>&nbsp;</c8><c4>-&gt;</c4><c8>&nbsp;</c8><c8><a href="c=0 n=108484">T</a></c8><c4>)</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8><a href="../libstd/result.rs.html#20">Result&lt;</a></c8><c8><a href="c=0 n=108484">T</a></c8><c3>,</c3><c8><a href="../libstd/result.rs.html#20">&nbsp;~</a></c8><c8><a href="../libstd/any.rs.html#39">Any</a></c8><c8><a href="../libstd/result.rs.html#20">&gt;</a></c8><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;250</ln><a id="250">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c41>/*!
+</c41><br/><ln>&nbsp;251</ln><a id="251">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Execute&nbsp;a&nbsp;function&nbsp;in&nbsp;another&nbsp;task&nbsp;and&nbsp;return&nbsp;either&nbsp;the&nbsp;return&nbsp;value
+</c41><br/><ln>&nbsp;252</ln><a id="252">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;of&nbsp;the&nbsp;function&nbsp;or&nbsp;result::err.
+</c41><br/><ln>&nbsp;253</ln><a id="253">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c41><br/><ln>&nbsp;254</ln><a id="254">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;This&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;task().try.
+</c41><br/><ln>&nbsp;255</ln><a id="255">&nbsp;</a><a id="n[]">&nbsp;</a><c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c41><br/><ln>&nbsp;256</ln><a id="256">&nbsp;</a><a id="n[]">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;257</ln><a id="257">&nbsp;</a><a id="n[108489, 108488, 108487, 108490, 108486, 108491]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c20><a href="#257_8_refs">task</a></c20><c13>&nbsp;=&nbsp;</c13><c26><a href="../libstd/task.rs.html#96">task</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;258</ln><a id="258">&nbsp;</a><a id="n[108495, 108493, 108494]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/task.rs.html#257">task</a></c26><c10><a href="../libstd/task.rs.html#202">.try</a></c10><c4>(</c4><c26><a href="../libstd/task.rs.html#249">f</a></c26><c4>)</c4><c22>
+</c22><br/><ln>&nbsp;259</ln><a id="259">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;260</ln><a id="260">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;261</ln><a id="261">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;262</ln><a id="262">&nbsp;</a><a id="n[]">&nbsp;</a><c41>/*&nbsp;Lifecycle&nbsp;functions&nbsp;*/</c41><c0>
+</c0><br/><ln>&nbsp;263</ln><a id="263">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;264</ln><a id="264">&nbsp;</a><a id="n[108496]">&nbsp;</a><c42>///&nbsp;Read&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;current&nbsp;task.
+</c42><br/><ln>&nbsp;265</ln><a id="265">&nbsp;</a><a id="n[108500, 108508, 108506, 108507, 108503, 108510, 108501, 108522]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;with_task_name</c30><c5>&lt;U&gt;</c5><c4>(</c4><c20><a href="#265_25_refs">blk</a></c20><c1>:&nbsp;</c1><c8>|</c8><c8><a href="../libstd/option.rs.html#151">Option&lt;&amp;str&gt;</a></c8><c8>|&nbsp;</c8><c4>-&gt;</c4><c8>&nbsp;</c8><c8><a href="c=0 n=108511">U</a></c8><c4>)</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8><a href="c=0 n=108511">U</a></c8><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;266</ln><a id="266">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;rt::task::Task</c22><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;267</ln><a id="267">&nbsp;</a><a id="n[]">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;268</ln><a id="268">&nbsp;</a><a id="n[108514, 108515, 108519, 108520, 108513, 108521, 108518, 108516]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c21>mut</c21><c20><a href="#268_8_refs">&nbsp;task</a></c20><c13>&nbsp;=&nbsp;</c13><c26><a href="../libstd/rt/local.rs.html#21">Local::borrow</a></c26><c4>(</c4><c26><a href="../libstd/option.rs.html#154">None::&lt;</a></c26><c8><a href="../libstd/rt/task.rs.html#43">Task</a></c8><c26><a href="../libstd/option.rs.html#154">&gt;</a></c26><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;269</ln><a id="269">&nbsp;</a><a id="n[108523, 108525, 108538, 108524]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match&nbsp;</c21><c26><a href="../libstd/task.rs.html#268">task</a></c26><c10><a href="../libstd/rt/local_ptr.rs.html#52">.get</a></c10><c4>()</c4><c24><a href="../libstd/rt/task.rs.html#51">.name</a></c24><c21>&nbsp;</c21><c3>{</c3><c21>
+</c21><br/><ln>&nbsp;270</ln><a id="270">&nbsp;</a><a id="n[108530, 108529, 108531, 108526, 108528, 108532, 108533, 108527]">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20><a href="../libstd/option.rs.html#156">Some</a></c20><c4>(</c4><c20><a href="#270_13_refs">ref&nbsp;name</a></c20><c4>)</c4><c21>&nbsp;</c21><c4>=&gt;</c4><c21>&nbsp;</c21><c26><a href="../libstd/task.rs.html#265">blk</a></c26><c4>(</c4><c26><a href="../libstd/option.rs.html#156">Some</a></c26><c4>(</c4><c26><a href="../libstd/task.rs.html#270">name</a></c26><c10><a href="../libstd/str.rs.html#1294">.as_slice</a></c10><c4>()))</c4><c3>,</c3><c21>
+</c21><br/><ln>&nbsp;271</ln><a id="271">&nbsp;</a><a id="n[108535, 108536, 108537, 108534]">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20><a href="../libstd/option.rs.html#154">None</a></c20><c21>&nbsp;</c21><c4>=&gt;</c4><c21>&nbsp;</c21><c26><a href="../libstd/task.rs.html#265">blk</a></c26><c4>(</c4><c26><a href="../libstd/option.rs.html#154">None</a></c26><c4>)</c4><c21>
+</c21><br/><ln>&nbsp;272</ln><a id="272">&nbsp;</a><a id="n[]">&nbsp;</a><c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;273</ln><a id="273">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;274</ln><a id="274">&nbsp;</a><a id="n[108539]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;275</ln><a id="275">&nbsp;</a><a id="n[108553, 108540]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;deschedule</c30><c4>()</c4><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;276</ln><a id="276">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//!&nbsp;Yield&nbsp;control&nbsp;to&nbsp;the&nbsp;task&nbsp;scheduler
+</c40><br/><ln>&nbsp;277</ln><a id="277">&nbsp;</a><a id="n[]">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;278</ln><a id="278">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;rt::local::Local</c22><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;279</ln><a id="279">&nbsp;</a><a id="n[]">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;280</ln><a id="280">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;FIXME(#7544):&nbsp;Optimize&nbsp;this,&nbsp;since&nbsp;we&nbsp;know&nbsp;we&nbsp;won't&nbsp;block.
+</c40><br/><ln>&nbsp;281</ln><a id="281">&nbsp;</a><a id="n[108545, 108544, 108542, 108548, 108547, 108549, 108546]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c20><a href="#281_8_refs">task</a></c20><c13>:&nbsp;</c13><c8>~</c8><c8><a href="../libstd/rt/task.rs.html#43">Task</a></c8><c13>&nbsp;=&nbsp;</c13><c26><a href="../libstd/rt/local.rs.html#18">Local::take</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;282</ln><a id="282">&nbsp;</a><a id="n[108550, 108552, 108551]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/task.rs.html#281">task</a></c26><c10><a href="../libstd/rt/task.rs.html#263">.yield_now</a></c10><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;283</ln><a id="283">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;284</ln><a id="284">&nbsp;</a><a id="n[108554]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;285</ln><a id="285">&nbsp;</a><a id="n[108556, 108567]">&nbsp;</a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;failing</c30><c4>()</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8>bool</c8><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;286</ln><a id="286">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//!&nbsp;True&nbsp;if&nbsp;the&nbsp;running&nbsp;task&nbsp;has&nbsp;failed
+</c40><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a><a id="n[]">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a><a id="n[]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>use</c21><c22>&nbsp;rt::task::Task</c22><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a><a id="n[]">&nbsp;</a><c22>
+</c22><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a><a id="n[108566, 108559, 108563, 108558, 108564, 108561, 108560, 108565]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c21>mut</c21><c20><a href="#290_8_refs">&nbsp;local</a></c20><c16>&nbsp;=&nbsp;</c16><c26><a href="../libstd/rt/local.rs.html#21">Local::borrow</a></c26><c4>(</c4><c26><a href="../libstd/option.rs.html#154">None::&lt;</a></c26><c8><a href="../libstd/rt/task.rs.html#43">Task</a></c8><c26><a href="../libstd/option.rs.html#154">&gt;</a></c26><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a><a id="n[108570, 108571, 108568, 108569]">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libstd/task.rs.html#290">local</a></c26><c10><a href="../libstd/rt/local_ptr.rs.html#52">.get</a></c10><c4>()</c4><c24><a href="../libstd/rt/task.rs.html#48">.unwinder</a></c24><c10><a href="../libstd/rt/unwind.rs.html#90">.unwinding</a></c10><c4>()</c4><c22>
+</c22><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;294</ln><a id="294">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;The&nbsp;following&nbsp;8&nbsp;tests&nbsp;test&nbsp;the&nbsp;following&nbsp;2^3&nbsp;combinations:
+</c40><br/><ln>&nbsp;295</ln><a id="295">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;{un,}linked&nbsp;{un,}supervised&nbsp;failure&nbsp;propagation&nbsp;{up,down}wards.
+</c40><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;!!!&nbsp;These&nbsp;tests&nbsp;are&nbsp;dangerous.&nbsp;If&nbsp;Something&nbsp;is&nbsp;buggy,&nbsp;they&nbsp;will&nbsp;hang,&nbsp;!!!
+</c40><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a><a id="n[]">&nbsp;</a><c40>//&nbsp;!!!&nbsp;instead&nbsp;of&nbsp;exiting&nbsp;cleanly.&nbsp;This&nbsp;might&nbsp;wedge&nbsp;the&nbsp;buildbots.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;!!!
+</c40><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_unnamed_task</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;303</ln><a id="303">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with_task_name</c0><c4>(</c4><c0>|name|&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;304</ln><a id="304">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>name.is_none</c0><c4>())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;305</ln><a id="305">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;306</ln><a id="306">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;307</ln><a id="307">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;308</ln><a id="308">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;309</ln><a id="309">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;310</ln><a id="310">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_owned_named_task</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;311</ln><a id="311">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;task</c0><c4>()</c4><c0>.named</c0><c4>(</c4><c0>~"ada&nbsp;lovelace"</c0><c4>)</c4><c0>.spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;312</ln><a id="312">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with_task_name</c0><c4>(</c4><c0>|name|&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;313</ln><a id="313">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>name.unwrap</c0><c4>()</c4><c0>&nbsp;==&nbsp;"ada&nbsp;lovelace"</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_static_named_task</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;task</c0><c4>()</c4><c0>.named</c0><c4>(</c4><c0>"ada&nbsp;lovelace"</c0><c4>)</c4><c0>.spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;321</ln><a id="321">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with_task_name</c0><c4>(</c4><c0>|name|&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;322</ln><a id="322">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>name.unwrap</c0><c4>()</c4><c0>&nbsp;==&nbsp;"ada&nbsp;lovelace"</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_send_named_task</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;329</ln><a id="329">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;task</c0><c4>()</c4><c0>.named</c0><c4>(</c4><c0>"ada&nbsp;lovelace".into_maybe_owned</c0><c4>())</c4><c0>.spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;330</ln><a id="330">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with_task_name</c0><c4>(</c4><c0>|name|&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;331</ln><a id="331">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>name.unwrap</c0><c4>()</c4><c0>&nbsp;==&nbsp;"ada&nbsp;lovelace"</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;332</ln><a id="332">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;333</ln><a id="333">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;334</ln><a id="334">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;335</ln><a id="335">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;336</ln><a id="336">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;337</ln><a id="337">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_run_basic</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;338</ln><a id="338">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c4>(</c4><c0>tx</c0><c3>,</c3><c0>&nbsp;rx</c0><c4>)</c4><c0>&nbsp;=&nbsp;channel</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;339</ln><a id="339">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;task</c0><c4>()</c4><c0>.spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;340</ln><a id="340">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tx.send</c0><c4>(())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;341</ln><a id="341">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;342</ln><a id="342">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;rx.recv</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;343</ln><a id="343">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;344</ln><a id="344">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;345</ln><a id="345">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;346</ln><a id="346">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_with_wrapper</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;347</ln><a id="347">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c4>(</c4><c0>tx</c0><c3>,</c3><c0>&nbsp;rx</c0><c4>)</c4><c0>&nbsp;=&nbsp;channel</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;348</ln><a id="348">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;task</c0><c4>()</c4><c0>.with_wrapper</c0><c4>(</c4><c0>proc</c0><c4>(</c4><c0>body</c0><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;349</ln><a id="349">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;result:&nbsp;proc</c0><c4>()</c4><c0>&nbsp;=&nbsp;proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;350</ln><a id="350">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;351</ln><a id="351">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tx.send</c0><c4>(())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;352</ln><a id="352">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;353</ln><a id="353">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result
+</c0><br/><ln>&nbsp;354</ln><a id="354">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>.spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;355</ln><a id="355">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;rx.recv</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;356</ln><a id="356">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;357</ln><a id="357">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;358</ln><a id="358">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;359</ln><a id="359">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_future_result</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;360</ln><a id="360">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;builder&nbsp;=&nbsp;task</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;361</ln><a id="361">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;result&nbsp;=&nbsp;builder.future_result</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;362</ln><a id="362">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;builder.spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;363</ln><a id="363">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>result.recv</c0><c4>()</c4><c0>.is_ok</c0><c4>())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;364</ln><a id="364">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;365</ln><a id="365">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;builder&nbsp;=&nbsp;task</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;366</ln><a id="366">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;result&nbsp;=&nbsp;builder.future_result</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;367</ln><a id="367">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;builder.spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;368</ln><a id="368">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;369</ln><a id="369">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;370</ln><a id="370">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>result.recv</c0><c4>()</c4><c0>.is_err</c0><c4>())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;371</ln><a id="371">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;372</ln><a id="372">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;373</ln><a id="373">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>&nbsp;#</c50><c3>[</c3><c50>should_fail</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;374</ln><a id="374">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_back_to_the_future_result</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;375</ln><a id="375">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;builder&nbsp;=&nbsp;task</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;376</ln><a id="376">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;builder.future_result</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;377</ln><a id="377">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;builder.future_result</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;378</ln><a id="378">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;379</ln><a id="379">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;380</ln><a id="380">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;381</ln><a id="381">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_try_success</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;382</ln><a id="382">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>match</c21><c0>&nbsp;try</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;383</ln><a id="383">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~"Success!"
+</c0><br/><ln>&nbsp;384</ln><a id="384">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>.as_ref</c0><c4>()</c4><c0>.map</c0><c4>(</c4><c0>|s|&nbsp;s.as_slice</c0><c4>())</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;385</ln><a id="385">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result::Ok</c0><c4>(</c4><c0>"Success!"</c0><c4>)</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;</c0><c4>()</c4><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;386</ln><a id="386">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;fail!</c0><c4>()</c4><c0>
+</c0><br/><ln>&nbsp;387</ln><a id="387">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;388</ln><a id="388">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;389</ln><a id="389">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;390</ln><a id="390">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;391</ln><a id="391">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_try_fail</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;392</ln><a id="392">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>match</c21><c0>&nbsp;try</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;393</ln><a id="393">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c4>()</c4><c0>
+</c0><br/><ln>&nbsp;394</ln><a id="394">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;395</ln><a id="395">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result::Err</c0><c4>(</c4><c0>_</c0><c4>)</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;</c0><c4>()</c4><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;396</ln><a id="396">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result::Ok</c0><c4>(())</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;fail!</c0><c4>()</c4><c0>
+</c0><br/><ln>&nbsp;397</ln><a id="397">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;398</ln><a id="398">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;399</ln><a id="399">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;400</ln><a id="400">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;401</ln><a id="401">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_spawn_sched</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;402</ln><a id="402">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;clone::Clone</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;403</ln><a id="403">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;404</ln><a id="404">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c4>(</c4><c0>tx</c0><c3>,</c3><c0>&nbsp;rx</c0><c4>)</c4><c0>&nbsp;=&nbsp;channel</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;405</ln><a id="405">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;406</ln><a id="406">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;f</c30><c4>(</c4><c0>i:&nbsp;int</c0><c3>,</c3><c0>&nbsp;tx:&nbsp;Sender&lt;</c0><c4>()</c4><c0>&gt;</c0><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;407</ln><a id="407">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;tx&nbsp;=&nbsp;tx.clone</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;408</ln><a id="408">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;409</ln><a id="409">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>if</c21><c0>&nbsp;i&nbsp;==&nbsp;0&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;410</ln><a id="410">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tx.send</c0><c4>(())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;411</ln><a id="411">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>&nbsp;</c0><c21>else</c21><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;412</ln><a id="412">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f</c0><c4>(</c4><c0>i&nbsp;-&nbsp;1</c0><c3>,</c3><c0>&nbsp;tx</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;413</ln><a id="413">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;414</ln><a id="414">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;415</ln><a id="415">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;416</ln><a id="416">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;417</ln><a id="417">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;f</c0><c4>(</c4><c0>10</c0><c3>,</c3><c0>&nbsp;tx</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;418</ln><a id="418">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;rx.recv</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;419</ln><a id="419">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;420</ln><a id="420">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;421</ln><a id="421">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;422</ln><a id="422">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_spawn_sched_childs_on_default_sched</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;423</ln><a id="423">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c4>(</c4><c0>tx</c0><c3>,</c3><c0>&nbsp;rx</c0><c4>)</c4><c0>&nbsp;=&nbsp;channel</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;424</ln><a id="424">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;425</ln><a id="425">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;426</ln><a id="426">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;427</ln><a id="427">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tx.send</c0><c4>(())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;428</ln><a id="428">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;429</ln><a id="429">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;430</ln><a id="430">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;431</ln><a id="431">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;rx.recv</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;432</ln><a id="432">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;433</ln><a id="433">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;434</ln><a id="434">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;435</ln><a id="435">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;avoid_copying_the_body</c30><c4>(</c4><c0>spawnfn:&nbsp;|v:&nbsp;proc</c0><c4>()</c4><c0>|</c0><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;436</ln><a id="436">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c4>(</c4><c0>tx</c0><c3>,</c3><c0>&nbsp;rx</c0><c4>)</c4><c0>&nbsp;=&nbsp;channel::&lt;uint&gt;</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;437</ln><a id="437">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;438</ln><a id="438">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x&nbsp;=&nbsp;~1</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;439</ln><a id="439">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x_in_parent&nbsp;=&nbsp;</c0><c4>(</c4><c0>&amp;*x</c0><c4>)</c4><c0>&nbsp;as&nbsp;*int&nbsp;as&nbsp;uint</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;440</ln><a id="440">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;441</ln><a id="441">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;spawnfn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;442</ln><a id="442">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x_in_child&nbsp;=&nbsp;</c0><c4>(</c4><c0>&amp;*x</c0><c4>)</c4><c0>&nbsp;as&nbsp;*int&nbsp;as&nbsp;uint</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;443</ln><a id="443">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tx.send</c0><c4>(</c4><c0>x_in_child</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;444</ln><a id="444">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;445</ln><a id="445">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;446</ln><a id="446">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;x_in_child&nbsp;=&nbsp;rx.recv</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;447</ln><a id="447">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>x_in_parent</c0><c3>,</c3><c0>&nbsp;x_in_child</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;448</ln><a id="448">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;449</ln><a id="449">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;450</ln><a id="450">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;451</ln><a id="451">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_avoid_copying_the_body_spawn</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;452</ln><a id="452">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;avoid_copying_the_body</c0><c4>(</c4><c0>spawn</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;453</ln><a id="453">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;454</ln><a id="454">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;455</ln><a id="455">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;456</ln><a id="456">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_avoid_copying_the_body_task_spawn</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;457</ln><a id="457">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;avoid_copying_the_body</c0><c4>(</c4><c0>|f|&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;458</ln><a id="458">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;builder&nbsp;=&nbsp;task</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;459</ln><a id="459">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;builder.spawn</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;460</ln><a id="460">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;461</ln><a id="461">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;462</ln><a id="462">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;463</ln><a id="463">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;464</ln><a id="464">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;465</ln><a id="465">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;466</ln><a id="466">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_avoid_copying_the_body_try</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;467</ln><a id="467">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;avoid_copying_the_body</c0><c4>(</c4><c0>|f|&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;468</ln><a id="468">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;_&nbsp;=&nbsp;try</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;469</ln><a id="469">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f</c0><c4>()</c4><c0>
+</c0><br/><ln>&nbsp;470</ln><a id="470">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;471</ln><a id="471">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;472</ln><a id="472">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;473</ln><a id="473">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;474</ln><a id="474">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;475</ln><a id="475">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_child_doesnt_ref_parent</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;476</ln><a id="476">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c40>//&nbsp;If&nbsp;the&nbsp;child&nbsp;refcounts&nbsp;the&nbsp;parent&nbsp;task,&nbsp;this&nbsp;will&nbsp;stack&nbsp;overflow&nbsp;when
+</c40><br/><ln>&nbsp;477</ln><a id="477">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c40>//&nbsp;climbing&nbsp;the&nbsp;task&nbsp;tree&nbsp;to&nbsp;dereference&nbsp;each&nbsp;ancestor.&nbsp;(See&nbsp;#1789)
+</c40><br/><ln>&nbsp;478</ln><a id="478">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c40>//&nbsp;(well,&nbsp;it&nbsp;would&nbsp;if&nbsp;the&nbsp;constant&nbsp;were&nbsp;8000+&nbsp;-&nbsp;I&nbsp;lowered&nbsp;it&nbsp;to&nbsp;be&nbsp;more
+</c40><br/><ln>&nbsp;479</ln><a id="479">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c40>//&nbsp;valgrind-friendly.&nbsp;try&nbsp;this&nbsp;at&nbsp;home,&nbsp;instead..!)
+</c40><br/><ln>&nbsp;480</ln><a id="480">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c36>static&nbsp;generations:&nbsp;uint&nbsp;=&nbsp;16;
+</c36><br/><ln>&nbsp;481</ln><a id="481">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;child_no</c30><c4>(</c4><c0>x:&nbsp;uint</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;482</ln><a id="482">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>return</c21><c0>&nbsp;proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;483</ln><a id="483">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>if</c21><c0>&nbsp;x&nbsp;&lt;&nbsp;generations&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;484</ln><a id="484">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;task</c0><c4>()</c4><c0>.spawn</c0><c4>(</c4><c0>child_no</c0><c4>(</c4><c0>x+1</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;485</ln><a id="485">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;486</ln><a id="486">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;487</ln><a id="487">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;488</ln><a id="488">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;task</c0><c4>()</c4><c0>.spawn</c0><c4>(</c4><c0>child_no</c0><c4>(</c4><c0>0</c0><c4>))</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;489</ln><a id="489">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;490</ln><a id="490">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;491</ln><a id="491">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;492</ln><a id="492">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_simple_newsched_spawn</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;493</ln><a id="493">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;spawn</c0><c4>(</c4><c0>proc</c0><c4>()())</c4><c0>
+</c0><br/><ln>&nbsp;494</ln><a id="494">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;495</ln><a id="495">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;496</ln><a id="496">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;497</ln><a id="497">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_try_fail_message_static_str</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;498</ln><a id="498">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>match</c21><c0>&nbsp;try</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;499</ln><a id="499">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c4>(</c4><c0>"</c0><c36>static&nbsp;string");
+</c36><br/><ln>&nbsp;500</ln><a id="500">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;501</ln><a id="501">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Err</c0><c4>(</c4><c0>e</c0><c4>)</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;502</ln><a id="502">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c35>type&nbsp;T&nbsp;=&nbsp;&amp;'static&nbsp;str;
+</c35><br/><ln>&nbsp;503</ln><a id="503">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>e.is::&lt;T&gt;</c0><c4>())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;504</ln><a id="504">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*e.move::&lt;T&gt;</c0><c4>()</c4><c0>.unwrap</c0><c4>()</c4><c3>,</c3><c0>&nbsp;"</c0><c36>static&nbsp;string");
+</c36><br/><ln>&nbsp;505</ln><a id="505">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;506</ln><a id="506">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ok</c0><c4>(())</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;fail!</c0><c4>()</c4><c0>
+</c0><br/><ln>&nbsp;507</ln><a id="507">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;508</ln><a id="508">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;509</ln><a id="509">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;510</ln><a id="510">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;511</ln><a id="511">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_try_fail_message_owned_str</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;512</ln><a id="512">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>match</c21><c0>&nbsp;try</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;513</ln><a id="513">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c4>(</c4><c0>~"owned&nbsp;string"</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;514</ln><a id="514">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;515</ln><a id="515">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Err</c0><c4>(</c4><c0>e</c0><c4>)</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;516</ln><a id="516">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c35>type&nbsp;T&nbsp;=&nbsp;~str;
+</c35><br/><ln>&nbsp;517</ln><a id="517">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>e.is::&lt;T&gt;</c0><c4>())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;518</ln><a id="518">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*e.move::&lt;T&gt;</c0><c4>()</c4><c0>.unwrap</c0><c4>()</c4><c3>,</c3><c0>&nbsp;~"owned&nbsp;string"</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;519</ln><a id="519">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;520</ln><a id="520">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ok</c0><c4>(())</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;fail!</c0><c4>()</c4><c0>
+</c0><br/><ln>&nbsp;521</ln><a id="521">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;522</ln><a id="522">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;523</ln><a id="523">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;524</ln><a id="524">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;525</ln><a id="525">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_try_fail_message_any</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;526</ln><a id="526">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>match</c21><c0>&nbsp;try</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;527</ln><a id="527">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c4>(</c4><c0>~413u16&nbsp;as&nbsp;~Any</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;528</ln><a id="528">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;529</ln><a id="529">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Err</c0><c4>(</c4><c0>e</c0><c4>)</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;530</ln><a id="530">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c35>type&nbsp;T&nbsp;=&nbsp;~Any;
+</c35><br/><ln>&nbsp;531</ln><a id="531">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>e.is::&lt;T&gt;</c0><c4>())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;532</ln><a id="532">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;any&nbsp;=&nbsp;e.move::&lt;T&gt;</c0><c4>()</c4><c0>.unwrap</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;533</ln><a id="533">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>any.is::&lt;u16&gt;</c0><c4>())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;534</ln><a id="534">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*any.move::&lt;u16&gt;</c0><c4>()</c4><c0>.unwrap</c0><c4>()</c4><c3>,</c3><c0>&nbsp;413u16</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;535</ln><a id="535">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;536</ln><a id="536">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ok</c0><c4>(())</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;fail!</c0><c4>()</c4><c0>
+</c0><br/><ln>&nbsp;537</ln><a id="537">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;538</ln><a id="538">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;539</ln><a id="539">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;540</ln><a id="540">&nbsp;</a><a id="n[]">&nbsp;</a><c50>#</c50><c3>[</c3><c50>test</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;541</ln><a id="541">&nbsp;</a><a id="n[]">&nbsp;</a><c30>fn&nbsp;test_try_fail_message_unit_struct</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;542</ln><a id="542">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c31>struct&nbsp;Juju;
+</c31><br/><ln>&nbsp;543</ln><a id="543">&nbsp;</a><a id="n[]">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;544</ln><a id="544">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>match</c21><c0>&nbsp;try</c0><c4>(</c4><c0>proc</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;545</ln><a id="545">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c4>(</c4><c0>Juju</c0><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;546</ln><a id="546">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;547</ln><a id="547">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Err</c0><c4>(</c4><c0>ref&nbsp;e</c0><c4>)</c4><c0>&nbsp;if&nbsp;e.is::&lt;Juju&gt;</c0><c4>()</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;</c0><c3>{}</c3><c0>
+</c0><br/><ln>&nbsp;548</ln><a id="548">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Err</c0><c4>(</c4><c0>_</c0><c4>)</c4><c0>&nbsp;|&nbsp;Ok</c0><c4>(())</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;fail!</c0><c4>()</c4><c0>
+</c0><br/><ln>&nbsp;549</ln><a id="549">&nbsp;</a><a id="n[]">&nbsp;</a><c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;550</ln><a id="550">&nbsp;</a><a id="n[]">&nbsp;</a><c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="60_31_refs"><a href="#60"><c40>libstd/task.rs:60:31-60:31&nbsp;-struct-&nbsp;definition:<br/></c40><pr>///&nbsp;Task&nbsp;configuration&nbsp;options
+<br/>pub&nbsp;struct&nbsp;TaskOpts&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/task.rs.html#88"><c40>88:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;opts:&nbsp;TaskOpts,
+<br/></a><a href="../libstd/task.rs.html#226"><c40>226:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TaskOpts&nbsp;{
+<br/></a><a href="../libstd/task.rs.html#221"><c40>221:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;new()&nbsp;-&gt;&nbsp;TaskOpts&nbsp;{
+<br/></a><a href="../libstd/rt/mod.rs.html"><c40>libstd/rt/mod.rs:<br/></c40></a><a href="../libstd/rt/mod.rs.html#159"><c40>159:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;spawn_sibling(~self,&nbsp;cur_task:&nbsp;~Task,&nbsp;opts:&nbsp;TaskOpts,&nbsp;f:&nbsp;proc());
+<br/></a><a href="../libstd/rt/task.rs.html"><c40>libstd/rt/task.rs:<br/></c40></a><a href="../libstd/rt/task.rs.html#238"><c40>238:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;spawn_sibling(mut&nbsp;~self,&nbsp;opts:&nbsp;TaskOpts,&nbsp;f:&nbsp;proc())&nbsp;{
+<br/></a><a href="../libstd/task.rs.html"><c40>libstd/task.rs:<br/></c40></a><a href="../libstd/task.rs.html#220"><c40>220:&nbsp;</c40>impl&nbsp;TaskOpts&nbsp;{
+<br/></a><br/><br/><a id="85_34_refs"><a href="#85"><c40>libstd/task.rs:85:34-85:34&nbsp;-struct-&nbsp;definition:<br/></c40><pr>//&nbsp;the&nbsp;run&nbsp;function&nbsp;move&nbsp;them&nbsp;in.
+<br/>pub&nbsp;struct&nbsp;TaskBuilder&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/task.rs.html#136"><c40>136:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;named&lt;S:&nbsp;IntoMaybeOwned&lt;'static&gt;&gt;(mut&nbsp;self,&nbsp;name:&nbsp;S)&nbsp;-&gt;&nbsp;TaskBuilder&nbsp;{
+<br/></a><a href="../libstd/task.rs.html#105"><c40>105:&nbsp;</c40>impl&nbsp;TaskBuilder&nbsp;{
+<br/></a><a href="../libstd/task.rs.html#98"><c40>98:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;TaskBuilder&nbsp;{
+<br/></a><a href="../libstd/task.rs.html#97"><c40>97:&nbsp;</c40>pub&nbsp;fn&nbsp;task()&nbsp;-&gt;&nbsp;TaskBuilder&nbsp;{
+<br/></a><a href="../libstd/task.rs.html#153"><c40>153:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;with_wrapper(mut&nbsp;self,&nbsp;wrapper:&nbsp;proc(v:&nbsp;proc())&nbsp;-&gt;&nbsp;proc())&nbsp;-&gt;&nbsp;TaskBuilder&nbsp;{
+<br/></a><br/><br/><a id="243_54_refs"><a href="#243"><c40>libstd/task.rs:243:54-243:54&nbsp;-fn-&nbsp;definition:<br/></c40><pr>///&nbsp;This&nbsp;function&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;`task().spawn(f)`.
+<br/>pub&nbsp;fn&nbsp;spawn(f:&nbsp;proc())&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/io/process.rs.html"><c40>libstd/io/process.rs:<br/></c40></a><a href="../libstd/io/process.rs.html#385"><c40>385:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some(stream)&nbsp;=&gt;&nbsp;spawn(proc()&nbsp;{
+<br/></a><br/><br/><a id="57_62_refs"><a href="#57"><c40>libstd/task.rs:57:62-57:62&nbsp;-ty-&nbsp;definition:<br/></c40><pr>///&nbsp;children&nbsp;tasks&nbsp;complete,&nbsp;recommend&nbsp;using&nbsp;a&nbsp;result&nbsp;future.
+<br/>pub&nbsp;type&nbsp;TaskResult&nbsp;=&nbsp;Result&lt;(),&nbsp;~Any&gt;;
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/task.rs.html#115"><c40>115:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;future_result(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;Receiver&lt;TaskResult&gt;&nbsp;{
+<br/></a><a href="../libstd/rt/task.rs.html"><c40>libstd/rt/task.rs:<br/></c40></a><a href="../libstd/rt/task.rs.html#74"><c40>74:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;SendMessage(Sender&lt;TaskResult&gt;),
+<br/></a><a href="../libstd/rt/task.rs.html#384"><c40>384:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;collect_failure(&amp;mut&nbsp;self,&nbsp;result:&nbsp;TaskResult)&nbsp;{
+<br/></a><a href="../libstd/rt/task.rs.html#72"><c40>72:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;Execute(proc(TaskResult)),
+<br/></a><a href="../libstd/rt/unwind.rs.html"><c40>libstd/rt/unwind.rs:<br/></c40></a><a href="../libstd/rt/unwind.rs.html#161"><c40>161:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;result(&amp;mut&nbsp;self)&nbsp;-&gt;&nbsp;TaskResult&nbsp;{
+<br/></a><a href="../libstd/task.rs.html"><c40>libstd/task.rs:<br/></c40></a><a href="../libstd/task.rs.html#63"><c40>63:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;notify_chan:&nbsp;Option&lt;Sender&lt;TaskResult&gt;&gt;,
+<br/></a><br/><br/><a id="96_4_refs"><a href="#96"><c40>libstd/task.rs:96:4-96:4&nbsp;-fn-&nbsp;definition:<br/></c40><pr>&nbsp;*/
+<br/>pub&nbsp;fn&nbsp;task()&nbsp;-&gt;&nbsp;TaskBuilder&nbsp;{
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../libstd/task.rs.html#245"><c40>245:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;task&nbsp;=&nbsp;task();
+<br/></a><a href="../libstd/task.rs.html#257"><c40>257:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;task&nbsp;=&nbsp;task();
+<br/></a><br/></div></maintext></div></body>

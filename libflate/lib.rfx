@@ -1,0 +1,440 @@
+node	lib	308	359	<std macros>	4	18	24	tup	
+node	lib	320	330	<std macros>	4	18	24	path	
+node	lib	363	381	libflate/lib.rs	77	4	456	block	
+node	lib	170	181	<std macros>	4	18	24	stmt	
+node	lib	223	225	libflate/lib.rs	69	27	5	path	
+node	lib	216	210	libflate/lib.rs	68	21	5	pat	
+node	lib	317	319	<std macros>	4	18	24	path	
+node	lib	355	356	<std macros>	4	18	24	path	
+node	lib	218	220	libflate/lib.rs	68	43	2	ty	
+node	lib	60	0	libflate/lib.rs	52	0	30	static	LZ_NORM
+node	lib	123	119	<std macros>	21	24	22	ty	
+node	lib	230	231	libflate/lib.rs	72	34	4	ty	
+node	lib	380	363	libflate/lib.rs	84	8	74	call	
+node	lib	260	363	libflate/lib.rs	78	12	22	local	
+node	lib	77	72	libflate/lib.rs	56	33	5	ty	
+node	lib	357	353	<std macros>	24	21	7	call	
+node	lib	76	77	libflate/lib.rs	56	34	4	ty	
+node	lib	281	282	libflate/lib.rs	81	60	5	path	
+node	lib	403	398	libflate/lib.rs	92	33	5	ty	
+node	lib	19	20	libflate/lib.rs	38	53	6	ty	
+node	lib	97	112	libflate/lib.rs	59	18	34	path	
+node	lib	94	191	libflate/lib.rs	59	12	268	local	
+node	lib	390	392	libflate/lib.rs	88	43	2	ty	
+node	lib	231	226	libflate/lib.rs	72	33	5	ty	
+node	lib	253	244	libflate/lib.rs	76	47	5	ty	
+node	lib	226	0	libflate/lib.rs	72	0	124	fn	deflate_bytes_zlib
+node	lib	28	29	libflate/lib.rs	40	57	6	ty	
+node	lib	129	131	<std macros>	22	45	8	lit	
+node	lib	25	15	libflate/lib.rs	39	42	11	pat	
+node	lib	113	191	libflate/lib.rs	59	12	268	stmt	
+node	lib	373	380	libflate/lib.rs	84	44	13	cast	
+node	lib	270	271	libflate/lib.rs	79	55	5	path	
+node	lib	116	117	libflate/lib.rs	63	16	14	not	
+node	lib	335	333	<std macros>	4	18	24	pat	
+node	lib	398	0	libflate/lib.rs	92	0	119	fn	inflate_bytes_zlib
+node	lib	124	119	<std macros>	21	19	3	pat	
+node	lib	232	226	libflate/lib.rs	72	26	5	pat	
+node	lib	327	329	<std macros>	4	18	24	expr_struct	
+node	lib	298	291	<std macros>	21	53	74	block	
+node	lib	189	191	<std macros>	3	8	84	if	
+node	lib	162	161	<std macros>	4	18	24	ty	
+node	lib	290	361	<std macros>	3	18	74	block	
+node	lib	215	210	libflate/lib.rs	68	28	5	ty	
+node	lib	47	15	libflate/lib.rs	45	44	11	pat	
+node	lib	195	196	libflate/lib.rs	64	40	2	ty	
+node	lib	143	144	<std macros>	4	18	24	lit	
+node	lib	133	188	<std macros>	8	33	885	block	
+node	lib	300	303	<std macros>	22	40	3	path	
+node	lib	358	359	<std macros>	4	18	24	blk	
+node	lib	157	158	<std macros>	4	18	24	expr_struct	
+node	lib	360	290	<std macros>	4	12	60	blk	
+node	lib	136	187	<std macros>	4	18	24	tup	
+node	lib	115	116	libflate/lib.rs	63	17	13	method_call	
+node	lib	64	0	libflate/lib.rs	53	0	50	static	TINFL_FLAG_PARSE_ZLIB_HEADER
+node	lib	190	191	<std macros>	3	8	84	stmt	
+node	lib	331	311	<std macros>	4	18	24	vec	
+node	lib	101	102	libflate/lib.rs	59	72	6	ty	
+node	lib	164	167	<std macros>	4	44	17	path	
+node	lib	394	397	libflate/lib.rs	89	4	22	path	
+node	lib	146	147	<std macros>	4	18	24	lit	
+node	lib	30	15	libflate/lib.rs	40	42	8	pat	
+node	lib	342	353	<std macros>	4	18	24	stmt	
+node	lib	296	291	<std macros>	21	19	3	pat	
+node	lib	86	72	libflate/lib.rs	56	57	8	ty	
+node	lib	276	277	libflate/lib.rs	80	55	5	path	
+node	lib	168	169	<std macros>	4	18	24	vec	
+node	lib	329	330	<std macros>	4	18	24	expr_struct	
+node	lib	200	201	libflate/lib.rs	64	53	4	ty	
+node	lib	127	131	<std macros>	22	12	27	path	
+node	lib	186	187	<std macros>	4	18	24	blk	
+node	lib	102	103	libflate/lib.rs	59	71	7	ty	
+node	lib	111	112	libflate/lib.rs	62	53	5	path	
+node	lib	328	329	<std macros>	4	18	24	path	
+node	lib	126	119	<std macros>	21	53	74	block	
+node	lib	345	343	<std macros>	4	18	24	pat	
+node	lib	259	244	libflate/lib.rs	76	66	464	block	
+node	lib	388	382	libflate/lib.rs	88	21	5	pat	
+node	lib	243	237	libflate/lib.rs	73	4	64	call	
+node	lib	179	171	<std macros>	4	18	24	blk	
+node	lib	236	226	libflate/lib.rs	72	43	8	ty	
+node	lib	114	115	libflate/lib.rs	63	17	3	path	
+node	lib	273	274	libflate/lib.rs	79	74	6	ty	
+node	lib	263	260	libflate/lib.rs	78	12	9	pat	
+node	lib	319	331	<std macros>	4	18	24	call	
+node	lib	287	288	libflate/lib.rs	83	17	13	method_call	
+node	lib	409	398	libflate/lib.rs	92	52	67	block	
+node	lib	139	181	<std macros>	4	18	24	static	__STATIC_FMTSTR
+node	lib	169	161	<std macros>	4	18	24	vstore	
+node	lib	112	94	libflate/lib.rs	59	18	262	call	
+node	lib	346	351	<std macros>	4	18	24	block	
+node	lib	315	316	<std macros>	4	18	24	lit	
+node	lib	239	243	libflate/lib.rs	73	27	5	path	
+node	lib	324	327	<std macros>	4	18	24	lit	
+node	lib	152	155	<std macros>	4	18	24	lit	
+node	lib	178	174	<std macros>	4	18	24	call	
+node	lib	24	15	libflate/lib.rs	39	55	6	ty	
+node	lib	348	350	<std macros>	4	18	24	path	
+node	lib	148	158	<std macros>	4	18	24	path	
+node	lib	147	159	<std macros>	4	18	24	call	
+node	lib	277	280	libflate/lib.rs	80	55	11	method_call	
+node	lib	341	333	<std macros>	4	18	24	vstore	
+node	lib	138	187	<std macros>	4	18	24	pat	
+node	lib	9	0	libflate/lib.rs	33	0	744	mod	rustrt
+node	lib	59	15	libflate/lib.rs	48	47	11	ty	
+node	lib	132	133	<std macros>	21	8	119	stmt	
+node	lib	185	181	<std macros>	24	21	7	call	
+node	lib	353	358	<std macros>	4	18	24	block	
+node	lib	119	133	<std macros>	21	8	119	fn	run_fmt
+node	lib	37	15	libflate/lib.rs	42	45	11	ty	
+node	lib	238	243	libflate/lib.rs	73	4	22	path	
+node	lib	397	393	libflate/lib.rs	89	4	32	call	
+node	lib	322	327	<std macros>	4	18	24	lit	
+node	lib	88	191	libflate/lib.rs	58	12	22	local	
+node	lib	309	310	<std macros>	4	44	17	pat	
+node	lib	311	353	<std macros>	4	18	24	static	__STATIC_FMTSTR
+node	lib	222	225	libflate/lib.rs	69	4	22	path	
+node	lib	256	258	libflate/lib.rs	76	62	2	ty	
+node	lib	326	327	<std macros>	4	18	24	path	
+node	lib	374	379	libflate/lib.rs	84	66	4	ty	
+node	lib	412	413	libflate/lib.rs	93	34	28	path	
+node	lib	310	359	<std macros>	4	18	24	pat	
+node	lib	362	363	<std macros>	3	8	84	stmt	
+node	lib	240	242	libflate/lib.rs	73	34	7	path	
+node	lib	284	266	libflate/lib.rs	79	18	270	call	
+node	lib	350	346	<std macros>	4	18	24	call	
+node	lib	385	386	libflate/lib.rs	88	30	2	ty	
+node	lib	367	368	libflate/lib.rs	84	40	2	ty	
+node	lib	234	236	libflate/lib.rs	72	48	2	ty	
+node	lib	250	244	libflate/lib.rs	76	26	5	pat	
+node	lib	304	305	<std macros>	21	8	119	stmt	
+node	lib	305	360	<std macros>	8	33	885	block	
+node	lib	174	179	<std macros>	4	18	24	block	
+node	lib	269	284	libflate/lib.rs	79	18	36	path	
+node	lib	103	112	libflate/lib.rs	59	53	25	cast	
+node	lib	411	413	libflate/lib.rs	93	27	5	path	
+node	lib	275	284	libflate/lib.rs	79	55	25	cast	
+node	lib	288	289	libflate/lib.rs	83	16	14	not	
+node	lib	352	353	<std macros>	4	18	24	stmt	
+node	lib	92	88	libflate/lib.rs	58	33	1	lit	
+node	lib	122	123	<std macros>	21	25	21	ty	
+node	lib	182	185	<std macros>	24	21	7	path	
+node	lib	286	287	libflate/lib.rs	83	17	3	path	
+node	lib	109	110	libflate/lib.rs	61	58	5	path	
+node	lib	221	210	libflate/lib.rs	68	47	46	block	
+node	lib	104	105	libflate/lib.rs	60	53	5	path	
+node	lib	209	87	libflate/lib.rs	57	4	448	blk	
+node	lib	340	341	<std macros>	4	18	24	vec	
+node	lib	392	382	libflate/lib.rs	88	38	8	ty	
+node	lib	294	295	<std macros>	21	25	21	ty	
+node	lib	150	155	<std macros>	4	18	24	lit	
+node	lib	105	108	libflate/lib.rs	60	53	11	method_call	
+node	lib	323	327	<std macros>	4	18	24	path	
+node	lib	67	64	libflate/lib.rs	53	46	3	lit	
+node	lib	135	136	<std macros>	4	44	17	addr_of	
+node	lib	165	167	<std macros>	4	44	17	path	
+node	lib	208	191	libflate/lib.rs	64	8	74	call	
+node	lib	197	208	libflate/lib.rs	64	28	14	cast	
+node	lib	280	284	libflate/lib.rs	80	55	21	cast	
+node	lib	62	60	libflate/lib.rs	52	17	5	ty	
+node	lib	156	157	<std macros>	4	18	24	path	
+node	lib	153	155	<std macros>	4	18	24	path	
+node	lib	196	197	libflate/lib.rs	64	35	7	ty	
+node	lib	410	413	libflate/lib.rs	93	4	22	path	
+node	lib	347	350	<std macros>	4	18	24	path	
+node	lib	268	266	libflate/lib.rs	79	12	3	pat	
+node	lib	351	343	<std macros>	4	18	24	blk	
+node	lib	297	291	<std macros>	21	51	1	ty	
+node	lib	349	350	<std macros>	4	18	24	path	
+node	lib	198	201	libflate/lib.rs	64	44	5	path	
+node	lib	128	131	<std macros>	22	40	3	path	
+node	lib	34	15	libflate/lib.rs	41	42	5	pat	
+node	lib	20	15	libflate/lib.rs	38	52	7	ty	
+node	lib	46	15	libflate/lib.rs	45	57	6	ty	
+node	lib	91	88	libflate/lib.rs	58	12	9	pat	
+node	lib	248	249	libflate/lib.rs	76	34	4	ty	
+node	lib	50	51	libflate/lib.rs	46	59	6	ty	
+node	lib	387	382	libflate/lib.rs	88	28	5	ty	
+node	lib	381	259	libflate/lib.rs	77	4	456	blk	
+node	lib	395	397	libflate/lib.rs	89	27	5	path	
+node	lib	299	303	<std macros>	22	12	27	path	
+node	lib	354	357	<std macros>	24	21	7	path	
+node	lib	375	379	libflate/lib.rs	84	66	15	block	
+node	lib	81	72	libflate/lib.rs	56	47	5	ty	
+node	lib	214	215	libflate/lib.rs	68	29	4	ty	
+node	lib	58	59	libflate/lib.rs	48	52	6	ty	
+node	lib	78	72	libflate/lib.rs	56	26	5	pat	
+node	lib	87	72	libflate/lib.rs	56	66	456	block	
+node	lib	325	327	<std macros>	4	18	24	path	
+node	lib	303	298	<std macros>	22	12	50	call	
+node	lib	404	398	libflate/lib.rs	92	26	5	pat	
+node	lib	82	72	libflate/lib.rs	56	40	5	pat	
+node	lib	159	139	<std macros>	4	18	24	vec	
+node	lib	249	244	libflate/lib.rs	76	33	5	ty	
+node	lib	187	133	<std macros>	24	8	43	match	
+node	lib	201	208	libflate/lib.rs	64	44	13	cast	
+node	lib	90	88	libflate/lib.rs	58	24	6	ty	
+node	lib	110	112	libflate/lib.rs	61	53	10	addr_of	
+node	lib	336	339	<std macros>	4	44	17	path	
+node	lib	291	305	<std macros>	21	8	119	fn	run_fmt
+node	lib	131	126	<std macros>	22	12	50	call	
+node	lib	36	37	libflate/lib.rs	42	50	6	ty	
+node	lib	213	214	libflate/lib.rs	68	30	2	ty	
+node	lib	145	147	<std macros>	4	18	24	path	
+node	lib	93	191	libflate/lib.rs	58	12	22	stmt	
+node	lib	137	138	<std macros>	4	44	17	pat	
+node	lib	274	275	libflate/lib.rs	79	73	7	ty	
+node	lib	262	260	libflate/lib.rs	78	24	6	ty	
+node	lib	295	291	<std macros>	21	24	22	ty	
+node	lib	370	373	libflate/lib.rs	84	44	5	path	
+node	lib	56	15	libflate/lib.rs	47	44	5	pat	
+node	lib	302	303	<std macros>	22	54	8	lit	
+node	lib	321	329	<std macros>	4	18	24	path	
+node	lib	206	203	libflate/lib.rs	64	66	15	call	
+node	lib	207	208	libflate/lib.rs	64	59	22	proc	
+node	lib	55	15	libflate/lib.rs	47	51	5	ty	
+node	lib	155	157	<std macros>	4	18	24	expr_struct	
+node	lib	176	178	<std macros>	4	18	24	path	
+node	lib	130	131	<std macros>	22	54	8	lit	
+node	lib	356	357	<std macros>	24	21	7	addr_of	
+node	lib	29	15	libflate/lib.rs	40	52	11	ty	
+node	lib	117	189	<std macros>	3	11	4294963804	not	
+node	lib	41	42	libflate/lib.rs	44	55	6	ty	
+node	lib	175	178	<std macros>	4	18	24	path	
+node	lib	254	244	libflate/lib.rs	76	40	5	pat	
+node	lib	338	339	<std macros>	4	44	17	path	
+node	lib	364	380	libflate/lib.rs	84	8	19	path	
+node	lib	71	68	libflate/lib.rs	54	41	7	lit	
+node	lib	279	280	libflate/lib.rs	80	70	6	ty	
+node	lib	96	94	libflate/lib.rs	59	12	3	pat	
+node	lib	172	171	<std macros>	4	18	24	ty	
+node	lib	314	316	<std macros>	4	18	24	ty	
+node	lib	382	0	libflate/lib.rs	88	0	87	fn	inflate_bytes
+node	lib	142	144	<std macros>	4	18	24	ty	
+node	lib	84	86	libflate/lib.rs	56	62	2	ty	
+node	lib	301	303	<std macros>	22	45	8	lit	
+node	lib	378	375	libflate/lib.rs	84	66	15	call	
+node	lib	244	0	libflate/lib.rs	76	0	530	fn	inflate_bytes_internal
+node	lib	15	9	libflate/lib.rs	37	4	631	foreign_mod	
+node	lib	306	307	<std macros>	4	44	17	lit	
+node	lib	193	197	libflate/lib.rs	64	28	3	path	
+node	lib	173	171	<std macros>	4	18	24	pat	
+node	lib	318	319	<std macros>	4	18	24	lit	
+node	lib	332	353	<std macros>	4	18	24	stmt	
+node	lib	166	167	<std macros>	4	44	17	path	
+node	lib	220	210	libflate/lib.rs	68	38	8	ty	
+node	lib	237	226	libflate/lib.rs	72	52	72	block	
+node	lib	151	155	<std macros>	4	18	24	path	
+node	lib	361	363	<std macros>	3	8	84	if	
+node	lib	98	99	libflate/lib.rs	59	53	5	path	
+node	lib	242	243	libflate/lib.rs	73	34	33	bitor	
+node	lib	316	311	<std macros>	4	18	24	ty	
+node	lib	401	402	libflate/lib.rs	92	35	2	ty	
+node	lib	180	181	<std macros>	4	18	24	stmt	
+node	lib	171	181	<std macros>	4	18	24	local	
+node	lib	265	363	libflate/lib.rs	78	12	22	stmt	
+node	lib	183	184	<std macros>	4	18	24	path	
+node	lib	202	207	libflate/lib.rs	64	66	4	ty	
+node	lib	108	112	libflate/lib.rs	60	53	21	cast	
+node	lib	204	206	libflate/lib.rs	64	66	10	path	
+node	lib	225	221	libflate/lib.rs	69	4	38	call	
+node	lib	402	403	libflate/lib.rs	92	34	4	ty	
+node	lib	369	380	libflate/lib.rs	84	28	14	cast	
+node	lib	413	409	libflate/lib.rs	93	4	59	call	
+node	lib	205	206	libflate/lib.rs	64	77	3	path	
+node	lib	247	248	libflate/lib.rs	76	35	2	ty	
+node	lib	99	103	libflate/lib.rs	59	53	14	method_call	
+node	lib	379	380	libflate/lib.rs	84	59	22	proc	
+node	lib	258	244	libflate/lib.rs	76	57	8	ty	
+node	lib	52	15	libflate/lib.rs	46	44	8	pat	
+node	lib	118	189	<std macros>	3	18	74	block	
+node	lib	210	0	libflate/lib.rs	68	0	93	fn	deflate_bytes
+node	lib	339	340	<std macros>	4	44	17	call	
+node	lib	377	378	libflate/lib.rs	84	77	3	path	
+node	lib	334	333	<std macros>	4	18	24	ty	
+node	lib	365	369	libflate/lib.rs	84	28	3	path	
+node	lib	271	275	libflate/lib.rs	79	55	14	method_call	
+node	lib	266	363	libflate/lib.rs	79	12	276	local	
+node	lib	167	168	<std macros>	4	44	17	call	
+node	lib	241	242	libflate/lib.rs	73	44	23	path	
+node	lib	70	68	libflate/lib.rs	54	33	5	ty	
+node	lib	188	118	<std macros>	4	12	60	blk	
+node	lib	125	119	<std macros>	21	51	1	ty	
+node	lib	134	135	<std macros>	4	44	17	lit	
+node	lib	333	353	<std macros>	4	18	24	local	
+node	lib	376	378	libflate/lib.rs	84	66	10	path	
+node	lib	149	157	<std macros>	4	18	24	path	
+node	lib	386	387	libflate/lib.rs	88	29	4	ty	
+node	lib	68	0	libflate/lib.rs	54	0	49	static	TDEFL_WRITE_ZLIB_HEADER
+node	lib	51	15	libflate/lib.rs	46	54	11	ty	
+node	lib	282	284	libflate/lib.rs	81	55	10	addr_of	
+node	lib	63	60	libflate/lib.rs	52	25	4	lit	
+node	lib	21	15	libflate/lib.rs	38	42	8	pat	
+node	lib	330	331	<std macros>	4	18	24	call	
+node	lib	107	108	libflate/lib.rs	60	68	6	ty	
+node	lib	289	361	<std macros>	3	11	4294964557	not	
+node	lib	42	15	libflate/lib.rs	44	54	7	ty	
+node	lib	359	305	<std macros>	24	8	43	match	
+node	lib	393	382	libflate/lib.rs	88	47	40	block	
+node	lib	372	373	libflate/lib.rs	84	53	4	ty	
+node	lib	406	408	libflate/lib.rs	92	48	2	ty	
+node	lib	229	230	libflate/lib.rs	72	35	2	ty	
+node	lib	72	0	libflate/lib.rs	56	0	522	fn	deflate_bytes_internal
+node	lib	307	308	<std macros>	4	44	17	addr_of	
+node	lib	163	161	<std macros>	4	18	24	pat	
+node	lib	33	15	libflate/lib.rs	41	49	5	ty	
+node	lib	177	178	<std macros>	4	18	24	path	
+node	lib	267	266	libflate/lib.rs	79	12	0	ty	
+node	lib	344	343	<std macros>	4	18	24	ty	
+node	lib	337	339	<std macros>	4	44	17	path	
+node	lib	408	398	libflate/lib.rs	92	43	8	ty	
+node	lib	95	94	libflate/lib.rs	59	12	0	ty	
+node	lib	203	207	libflate/lib.rs	64	66	15	block	
+node	lib	158	159	<std macros>	4	18	24	call	
+node	lib	192	208	libflate/lib.rs	64	8	19	path	
+node	lib	285	363	libflate/lib.rs	79	12	276	stmt	
+node	lib	343	353	<std macros>	4	18	24	local	
+node	lib	161	181	<std macros>	4	18	24	local	
+node	lib	43	15	libflate/lib.rs	44	44	8	pat	
+node	lib	283	284	libflate/lib.rs	82	55	5	path	
+node	lib	368	369	libflate/lib.rs	84	35	7	ty	
+node	lib	396	397	libflate/lib.rs	89	34	1	lit	
+node	lib	264	260	libflate/lib.rs	78	33	1	lit	
+node	lib	191	209	libflate/lib.rs	57	4	448	block	
+node	lib	184	185	<std macros>	24	21	7	addr_of	
+node	lib	160	181	<std macros>	4	18	24	stmt	
+node	lib	224	225	libflate/lib.rs	69	34	7	path	
+node	lib	75	76	libflate/lib.rs	56	35	2	ty	
+node	lib	181	186	<std macros>	4	18	24	block	
+node	lib	66	64	libflate/lib.rs	53	38	5	ty	
+node	lib	154	155	<std macros>	4	18	24	path	
+node	lib	144	139	<std macros>	4	18	24	ty	
+jdef	183	lib	173
+jdef	240	lib	60
+jdef	300	lib	296
+jdef	411	lib	404
+jdef	338	lib	309
+jdef	101	std	127323
+jdef	348	lib	311
+jdef	258	std	132630
+jdef	70	std	127568
+jdef	326	std	169505
+jdef	145	std	169453
+jdef	98	lib	78
+jdef	365	lib	268
+jdef	236	std	132630
+jdef	81	std	127568
+jdef	24	std	127586
+jdef	325	std	169505
+jdef	281	lib	263
+jdef	198	lib	91
+jdef	182	lib	119
+jdef	376	std	129763
+jdef	323	std	166363
+jdef	410	lib	244
+jdef	222	lib	72
+jdef	317	std	169453
+jdef	394	lib	244
+jdef	377	lib	268
+jdef	269	lib	38
+jdef	204	std	129763
+jdef	149	std	169507
+jdef	192	std	132770
+jdef	283	lib	254
+jdef	166	lib	137
+jdef	55	std	127568
+jdef	154	std	169505
+jdef	157	std	169463
+jdef	328	std	104337
+jdef	238	lib	72
+jdef	165	std	170048
+jdef	320	std	169461
+jdef	223	lib	216
+jdef	286	lib	268
+jdef	41	std	127323
+jdef	122	std	169681
+jdef	99	std	49765
+jdef	224	lib	60
+jdef	370	lib	263
+jdef	115	std	72085
+jdef	408	std	132630
+jdef	128	lib	124
+jdef	105	std	48460
+jdef	97	lib	16
+jdef	114	lib	96
+jdef	175	std	169654
+jdef	321	std	169507
+jdef	337	std	170048
+jdef	299	std	243932
+jdef	205	lib	96
+jdef	111	lib	82
+jdef	58	std	127323
+jdef	327	std	169479
+jdef	349	lib	335
+jdef	412	lib	64
+jdef	33	std	127568
+jdef	287	std	72085
+jdef	220	std	132630
+jdef	62	std	127568
+jdef	262	std	127586
+jdef	279	std	127586
+jdef	151	std	166363
+jdef	270	lib	250
+jdef	148	std	169461
+jdef	355	lib	345
+jdef	239	lib	232
+jdef	142	std	169447
+jdef	354	lib	291
+jdef	86	std	132630
+jdef	104	lib	78
+jdef	395	lib	388
+jdef	314	std	169447
+jdef	156	std	104337
+jdef	155	std	169479
+jdef	176	lib	139
+jdef	66	std	127568
+jdef	241	lib	68
+jdef	329	std	169463
+jdef	153	std	169505
+jdef	50	std	127586
+jdef	253	std	127568
+jdef	107	std	127586
+jdef	177	lib	163
+jdef	193	lib	96
+jdef	46	std	127586
+jdef	277	std	48460
+jdef	347	std	169654
+jdef	19	std	127323
+jdef	273	std	127323
+jdef	392	std	132630
+jdef	28	std	127586
+jdef	276	lib	250
+jdef	109	lib	91
+jdef	90	std	127586
+jdef	127	std	243932
+jdef	294	std	169681
+jdef	364	std	132770
+jdef	271	std	49765
+jdef	336	std	171474
+jdef	164	std	171474
+jdef	36	std	127323
