@@ -1,3 +1,5 @@
+# for the minute we do this manually because dependancy/order matters -
+# it requires the '.rfx' from one library to create links from any other
 update: 
 	cd $(RUST_PATH)/src;pwd;
 	
