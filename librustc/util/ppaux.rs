@@ -19,11 +19,11 @@ use middle::ty::{ReFree, ReScope, ReInfer, ReStatic, Region,
 use middle::ty::{ty_bool, ty_char, ty_bot, ty_box, ty_struct, ty_enum};
 use middle::ty::{ty_err, ty_str, ty_vec, ty_float, ty_bare_fn, ty_closure};
 use middle::ty::{ty_nil, ty_param, ty_ptr, ty_rptr, ty_self, ty_tup};
-use middle::ty::{ty_uniq, ty_trait, ty_int, ty_uint, ty_unboxed_vec, ty_infer};
+use middle::ty::{ty_uniq, ty_trait, ty_int, ty_uint, ty_infer};
 use middle::ty;
 use middle::typeck;
 
-use syntax::abi::AbiSet;
+use syntax::abi;
 use syntax::ast_map;
 use syntax::codemap::{Span, Pos};
 use syntax::parse::token;
@@ -57,14 +57,6 @@ pub fn note_and_explain_region(cx: &ctxt,
       }
     }
 }
-
-/// Returns a string like "the block at 27:31" that attempts to explain a
-/// lifetime in a way it might plausibly be understood.
-pub fn explain_region(cx: &ctxt, region: ty::Region) -> ~str {
-  let (res, _) = explain_region_and_span(cx, region);
-  return res;
-}
-
 
 pub fn explain_region_and_span(cx: &ctxt, region: ty::Region)
                             -> (~str, Option<Span>) {
@@ -165,42 +157,6 @@ pub fn bound_region_to_str(cx: &ctxt,
     }
 }
 
-pub fn ReScope_id_to_str(cx: &ctxt, node_id: ast::NodeId) -> ~str {
-    match cx.map.find(node_id) {
-      Some(ast_map::NodeBlock(ref blk)) => {
-        format!("<block at {}>",
-             cx.sess.codemap().span_to_str(blk.span))
-      }
-      Some(ast_map::NodeExpr(expr)) => {
-        match expr.node {
-          ast::ExprCall(..) => {
-            format!("<call at {}>",
-                 cx.sess.codemap().span_to_str(expr.span))
-          }
-          ast::ExprMatch(..) => {
-            format!("<match at {}>",
-                 cx.sess.codemap().span_to_str(expr.span))
-          }
-          ast::ExprAssignOp(..) |
-          ast::ExprUnary(..) |
-          ast::ExprBinary(..) |
-          ast::ExprIndex(..) => {
-            format!("<method at {}>",
-                 cx.sess.codemap().span_to_str(expr.span))
-          }
-          _ => {
-            format!("<expression at {}>",
-                 cx.sess.codemap().span_to_str(expr.span))
-          }
-        }
-      }
-      None => {
-        format!("<unknown-{}>", node_id)
-      }
-      _ => cx.sess.bug(format!("ReScope refers to {}", cx.map.node_to_str(node_id)))
-    }
-}
-
 // In general, if you are giving a region error message,
 // you should use `explain_region()` or, better yet,
 // `note_and_explain_region()`
@@ -276,12 +232,8 @@ pub fn vstore_ty_to_str(cx: &ctxt, mt: &mt, vs: ty::vstore) -> ~str {
 }
 
 pub fn vec_map_to_str<T>(ts: &[T], f: |t: &T| -> ~str) -> ~str {
-    let tstrs = ts.map(f);
+    let tstrs = ts.iter().map(f).collect::<Vec<~str>>();
     format!("[{}]", tstrs.connect(", "))
-}
-
-pub fn tys_to_str(cx: &ctxt, ts: &[t]) -> ~str {
-    vec_map_to_str(ts, |t| ty_to_str(cx, *t))
 }
 
 pub fn fn_sig_to_str(cx: &ctxt, typ: &ty::FnSig) -> ~str {
@@ -301,14 +253,14 @@ pub fn ty_to_str(cx: &ctxt, typ: t) -> ~str {
     }
     fn bare_fn_to_str(cx: &ctxt,
                       purity: ast::Purity,
-                      abis: AbiSet,
+                      abi: abi::Abi,
                       ident: Option<ast::Ident>,
                       sig: &ty::FnSig)
                       -> ~str {
-        let mut s = if abis.is_rust() {
+        let mut s = if abi == abi::Rust {
             ~""
         } else {
-            format!("extern {} ", abis.to_str())
+            format!("extern {} ", abi.to_str())
         };
 
         match purity {
@@ -405,7 +357,7 @@ pub fn ty_to_str(cx: &ctxt, typ: t) -> ~str {
                        ket: char,
                        sig: &ty::FnSig) {
         s.push_char(bra);
-        let strs = sig.inputs.map(|a| fn_input_to_str(cx, *a));
+        let strs: Vec<~str> = sig.inputs.iter().map(|a| fn_input_to_str(cx, *a)).collect();
         s.push_str(strs.connect(", "));
         if sig.variadic {
             s.push_str(", ...");
@@ -445,16 +397,15 @@ pub fn ty_to_str(cx: &ctxt, typ: t) -> ~str {
       ty_rptr(r, ref tm) => {
         region_ptr_to_str(cx, r) + mt_to_str(cx, tm)
       }
-      ty_unboxed_vec(ref tm) => { format!("unboxed_vec<{}>", mt_to_str(cx, tm)) }
       ty_tup(ref elems) => {
-        let strs = elems.map(|elem| ty_to_str(cx, *elem));
+        let strs: Vec<~str> = elems.iter().map(|elem| ty_to_str(cx, *elem)).collect();
         ~"(" + strs.connect(",") + ")"
       }
       ty_closure(ref f) => {
           closure_to_str(cx, *f)
       }
       ty_bare_fn(ref f) => {
-          bare_fn_to_str(cx, f.purity, f.abis, None, &f.sig)
+          bare_fn_to_str(cx, f.purity, f.abi, None, &f.sig)
       }
       ty_infer(infer_ty) => infer_ty.to_str(),
       ty_err => ~"[type error]",
@@ -665,7 +616,7 @@ impl Repr for ty::ParamBounds {
                 ty::BoundStatic => ~"'static",
                 ty::BoundSend => ~"Send",
                 ty::BoundSized => ~"Sized",
-                ty::BoundPod => ~"Pod",
+                ty::BoundCopy => ~"Pod",
                 ty::BoundShare => ~"Share",
             });
         }
@@ -861,9 +812,9 @@ impl Repr for ast::Visibility {
 
 impl Repr for ty::BareFnTy {
     fn repr(&self, tcx: &ctxt) -> ~str {
-        format!("BareFnTy \\{purity: {:?}, abis: {}, sig: {}\\}",
+        format!("BareFnTy \\{purity: {:?}, abi: {}, sig: {}\\}",
              self.purity,
-             self.abis.to_str(),
+             self.abi.to_str(),
              self.sig.repr(tcx))
     }
 }
@@ -952,7 +903,7 @@ impl UserString for ty::BuiltinBound {
             ty::BoundStatic => ~"'static",
             ty::BoundSend => ~"Send",
             ty::BoundSized => ~"Sized",
-            ty::BoundPod => ~"Pod",
+            ty::BoundCopy => ~"Pod",
             ty::BoundShare => ~"Share",
         }
     }
@@ -1016,13 +967,13 @@ impl UserString for ast::Ident {
     }
 }
 
-impl Repr for AbiSet {
+impl Repr for abi::Abi {
     fn repr(&self, _tcx: &ctxt) -> ~str {
         self.to_str()
     }
 }
 
-impl UserString for AbiSet {
+impl UserString for abi::Abi {
     fn user_string(&self, _tcx: &ctxt) -> ~str {
         self.to_str()
     }

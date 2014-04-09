@@ -38,7 +38,7 @@ use util::ppaux;
 use arena::TypedArena;
 use std::c_str::ToCStr;
 use std::cell::Cell;
-use std::libc::c_uint;
+use libc::c_uint;
 use syntax::ast;
 use syntax::parse::token;
 
@@ -290,10 +290,13 @@ fn make_drop_glue<'a>(bcx: &'a Block<'a>, v0: ValueRef, t: ty::t) -> &'a Block<'
             })
         }
         ty::ty_vec(_, ty::vstore_uniq) | ty::ty_str(ty::vstore_uniq) => {
-            make_drop_glue(bcx, v0, tvec::expand_boxed_vec_ty(bcx.tcx(), t))
-        }
-        ty::ty_unboxed_vec(_) => {
-            tvec::make_drop_glue_unboxed(bcx, v0, t)
+            let llbox = Load(bcx, v0);
+            let not_null = IsNotNull(bcx, llbox);
+            with_cond(bcx, not_null, |bcx| {
+                let unit_ty = ty::sequence_element_type(bcx.tcx(), t);
+                let bcx = tvec::make_drop_glue_unboxed(bcx, llbox, unit_ty);
+                trans_exchange_free(bcx, llbox)
+            })
         }
         ty::ty_struct(did, ref substs) => {
             let tcx = bcx.tcx();
@@ -463,7 +466,7 @@ fn make_generic_glue(ccx: &CrateContext,
     // llfn is expected be declared to take a parameter of the appropriate
     // type, so we don't need to explicitly cast the function parameter.
 
-    let bcx = fcx.entry_bcx.get().unwrap();
+    let bcx = fcx.entry_bcx.borrow().clone().unwrap();
     let llrawptr0 = unsafe { llvm::LLVMGetParam(llfn, fcx.arg_pos(0) as c_uint) };
     let bcx = helper(bcx, llrawptr0, t);
     finish_fn(&fcx, bcx);

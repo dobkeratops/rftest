@@ -10,7 +10,7 @@
 
 /*! See doc.rs for a thorough explanation of the borrow checker */
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use mc = middle::mem_categorization;
 use middle::ty;
@@ -207,8 +207,8 @@ pub struct BorrowStats {
 // is T, which is not a box.
 #[deriving(Eq, TotalEq, Hash)]
 pub struct root_map_key {
-    id: ast::NodeId,
-    derefs: uint
+    pub id: ast::NodeId,
+    pub derefs: uint
 }
 
 pub type BckResult<T> = Result<T, BckError>;
@@ -326,6 +326,7 @@ pub struct RestrictionSet {
     bits: u32
 }
 
+#[allow(dead_code)] // potentially useful
 pub static RESTR_EMPTY: RestrictionSet  = RestrictionSet {bits: 0b0000};
 pub static RESTR_MUTATE: RestrictionSet = RestrictionSet {bits: 0b0001};
 pub static RESTR_FREEZE: RestrictionSet = RestrictionSet {bits: 0b0010};
@@ -333,10 +334,6 @@ pub static RESTR_FREEZE: RestrictionSet = RestrictionSet {bits: 0b0010};
 impl RestrictionSet {
     pub fn intersects(&self, restr: RestrictionSet) -> bool {
         (self.bits & restr.bits) != 0
-    }
-
-    pub fn contains_all(&self, restr: RestrictionSet) -> bool {
-        (self.bits & restr.bits) == restr.bits
     }
 }
 
@@ -378,7 +375,7 @@ impl Repr for RestrictionSet {
 // uncovered after a certain number of auto-derefs.
 
 pub struct RootInfo {
-    scope: ast::NodeId,
+    pub scope: ast::NodeId,
 }
 
 pub type root_map = @RefCell<HashMap<root_map_key, RootInfo>>;
@@ -861,17 +858,6 @@ impl<'a> BorrowckCtxt<'a> {
 
     pub fn cmt_to_str(&self, cmt: mc::cmt) -> ~str {
         self.mc().cmt_to_str(cmt)
-    }
-
-    pub fn mut_to_str(&self, mutbl: ast::Mutability) -> ~str {
-        self.mc().mut_to_str(mutbl)
-    }
-
-    pub fn mut_to_keyword(&self, mutbl: ast::Mutability) -> &'static str {
-        match mutbl {
-            ast::MutImmutable => "",
-            ast::MutMutable => "mut",
-        }
     }
 }
 

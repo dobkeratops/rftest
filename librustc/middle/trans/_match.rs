@@ -192,7 +192,7 @@
  *
  */
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use back::abi;
 use driver::session::FullDebugInfo;
@@ -225,7 +225,6 @@ use util::ppaux::{Repr, vec_map_to_str};
 
 use collections::HashMap;
 use std::cell::Cell;
-use std::vec;
 use syntax::ast;
 use syntax::ast::Ident;
 use syntax::ast_util::path_to_ident;
@@ -256,43 +255,23 @@ enum Opt {
     vec_len(/* length */ uint, VecLenOpt, /*range of matches*/(uint, uint))
 }
 
+fn lit_to_expr(tcx: &ty::ctxt, a: &Lit) -> @ast::Expr {
+    match *a {
+        ExprLit(existing_a_expr) => existing_a_expr,
+        ConstLit(a_const) => const_eval::lookup_const_by_id(tcx, a_const).unwrap(),
+        UnitLikeStructLit(_) => fail!("lit_to_expr: unexpected struct lit"),
+    }
+}
+
 fn opt_eq(tcx: &ty::ctxt, a: &Opt, b: &Opt) -> bool {
     match (a, b) {
+        (&lit(UnitLikeStructLit(a)), &lit(UnitLikeStructLit(b))) => a == b,
         (&lit(a), &lit(b)) => {
-            match (a, b) {
-                (UnitLikeStructLit(a), UnitLikeStructLit(b)) => a == b,
-                _ => {
-                    let a_expr;
-                    match a {
-                        ExprLit(existing_a_expr) => a_expr = existing_a_expr,
-                            ConstLit(a_const) => {
-                                let e = const_eval::lookup_const_by_id(tcx, a_const);
-                                a_expr = e.unwrap();
-                            }
-                        UnitLikeStructLit(_) => {
-                            fail!("UnitLikeStructLit should have been handled \
-                                    above")
-                        }
-                    }
-
-                    let b_expr;
-                    match b {
-                        ExprLit(existing_b_expr) => b_expr = existing_b_expr,
-                            ConstLit(b_const) => {
-                                let e = const_eval::lookup_const_by_id(tcx, b_const);
-                                b_expr = e.unwrap();
-                            }
-                        UnitLikeStructLit(_) => {
-                            fail!("UnitLikeStructLit should have been handled \
-                                    above")
-                        }
-                    }
-
-                    match const_eval::compare_lit_exprs(tcx, a_expr, b_expr) {
-                        Some(val1) => val1 == 0,
-                        None => fail!("compare_list_exprs: type mismatch"),
-                    }
-                }
+            let a_expr = lit_to_expr(tcx, &a);
+            let b_expr = lit_to_expr(tcx, &b);
+            match const_eval::compare_lit_exprs(tcx, a_expr, b_expr) {
+                Some(val1) => val1 == 0,
+                None => fail!("compare_list_exprs: type mismatch"),
             }
         }
         (&range(a1, a2), &range(b1, b2)) => {
@@ -307,6 +286,42 @@ fn opt_eq(tcx: &ty::ctxt, a: &Opt, b: &Opt) -> bool {
         (&vec_len(a1, a2, _), &vec_len(b1, b2, _)) =>
             a1 == b1 && a2 == b2,
         _ => false
+    }
+}
+
+fn opt_overlap(tcx: &ty::ctxt, a: &Opt, b: &Opt) -> bool {
+    match (a, b) {
+        (&lit(a), &lit(b)) => {
+            let a_expr = lit_to_expr(tcx, &a);
+            let b_expr = lit_to_expr(tcx, &b);
+            match const_eval::compare_lit_exprs(tcx, a_expr, b_expr) {
+                Some(val1) => val1 == 0,
+                None => fail!("opt_overlap: type mismatch"),
+            }
+        }
+
+        (&range(a1, a2), &range(b1, b2)) => {
+            let m1 = const_eval::compare_lit_exprs(tcx, a1, b2);
+            let m2 = const_eval::compare_lit_exprs(tcx, b1, a2);
+            match (m1, m2) {
+                // two ranges [a1, a2] and [b1, b2] overlap iff:
+                //      a1 <= b2 && b1 <= a2
+                (Some(val1), Some(val2)) => (val1 <= 0 && val2 <= 0),
+                _ => fail!("opt_overlap: type mismatch"),
+            }
+        }
+
+        (&range(a1, a2), &lit(b)) | (&lit(b), &range(a1, a2)) => {
+            let b_expr = lit_to_expr(tcx, &b);
+            let m1 = const_eval::compare_lit_exprs(tcx, a1, b_expr);
+            let m2 = const_eval::compare_lit_exprs(tcx, a2, b_expr);
+            match (m1, m2) {
+                // b is in range [a1, a2] iff a1 <= b and b <= a2
+                (Some(val1), Some(val2)) => (val1 <= 0 && 0 <= val2),
+                _ => fail!("opt_overlap: type mismatch"),
+            }
+        }
+        _ => fail!("opt_overlap: expect lit or range")
     }
 }
 
@@ -462,11 +477,9 @@ fn expand_nested_bindings<'r,'b>(
     m.iter().map(|br| {
         match br.pats.get(col).node {
             ast::PatIdent(_, ref path, Some(inner)) => {
-                let pats = vec::append(
-                    Vec::from_slice(br.pats.slice(0u, col)),
-                    vec::append(vec!(inner),
-                                br.pats.slice(col + 1u,
-                                           br.pats.len())).as_slice());
+                let pats = Vec::from_slice(br.pats.slice(0u, col))
+                           .append((vec!(inner))
+                                   .append(br.pats.slice(col + 1u, br.pats.len())).as_slice());
 
                 let mut res = Match {
                     pats: pats,
@@ -490,7 +503,7 @@ fn assert_is_binding_or_wild(bcx: &Block, p: @ast::Pat) {
     }
 }
 
-type enter_pat<'a> = 'a |@ast::Pat| -> Option<Vec<@ast::Pat> >;
+type enter_pat<'a> = |@ast::Pat|: 'a -> Option<Vec<@ast::Pat>>;
 
 fn enter_match<'r,'b>(
                bcx: &'b Block<'b>,
@@ -511,10 +524,8 @@ fn enter_match<'r,'b>(
     for br in m.iter() {
         match e(*br.pats.get(col)) {
             Some(sub) => {
-                let pats =
-                    vec::append(
-                        vec::append(sub, br.pats.slice(0u, col)),
-                        br.pats.slice(col + 1u, br.pats.len()));
+                let pats = sub.append(br.pats.slice(0u, col))
+                              .append(br.pats.slice(col + 1u, br.pats.len()));
 
                 let this = *br.pats.get(col);
                 let mut bound_ptrs = br.bound_ptrs.clone();
@@ -632,16 +643,30 @@ fn enter_opt<'r,'b>(
     let tcx = bcx.tcx();
     let dummy = @ast::Pat {id: 0, node: ast::PatWild, span: DUMMY_SP};
     let mut i = 0;
+    // By the virtue of fact that we are in `trans` already, `enter_opt` is able
+    // to prune sub-match tree aggressively based on exact equality. But when it
+    // comes to literal or range, that strategy may lead to wrong result if there
+    // are guard function or multiple patterns inside tuple; in that case, pruning
+    // based on the overlap of patterns is required.
+    //
+    // Ideally, when constructing the sub-match tree for certain arm, only those
+    // arms beneath it matter. But that isn't how algorithm works right now and
+    // all other arms are taken into consideration when computing `guarded` below.
+    // That is ok since each round of `compile_submatch` guarantees to trim one
+    // "column" of arm patterns and the algorithm will converge.
+    let guarded = m.iter().any(|x| x.data.arm.guard.is_some());
+    let multi_pats = m.len() > 0 && m[0].pats.len() > 1;
     enter_match(bcx, tcx.def_map, m, col, val, |p| {
         let answer = match p.node {
             ast::PatEnum(..) |
             ast::PatIdent(_, _, None) if pat_is_const(tcx.def_map, p) => {
                 let const_def = tcx.def_map.borrow().get_copy(&p.id);
                 let const_def_id = ast_util::def_id_of_def(const_def);
-                if opt_eq(tcx, &lit(ConstLit(const_def_id)), opt) {
-                    Some(Vec::new())
-                } else {
-                    None
+                let konst = lit(ConstLit(const_def_id));
+                match guarded || multi_pats {
+                    false if opt_eq(tcx, &konst, opt) => Some(Vec::new()),
+                    true if opt_overlap(tcx, &konst, opt) => Some(Vec::new()),
+                    _ => None,
                 }
             }
             ast::PatEnum(_, ref subpats) => {
@@ -666,10 +691,20 @@ fn enter_opt<'r,'b>(
                 }
             }
             ast::PatLit(l) => {
-                if opt_eq(tcx, &lit(ExprLit(l)), opt) {Some(Vec::new())} else {None}
+                let lit_expr = lit(ExprLit(l));
+                match guarded || multi_pats {
+                    false if opt_eq(tcx, &lit_expr, opt) => Some(Vec::new()),
+                    true if opt_overlap(tcx, &lit_expr, opt) => Some(Vec::new()),
+                    _ => None,
+                }
             }
             ast::PatRange(l1, l2) => {
-                if opt_eq(tcx, &range(l1, l2), opt) {Some(Vec::new())} else {None}
+                let rng = range(l1, l2);
+                match guarded || multi_pats {
+                    false if opt_eq(tcx, &rng, opt) => Some(Vec::new()),
+                    true if opt_overlap(tcx, &rng, opt) => Some(Vec::new()),
+                    _ => None,
+                }
             }
             ast::PatStruct(_, ref field_pats, _) => {
                 if opt_eq(tcx, &variant_opt(bcx, p.id), opt) {
@@ -1053,7 +1088,8 @@ fn extract_vec_elems<'a>(
     let _icx = push_ctxt("match::extract_vec_elems");
     let vec_datum = match_datum(bcx, val, pat_id);
     let (base, len) = vec_datum.get_vec_base_and_len(bcx);
-    let vt = tvec::vec_types(bcx, node_id_type(bcx, pat_id));
+    let vec_ty = node_id_type(bcx, pat_id);
+    let vt = tvec::vec_types(bcx, ty::sequence_element_type(bcx.tcx(), vec_ty));
 
     let mut elems = Vec::from_fn(elem_count, |i| {
         match slice {
@@ -1517,8 +1553,7 @@ fn compile_submatch_continue<'r,
     let tcx = bcx.tcx();
     let dm = tcx.def_map;
 
-    let vals_left = vec::append(Vec::from_slice(vals.slice(0u, col)),
-                                   vals.slice(col + 1u, vals.len()));
+    let vals_left = Vec::from_slice(vals.slice(0u, col)).append(vals.slice(col + 1u, vals.len()));
     let ccx = bcx.fcx.ccx;
     let mut pat_id = 0;
     for br in m.iter() {
@@ -1538,10 +1573,10 @@ fn compile_submatch_continue<'r,
             let pat_ty = node_id_type(bcx, pat_id);
             let pat_repr = adt::represent_type(bcx.ccx(), pat_ty);
             expr::with_field_tys(tcx, pat_ty, Some(pat_id), |discr, field_tys| {
-                let rec_vals = rec_fields.map(|field_name| {
+                let rec_vals = rec_fields.iter().map(|field_name| {
                         let ix = ty::field_idx_strict(tcx, field_name.name, field_tys);
                         adt::trans_field_ptr(bcx, pat_repr, val, discr, ix)
-                        });
+                        }).collect::<Vec<_>>();
                 compile_submatch(
                         bcx,
                         enter_rec_or_struct(bcx,
@@ -1550,8 +1585,7 @@ fn compile_submatch_continue<'r,
                                             col,
                                             rec_fields.as_slice(),
                                             val).as_slice(),
-                        vec::append(rec_vals,
-                                       vals_left.as_slice()).as_slice(),
+                        rec_vals.append(vals_left.as_slice()).as_slice(),
                         chk);
             });
             return;
@@ -1576,8 +1610,7 @@ fn compile_submatch_continue<'r,
                                    col,
                                    val,
                                    n_tup_elts).as_slice(),
-                         vec::append(tup_vals,
-                                        vals_left.as_slice()).as_slice(),
+                         tup_vals.append(vals_left.as_slice()).as_slice(),
                          chk);
         return;
     }
@@ -1602,8 +1635,7 @@ fn compile_submatch_continue<'r,
         compile_submatch(bcx,
                          enter_tuple_struct(bcx, dm, m, col, val,
                                             struct_element_count).as_slice(),
-                         vec::append(llstructvals,
-                                        vals_left.as_slice()).as_slice(),
+                         llstructvals.append(vals_left.as_slice()).as_slice(),
                          chk);
         return;
     }
@@ -1612,8 +1644,7 @@ fn compile_submatch_continue<'r,
         let llbox = Load(bcx, val);
         compile_submatch(bcx,
                          enter_uniq(bcx, dm, m, col, val).as_slice(),
-                         vec::append(vec!(llbox),
-                                        vals_left.as_slice()).as_slice(),
+                         (vec!(llbox)).append(vals_left.as_slice()).as_slice(),
                          chk);
         return;
     }
@@ -1622,8 +1653,7 @@ fn compile_submatch_continue<'r,
         let loaded_val = Load(bcx, val);
         compile_submatch(bcx,
                          enter_region(bcx, dm, m, col, val).as_slice(),
-                         vec::append(vec!(loaded_val),
-                                        vals_left.as_slice()).as_slice(),
+                         (vec!(loaded_val)).append(vals_left.as_slice()).as_slice(),
                          chk);
         return;
     }
@@ -1652,8 +1682,8 @@ fn compile_submatch_continue<'r,
                 kind = compare;
             },
             vec_len(..) => {
-                let vt = tvec::vec_types(bcx, node_id_type(bcx, pat_id));
-                let (_, len) = tvec::get_base_and_len(bcx, val, vt.vec_ty);
+                let vec_ty = node_id_type(bcx, pat_id);
+                let (_, len) = tvec::get_base_and_len(bcx, val, vec_ty);
                 test_val = len;
                 kind = compare_vec_len;
             }
@@ -1804,7 +1834,7 @@ fn compile_submatch_continue<'r,
             lit(_) | range(_, _) => ()
         }
         let opt_ms = enter_opt(opt_cx, m, opt, col, size, val);
-        let opt_vals = vec::append(unpacked, vals_left.as_slice());
+        let opt_vals = unpacked.append(vals_left.as_slice());
 
         match branch_chk {
             None => {

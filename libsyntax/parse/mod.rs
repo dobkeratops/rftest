@@ -39,7 +39,7 @@ pub mod obsolete;
 
 // info about a parsing session.
 pub struct ParseSess {
-    span_diagnostic: SpanHandler, // better be the same as the one in the reader!
+    pub span_diagnostic: SpanHandler, // better be the same as the one in the reader!
     /// Used to determine and report recursive mod inclusions
     included_mod_stack: RefCell<Vec<Path>>,
 }
@@ -228,9 +228,10 @@ pub fn file_to_filemap(sess: &ParseSess, path: &Path, spanopt: Option<Span>)
             unreachable!()
         }
     };
-    match str::from_utf8_owned(bytes) {
+    match str::from_utf8(bytes.as_slice()) {
         Some(s) => {
-            return string_to_filemap(sess, s, path.as_str().unwrap().to_str())
+            return string_to_filemap(sess, s.to_owned(),
+                                     path.as_str().unwrap().to_str())
         }
         None => err(format!("{} is not UTF-8 encoded", path.display())),
     }
@@ -288,12 +289,11 @@ mod test {
     use util::parser_testing::{string_to_expr, string_to_item};
     use util::parser_testing::string_to_stmt;
 
-    #[cfg(test)]
-    fn to_json_str<'a, E: Encodable<json::Encoder<'a>>>(val: &E) -> ~str {
+    fn to_json_str<'a, E: Encodable<json::Encoder<'a>, io::IoError>>(val: &E) -> ~str {
         let mut writer = MemWriter::new();
         let mut encoder = json::Encoder::new(&mut writer as &mut io::Writer);
-        val.encode(&mut encoder);
-        str::from_utf8_owned(writer.unwrap()).unwrap()
+        let _ = val.encode(&mut encoder);
+        str::from_utf8(writer.unwrap().as_slice()).unwrap().to_owned()
     }
 
     // produce a codemap::span
@@ -357,13 +357,13 @@ mod test {
             [ast::TTTok(_,_),
              ast::TTTok(_,token::NOT),
              ast::TTTok(_,_),
-             ast::TTDelim(delim_elts)] => {
+             ast::TTDelim(ref delim_elts)] => {
                 let delim_elts: &[ast::TokenTree] = delim_elts.as_slice();
                 match delim_elts {
                     [ast::TTTok(_,token::LPAREN),
-                     ast::TTDelim(first_set),
+                     ast::TTDelim(ref first_set),
                      ast::TTTok(_,token::FAT_ARROW),
-                     ast::TTDelim(second_set),
+                     ast::TTDelim(ref second_set),
                      ast::TTTok(_,token::RPAREN)] => {
                         let first_set: &[ast::TokenTree] =
                             first_set.as_slice();
@@ -658,7 +658,7 @@ mod test {
                                 variadic: false
                             }),
                                     ast::ImpureFn,
-                                    abi::AbiSet::Rust(),
+                                    abi::Rust,
                                     ast::Generics{ // no idea on either of these:
                                         lifetimes: Vec::new(),
                                         ty_params: OwnedSlice::empty(),

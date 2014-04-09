@@ -28,14 +28,14 @@ use middle::trans::inline;
 use middle::trans::machine;
 use middle::trans::type_::Type;
 use middle::trans::type_of;
+use middle::trans::debuginfo;
 use middle::ty;
 use util::ppaux::{Repr, ty_to_str};
 
 use std::c_str::ToCStr;
-use std::libc::c_uint;
 use std::slice;
 use std::vec::Vec;
-use std::vec;
+use libc::c_uint;
 use syntax::{ast, ast_util};
 
 pub fn const_lit(cx: &CrateContext, e: &ast::Expr, lit: ast::Lit)
@@ -294,7 +294,7 @@ fn const_expr_unadjusted(cx: &CrateContext, e: &ast::Expr,
         exprs.iter().map(|&e| const_expr(cx, e, is_local))
              .fold((Vec::new(), true),
                    |(l, all_inlineable), (val, inlineable)| {
-                (vec::append_one(l, val), all_inlineable && inlineable)
+                (l.append_one(val), all_inlineable && inlineable)
              })
     };
     unsafe {
@@ -557,7 +557,7 @@ fn const_expr_unadjusted(cx: &CrateContext, e: &ast::Expr,
                    inlineable.iter().fold(true, |a, &b| a && b))
               })
           }
-          ast::ExprVec(ref es, ast::MutImmutable) => {
+          ast::ExprVec(ref es) => {
             let (v, _, inlineable) = const_vec(cx,
                                                e,
                                                es.as_slice(),
@@ -573,7 +573,7 @@ fn const_expr_unadjusted(cx: &CrateContext, e: &ast::Expr,
                     _ => { cx.sess().span_bug(e.span, "bad const-slice lit") }
                 }
               }
-              ast::ExprVec(ref es, ast::MutImmutable) => {
+              ast::ExprVec(ref es) => {
                 let (cv, llunitty, _) = const_vec(cx,
                                                   e,
                                                   es.as_slice(),
@@ -592,7 +592,7 @@ fn const_expr_unadjusted(cx: &CrateContext, e: &ast::Expr,
               _ => cx.sess().span_bug(e.span, "bad const-slice expr")
             }
           }
-          ast::ExprRepeat(elem, count, _) => {
+          ast::ExprRepeat(elem, count) => {
             let vec_ty = ty::expr_ty(cx.tcx(), e);
             let unit_ty = ty::sequence_element_type(cx.tcx(), vec_ty);
             let llunitty = type_of::type_of(cx, unit_ty);
@@ -688,5 +688,6 @@ pub fn trans_const(ccx: &CrateContext, m: ast::Mutability, id: ast::NodeId) {
         if m != ast::MutMutable {
             llvm::LLVMSetGlobalConstant(g, True);
         }
+        debuginfo::create_global_var_metadata(ccx, id, g);
     }
 }

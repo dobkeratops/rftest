@@ -8,7 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use middle::pat_util::{PatIdMap, pat_id_map, pat_is_binding, pat_is_const};
 use middle::ty;
@@ -103,8 +103,8 @@ pub fn check_match(fcx: &FnCtxt,
 }
 
 pub struct pat_ctxt<'a> {
-    fcx: &'a FnCtxt<'a>,
-    map: PatIdMap,
+    pub fcx: &'a FnCtxt<'a>,
+    pub map: PatIdMap,
 }
 
 pub fn check_pat_variant(pcx: &pat_ctxt, pat: &ast::Pat, path: &ast::Path,
@@ -147,7 +147,7 @@ pub fn check_pat_variant(pcx: &pat_ctxt, pat: &ast::Pat, path: &ast::Path,
                         let vinfo =
                             ty::enum_variant_with_id(tcx, enm, var);
                         let var_tpt = ty::lookup_item_type(tcx, var);
-                        vinfo.args.map(|t| {
+                        vinfo.args.iter().map(|t| {
                             if var_tpt.generics.type_param_defs().len() ==
                                 expected_substs.tps.len()
                             {
@@ -157,7 +157,7 @@ pub fn check_pat_variant(pcx: &pat_ctxt, pat: &ast::Pat, path: &ast::Path,
                                 *t // In this case, an error was already signaled
                                     // anyway
                             }
-                        })
+                        }).collect()
                     };
 
                     kind_name = "variant";
@@ -209,7 +209,7 @@ pub fn check_pat_variant(pcx: &pat_ctxt, pat: &ast::Pat, path: &ast::Path,
             // Get the expected types of the arguments.
             let class_fields = ty::struct_fields(
                 tcx, struct_def_id, expected_substs);
-            arg_types = class_fields.map(|field| field.mt.ty);
+            arg_types = class_fields.iter().map(|field| field.mt.ty).collect();
 
             kind_name = "structure";
         }
@@ -637,9 +637,6 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
             };
             (mt, region_var)
           }
-          ty::ty_unboxed_vec(mt) => {
-            (mt, default_region_var)
-          },
           _ => {
               for &elt in before.iter() {
                   check_pat(pcx, elt, ty::mk_err());

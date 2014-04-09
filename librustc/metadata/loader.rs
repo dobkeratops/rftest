@@ -29,8 +29,10 @@ use std::cast;
 use std::cmp;
 use std::io;
 use std::os::consts::{macos, freebsd, linux, android, win32};
-use std::str;
+use std::ptr;
+use std::rc::Rc;
 use std::slice;
+use std::str;
 
 use collections::{HashMap, HashSet};
 use flate;
@@ -44,28 +46,49 @@ pub enum Os {
     OsFreebsd
 }
 
+pub struct HashMismatch {
+    path: Path,
+}
+
 pub struct Context<'a> {
-    sess: &'a Session,
-    span: Span,
-    ident: &'a str,
-    crate_id: &'a CrateId,
-    id_hash: &'a str,
-    hash: Option<&'a Svh>,
-    os: Os,
-    intr: @IdentInterner,
-    rejected_via_hash: bool,
+    pub sess: &'a Session,
+    pub span: Span,
+    pub ident: &'a str,
+    pub crate_id: &'a CrateId,
+    pub id_hash: &'a str,
+    pub hash: Option<&'a Svh>,
+    pub os: Os,
+    pub intr: Rc<IdentInterner>,
+    pub rejected_via_hash: Vec<HashMismatch>
 }
 
 pub struct Library {
-    dylib: Option<Path>,
-    rlib: Option<Path>,
-    metadata: MetadataBlob,
+    pub dylib: Option<Path>,
+    pub rlib: Option<Path>,
+    pub metadata: MetadataBlob,
 }
 
 pub struct ArchiveMetadata {
-    priv archive: ArchiveRO,
+    archive: ArchiveRO,
     // See comments in ArchiveMetadata::new for why this is static
-    priv data: &'static [u8],
+    data: &'static [u8],
+}
+
+pub struct CratePaths {
+    pub ident: ~str,
+    pub dylib: Option<Path>,
+    pub rlib: Option<Path>
+}
+
+impl CratePaths {
+    fn paths(&self) -> Vec<Path> {
+        match (&self.dylib, &self.rlib) {
+            (&None,    &None)              => vec!(),
+            (&Some(ref p), &None) |
+            (&None, &Some(ref p))          => vec!(p.clone()),
+            (&Some(ref p1), &Some(ref p2)) => vec!(p1.clone(), p2.clone()),
+        }
+    }
 }
 
 // FIXME(#11857) this should be a "real" realpath
@@ -81,26 +104,43 @@ fn realpath(p: &Path) -> Path {
 }
 
 impl<'a> Context<'a> {
-    pub fn load_library_crate(&mut self, root_ident: Option<&str>) -> Library {
+    pub fn load_library_crate(&mut self, root: &Option<CratePaths>) -> Library {
         match self.find_library_crate() {
             Some(t) => t,
             None => {
                 self.sess.abort_if_errors();
-                let message = if self.rejected_via_hash {
+                let message = if self.rejected_via_hash.len() > 0 {
                     format!("found possibly newer version of crate `{}`",
                             self.ident)
                 } else {
                     format!("can't find crate for `{}`", self.ident)
                 };
-                let message = match root_ident {
-                    None => message,
-                    Some(c) => format!("{} which `{}` depends on", message, c),
+                let message = match root {
+                    &None => message,
+                    &Some(ref r) => format!("{} which `{}` depends on",
+                                            message, r.ident)
                 };
                 self.sess.span_err(self.span, message);
 
-                if self.rejected_via_hash {
+                if self.rejected_via_hash.len() > 0 {
                     self.sess.span_note(self.span, "perhaps this crate needs \
                                                     to be recompiled?");
+                    let mismatches = self.rejected_via_hash.iter();
+                    for (i, &HashMismatch{ ref path }) in mismatches.enumerate() {
+                        self.sess.fileline_note(self.span,
+                            format!("crate `{}` path \\#{}: {}",
+                                    self.ident, i+1, path.display()));
+                    }
+                    match root {
+                        &None => {}
+                        &Some(ref r) => {
+                            for (i, path) in r.paths().iter().enumerate() {
+                                self.sess.fileline_note(self.span,
+                                    format!("crate `{}` path \\#{}: {}",
+                                            r.ident, i+1, path.display()));
+                            }
+                        }
+                    }
                 }
                 self.sess.abort_if_errors();
                 unreachable!()
@@ -277,20 +317,28 @@ impl<'a> Context<'a> {
     // read the metadata from it if `*slot` is `None`. If the metadata couldn't
     // be read, it is assumed that the file isn't a valid rust library (no
     // errors are emitted).
-    //
-    // FIXME(#10786): for an optimization, we only read one of the library's
-    //                metadata sections. In theory we should read both, but
-    //                reading dylib metadata is quite slow.
     fn extract_one(&mut self, m: HashSet<Path>, flavor: &str,
                    slot: &mut Option<MetadataBlob>) -> Option<Path> {
         let mut ret = None::<Path>;
         let mut error = 0;
 
+        if slot.is_some() {
+            // FIXME(#10786): for an optimization, we only read one of the
+            //                library's metadata sections. In theory we should
+            //                read both, but reading dylib metadata is quite
+            //                slow.
+            if m.len() == 0 {
+                return None
+            } else if m.len() == 1 {
+                return Some(m.move_iter().next().unwrap())
+            }
+        }
+
         for lib in m.move_iter() {
             info!("{} reading metadata from: {}", flavor, lib.display());
             let metadata = match get_metadata_section(self.os, &lib) {
                 Ok(blob) => {
-                    if self.crate_matches(blob.as_slice()) {
+                    if self.crate_matches(blob.as_slice(), &lib) {
                         blob
                     } else {
                         info!("metadata mismatch");
@@ -325,7 +373,7 @@ impl<'a> Context<'a> {
         return if error > 0 {None} else {ret}
     }
 
-    fn crate_matches(&mut self, crate_data: &[u8]) -> bool {
+    fn crate_matches(&mut self, crate_data: &[u8], libpath: &Path) -> bool {
         match decoder::maybe_get_crate_id(crate_data) {
             Some(ref id) if self.crate_id.matches(id) => {}
             _ => return false
@@ -337,7 +385,7 @@ impl<'a> Context<'a> {
             None => true,
             Some(myhash) => {
                 if *myhash != hash {
-                    self.rejected_via_hash = true;
+                    self.rejected_via_hash.push(HashMismatch{ path: libpath.clone() });
                     false
                 } else {
                     true
@@ -438,8 +486,9 @@ fn get_metadata_section_imp(os: Os, filename: &Path) -> Result<MetadataBlob, ~st
         };
         let si = mk_section_iter(of.llof);
         while llvm::LLVMIsSectionIteratorAtEnd(of.llof, si.llsi) == False {
-            let name_buf = llvm::LLVMGetSectionName(si.llsi);
-            let name = str::raw::from_c_str(name_buf);
+            let mut name_buf = ptr::null();
+            let name_len = llvm::LLVMRustGetSectionName(si.llsi, &mut name_buf);
+            let name = str::raw::from_buf_len(name_buf as *u8, name_len as uint);
             debug!("get_metadata_section: name {}", name);
             if read_meta_section_name(os) == name {
                 let cbuf = llvm::LLVMGetSectionContents(si.llsi);
@@ -453,14 +502,17 @@ fn get_metadata_section_imp(os: Os, filename: &Path) -> Result<MetadataBlob, ~st
                 let version_ok = slice::raw::buf_as_slice(cvbuf, minsz,
                     |buf0| buf0 == encoder::metadata_encoding_version);
                 if !version_ok { return Err(format!("incompatible metadata version found: '{}'",
-                                                    filename.display()));}
+                                                    filename.display())); }
 
                 let cvbuf1 = cvbuf.offset(vlen as int);
                 debug!("inflating {} bytes of compressed metadata",
                        csz - vlen);
                 slice::raw::buf_as_slice(cvbuf1, csz-vlen, |bytes| {
-                    let inflated = flate::inflate_bytes(bytes);
-                    found = Ok(MetadataVec(inflated));
+                    match flate::inflate_bytes(bytes) {
+                        Some(inflated) => found = Ok(MetadataVec(inflated)),
+                        None => found = Err(format!("failed to decompress metadata for: '{}'",
+                                                    filename.display()))
+                    }
                 });
                 if found.is_ok() {
                     return found;

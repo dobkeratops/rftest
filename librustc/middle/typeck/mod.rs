@@ -59,7 +59,7 @@ independently:
 
 */
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use driver::session;
 
@@ -72,7 +72,6 @@ use util::nodemap::{DefIdMap, FnvHashMap};
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use collections::List;
 use syntax::codemap::Span;
 use syntax::print::pprust::*;
 use syntax::{ast, ast_map, abi};
@@ -109,49 +108,49 @@ pub enum MethodOrigin {
 #[deriving(Clone, Encodable, Decodable)]
 pub struct MethodParam {
     // the trait containing the method to be invoked
-    trait_id: ast::DefId,
+    pub trait_id: ast::DefId,
 
     // index of the method to be invoked amongst the trait's methods
-    method_num: uint,
+    pub method_num: uint,
 
     // index of the type parameter (from those that are in scope) that is
     // the type of the receiver
-    param_num: param_index,
+    pub param_num: param_index,
 
     // index of the bound for this type parameter which specifies the trait
-    bound_num: uint,
+    pub bound_num: uint,
 }
 
 // details for a method invoked with a receiver whose type is an object
 #[deriving(Clone, Encodable, Decodable)]
 pub struct MethodObject {
     // the (super)trait containing the method to be invoked
-    trait_id: ast::DefId,
+    pub trait_id: ast::DefId,
 
     // the actual base trait id of the object
-    object_trait_id: ast::DefId,
+    pub object_trait_id: ast::DefId,
 
     // index of the method to be invoked amongst the trait's methods
-    method_num: uint,
+    pub method_num: uint,
 
     // index into the actual runtime vtable.
     // the vtable is formed by concatenating together the method lists of
     // the base object trait and all supertraits;  this is the index into
     // that vtable
-    real_index: uint,
+    pub real_index: uint,
 }
 
 #[deriving(Clone)]
 pub struct MethodCallee {
-    origin: MethodOrigin,
-    ty: ty::t,
-    substs: ty::substs
+    pub origin: MethodOrigin,
+    pub ty: ty::t,
+    pub substs: ty::substs
 }
 
 #[deriving(Clone, Eq, TotalEq, Hash, Show)]
 pub struct MethodCall {
-    expr_id: ast::NodeId,
-    autoderef: u32
+    pub expr_id: ast::NodeId,
+    pub autoderef: u32
 }
 
 impl MethodCall {
@@ -225,9 +224,9 @@ pub type vtable_map = @RefCell<FnvHashMap<MethodCall, vtable_res>>;
 #[deriving(Clone)]
 pub struct impl_res {
     // resolutions for any bounded params on the trait definition
-    trait_vtables: vtable_res,
+    pub trait_vtables: vtable_res,
     // resolutions for the trait /itself/ (and for supertraits)
-    self_vtables: vtable_param_res
+    pub self_vtables: vtable_param_res
 }
 
 impl Repr for impl_res {
@@ -259,21 +258,12 @@ pub fn write_substs_to_tcx(tcx: &ty::ctxt,
                            substs: Vec<ty::t> ) {
     if substs.len() > 0u {
         debug!("write_substs_to_tcx({}, {:?})", node_id,
-               substs.map(|t| ppaux::ty_to_str(tcx, *t)));
+               substs.iter().map(|t| ppaux::ty_to_str(tcx, *t)).collect::<Vec<~str>>());
         assert!(substs.iter().all(|t| !ty::type_needs_infer(*t)));
 
         tcx.node_type_substs.borrow_mut().insert(node_id, substs);
     }
 }
-pub fn write_tpt_to_tcx(tcx: &ty::ctxt,
-                        node_id: ast::NodeId,
-                        tpt: &ty::ty_param_substs_and_ty) {
-    write_ty_to_tcx(tcx, node_id, tpt.ty);
-    if !tpt.substs.tps.is_empty() {
-        write_substs_to_tcx(tcx, node_id, tpt.substs.tps.clone());
-    }
-}
-
 pub fn lookup_def_tcx(tcx:&ty::ctxt, sp: Span, id: ast::NodeId) -> ast::Def {
     match tcx.def_map.borrow().find(&id) {
         Some(&x) => x,
@@ -327,7 +317,7 @@ pub fn require_same_types(tcx: &ty::ctxt,
 
 // a list of mapping from in-scope-region-names ("isr") to the
 // corresponding ty::Region
-pub type isr_alist = @List<(ty::BoundRegion, ty::Region)>;
+pub type isr_alist = @Vec<(ty::BoundRegion, ty::Region)>;
 
 trait get_region<'a, T:'static> {
     fn get(&'a self, br: ty::BoundRegion) -> ty::Region;
@@ -368,7 +358,7 @@ fn check_main_fn_ty(ccx: &CrateCtxt,
             }
             let se_ty = ty::mk_bare_fn(tcx, ty::BareFnTy {
                 purity: ast::ImpureFn,
-                abis: abi::AbiSet::Rust(),
+                abi: abi::Rust,
                 sig: ty::FnSig {
                     binder_id: main_id,
                     inputs: Vec::new(),
@@ -414,7 +404,7 @@ fn check_start_fn_ty(ccx: &CrateCtxt,
 
             let se_ty = ty::mk_bare_fn(tcx, ty::BareFnTy {
                 purity: ast::ImpureFn,
-                abis: abi::AbiSet::Rust(),
+                abi: abi::Rust,
                 sig: ty::FnSig {
                     binder_id: start_id,
                     inputs: vec!(
@@ -441,7 +431,7 @@ fn check_start_fn_ty(ccx: &CrateCtxt,
 fn check_for_entry_fn(ccx: &CrateCtxt) {
     let tcx = ccx.tcx;
     if !tcx.sess.building_library.get() {
-        match tcx.sess.entry_fn.get() {
+        match *tcx.sess.entry_fn.borrow() {
           Some((id, sp)) => match tcx.sess.entry_type.get() {
               Some(session::EntryMain) => check_main_fn_ty(ccx, id, sp),
               Some(session::EntryStart) => check_start_fn_ty(ccx, id, sp),

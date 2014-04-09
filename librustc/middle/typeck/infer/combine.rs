@@ -67,7 +67,7 @@ use std::result;
 use syntax::ast::{Onceness, Purity};
 use syntax::ast;
 use syntax::owned_slice::OwnedSlice;
-use syntax::abi::AbiSet;
+use syntax::abi;
 
 pub trait Combine {
     fn infcx<'a>(&'a self) -> &'a InferCtxt<'a>;
@@ -195,10 +195,10 @@ pub trait Combine {
     fn bare_fn_tys(&self, a: &ty::BareFnTy,
                    b: &ty::BareFnTy) -> cres<ty::BareFnTy> {
         let purity = if_ok!(self.purities(a.purity, b.purity));
-        let abi = if_ok!(self.abis(a.abis, b.abis));
+        let abi = if_ok!(self.abi(a.abi, b.abi));
         let sig = if_ok!(self.fn_sigs(&a.sig, &b.sig));
         Ok(ty::BareFnTy {purity: purity,
-                abis: abi,
+                abi: abi,
                 sig: sig})
     }
 
@@ -248,7 +248,7 @@ pub trait Combine {
 
     fn purities(&self, a: Purity, b: Purity) -> cres<Purity>;
 
-    fn abis(&self, a: AbiSet, b: AbiSet) -> cres<AbiSet> {
+    fn abi(&self, a: abi::Abi, b: abi::Abi) -> cres<abi::Abi> {
         if a == b {
             Ok(a)
         } else {
@@ -331,9 +331,9 @@ pub trait Combine {
 }
 
 pub struct CombineFields<'a> {
-    infcx: &'a InferCtxt<'a>,
-    a_is_expected: bool,
-    trace: TypeTrace,
+    pub infcx: &'a InferCtxt<'a>,
+    pub a_is_expected: bool,
+    pub trace: TypeTrace,
 }
 
 pub fn expected_found<C:Combine,T>(
@@ -371,28 +371,6 @@ pub fn eq_regions<C:Combine>(this: &C, a: ty::Region, b: ty::Region)
             }
         }).to_ures()
     })
-}
-
-pub fn eq_opt_regions<C:Combine>(
-    this: &C,
-    a: Option<ty::Region>,
-    b: Option<ty::Region>) -> cres<Option<ty::Region>> {
-
-    match (a, b) {
-        (None, None) => Ok(None),
-        (Some(a), Some(b)) => eq_regions(this, a, b).then(|| Ok(Some(a))),
-        (_, _) => {
-            // If these two substitutions are for the same type (and
-            // they should be), then the type should either
-            // consistently have a region parameter or not have a
-            // region parameter.
-            this.infcx().tcx.sess.bug(
-                format!("substitution a had opt_region {} and \
-                      b had opt_region {}",
-                     a.inf_str(this.infcx()),
-                     b.inf_str(this.infcx())));
-        }
-    }
 }
 
 pub fn super_fn_sigs<C:Combine>(this: &C, a: &ty::FnSig, b: &ty::FnSig) -> cres<ty::FnSig> {

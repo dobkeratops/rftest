@@ -31,12 +31,13 @@
  * See doc.rs for more comments.
  */
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use back::abi;
 use lib::llvm::{ValueRef, llvm};
 use lib;
 use metadata::csearch;
+use middle::lang_items::MallocFnLangItem;
 use middle::trans::_match;
 use middle::trans::adt;
 use middle::trans::asm;
@@ -67,7 +68,7 @@ use middle::typeck::MethodCall;
 use util::common::indenter;
 use util::ppaux::Repr;
 use util::nodemap::NodeMap;
-use middle::trans::machine::llsize_of;
+use middle::trans::machine::{llsize_of, llsize_of_alloc};
 use middle::trans::type_::Type;
 
 use std::slice;
@@ -426,8 +427,7 @@ fn trans_datum_unadjusted<'a>(bcx: &'a Block<'a>,
             // `trans_rvalue_dps_unadjusted`.)
             let box_ty = expr_ty(bcx, expr);
             let contents_ty = expr_ty(bcx, contents);
-            let heap = heap_exchange;
-            return trans_boxed_expr(bcx, box_ty, contents, contents_ty, heap)
+            trans_uniq_expr(bcx, box_ty, contents, contents_ty)
         }
         ast::ExprLit(lit) => trans_immediate_lit(bcx, expr, (*lit).clone()),
         ast::ExprBinary(op, lhs, rhs) => {
@@ -504,7 +504,7 @@ fn trans_index<'a>(bcx: &'a Block<'a>,
         }
     };
 
-    let vt = tvec::vec_types(bcx, base_datum.ty);
+    let vt = tvec::vec_types(bcx, ty::sequence_element_type(bcx.tcx(), base_datum.ty));
     base::maybe_name_value(bcx.ccx(), vt.llunit_size, "unit_sz");
 
     let (base, len) = base_datum.get_vec_base_and_len(bcx);
@@ -994,7 +994,7 @@ fn trans_rec_or_struct<'a>(
     with_field_tys(tcx, ty, Some(id), |discr, field_tys| {
         let mut need_base = slice::from_elem(field_tys.len(), true);
 
-        let numbered_fields = fields.map(|field| {
+        let numbered_fields = fields.iter().map(|field| {
             let opt_pos =
                 field_tys.iter().position(|field_ty|
                                           field_ty.ident.name == field.ident.node.name);
@@ -1008,7 +1008,7 @@ fn trans_rec_or_struct<'a>(
                                       "Couldn't find field in struct type")
                 }
             }
-        });
+        }).collect::<Vec<_>>();
         let optbase = match base {
             Some(base_expr) => {
                 let mut leftovers = Vec::new();
@@ -1029,7 +1029,7 @@ fn trans_rec_or_struct<'a>(
         };
 
         let repr = adt::represent_type(bcx.ccx(), ty);
-        trans_adt(bcx, repr, discr, numbered_fields, optbase, dest)
+        trans_adt(bcx, repr, discr, numbered_fields.as_slice(), optbase, dest)
     })
 }
 
@@ -1175,10 +1175,10 @@ fn trans_unary<'a>(bcx: &'a Block<'a>,
             immediate_rvalue_bcx(bcx, llneg, un_ty).to_expr_datumblock()
         }
         ast::UnBox => {
-            trans_boxed_expr(bcx, un_ty, sub_expr, expr_ty(bcx, sub_expr), heap_managed)
+            trans_managed_expr(bcx, un_ty, sub_expr, expr_ty(bcx, sub_expr))
         }
         ast::UnUniq => {
-            trans_boxed_expr(bcx, un_ty, sub_expr, expr_ty(bcx, sub_expr), heap_exchange)
+            trans_uniq_expr(bcx, un_ty, sub_expr, expr_ty(bcx, sub_expr))
         }
         ast::UnDeref => {
             let datum = unpack_datum!(bcx, trans(bcx, sub_expr));
@@ -1187,35 +1187,52 @@ fn trans_unary<'a>(bcx: &'a Block<'a>,
     }
 }
 
-fn trans_boxed_expr<'a>(bcx: &'a Block<'a>,
-                        box_ty: ty::t,
-                        contents: &ast::Expr,
-                        contents_ty: ty::t,
-                        heap: heap)
+fn trans_uniq_expr<'a>(bcx: &'a Block<'a>,
+                       box_ty: ty::t,
+                       contents: &ast::Expr,
+                       contents_ty: ty::t)
                         -> DatumBlock<'a, Expr> {
-    let _icx = push_ctxt("trans_boxed_expr");
+    let _icx = push_ctxt("trans_uniq_expr");
     let fcx = bcx.fcx;
-    if heap == heap_exchange {
-        let llty = type_of::type_of(bcx.ccx(), contents_ty);
-        let size = llsize_of(bcx.ccx(), llty);
-        let Result { bcx: bcx, val: val } = malloc_raw_dyn(bcx, contents_ty,
-                                                           heap_exchange, size);
+    let llty = type_of::type_of(bcx.ccx(), contents_ty);
+    let size = llsize_of(bcx.ccx(), llty);
+    // We need to a make a pointer type because box_ty is ty_bot
+    // if content_ty is, e.g. ~fail!().
+    let real_box_ty = ty::mk_uniq(bcx.tcx(), contents_ty);
+    let Result { bcx, val } = malloc_raw_dyn(bcx, real_box_ty, size);
+    // Unique boxes do not allocate for zero-size types. The standard library may assume
+    // that `free` is never called on the pointer returned for `~ZeroSizeType`.
+    let bcx = if llsize_of_alloc(bcx.ccx(), llty) == 0 {
+        trans_into(bcx, contents, SaveIn(val))
+    } else {
         let custom_cleanup_scope = fcx.push_custom_cleanup_scope();
         fcx.schedule_free_value(cleanup::CustomScope(custom_cleanup_scope),
-                                val, heap_exchange);
+                                val, cleanup::HeapExchange);
         let bcx = trans_into(bcx, contents, SaveIn(val));
         fcx.pop_custom_cleanup_scope(custom_cleanup_scope);
-        immediate_rvalue_bcx(bcx, val, box_ty).to_expr_datumblock()
-    } else {
-        let base::MallocResult { bcx, smart_ptr: bx, body } =
-            base::malloc_general(bcx, contents_ty, heap);
-        let custom_cleanup_scope = fcx.push_custom_cleanup_scope();
-        fcx.schedule_free_value(cleanup::CustomScope(custom_cleanup_scope),
-                                bx, heap);
-        let bcx = trans_into(bcx, contents, SaveIn(body));
-        fcx.pop_custom_cleanup_scope(custom_cleanup_scope);
-        immediate_rvalue_bcx(bcx, bx, box_ty).to_expr_datumblock()
-    }
+        bcx
+    };
+    immediate_rvalue_bcx(bcx, val, box_ty).to_expr_datumblock()
+}
+
+fn trans_managed_expr<'a>(bcx: &'a Block<'a>,
+                          box_ty: ty::t,
+                          contents: &ast::Expr,
+                          contents_ty: ty::t)
+                          -> DatumBlock<'a, Expr> {
+    let _icx = push_ctxt("trans_managed_expr");
+    let fcx = bcx.fcx;
+    let ty = type_of::type_of(bcx.ccx(), contents_ty);
+    let Result {bcx, val: bx} = malloc_raw_dyn_managed(bcx, contents_ty, MallocFnLangItem,
+                                                        llsize_of(bcx.ccx(), ty));
+    let body = GEPi(bcx, bx, [0u, abi::box_field_body]);
+
+    let custom_cleanup_scope = fcx.push_custom_cleanup_scope();
+    fcx.schedule_free_value(cleanup::CustomScope(custom_cleanup_scope),
+                            bx, cleanup::HeapManaged);
+    let bcx = trans_into(bcx, contents, SaveIn(body));
+    fcx.pop_custom_cleanup_scope(custom_cleanup_scope);
+    immediate_rvalue_bcx(bcx, bx, box_ty).to_expr_datumblock()
 }
 
 fn trans_addr_of<'a>(bcx: &'a Block<'a>,
@@ -1236,31 +1253,22 @@ fn trans_gc<'a>(mut bcx: &'a Block<'a>,
                 -> &'a Block<'a> {
     let contents_ty = expr_ty(bcx, contents);
     let box_ty = ty::mk_box(bcx.tcx(), contents_ty);
-    let expr_ty = expr_ty(bcx, expr);
 
-    let addr = match dest {
-        Ignore => {
-            return trans_boxed_expr(bcx,
-                                    box_ty,
-                                    contents,
-                                    contents_ty,
-                                    heap_managed).bcx
+    let contents_datum = unpack_datum!(bcx, trans_managed_expr(bcx,
+                                                               box_ty,
+                                                               contents,
+                                                               contents_ty));
+
+    match dest {
+        Ignore => bcx,
+        SaveIn(addr) => {
+            let expr_ty = expr_ty(bcx, expr);
+            let repr = adt::represent_type(bcx.ccx(), expr_ty);
+            adt::trans_start_init(bcx, repr, addr, 0);
+            let field_dest = adt::trans_field_ptr(bcx, repr, addr, 0, 0);
+            contents_datum.store_to(bcx, field_dest)
         }
-        SaveIn(addr) => addr,
-    };
-
-    let repr = adt::represent_type(bcx.ccx(), expr_ty);
-    adt::trans_start_init(bcx, repr, addr, 0);
-    let field_dest = adt::trans_field_ptr(bcx, repr, addr, 0, 0);
-    let contents_datum = unpack_datum!(bcx, trans_boxed_expr(bcx,
-                                                             box_ty,
-                                                             contents,
-                                                             contents_ty,
-                                                             heap_managed));
-    bcx = contents_datum.store_to(bcx, field_dest);
-
-    // Next, wrap it up in the struct.
-    bcx
+    }
 }
 
 // Important to get types for both lhs and rhs, because one might be _|_
@@ -1794,11 +1802,15 @@ fn deref_once<'a>(bcx: &'a Block<'a>,
             RvalueExpr(Rvalue { mode: ByRef }) => {
                 let scope = cleanup::temporary_scope(bcx.tcx(), expr.id);
                 let ptr = Load(bcx, datum.val);
-                bcx.fcx.schedule_free_value(scope, ptr, heap_exchange);
+                if !type_is_zero_size(bcx.ccx(), content_ty) {
+                    bcx.fcx.schedule_free_value(scope, ptr, cleanup::HeapExchange);
+                }
             }
             RvalueExpr(Rvalue { mode: ByValue }) => {
                 let scope = cleanup::temporary_scope(bcx.tcx(), expr.id);
-                bcx.fcx.schedule_free_value(scope, datum.val, heap_exchange);
+                if !type_is_zero_size(bcx.ccx(), content_ty) {
+                    bcx.fcx.schedule_free_value(scope, datum.val, cleanup::HeapExchange);
+                }
             }
             LvalueExpr => { }
         }

@@ -309,7 +309,7 @@ pub fn check_expr(cx: &mut Context, e: &Expr) {
             let target_ty = ty::expr_ty(cx.tcx, e);
             check_trait_cast(cx, source_ty, target_ty, source.span);
         }
-        ExprRepeat(element, count_expr, _) => {
+        ExprRepeat(element, count_expr) => {
             let count = ty::eval_repeat_count(cx.tcx, count_expr);
             if count > 1 {
                 let element_ty = ty::expr_ty(cx.tcx, element);
@@ -447,17 +447,6 @@ fn check_copy(cx: &Context, ty: ty::t, sp: Span, reason: &str) {
             sp, format!("copying a value of non-copyable type `{}`",
                      ty_to_str(cx.tcx, ty)));
         cx.tcx.sess.span_note(sp, format!("{}", reason));
-    }
-}
-
-pub fn check_send(cx: &Context, ty: ty::t, sp: Span) -> bool {
-    if !ty::type_is_sendable(cx.tcx, ty) {
-        cx.tcx.sess.span_err(
-            sp, format!("value has non-sendable type `{}`",
-                     ty_to_str(cx.tcx, ty)));
-        false
-    } else {
-        true
     }
 }
 

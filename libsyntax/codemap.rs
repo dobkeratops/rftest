@@ -33,13 +33,13 @@ pub trait Pos {
 /// A byte offset. Keep this small (currently 32-bits), as AST contains
 /// a lot of them.
 #[deriving(Clone, Eq, TotalEq, Hash, Ord, Show)]
-pub struct BytePos(u32);
+pub struct BytePos(pub u32);
 
 /// A character offset. Because of multibyte utf8 characters, a byte offset
 /// is not equivalent to a character offset. The CodeMap will convert BytePos
 /// values to CharPos values as necessary.
 #[deriving(Eq, Hash, Ord, Show)]
-pub struct CharPos(uint);
+pub struct CharPos(pub uint);
 
 // FIXME: Lots of boilerplate in these impls, but so far my attempts to fix
 // have been unsuccessful
@@ -86,17 +86,19 @@ to the original source.
 */
 #[deriving(Clone, Show, Hash)]
 pub struct Span {
-    lo: BytePos,
-    hi: BytePos,
-    expn_info: Option<@ExpnInfo>
+    pub lo: BytePos,
+    pub hi: BytePos,
+    /// Information about where the macro came from, if this piece of
+    /// code was created by a macro expansion.
+    pub expn_info: Option<@ExpnInfo>
 }
 
 pub static DUMMY_SP: Span = Span { lo: BytePos(0), hi: BytePos(0), expn_info: None };
 
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
 pub struct Spanned<T> {
-    node: T,
-    span: Span,
+    pub node: T,
+    pub span: Span,
 }
 
 impl Eq for Span {
@@ -108,16 +110,16 @@ impl Eq for Span {
 
 impl TotalEq for Span {}
 
-impl<S:Encoder> Encodable<S> for Span {
+impl<S:Encoder<E>, E> Encodable<S, E> for Span {
     /* Note #1972 -- spans are encoded but not decoded */
-    fn encode(&self, s: &mut S) {
+    fn encode(&self, s: &mut S) -> Result<(), E> {
         s.emit_nil()
     }
 }
 
-impl<D:Decoder> Decodable<D> for Span {
-    fn decode(_d: &mut D) -> Span {
-        DUMMY_SP
+impl<D:Decoder<E>, E> Decodable<D, E> for Span {
+    fn decode(_d: &mut D) -> Result<Span, E> {
+        Ok(DUMMY_SP)
     }
 }
 
@@ -141,63 +143,84 @@ pub fn mk_sp(lo: BytePos, hi: BytePos) -> Span {
 /// A source code location used for error reporting
 pub struct Loc {
     /// Information about the original source
-    file: Rc<FileMap>,
+    pub file: Rc<FileMap>,
     /// The (1-based) line number
-    line: uint,
+    pub line: uint,
     /// The (0-based) column offset
-    col: CharPos
+    pub col: CharPos
 }
 
 /// A source code location used as the result of lookup_char_pos_adj
 // Actually, *none* of the clients use the filename *or* file field;
 // perhaps they should just be removed.
 pub struct LocWithOpt {
-    filename: FileName,
-    line: uint,
-    col: CharPos,
-    file: Option<Rc<FileMap>>,
+    pub filename: FileName,
+    pub line: uint,
+    pub col: CharPos,
+    pub file: Option<Rc<FileMap>>,
 }
 
 // used to be structural records. Better names, anyone?
-pub struct FileMapAndLine {fm: Rc<FileMap>, line: uint}
-pub struct FileMapAndBytePos {fm: Rc<FileMap>, pos: BytePos}
+pub struct FileMapAndLine { pub fm: Rc<FileMap>, pub line: uint }
+pub struct FileMapAndBytePos { pub fm: Rc<FileMap>, pub pos: BytePos }
 
+/// The syntax with which a macro was invoked.
 #[deriving(Clone, Hash, Show)]
 pub enum MacroFormat {
-    // e.g. #[deriving(...)] <item>
+    /// e.g. #[deriving(...)] <item>
     MacroAttribute,
-    // e.g. `format!()`
+    /// e.g. `format!()`
     MacroBang
 }
 
 #[deriving(Clone, Hash, Show)]
 pub struct NameAndSpan {
-    name: ~str,
-    // the format with which the macro was invoked.
-    format: MacroFormat,
-    span: Option<Span>
+    /// The name of the macro that was invoked to create the thing
+    /// with this Span.
+    pub name: ~str,
+    /// The format with which the macro was invoked.
+    pub format: MacroFormat,
+    /// The span of the macro definition itself. The macro may not
+    /// have a sensible definition span (e.g. something defined
+    /// completely inside libsyntax) in which case this is None.
+    pub span: Option<Span>
 }
 
 /// Extra information for tracking macro expansion of spans
 #[deriving(Hash, Show)]
 pub struct ExpnInfo {
-    call_site: Span,
-    callee: NameAndSpan
+    /// The location of the actual macro invocation, e.g. `let x =
+    /// foo!();`
+    ///
+    /// This may recursively refer to other macro invocations, e.g. if
+    /// `foo!()` invoked `bar!()` internally, and there was an
+    /// expression inside `bar!`; the call_site of the expression in
+    /// the expansion would point to the `bar!` invocation; that
+    /// call_site span would have its own ExpnInfo, with the call_site
+    /// pointing to the `foo!` invocation.
+    pub call_site: Span,
+    /// Information about the macro and its definition.
+    ///
+    /// The `callee` of the inner expression in the `call_site`
+    /// example would point to the `macro_rules! bar { ... }` and that
+    /// of the `bar!()` invocation would point to the `macro_rules!
+    /// foo { ... }`.
+    pub callee: NameAndSpan
 }
 
 pub type FileName = ~str;
 
 pub struct FileLines {
-    file: Rc<FileMap>,
-    lines: Vec<uint>
+    pub file: Rc<FileMap>,
+    pub lines: Vec<uint>
 }
 
 /// Identifies an offset of a multi-byte character in a FileMap
 pub struct MultiByteChar {
     /// The absolute offset of the character in the CodeMap
-    pos: BytePos,
+    pub pos: BytePos,
     /// The number of bytes, >=2
-    bytes: uint,
+    pub bytes: uint,
 }
 
 /// A single source in the CodeMap
@@ -205,15 +228,15 @@ pub struct FileMap {
     /// The name of the file that the source came from, source that doesn't
     /// originate from files has names between angle brackets by convention,
     /// e.g. `<anon>`
-    name: FileName,
+    pub name: FileName,
     /// The complete source code
-    src: ~str,
+    pub src: ~str,
     /// The start position of this source in the CodeMap
-    start_pos: BytePos,
+    pub start_pos: BytePos,
     /// Locations of lines beginnings in the source code
-    lines: RefCell<Vec<BytePos> >,
+    pub lines: RefCell<Vec<BytePos> >,
     /// Locations of multi-byte characters in the source code
-    multibyte_chars: RefCell<Vec<MultiByteChar> >,
+    pub multibyte_chars: RefCell<Vec<MultiByteChar> >,
 }
 
 impl FileMap {
@@ -261,7 +284,7 @@ impl FileMap {
 }
 
 pub struct CodeMap {
-    files: RefCell<Vec<Rc<FileMap>>>
+    pub files: RefCell<Vec<Rc<FileMap>>>
 }
 
 impl CodeMap {

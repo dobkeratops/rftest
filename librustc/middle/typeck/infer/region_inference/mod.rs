@@ -104,8 +104,8 @@ pub enum RegionResolutionError {
 /// 'a and 'b together inside a SameRegions struct
 #[deriving(Clone)]
 pub struct SameRegions {
-    scope_id: ast::NodeId,
-    regions: Vec<BoundRegion>
+    pub scope_id: ast::NodeId,
+    pub regions: Vec<BoundRegion>
 }
 
 impl SameRegions {
@@ -1117,16 +1117,32 @@ impl<'a> RegionVarBindings<'a> {
     {
         // Errors in expanding nodes result from a lower-bound that is
         // not contained by an upper-bound.
-        let (lower_bounds, lower_dup) =
+        let (mut lower_bounds, lower_dup) =
             self.collect_concrete_regions(graph, var_data, node_idx,
                                           graph::Incoming, dup_vec);
-        let (upper_bounds, upper_dup) =
+        let (mut upper_bounds, upper_dup) =
             self.collect_concrete_regions(graph, var_data, node_idx,
                                           graph::Outgoing, dup_vec);
 
         if lower_dup || upper_dup {
             return;
         }
+
+        // We place free regions first because we are special casing
+        // SubSupConflict(ReFree, ReFree) when reporting error, and so
+        // the user will more likely get a specific suggestion.
+        fn free_regions_first(a: &RegionAndOrigin,
+                              b: &RegionAndOrigin)
+                              -> Ordering {
+            match (a.region, b.region) {
+                (ReFree(..), ReFree(..)) => Equal,
+                (ReFree(..), _) => Less,
+                (_, ReFree(..)) => Greater,
+                (_, _) => Equal,
+            }
+        }
+        lower_bounds.sort_by(|a, b| { free_regions_first(a, b) });
+        upper_bounds.sort_by(|a, b| { free_regions_first(a, b) });
 
         for lower_bound in lower_bounds.iter() {
             for upper_bound in upper_bounds.iter() {
@@ -1148,8 +1164,14 @@ impl<'a> RegionVarBindings<'a> {
             format!("collect_error_for_expanding_node() could not find error \
                   for var {:?}, lower_bounds={}, upper_bounds={}",
                  node_idx,
-                 lower_bounds.map(|x| x.region).repr(self.tcx),
-                 upper_bounds.map(|x| x.region).repr(self.tcx)));
+                 lower_bounds.iter()
+                             .map(|x| x.region)
+                             .collect::<Vec<ty::Region>>()
+                             .repr(self.tcx),
+                 upper_bounds.iter()
+                             .map(|x| x.region)
+                             .collect::<Vec<ty::Region>>()
+                             .repr(self.tcx)));
     }
 
     fn collect_error_for_contracting_node(
@@ -1193,7 +1215,10 @@ impl<'a> RegionVarBindings<'a> {
             format!("collect_error_for_contracting_node() could not find error \
                   for var {:?}, upper_bounds={}",
                  node_idx,
-                 upper_bounds.map(|x| x.region).repr(self.tcx)));
+                 upper_bounds.iter()
+                             .map(|x| x.region)
+                             .collect::<Vec<ty::Region>>()
+                             .repr(self.tcx)));
     }
 
     fn collect_concrete_regions(&self,

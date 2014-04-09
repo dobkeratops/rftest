@@ -70,7 +70,7 @@
 </c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c40>//&nbsp;convert&nbsp;a&nbsp;vector&nbsp;of&nbsp;strings&nbsp;to&nbsp;a&nbsp;vector&nbsp;of&nbsp;ast::Ident's
 </c40><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c30>fn&nbsp;strs_to_idents</c30><c4>(</c4><c0>ids:&nbsp;Vec&lt;&amp;str&gt;&nbsp;</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;Vec&lt;ast::Ident&gt;&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;ids.map</c0><c4>(</c4><c0>|u|&nbsp;token::str_to_ident</c0><c4>(</c4><c0>*u</c0><c4>))</c4><c0>
+</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;ids.iter</c0><c4>()</c4><c0>.map</c0><c4>(</c4><c0>|u|&nbsp;token::str_to_ident</c0><c4>(</c4><c0>*u</c0><c4>))</c4><c0>.collect</c0><c4>()</c4><c0>
 </c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c40>//&nbsp;does&nbsp;the&nbsp;given&nbsp;string&nbsp;match&nbsp;the&nbsp;pattern?&nbsp;whitespace&nbsp;in&nbsp;the&nbsp;first&nbsp;string

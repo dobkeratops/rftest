@@ -23,7 +23,7 @@
 //     but one TypeRef corresponds to many `ty::t`s; for instance, tup(int, int,
 //     int) and rec(x=int, y=int, z=int) will have the same TypeRef.
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use back::link::{mangle_exported_name};
 use back::{link, abi};
@@ -37,7 +37,6 @@ use lib;
 use metadata::{csearch, encoder};
 use middle::astencode;
 use middle::lang_items::{LangItem, ExchangeMallocFnLangItem, StartFnLangItem};
-use middle::lang_items::{MallocFnLangItem, ClosureExchangeMallocFnLangItem};
 use middle::trans::_match;
 use middle::trans::adt;
 use middle::trans::build::*;
@@ -72,18 +71,16 @@ use util::sha2::Sha256;
 use util::nodemap::NodeMap;
 
 use arena::TypedArena;
+use libc::c_uint;
 use std::c_str::ToCStr;
 use std::cell::{Cell, RefCell};
-use std::libc::c_uint;
 use std::local_data;
 use syntax::abi::{X86, X86_64, Arm, Mips, Rust, RustIntrinsic};
-use syntax::ast_map::PathName;
 use syntax::ast_util::{local_def, is_local};
 use syntax::attr::AttrMetaMethods;
 use syntax::attr;
 use syntax::codemap::Span;
 use syntax::parse::token::InternedString;
-use syntax::parse::token;
 use syntax::visit::Visitor;
 use syntax::visit;
 use syntax::{ast, ast_util, ast_map};
@@ -246,6 +243,8 @@ fn get_extern_rust_fn(ccx: &CrateContext, inputs: &[ty::t], output: ty::t,
 pub fn decl_rust_fn(ccx: &CrateContext, has_env: bool,
                     inputs: &[ty::t], output: ty::t,
                     name: &str) -> ValueRef {
+    use middle::ty::{BrAnon, ReLateBound};
+
     let llfty = type_of_rust_fn(ccx, has_env, inputs, output);
     let llfn = decl_cdecl_fn(ccx.llmod, name, llfty, output);
 
@@ -265,7 +264,16 @@ pub fn decl_rust_fn(ccx: &CrateContext, has_env: bool,
                 unsafe {
                     llvm::LLVMAddAttribute(llarg, lib::llvm::NoAliasAttribute as c_uint);
                 }
-            }
+            },
+            // When a reference in an argument has no named lifetime, it's
+            // impossible for that reference to escape this function(ie, be
+            // returned).
+            ty::ty_rptr(ReLateBound(_, BrAnon(_)), _) => {
+                debug!("marking argument of {} as nocapture because of anonymous lifetime", name);
+                unsafe {
+                    llvm::LLVMAddAttribute(llarg, lib::llvm::NoCaptureAttribute as c_uint);
+                }
+            },
             _ => {
                 // For non-immediate arguments the callee gets its own copy of
                 // the value on the stack, so there are no aliases
@@ -327,118 +335,67 @@ pub fn at_box_body(bcx: &Block, body_t: ty::t, boxptr: ValueRef) -> ValueRef {
     GEPi(bcx, boxptr, [0u, abi::box_field_body])
 }
 
-// malloc_raw_dyn: allocates a box to contain a given type, but with a
-// potentially dynamic size.
-pub fn malloc_raw_dyn<'a>(
-                      bcx: &'a Block<'a>,
-                      t: ty::t,
-                      heap: heap,
-                      size: ValueRef)
-                      -> Result<'a> {
-    let _icx = push_ctxt("malloc_raw");
-    let ccx = bcx.ccx();
-
-    fn require_alloc_fn(bcx: &Block, t: ty::t, it: LangItem) -> ast::DefId {
-        let li = &bcx.tcx().lang_items;
-        match li.require(it) {
-            Ok(id) => id,
-            Err(s) => {
-                bcx.sess().fatal(format!("allocation of `{}` {}",
-                                         bcx.ty_to_str(t), s));
-            }
+fn require_alloc_fn(bcx: &Block, info_ty: ty::t, it: LangItem) -> ast::DefId {
+    match bcx.tcx().lang_items.require(it) {
+        Ok(id) => id,
+        Err(s) => {
+            bcx.sess().fatal(format!("allocation of `{}` {}",
+                                     bcx.ty_to_str(info_ty), s));
         }
     }
-
-    if heap == heap_exchange {
-        let llty_value = type_of::type_of(ccx, t);
-
-        // Allocate space:
-        let r = callee::trans_lang_call(
-            bcx,
-            require_alloc_fn(bcx, t, ExchangeMallocFnLangItem),
-            [size],
-            None);
-        rslt(r.bcx, PointerCast(r.bcx, r.val, llty_value.ptr_to()))
-    } else {
-        // we treat ~fn as @ here, which isn't ideal
-        let langcall = match heap {
-            heap_managed => {
-                require_alloc_fn(bcx, t, MallocFnLangItem)
-            }
-            heap_exchange_closure => {
-                require_alloc_fn(bcx, t, ClosureExchangeMallocFnLangItem)
-            }
-            _ => fail!("heap_exchange already handled")
-        };
-
-        // Grab the TypeRef type of box_ptr_ty.
-        let box_ptr_ty = ty::mk_box(bcx.tcx(), t);
-        let llty = type_of(ccx, box_ptr_ty);
-        let llalign = C_uint(ccx, llalign_of_min(ccx, llty) as uint);
-
-        // Allocate space:
-        let drop_glue = glue::get_drop_glue(ccx, t);
-        let r = callee::trans_lang_call(
-            bcx,
-            langcall,
-            [
-                PointerCast(bcx, drop_glue, Type::glue_fn(ccx, Type::i8p(ccx)).ptr_to()),
-                size,
-                llalign
-            ],
-            None);
-        rslt(r.bcx, PointerCast(r.bcx, r.val, llty))
-    }
 }
 
-// malloc_raw: expects an unboxed type and returns a pointer to
-// enough space for a box of that type.  This includes a rust_opaque_box
-// header.
-pub fn malloc_raw<'a>(bcx: &'a Block<'a>, t: ty::t, heap: heap)
-                  -> Result<'a> {
-    let ty = type_of(bcx.ccx(), t);
-    let size = llsize_of(bcx.ccx(), ty);
-    malloc_raw_dyn(bcx, t, heap, size)
-}
+// The following malloc_raw_dyn* functions allocate a box to contain
+// a given type, but with a potentially dynamic size.
 
-pub struct MallocResult<'a> {
-    bcx: &'a Block<'a>,
-    smart_ptr: ValueRef,
-    body: ValueRef
-}
-
-// malloc_general_dyn: usefully wraps malloc_raw_dyn; allocates a smart
-// pointer, and pulls out the body
-pub fn malloc_general_dyn<'a>(
-                          bcx: &'a Block<'a>,
-                          t: ty::t,
-                          heap: heap,
+pub fn malloc_raw_dyn<'a>(bcx: &'a Block<'a>,
+                          ptr_ty: ty::t,
                           size: ValueRef)
-                          -> MallocResult<'a> {
-    assert!(heap != heap_exchange);
-    let _icx = push_ctxt("malloc_general");
-    let Result {bcx: bcx, val: llbox} = malloc_raw_dyn(bcx, t, heap, size);
-    let body = GEPi(bcx, llbox, [0u, abi::box_field_body]);
+                          -> Result<'a> {
+    let _icx = push_ctxt("malloc_raw_exchange");
+    let ccx = bcx.ccx();
 
-    MallocResult {
-        bcx: bcx,
-        smart_ptr: llbox,
-        body: body,
-    }
+    // Allocate space:
+    let r = callee::trans_lang_call(bcx,
+        require_alloc_fn(bcx, ptr_ty, ExchangeMallocFnLangItem),
+        [size],
+        None);
+
+    let llty_ptr = type_of::type_of(ccx, ptr_ty);
+    rslt(r.bcx, PointerCast(r.bcx, r.val, llty_ptr))
 }
 
-pub fn malloc_general<'a>(bcx: &'a Block<'a>, t: ty::t, heap: heap)
-                      -> MallocResult<'a> {
-    let ty = type_of(bcx.ccx(), t);
-    assert!(heap != heap_exchange);
-    malloc_general_dyn(bcx, t, heap, llsize_of(bcx.ccx(), ty))
+pub fn malloc_raw_dyn_managed<'a>(
+                      bcx: &'a Block<'a>,
+                      t: ty::t,
+                      alloc_fn: LangItem,
+                      size: ValueRef)
+                      -> Result<'a> {
+    let _icx = push_ctxt("malloc_raw_managed");
+    let ccx = bcx.ccx();
+
+    let langcall = require_alloc_fn(bcx, t, alloc_fn);
+
+    // Grab the TypeRef type of box_ptr_ty.
+    let box_ptr_ty = ty::mk_box(bcx.tcx(), t);
+    let llty = type_of(ccx, box_ptr_ty);
+    let llalign = C_uint(ccx, llalign_of_min(ccx, llty) as uint);
+
+    // Allocate space:
+    let drop_glue = glue::get_drop_glue(ccx, t);
+    let r = callee::trans_lang_call(
+        bcx,
+        langcall,
+        [
+            PointerCast(bcx, drop_glue, Type::glue_fn(ccx, Type::i8p(ccx)).ptr_to()),
+            size,
+            llalign
+        ],
+        None);
+    rslt(r.bcx, PointerCast(r.bcx, r.val, llty))
 }
 
 // Type descriptor and type glue stuff
-
-pub fn get_tydesc_simple(ccx: &CrateContext, t: ty::t) -> ValueRef {
-    get_tydesc(ccx, t).tydesc
-}
 
 pub fn get_tydesc(ccx: &CrateContext, t: ty::t) -> @tydesc_info {
     match ccx.tydescs.borrow().find(&t) {
@@ -453,6 +410,7 @@ pub fn get_tydesc(ccx: &CrateContext, t: ty::t) -> @tydesc_info {
     return inf;
 }
 
+#[allow(dead_code)] // useful
 pub fn set_optimize_for_size(f: ValueRef) {
     lib::llvm::SetFunctionAttribute(f, lib::llvm::OptimizeForSizeAttribute)
 }
@@ -461,6 +419,7 @@ pub fn set_no_inline(f: ValueRef) {
     lib::llvm::SetFunctionAttribute(f, lib::llvm::NoInlineAttribute)
 }
 
+#[allow(dead_code)] // useful
 pub fn set_no_unwind(f: ValueRef) {
     lib::llvm::SetFunctionAttribute(f, lib::llvm::NoUnwindAttribute)
 }
@@ -654,20 +613,7 @@ pub fn compare_scalar_values<'a>(
 }
 
 pub type val_and_ty_fn<'r,'b> =
-    'r |&'b Block<'b>, ValueRef, ty::t| -> &'b Block<'b>;
-
-pub fn load_inbounds<'a>(cx: &'a Block<'a>, p: ValueRef, idxs: &[uint])
-                     -> ValueRef {
-    return Load(cx, GEPi(cx, p, idxs));
-}
-
-pub fn store_inbounds<'a>(
-                      cx: &'a Block<'a>,
-                      v: ValueRef,
-                      p: ValueRef,
-                      idxs: &[uint]) {
-    Store(cx, v, GEPi(cx, p, idxs));
-}
+    |&'b Block<'b>, ValueRef, ty::t|: 'r -> &'b Block<'b>;
 
 // Iterates through the elements of a structural type.
 pub fn iter_structural_ty<'r,
@@ -714,7 +660,8 @@ pub fn iter_structural_ty<'r,
       ty::ty_str(ty::vstore_fixed(_)) |
       ty::ty_vec(_, ty::vstore_fixed(_)) => {
         let (base, len) = tvec::get_base_and_byte_len(cx, av, t);
-        cx = tvec::iter_vec_raw(cx, base, t, len, f);
+        let unit_ty = ty::sequence_element_type(cx.tcx(), t);
+        cx = tvec::iter_vec_raw(cx, base, unit_ty, len, f);
       }
       ty::ty_tup(ref args) => {
           let repr = adt::represent_type(cx.ccx(), t);
@@ -861,8 +808,8 @@ pub fn trans_external_path(ccx: &CrateContext, did: ast::DefId, t: ty::t) -> Val
     let name = csearch::get_symbol(&ccx.sess().cstore, did);
     match ty::get(t).sty {
         ty::ty_bare_fn(ref fn_ty) => {
-            match fn_ty.abis.for_target(ccx.sess().targ_cfg.os,
-                                        ccx.sess().targ_cfg.arch) {
+            match fn_ty.abi.for_target(ccx.sess().targ_cfg.os,
+                                       ccx.sess().targ_cfg.arch) {
                 Some(Rust) | Some(RustIntrinsic) => {
                     get_extern_rust_fn(ccx,
                                        fn_ty.sig.inputs.as_slice(),
@@ -871,7 +818,7 @@ pub fn trans_external_path(ccx: &CrateContext, did: ast::DefId, t: ty::t) -> Val
                                        did)
                 }
                 Some(..) | None => {
-                    let c = foreign::llvm_calling_convention(ccx, fn_ty.abis);
+                    let c = foreign::llvm_calling_convention(ccx, fn_ty.abi);
                     let cconv = c.unwrap_or(lib::llvm::CCallConv);
                     let llty = type_of_fn_from_ty(ccx, t);
                     get_extern_fn(&mut *ccx.externs.borrow_mut(), ccx.llmod,
@@ -964,29 +911,6 @@ pub fn need_invoke(bcx: &Block) -> bool {
     bcx.fcx.needs_invoke()
 }
 
-pub fn do_spill(bcx: &Block, v: ValueRef, t: ty::t) -> ValueRef {
-    if ty::type_is_bot(t) {
-        return C_null(Type::i8p(bcx.ccx()));
-    }
-    let llptr = alloc_ty(bcx, t, "");
-    Store(bcx, v, llptr);
-    return llptr;
-}
-
-// Since this function does *not* root, it is the caller's responsibility to
-// ensure that the referent is pointed to by a root.
-pub fn do_spill_noroot(cx: &Block, v: ValueRef) -> ValueRef {
-    let llptr = alloca(cx, val_ty(v), "");
-    Store(cx, v, llptr);
-    return llptr;
-}
-
-pub fn spill_if_immediate(cx: &Block, v: ValueRef, t: ty::t) -> ValueRef {
-    let _icx = push_ctxt("spill_if_immediate");
-    if type_is_immediate(cx.ccx(), t) { return do_spill(cx, v, t); }
-    return v;
-}
-
 pub fn load_if_immediate(cx: &Block, v: ValueRef, t: ty::t) -> ValueRef {
     let _icx = push_ctxt("load_if_immediate");
     if type_is_immediate(cx.ccx(), t) { return Load(cx, v); }
@@ -1027,20 +951,6 @@ pub fn raw_block<'a>(
                  llbb: BasicBlockRef)
                  -> &'a Block<'a> {
     Block::new(llbb, is_lpad, None, fcx)
-}
-
-pub fn block_locals(b: &ast::Block, it: |@ast::Local|) {
-    for s in b.stmts.iter() {
-        match s.node {
-          ast::StmtDecl(d, _) => {
-            match d.node {
-              ast::DeclLocal(ref local) => it(*local),
-              _ => {} /* fall through */
-            }
-          }
-          _ => {} /* fall through */
-        }
-    }
 }
 
 pub fn with_cond<'a>(
@@ -1162,10 +1072,6 @@ pub fn arrayalloca(cx: &Block, ty: Type, v: ValueRef) -> ValueRef {
     return ArrayAlloca(cx, ty, v);
 }
 
-pub struct BasicBlocks {
-    sa: BasicBlockRef,
-}
-
 // Creates and returns space for, or returns the argument representing, the
 // slot where the return value of the function must go.
 pub fn make_return_pointer(fcx: &FunctionContext, output_type: ty::t)
@@ -1175,7 +1081,7 @@ pub fn make_return_pointer(fcx: &FunctionContext, output_type: ty::t)
             llvm::LLVMGetParam(fcx.llfn, 0)
         } else {
             let lloutputtype = type_of::type_of(fcx.ccx, output_type);
-            let bcx = fcx.entry_bcx.get().unwrap();
+            let bcx = fcx.entry_bcx.borrow().clone().unwrap();
             Alloca(bcx, lloutputtype, "__make_return_pointer")
         }
     }
@@ -1256,7 +1162,7 @@ pub fn init_function<'a>(
                      param_substs: Option<@param_substs>) {
     let entry_bcx = fcx.new_temp_block("entry-block");
 
-    fcx.entry_bcx.set(Some(entry_bcx));
+    *fcx.entry_bcx.borrow_mut() = Some(entry_bcx);
 
     // Use a dummy instruction as the insertion point for all allocas.
     // This is later removed in FunctionContext::cleanup.
@@ -1446,7 +1352,7 @@ pub fn trans_closure(ccx: &CrateContext,
 
     // Create the first basic block in the function and keep a handle on it to
     //  pass to finish_fn later.
-    let bcx_top = fcx.entry_bcx.get().unwrap();
+    let bcx_top = fcx.entry_bcx.borrow().clone().unwrap();
     let mut bcx = bcx_top;
     let block_ty = node_id_type(bcx, body.id);
 
@@ -1594,7 +1500,7 @@ fn trans_enum_variant_or_tuple_like_struct(ccx: &CrateContext,
 
     let arg_datums = create_datums_for_fn_args(&fcx, arg_tys.as_slice());
 
-    let bcx = fcx.entry_bcx.get().unwrap();
+    let bcx = fcx.entry_bcx.borrow().clone().unwrap();
 
     if !type_is_zero_size(fcx.ccx, result_ty) {
         let repr = adt::represent_type(ccx, result_ty);
@@ -1636,7 +1542,7 @@ pub fn trans_enum_def(ccx: &CrateContext, enum_definition: &ast::EnumDef,
 }
 
 pub struct TransItemVisitor<'a> {
-    ccx: &'a CrateContext,
+    pub ccx: &'a CrateContext,
 }
 
 impl<'a> Visitor<()> for TransItemVisitor<'a> {
@@ -1648,7 +1554,7 @@ impl<'a> Visitor<()> for TransItemVisitor<'a> {
 pub fn trans_item(ccx: &CrateContext, item: &ast::Item) {
     let _icx = push_ctxt("trans_item");
     match item.node {
-      ast::ItemFn(decl, purity, _abis, ref generics, body) => {
+      ast::ItemFn(decl, purity, _abi, ref generics, body) => {
         if purity == ast::ExternFn  {
             let llfndecl = get_item_val(ccx, item.id);
             foreign::trans_rust_fn_with_foreign_abi(
@@ -1768,7 +1674,7 @@ fn register_fn(ccx: &CrateContext,
                -> ValueRef {
     let f = match ty::get(node_type).sty {
         ty::ty_bare_fn(ref f) => {
-            assert!(f.abis.is_rust() || f.abis.is_intrinsic());
+            assert!(f.abi == Rust || f.abi == RustIntrinsic);
             f
         }
         _ => fail!("expected bare rust fn or an intrinsic")
@@ -1799,7 +1705,7 @@ pub fn register_fn_llvmty(ccx: &CrateContext,
 }
 
 pub fn is_entry_fn(sess: &Session, node_id: ast::NodeId) -> bool {
-    match sess.entry_fn.get() {
+    match *sess.entry_fn.borrow() {
         Some((entry_id, _)) => node_id == entry_id,
         None => false
     }
@@ -2044,8 +1950,8 @@ pub fn get_item_val(ccx: &CrateContext, id: ast::NodeId) -> ValueRef {
 
             match ni.node {
                 ast::ForeignItemFn(..) => {
-                    let abis = ccx.tcx.map.get_foreign_abis(id);
-                    foreign::register_foreign_item_fn(ccx, abis, ni)
+                    let abi = ccx.tcx.map.get_foreign_abi(id);
+                    foreign::register_foreign_item_fn(ccx, abi, ni)
                 }
                 ast::ForeignItemStatic(..) => {
                     foreign::register_static(ccx, ni)
@@ -2129,11 +2035,6 @@ fn register_method(ccx: &CrateContext, id: ast::NodeId,
     let llfn = register_fn(ccx, m.span, sym, id, mty);
     set_llvm_fn_attrs(m.attrs.as_slice(), llfn);
     llfn
-}
-
-pub fn vp2i(cx: &Block, v: ValueRef) -> ValueRef {
-    let ccx = cx.ccx();
-    return PtrToInt(cx, v, ccx.int_type);
 }
 
 pub fn p2i(ccx: &CrateContext, v: ValueRef) -> ValueRef {
@@ -2304,18 +2205,6 @@ pub fn declare_intrinsics(ccx: &mut CrateContext) {
     }
 }
 
-pub fn trap(bcx: &Block) {
-    match bcx.ccx().intrinsics.find_equiv(& &"llvm.trap") {
-      Some(&x) => { Call(bcx, x, [], []); },
-      _ => bcx.sess().bug("unbound llvm.trap in trap")
-    }
-}
-
-pub fn symname(name: &str, hash: &str, vers: &str) -> ~str {
-    let path = [PathName(token::intern(name))];
-    link::exported_name(ast_map::Values(path.iter()).chain(None), hash, vers)
-}
-
 pub fn crate_ctxt_to_encode_parms<'r>(cx: &'r CrateContext, ie: encoder::EncodeInlinedItem<'r>)
     -> encoder::EncodeParams<'r> {
 
@@ -2347,7 +2236,10 @@ pub fn write_metadata(cx: &CrateContext, krate: &ast::Crate) -> Vec<u8> {
     let encode_parms = crate_ctxt_to_encode_parms(cx, encode_inlined_item);
     let metadata = encoder::encode_metadata(encode_parms, krate);
     let compressed = encoder::metadata_encoding_version +
-                        flate::deflate_bytes(metadata.as_slice()).as_slice();
+                        match flate::deflate_bytes(metadata.as_slice()) {
+                            Some(compressed) => compressed,
+                            None => cx.sess().fatal(format!("failed to compress metadata", ))
+                        }.as_slice();
     let llmeta = C_bytes(cx, compressed);
     let llconst = C_struct(cx, [llmeta], false);
     let name = format!("rust_metadata_{}_{}_{}", cx.link_meta.crateid.name,

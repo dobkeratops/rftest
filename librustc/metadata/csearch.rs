@@ -10,7 +10,7 @@
 
 // Searching for information from the cstore
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use metadata::common::*;
 use metadata::cstore;
@@ -20,28 +20,21 @@ use middle::typeck;
 
 use reader = serialize::ebml::reader;
 use std::rc::Rc;
-use std::vec;
 use syntax::ast;
 use syntax::ast_map;
 use syntax::diagnostic::expect;
 use syntax::parse::token;
 
 pub struct StaticMethodInfo {
-    ident: ast::Ident,
-    def_id: ast::DefId,
-    purity: ast::Purity,
-    vis: ast::Visibility,
+    pub ident: ast::Ident,
+    pub def_id: ast::DefId,
+    pub purity: ast::Purity,
+    pub vis: ast::Visibility,
 }
 
 pub fn get_symbol(cstore: &cstore::CStore, def: ast::DefId) -> ~str {
     let cdata = cstore.get_crate_data(def.krate).data();
     return decoder::get_symbol(cdata, def.node);
-}
-
-pub fn get_type_param_count(cstore: &cstore::CStore, def: ast::DefId)
-                         -> uint {
-    let cdata = cstore.get_crate_data(def.krate).data();
-    return decoder::get_type_param_count(cdata, def.node);
 }
 
 /// Iterates over all the language items in the given crate.
@@ -63,7 +56,7 @@ pub fn each_child_of_item(cstore: &cstore::CStore,
     let get_crate_data: decoder::GetCrateDataCb = |cnum| {
         cstore.get_crate_data(cnum)
     };
-    decoder::each_child_of_item(cstore.intr,
+    decoder::each_child_of_item(cstore.intr.clone(),
                                 crate_data,
                                 def_id.node,
                                 get_crate_data,
@@ -80,7 +73,7 @@ pub fn each_top_level_item_of_crate(cstore: &cstore::CStore,
     let get_crate_data: decoder::GetCrateDataCb = |cnum| {
         cstore.get_crate_data(cnum)
     };
-    decoder::each_top_level_item_of_crate(cstore.intr,
+    decoder::each_top_level_item_of_crate(cstore.intr.clone(),
                                           crate_data,
                                           get_crate_data,
                                           callback)
@@ -93,8 +86,7 @@ pub fn get_item_path(tcx: &ty::ctxt, def: ast::DefId) -> Vec<ast_map::PathElem> 
 
     // FIXME #1920: This path is not always correct if the crate is not linked
     // into the root namespace.
-    vec::append(vec!(ast_map::PathMod(token::intern(cdata.name))),
-                   path.as_slice())
+    (vec!(ast_map::PathMod(token::intern(cdata.name)))).append(path.as_slice())
 }
 
 pub enum found_ast {
@@ -118,19 +110,19 @@ pub fn get_enum_variants(tcx: &ty::ctxt, def: ast::DefId)
                       -> Vec<@ty::VariantInfo> {
     let cstore = &tcx.sess.cstore;
     let cdata = cstore.get_crate_data(def.krate);
-    return decoder::get_enum_variants(cstore.intr, cdata, def.node, tcx)
+    return decoder::get_enum_variants(cstore.intr.clone(), cdata, def.node, tcx)
 }
 
 /// Returns information about the given implementation.
 pub fn get_impl(tcx: &ty::ctxt, impl_def_id: ast::DefId)
                 -> ty::Impl {
     let cdata = tcx.sess.cstore.get_crate_data(impl_def_id.krate);
-    decoder::get_impl(tcx.sess.cstore.intr, cdata, impl_def_id.node, tcx)
+    decoder::get_impl(tcx.sess.cstore.intr.clone(), cdata, impl_def_id.node, tcx)
 }
 
 pub fn get_method(tcx: &ty::ctxt, def: ast::DefId) -> ty::Method {
     let cdata = tcx.sess.cstore.get_crate_data(def.krate);
-    decoder::get_method(tcx.sess.cstore.intr, cdata, def.node, tcx)
+    decoder::get_method(tcx.sess.cstore.intr.clone(), cdata, def.node, tcx)
 }
 
 pub fn get_method_name_and_explicit_self(cstore: &cstore::CStore,
@@ -138,7 +130,7 @@ pub fn get_method_name_and_explicit_self(cstore: &cstore::CStore,
                                      -> (ast::Ident, ast::ExplicitSelf_)
 {
     let cdata = cstore.get_crate_data(def.krate);
-    decoder::get_method_name_and_explicit_self(cstore.intr, cdata, def.node)
+    decoder::get_method_name_and_explicit_self(cstore.intr.clone(), cdata, def.node)
 }
 
 pub fn get_trait_method_def_ids(cstore: &cstore::CStore,
@@ -158,7 +150,7 @@ pub fn get_provided_trait_methods(tcx: &ty::ctxt,
                                -> Vec<@ty::Method> {
     let cstore = &tcx.sess.cstore;
     let cdata = cstore.get_crate_data(def.krate);
-    decoder::get_provided_trait_methods(cstore.intr, cdata, def.node, tcx)
+    decoder::get_provided_trait_methods(cstore.intr.clone(), cdata, def.node, tcx)
 }
 
 pub fn get_supertraits(tcx: &ty::ctxt, def: ast::DefId) -> Vec<@ty::TraitRef> {
@@ -177,7 +169,7 @@ pub fn get_static_methods_if_impl(cstore: &cstore::CStore,
                                   def: ast::DefId)
                                -> Option<Vec<StaticMethodInfo> > {
     let cdata = cstore.get_crate_data(def.krate);
-    decoder::get_static_methods_if_impl(cstore.intr, cdata, def.node)
+    decoder::get_static_methods_if_impl(cstore.intr.clone(), cdata, def.node)
 }
 
 pub fn get_item_attrs(cstore: &cstore::CStore,
@@ -191,7 +183,7 @@ pub fn get_struct_fields(cstore: &cstore::CStore,
                          def: ast::DefId)
                       -> Vec<ty::field_ty> {
     let cdata = cstore.get_crate_data(def.krate);
-    decoder::get_struct_fields(cstore.intr, cdata, def.node)
+    decoder::get_struct_fields(cstore.intr.clone(), cdata, def.node)
 }
 
 pub fn get_type(tcx: &ty::ctxt,
@@ -246,21 +238,6 @@ pub fn get_impl_vtables(tcx: &ty::ctxt,
     decoder::get_impl_vtables(cdata, def.node, tcx)
 }
 
-pub fn get_impl_method(cstore: &cstore::CStore,
-                       def: ast::DefId,
-                       mname: ast::Ident)
-                    -> Option<ast::DefId> {
-    let cdata = cstore.get_crate_data(def.krate);
-    decoder::get_impl_method(cstore.intr, cdata, def.node, mname)
-}
-
-pub fn get_item_visibility(cstore: &cstore::CStore,
-                           def_id: ast::DefId)
-                        -> ast::Visibility {
-    let cdata = cstore.get_crate_data(def_id.krate);
-    decoder::get_item_visibility(cdata, def_id.node)
-}
-
 pub fn get_native_libraries(cstore: &cstore::CStore,
                             crate_num: ast::CrateNum)
                                 -> Vec<(cstore::NativeLibaryKind, ~str)> {
@@ -312,4 +289,12 @@ pub fn get_exported_macros(cstore: &cstore::CStore,
                            -> Vec<~str> {
     let cdata = cstore.get_crate_data(crate_num);
     decoder::get_exported_macros(cdata)
+}
+
+pub fn get_tuple_struct_definition_if_ctor(cstore: &cstore::CStore,
+                                           def_id: ast::DefId)
+    -> Option<ast::DefId>
+{
+    let cdata = cstore.get_crate_data(def_id.krate);
+    decoder::get_tuple_struct_definition_if_ctor(cdata, def_id.node)
 }

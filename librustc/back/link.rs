@@ -102,7 +102,7 @@ pub mod write {
 
     use std::c_str::ToCStr;
     use std::io::Process;
-    use std::libc::{c_uint, c_int};
+    use libc::{c_uint, c_int};
     use std::str;
 
     // On android, we by default compile for armv7 processors. This enables
@@ -152,13 +152,26 @@ pub mod write {
                              (sess.targ_cfg.os == abi::OsMacos &&
                               sess.targ_cfg.arch == abi::X86_64);
 
+            let reloc_model = match sess.opts.cg.relocation_model.as_slice() {
+                "pic" => lib::llvm::RelocPIC,
+                "static" => lib::llvm::RelocStatic,
+                "default" => lib::llvm::RelocDefault,
+                "dynamic-no-pic" => lib::llvm::RelocDynamicNoPic,
+                _ => {
+                    sess.err(format!("{} is not a valid relocation mode",
+                             sess.opts.cg.relocation_model));
+                    sess.abort_if_errors();
+                    return;
+                }
+            };
+
             let tm = sess.targ_cfg.target_strs.target_triple.with_c_str(|t| {
                 sess.opts.cg.target_cpu.with_c_str(|cpu| {
                     target_feature(sess).with_c_str(|features| {
                         llvm::LLVMRustCreateTargetMachine(
                             t, cpu, features,
                             lib::llvm::CodeModelDefault,
-                            lib::llvm::RelocPIC,
+                            reloc_model,
                             opt_level,
                             true,
                             use_softfp,
@@ -337,7 +350,9 @@ pub mod write {
                 if !prog.status.success() {
                     sess.err(format!("linking with `{}` failed: {}", cc, prog.status));
                     sess.note(format!("{} arguments: '{}'", cc, args.connect("' '")));
-                    sess.note(str::from_utf8_owned(prog.error + prog.output).unwrap());
+                    let mut note = prog.error.clone();
+                    note.push_all(prog.output.as_slice());
+                    sess.note(str::from_utf8(note.as_slice()).unwrap().to_owned());
                     sess.abort_if_errors();
                 }
             },
@@ -687,16 +702,6 @@ pub fn mangle_exported_name(ccx: &CrateContext, path: PathElems,
     exported_name(path, hash, ccx.link_meta.crateid.version_or_default())
 }
 
-pub fn mangle_internal_name_by_type_only(ccx: &CrateContext,
-                                         t: ty::t,
-                                         name: &str) -> ~str {
-    let s = ppaux::ty_to_short_str(ccx.tcx(), t);
-    let path = [PathName(token::intern(name)),
-                PathName(token::intern(s))];
-    let hash = get_symbol_hash(ccx, t);
-    mangle(ast_map::Values(path.iter()), Some(hash.as_slice()), None)
-}
-
 pub fn mangle_internal_name_by_type_and_seq(ccx: &CrateContext,
                                             t: ty::t,
                                             name: &str) -> ~str {
@@ -939,11 +944,15 @@ fn link_rlib<'a>(sess: &'a Session,
             let bc = obj_filename.with_extension("bc");
             let bc_deflated = obj_filename.with_extension("bc.deflate");
             match fs::File::open(&bc).read_to_end().and_then(|data| {
-                fs::File::create(&bc_deflated).write(flate::deflate_bytes(data).as_slice())
+                fs::File::create(&bc_deflated)
+                    .write(match flate::deflate_bytes(data.as_slice()) {
+                        Some(compressed) => compressed,
+                        None => sess.fatal("failed to compress bytecode")
+                     }.as_slice())
             }) {
                 Ok(()) => {}
                 Err(e) => {
-                    sess.err(format!("failed to compress bytecode: {}", e));
+                    sess.err(format!("failed to write compressed bytecode: {}", e));
                     sess.abort_if_errors()
                 }
             }
@@ -1035,7 +1044,9 @@ fn link_natively(sess: &Session, dylib: bool, obj_filename: &Path,
             if !prog.status.success() {
                 sess.err(format!("linking with `{}` failed: {}", cc_prog, prog.status));
                 sess.note(format!("{} arguments: '{}'", cc_prog, cc_args.connect("' '")));
-                sess.note(str::from_utf8_owned(prog.error + prog.output).unwrap());
+                let mut output = prog.error.clone();
+                output.push_all(prog.output.as_slice());
+                sess.note(str::from_utf8(output.as_slice()).unwrap().to_owned());
                 sess.abort_if_errors();
             }
         },
@@ -1137,6 +1148,33 @@ fn link_args(sess: &Session,
         // DWARF stack unwinding will not work.
         // This behavior may be overridden by --link-args "-static-libgcc"
         args.push(~"-shared-libgcc");
+
+        // And here, we see obscure linker flags #45. On windows, it has been
+        // found to be necessary to have this flag to compile liblibc.
+        //
+        // First a bit of background. On Windows, the file format is not ELF,
+        // but COFF (at least according to LLVM). COFF doesn't officially allow
+        // for section names over 8 characters, apparently. Our metadata
+        // section, ".note.rustc", you'll note is over 8 characters.
+        //
+        // On more recent versions of gcc on mingw, apparently the section name
+        // is *not* truncated, but rather stored elsewhere in a separate lookup
+        // table. On older versions of gcc, they apparently always truncated the
+        // section names (at least in some cases). Truncating the section name
+        // actually creates "invalid" objects [1] [2], but only for some
+        // introspection tools, not in terms of whether it can be loaded.
+        //
+        // Long story shory, passing this flag forces the linker to *not*
+        // truncate section names (so we can find the metadata section after
+        // it's compiled). The real kicker is that rust compiled just fine on
+        // windows for quite a long time *without* this flag, so I have no idea
+        // why it suddenly started failing for liblibc. Regardless, we
+        // definitely don't want section name truncation, so we're keeping this
+        // flag for windows.
+        //
+        // [1] - https://sourceware.org/bugzilla/show_bug.cgi?id=13130
+        // [2] - https://code.google.com/p/go/issues/detail?id=2139
+        args.push(~"-Wl,--enable-long-section-names");
     }
 
     if sess.targ_cfg.os == abi::OsAndroid {

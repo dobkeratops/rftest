@@ -8,7 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use middle::const_eval::{compare_const_vals, lookup_const_by_id};
 use middle::const_eval::{eval_const_expr, const_val, const_bool, const_float};
@@ -21,7 +21,6 @@ use util::ppaux::ty_to_str;
 
 use std::cmp;
 use std::iter;
-use std::vec;
 use syntax::ast::*;
 use syntax::ast_util::{unguarded_pat, walk_pat};
 use syntax::codemap::{DUMMY_SP, Span};
@@ -163,7 +162,7 @@ fn raw_pat(p: @Pat) -> @Pat {
 
 fn check_exhaustive(cx: &MatchCheckCtxt, sp: Span, pats: Vec<@Pat> ) {
     assert!((!pats.is_empty()));
-    let ext = match is_useful(cx, &pats.map(|p| vec!(*p)), [wild()]) {
+    let ext = match is_useful(cx, &pats.iter().map(|p| vec!(*p)).collect(), [wild()]) {
         not_useful => {
             // This is good, wildcard pattern isn't reachable
             return;
@@ -192,7 +191,7 @@ fn check_exhaustive(cx: &MatchCheckCtxt, sp: Span, pats: Vec<@Pat> ) {
                         }
                     }
                 }
-                ty::ty_unboxed_vec(..) | ty::ty_vec(..) => {
+                ty::ty_vec(..) => {
                     match *ctor {
                         vec(n) => Some(format!("vectors of length {}", n)),
                         _ => None
@@ -283,7 +282,7 @@ fn is_useful(cx: &MatchCheckCtxt, m: &matrix, v: &[@Pat]) -> useful {
               ty::ty_vec(_, ty::vstore_fixed(n)) => {
                 is_useful_specialized(cx, m, v, vec(n), n, left_ty)
               }
-              ty::ty_unboxed_vec(..) | ty::ty_vec(..) => {
+              ty::ty_vec(..) => {
                 let max_len = m.iter().rev().fold(0, |max_len, r| {
                   match r.get(0).node {
                     PatVec(ref before, _, ref after) => {
@@ -465,7 +464,7 @@ fn missing_ctor(cx: &MatchCheckCtxt,
           _         => None
         }
       }
-      ty::ty_unboxed_vec(..) | ty::ty_vec(..) => {
+      ty::ty_vec(..) => {
 
         // Find the lengths and slices of all vector patterns.
         let mut vec_pat_lens = m.iter().filter_map(|r| {
@@ -530,7 +529,7 @@ fn ctor_arity(cx: &MatchCheckCtxt, ctor: &ctor, ty: ty::t) -> uint {
         }
       }
       ty::ty_struct(cid, _) => ty::lookup_struct_fields(cx.tcx, cid).len(),
-      ty::ty_unboxed_vec(..) | ty::ty_vec(..) => {
+      ty::ty_vec(..) => {
         match *ctor {
           vec(n) => n,
           _ => 0u
@@ -560,11 +559,10 @@ fn specialize(cx: &MatchCheckCtxt,
         Pat{id: pat_id, node: n, span: pat_span} =>
             match n {
             PatWild => {
-                Some(vec::append(Vec::from_elem(arity, wild()), r.tail()))
+                Some(Vec::from_elem(arity, wild()).append(r.tail()))
             }
             PatWildMulti => {
-                Some(vec::append(Vec::from_elem(arity, wild_multi()),
-                                    r.tail()))
+                Some(Vec::from_elem(arity, wild_multi()).append(r.tail()))
             }
             PatIdent(_, _, _) => {
                 let opt_def = cx.tcx.def_map.borrow().find_copy(&pat_id);
@@ -615,12 +613,7 @@ fn specialize(cx: &MatchCheckCtxt,
                         }
                     }
                     _ => {
-                        Some(
-                            vec::append(
-                                Vec::from_elem(arity, wild()),
-                                r.tail()
-                            )
-                        )
+                        Some(Vec::from_elem(arity, wild()).append(r.tail()))
                     }
                 }
             }
@@ -667,7 +660,7 @@ fn specialize(cx: &MatchCheckCtxt,
                             Some(args) => args.iter().map(|x| *x).collect(),
                             None => Vec::from_elem(arity, wild())
                         };
-                        Some(vec::append(args, r.tail()))
+                        Some(args.append(r.tail()))
                     }
                     DefVariant(_, _, _) => None,
 
@@ -680,7 +673,7 @@ fn specialize(cx: &MatchCheckCtxt,
                             }
                             None => new_args = Vec::from_elem(arity, wild())
                         }
-                        Some(vec::append(new_args, r.tail()))
+                        Some(new_args.append(r.tail()))
                     }
                     _ => None
                 }
@@ -692,13 +685,13 @@ fn specialize(cx: &MatchCheckCtxt,
                     DefVariant(_, variant_id, _) => {
                         if variant(variant_id) == *ctor_id {
                             let struct_fields = ty::lookup_struct_fields(cx.tcx, variant_id);
-                            let args = struct_fields.map(|sf| {
+                            let args = struct_fields.iter().map(|sf| {
                                 match pattern_fields.iter().find(|f| f.ident.name == sf.name) {
                                     Some(f) => f.pat,
                                     _ => wild()
                                 }
-                            });
-                            Some(vec::append(args, r.tail()))
+                            }).collect::<Vec<_>>();
+                            Some(args.append(r.tail()))
                         } else {
                             None
                         }
@@ -728,16 +721,16 @@ fn specialize(cx: &MatchCheckCtxt,
                                 Some(f) => f.pat,
                                 _ => wild()
                             }
-                        }).collect();
-                        Some(vec::append(args, r.tail()))
+                        }).collect::<Vec<_>>();
+                        Some(args.append(r.tail()))
                     }
                 }
             }
             PatTup(args) => {
-                Some(vec::append(args.iter().map(|x| *x).collect(), r.tail()))
+                Some(args.iter().map(|x| *x).collect::<Vec<_>>().append(r.tail()))
             }
             PatUniq(a) | PatRegion(a) => {
-                Some(vec::append(vec!(a), r.tail()))
+                Some((vec!(a)).append(r.tail()))
             }
             PatLit(expr) => {
                 let e_v = eval_const_expr(cx.tcx, expr);

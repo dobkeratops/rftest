@@ -14,13 +14,12 @@
 // tjc note: Would be great to have a `match check` macro equivalent
 // for some of these
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use middle::ty;
 
 use std::str;
 use std::uint;
-use syntax::abi::AbiSet;
 use syntax::abi;
 use syntax::ast;
 use syntax::ast::*;
@@ -55,7 +54,7 @@ pub enum DefIdSource {
     RegionParameter,
 }
 pub type conv_did<'a> =
-    'a |source: DefIdSource, ast::DefId| -> ast::DefId;
+    |source: DefIdSource, ast::DefId|: 'a -> ast::DefId;
 
 pub struct PState<'a> {
     data: &'a [u8],
@@ -350,7 +349,6 @@ fn parse_ty(st: &mut PState, conv: conv_did) -> ty::t {
         let mt = parse_mt(st, |x,y| conv(x,y));
         return ty::mk_rptr(st.tcx, r, mt);
       }
-      'U' => return ty::mk_unboxed_vec(st.tcx, parse_mt(st, |x,y| conv(x,y))),
       'V' => {
         let mt = parse_mt(st, |x,y| conv(x,y));
         let v = parse_vstore(st, |x,y| conv(x,y));
@@ -460,18 +458,12 @@ fn parse_purity(c: char) -> Purity {
     }
 }
 
-fn parse_abi_set(st: &mut PState) -> AbiSet {
+fn parse_abi_set(st: &mut PState) -> abi::Abi {
     assert_eq!(next(st), '[');
-    let mut abis = AbiSet::empty();
-    while peek(st) != ']' {
-         scan(st, |c| c == ',', |bytes| {
-                 let abi_str = str::from_utf8(bytes).unwrap().to_owned();
-                 let abi = abi::lookup(abi_str).expect(abi_str);
-                 abis.add(abi);
-              });
-    }
-    assert_eq!(next(st), ']');
-    return abis;
+    scan(st, |c| c == ']', |bytes| {
+        let abi_str = str::from_utf8(bytes).unwrap().to_owned();
+        abi::lookup(abi_str).expect(abi_str)
+    })
 }
 
 fn parse_onceness(c: char) -> ast::Onceness {
@@ -505,7 +497,7 @@ fn parse_bare_fn_ty(st: &mut PState, conv: conv_did) -> ty::BareFnTy {
     let sig = parse_sig(st, |x,y| conv(x,y));
     ty::BareFnTy {
         purity: purity,
-        abis: abi,
+        abi: abi,
         sig: sig
     }
 }
@@ -591,7 +583,7 @@ fn parse_bounds(st: &mut PState, conv: conv_did) -> ty::ParamBounds {
                 param_bounds.builtin_bounds.add(ty::BoundSized);
             }
             'P' => {
-                param_bounds.builtin_bounds.add(ty::BoundPod);
+                param_bounds.builtin_bounds.add(ty::BoundCopy);
             }
             'T' => {
                 param_bounds.builtin_bounds.add(ty::BoundShare);

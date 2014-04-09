@@ -14,14 +14,14 @@
 </c41><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c41>Core&nbsp;encoding&nbsp;and&nbsp;decoding&nbsp;interfaces.
 </c41><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c41>*/
 </c41><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>crate_id&nbsp;=&nbsp;"serialize#0.10-pre"</c50><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>crate_type&nbsp;=&nbsp;"rlib"</c50><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>crate_type&nbsp;=&nbsp;"dylib"</c50><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>license&nbsp;=&nbsp;"MIT/ASL2"</c50><c3>];</c3><c50>
-</c50><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>html_logo_url&nbsp;=&nbsp;"http:</c50><c40>//www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png",
-</c40><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;html_favicon_url&nbsp;=&nbsp;"http:</c0><c40>//www.rust-lang.org/favicon.ico",
-</c40><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;html_root_url&nbsp;=&nbsp;"http:</c0><c40>//static.rust-lang.org/doc/master")];
-</c40><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>feature</c50><c4>(</c4><c50>macro_rules</c50><c3>,</c3><c50>&nbsp;managed_boxes</c50><c3>,</c3><c50>&nbsp;default_type_params</c50><c3>,</c3><c50>&nbsp;phase</c50><c4>)</c4><c3>];</c3><c50>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c50>#!</c50><c3>[</c3><c50>crate_id&nbsp;=&nbsp;"serialize#0.11-pre"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c50>#!</c50><c3>[</c3><c50>crate_type&nbsp;=&nbsp;"rlib"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c50>#!</c50><c3>[</c3><c50>crate_type&nbsp;=&nbsp;"dylib"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c50>#!</c50><c3>[</c3><c50>license&nbsp;=&nbsp;"MIT/ASL2"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c50>#!</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>html_logo_url&nbsp;=&nbsp;"http:</c50><c40>//www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png",
+</c40><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;html_favicon_url&nbsp;=&nbsp;"http:</c0><c40>//www.rust-lang.org/favicon.ico",
+</c40><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;html_root_url&nbsp;=&nbsp;"http:</c0><c40>//static.rust-lang.org/doc/master")]
+</c40><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c50>#!</c50><c3>[</c3><c50>feature</c50><c4>(</c4><c50>macro_rules</c50><c3>,</c3><c50>&nbsp;managed_boxes</c50><c3>,</c3><c50>&nbsp;default_type_params</c50><c3>,</c3><c50>&nbsp;phase</c50><c4>)</c4><c3>]</c3><c50>
 </c50><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c40>//&nbsp;test&nbsp;harness&nbsp;access
 </c40><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
@@ -34,11 +34,11 @@
 </c0><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::serialize::</c0><c3>{</c3><c0>Decoder</c0><c3>,</c3><c0>&nbsp;Encoder</c0><c3>,</c3><c0>&nbsp;Decodable</c0><c3>,</c3><c0>&nbsp;Encodable</c0><c3>,</c3><c0>
 </c0><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DecoderHelpers</c0><c3>,</c3><c0>&nbsp;EncoderHelpers</c0><c3>};</c3><c0>
 </c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a><a id="n12">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n10209">&nbsp;</a><c21>mod</c21><c38>&nbsp;serialize;
+</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n13855">&nbsp;</a><c21>mod</c21><c38>&nbsp;serialize;
 </c38><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;collection_impls;
-</c38><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n11772">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n12804">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;base64;
-</c38><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n21276">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;ebml;
-</c38><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n21739">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;hex;
+</c38><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n15901">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n16969">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;base64;
+</c38><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n27130">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;ebml;
+</c38><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n27601">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;hex;
 </c38><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;json;
 </c38><br/><div class="refblock"></div></maintext></div></body>

@@ -2,37 +2,37 @@
 # it requires the '.rfx' from one library to create links from any other
 update: 
 	cd $(RUST_PATH)/src;pwd;
-	
+
 	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libstd/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libcollections/lib.rs
-#	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libextra/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libgreen/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind librustuv/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libnative/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libflate/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libarena/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libglob/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libterm/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libsemver/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libuuid/lib.rs
 	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libserialize/lib.rs
 	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libsync/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind liblog/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libterm/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind librand/lib.rs
 	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libgetopts/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libarena/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libflate/lib.rs
+
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libcollections/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libnum/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libtest/lib.rs
 	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libtime/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind librand/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libworkcache/lib.rs
+#	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libextra/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind liburl/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind liblog/lib.rs
 
 	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libsyntax/lib.rs
-	export CFG_VERSION=0;export CFG_COMPILER=0;export CFG_PREFIX=0;export CFG_LIBDIR_RELATIVE=0; export CFG_RUSTLIBDIR=0;export CFG_COMPILER_TRIPLE=0;cd $(RUST_SRC);pwd; ~/rustfind/rustfind librustc/lib.rs
-
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libnum/lib.rs
+	export CFG_VERSION=0;export CFG_COMPILER=0;export CFG_PREFIX=0;export CFG_LIBDIR_RELATIVE=0; export CFG_RUSTLIBDIR=0;export CFG_COMPILER_HOST_TRIPLE=0; export CFG_COMPILER_TRIPLE=0;cd $(RUST_SRC);pwd; ~/rustfind/rustfind librustc/lib.rs
 	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind librustdoc/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libnative/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind liburl/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libtest/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libfourcc/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind librustuv/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libworkcache/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libuuid/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libglob/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libgreen/lib.rs
-	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libhexfloat/lib.rs
 
-#	cd $(RUST_PATH)/src;pwd;  ~/rustfind/rustfind libextra/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libfourcc/lib.rs
+	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind libhexfloat/lib.rs
 
 rustc:
 	cd $(RUST_PATH)/src;pwd; ~/rustfind/rustfind librustc/lib.rs

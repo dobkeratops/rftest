@@ -535,7 +535,7 @@ impl<T> Default for Option<T> {
 /// methods on `Option`.
 #[deriving(Clone)]
 pub struct Item<A> {
-    priv opt: Option<A>
+    opt: Option<A>
 }
 
 impl<A> Iterator<A> for Item<A> {
@@ -593,7 +593,7 @@ pub fn collect<T, Iter: Iterator<Option<T>>, V: FromIterator<T>>(iter: Iter) -> 
         }
     });
 
-    let v: V = FromIterator::from_iterator(iter.by_ref());
+    let v: V = FromIterator::from_iter(iter.by_ref());
 
     if iter.state {
         None
@@ -651,7 +651,8 @@ mod tests {
         impl ::ops::Drop for R {
            fn drop(&mut self) {
                 let ii = &*self.i;
-                ii.set(ii.get() + 1);
+                let i = ii.borrow().clone();
+                *ii.borrow_mut() = i + 1;
             }
         }
 
@@ -667,7 +668,7 @@ mod tests {
             let opt = Some(x);
             let _y = opt.unwrap();
         }
-        assert_eq!(i.get(), 1);
+        assert_eq!(*i.borrow(), 1);
     }
 
     #[test]
@@ -684,7 +685,7 @@ mod tests {
 
     #[test] #[should_fail]
     fn test_option_too_much_dance() {
-        let mut y = Some(marker::NoPod);
+        let mut y = Some(marker::NoCopy);
         let _y2 = y.take_unwrap();
         let _y3 = y.take_unwrap();
     }

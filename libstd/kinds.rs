@@ -33,10 +33,8 @@ pub trait Sized {
 }
 
 /// Types that can be copied by simply copying bits (i.e. `memcpy`).
-///
-/// The name "POD" stands for "Plain Old Data" and is borrowed from C++.
-#[lang="pod"]
-pub trait Pod {
+#[lang="copy"]
+pub trait Copy {
     // Empty.
 }
 
@@ -195,7 +193,7 @@ pub mod marker {
     /// "interior" mutability:
     ///
     /// ```
-    /// pub struct Cell<T> { priv value: T }
+    /// pub struct Cell<T> { value: T }
     /// # fn main() {}
     /// ```
     ///
@@ -264,9 +262,9 @@ pub mod marker {
     /// A type which is considered "not POD", meaning that it is not
     /// implicitly copyable. This is typically embedded in other types to
     /// ensure that they are never copied, even if they lack a destructor.
-    #[lang="no_pod_bound"]
+    #[lang="no_copy_bound"]
     #[deriving(Eq,Clone)]
-    pub struct NoPod;
+    pub struct NoCopy;
 
     /// A type which is considered "not sharable", meaning that
     /// its contents are not threadsafe, hence they cannot be

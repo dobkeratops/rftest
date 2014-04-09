@@ -33,7 +33,7 @@
 //! modify the Context visitor appropriately. If you're adding lints from the
 //! Context itself, span_lint should be used instead of add_lint.
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use driver::session;
 use metadata::csearch;
@@ -59,6 +59,7 @@ use std::u32;
 use std::u64;
 use std::u8;
 use collections::SmallIntMap;
+use syntax::abi;
 use syntax::ast_map;
 use syntax::ast_util::IdVisitingOperation;
 use syntax::attr::{AttrMetaMethods, AttributeMethods};
@@ -115,6 +116,8 @@ pub enum Lint {
     DeprecatedOwnedVector,
 
     Warnings,
+
+    RawPointerDeriving,
 }
 
 pub fn level_to_str(lv: level) -> &'static str {
@@ -133,9 +136,9 @@ pub enum level {
 
 #[deriving(Clone, Eq, Ord, TotalEq, TotalOrd)]
 pub struct LintSpec {
-    default: level,
-    lint: Lint,
-    desc: &'static str,
+    pub default: level,
+    pub lint: Lint,
+    pub desc: &'static str,
 }
 
 pub type LintDict = HashMap<&'static str, LintSpec>;
@@ -151,7 +154,7 @@ static lint_table: &'static [(&'static str, LintSpec)] = &[
     ("ctypes",
      LintSpec {
         lint: CTypes,
-        desc: "proper use of std::libc types in foreign modules",
+        desc: "proper use of libc types in foreign modules",
         default: warn
      }),
 
@@ -405,6 +408,13 @@ static lint_table: &'static [(&'static str, LintSpec)] = &[
         lint: DeprecatedOwnedVector,
         desc: "use of a `~[T]` vector",
         default: allow,
+    }),
+
+    ("raw_pointer_deriving",
+     LintSpec {
+        lint: RawPointerDeriving,
+        desc: "uses of #[deriving] with raw pointers are rarely correct",
+        default: warn,
     }),
 ];
 
@@ -883,7 +893,7 @@ fn check_item_ctypes(cx: &Context, it: &ast::Item) {
     }
 
     match it.node {
-      ast::ItemForeignMod(ref nmod) if !nmod.abis.is_intrinsic() => {
+      ast::ItemForeignMod(ref nmod) if nmod.abi != abi::RustIntrinsic => {
         for ni in nmod.items.iter() {
             match ni.node {
                 ast::ForeignItemFn(decl, _) => check_foreign_fn(cx, decl),
@@ -956,6 +966,37 @@ fn check_heap_item(cx: &Context, it: &ast::Item) {
             }
         }
         _ => ()
+    }
+}
+
+struct RawPtrDerivingVisitor<'a> {
+    cx: &'a Context<'a>
+}
+
+impl<'a> Visitor<()> for RawPtrDerivingVisitor<'a> {
+    fn visit_ty(&mut self, ty: &ast::Ty, _: ()) {
+        static MSG: &'static str = "use of `#[deriving]` with a raw pointer";
+        match ty.node {
+            ast::TyPtr(..) => self.cx.span_lint(RawPointerDeriving, ty.span, MSG),
+            _ => {}
+        }
+        visit::walk_ty(self, ty, ());
+    }
+    // explicit override to a no-op to reduce code bloat
+    fn visit_expr(&mut self, _: &ast::Expr, _: ()) {}
+    fn visit_block(&mut self, _: &ast::Block, _: ()) {}
+}
+
+fn check_raw_ptr_deriving(cx: &Context, item: &ast::Item) {
+    if !attr::contains_name(item.attrs.as_slice(), "deriving") {
+        return
+    }
+    match item.node {
+        ast::ItemStruct(..) | ast::ItemEnum(..) => {
+            let mut visitor = RawPtrDerivingVisitor { cx: cx };
+            visit::walk_item(&mut visitor, item, ());
+        }
+        _ => {}
     }
 }
 
@@ -1466,7 +1507,7 @@ fn check_missing_doc_ty_method(cx: &Context, tm: &ast::TypeMethod) {
 
 fn check_missing_doc_struct_field(cx: &Context, sf: &ast::StructField) {
     match sf.node.kind {
-        ast::NamedField(_, vis) if vis != ast::Private =>
+        ast::NamedField(_, vis) if vis == ast::Public =>
             check_missing_doc_attrs(cx,
                                     Some(cx.cur_struct_def_id),
                                     sf.node.attrs.as_slice(),
@@ -1585,6 +1626,7 @@ impl<'a> Visitor<()> for Context<'a> {
             check_heap_item(cx, it);
             check_missing_doc_item(cx, it);
             check_attrs_usage(cx, it.attrs.as_slice());
+            check_raw_ptr_deriving(cx, it);
 
             cx.visit_ids(|v| v.visit_item(it, ()));
 

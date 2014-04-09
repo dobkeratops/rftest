@@ -14,8 +14,8 @@
 </c0><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::cast</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::io::IoError</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::io</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::libc::</c0><c3>{</c3><c0>c_int</c0><c3>,</c3><c0>&nbsp;c_void</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::libc</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;libc::</c0><c3>{</c3><c0>c_int</c0><c3>,</c3><c0>&nbsp;c_void</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;libc</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::mem</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::os::win32::</c0><c3>{</c3><c0>as_utf16_p</c0><c3>,</c3><c0>&nbsp;fill_utf16_buf_and_decode</c0><c3>};</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::ptr</c0><c3>;</c3><c0>
@@ -34,7 +34,7 @@
 </c0><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c31>struct&nbsp;FileDesc&nbsp;</c31><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>priv</c21><c0>&nbsp;inner:&nbsp;UnsafeArc&lt;Inner&gt;
+</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;inner:&nbsp;UnsafeArc&lt;Inner&gt;
 </c0><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c33>impl&nbsp;FileDesc&nbsp;</c33><c3>{</c3><c0>
@@ -206,8 +206,8 @@
 </c0><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;write</c30><c4>(</c4><c0>&amp;mut&nbsp;self</c0><c3>,</c3><c0>&nbsp;buf:&nbsp;&amp;</c0><c3>[</c3><c0>u8</c0><c3>]</c3><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;Result&lt;</c0><c4>()</c4><c3>,</c3><c0>&nbsp;IoError&gt;&nbsp;</c0><c3>{</c3><c0>
 </c0><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.inner_write</c0><c4>(</c4><c0>buf</c0><c4>)</c4><c0>
 </c0><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
-</c0><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;clone</c30><c4>(</c4><c0>&amp;self</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;~rtio::RtioPipe&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~FileDesc&nbsp;</c0><c3>{</c3><c0>&nbsp;inner:&nbsp;self.inner.clone</c0><c4>()</c4><c0>&nbsp;</c0><c3>}</c3><c0>&nbsp;as&nbsp;~rtio::RtioPipe
+</c0><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;clone</c30><c4>(</c4><c0>&amp;self</c0><c4>)</c4><c0>&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;~rtio::RtioPipe:Send&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~FileDesc&nbsp;</c0><c3>{</c3><c0>&nbsp;inner:&nbsp;self.inner.clone</c0><c4>()</c4><c0>&nbsp;</c0><c3>}</c3><c0>&nbsp;as&nbsp;~rtio::RtioPipe:Send
 </c0><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
 </c0><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a>&nbsp;<c0>

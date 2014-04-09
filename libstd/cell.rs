@@ -14,18 +14,18 @@ use cast;
 use clone::Clone;
 use cmp::Eq;
 use fmt;
-use kinds::{marker, Pod};
+use kinds::{marker, Copy};
 use ops::{Deref, DerefMut, Drop};
 use option::{None, Option, Some};
 use ty::Unsafe;
 
-/// A mutable memory location that admits only `Pod` data.
+/// A mutable memory location that admits only `Copy` data.
 pub struct Cell<T> {
-    priv value: Unsafe<T>,
-    priv noshare: marker::NoShare,
+    value: Unsafe<T>,
+    noshare: marker::NoShare,
 }
 
-impl<T:Pod> Cell<T> {
+impl<T:Copy> Cell<T> {
     /// Creates a new `Cell` containing the given value.
     pub fn new(value: T) -> Cell<T> {
         Cell {
@@ -49,30 +49,30 @@ impl<T:Pod> Cell<T> {
     }
 }
 
-impl<T:Pod> Clone for Cell<T> {
+impl<T:Copy> Clone for Cell<T> {
     fn clone(&self) -> Cell<T> {
         Cell::new(self.get())
     }
 }
 
-impl<T:Eq + Pod> Eq for Cell<T> {
+impl<T:Eq + Copy> Eq for Cell<T> {
     fn eq(&self, other: &Cell<T>) -> bool {
         self.get() == other.get()
     }
 }
 
-impl<T: fmt::Show> fmt::Show for Cell<T> {
+impl<T: Copy + fmt::Show> fmt::Show for Cell<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f.buf, r"Cell \{ value: {} \}", unsafe{*&self.value.get()})
+        write!(f.buf, r"Cell \{ value: {} \}", self.get())
     }
 }
 
 /// A mutable memory location with dynamically checked borrow rules
 pub struct RefCell<T> {
-    priv value: Unsafe<T>,
-    priv borrow: BorrowFlag,
-    priv nopod: marker::NoPod,
-    priv noshare: marker::NoShare,
+    value: Unsafe<T>,
+    borrow: BorrowFlag,
+    nocopy: marker::NoCopy,
+    noshare: marker::NoShare,
 }
 
 // Values [1, MAX-1] represent the number of `Ref` active
@@ -86,7 +86,7 @@ impl<T> RefCell<T> {
     pub fn new(value: T) -> RefCell<T> {
         RefCell {
             value: Unsafe::new(value),
-            nopod: marker::NoPod,
+            nocopy: marker::NoCopy,
             noshare: marker::NoShare,
             borrow: UNUSED,
         }
@@ -164,33 +164,11 @@ impl<T> RefCell<T> {
             None => fail!("RefCell<T> already borrowed")
         }
     }
-
-    /// Sets the value, replacing what was there.
-    ///
-    /// # Failure
-    ///
-    /// Fails if the value is currently borrowed.
-    #[inline]
-    pub fn set(&self, value: T) {
-        *self.borrow_mut() = value;
-    }
-}
-
-impl<T:Clone> RefCell<T> {
-    /// Returns a copy of the contained value.
-    ///
-    /// # Failure
-    ///
-    /// Fails if the value is currently mutably borrowed.
-    #[inline]
-    pub fn get(&self) -> T {
-        (*self.borrow()).clone()
-    }
 }
 
 impl<T: Clone> Clone for RefCell<T> {
     fn clone(&self) -> RefCell<T> {
-        RefCell::new(self.get())
+        RefCell::new(self.borrow().clone())
     }
 }
 
@@ -202,7 +180,7 @@ impl<T: Eq> Eq for RefCell<T> {
 
 /// Wraps a borrowed reference to a value in a `RefCell` box.
 pub struct Ref<'b, T> {
-    priv parent: &'b RefCell<T>
+    parent: &'b RefCell<T>
 }
 
 #[unsafe_destructor]
@@ -216,13 +194,13 @@ impl<'b, T> Drop for Ref<'b, T> {
 impl<'b, T> Deref<T> for Ref<'b, T> {
     #[inline]
     fn deref<'a>(&'a self) -> &'a T {
-        unsafe{ &*self.parent.value.get() }
+        unsafe { &*self.parent.value.get() }
     }
 }
 
 /// Wraps a mutable borrowed reference to a value in a `RefCell` box.
 pub struct RefMut<'b, T> {
-    priv parent: &'b mut RefCell<T>
+    parent: &'b mut RefCell<T>
 }
 
 #[unsafe_destructor]
@@ -236,14 +214,14 @@ impl<'b, T> Drop for RefMut<'b, T> {
 impl<'b, T> Deref<T> for RefMut<'b, T> {
     #[inline]
     fn deref<'a>(&'a self) -> &'a T {
-        unsafe{ &*self.parent.value.get() }
+        unsafe { &*self.parent.value.get() }
     }
 }
 
 impl<'b, T> DerefMut<T> for RefMut<'b, T> {
     #[inline]
     fn deref_mut<'a>(&'a mut self) -> &'a mut T {
-        unsafe{ &mut *self.parent.value.get() }
+        unsafe { &mut *self.parent.value.get() }
     }
 }
 
@@ -263,6 +241,17 @@ mod test {
         let y = Cell::new((30, 40));
         assert_eq!(y, Cell::new((30, 40)));
         assert_eq!(y.get(), (30, 40));
+    }
+
+    #[test]
+    fn cell_has_sensible_show() {
+        use str::StrSlice;
+
+        let x = Cell::new("foo bar");
+        assert!(format!("{}", x).contains(x.get()));
+
+        x.set("baz qux");
+        assert!(format!("{}", x).contains(x.get()));
     }
 
     #[test]

@@ -741,7 +741,7 @@ impl<'a> Liveness<'a> {
             self.write_vars(wr, ln, |idx| self.users.get(idx).writer);
             write!(wr, "  precedes {}]", self.successors.get(ln.get()).to_str());
         }
-        str::from_utf8_owned(wr.unwrap()).unwrap()
+        str::from_utf8(wr.unwrap().as_slice()).unwrap().to_owned()
     }
 
     fn init_empty(&mut self, ln: LiveNode, succ_ln: LiveNode) {
@@ -1109,11 +1109,11 @@ impl<'a> Liveness<'a> {
             self.propagate_through_expr(expr, succ)
           }
 
-          ExprVec(ref exprs, _) => {
+          ExprVec(ref exprs) => {
             self.propagate_through_exprs(exprs.as_slice(), succ)
           }
 
-          ExprRepeat(element, count, _) => {
+          ExprRepeat(element, count) => {
             let succ = self.propagate_through_expr(count, succ);
             self.propagate_through_expr(element, succ)
           }

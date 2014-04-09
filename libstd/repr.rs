@@ -14,7 +14,7 @@ More runtime type reflection
 
 */
 
-#[allow(missing_doc)];
+#![allow(missing_doc)]
 
 use cast::transmute;
 use char;
@@ -28,7 +28,7 @@ use reflect::{MovePtr, align};
 use result::{Ok, Err};
 use str::StrSlice;
 use to_str::ToStr;
-use slice::OwnedVector;
+use slice::{Vector, OwnedVector};
 use intrinsics::{Disr, Opaque, TyDesc, TyVisitor, get_tydesc, visit_tydesc};
 use raw;
 
@@ -101,11 +101,11 @@ enum VariantState {
 }
 
 pub struct ReprVisitor<'a> {
-    priv ptr: *u8,
-    priv ptr_stk: ~[*u8],
-    priv var_stk: ~[VariantState],
-    priv writer: &'a mut io::Writer,
-    priv last_err: Option<io::IoError>,
+    ptr: *u8,
+    ptr_stk: ~[*u8],
+    var_stk: ~[VariantState],
+    writer: &'a mut io::Writer,
+    last_err: Option<io::IoError>,
 }
 
 pub fn ReprVisitor<'a>(ptr: *u8,
@@ -338,15 +338,6 @@ impl<'a> TyVisitor for ReprVisitor<'a> {
         self.write_mut_qualifier(mtbl);
         self.get::<*u8>(|this, p| {
             this.visit_ptr_inner(*p, inner)
-        })
-    }
-
-    // Type no longer exists, vestigial function.
-    fn visit_vec(&mut self, _mtbl: uint, _inner: *TyDesc) -> bool { fail!(); }
-
-    fn visit_unboxed_vec(&mut self, mtbl: uint, inner: *TyDesc) -> bool {
-        self.get::<raw::Vec<()>>(|this, b| {
-            this.write_unboxed_vec_repr(mtbl, b, inner)
         })
     }
 
@@ -617,7 +608,7 @@ pub fn repr_to_str<T>(t: &T) -> ~str {
 
     let mut result = io::MemWriter::new();
     write_repr(&mut result as &mut io::Writer, t).unwrap();
-    str::from_utf8_owned(result.unwrap()).unwrap()
+    str::from_utf8(result.unwrap().as_slice()).unwrap().to_owned()
 }
 
 #[cfg(test)]
@@ -635,7 +626,7 @@ fn test_repr() {
     fn exact_test<T>(t: &T, e:&str) {
         let mut m = io::MemWriter::new();
         write_repr(&mut m as &mut io::Writer, t).unwrap();
-        let s = str::from_utf8_owned(m.unwrap()).unwrap();
+        let s = str::from_utf8(m.unwrap().as_slice()).unwrap().to_owned();
         assert_eq!(s.as_slice(), e);
     }
 
@@ -686,7 +677,7 @@ fn test_repr() {
     exact_test(&println, "fn(&str)");
     exact_test(&swap::<int>, "fn(&mut int, &mut int)");
     exact_test(&is_alphabetic, "fn(char) -> bool");
-    exact_test(&(~5 as ~ToStr), "~to_str::ToStr:Send");
+    exact_test(&(~5 as ~ToStr), "~to_str::ToStr<no-bounds>");
 
     struct Foo;
     exact_test(&(~[Foo, Foo]), "~[repr::test_repr::Foo, repr::test_repr::Foo]");

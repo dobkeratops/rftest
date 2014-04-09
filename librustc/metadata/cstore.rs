@@ -8,7 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 // The crate store - a central repo for information collected about external
 // crates and libraries
@@ -19,10 +19,12 @@ use metadata::loader;
 
 use std::cell::RefCell;
 use std::c_vec::CVec;
+use std::rc::Rc;
 use collections::HashMap;
 use syntax::ast;
-use syntax::parse::token::IdentInterner;
 use syntax::crateid::CrateId;
+use syntax::codemap::Span;
+use syntax::parse::token::IdentInterner;
 
 // A map from external crate numbers (as decoded from some crate file) to
 // local crate numbers (as generated during this session). Each external
@@ -36,10 +38,11 @@ pub enum MetadataBlob {
 }
 
 pub struct crate_metadata {
-    name: ~str,
-    data: MetadataBlob,
-    cnum_map: cnum_map,
-    cnum: ast::CrateNum
+    pub name: ~str,
+    pub data: MetadataBlob,
+    pub cnum_map: cnum_map,
+    pub cnum: ast::CrateNum,
+    pub span: Span,
 }
 
 #[deriving(Eq)]
@@ -59,25 +62,25 @@ pub enum NativeLibaryKind {
 // must be non-None.
 #[deriving(Eq, Clone)]
 pub struct CrateSource {
-    dylib: Option<Path>,
-    rlib: Option<Path>,
-    cnum: ast::CrateNum,
+    pub dylib: Option<Path>,
+    pub rlib: Option<Path>,
+    pub cnum: ast::CrateNum,
 }
 
 pub struct CStore {
-    priv metas: RefCell<HashMap<ast::CrateNum, @crate_metadata>>,
-    priv extern_mod_crate_map: RefCell<extern_mod_crate_map>,
-    priv used_crate_sources: RefCell<Vec<CrateSource> >,
-    priv used_libraries: RefCell<Vec<(~str, NativeLibaryKind)> >,
-    priv used_link_args: RefCell<Vec<~str> >,
-    intr: @IdentInterner
+    metas: RefCell<HashMap<ast::CrateNum, @crate_metadata>>,
+    extern_mod_crate_map: RefCell<extern_mod_crate_map>,
+    used_crate_sources: RefCell<Vec<CrateSource>>,
+    used_libraries: RefCell<Vec<(~str, NativeLibaryKind)>>,
+    used_link_args: RefCell<Vec<~str>>,
+    pub intr: Rc<IdentInterner>,
 }
 
 // Map from NodeId's of local extern crate statements to crate numbers
 type extern_mod_crate_map = HashMap<ast::NodeId, ast::CrateNum>;
 
 impl CStore {
-    pub fn new(intr: @IdentInterner) -> CStore {
+    pub fn new(intr: Rc<IdentInterner>) -> CStore {
         CStore {
             metas: RefCell::new(HashMap::new()),
             extern_mod_crate_map: RefCell::new(HashMap::new()),
@@ -86,6 +89,10 @@ impl CStore {
             used_link_args: RefCell::new(Vec::new()),
             intr: intr
         }
+    }
+
+    pub fn next_crate_num(&self) -> ast::CrateNum {
+        self.metas.borrow().len() as ast::CrateNum + 1
     }
 
     pub fn get_crate_data(&self, cnum: ast::CrateNum) -> @crate_metadata {
@@ -97,17 +104,8 @@ impl CStore {
         decoder::get_crate_hash(cdata.data())
     }
 
-    pub fn get_crate_id(&self, cnum: ast::CrateNum) -> CrateId {
-        let cdata = self.get_crate_data(cnum);
-        decoder::get_crate_id(cdata.data())
-    }
-
     pub fn set_crate_data(&self, cnum: ast::CrateNum, data: @crate_metadata) {
         self.metas.borrow_mut().insert(cnum, data);
-    }
-
-    pub fn have_crate_data(&self, cnum: ast::CrateNum) -> bool {
-        self.metas.borrow().contains_key(&cnum)
     }
 
     pub fn iter_crate_data(&self, i: |ast::CrateNum, @crate_metadata|) {
@@ -128,6 +126,9 @@ impl CStore {
         self.used_crate_sources.borrow_mut()
             .iter().find(|source| source.cnum == cnum)
             .map(|source| source.clone())
+    }
+
+    pub fn dump_phase_syntax_crates(&self) {
     }
 
     pub fn reset(&self) {
@@ -211,6 +212,8 @@ impl CStore {
 
 impl crate_metadata {
     pub fn data<'a>(&'a self) -> &'a [u8] { self.data.as_slice() }
+    pub fn crate_id(&self) -> CrateId { decoder::get_crate_id(self.data()) }
+    pub fn hash(&self) -> Svh { decoder::get_crate_hash(self.data()) }
 }
 
 impl MetadataBlob {

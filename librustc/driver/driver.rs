@@ -37,7 +37,6 @@ use std::io::fs;
 use std::io::MemReader;
 use std::mem::drop;
 use std::os;
-use std::vec;
 use getopts::{optopt, optmulti, optflag, optflagopt};
 use getopts;
 use syntax::ast;
@@ -137,8 +136,7 @@ pub fn build_configuration(sess: &Session) -> ast::CrateConfig {
     } else {
         InternedString::new("nogc")
     });
-    return vec::append(user_cfg.move_iter().collect(),
-                          default_cfg.as_slice());
+    user_cfg.move_iter().collect::<Vec<_>>().append(default_cfg.as_slice())
 }
 
 // Convert strings provided as --cfg [cfgspec] into a crate_cfg
@@ -168,6 +166,7 @@ impl Input {
     }
 }
 
+
 pub fn phase_1_parse_input(sess: &Session, cfg: ast::CrateConfig, input: &Input)
     -> ast::Crate {
     let krate = time(sess.time_passes(), "parsing", (), |_| {
@@ -187,7 +186,8 @@ pub fn phase_1_parse_input(sess: &Session, cfg: ast::CrateConfig, input: &Input)
     if sess.opts.debugging_opts & session::AST_JSON_NOEXPAND != 0 {
         let mut stdout = io::BufferedWriter::new(io::stdout());
         let mut json = json::PrettyEncoder::new(&mut stdout);
-        krate.encode(&mut json);
+        // unwrapping so IoError isn't ignored
+        krate.encode(&mut json).unwrap();
     }
 
     if sess.show_span() {
@@ -212,9 +212,7 @@ pub fn phase_2_configure_and_expand(sess: &Session,
     let time_passes = sess.time_passes();
 
     sess.building_library.set(session::building_library(&sess.opts, &krate));
-    sess.crate_types.set(session::collect_crate_types(sess,
-                                                      krate.attrs
-                                                           .as_slice()));
+    *sess.crate_types.borrow_mut() = session::collect_crate_types(sess, krate.attrs.as_slice());
 
     time(time_passes, "gated feature checking", (), |_|
          front::feature_gate::check_crate(sess, &krate));
@@ -243,8 +241,6 @@ pub fn phase_2_configure_and_expand(sess: &Session,
                                           cfg,
                                           krate)
     });
-    // dump the syntax-time crates
-    sess.cstore.reset();
 
     // strip again, in case expansion added anything with a #[cfg].
     krate = time(time_passes, "configuration 2", krate, |krate|
@@ -262,19 +258,20 @@ pub fn phase_2_configure_and_expand(sess: &Session,
     if sess.opts.debugging_opts & session::AST_JSON != 0 {
         let mut stdout = io::BufferedWriter::new(io::stdout());
         let mut json = json::PrettyEncoder::new(&mut stdout);
-        krate.encode(&mut json);
+        // unwrapping so IoError isn't ignored
+        krate.encode(&mut json).unwrap();
     }
 
     (krate, map)
 }
 
 pub struct CrateAnalysis {
-    exp_map2: middle::resolve::ExportMap2,
-    exported_items: middle::privacy::ExportedItems,
-    public_items: middle::privacy::PublicItems,
-    ty_cx: ty::ctxt,
-    maps: astencode::Maps,
-    reachable: NodeSet,
+    pub exp_map2: middle::resolve::ExportMap2,
+    pub exported_items: middle::privacy::ExportedItems,
+    pub public_items: middle::privacy::PublicItems,
+    pub ty_cx: ty::ctxt,
+    pub maps: astencode::Maps,
+    pub reachable: NodeSet,
 }
 
 /// Run the resolution, typechecking, region checking and other
@@ -324,6 +321,9 @@ pub fn phase_3_run_analysis_passes(sess: Session,
     let region_map = time(time_passes, "region resolution", (), |_|
                           middle::region::resolve_crate(&sess, krate));
 
+    time(time_passes, "loop checking", (), |_|
+         middle::check_loop::check_crate(&sess, krate));
+
     let ty_cx = ty::mk_ctxt(sess, def_map, named_region_map, ast_map,
                             freevars, region_map, lang_items);
 
@@ -348,9 +348,6 @@ pub fn phase_3_run_analysis_passes(sess: Session,
 
     time(time_passes, "effect checking", (), |_|
          middle::effect::check_crate(&ty_cx, method_map, krate));
-
-    time(time_passes, "loop checking", (), |_|
-         middle::check_loop::check_crate(&ty_cx, krate));
 
     let middle::moves::MoveMaps {moves_map, moved_variables_set,
                                  capture_map} =
@@ -408,12 +405,12 @@ pub fn phase_3_run_analysis_passes(sess: Session,
 }
 
 pub struct CrateTranslation {
-    context: ContextRef,
-    module: ModuleRef,
-    metadata_module: ModuleRef,
-    link: LinkMeta,
-    metadata: Vec<u8> ,
-    reachable: Vec<~str> ,
+    pub context: ContextRef,
+    pub module: ModuleRef,
+    pub metadata_module: ModuleRef,
+    pub link: LinkMeta,
+    pub metadata: Vec<u8>,
+    pub reachable: Vec<~str>,
 }
 
 /// Run the translation phase to LLVM, after which the AST and analysis can
@@ -682,7 +679,7 @@ pub fn pretty_print_input(sess: Session,
     };
 
     let src_name = source_name(input);
-    let src = sess.codemap().get_filemap(src_name).src.as_bytes().to_owned();
+    let src = Vec::from_slice(sess.codemap().get_filemap(src_name).src.as_bytes());
     let mut rdr = MemReader::new(src);
 
     match ppm {
@@ -800,7 +797,7 @@ pub fn host_triple() -> ~str {
     // Instead of grabbing the host triple (for the current host), we grab (at
     // compile time) the target triple that this rustc is built with and
     // calling that (at runtime) the host triple.
-    (env!("CFG_COMPILER")).to_owned()
+    (env!("CFG_COMPILER_HOST_TRIPLE")).to_owned()
 }
 
 pub fn build_session_options(matches: &getopts::Matches) -> session::Options {
@@ -833,9 +830,7 @@ pub fn build_session_options(matches: &getopts::Matches) -> session::Options {
 
         let level_short = level_name.slice_chars(0, 1);
         let level_short = level_short.to_ascii().to_upper().into_str();
-        let flags = vec::append(matches.opt_strs(level_short)
-                                          .move_iter()
-                                          .collect(),
+        let flags = matches.opt_strs(level_short).move_iter().collect::<Vec<_>>().append(
                                    matches.opt_strs(level_name).as_slice());
         for lint_name in flags.iter() {
             let lint_name = lint_name.replace("-", "_");
@@ -940,9 +935,9 @@ pub fn build_session_options(matches: &getopts::Matches) -> session::Options {
         NoDebugInfo
     };
 
-    let addl_lib_search_paths = matches.opt_strs("L").map(|s| {
+    let addl_lib_search_paths = matches.opt_strs("L").iter().map(|s| {
         Path::new(s.as_slice())
-    }).move_iter().collect();
+    }).collect();
 
     let cfg = parse_cfgspecs(matches.opt_strs("cfg").move_iter().collect());
     let test = matches.opt_present("test");
@@ -1125,9 +1120,9 @@ pub fn optgroups() -> Vec<getopts::OptGroup> {
 }
 
 pub struct OutputFilenames {
-    out_directory: Path,
-    out_filestem: ~str,
-    single_output_file: Option<Path>,
+    pub out_directory: Path,
+    pub out_filestem: ~str,
+    pub single_output_file: Option<Path>,
 }
 
 impl OutputFilenames {

@@ -8,7 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use abi::AbiSet;
+use abi;
 use ast::{P, Ident};
 use ast;
 use ast_util;
@@ -141,6 +141,10 @@ pub trait AstBuilder {
 
     fn expr_fail(&self, span: Span, msg: InternedString) -> @ast::Expr;
     fn expr_unreachable(&self, span: Span) -> @ast::Expr;
+
+    fn expr_ok(&self, span: Span, expr: @ast::Expr) -> @ast::Expr;
+    fn expr_err(&self, span: Span, expr: @ast::Expr) -> @ast::Expr;
+    fn expr_try(&self, span: Span, head: @ast::Expr) -> @ast::Expr;
 
     fn pat(&self, span: Span, pat: ast::Pat_) -> @ast::Pat;
     fn pat_wild(&self, span: Span) -> @ast::Pat;
@@ -575,7 +579,7 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
         self.expr(sp, ast::ExprVstore(expr, vst))
     }
     fn expr_vec(&self, sp: Span, exprs: Vec<@ast::Expr> ) -> @ast::Expr {
-        self.expr(sp, ast::ExprVec(exprs, ast::MutImmutable))
+        self.expr(sp, ast::ExprVec(exprs))
     }
     fn expr_vec_ng(&self, sp: Span) -> @ast::Expr {
         self.expr_call_global(sp,
@@ -638,6 +642,50 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
                            "internal error: entered unreachable code"))
     }
 
+    fn expr_ok(&self, sp: Span, expr: @ast::Expr) -> @ast::Expr {
+        let ok = vec!(
+            self.ident_of("std"),
+            self.ident_of("result"),
+            self.ident_of("Ok"));
+        self.expr_call_global(sp, ok, vec!(expr))
+    }
+
+    fn expr_err(&self, sp: Span, expr: @ast::Expr) -> @ast::Expr {
+        let err = vec!(
+            self.ident_of("std"),
+            self.ident_of("result"),
+            self.ident_of("Err"));
+        self.expr_call_global(sp, err, vec!(expr))
+    }
+
+    fn expr_try(&self, sp: Span, head: @ast::Expr) -> @ast::Expr {
+        let ok = self.ident_of("Ok");
+        let ok_path = self.path_ident(sp, ok);
+        let err = self.ident_of("Err");
+        let err_path = self.path_ident(sp, err);
+
+        let binding_variable = self.ident_of("__try_var");
+        let binding_pat = self.pat_ident(sp, binding_variable);
+        let binding_expr = self.expr_ident(sp, binding_variable);
+
+        // Ok(__try_var) pattern
+        let ok_pat = self.pat_enum(sp, ok_path, vec!(binding_pat));
+
+        // Err(__try_var)  (pattern and expression resp.)
+        let err_pat = self.pat_enum(sp, err_path, vec!(binding_pat));
+        let err_inner_expr = self.expr_call_ident(sp, err, vec!(binding_expr));
+        // return Err(__try_var)
+        let err_expr = self.expr(sp, ast::ExprRet(Some(err_inner_expr)));
+
+        // Ok(__try_var) => __try_var
+        let ok_arm = self.arm(sp, vec!(ok_pat), binding_expr);
+        // Err(__try_var) => return Err(__try_var)
+        let err_arm = self.arm(sp, vec!(err_pat), err_expr);
+
+        // match head { Ok() => ..., Err() => ... }
+        self.expr_match(sp, head, vec!(ok_arm, err_arm))
+    }
+
 
     fn pat(&self, span: Span, pat: ast::Pat_) -> @ast::Pat {
         @ast::Pat { id: ast::DUMMY_NODE_ID, node: pat, span: span }
@@ -698,7 +746,7 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
     }
     fn lambda(&self, span: Span, ids: Vec<ast::Ident> , blk: P<ast::Block>) -> @ast::Expr {
         let fn_decl = self.fn_decl(
-            ids.map(|id| self.arg(span, *id, self.ty_infer(span))),
+            ids.iter().map(|id| self.arg(span, *id, self.ty_infer(span))).collect(),
             self.ty_infer(span));
 
         self.expr(span, ast::ExprFnBlock(fn_decl, blk))
@@ -778,7 +826,7 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
                   Vec::new(),
                   ast::ItemFn(self.fn_decl(inputs, output),
                               ast::ImpureFn,
-                              AbiSet::Rust(),
+                              abi::Rust,
                               generics,
                               body))
     }
@@ -918,16 +966,14 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
 
     fn view_use_list(&self, sp: Span, vis: ast::Visibility,
                      path: Vec<ast::Ident> , imports: &[ast::Ident]) -> ast::ViewItem {
-        let imports = imports.map(|id| {
+        let imports = imports.iter().map(|id| {
             respan(sp, ast::PathListIdent_ { name: *id, id: ast::DUMMY_NODE_ID })
-        });
+        }).collect();
 
         self.view_use(sp, vis,
                       vec!(@respan(sp,
                                 ast::ViewPathList(self.path(sp, path),
-                                                  imports.iter()
-                                                         .map(|x| *x)
-                                                         .collect(),
+                                                  imports,
                                                   ast::DUMMY_NODE_ID))))
     }
 

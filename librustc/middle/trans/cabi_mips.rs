@@ -8,9 +8,9 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[allow(non_uppercase_pattern_statics)];
+#![allow(non_uppercase_pattern_statics)]
 
-use std::libc::c_uint;
+use libc::c_uint;
 use std::cmp;
 use lib::llvm::{llvm, Integer, Pointer, Float, Double, Struct, Array};
 use lib::llvm::StructRetAttribute;

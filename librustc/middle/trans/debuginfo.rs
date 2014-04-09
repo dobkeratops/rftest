@@ -145,7 +145,7 @@ use std::c_str::{CString, ToCStr};
 use std::cell::{Cell, RefCell};
 use collections::HashMap;
 use collections::HashSet;
-use std::libc::{c_uint, c_ulonglong, c_longlong};
+use libc::{c_uint, c_ulonglong, c_longlong};
 use std::ptr;
 use std::sync::atomics;
 use std::slice;
@@ -173,15 +173,15 @@ static DW_ATE_unsigned_char: c_uint = 0x08;
 
 /// A context object for maintaining all state needed by the debuginfo module.
 pub struct CrateDebugContext {
-    priv llcontext: ContextRef,
-    priv builder: DIBuilderRef,
-    priv current_debug_location: Cell<DebugLocation>,
-    priv created_files: RefCell<HashMap<~str, DIFile>>,
-    priv created_types: RefCell<HashMap<uint, DIType>>,
-    priv namespace_map: RefCell<HashMap<Vec<ast::Name> , @NamespaceTreeNode>>,
+    llcontext: ContextRef,
+    builder: DIBuilderRef,
+    current_debug_location: Cell<DebugLocation>,
+    created_files: RefCell<HashMap<~str, DIFile>>,
+    created_types: RefCell<HashMap<uint, DIType>>,
+    namespace_map: RefCell<HashMap<Vec<ast::Name> , @NamespaceTreeNode>>,
     // This collection is used to assert that composite types (structs, enums, ...) have their
     // members only set once:
-    priv composite_types_completed: RefCell<HashSet<DIType>>,
+    composite_types_completed: RefCell<HashSet<DIType>>,
 }
 
 impl CrateDebugContext {
@@ -278,6 +278,66 @@ pub fn finalize(cx: &CrateContext) {
             |s| llvm::LLVMRustAddModuleFlag(cx.llmod, s,
                                             llvm::LLVMRustDebugMetadataVersion));
     };
+}
+
+/// Creates debug information for the given global variable.
+///
+/// Adds the created metadata nodes directly to the crate's IR.
+pub fn create_global_var_metadata(cx: &CrateContext,
+                                  node_id: ast::NodeId,
+                                  global: ValueRef) {
+    if cx.dbg_cx.is_none() {
+        return;
+    }
+
+    let var_item = cx.tcx.map.get(node_id);
+
+    let (ident, span) = match var_item {
+        ast_map::NodeItem(item) => {
+            match item.node {
+                ast::ItemStatic(..) => (item.ident, item.span),
+                _ => cx.sess().span_bug(item.span,
+                                        format!("debuginfo::create_global_var_metadata() -
+                                                Captured var-id refers to unexpected ast_item
+                                                variant: {:?}",
+                                                var_item))
+            }
+        },
+        _ => cx.sess().bug(format!("debuginfo::create_global_var_metadata() - Captured var-id \
+                                   refers to unexpected ast_map variant: {:?}",
+                                   var_item))
+    };
+
+    let filename = span_start(cx, span).file.name.clone();
+    let file_metadata = file_metadata(cx, filename);
+
+    let is_local_to_unit = is_node_local_to_unit(cx, node_id);
+    let loc = span_start(cx, span);
+
+    let variable_type = ty::node_id_to_type(cx.tcx(), node_id);
+    let type_metadata = type_metadata(cx, variable_type, span);
+
+    let namespace_node = namespace_for_item(cx, ast_util::local_def(node_id));
+    let var_name = token::get_ident(ident).get().to_str();
+    let linkage_name = namespace_node.mangled_name_of_contained_item(var_name);
+    let var_scope = namespace_node.scope;
+
+    var_name.with_c_str(|var_name| {
+        linkage_name.with_c_str(|linkage_name| {
+            unsafe {
+                llvm::LLVMDIBuilderCreateStaticVariable(DIB(cx),
+                                                        var_scope,
+                                                        var_name,
+                                                        linkage_name,
+                                                        file_metadata,
+                                                        loc.line as c_uint,
+                                                        type_metadata,
+                                                        is_local_to_unit,
+                                                        global,
+                                                        ptr::null());
+            }
+        })
+    });
 }
 
 /// Creates debug information for the given local variable.
@@ -640,13 +700,7 @@ pub fn create_function_debug_context(cx: &CrateContext,
     // Clang sets this parameter to the opening brace of the function's block, so let's do this too.
     let scope_line = span_start(cx, top_level_block.span).line;
 
-    // The is_local_to_unit flag indicates whether a function is local to the current compilation
-    // unit (i.e. if it is *static* in the C-sense). The *reachable* set should provide a good
-    // approximation of this, as it contains everything that might leak out of the current crate
-    // (by being externally visible or by being inlined into something externally visible). It might
-    // better to use the `exported_items` set from `driver::CrateAnalysis` in the future, but (atm)
-    // this set is not available in the translation pass.
-    let is_local_to_unit = !cx.reachable.contains(&fn_ast_id);
+    let is_local_to_unit = is_node_local_to_unit(cx, fn_ast_id);
 
     let fn_metadata = function_name.with_c_str(|function_name| {
                           linkage_name.with_c_str(|linkage_name| {
@@ -679,7 +733,7 @@ pub fn create_function_debug_context(cx: &CrateContext,
         source_locations_enabled: Cell::new(false),
     };
 
-    let arg_pats = fn_decl.inputs.map(|arg_ref| arg_ref.pat);
+    let arg_pats = fn_decl.inputs.iter().map(|arg_ref| arg_ref.pat).collect::<Vec<_>>();
     populate_scope_map(cx,
                        arg_pats.as_slice(),
                        top_level_block,
@@ -853,6 +907,17 @@ pub fn create_function_debug_context(cx: &CrateContext,
 //=-------------------------------------------------------------------------------------------------
 // Module-Internal debug info creation functions
 //=-------------------------------------------------------------------------------------------------
+
+fn is_node_local_to_unit(cx: &CrateContext, node_id: ast::NodeId) -> bool
+{
+    // The is_local_to_unit flag indicates whether a function is local to the current compilation
+    // unit (i.e. if it is *static* in the C-sense). The *reachable* set should provide a good
+    // approximation of this, as it contains everything that might leak out of the current crate
+    // (by being externally visible or by being inlined into something externally visible). It might
+    // better to use the `exported_items` set from `driver::CrateAnalysis` in the future, but (atm)
+    // this set is not available in the translation pass.
+    !cx.reachable.contains(&node_id)
+}
 
 fn create_DIArray(builder: DIBuilderRef, arr: &[DIDescriptor]) -> DIArray {
     return unsafe {
@@ -1153,7 +1218,7 @@ struct StructMemberDescriptionFactory {
 impl StructMemberDescriptionFactory {
     fn create_member_descriptions(&self, cx: &CrateContext)
                                   -> Vec<MemberDescription> {
-        self.fields.map(|field| {
+        self.fields.iter().map(|field| {
             let name = if field.ident.name == special_idents::unnamed_field.name {
                 ~""
             } else {
@@ -1166,7 +1231,7 @@ impl StructMemberDescriptionFactory {
                 type_metadata: type_metadata(cx, field.mt.ty, self.span),
                 offset: ComputedMemberOffset,
             }
-        })
+        }).collect()
     }
 }
 
@@ -1256,14 +1321,14 @@ struct TupleMemberDescriptionFactory {
 impl TupleMemberDescriptionFactory {
     fn create_member_descriptions(&self, cx: &CrateContext)
                                   -> Vec<MemberDescription> {
-        self.component_types.map(|&component_type| {
+        self.component_types.iter().map(|&component_type| {
             MemberDescription {
                 name: ~"",
                 llvm_type: type_of::type_of(cx, component_type),
                 type_metadata: type_metadata(cx, component_type, self.span),
                 offset: ComputedMemberOffset,
             }
-        })
+        }).collect()
     }
 }
 
@@ -1378,7 +1443,9 @@ fn describe_enum_variant(cx: &CrateContext,
                       -> (DICompositeType, Type, MemberDescriptionFactory) {
     let variant_llvm_type =
         Type::struct_(cx, struct_def.fields
+                                    .iter()
                                     .map(|&t| type_of::type_of(cx, t))
+                                    .collect::<Vec<_>>()
                                     .as_slice(),
                       struct_def.packed);
     // Could some consistency checks here: size, align, field count, discr type
@@ -1399,11 +1466,11 @@ fn describe_enum_variant(cx: &CrateContext,
                                            variant_definition_span);
 
     // Get the argument names from the enum variant info
-    let mut arg_names = match variant_info.arg_names {
+    let mut arg_names: Vec<_> = match variant_info.arg_names {
         Some(ref names) => {
-            names.map(|ident| token::get_ident(*ident).get().to_str())
+            names.iter().map(|ident| token::get_ident(*ident).get().to_str()).collect()
         }
-        None => variant_info.args.map(|_| ~"")
+        None => variant_info.args.iter().map(|_| ~"").collect()
     };
 
     // If this is not a univariant enum, there is also the (unnamed) discriminant field
@@ -2062,7 +2129,7 @@ fn type_metadata(cx: &CrateContext,
             let i8_t = ty::mk_i8();
             match *vstore {
                 ty::vstore_fixed(len) => {
-                    fixed_vec_metadata(cx, i8_t, len + 1, usage_site_span)
+                    fixed_vec_metadata(cx, i8_t, len, usage_site_span)
                 },
                 ty::vstore_uniq  => {
                     let vec_metadata = vec_metadata(cx, i8_t, usage_site_span);
@@ -2552,15 +2619,15 @@ fn populate_scope_map(cx: &CrateContext,
                 walk_expr(cx, rhs, scope_stack, scope_map);
             }
 
-            ast::ExprVec(ref init_expressions, _) |
-            ast::ExprTup(ref init_expressions)    => {
+            ast::ExprVec(ref init_expressions) |
+            ast::ExprTup(ref init_expressions) => {
                 for ie in init_expressions.iter() {
                     walk_expr(cx, *ie, scope_stack, scope_map);
                 }
             }
 
-            ast::ExprAssign(sub_exp1, sub_exp2)    |
-            ast::ExprRepeat(sub_exp1, sub_exp2, _) => {
+            ast::ExprAssign(sub_exp1, sub_exp2) |
+            ast::ExprRepeat(sub_exp1, sub_exp2) => {
                 walk_expr(cx, sub_exp1, scope_stack, scope_map);
                 walk_expr(cx, sub_exp2, scope_stack, scope_map);
             }

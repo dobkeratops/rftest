@@ -24,7 +24,7 @@ use middle::ty::{ty_str, ty_vec, ty_float, ty_infer, ty_int, ty_nil};
 use middle::ty::{ty_param, ty_param_bounds_and_ty, ty_ptr};
 use middle::ty::{ty_rptr, ty_self, ty_struct, ty_trait, ty_tup};
 use middle::ty::{ty_uint, ty_uniq, ty_bare_fn, ty_closure};
-use middle::ty::{ty_unboxed_vec, type_is_ty_var};
+use middle::ty::type_is_ty_var;
 use middle::subst::Subst;
 use middle::ty;
 use middle::ty::{Impl, Method};
@@ -48,7 +48,6 @@ use syntax::visit;
 use collections::HashSet;
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::vec;
 
 struct UniversalQuantificationResult {
     monotype: t,
@@ -82,9 +81,8 @@ fn get_base_type(inference_context: &InferCtxt,
 
         ty_nil | ty_bot | ty_bool | ty_char | ty_int(..) | ty_uint(..) | ty_float(..) |
         ty_str(..) | ty_vec(..) | ty_bare_fn(..) | ty_closure(..) | ty_tup(..) |
-        ty_infer(..) | ty_param(..) | ty_self(..) |
-        ty_unboxed_vec(..) | ty_err | ty_box(_) |
-        ty_uniq(_) | ty_ptr(_) | ty_rptr(_, _) => {
+        ty_infer(..) | ty_param(..) | ty_self(..) | ty_err |
+        ty_box(_) | ty_uniq(_) | ty_ptr(_) | ty_rptr(_, _) => {
             debug!("(getting base type) no base type; found {:?}",
                    get(original_type).sty);
             None
@@ -345,9 +343,7 @@ impl<'a> CoherenceChecker<'a> {
             // construct the polytype for the method based on the method_ty
             let new_generics = ty::Generics {
                 type_param_defs:
-                    Rc::new(vec::append(
-                        Vec::from_slice(impl_poly_type.generics
-                                                      .type_param_defs()),
+                    Rc::new(Vec::from_slice(impl_poly_type.generics.type_param_defs()).append(
                             new_method_ty.generics.type_param_defs())),
                 region_param_defs:
                     impl_poly_type.generics.region_param_defs.clone()

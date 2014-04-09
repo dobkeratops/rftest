@@ -10,8 +10,8 @@
 
 // Type encoding
 
-#[allow(unused_must_use)]; // as with encoding, everything is a no-fail MemWriter
-#[allow(non_camel_case_types)];
+#![allow(unused_must_use)] // as with encoding, everything is a no-fail MemWriter
+#![allow(non_camel_case_types)]
 
 use std::cell::RefCell;
 use collections::HashMap;
@@ -23,7 +23,7 @@ use std::fmt;
 use middle::ty::param_ty;
 use middle::ty;
 
-use syntax::abi::AbiSet;
+use syntax::abi::Abi;
 use syntax::ast;
 use syntax::ast::*;
 use syntax::diagnostic::SpanHandler;
@@ -34,12 +34,12 @@ macro_rules! mywrite( ($wr:expr, $($arg:tt)*) => (
 ) )
 
 pub struct ctxt<'a> {
-    diag: &'a SpanHandler,
+    pub diag: &'a SpanHandler,
     // Def -> str Callback:
-    ds: fn(DefId) -> ~str,
+    pub ds: fn(DefId) -> ~str,
     // The type context.
-    tcx: &'a ty::ctxt,
-    abbrevs: abbrev_ctxt
+    pub tcx: &'a ty::ctxt,
+    pub abbrevs: abbrev_ctxt
 }
 
 // Compact string representation for ty.t values. API ty_str & parse_from_str.
@@ -298,7 +298,6 @@ fn enc_sty(w: &mut MemWriter, cx: &ctxt, st: &ty::sty) {
             mywrite!(w, "v");
             enc_vstore(w, cx, v);
         }
-        ty::ty_unboxed_vec(mt) => { mywrite!(w, "U"); enc_mt(w, cx, mt); }
         ty::ty_closure(ref f) => {
             mywrite!(w, "f");
             enc_closure_ty(w, cx, *f);
@@ -341,12 +340,9 @@ fn enc_purity(w: &mut MemWriter, p: Purity) {
     }
 }
 
-fn enc_abi_set(w: &mut MemWriter, abis: AbiSet) {
+fn enc_abi(w: &mut MemWriter, abi: Abi) {
     mywrite!(w, "[");
-    abis.each(|abi| {
-        mywrite!(w, "{},", abi.name());
-        true
-    });
+    mywrite!(w, "{}", abi.name());
     mywrite!(w, "]")
 }
 
@@ -359,7 +355,7 @@ fn enc_onceness(w: &mut MemWriter, o: Onceness) {
 
 pub fn enc_bare_fn_ty(w: &mut MemWriter, cx: &ctxt, ft: &ty::BareFnTy) {
     enc_purity(w, ft.purity);
-    enc_abi_set(w, ft.abis);
+    enc_abi(w, ft.abi);
     enc_fn_sig(w, cx, &ft.sig);
 }
 
@@ -394,7 +390,7 @@ fn enc_bounds(w: &mut MemWriter, cx: &ctxt, bs: &ty::ParamBounds) {
             ty::BoundSend => mywrite!(w, "S"),
             ty::BoundStatic => mywrite!(w, "O"),
             ty::BoundSized => mywrite!(w, "Z"),
-            ty::BoundPod => mywrite!(w, "P"),
+            ty::BoundCopy => mywrite!(w, "P"),
             ty::BoundShare => mywrite!(w, "T"),
         }
     }

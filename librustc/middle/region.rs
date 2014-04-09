@@ -75,11 +75,11 @@ The region maps encode information about region relationships.
   for dynamic checks and/or arbitrary amounts of stack space.
 */
 pub struct RegionMaps {
-    priv scope_map: RefCell<NodeMap<ast::NodeId>>,
-    priv var_map: RefCell<NodeMap<ast::NodeId>>,
-    priv free_region_map: RefCell<HashMap<FreeRegion, Vec<FreeRegion> >>,
-    priv rvalue_scopes: RefCell<NodeMap<ast::NodeId>>,
-    priv terminating_scopes: RefCell<HashSet<ast::NodeId>>,
+    scope_map: RefCell<NodeMap<ast::NodeId>>,
+    var_map: RefCell<NodeMap<ast::NodeId>>,
+    free_region_map: RefCell<HashMap<FreeRegion, Vec<FreeRegion> >>,
+    rvalue_scopes: RefCell<NodeMap<ast::NodeId>>,
+    terminating_scopes: RefCell<HashSet<ast::NodeId>>,
 }
 
 #[deriving(Clone)]
@@ -149,6 +149,7 @@ impl RegionMaps {
         self.scope_map.borrow().find(&id).map(|x| *x)
     }
 
+    #[allow(dead_code)] // used in middle::cfg
     pub fn encl_scope(&self, id: ast::NodeId) -> ast::NodeId {
         //! Returns the narrowest scope that encloses `id`, if any.
         match self.scope_map.borrow().find(&id) {
@@ -201,12 +202,6 @@ impl RegionMaps {
         }
         debug!("temporary_scope({}) = {} [enclosing]", expr_id, id);
         return Some(id);
-    }
-
-    pub fn encl_region(&self, id: ast::NodeId) -> ty::Region {
-        //! Returns the narrowest scope region that encloses `id`, if any.
-
-        ty::ReScope(self.encl_scope(id))
     }
 
     pub fn var_region(&self, id: ast::NodeId) -> ty::Region {
@@ -729,7 +724,7 @@ fn resolve_local(visitor: &mut RegionResolutionVisitor,
                 visitor.region_maps.record_rvalue_scope(subexpr.id, blk_id);
                 record_rvalue_scope_if_borrow_expr(visitor, subexpr, blk_id);
             }
-            ast::ExprVec(ref subexprs, _) |
+            ast::ExprVec(ref subexprs) |
             ast::ExprTup(ref subexprs) => {
                 for &subexpr in subexprs.iter() {
                     record_rvalue_scope_if_borrow_expr(

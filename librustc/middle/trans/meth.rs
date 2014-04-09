@@ -34,7 +34,7 @@ use util::common::indenter;
 use util::ppaux::Repr;
 
 use std::c_str::ToCStr;
-use std::vec;
+use syntax::abi::Rust;
 use syntax::parse::token;
 use syntax::{ast, ast_map, visit};
 
@@ -73,22 +73,6 @@ pub fn trans_impl(ccx: &CrateContext,
             visit::walk_method_helper(&mut v, *method, ());
         }
     }
-}
-
-/// Translates a (possibly monomorphized) method body.
-///
-/// Parameters:
-/// * `method`: the AST node for the method
-/// * `param_substs`: if this is a generic method, the current values for
-///   type parameters and so forth, else None
-/// * `llfn`: the LLVM ValueRef for the method
-///
-pub fn trans_method(ccx: &CrateContext, method: &ast::Method,
-                    param_substs: Option<@param_substs>,
-                    llfn: ValueRef) -> ValueRef {
-    trans_fn(ccx, method.decl, method.body,
-             llfn, param_substs, method.id, []);
-    llfn
 }
 
 pub fn trans_method_callee<'a>(
@@ -319,8 +303,7 @@ fn combine_impl_and_methods_tps(bcx: &Block,
     let node_substs = node_id_type_params(bcx, node);
     debug!("rcvr_substs={:?}", rcvr_substs.repr(ccx.tcx()));
     let ty_substs
-        = vec::append(Vec::from_slice(rcvr_substs),
-                         node_substs.tailn(node_substs.len() - n_m_tps));
+        = Vec::from_slice(rcvr_substs).append(node_substs.tailn(node_substs.len() - n_m_tps));
     debug!("n_m_tps={:?}", n_m_tps);
     debug!("node_substs={:?}", node_substs.repr(ccx.tcx()));
     debug!("ty_substs={:?}", ty_substs.repr(ccx.tcx()));
@@ -338,8 +321,8 @@ fn combine_impl_and_methods_tps(bcx: &Block,
         None => @Vec::from_elem(node_substs.len(), @Vec::new())
     };
     let vtables
-        = @vec::append(Vec::from_slice(rcvr_origins.as_slice()),
-                          r_m_origins.tailn(r_m_origins.len() - n_m_tps));
+        = @Vec::from_slice(rcvr_origins.as_slice())
+                           .append(r_m_origins.tailn(r_m_origins.len() - n_m_tps));
 
     (ty_substs, vtables)
 }
@@ -411,7 +394,7 @@ pub fn trans_trait_callee_from_llval<'a>(bcx: &'a Block<'a>,
     debug!("(translating trait callee) loading method");
     // Replace the self type (&Self or ~Self) with an opaque pointer.
     let llcallee_ty = match ty::get(callee_ty).sty {
-        ty::ty_bare_fn(ref f) if f.abis.is_rust() => {
+        ty::ty_bare_fn(ref f) if f.abi == Rust => {
             type_of_rust_fn(ccx, true, f.sig.inputs.slice_from(1), f.sig.output)
         }
         _ => {
@@ -541,7 +524,7 @@ fn emit_vtable_methods(bcx: &Block,
     ty::populate_implementations_for_trait_if_necessary(bcx.tcx(), trt_id);
 
     let trait_method_def_ids = ty::trait_method_def_ids(tcx, trt_id);
-    trait_method_def_ids.map(|method_def_id| {
+    trait_method_def_ids.iter().map(|method_def_id| {
         let ident = ty::method(tcx, *method_def_id).ident;
         // The substitutions we have are on the impl, so we grab
         // the method type from the impl to substitute into.
@@ -558,7 +541,7 @@ fn emit_vtable_methods(bcx: &Block,
         } else {
             trans_fn_ref_with_vtables(bcx, m_id, ExprId(0), substs, Some(vtables))
         }
-    })
+    }).collect()
 }
 
 pub fn trans_trait_cast<'a>(bcx: &'a Block<'a>,

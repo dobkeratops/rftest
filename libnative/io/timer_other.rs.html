@@ -47,7 +47,7 @@
 </c40><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c40>//!&nbsp;Note&nbsp;that&nbsp;all&nbsp;time&nbsp;units&nbsp;in&nbsp;this&nbsp;file&nbsp;are&nbsp;in&nbsp;*milliseconds*.
 </c40><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::comm::Data</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::libc</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;libc</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::mem</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::os</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::ptr</c0><c3>;</c3><c0>
@@ -59,8 +59,8 @@
 </c0><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;io::timer_helper</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c31>struct&nbsp;Timer&nbsp;</c31><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>priv</c21><c0>&nbsp;id:&nbsp;uint</c0><c3>,</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>priv</c21><c0>&nbsp;inner:&nbsp;Option&lt;~Inner&gt;</c0><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;id:&nbsp;uint</c0><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;inner:&nbsp;Option&lt;~Inner&gt;</c0><c3>,</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c31>struct&nbsp;Inner&nbsp;</c31><c3>{</c3><c0>
@@ -287,7 +287,7 @@
 </c0><br/><ln>&nbsp;287</ln><a id="287">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;288</ln><a id="288">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os&nbsp;=&nbsp;"macos"</c50><c4>)</c4><c3>]</c3><c50>
 </c50><br/><ln>&nbsp;289</ln><a id="289">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;imp&nbsp;</c38><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;std::libc</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;290</ln><a id="290">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;libc</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;291</ln><a id="291">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;292</ln><a id="292">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c36>static&nbsp;FD_SETSIZE:&nbsp;uint&nbsp;=&nbsp;1024;
 </c36><br/><ln>&nbsp;293</ln><a id="293">&nbsp;</a>&nbsp;<c0>
@@ -296,7 +296,7 @@
 </c0><br/><ln>&nbsp;296</ln><a id="296">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
 </c0><br/><ln>&nbsp;297</ln><a id="297">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;298</ln><a id="298">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c30>fn&nbsp;fd_set</c30><c4>(</c4><c0>set:&nbsp;&amp;mut&nbsp;fd_set</c0><c3>,</c3><c0>&nbsp;fd:&nbsp;i32</c0><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set.fds_bits</c0><c3>[</c3><c0>fd&nbsp;/&nbsp;32</c0><c3>]</c3><c0>&nbsp;|=&nbsp;1&nbsp;&lt;&lt;&nbsp;</c0><c4>(</c4><c0>fd&nbsp;%&nbsp;32</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;299</ln><a id="299">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set.fds_bits</c0><c3>[</c3><c4>(</c4><c0>fd&nbsp;/&nbsp;32</c0><c4>)</c4><c0>&nbsp;as&nbsp;uint</c0><c3>]</c3><c0>&nbsp;|=&nbsp;1&nbsp;&lt;&lt;&nbsp;</c0><c4>(</c4><c0>fd&nbsp;%&nbsp;32</c0><c4>)</c4><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;300</ln><a id="300">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
 </c0><br/><ln>&nbsp;301</ln><a id="301">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;302</ln><a id="302">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>extern</c21><c0>&nbsp;</c0><c3>{</c3><c0>
@@ -314,7 +314,7 @@
 </c0><br/><ln>&nbsp;314</ln><a id="314">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os&nbsp;=&nbsp;"android"</c50><c4>)</c4><c3>]</c3><c50>
 </c50><br/><ln>&nbsp;315</ln><a id="315">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>target_os&nbsp;=&nbsp;"freebsd"</c50><c4>)</c4><c3>]</c3><c50>
 </c50><br/><ln>&nbsp;316</ln><a id="316">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;imp&nbsp;</c38><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;std::libc</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;317</ln><a id="317">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;libc</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;318</ln><a id="318">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;319</ln><a id="319">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c36>static&nbsp;FD_SETSIZE:&nbsp;uint&nbsp;=&nbsp;1024;
 </c36><br/><ln>&nbsp;320</ln><a id="320">&nbsp;</a>&nbsp;<c0>
@@ -323,7 +323,7 @@
 </c0><br/><ln>&nbsp;323</ln><a id="323">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
 </c0><br/><ln>&nbsp;324</ln><a id="324">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;325</ln><a id="325">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c30>fn&nbsp;fd_set</c30><c4>(</c4><c0>set:&nbsp;&amp;mut&nbsp;fd_set</c0><c3>,</c3><c0>&nbsp;fd:&nbsp;i32</c0><c4>)</c4><c0>&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set.fds_bits</c0><c3>[</c3><c0>fd&nbsp;/&nbsp;64</c0><c3>]</c3><c0>&nbsp;|=&nbsp;</c0><c4>(</c4><c0>1&nbsp;&lt;&lt;&nbsp;</c0><c4>(</c4><c0>fd&nbsp;%&nbsp;64</c0><c4>))</c4><c0>&nbsp;as&nbsp;u64</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;326</ln><a id="326">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set.fds_bits</c0><c3>[</c3><c4>(</c4><c0>fd&nbsp;/&nbsp;64</c0><c4>)</c4><c0>&nbsp;as&nbsp;uint</c0><c3>]</c3><c0>&nbsp;|=&nbsp;</c0><c4>(</c4><c0>1&nbsp;&lt;&lt;&nbsp;</c0><c4>(</c4><c0>fd&nbsp;%&nbsp;64</c0><c4>))</c4><c0>&nbsp;as&nbsp;u64</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;327</ln><a id="327">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
 </c0><br/><ln>&nbsp;328</ln><a id="328">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;329</ln><a id="329">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>extern</c21><c0>&nbsp;</c0><c3>{</c3><c0>

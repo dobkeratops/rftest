@@ -15,7 +15,7 @@ use cmp::{Ord, Eq, Ordering, TotalEq, TotalOrd};
 use container::{Container, Mutable};
 use default::Default;
 use fmt;
-use iter::{DoubleEndedIterator, FromIterator, Extendable, Iterator};
+use iter::{DoubleEndedIterator, FromIterator, Extendable, Iterator, range};
 use libc::{free, c_void};
 use mem::{size_of, move_val_init};
 use mem;
@@ -56,9 +56,9 @@ use slice::{MutableTotalOrdVector, Vector};
 /// ```
 #[unsafe_no_drop_flag]
 pub struct Vec<T> {
-    priv len: uint,
-    priv cap: uint,
-    priv ptr: *mut T
+    len: uint,
+    cap: uint,
+    ptr: *mut T
 }
 
 impl<T> Vec<T> {
@@ -166,6 +166,22 @@ impl<T> Vec<T> {
 }
 
 impl<T: Clone> Vec<T> {
+    /// Iterates over the `second` vector, copying each element and appending it to
+    /// the `first`. Afterwards, the `first` is then returned for use again.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// let vec = vec!(1, 2);
+    /// let vec = vec.append([3, 4]);
+    /// assert_eq!(vec, vec!(1, 2, 3, 4));
+    /// ```
+    #[inline]
+    pub fn append(mut self, second: &[T]) -> Vec<T> {
+        self.push_all(second);
+        self
+    }
+
     /// Constructs a `Vec` by cloning elements of a slice.
     ///
     /// # Example
@@ -214,9 +230,7 @@ impl<T: Clone> Vec<T> {
     /// ```
     #[inline]
     pub fn push_all(&mut self, other: &[T]) {
-        for element in other.iter() {
-            self.push((*element).clone())
-        }
+        self.extend(other.iter().map(|e| e.clone()));
     }
 
     /// Grows the `Vec` in-place.
@@ -296,16 +310,29 @@ impl<T: Clone> Vec<T> {
 
 impl<T:Clone> Clone for Vec<T> {
     fn clone(&self) -> Vec<T> {
-        let mut vector = Vec::with_capacity(self.len());
-        for element in self.iter() {
-            vector.push((*element).clone())
+        self.iter().map(|x| x.clone()).collect()
+    }
+
+    fn clone_from(&mut self, other: &Vec<T>) {
+        // drop anything in self that will not be overwritten
+        if self.len() > other.len() {
+            self.truncate(other.len())
         }
-        vector
+
+        // reuse the contained values' allocations/resources.
+        for (place, thing) in self.mut_iter().zip(other.iter()) {
+            place.clone_from(thing)
+        }
+
+        // self.len <= other.len due to the truncate above, so the
+        // slice here is always in-bounds.
+        let len = self.len();
+        self.extend(other.slice_from(len).iter().map(|x| x.clone()));
     }
 }
 
 impl<T> FromIterator<T> for Vec<T> {
-    fn from_iterator<I:Iterator<T>>(mut iterator: I) -> Vec<T> {
+    fn from_iter<I:Iterator<T>>(mut iterator: I) -> Vec<T> {
         let (lower, _) = iterator.size_hint();
         let mut vector = Vec::with_capacity(lower);
         for element in iterator {
@@ -431,7 +458,7 @@ impl<T> Vec<T> {
     /// assert_eq!(vec.capacity(), 11);
     /// ```
     pub fn reserve_exact(&mut self, capacity: uint) {
-        if capacity >= self.len {
+        if capacity > self.cap {
             let size = capacity.checked_mul(&size_of::<T>()).expect("capacity overflow");
             self.cap = capacity;
             unsafe {
@@ -516,6 +543,22 @@ impl<T> Vec<T> {
             move_val_init(&mut *end, value);
             self.len += 1;
         }
+    }
+
+    /// Appends one element to the vector provided. The vector itself is then
+    /// returned for use again.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// let vec = vec!(1, 2);
+    /// let vec = vec.append_one(3);
+    /// assert_eq!(vec, vec!(1, 2, 3));
+    /// ```
+    #[inline]
+    pub fn append_one(mut self, x: T) -> Vec<T> {
+        self.push(x);
+        self
     }
 
     /// Shorten a vector, dropping excess elements.
@@ -902,13 +945,6 @@ impl<T> Vec<T> {
         }
     }
 
-    ///Apply a function to each element of a vector and return the results.
-    #[inline]
-    #[deprecated="Use `xs.iter().map(closure)` instead."]
-    pub fn map<U>(&self, f: |t: &T| -> U) -> Vec<U> {
-        self.iter().map(f).collect()
-    }
-
     /// Takes ownership of the vector `other`, moving all elements into
     /// the current vector. This does not copy any elements, and it is
     /// illegal to use the `other` vector after calling this method
@@ -922,9 +958,7 @@ impl<T> Vec<T> {
     /// assert_eq!(vec, vec!(~1, ~2, ~3, ~4));
     /// ```
     pub fn push_all_move(&mut self, other: Vec<T>) {
-        for element in other.move_iter() {
-            self.push(element)
-        }
+        self.extend(other.move_iter());
     }
 
     /// Returns a mutable slice of `self` between `start` and `end`.
@@ -1101,6 +1135,56 @@ impl<T> Vec<T> {
     pub fn as_mut_ptr(&mut self) -> *mut T {
         self.as_mut_slice().as_mut_ptr()
     }
+
+    /// Retains only the elements specified by the predicate.
+    ///
+    /// In other words, remove all elements `e` such that `f(&e)` returns false.
+    /// This method operates in place and preserves the order the retained elements.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// let mut vec = vec!(1i, 2, 3, 4);
+    /// vec.retain(|x| x%2 == 0);
+    /// assert_eq!(vec, vec!(2, 4));
+    /// ```
+    pub fn retain(&mut self, f: |&T| -> bool) {
+        let len = self.len();
+        let mut del = 0u;
+        {
+            let v = self.as_mut_slice();
+
+            for i in range(0u, len) {
+                if !f(&v[i]) {
+                    del += 1;
+                } else if del > 0 {
+                    v.swap(i-del, i);
+                }
+            }
+        }
+        if del > 0 {
+            self.truncate(len - del);
+        }
+    }
+
+    /// Expands a vector in place, initializing the new elements to the result of a function.
+    ///
+    /// The vector is grown by `n` elements. The i-th new element are initialized to the value
+    /// returned by `f(i)` where `i` is in the range [0, n).
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// let mut vec = vec!(0u, 1);
+    /// vec.grow_fn(3, |i| i);
+    /// assert_eq!(vec, vec!(0, 1, 0, 1, 2));
+    /// ```
+    pub fn grow_fn(&mut self, n: uint, f: |uint| -> T) {
+        self.reserve_additional(n);
+        for i in range(0u, n) {
+            self.push(f(i));
+        }
+    }
 }
 
 impl<T:TotalOrd> Vec<T> {
@@ -1255,38 +1339,6 @@ impl<T> Vector<T> for Vec<T> {
     }
 }
 
-/// Iterates over the `second` vector, copying each element and appending it to
-/// the `first`. Afterwards, the `first` is then returned for use again.
-///
-/// # Example
-///
-/// ```rust
-/// let vec = vec!(1, 2);
-/// let vec = std::vec::append(vec, [3, 4]);
-/// assert_eq!(vec, vec!(1, 2, 3, 4));
-/// ```
-#[inline]
-pub fn append<T:Clone>(mut first: Vec<T>, second: &[T]) -> Vec<T> {
-    first.push_all(second);
-    first
-}
-
-/// Appends one element to the vector provided. The vector itself is then
-/// returned for use again.
-///
-/// # Example
-///
-/// ```rust
-/// let vec = vec!(1, 2);
-/// let vec = std::vec::append_one(vec, 3);
-/// assert_eq!(vec, vec!(1, 2, 3));
-/// ```
-#[inline]
-pub fn append_one<T>(mut lhs: Vec<T>, x: T) -> Vec<T> {
-    lhs.push(x);
-    lhs
-}
-
 #[unsafe_destructor]
 impl<T> Drop for Vec<T> {
     fn drop(&mut self) {
@@ -1315,8 +1367,8 @@ impl<T:fmt::Show> fmt::Show for Vec<T> {
 
 /// An iterator that moves out of a vector.
 pub struct MoveItems<T> {
-    priv allocation: *mut c_void, // the block of memory allocated for the vector
-    priv iter: Items<'static, T>
+    allocation: *mut c_void, // the block of memory allocated for the vector
+    iter: Items<'static, T>
 }
 
 impl<T> Iterator<T> for MoveItems<T> {
@@ -1485,5 +1537,54 @@ mod tests {
         }
 
         assert!(values == Vec::from_slice([2u8, 3, 5, 6, 7]));
+    }
+
+    #[test]
+    fn test_clone() {
+        let v: Vec<int> = vec!();
+        let w = vec!(1, 2, 3);
+
+        assert_eq!(v, v.clone());
+
+        let z = w.clone();
+        assert_eq!(w, z);
+        // they should be disjoint in memory.
+        assert!(w.as_ptr() != z.as_ptr())
+    }
+
+    #[test]
+    fn test_clone_from() {
+        let mut v = vec!();
+        let three = vec!(~1, ~2, ~3);
+        let two = vec!(~4, ~5);
+        // zero, long
+        v.clone_from(&three);
+        assert_eq!(v, three);
+
+        // equal
+        v.clone_from(&three);
+        assert_eq!(v, three);
+
+        // long, short
+        v.clone_from(&two);
+        assert_eq!(v, two);
+
+        // short, long
+        v.clone_from(&three);
+        assert_eq!(v, three)
+    }
+
+    #[test]
+    fn test_grow_fn() {
+        let mut v = Vec::from_slice([0u, 1]);
+        v.grow_fn(3, |i| i);
+        assert!(v == Vec::from_slice([0u, 1, 0, 1, 2]));
+    }
+
+    #[test]
+    fn test_retain() {
+        let mut vec = Vec::from_slice([1u, 2, 3, 4]);
+        vec.retain(|x| x%2 == 0);
+        assert!(vec == Vec::from_slice([2u, 4]));
     }
 }

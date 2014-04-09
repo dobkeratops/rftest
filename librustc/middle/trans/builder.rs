@@ -8,6 +8,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#![allow(dead_code)] // FFI wrappers
+
 use lib;
 use lib::llvm::llvm;
 use lib::llvm::{CallConv, AtomicBinOp, AtomicOrdering, AsmDialect};
@@ -17,14 +19,14 @@ use middle::trans::base;
 use middle::trans::common::*;
 use middle::trans::machine::llalign_of_pref;
 use middle::trans::type_::Type;
-
 use collections::HashMap;
-use std::libc::{c_uint, c_ulonglong, c_char};
+use std::vec::Vec;
+use libc::{c_uint, c_ulonglong, c_char};
 use syntax::codemap::Span;
 
 pub struct Builder<'a> {
-    llbuilder: BuilderRef,
-    ccx: &'a CrateContext,
+    pub llbuilder: BuilderRef,
+    pub ccx: &'a CrateContext,
 }
 
 // This is a really awful way to get a zero-length c-string, but better (and a
@@ -780,13 +782,13 @@ impl<'a> Builder<'a> {
         let alignstack = if alignstack { lib::llvm::True }
                          else          { lib::llvm::False };
 
-        let argtys = inputs.map(|v| {
+        let argtys = inputs.iter().map(|v| {
             debug!("Asm Input Type: {:?}", self.ccx.tn.val_to_str(*v));
             val_ty(*v)
-        });
+        }).collect::<Vec<_>>();
 
         debug!("Asm Output Type: {:?}", self.ccx.tn.type_to_str(output));
-        let fty = Type::func(argtys, &output);
+        let fty = Type::func(argtys.as_slice(), &output);
         unsafe {
             let v = llvm::LLVMInlineAsm(
                 fty.to_ref(), asm, cons, volatile, alignstack, dia as c_uint);
@@ -800,7 +802,10 @@ impl<'a> Builder<'a> {
 
         debug!("Call {} with args ({})",
                self.ccx.tn.val_to_str(llfn),
-               args.map(|&v| self.ccx.tn.val_to_str(v)).connect(", "));
+               args.iter()
+                   .map(|&v| self.ccx.tn.val_to_str(v))
+                   .collect::<Vec<~str>>()
+                   .connect(", "));
 
         unsafe {
             let v = llvm::LLVMBuildCall(self.llbuilder, llfn, args.as_ptr(),

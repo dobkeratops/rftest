@@ -46,10 +46,9 @@ use util::ppaux;
 use util::ppaux::Repr;
 
 use std::rc::Rc;
-use std::vec;
 use collections::HashSet;
 
-use syntax::abi::AbiSet;
+use syntax::abi;
 use syntax::ast::{RegionTyParamBound, TraitTyParamBound};
 use syntax::ast;
 use syntax::ast_map;
@@ -117,8 +116,8 @@ impl<'a> AstConv for CrateCtxt<'a> {
         match self.tcx.map.find(id.node) {
             Some(ast_map::NodeItem(item)) => ty_of_item(self, item),
             Some(ast_map::NodeForeignItem(foreign_item)) => {
-                let abis = self.tcx.map.get_foreign_abis(id.node);
-                ty_of_foreign_item(self, foreign_item, abis)
+                let abi = self.tcx.map.get_foreign_abi(id.node);
+                ty_of_foreign_item(self, foreign_item, abi)
             }
             x => {
                 self.tcx.sess.bug(format!("unexpected sort of node \
@@ -152,7 +151,7 @@ pub fn get_enum_variant_types(ccx: &CrateCtxt,
         let result_ty = match variant.node.kind {
             ast::TupleVariantKind(ref args) if args.len() > 0 => {
                 let rs = ExplicitRscope;
-                let input_tys = args.map(|va| ccx.to_ty(&rs, va.ty));
+                let input_tys: Vec<_> = args.iter().map(|va| ccx.to_ty(&rs, va.ty)).collect();
                 ty::mk_ctor_fn(tcx, scope, input_tys.as_slice(), enum_ty)
             }
 
@@ -168,8 +167,8 @@ pub fn get_enum_variant_types(ccx: &CrateCtxt,
 
                 convert_struct(ccx, struct_def, tpt, variant.node.id);
 
-                let input_tys = struct_def.fields.map(
-                    |f| ty::node_id_to_type(ccx.tcx, f.node.id));
+                let input_tys: Vec<_> = struct_def.fields.iter().map(
+                    |f| ty::node_id_to_type(ccx.tcx, f.node.id)).collect();
                 ty::mk_ctor_fn(tcx, scope, input_tys.as_slice(), enum_ty)
             }
         };
@@ -222,7 +221,7 @@ pub fn ensure_trait_methods(ccx: &CrateCtxt, trait_id: ast::NodeId) {
                     }
 
                     // Add an entry mapping
-                    let method_def_ids = @ms.map(|m| {
+                    let method_def_ids = @ms.iter().map(|m| {
                         match m {
                             &ast::Required(ref ty_method) => {
                                 local_def(ty_method.id)
@@ -231,13 +230,11 @@ pub fn ensure_trait_methods(ccx: &CrateCtxt, trait_id: ast::NodeId) {
                                 local_def(method.id)
                             }
                         }
-                    });
+                    }).collect();
 
                     let trait_def_id = local_def(trait_id);
                     tcx.trait_method_def_ids.borrow_mut()
-                        .insert(trait_def_id, @method_def_ids.iter()
-                                                             .map(|x| *x)
-                                                             .collect());
+                        .insert(trait_def_id, method_def_ids);
                 }
                 _ => {} // Ignore things that aren't traits.
             }
@@ -322,8 +319,7 @@ pub fn ensure_trait_methods(ccx: &CrateCtxt, trait_id: ast::NodeId) {
         let substs = substs {
             regions: ty::NonerasedRegions(rps_from_trait),
             self_ty: Some(self_param),
-            tps: vec::append(non_shifted_trait_tps,
-                                shifted_method_tps.as_slice())
+            tps: non_shifted_trait_tps.append(shifted_method_tps.as_slice())
         };
 
         // create the type of `foo`, applying the substitution above
@@ -492,13 +488,10 @@ fn convert_methods(ccx: &CrateCtxt,
             // itself
             ty_param_bounds_and_ty {
                 generics: ty::Generics {
-                    type_param_defs: Rc::new(vec::append(
-                        Vec::from_slice(
-                            rcvr_ty_generics.type_param_defs()),
-                        m_ty_generics.type_param_defs())),
-                    region_param_defs: Rc::new(vec::append(
-                            Vec::from_slice(rcvr_ty_generics.region_param_defs()),
-                            m_ty_generics.region_param_defs())),
+                    type_param_defs: Rc::new(Vec::from_slice(rcvr_ty_generics.type_param_defs())
+                                             .append(m_ty_generics.type_param_defs())),
+                    region_param_defs: Rc::new(Vec::from_slice(rcvr_ty_generics.region_param_defs())
+                                               .append(m_ty_generics.region_param_defs())),
                 },
                 ty: fty
             });
@@ -557,10 +550,10 @@ pub fn ensure_no_ty_param_bounds(ccx: &CrateCtxt,
 
 fn ensure_generics_abi(ccx: &CrateCtxt,
                        span: Span,
-                       abis: AbiSet,
+                       abi: abi::Abi,
                        generics: &ast::Generics) {
     if generics.ty_params.len() > 0 &&
-       !(abis.is_rust() || abis.is_intrinsic()) {
+       !(abi == abi::Rust || abi == abi::RustIntrinsic) {
         ccx.tcx.sess.span_err(span,
                               "foreign functions may not use type parameters");
     }
@@ -695,12 +688,11 @@ pub fn convert_struct(ccx: &CrateCtxt,
                 write_ty_to_tcx(tcx, ctor_id, selfty);
 
                 tcx.tcache.borrow_mut().insert(local_def(ctor_id), tpt);
-            } else if struct_def.fields.get(0).node.kind ==
-                    ast::UnnamedField {
+            } else if struct_def.fields.get(0).node.kind.is_unnamed() {
                 // Tuple-like.
-                let inputs = struct_def.fields.map(
+                let inputs: Vec<_> = struct_def.fields.iter().map(
                         |field| tcx.tcache.borrow().get(
-                            &local_def(field.node.id)).ty);
+                            &local_def(field.node.id)).ty).collect();
                 let ctor_fn_ty = ty::mk_ctor_fn(tcx,
                                                 ctor_id,
                                                 inputs.as_slice(),
@@ -725,9 +717,9 @@ pub fn convert_foreign(ccx: &CrateCtxt, i: &ast::ForeignItem) {
     // map, and I regard each time that I use it as a personal and
     // moral failing, but at the moment it seems like the only
     // convenient way to extract the ABI. - ndm
-    let abis = ccx.tcx.map.get_foreign_abis(i.id);
+    let abi = ccx.tcx.map.get_foreign_abi(i.id);
 
-    let tpt = ty_of_foreign_item(ccx, i, abis);
+    let tpt = ty_of_foreign_item(ccx, i, abi);
     write_ty_to_tcx(ccx.tcx, i.id, tpt.ty);
 
     ccx.tcx.tcache.borrow_mut().insert(local_def(i.id), tpt);
@@ -899,7 +891,7 @@ pub fn ty_of_item(ccx: &CrateCtxt, it: &ast::Item)
 
 pub fn ty_of_foreign_item(ccx: &CrateCtxt,
                           it: &ast::ForeignItem,
-                          abis: AbiSet) -> ty::ty_param_bounds_and_ty
+                          abi: abi::Abi) -> ty::ty_param_bounds_and_ty
 {
     match it.node {
         ast::ForeignItemFn(fn_decl, ref generics) => {
@@ -907,7 +899,7 @@ pub fn ty_of_foreign_item(ccx: &CrateCtxt,
                                   fn_decl,
                                   local_def(it.id),
                                   generics,
-                                  abis)
+                                  abi)
         }
         ast::ForeignItemStatic(t, _) => {
             ty::ty_param_bounds_and_ty {
@@ -1011,7 +1003,7 @@ pub fn ty_of_foreign_fn_decl(ccx: &CrateCtxt,
                              decl: &ast::FnDecl,
                              def_id: ast::DefId,
                              ast_generics: &ast::Generics,
-                             abis: AbiSet)
+                             abi: abi::Abi)
                           -> ty::ty_param_bounds_and_ty {
 
     for i in decl.inputs.iter() {
@@ -1036,7 +1028,7 @@ pub fn ty_of_foreign_fn_decl(ccx: &CrateCtxt,
     let t_fn = ty::mk_bare_fn(
         ccx.tcx,
         ty::BareFnTy {
-            abis: abis,
+            abi: abi,
             purity: ast::UnsafeFn,
             sig: ty::FnSig {binder_id: def_id.node,
                             inputs: input_tys,

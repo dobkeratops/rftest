@@ -8,7 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 //! Code that is useful in various trans modules.
 
@@ -24,7 +24,6 @@ use middle::trans::datum;
 use middle::trans::datum::{Datum, Lvalue};
 use middle::trans::debuginfo;
 use middle::trans::type_::Type;
-use middle::ty::substs;
 use middle::ty;
 use middle::typeck;
 use util::ppaux::Repr;
@@ -32,9 +31,10 @@ use util::nodemap::NodeMap;
 
 use arena::TypedArena;
 use collections::HashMap;
+use libc::{c_uint, c_longlong, c_ulonglong, c_char};
 use std::c_str::ToCStr;
 use std::cell::{Cell, RefCell};
-use std::libc::{c_uint, c_longlong, c_ulonglong, c_char};
+use std::vec::Vec;
 use syntax::ast::Ident;
 use syntax::ast;
 use syntax::ast_map::{PathElem, PathName};
@@ -111,12 +111,12 @@ pub fn gensym_name(name: &str) -> PathElem {
 }
 
 pub struct tydesc_info {
-    ty: ty::t,
-    tydesc: ValueRef,
-    size: ValueRef,
-    align: ValueRef,
-    name: ValueRef,
-    visit_glue: Cell<Option<ValueRef>>,
+    pub ty: ty::t,
+    pub tydesc: ValueRef,
+    pub size: ValueRef,
+    pub align: ValueRef,
+    pub name: ValueRef,
+    pub visit_glue: Cell<Option<ValueRef>>,
 }
 
 /*
@@ -146,8 +146,8 @@ pub struct tydesc_info {
  */
 
 pub struct NodeInfo {
-    id: ast::NodeId,
-    span: Span,
+    pub id: ast::NodeId,
+    pub span: Span,
 }
 
 pub fn expr_info(expr: &ast::Expr) -> NodeInfo {
@@ -155,22 +155,22 @@ pub fn expr_info(expr: &ast::Expr) -> NodeInfo {
 }
 
 pub struct Stats {
-    n_static_tydescs: Cell<uint>,
-    n_glues_created: Cell<uint>,
-    n_null_glues: Cell<uint>,
-    n_real_glues: Cell<uint>,
-    n_fns: Cell<uint>,
-    n_monos: Cell<uint>,
-    n_inlines: Cell<uint>,
-    n_closures: Cell<uint>,
-    n_llvm_insns: Cell<uint>,
-    llvm_insns: RefCell<HashMap<~str, uint>>,
+    pub n_static_tydescs: Cell<uint>,
+    pub n_glues_created: Cell<uint>,
+    pub n_null_glues: Cell<uint>,
+    pub n_real_glues: Cell<uint>,
+    pub n_fns: Cell<uint>,
+    pub n_monos: Cell<uint>,
+    pub n_inlines: Cell<uint>,
+    pub n_closures: Cell<uint>,
+    pub n_llvm_insns: Cell<uint>,
+    pub llvm_insns: RefCell<HashMap<~str, uint>>,
     // (ident, time-in-ms, llvm-instructions)
-    fn_stats: RefCell<Vec<(~str, uint, uint)> >,
+    pub fn_stats: RefCell<Vec<(~str, uint, uint)> >,
 }
 
 pub struct BuilderRef_res {
-    b: BuilderRef,
+    pub b: BuilderRef,
 }
 
 impl Drop for BuilderRef_res {
@@ -192,10 +192,10 @@ pub type ExternMap = HashMap<~str, ValueRef>;
 // Here `self_ty` is the real type of the self parameter to this method. It
 // will only be set in the case of default methods.
 pub struct param_substs {
-    tys: Vec<ty::t> ,
-    self_ty: Option<ty::t>,
-    vtables: Option<typeck::vtable_res>,
-    self_vtables: Option<typeck::vtable_param_res>
+    pub tys: Vec<ty::t> ,
+    pub self_ty: Option<ty::t>,
+    pub vtables: Option<typeck::vtable_res>,
+    pub self_vtables: Option<typeck::vtable_param_res>
 }
 
 impl param_substs {
@@ -228,69 +228,69 @@ pub struct FunctionContext<'a> {
     // address of the first instruction in the sequence of
     // instructions for this function that will go in the .text
     // section of the executable we're generating.
-    llfn: ValueRef,
+    pub llfn: ValueRef,
 
     // The environment argument in a closure.
-    llenv: Option<ValueRef>,
+    pub llenv: Option<ValueRef>,
 
     // The place to store the return value. If the return type is immediate,
     // this is an alloca in the function. Otherwise, it's the hidden first
     // parameter to the function. After function construction, this should
     // always be Some.
-    llretptr: Cell<Option<ValueRef>>,
+    pub llretptr: Cell<Option<ValueRef>>,
 
-    entry_bcx: RefCell<Option<&'a Block<'a>>>,
+    pub entry_bcx: RefCell<Option<&'a Block<'a>>>,
 
-    // These elements: "hoisted basic blocks" containing
+    // These pub elements: "hoisted basic blocks" containing
     // administrative activities that have to happen in only one place in
     // the function, due to LLVM's quirks.
     // A marker for the place where we want to insert the function's static
     // allocas, so that LLVM will coalesce them into a single alloca call.
-    alloca_insert_pt: Cell<Option<ValueRef>>,
-    llreturn: Cell<Option<BasicBlockRef>>,
+    pub alloca_insert_pt: Cell<Option<ValueRef>>,
+    pub llreturn: Cell<Option<BasicBlockRef>>,
 
     // The a value alloca'd for calls to upcalls.rust_personality. Used when
     // outputting the resume instruction.
-    personality: Cell<Option<ValueRef>>,
+    pub personality: Cell<Option<ValueRef>>,
 
     // True if the caller expects this fn to use the out pointer to
     // return. Either way, your code should write into llretptr, but if
     // this value is false, llretptr will be a local alloca.
-    caller_expects_out_pointer: bool,
+    pub caller_expects_out_pointer: bool,
 
     // Maps arguments to allocas created for them in llallocas.
-    llargs: RefCell<NodeMap<LvalueDatum>>,
+    pub llargs: RefCell<NodeMap<LvalueDatum>>,
 
     // Maps the def_ids for local variables to the allocas created for
     // them in llallocas.
-    lllocals: RefCell<NodeMap<LvalueDatum>>,
+    pub lllocals: RefCell<NodeMap<LvalueDatum>>,
 
     // Same as above, but for closure upvars
-    llupvars: RefCell<NodeMap<ValueRef>>,
+    pub llupvars: RefCell<NodeMap<ValueRef>>,
 
     // The NodeId of the function, or -1 if it doesn't correspond to
     // a user-defined function.
-    id: ast::NodeId,
+    pub id: ast::NodeId,
 
     // If this function is being monomorphized, this contains the type
     // substitutions used.
-    param_substs: Option<@param_substs>,
+    pub param_substs: Option<@param_substs>,
 
     // The source span and nesting context where this function comes from, for
     // error reporting and symbol generation.
-    span: Option<Span>,
+    pub span: Option<Span>,
 
     // The arena that blocks are allocated from.
-    block_arena: &'a TypedArena<Block<'a>>,
+    pub block_arena: &'a TypedArena<Block<'a>>,
 
     // This function's enclosing crate context.
-    ccx: &'a CrateContext,
+    pub ccx: &'a CrateContext,
 
     // Used and maintained by the debuginfo module.
-    debug_context: debuginfo::FunctionDebugContext,
+    pub debug_context: debuginfo::FunctionDebugContext,
 
     // Cleanup scopes.
-    scopes: RefCell<Vec<cleanup::CleanupScope<'a>> >,
+    pub scopes: RefCell<Vec<cleanup::CleanupScope<'a>> >,
 }
 
 impl<'a> FunctionContext<'a> {
@@ -323,7 +323,7 @@ impl<'a> FunctionContext<'a> {
                                                      .unwrap());
         }
         // Remove the cycle between fcx and bcx, so memory can be freed
-        self.entry_bcx.set(None);
+        *self.entry_bcx.borrow_mut() = None;
     }
 
     pub fn get_llreturn(&self) -> BasicBlockRef {
@@ -386,14 +386,6 @@ impl<'a> FunctionContext<'a> {
     }
 }
 
-// Heap selectors. Indicate which heap something should go on.
-#[deriving(Eq)]
-pub enum heap {
-    heap_managed,
-    heap_exchange,
-    heap_exchange_closure
-}
-
 // Basic block context.  We create a block context for each basic block
 // (single-entry, single-exit sequence of instructions) we generate from Rust
 // code.  Each basic block we generate is attached to a function, typically
@@ -405,20 +397,20 @@ pub struct Block<'a> {
     // block to the function pointed to by llfn.  We insert
     // instructions into that block by way of this block context.
     // The block pointing to this one in the function's digraph.
-    llbb: BasicBlockRef,
-    terminated: Cell<bool>,
-    unreachable: Cell<bool>,
+    pub llbb: BasicBlockRef,
+    pub terminated: Cell<bool>,
+    pub unreachable: Cell<bool>,
 
     // Is this block part of a landing pad?
-    is_lpad: bool,
+    pub is_lpad: bool,
 
     // AST node-id associated with this block, if any. Used for
     // debugging purposes only.
-    opt_node_id: Option<ast::NodeId>,
+    pub opt_node_id: Option<ast::NodeId>,
 
     // The function context for the function to which this block is
     // attached.
-    fcx: &'a FunctionContext<'a>,
+    pub fcx: &'a FunctionContext<'a>,
 }
 
 impl<'a> Block<'a> {
@@ -456,14 +448,6 @@ impl<'a> Block<'a> {
         e.repr(self.tcx())
     }
 
-    pub fn expr_is_lval(&self, e: &ast::Expr) -> bool {
-        ty::expr_is_lval(self.tcx(), self.ccx().maps.method_map, e)
-    }
-
-    pub fn expr_kind(&self, e: &ast::Expr) -> ty::ExprKind {
-        ty::expr_kind(self.tcx(), self.ccx().maps.method_map, e)
-    }
-
     pub fn def(&self, nid: ast::NodeId) -> ast::Def {
         match self.tcx().def_map.borrow().find(&nid) {
             Some(&v) => v,
@@ -493,21 +477,14 @@ impl<'a> Block<'a> {
 }
 
 pub struct Result<'a> {
-    bcx: &'a Block<'a>,
-    val: ValueRef
+    pub bcx: &'a Block<'a>,
+    pub val: ValueRef
 }
 
 pub fn rslt<'a>(bcx: &'a Block<'a>, val: ValueRef) -> Result<'a> {
     Result {
         bcx: bcx,
         val: val,
-    }
-}
-
-impl<'a> Result<'a> {
-    pub fn unpack(&self, bcx: &mut &'a Block<'a>) -> ValueRef {
-        *bcx = self.bcx;
-        return self.val;
     }
 }
 
@@ -581,7 +558,7 @@ pub fn C_u8(ccx: &CrateContext, i: uint) -> ValueRef {
 
 // This is a 'c-like' raw string, which differs from
 // our boxed-and-length-annotated strings.
-pub fn C_cstr(cx: &CrateContext, s: InternedString) -> ValueRef {
+pub fn C_cstr(cx: &CrateContext, s: InternedString, null_terminated: bool) -> ValueRef {
     unsafe {
         match cx.const_cstr_cache.borrow().find(&s) {
             Some(&llval) => return llval,
@@ -591,7 +568,7 @@ pub fn C_cstr(cx: &CrateContext, s: InternedString) -> ValueRef {
         let sc = llvm::LLVMConstStringInContext(cx.llcx,
                                                 s.get().as_ptr() as *c_char,
                                                 s.get().len() as c_uint,
-                                                False);
+                                                !null_terminated as Bool);
 
         let gsym = token::gensym("str");
         let g = format!("str{}", gsym).with_c_str(|buf| {
@@ -611,7 +588,7 @@ pub fn C_cstr(cx: &CrateContext, s: InternedString) -> ValueRef {
 pub fn C_str_slice(cx: &CrateContext, s: InternedString) -> ValueRef {
     unsafe {
         let len = s.get().len();
-        let cs = llvm::LLVMConstPointerCast(C_cstr(cx, s), Type::i8p(cx).to_ref());
+        let cs = llvm::LLVMConstPointerCast(C_cstr(cx, s, false), Type::i8p(cx).to_ref());
         C_struct(cx, [cs, C_uint(cx, len)], false)
     }
 }
@@ -744,26 +721,10 @@ pub fn mono_data_classify(t: ty::t) -> MonoDataClass {
 
 #[deriving(Eq, TotalEq, Hash)]
 pub struct mono_id_ {
-    def: ast::DefId,
-    params: Vec<mono_param_id> }
+    pub def: ast::DefId,
+    pub params: Vec<mono_param_id> }
 
 pub type mono_id = @mono_id_;
-
-pub fn umax(cx: &Block, a: ValueRef, b: ValueRef) -> ValueRef {
-    let cond = build::ICmp(cx, lib::llvm::IntULT, a, b);
-    return build::Select(cx, cond, b, a);
-}
-
-pub fn umin(cx: &Block, a: ValueRef, b: ValueRef) -> ValueRef {
-    let cond = build::ICmp(cx, lib::llvm::IntULT, a, b);
-    return build::Select(cx, cond, a, b);
-}
-
-pub fn align_to(cx: &Block, off: ValueRef, align: ValueRef) -> ValueRef {
-    let mask = build::Sub(cx, align, C_int(cx.ccx(), 1));
-    let bumped = build::Add(cx, off, mask);
-    return build::And(cx, bumped, build::Not(cx, mask));
-}
 
 pub fn monomorphize_type(bcx: &Block, t: ty::t) -> ty::t {
     match bcx.fcx.param_substs {
@@ -816,7 +777,10 @@ pub fn node_id_type_params(bcx: &Block, node: ExprOrMethodCall) -> Vec<ty::t> {
     if !params.iter().all(|t| !ty::type_needs_infer(*t)) {
         bcx.sess().bug(
             format!("type parameters for node {:?} include inference types: {}",
-                 node, params.map(|t| bcx.ty_to_str(*t)).connect(",")));
+                 node, params.iter()
+                             .map(|t| bcx.ty_to_str(*t))
+                             .collect::<Vec<~str>>()
+                             .connect(",")));
     }
 
     match bcx.fcx.param_substs {
@@ -925,19 +889,11 @@ pub fn find_vtable(tcx: &ty::ctxt,
     param_bounds.get(n_bound).clone()
 }
 
-pub fn dummy_substs(tps: Vec<ty::t> ) -> ty::substs {
-    substs {
-        regions: ty::ErasedRegions,
-        self_ty: None,
-        tps: tps
-    }
-}
-
 pub fn filename_and_line_num_from_span(bcx: &Block, span: Span)
                                        -> (ValueRef, ValueRef) {
     let loc = bcx.sess().codemap().lookup_char_pos(span.lo);
     let filename_cstr = C_cstr(bcx.ccx(),
-                               token::intern_and_get_ident(loc.file.name));
+                               token::intern_and_get_ident(loc.file.name), true);
     let filename = build::PointerCast(bcx, filename_cstr, Type::i8p(bcx.ccx()));
     let line = C_int(bcx.ccx(), loc.line as int);
     (filename, line)

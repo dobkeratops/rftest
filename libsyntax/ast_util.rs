@@ -25,9 +25,9 @@ use std::u32;
 
 pub fn path_name_i(idents: &[Ident]) -> ~str {
     // FIXME: Bad copies (#2543 -- same for everything else that says "bad")
-    idents.map(|i| {
+    idents.iter().map(|i| {
         token::get_ident(*i).get().to_str()
-    }).connect("::")
+    }).collect::<Vec<~str>>().connect("::")
 }
 
 // totally scary function: ignores all but the last element, should have
@@ -290,8 +290,7 @@ pub fn split_trait_methods(trait_methods: &[TraitMethod])
 
 pub fn struct_field_visibility(field: ast::StructField) -> Visibility {
     match field.node.kind {
-        ast::NamedField(_, visibility) => visibility,
-        ast::UnnamedField => ast::Public
+        ast::NamedField(_, v) | ast::UnnamedField(v) => v
     }
 }
 
@@ -326,8 +325,8 @@ pub fn empty_generics() -> Generics {
 
 #[deriving(Encodable, Decodable)]
 pub struct IdRange {
-    min: NodeId,
-    max: NodeId,
+    pub min: NodeId,
+    pub max: NodeId,
 }
 
 impl IdRange {
@@ -353,9 +352,9 @@ pub trait IdVisitingOperation {
 }
 
 pub struct IdVisitor<'a, O> {
-    operation: &'a O,
-    pass_through_items: bool,
-    visited_outermost: bool,
+    pub operation: &'a O,
+    pub pass_through_items: bool,
+    pub visited_outermost: bool,
 }
 
 impl<'a, O: IdVisitingOperation> IdVisitor<'a, O> {
@@ -614,7 +613,7 @@ pub trait EachViewItem {
 }
 
 struct EachViewItemData<'a> {
-    callback: 'a |&ast::ViewItem| -> bool,
+    callback: |&ast::ViewItem|: 'a -> bool,
 }
 
 impl<'a> Visitor<()> for EachViewItemData<'a> {
@@ -718,13 +717,15 @@ mod test {
     }
 
     #[test] fn idents_name_eq_test() {
-        assert!(segments_name_eq([Ident{name:3,ctxt:4},
-                                   Ident{name:78,ctxt:82}].map(ident_to_segment),
-                                 [Ident{name:3,ctxt:104},
-                                   Ident{name:78,ctxt:182}].map(ident_to_segment)));
-        assert!(!segments_name_eq([Ident{name:3,ctxt:4},
-                                    Ident{name:78,ctxt:82}].map(ident_to_segment),
-                                  [Ident{name:3,ctxt:104},
-                                    Ident{name:77,ctxt:182}].map(ident_to_segment)));
+        assert!(segments_name_eq(
+            [Ident{name:3,ctxt:4}, Ident{name:78,ctxt:82}]
+                .iter().map(ident_to_segment).collect::<Vec<PathSegment>>().as_slice(),
+            [Ident{name:3,ctxt:104}, Ident{name:78,ctxt:182}]
+                .iter().map(ident_to_segment).collect::<Vec<PathSegment>>().as_slice()));
+        assert!(!segments_name_eq(
+            [Ident{name:3,ctxt:4}, Ident{name:78,ctxt:82}]
+                .iter().map(ident_to_segment).collect::<Vec<PathSegment>>().as_slice(),
+            [Ident{name:3,ctxt:104}, Ident{name:77,ctxt:182}]
+                .iter().map(ident_to_segment).collect::<Vec<PathSegment>>().as_slice()));
     }
 }

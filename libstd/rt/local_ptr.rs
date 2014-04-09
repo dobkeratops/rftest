@@ -12,10 +12,10 @@
 //!
 //! The runtime will use this for storing ~Task.
 //!
-//! XXX: Add runtime checks for usage of inconsistent pointer types.
+//! FIXME: Add runtime checks for usage of inconsistent pointer types.
 //! and for overwriting an existing pointer.
 
-#[allow(dead_code)];
+#![allow(dead_code)]
 
 use cast;
 use ops::Drop;
@@ -31,7 +31,7 @@ pub use self::compiled::*;
 /// Encapsulates a borrowed value. When this value goes out of scope, the
 /// pointer is returned.
 pub struct Borrowed<T> {
-    priv val: *(),
+    val: *(),
 }
 
 #[unsafe_destructor]

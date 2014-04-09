@@ -8,6 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#![allow(dead_code)] // FFI wrappers
 
 use lib::llvm::llvm;
 use lib::llvm::{CallConv, AtomicBinOp, AtomicOrdering, AsmDialect};
@@ -20,7 +21,7 @@ use syntax::codemap::Span;
 use middle::trans::builder::Builder;
 use middle::trans::type_::Type;
 
-use std::libc::{c_uint, c_ulonglong, c_char};
+use libc::{c_uint, c_ulonglong, c_char};
 
 pub fn terminate(cx: &Block, _: &str) {
     debug!("terminate({})", cx.to_str());
@@ -121,7 +122,7 @@ pub fn Invoke(cx: &Block,
     terminate(cx, "Invoke");
     debug!("Invoke({} with arguments ({}))",
            cx.val_to_str(fn_),
-           args.map(|a| cx.val_to_str(*a)).connect(", "));
+           args.iter().map(|a| cx.val_to_str(*a)).collect::<Vec<~str>>().connect(", "));
     B(cx).invoke(fn_, args, then, catch, attributes)
 }
 

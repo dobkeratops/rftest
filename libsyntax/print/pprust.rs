@@ -8,7 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use abi::AbiSet;
+use abi;
 use ast::{P, RegionTyParamBound, TraitTyParamBound, Required, Provided};
 use ast;
 use ast_util;
@@ -26,13 +26,12 @@ use print::pp::{Breaks, Consistent, Inconsistent, eof};
 use print::pp;
 
 use std::cast;
-use std::cell::RefCell;
 use std::char;
 use std::str;
 use std::io;
 use std::io::{IoResult, MemWriter};
+use std::rc::Rc;
 
-// The &mut State is stored here to prevent recursive type.
 pub enum AnnNode<'a> {
     NodeBlock(&'a ast::Block),
     NodeItem(&'a ast::Item),
@@ -55,13 +54,13 @@ pub struct CurrentCommentAndLiteral {
 }
 
 pub struct State<'a> {
-    s: pp::Printer,
+    pub s: pp::Printer,
     cm: Option<&'a CodeMap>,
-    intr: @token::IdentInterner,
+    intr: Rc<token::IdentInterner>,
     comments: Option<Vec<comments::Comment> >,
     literals: Option<Vec<comments::Literal> >,
     cur_cmnt_and_lit: CurrentCommentAndLiteral,
-    boxes: RefCell<Vec<pp::Breaks> >,
+    boxes: Vec<pp::Breaks>,
     ann: &'a PpAnn
 }
 
@@ -82,7 +81,7 @@ pub fn rust_printer_annotated<'a>(writer: ~io::Writer,
             cur_cmnt: 0,
             cur_lit: 0
         },
-        boxes: RefCell::new(Vec::new()),
+        boxes: Vec::new(),
         ann: ann
     }
 }
@@ -124,7 +123,7 @@ pub fn print_crate<'a>(cm: &'a CodeMap,
             cur_cmnt: 0,
             cur_lit: 0
         },
-        boxes: RefCell::new(Vec::new()),
+        boxes: Vec::new(),
         ann: ann
     };
     try!(s.print_mod(&krate.module, krate.attrs.as_slice()));
@@ -191,7 +190,7 @@ pub fn fun_to_str(decl: &ast::FnDecl, purity: ast::Purity, name: ast::Ident,
                   opt_explicit_self: Option<ast::ExplicitSelf_>,
                   generics: &ast::Generics) -> ~str {
     to_str(|s| {
-        try!(s.print_fn(decl, Some(purity), AbiSet::Rust(),
+        try!(s.print_fn(decl, Some(purity), abi::Rust,
                         name, generics, opt_explicit_self, ast::Inherited));
         try!(s.end()); // Close the head box
         s.end() // Close the outer box
@@ -238,23 +237,23 @@ pub fn visibility_qualified(vis: ast::Visibility, s: &str) -> ~str {
 
 impl<'a> State<'a> {
     pub fn ibox(&mut self, u: uint) -> IoResult<()> {
-        self.boxes.borrow_mut().push(pp::Inconsistent);
+        self.boxes.push(pp::Inconsistent);
         pp::ibox(&mut self.s, u)
     }
 
     pub fn end(&mut self) -> IoResult<()> {
-        self.boxes.borrow_mut().pop().unwrap();
+        self.boxes.pop().unwrap();
         pp::end(&mut self.s)
     }
 
     pub fn cbox(&mut self, u: uint) -> IoResult<()> {
-        self.boxes.borrow_mut().push(pp::Consistent);
+        self.boxes.push(pp::Consistent);
         pp::cbox(&mut self.s, u)
     }
 
     // "raw box"
     pub fn rbox(&mut self, u: uint, b: pp::Breaks) -> IoResult<()> {
-        self.boxes.borrow_mut().push(b);
+        self.boxes.push(b);
         pp::rbox(&mut self.s, u, b)
     }
 
@@ -321,8 +320,8 @@ impl<'a> State<'a> {
         self.s.last_token().is_eof() || self.s.last_token().is_hardbreak_tok()
     }
 
-    pub fn in_cbox(&mut self) -> bool {
-        match self.boxes.borrow().last() {
+    pub fn in_cbox(&self) -> bool {
+        match self.boxes.last() {
             Some(&last_box) => last_box == pp::Consistent,
             None => false
         }
@@ -479,7 +478,7 @@ impl<'a> State<'a> {
                     lifetimes: f.lifetimes.clone(),
                     ty_params: OwnedSlice::empty()
                 };
-                try!(self.print_ty_fn(Some(f.abis), None, &None,
+                try!(self.print_ty_fn(Some(f.abi), None, &None,
                                    f.purity, ast::Many, f.decl, None, &None,
                                    Some(&generics), None));
             }
@@ -525,7 +524,7 @@ impl<'a> State<'a> {
         try!(self.print_outer_attributes(item.attrs.as_slice()));
         match item.node {
             ast::ForeignItemFn(decl, ref generics) => {
-                try!(self.print_fn(decl, None, AbiSet::Rust(), item.ident, generics,
+                try!(self.print_fn(decl, None, abi::Rust, item.ident, generics,
                 None, item.vis));
                 try!(self.end()); // end head-ibox
                 try!(word(&mut self.s, ";"));
@@ -591,7 +590,7 @@ impl<'a> State<'a> {
             }
             ast::ItemForeignMod(ref nmod) => {
                 try!(self.head("extern"));
-                try!(self.word_nbsp(nmod.abis.to_str()));
+                try!(self.word_nbsp(nmod.abi.to_str()));
                 try!(self.bopen());
                 try!(self.print_foreign_mod(nmod, item.attrs.as_slice()));
                 try!(self.bclose(item.span));
@@ -743,7 +742,8 @@ impl<'a> State<'a> {
                     |s, field| {
                         match field.node.kind {
                             ast::NamedField(..) => fail!("unexpected named field"),
-                            ast::UnnamedField => {
+                            ast::UnnamedField(vis) => {
+                                try!(s.print_visibility(vis));
                                 try!(s.maybe_print_comment(field.span.lo));
                                 s.print_type(field.node.ty)
                             }
@@ -762,7 +762,7 @@ impl<'a> State<'a> {
 
             for field in struct_def.fields.iter() {
                 match field.node.kind {
-                    ast::UnnamedField => fail!("unexpected unnamed field"),
+                    ast::UnnamedField(..) => fail!("unexpected unnamed field"),
                     ast::NamedField(ident, visibility) => {
                         try!(self.hardbreak_if_not_bol());
                         try!(self.maybe_print_comment(field.span.lo));
@@ -883,7 +883,7 @@ impl<'a> State<'a> {
         try!(self.hardbreak_if_not_bol());
         try!(self.maybe_print_comment(meth.span.lo));
         try!(self.print_outer_attributes(meth.attrs.as_slice()));
-        try!(self.print_fn(meth.decl, Some(meth.purity), AbiSet::Rust(),
+        try!(self.print_fn(meth.decl, Some(meth.purity), abi::Rust,
                         meth.ident, &meth.generics, Some(meth.explicit_self.node),
                         meth.vis));
         try!(word(&mut self.s, " "));
@@ -915,9 +915,6 @@ impl<'a> State<'a> {
             match attr.node.style {
                 ast::AttrInner => {
                     try!(self.print_attribute(attr));
-                    if !attr.node.is_sugared_doc {
-                        try!(word(&mut self.s, ";"));
-                    }
                     count += 1;
                 }
                 _ => {/* fallthrough */ }
@@ -935,7 +932,10 @@ impl<'a> State<'a> {
         if attr.node.is_sugared_doc {
             word(&mut self.s, attr.value_str().unwrap().get())
         } else {
-            try!(word(&mut self.s, "#["));
+            match attr.node.style {
+                ast::AttrInner => try!(word(&mut self.s, "#![")),
+                ast::AttrOuter => try!(word(&mut self.s, "#[")),
+            }
             try!(self.print_meta_item(attr.meta()));
             word(&mut self.s, "]")
         }
@@ -1110,25 +1110,17 @@ impl<'a> State<'a> {
                 try!(self.word_space(")"));
                 try!(self.print_expr(e));
             }
-            ast::ExprVec(ref exprs, mutbl) => {
+            ast::ExprVec(ref exprs) => {
                 try!(self.ibox(indent_unit));
                 try!(word(&mut self.s, "["));
-                if mutbl == ast::MutMutable {
-                    try!(word(&mut self.s, "mut"));
-                    if exprs.len() > 0u { try!(self.nbsp()); }
-                }
                 try!(self.commasep_exprs(Inconsistent, exprs.as_slice()));
                 try!(word(&mut self.s, "]"));
                 try!(self.end());
             }
 
-            ast::ExprRepeat(element, count, mutbl) => {
+            ast::ExprRepeat(element, count) => {
                 try!(self.ibox(indent_unit));
                 try!(word(&mut self.s, "["));
-                if mutbl == ast::MutMutable {
-                    try!(word(&mut self.s, "mut"));
-                    try!(self.nbsp());
-                }
                 try!(self.print_expr(element));
                 try!(word(&mut self.s, ","));
                 try!(word(&mut self.s, ".."));
@@ -1525,7 +1517,7 @@ impl<'a> State<'a> {
         }
 
         let mut first = true;
-        for (i, segment) in path.segments.iter().enumerate() {
+        for segment in path.segments.iter() {
             if first {
                 first = false
             } else {
@@ -1533,14 +1525,6 @@ impl<'a> State<'a> {
             }
 
             try!(self.print_ident(segment.identifier));
-
-            // If this is the last segment, print the bounds.
-            if i == path.segments.len() - 1 {
-                match *opt_bounds {
-                    None => {}
-                    Some(ref bounds) => try!(self.print_bounds(bounds, true)),
-                }
-            }
 
             if !segment.lifetimes.is_empty() || !segment.types.is_empty() {
                 if colons_before_params {
@@ -1570,7 +1554,11 @@ impl<'a> State<'a> {
                 try!(word(&mut self.s, ">"))
             }
         }
-        Ok(())
+
+        match *opt_bounds {
+            None => Ok(()),
+            Some(ref bounds) => self.print_bounds(&None, bounds, true),
+        }
     }
 
     fn print_path(&mut self, path: &ast::Path,
@@ -1721,14 +1709,14 @@ impl<'a> State<'a> {
     pub fn print_fn(&mut self,
                     decl: &ast::FnDecl,
                     purity: Option<ast::Purity>,
-                    abis: AbiSet,
+                    abi: abi::Abi,
                     name: ast::Ident,
                     generics: &ast::Generics,
                     opt_explicit_self: Option<ast::ExplicitSelf_>,
                     vis: ast::Visibility) -> IoResult<()> {
         try!(self.head(""));
-        try!(self.print_fn_header_info(opt_explicit_self, purity, abis,
-                                    ast::Many, None, vis));
+        try!(self.print_fn_header_info(opt_explicit_self, purity, abi,
+                                       ast::Many, None, vis));
         try!(self.nbsp());
         try!(self.print_ident(name));
         try!(self.print_generics(generics));
@@ -1825,11 +1813,24 @@ impl<'a> State<'a> {
         self.maybe_print_comment(decl.output.span.lo)
     }
 
-    pub fn print_bounds(&mut self, bounds: &OwnedSlice<ast::TyParamBound>,
+    pub fn print_bounds(&mut self,
+                        region: &Option<ast::Lifetime>,
+                        bounds: &OwnedSlice<ast::TyParamBound>,
                         print_colon_anyway: bool) -> IoResult<()> {
-        if !bounds.is_empty() {
+        if !bounds.is_empty() || region.is_some() {
             try!(word(&mut self.s, ":"));
             let mut first = true;
+            match *region {
+                Some(ref lt) => {
+                    let token = token::get_name(lt.name);
+                    if token.get() != "static" {
+                        try!(self.nbsp());
+                        first = false;
+                        try!(self.print_lifetime(lt));
+                    }
+                }
+                None => {}
+            }
             for bound in bounds.iter() {
                 try!(self.nbsp());
                 if first {
@@ -1878,7 +1879,7 @@ impl<'a> State<'a> {
                         let idx = idx - generics.lifetimes.len();
                         let param = generics.ty_params.get(idx);
                         try!(s.print_ident(param.ident));
-                        try!(s.print_bounds(&param.bounds, false));
+                        try!(s.print_bounds(&None, &param.bounds, false));
                         match param.default {
                             Some(default) => {
                                 try!(space(&mut s.s));
@@ -2020,7 +2021,7 @@ impl<'a> State<'a> {
     }
 
     pub fn print_ty_fn(&mut self,
-                       opt_abis: Option<AbiSet>,
+                       opt_abi: Option<abi::Abi>,
                        opt_sigil: Option<ast::Sigil>,
                        opt_region: &Option<ast::Lifetime>,
                        purity: ast::Purity,
@@ -2038,16 +2039,12 @@ impl<'a> State<'a> {
         if opt_sigil == Some(ast::OwnedSigil) && onceness == ast::Once {
             try!(word(&mut self.s, "proc"));
         } else if opt_sigil == Some(ast::BorrowedSigil) {
-            try!(self.print_extern_opt_abis(opt_abis));
-            for lifetime in opt_region.iter() {
-                try!(self.print_lifetime(lifetime));
-            }
+            try!(self.print_extern_opt_abi(opt_abi));
             try!(self.print_purity(purity));
             try!(self.print_onceness(onceness));
         } else {
-            try!(self.print_opt_abis_and_extern_if_nondefault(opt_abis));
+            try!(self.print_opt_abi_and_extern_if_nondefault(opt_abi));
             try!(self.print_opt_sigil(opt_sigil));
-            try!(self.print_opt_lifetime(opt_region));
             try!(self.print_purity(purity));
             try!(self.print_onceness(onceness));
             try!(word(&mut self.s, "fn"));
@@ -2059,10 +2056,6 @@ impl<'a> State<'a> {
                 try!(self.print_ident(id));
             }
             _ => ()
-        }
-
-        if opt_sigil != Some(ast::BorrowedSigil) {
-            opt_bounds.as_ref().map(|bounds| self.print_bounds(bounds, true));
         }
 
         match generics { Some(g) => try!(self.print_generics(g)), _ => () }
@@ -2078,14 +2071,16 @@ impl<'a> State<'a> {
 
         if opt_sigil == Some(ast::BorrowedSigil) {
             try!(word(&mut self.s, "|"));
-
-            opt_bounds.as_ref().map(|bounds| self.print_bounds(bounds, true));
         } else {
             if decl.variadic {
                 try!(word(&mut self.s, ", ..."));
             }
             try!(self.pclose());
         }
+
+        opt_bounds.as_ref().map(|bounds| {
+            self.print_bounds(opt_region, bounds, true)
+        });
 
         try!(self.maybe_print_comment(decl.output.span.lo));
 
@@ -2307,24 +2302,25 @@ impl<'a> State<'a> {
         }
     }
 
-    pub fn print_opt_abis_and_extern_if_nondefault(&mut self,
-                                                   opt_abis: Option<AbiSet>)
+    pub fn print_opt_abi_and_extern_if_nondefault(&mut self,
+                                                  opt_abi: Option<abi::Abi>)
         -> IoResult<()> {
-        match opt_abis {
-            Some(abis) if !abis.is_rust() => {
+        match opt_abi {
+            Some(abi::Rust) => Ok(()),
+            Some(abi) => {
                 try!(self.word_nbsp("extern"));
-                self.word_nbsp(abis.to_str())
+                self.word_nbsp(abi.to_str())
             }
-            Some(_) | None => Ok(())
+            None => Ok(())
         }
     }
 
-    pub fn print_extern_opt_abis(&mut self,
-                                 opt_abis: Option<AbiSet>) -> IoResult<()> {
-        match opt_abis {
-            Some(abis) => {
+    pub fn print_extern_opt_abi(&mut self,
+                                opt_abi: Option<abi::Abi>) -> IoResult<()> {
+        match opt_abi {
+            Some(abi) => {
                 try!(self.word_nbsp("extern"));
-                self.word_nbsp(abis.to_str())
+                self.word_nbsp(abi.to_str())
             }
             None => Ok(())
         }
@@ -2343,15 +2339,15 @@ impl<'a> State<'a> {
     pub fn print_fn_header_info(&mut self,
                                 _opt_explicit_self: Option<ast::ExplicitSelf_>,
                                 opt_purity: Option<ast::Purity>,
-                                abis: AbiSet,
+                                abi: abi::Abi,
                                 onceness: ast::Onceness,
                                 opt_sigil: Option<ast::Sigil>,
                                 vis: ast::Visibility) -> IoResult<()> {
         try!(word(&mut self.s, visibility_qualified(vis, "")));
 
-        if abis != AbiSet::Rust() {
+        if abi != abi::Rust {
             try!(self.word_nbsp("extern"));
-            try!(self.word_nbsp(abis.to_str()));
+            try!(self.word_nbsp(abi.to_str()));
 
             if opt_purity != Some(ast::ExternFn) {
                 try!(self.print_opt_purity(opt_purity));

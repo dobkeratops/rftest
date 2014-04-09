@@ -13,7 +13,7 @@ use syntax::{ast, fold, attr};
 use syntax::codemap;
 
 struct Context<'a> {
-    in_cfg: 'a |attrs: &[ast::Attribute]| -> bool,
+    in_cfg: |attrs: &[ast::Attribute]|: 'a -> bool,
 }
 
 // Support conditional compilation by transforming the AST, stripping out
@@ -90,7 +90,7 @@ fn fold_foreign_mod(cx: &mut Context, nm: &ast::ForeignMod) -> ast::ForeignMod {
         filter_view_item(cx, a).map(|x| cx.fold_view_item(x))
     }).collect();
     ast::ForeignMod {
-        abis: nm.abis,
+        abi: nm.abi,
         view_items: filtered_view_items,
         items: filtered_items
     }

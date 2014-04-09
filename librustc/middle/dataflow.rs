@@ -31,21 +31,21 @@ use util::nodemap::NodeMap;
 
 #[deriving(Clone)]
 pub struct DataFlowContext<'a, O> {
-    priv tcx: &'a ty::ctxt,
-    priv method_map: typeck::MethodMap,
+    tcx: &'a ty::ctxt,
+    method_map: typeck::MethodMap,
 
     /// the data flow operator
-    priv oper: O,
+    oper: O,
 
     /// number of bits to propagate per id
-    priv bits_per_id: uint,
+    bits_per_id: uint,
 
     /// number of words we will use to store bits_per_id.
     /// equal to bits_per_id/uint::BITS rounded up.
-    priv words_per_id: uint,
+    words_per_id: uint,
 
     // mapping from node to bitset index.
-    priv nodeid_to_bitset: NodeMap<uint>,
+    nodeid_to_bitset: NodeMap<uint>,
 
     // Bit sets per id.  The following three fields (`gens`, `kills`,
     // and `on_entry`) all have the same structure. For each id in
@@ -54,14 +54,15 @@ pub struct DataFlowContext<'a, O> {
     // the full vector (see the method `compute_id_range()`).
 
     /// bits generated as we exit the scope `id`. Updated by `add_gen()`.
-    priv gens: Vec<uint> ,
+    gens: Vec<uint>,
 
     /// bits killed as we exit the scope `id`. Updated by `add_kill()`.
-    priv kills: Vec<uint> ,
+    kills: Vec<uint>,
 
     /// bits that are valid on entry to the scope `id`. Updated by
     /// `propagate()`.
-    priv on_entry: Vec<uint> }
+    on_entry: Vec<uint>,
+}
 
 /// Parameterization for the precise form of data flow that is used.
 pub trait DataFlowOperator {
@@ -243,31 +244,6 @@ impl<'a, O:DataFlowOperator> DataFlowContext<'a, O> {
         debug!("each_bit_on_entry_frozen(id={:?}, on_entry={})",
                id, bits_to_str(on_entry));
         self.each_bit(on_entry, f)
-    }
-
-    pub fn each_bit_on_entry(&mut self,
-                             id: ast::NodeId,
-                             f: |uint| -> bool)
-                             -> bool {
-        //! Iterates through each bit that is set on entry to `id`.
-        //! Only useful after `propagate()` has been called.
-
-        let (start, end) = self.compute_id_range(id);
-        let on_entry = self.on_entry.slice(start, end);
-        debug!("each_bit_on_entry(id={:?}, on_entry={})",
-               id, bits_to_str(on_entry));
-        self.each_bit(on_entry, f)
-    }
-
-    pub fn each_gen_bit(&mut self, id: ast::NodeId, f: |uint| -> bool)
-                        -> bool {
-        //! Iterates through each bit in the gen set for `id`.
-
-        let (start, end) = self.compute_id_range(id);
-        let gens = self.gens.slice(start, end);
-        debug!("each_gen_bit(id={:?}, gens={})",
-               id, bits_to_str(gens));
-        self.each_bit(gens, f)
     }
 
     pub fn each_gen_bit_frozen(&self, id: ast::NodeId, f: |uint| -> bool)
@@ -562,11 +538,11 @@ impl<'a, 'b, O:DataFlowOperator> PropagationContext<'a, 'b, O> {
                 self.walk_expr(l, in_out, loop_scopes);
             }
 
-            ast::ExprVec(ref exprs, _) => {
+            ast::ExprVec(ref exprs) => {
                 self.walk_exprs(exprs.as_slice(), in_out, loop_scopes)
             }
 
-            ast::ExprRepeat(l, r, _) => {
+            ast::ExprRepeat(l, r) => {
                 self.walk_expr(l, in_out, loop_scopes);
                 self.walk_expr(r, in_out, loop_scopes);
             }

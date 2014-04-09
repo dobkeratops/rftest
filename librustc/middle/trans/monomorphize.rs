@@ -23,6 +23,7 @@ use middle::ty;
 use middle::typeck;
 use util::ppaux::Repr;
 
+use syntax::abi;
 use syntax::ast;
 use syntax::ast_map;
 use syntax::ast_util::local_def;
@@ -99,7 +100,7 @@ pub fn monomorphic_fn(ccx: &CrateContext,
 
     match map_node {
         ast_map::NodeForeignItem(_) => {
-            if !ccx.tcx.map.get_foreign_abis(fn_id.node).is_intrinsic() {
+            if ccx.tcx.map.get_foreign_abi(fn_id.node) != abi::RustIntrinsic {
                 // Foreign externs don't have to be monomorphized.
                 return (get_item_val(ccx, fn_id.node), true);
             }
@@ -150,7 +151,7 @@ pub fn monomorphic_fn(ccx: &CrateContext,
 
     let f = match ty::get(mono_ty).sty {
         ty::ty_bare_fn(ref f) => {
-            assert!(f.abis.is_rust() || f.abis.is_intrinsic());
+            assert!(f.abi == abi::Rust || f.abi == abi::RustIntrinsic);
             f
         }
         _ => fail!("expected bare rust fn or an intrinsic")
@@ -298,7 +299,7 @@ pub fn make_mono_id(ccx: &CrateContext,
                vts.repr(ccx.tcx()), substs.tys.repr(ccx.tcx()));
         let vts_iter = substs.self_vtables.iter().chain(vts.iter());
         vts_iter.zip(substs_iter).map(|(vtable, subst)| {
-            let v = vtable.map(|vt| meth::vtable_id(ccx, vt));
+            let v = vtable.iter().map(|vt| meth::vtable_id(ccx, vt)).collect::<Vec<_>>();
             (*subst, if !v.is_empty() { Some(@v) } else { None })
         }).collect()
       }

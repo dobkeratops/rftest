@@ -11,7 +11,7 @@
 // A pass that annotates for each loops and functions with the free
 // variables that they contain.
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 use middle::resolve;
 use middle::ty;
@@ -26,8 +26,8 @@ use syntax::visit::Visitor;
 // (The def_upvar will already have been stripped).
 #[deriving(Encodable, Decodable)]
 pub struct freevar_entry {
-    def: ast::Def, //< The variable being accessed free.
-    span: Span     //< First span where it is accessed (there can be multiple)
+    pub def: ast::Def, //< The variable being accessed free.
+    pub span: Span     //< First span where it is accessed (there can be multiple)
 }
 pub type freevar_info = @Vec<@freevar_entry> ;
 pub type freevar_map = NodeMap<freevar_info>;
@@ -144,8 +144,4 @@ pub fn get_freevars(tcx: &ty::ctxt, fid: ast::NodeId) -> freevar_info {
         None => fail!("get_freevars: {} has no freevars", fid),
         Some(&d) => return d
     }
-}
-
-pub fn has_freevars(tcx: &ty::ctxt, fid: ast::NodeId) -> bool {
-    !get_freevars(tcx, fid).is_empty()
 }

@@ -8,7 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use abi::AbiSet;
+use abi::Abi;
 use ast::*;
 use ast;
 use codemap::Span;
@@ -29,7 +29,7 @@ use owned_slice::OwnedSlice;
 
 pub enum FnKind<'a> {
     // fn foo() or extern "Abi" fn foo()
-    FkItemFn(Ident, &'a Generics, Purity, AbiSet),
+    FkItemFn(Ident, &'a Generics, Purity, Abi),
 
     // fn foo(&self)
     FkMethod(Ident, &'a Generics, &'a Method),
@@ -635,10 +635,10 @@ pub fn walk_expr<E: Clone, V: Visitor<E>>(visitor: &mut V, expression: &Expr, en
             visitor.visit_expr(place, env.clone());
             visitor.visit_expr(subexpression, env.clone())
         }
-        ExprVec(ref subexpressions, _) => {
+        ExprVec(ref subexpressions) => {
             walk_exprs(visitor, subexpressions.as_slice(), env.clone())
         }
-        ExprRepeat(element, count, _) => {
+        ExprRepeat(element, count) => {
             visitor.visit_expr(element, env.clone());
             visitor.visit_expr(count, env.clone())
         }

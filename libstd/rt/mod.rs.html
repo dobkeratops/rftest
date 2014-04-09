@@ -52,171 +52,172 @@
 </c0><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c41>*/
 </c41><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c40>//&nbsp;FIXME:&nbsp;this&nbsp;should&nbsp;not&nbsp;be&nbsp;here.
-</c40><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>missing_doc</c50><c4>)</c4><c3>];</c3><c50>
+</c40><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c50>#!</c50><c3>[</c3><c50>allow</c50><c4>(</c4><c50>missing_doc</c50><c4>)</c4><c3>]</c3><c50>
 </c50><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;any::Any</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::Option</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;result::Result</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;task::TaskOpts</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;self::task::</c0><c3>{</c3><c0>Task</c0><c3>,</c3><c0>&nbsp;BlockedTask</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c40>//&nbsp;this&nbsp;is&nbsp;somewhat&nbsp;useful&nbsp;when&nbsp;a&nbsp;program&nbsp;wants&nbsp;to&nbsp;spawn&nbsp;a&nbsp;"reasonable"&nbsp;number
-</c40><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c40>//&nbsp;of&nbsp;workers&nbsp;based&nbsp;on&nbsp;the&nbsp;constraints&nbsp;of&nbsp;the&nbsp;system&nbsp;that&nbsp;it's&nbsp;running&nbsp;on.
-</c40><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c40>//&nbsp;Perhaps&nbsp;this&nbsp;shouldn't&nbsp;be&nbsp;a&nbsp;`pub&nbsp;use`&nbsp;though&nbsp;and&nbsp;there&nbsp;should&nbsp;be&nbsp;another
-</c40><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c40>//&nbsp;method...
-</c40><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::util::default_sched_threads</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c40>//&nbsp;Export&nbsp;unwinding&nbsp;facilities&nbsp;used&nbsp;by&nbsp;the&nbsp;failure&nbsp;macros
-</c40><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::unwind::</c0><c3>{</c3><c0>begin_unwind</c0><c3>,</c3><c0>&nbsp;begin_unwind_raw</c0><c3>,</c3><c0>&nbsp;begin_unwind_fmt</c0><c3>};</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c40>//&nbsp;FIXME:&nbsp;these&nbsp;probably&nbsp;shouldn't&nbsp;be&nbsp;public...
-</c40><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a><a id="n235203">&nbsp;</a><c50>#</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>hidden</c50><c4>)</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;shouldnt_be_public&nbsp;</c38><c3>{</c3><c38>
-</c38><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>cfg</c38><c4>(</c4><c38>not</c38><c4>(</c4><c38>test</c38><c4>))</c4><c3>]</c3><c38>
-</c38><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>use</c21><c38>&nbsp;super::local_ptr::native::maybe_tls_key</c38><c3>;</c3><c38>
-</c38><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>cfg</c38><c4>(</c4><c38>not</c38><c4>(</c4><c38>windows</c38><c4>)</c4><c3>,</c3><c38>&nbsp;not</c38><c4>(</c4><c38>target_os&nbsp;=&nbsp;"android"</c38><c4>))</c4><c3>]</c3><c38>
-</c38><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>use</c21><c38>&nbsp;super::local_ptr::compiled::RT_TLS_PTR</c38><c3>;</c3><c38>
-</c38><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a><a id="n235206">&nbsp;</a><c40>//&nbsp;Internal&nbsp;macros&nbsp;used&nbsp;by&nbsp;the&nbsp;runtime.
-</c40><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;macros;
-</c38><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a><a id="n235207">&nbsp;</a><c42>///&nbsp;The&nbsp;global&nbsp;(exchange)&nbsp;heap.
-</c42><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;global_heap;
-</c38><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a><a id="n235582">&nbsp;</a><c42>///&nbsp;Implementations&nbsp;of&nbsp;language-critical&nbsp;runtime&nbsp;features&nbsp;like&nbsp;@.
-</c42><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;task;
-</c38><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a><a id="n236819">&nbsp;</a><c42>///&nbsp;The&nbsp;EventLoop&nbsp;and&nbsp;internal&nbsp;synchronous&nbsp;I/O&nbsp;interface.
-</c42><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;rtio;
-</c38><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;Local&nbsp;trait&nbsp;for&nbsp;types&nbsp;that&nbsp;are&nbsp;accessible&nbsp;via&nbsp;thread-local
-</c42><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a id="n238174">&nbsp;</a><c42>///&nbsp;or&nbsp;task-local&nbsp;storage.
-</c42><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;local;
-</c38><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a id="n238323">&nbsp;</a><c42>///&nbsp;Bindings&nbsp;to&nbsp;system&nbsp;threading&nbsp;libraries.
-</c42><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;thread;
-</c38><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a><a id="n240045">&nbsp;</a><c42>///&nbsp;The&nbsp;runtime&nbsp;configuration,&nbsp;read&nbsp;from&nbsp;environment&nbsp;variables.
-</c42><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;env;
-</c38><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a id="n240140">&nbsp;</a><c42>///&nbsp;The&nbsp;local,&nbsp;managed&nbsp;heap
-</c42><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;local_heap;
-</c38><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a id="n241523">&nbsp;</a><c42>///&nbsp;The&nbsp;runtime&nbsp;needs&nbsp;to&nbsp;be&nbsp;able&nbsp;to&nbsp;put&nbsp;a&nbsp;pointer&nbsp;into&nbsp;thread-local&nbsp;storage.
-</c42><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;local_ptr;
-</c38><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a id="n242566">&nbsp;</a><c42>///&nbsp;Bindings&nbsp;to&nbsp;pthread/windows&nbsp;thread-local&nbsp;storage.
-</c42><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;thread_local_storage;
-</c38><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a id="n243054">&nbsp;</a><c42>///&nbsp;Stack&nbsp;unwinding
-</c42><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;unwind;
-</c38><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a><a id="n244707">&nbsp;</a><c42>///&nbsp;The&nbsp;interface&nbsp;to&nbsp;libunwind&nbsp;that&nbsp;rust&nbsp;is&nbsp;using.
-</c42><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;libunwind;
-</c38><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a><a id="n244836">&nbsp;</a><c42>///&nbsp;Simple&nbsp;backtrace&nbsp;functionality&nbsp;(to&nbsp;print&nbsp;on&nbsp;failure)
-</c42><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;backtrace;
-</c38><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a><a id="n246533">&nbsp;</a><c42>///&nbsp;Just&nbsp;stuff
-</c42><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;util;
-</c38><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a><a id="n247075">&nbsp;</a><c40>//&nbsp;Global&nbsp;command&nbsp;line&nbsp;argument&nbsp;storage
-</c40><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;args;
-</c38><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a><a id="n247567">&nbsp;</a><c40>//&nbsp;Support&nbsp;for&nbsp;running&nbsp;procedures&nbsp;when&nbsp;a&nbsp;program&nbsp;has&nbsp;exited.
-</c40><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;at_exit_imp;
-</c38><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a><a id="n248165">&nbsp;</a><c40>//&nbsp;Bookkeeping&nbsp;for&nbsp;task&nbsp;counts
-</c40><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;bookkeeping;
-</c38><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a><a id="n248234">&nbsp;</a><c40>//&nbsp;Stack&nbsp;overflow&nbsp;protection
-</c40><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;stack;
-</c38><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;default&nbsp;error&nbsp;code&nbsp;of&nbsp;the&nbsp;rust&nbsp;runtime&nbsp;if&nbsp;the&nbsp;main&nbsp;task&nbsp;fails&nbsp;instead
-</c42><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a><a id="n248452">&nbsp;</a><c42>///&nbsp;of&nbsp;exiting&nbsp;cleanly.
-</c42><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><a id="n248454"><a id="n248455">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;DEFAULT_ERROR_CODE:&nbsp;int&nbsp;=&nbsp;101;
-</c36><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;interface&nbsp;to&nbsp;the&nbsp;current&nbsp;runtime.
-</c42><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a>&nbsp;<c42>///
-</c42><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;trait&nbsp;is&nbsp;used&nbsp;as&nbsp;the&nbsp;abstraction&nbsp;between&nbsp;1:1&nbsp;and&nbsp;M:N&nbsp;scheduling.&nbsp;The
-</c42><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a>&nbsp;<c42>///&nbsp;two&nbsp;independent&nbsp;crates,&nbsp;libnative&nbsp;and&nbsp;libgreen,&nbsp;both&nbsp;have&nbsp;objects&nbsp;which
-</c42><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a>&nbsp;<c42>///&nbsp;implement&nbsp;this&nbsp;trait.&nbsp;The&nbsp;goal&nbsp;of&nbsp;this&nbsp;trait&nbsp;is&nbsp;to&nbsp;encompass&nbsp;all&nbsp;the
-</c42><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a>&nbsp;<c42>///&nbsp;fundamental&nbsp;differences&nbsp;in&nbsp;functionality&nbsp;between&nbsp;the&nbsp;1:1&nbsp;and&nbsp;M:N&nbsp;runtime
-</c42><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a><a id="n248456">&nbsp;</a><c42>///&nbsp;modes.
-</c42><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a>&nbsp;<c21>pub</c21><c32><a href="#147_11_refs">&nbsp;</a></c32><c32>trait</c32><c32><a href="#147_11_refs">&nbsp;Runtime&nbsp;</a></c32><c3>{</c3><c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a>&nbsp;<c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;Necessary&nbsp;scheduling&nbsp;functions,&nbsp;used&nbsp;for&nbsp;channels&nbsp;and&nbsp;blocking&nbsp;I/O
-</c40><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a>&nbsp;<c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;(sometimes).
-</c40><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a><a id="n248466"><a id="n248463"><a id="n248457"><a id="n248464">&nbsp;</a></a></a></a><c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#147_11_refs">&nbsp;yield_now</a></c30><c4>(</c4><c18><a href="#147_11_refs">~self</a></c18><c3>,</c3><c18><a href="#147_11_refs">&nbsp;cur_task:&nbsp;</a></c18><c8><a href="#147_11_refs">~</a></c8><c8><a href="../../libstd/rt/task.rs.html#43">Task</a></c8><c4>)</c4><c3>;</c3><c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><a id="n248476"><a id="n248467"><a id="n248474"><a id="n248473">&nbsp;</a></a></a></a><c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#147_11_refs">&nbsp;maybe_yield</a></c30><c4>(</c4><c18><a href="#147_11_refs">~self</a></c18><c3>,</c3><c18><a href="#147_11_refs">&nbsp;cur_task:&nbsp;</a></c18><c8><a href="#147_11_refs">~</a></c8><c8><a href="../../libstd/rt/task.rs.html#43">Task</a></c8><c4>)</c4><c3>;</c3><c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><a id="n248483"><a id="n248487"><a id="n248477"><a id="n248488">&nbsp;</a></a></a></a><c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#147_11_refs">&nbsp;deschedule</a></c30><c4>(</c4><c18><a href="#147_11_refs">~self</a></c18><c3>,</c3><c18><a href="#147_11_refs">&nbsp;times:&nbsp;</a></c18><c8><a href="#147_11_refs">uint</a></c8><c3>,</c3><c18><a href="#147_11_refs">&nbsp;cur_task:&nbsp;</a></c18><c8><a href="#147_11_refs">~</a></c8><c8><a href="../../libstd/rt/task.rs.html#43">Task</a></c8><c3>,</c3><c18><a href="#147_11_refs">
-</a></c18><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><a id="n248500"><a id="n248495"><a id="n248502"><a id="n248497"><a id="n248493"><a id="n248499">&nbsp;</a></a></a></a></a></a><c18><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f:&nbsp;</a></c18><c8><a href="#147_11_refs">|</a></c8><c8><a href="../../libstd/rt/task.rs.html#63">BlockedTask</a></c8><c8><a href="#147_11_refs">|&nbsp;</a></c8><c4>-&gt;</c4><c8><a href="#147_11_refs">&nbsp;</a></c8><c8><a href="../../libstd/result.rs.html#20">Result&lt;</a></c8><c4>()</c4><c3>,</c3><c8><a href="../../libstd/result.rs.html#20">&nbsp;</a></c8><c8><a href="../../libstd/rt/task.rs.html#63">BlockedTask</a></c8><c8><a href="../../libstd/result.rs.html#20">&gt;</a></c8><c4>)</c4><c3>;</c3><c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><a id="n248510"><a id="n248512"><a id="n248503"><a id="n248509">&nbsp;</a></a></a></a><c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#147_11_refs">&nbsp;reawaken</a></c30><c4>(</c4><c18><a href="#147_11_refs">~self</a></c18><c3>,</c3><c18><a href="#147_11_refs">&nbsp;to_wake:&nbsp;</a></c18><c8><a href="#147_11_refs">~</a></c8><c8><a href="../../libstd/rt/task.rs.html#43">Task</a></c8><c4>)</c4><c3>;</c3><c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a>&nbsp;<c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a>&nbsp;<c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;Miscellaneous&nbsp;calls&nbsp;which&nbsp;are&nbsp;very&nbsp;different&nbsp;depending&nbsp;on&nbsp;what&nbsp;context
-</c40><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a>&nbsp;<c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;you're&nbsp;in.
-</c40><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a><a id="n248519"><a id="n248520"><a id="n248524"><a id="n248527"><a id="n248530"><a id="n248528"><a id="n248513">&nbsp;</a></a></a></a></a></a></a><c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#147_11_refs">&nbsp;spawn_sibling</a></c30><c4>(</c4><c18><a href="#147_11_refs">~self</a></c18><c3>,</c3><c18><a href="#147_11_refs">&nbsp;cur_task:&nbsp;</a></c18><c8><a href="#147_11_refs">~</a></c8><c8><a href="../../libstd/rt/task.rs.html#43">Task</a></c8><c3>,</c3><c18><a href="#147_11_refs">&nbsp;opts:&nbsp;</a></c18><c8><a href="../../libstd/task.rs.html#60">TaskOpts</a></c8><c3>,</c3><c18><a href="#147_11_refs">&nbsp;f:&nbsp;</a></c18><c8><a href="#147_11_refs">proc</a></c8><c4>())</c4><c3>;</c3><c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><a id="n248531"><a id="n248539"><a id="n248537">&nbsp;</a></a></a><c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#147_11_refs">&nbsp;local_io</a></c30><c5><a href="#147_11_refs">&lt;'a&gt;</a></c5><c4>(</c4><c18><a href="#147_11_refs">&amp;'a&nbsp;mut&nbsp;self</a></c18><c4>)</c4><c18><a href="#147_11_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#147_11_refs">&nbsp;</a></c18><c8><a href="../../libstd/option.rs.html#151">Option&lt;</a></c8><c8><a href="../../libstd/rt/rtio.rs.html#82">rtio::LocalIo&lt;'a&gt;</a></c8><c8><a href="../../libstd/option.rs.html#151">&gt;</a></c8><c3>;</c3><c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a>&nbsp;<c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c42>///&nbsp;The&nbsp;(low,&nbsp;high)&nbsp;edges&nbsp;of&nbsp;the&nbsp;current&nbsp;stack.
-</c42><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a><a id="n248547"><a id="n248549"><a id="n248542"><a id="n248550">&nbsp;</a></a></a></a><c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#147_11_refs">&nbsp;stack_bounds</a></c30><c4>(</c4><c18><a href="#147_11_refs">&amp;self</a></c18><c4>)</c4><c18><a href="#147_11_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#147_11_refs">&nbsp;</a></c18><c4>(</c4><c8><a href="#147_11_refs">uint</a></c8><c3>,</c3><c8><a href="#147_11_refs">&nbsp;uint</a></c8><c4>)</c4><c3>;</c3><c32><a href="#147_11_refs">&nbsp;</a></c32><c40>//&nbsp;(lo,&nbsp;hi)
-</c40><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><a id="n248551"><a id="n248556">&nbsp;</a></a><c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#147_11_refs">&nbsp;can_block</a></c30><c4>(</c4><c18><a href="#147_11_refs">&amp;self</a></c18><c4>)</c4><c18><a href="#147_11_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#147_11_refs">&nbsp;</a></c18><c8><a href="#147_11_refs">bool</a></c8><c3>;</c3><c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a>&nbsp;<c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a>&nbsp;<c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;FIXME:&nbsp;This&nbsp;is&nbsp;a&nbsp;serious&nbsp;code&nbsp;smell&nbsp;and&nbsp;this&nbsp;should&nbsp;not&nbsp;exist&nbsp;at&nbsp;all.
-</c40><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a><a id="n248562"><a id="n248557"><a id="n248563">&nbsp;</a></a></a><c32><a href="#147_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#147_11_refs">&nbsp;wrap</a></c30><c4>(</c4><c18><a href="#147_11_refs">~self</a></c18><c4>)</c4><c18><a href="#147_11_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#147_11_refs">&nbsp;</a></c18><c8><a href="#147_11_refs">~</a></c8><c8><a href="../../libstd/any.rs.html#39">Any</a></c8><c3>;</c3><c32><a href="#147_11_refs">
-</a></c32><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a>&nbsp;<c42>///&nbsp;One-time&nbsp;runtime&nbsp;initialization.
-</c42><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a>&nbsp;<c42>///
-</c42><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a>&nbsp;<c42>///&nbsp;Initializes&nbsp;global&nbsp;state,&nbsp;including&nbsp;frobbing
-</c42><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a>&nbsp;<c42>///&nbsp;the&nbsp;crate's&nbsp;logging&nbsp;flags,&nbsp;registering&nbsp;GC
-</c42><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a><a id="n248564">&nbsp;</a><c42>///&nbsp;metadata,&nbsp;and&nbsp;storing&nbsp;the&nbsp;process&nbsp;arguments.
-</c42><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><a id="n248568"><a id="n248574"><a id="n248567"><a id="n248573"><a id="n248572"><a id="n248575"><a id="n248571"><a id="n248576">&nbsp;</a></a></a></a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;init</c30><c4>(</c4><c20><a href="#174_12_refs">argc</a></c20><c1>:&nbsp;</c1><c8>int</c8><c3>,</c3><c1>&nbsp;</c1><c20><a href="#174_23_refs">argv</a></c20><c1>:&nbsp;</c1><c8>**u8</c8><c4>)</c4><c1>&nbsp;</c1><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;FIXME:&nbsp;Derefing&nbsp;these&nbsp;pointers&nbsp;is&nbsp;not&nbsp;safe.
-</c40><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;Need&nbsp;to&nbsp;propagate&nbsp;the&nbsp;unsafety&nbsp;to&nbsp;`start`.
-</c40><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a><a id="n248591"><a id="n248592">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><a id="n248581"><a id="n248577"><a id="n248578"><a id="n248580"><a id="n248579">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/args.rs.html#29">args::init</a></c26><c4>(</c4><c26><a href="../../libstd/rt/mod.rs.html#174">argc</a></c26><c3>,</c3><c27>&nbsp;</c27><c26><a href="../../libstd/rt/mod.rs.html#174">argv</a></c26><c4>)</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><a id="n248583"><a id="n248584"><a id="n248582">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/env.rs.html#24">env::init</a></c26><c4>()</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><a id="n248586"><a id="n248585"><a id="n248587">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/local_ptr.rs.html#92">local_ptr::init</a></c26><c4>()</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><a id="n248589"><a id="n248588"><a id="n248590">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/at_exit_imp.rs.html#32">at_exit_imp::init</a></c26><c4>()</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
-</c22><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a>&nbsp;<c42>///&nbsp;Enqueues&nbsp;a&nbsp;procedure&nbsp;to&nbsp;run&nbsp;when&nbsp;the&nbsp;runtime&nbsp;is&nbsp;cleaned&nbsp;up
-</c42><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a>&nbsp;<c42>///
-</c42><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;procedure&nbsp;passed&nbsp;to&nbsp;this&nbsp;function&nbsp;will&nbsp;be&nbsp;executed&nbsp;as&nbsp;part&nbsp;of&nbsp;the
-</c42><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a>&nbsp;<c42>///&nbsp;runtime&nbsp;cleanup&nbsp;phase.&nbsp;For&nbsp;normal&nbsp;rust&nbsp;programs,&nbsp;this&nbsp;means&nbsp;that&nbsp;it&nbsp;will&nbsp;run
-</c42><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a>&nbsp;<c42>///&nbsp;after&nbsp;all&nbsp;other&nbsp;tasks&nbsp;have&nbsp;exited.
-</c42><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a>&nbsp;<c42>///
-</c42><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;procedure&nbsp;is&nbsp;*not*&nbsp;executed&nbsp;with&nbsp;a&nbsp;local&nbsp;`Task`&nbsp;available&nbsp;to&nbsp;it,&nbsp;so
-</c42><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a>&nbsp;<c42>///&nbsp;primitives&nbsp;like&nbsp;logging,&nbsp;I/O,&nbsp;channels,&nbsp;spawning,&nbsp;etc,&nbsp;are&nbsp;*not*&nbsp;available.
-</c42><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;is&nbsp;meant&nbsp;for&nbsp;"bare&nbsp;bones"&nbsp;usage&nbsp;to&nbsp;clean&nbsp;up&nbsp;runtime&nbsp;details,&nbsp;this&nbsp;is
-</c42><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a>&nbsp;<c42>///&nbsp;not&nbsp;meant&nbsp;as&nbsp;a&nbsp;general-purpose&nbsp;"let's&nbsp;clean&nbsp;everything&nbsp;up"&nbsp;function.
-</c42><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a>&nbsp;<c42>///
-</c42><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a>&nbsp;<c42>///&nbsp;It&nbsp;is&nbsp;forbidden&nbsp;for&nbsp;procedures&nbsp;to&nbsp;register&nbsp;more&nbsp;`at_exit`&nbsp;handlers&nbsp;when&nbsp;they
-</c42><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a><a id="n248593">&nbsp;</a><c42>///&nbsp;are&nbsp;running,&nbsp;and&nbsp;doing&nbsp;so&nbsp;will&nbsp;lead&nbsp;to&nbsp;a&nbsp;process&nbsp;abort.
-</c42><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><a id="n248596"><a id="n248603"><a id="n248595"><a id="n248598"><a id="n248597">&nbsp;</a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;at_exit</c30><c4>(</c4><c20><a href="#198_15_refs">f</a></c20><c1>:&nbsp;</c1><c8>proc</c8><c4>())</c4><c1>&nbsp;</c1><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><a id="n248599"><a id="n248600"><a id="n248602"><a id="n248601">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/at_exit_imp.rs.html#41">at_exit_imp::push</a></c26><c4>(</c4><c26><a href="../../libstd/rt/mod.rs.html#198">f</a></c26><c4>)</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a>&nbsp;<c42>///&nbsp;One-time&nbsp;runtime&nbsp;cleanup.
-</c42><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a>&nbsp;<c42>///
-</c42><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;function&nbsp;is&nbsp;unsafe&nbsp;because&nbsp;it&nbsp;performs&nbsp;no&nbsp;checks&nbsp;to&nbsp;ensure&nbsp;that&nbsp;the
-</c42><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a>&nbsp;<c42>///&nbsp;runtime&nbsp;has&nbsp;completely&nbsp;ceased&nbsp;running.&nbsp;It&nbsp;is&nbsp;the&nbsp;responsibility&nbsp;of&nbsp;the
-</c42><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a>&nbsp;<c42>///&nbsp;caller&nbsp;to&nbsp;ensure&nbsp;that&nbsp;the&nbsp;runtime&nbsp;is&nbsp;entirely&nbsp;shut&nbsp;down&nbsp;and&nbsp;nothing&nbsp;will&nbsp;be
-</c42><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a>&nbsp;<c42>///&nbsp;poking&nbsp;around&nbsp;at&nbsp;the&nbsp;internal&nbsp;components.
-</c42><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a>&nbsp;<c42>///
-</c42><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a>&nbsp;<c42>///&nbsp;Invoking&nbsp;cleanup&nbsp;while&nbsp;portions&nbsp;of&nbsp;the&nbsp;runtime&nbsp;are&nbsp;still&nbsp;in&nbsp;use&nbsp;may&nbsp;cause
-</c42><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a><a id="n248604">&nbsp;</a><c42>///&nbsp;undefined&nbsp;behavior.
-</c42><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><a id="n248605"><a id="n248618">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c30>fn&nbsp;cleanup</c30><c4>()</c4><c1>&nbsp;</c1><c3>{</c3><c22>
-</c22><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><a id="n248606"><a id="n248607"><a id="n248608">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/bookkeeping.rs.html#44">bookkeeping::wait_for_other_tasks</a></c26><c4>()</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><a id="n248610"><a id="n248611"><a id="n248609">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/at_exit_imp.rs.html#53">at_exit_imp::run</a></c26><c4>()</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><a id="n248612"><a id="n248613"><a id="n248614">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/args.rs.html#35">args::cleanup</a></c26><c4>()</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><a id="n248617"><a id="n248616"><a id="n248615">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/local_ptr.rs.html#94">local_ptr::cleanup</a></c26><c4>()</c4><c3>;</c3><c22>
-</c22><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a>&nbsp;<c3>}</c3><c0>
-</c0><br/><div class="refblock"><br/><a id="147_11_refs"><a href="#147"><c40>libstd/rt/mod.rs:147:11-147:11&nbsp;-trait-&nbsp;definition:<br/></c40><pr>///&nbsp;modes.
+</c0><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;kinds::Send</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::Option</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;result::Result</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;task::TaskOpts</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;self::task::</c0><c3>{</c3><c0>Task</c0><c3>,</c3><c0>&nbsp;BlockedTask</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c40>//&nbsp;this&nbsp;is&nbsp;somewhat&nbsp;useful&nbsp;when&nbsp;a&nbsp;program&nbsp;wants&nbsp;to&nbsp;spawn&nbsp;a&nbsp;"reasonable"&nbsp;number
+</c40><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c40>//&nbsp;of&nbsp;workers&nbsp;based&nbsp;on&nbsp;the&nbsp;constraints&nbsp;of&nbsp;the&nbsp;system&nbsp;that&nbsp;it's&nbsp;running&nbsp;on.
+</c40><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c40>//&nbsp;Perhaps&nbsp;this&nbsp;shouldn't&nbsp;be&nbsp;a&nbsp;`pub&nbsp;use`&nbsp;though&nbsp;and&nbsp;there&nbsp;should&nbsp;be&nbsp;another
+</c40><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c40>//&nbsp;method...
+</c40><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::util::default_sched_threads</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c40>//&nbsp;Export&nbsp;unwinding&nbsp;facilities&nbsp;used&nbsp;by&nbsp;the&nbsp;failure&nbsp;macros
+</c40><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;self::unwind::</c0><c3>{</c3><c0>begin_unwind</c0><c3>,</c3><c0>&nbsp;begin_unwind_raw</c0><c3>,</c3><c0>&nbsp;begin_unwind_fmt</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a>&nbsp;<c40>//&nbsp;FIXME:&nbsp;these&nbsp;probably&nbsp;shouldn't&nbsp;be&nbsp;public...
+</c40><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a><a id="n229695">&nbsp;</a><c50>#</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>hidden</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;shouldnt_be_public&nbsp;</c38><c3>{</c3><c38>
+</c38><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>cfg</c38><c4>(</c4><c38>not</c38><c4>(</c4><c38>test</c38><c4>))</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>use</c21><c38>&nbsp;super::local_ptr::native::maybe_tls_key</c38><c3>;</c3><c38>
+</c38><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;#</c38><c3>[</c3><c38>cfg</c38><c4>(</c4><c38>not</c38><c4>(</c4><c38>windows</c38><c4>)</c4><c3>,</c3><c38>&nbsp;not</c38><c4>(</c4><c38>target_os&nbsp;=&nbsp;"android"</c38><c4>))</c4><c3>]</c3><c38>
+</c38><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c38>&nbsp;&nbsp;&nbsp;&nbsp;</c38><c21>pub</c21><c38>&nbsp;</c38><c21>use</c21><c38>&nbsp;super::local_ptr::compiled::RT_TLS_PTR</c38><c3>;</c3><c38>
+</c38><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a><a id="n229698">&nbsp;</a><c40>//&nbsp;Internal&nbsp;macros&nbsp;used&nbsp;by&nbsp;the&nbsp;runtime.
+</c40><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;macros;
+</c38><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a><a id="n229699">&nbsp;</a><c42>///&nbsp;The&nbsp;global&nbsp;(exchange)&nbsp;heap.
+</c42><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;global_heap;
+</c38><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a><a id="n230090">&nbsp;</a><c42>///&nbsp;Implementations&nbsp;of&nbsp;language-critical&nbsp;runtime&nbsp;features&nbsp;like&nbsp;@.
+</c42><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;task;
+</c38><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n231335">&nbsp;</a><c42>///&nbsp;The&nbsp;EventLoop&nbsp;and&nbsp;internal&nbsp;synchronous&nbsp;I/O&nbsp;interface.
+</c42><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;rtio;
+</c38><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;Local&nbsp;trait&nbsp;for&nbsp;types&nbsp;that&nbsp;are&nbsp;accessible&nbsp;via&nbsp;thread-local
+</c42><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n232578">&nbsp;</a><c42>///&nbsp;or&nbsp;task-local&nbsp;storage.
+</c42><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;local;
+</c38><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n232727">&nbsp;</a><c42>///&nbsp;Bindings&nbsp;to&nbsp;system&nbsp;threading&nbsp;libraries.
+</c42><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;thread;
+</c38><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n234454">&nbsp;</a><c42>///&nbsp;The&nbsp;runtime&nbsp;configuration,&nbsp;read&nbsp;from&nbsp;environment&nbsp;variables.
+</c42><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;env;
+</c38><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a><a id="n234549">&nbsp;</a><c42>///&nbsp;The&nbsp;local,&nbsp;managed&nbsp;heap
+</c42><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;local_heap;
+</c38><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a><a id="n235932">&nbsp;</a><c42>///&nbsp;The&nbsp;runtime&nbsp;needs&nbsp;to&nbsp;be&nbsp;able&nbsp;to&nbsp;put&nbsp;a&nbsp;pointer&nbsp;into&nbsp;thread-local&nbsp;storage.
+</c42><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;local_ptr;
+</c38><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a id="n236975">&nbsp;</a><c42>///&nbsp;Bindings&nbsp;to&nbsp;pthread/windows&nbsp;thread-local&nbsp;storage.
+</c42><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;thread_local_storage;
+</c38><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a id="n237463">&nbsp;</a><c42>///&nbsp;Stack&nbsp;unwinding
+</c42><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;unwind;
+</c38><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a><a id="n239119">&nbsp;</a><c42>///&nbsp;The&nbsp;interface&nbsp;to&nbsp;libunwind&nbsp;that&nbsp;rust&nbsp;is&nbsp;using.
+</c42><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;libunwind;
+</c38><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a><a id="n239248">&nbsp;</a><c42>///&nbsp;Simple&nbsp;backtrace&nbsp;functionality&nbsp;(to&nbsp;print&nbsp;on&nbsp;failure)
+</c42><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;backtrace;
+</c38><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a><a id="n240945">&nbsp;</a><c42>///&nbsp;Just&nbsp;stuff
+</c42><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;util;
+</c38><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a><a id="n241487">&nbsp;</a><c40>//&nbsp;Global&nbsp;command&nbsp;line&nbsp;argument&nbsp;storage
+</c40><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;args;
+</c38><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a><a id="n241979">&nbsp;</a><c40>//&nbsp;Support&nbsp;for&nbsp;running&nbsp;procedures&nbsp;when&nbsp;a&nbsp;program&nbsp;has&nbsp;exited.
+</c40><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;at_exit_imp;
+</c38><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a><a id="n242580">&nbsp;</a><c40>//&nbsp;Bookkeeping&nbsp;for&nbsp;task&nbsp;counts
+</c40><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;bookkeeping;
+</c38><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a><a id="n242649">&nbsp;</a><c40>//&nbsp;Stack&nbsp;overflow&nbsp;protection
+</c40><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;stack;
+</c38><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;default&nbsp;error&nbsp;code&nbsp;of&nbsp;the&nbsp;rust&nbsp;runtime&nbsp;if&nbsp;the&nbsp;main&nbsp;task&nbsp;fails&nbsp;instead
+</c42><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a><a id="n242867">&nbsp;</a><c42>///&nbsp;of&nbsp;exiting&nbsp;cleanly.
+</c42><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a><a id="n242869"><a id="n242870">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;DEFAULT_ERROR_CODE:&nbsp;int&nbsp;=&nbsp;101;
+</c36><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;interface&nbsp;to&nbsp;the&nbsp;current&nbsp;runtime.
+</c42><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;trait&nbsp;is&nbsp;used&nbsp;as&nbsp;the&nbsp;abstraction&nbsp;between&nbsp;1:1&nbsp;and&nbsp;M:N&nbsp;scheduling.&nbsp;The
+</c42><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a>&nbsp;<c42>///&nbsp;two&nbsp;independent&nbsp;crates,&nbsp;libnative&nbsp;and&nbsp;libgreen,&nbsp;both&nbsp;have&nbsp;objects&nbsp;which
+</c42><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a>&nbsp;<c42>///&nbsp;implement&nbsp;this&nbsp;trait.&nbsp;The&nbsp;goal&nbsp;of&nbsp;this&nbsp;trait&nbsp;is&nbsp;to&nbsp;encompass&nbsp;all&nbsp;the
+</c42><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a>&nbsp;<c42>///&nbsp;fundamental&nbsp;differences&nbsp;in&nbsp;functionality&nbsp;between&nbsp;the&nbsp;1:1&nbsp;and&nbsp;M:N&nbsp;runtime
+</c42><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a><a id="n242871">&nbsp;</a><c42>///&nbsp;modes.
+</c42><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a>&nbsp;<c21>pub</c21><c32><a href="#148_11_refs">&nbsp;</a></c32><c32>trait</c32><c32><a href="#148_11_refs">&nbsp;Runtime&nbsp;</a></c32><c3>{</c3><c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a>&nbsp;<c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;Necessary&nbsp;scheduling&nbsp;functions,&nbsp;used&nbsp;for&nbsp;channels&nbsp;and&nbsp;blocking&nbsp;I/O
+</c40><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a>&nbsp;<c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;(sometimes).
+</c40><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a><a id="n242878"><a id="n242872"><a id="n242879"><a id="n242881">&nbsp;</a></a></a></a><c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#148_11_refs">&nbsp;yield_now</a></c30><c4>(</c4><c18><a href="#148_11_refs">~self</a></c18><c3>,</c3><c18><a href="#148_11_refs">&nbsp;cur_task:&nbsp;</a></c18><c8><a href="#148_11_refs">~</a></c8><c8><a href="../../libstd/rt/task.rs.html#44">Task</a></c8><c4>)</c4><c3>;</c3><c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a><a id="n242889"><a id="n242891"><a id="n242882"><a id="n242888">&nbsp;</a></a></a></a><c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#148_11_refs">&nbsp;maybe_yield</a></c30><c4>(</c4><c18><a href="#148_11_refs">~self</a></c18><c3>,</c3><c18><a href="#148_11_refs">&nbsp;cur_task:&nbsp;</a></c18><c8><a href="#148_11_refs">~</a></c8><c8><a href="../../libstd/rt/task.rs.html#44">Task</a></c8><c4>)</c4><c3>;</c3><c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a><a id="n242902"><a id="n242892"><a id="n242898"><a id="n242903">&nbsp;</a></a></a></a><c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#148_11_refs">&nbsp;deschedule</a></c30><c4>(</c4><c18><a href="#148_11_refs">~self</a></c18><c3>,</c3><c18><a href="#148_11_refs">&nbsp;times:&nbsp;</a></c18><c8><a href="#148_11_refs">uint</a></c8><c3>,</c3><c18><a href="#148_11_refs">&nbsp;cur_task:&nbsp;</a></c18><c8><a href="#148_11_refs">~</a></c8><c8><a href="../../libstd/rt/task.rs.html#44">Task</a></c8><c3>,</c3><c18><a href="#148_11_refs">
+</a></c18><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a><a id="n242908"><a id="n242915"><a id="n242910"><a id="n242917"><a id="n242912"><a id="n242914">&nbsp;</a></a></a></a></a></a><c18><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f:&nbsp;</a></c18><c8><a href="#148_11_refs">|</a></c8><c8><a href="../../libstd/rt/task.rs.html#64">BlockedTask</a></c8><c8><a href="#148_11_refs">|&nbsp;</a></c8><c4>-&gt;</c4><c8><a href="#148_11_refs">&nbsp;</a></c8><c8><a href="../../libstd/result.rs.html#20">Result&lt;</a></c8><c4>()</c4><c3>,</c3><c8><a href="../../libstd/result.rs.html#20">&nbsp;</a></c8><c8><a href="../../libstd/rt/task.rs.html#64">BlockedTask</a></c8><c8><a href="../../libstd/result.rs.html#20">&gt;</a></c8><c4>)</c4><c3>;</c3><c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a><a id="n242927"><a id="n242924"><a id="n242925"><a id="n242918">&nbsp;</a></a></a></a><c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#148_11_refs">&nbsp;reawaken</a></c30><c4>(</c4><c18><a href="#148_11_refs">~self</a></c18><c3>,</c3><c18><a href="#148_11_refs">&nbsp;to_wake:&nbsp;</a></c18><c8><a href="#148_11_refs">~</a></c8><c8><a href="../../libstd/rt/task.rs.html#44">Task</a></c8><c4>)</c4><c3>;</c3><c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a>&nbsp;<c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a>&nbsp;<c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;Miscellaneous&nbsp;calls&nbsp;which&nbsp;are&nbsp;very&nbsp;different&nbsp;depending&nbsp;on&nbsp;what&nbsp;context
+</c40><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a>&nbsp;<c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;you're&nbsp;in.
+</c40><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a><a id="n242946"><a id="n242928"><a id="n242935"><a id="n242939"><a id="n242943"><a id="n242944"><a id="n242934">&nbsp;</a></a></a></a></a></a></a><c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#148_11_refs">&nbsp;spawn_sibling</a></c30><c4>(</c4><c18><a href="#148_11_refs">~self</a></c18><c3>,</c3><c18><a href="#148_11_refs">&nbsp;cur_task:&nbsp;</a></c18><c8><a href="#148_11_refs">~</a></c8><c8><a href="../../libstd/rt/task.rs.html#44">Task</a></c8><c3>,</c3><c18><a href="#148_11_refs">&nbsp;opts:&nbsp;</a></c18><c8><a href="../../libstd/task.rs.html#60">TaskOpts</a></c8><c3>,</c3><c18><a href="#148_11_refs">&nbsp;f:&nbsp;</a></c18><c8><a href="#148_11_refs">proc</a></c8><c4>()</c4><c8><a href="#148_11_refs">:Send</a></c8><c4>)</c4><c3>;</c3><c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a><a id="n242955"><a id="n242953"><a id="n242947">&nbsp;</a></a></a><c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#148_11_refs">&nbsp;local_io</a></c30><c5><a href="#148_11_refs">&lt;'a&gt;</a></c5><c4>(</c4><c18><a href="#148_11_refs">&amp;'a&nbsp;mut&nbsp;self</a></c18><c4>)</c4><c18><a href="#148_11_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#148_11_refs">&nbsp;</a></c18><c8><a href="../../libstd/option.rs.html#151">Option&lt;</a></c8><c8><a href="../../libstd/rt/rtio.rs.html#84">rtio::LocalIo&lt;'a&gt;</a></c8><c8><a href="../../libstd/option.rs.html#151">&gt;</a></c8><c3>;</c3><c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a>&nbsp;<c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c42>///&nbsp;The&nbsp;(low,&nbsp;high)&nbsp;edges&nbsp;of&nbsp;the&nbsp;current&nbsp;stack.
+</c42><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a><a id="n242958"><a id="n242963"><a id="n242966"><a id="n242965">&nbsp;</a></a></a></a><c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#148_11_refs">&nbsp;stack_bounds</a></c30><c4>(</c4><c18><a href="#148_11_refs">&amp;self</a></c18><c4>)</c4><c18><a href="#148_11_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#148_11_refs">&nbsp;</a></c18><c4>(</c4><c8><a href="#148_11_refs">uint</a></c8><c3>,</c3><c8><a href="#148_11_refs">&nbsp;uint</a></c8><c4>)</c4><c3>;</c3><c32><a href="#148_11_refs">&nbsp;</a></c32><c40>//&nbsp;(lo,&nbsp;hi)
+</c40><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a><a id="n242967"><a id="n242972">&nbsp;</a></a><c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#148_11_refs">&nbsp;can_block</a></c30><c4>(</c4><c18><a href="#148_11_refs">&amp;self</a></c18><c4>)</c4><c18><a href="#148_11_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#148_11_refs">&nbsp;</a></c18><c8><a href="#148_11_refs">bool</a></c8><c3>;</c3><c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a>&nbsp;<c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a>&nbsp;<c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c40>//&nbsp;FIXME:&nbsp;This&nbsp;is&nbsp;a&nbsp;serious&nbsp;code&nbsp;smell&nbsp;and&nbsp;this&nbsp;should&nbsp;not&nbsp;exist&nbsp;at&nbsp;all.
+</c40><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a><a id="n242973"><a id="n242978"><a id="n242979">&nbsp;</a></a></a><c32><a href="#148_11_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#148_11_refs">&nbsp;wrap</a></c30><c4>(</c4><c18><a href="#148_11_refs">~self</a></c18><c4>)</c4><c18><a href="#148_11_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#148_11_refs">&nbsp;</a></c18><c8><a href="#148_11_refs">~</a></c8><c8><a href="../../libstd/any.rs.html#39">Any</a></c8><c3>;</c3><c32><a href="#148_11_refs">
+</a></c32><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a>&nbsp;<c42>///&nbsp;One-time&nbsp;runtime&nbsp;initialization.
+</c42><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a>&nbsp;<c42>///&nbsp;Initializes&nbsp;global&nbsp;state,&nbsp;including&nbsp;frobbing
+</c42><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a>&nbsp;<c42>///&nbsp;the&nbsp;crate's&nbsp;logging&nbsp;flags,&nbsp;registering&nbsp;GC
+</c42><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a><a id="n242980">&nbsp;</a><c42>///&nbsp;metadata,&nbsp;and&nbsp;storing&nbsp;the&nbsp;process&nbsp;arguments.
+</c42><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a><a id="n242984"><a id="n242983"><a id="n242988"><a id="n242989"><a id="n242987"><a id="n242992"><a id="n242991"><a id="n242990">&nbsp;</a></a></a></a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;init</c30><c4>(</c4><c20><a href="#175_12_refs">argc</a></c20><c1>:&nbsp;</c1><c8>int</c8><c3>,</c3><c1>&nbsp;</c1><c20><a href="#175_23_refs">argv</a></c20><c1>:&nbsp;</c1><c8>**u8</c8><c4>)</c4><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;176</ln><a id="176">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;FIXME:&nbsp;Derefing&nbsp;these&nbsp;pointers&nbsp;is&nbsp;not&nbsp;safe.
+</c40><br/><ln>&nbsp;177</ln><a id="177">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c40>//&nbsp;Need&nbsp;to&nbsp;propagate&nbsp;the&nbsp;unsafety&nbsp;to&nbsp;`start`.
+</c40><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a><a id="n243007"><a id="n243008">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>unsafe</c21><c22>&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a><a id="n242997"><a id="n242996"><a id="n242994"><a id="n242993"><a id="n242995">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/args.rs.html#29">args::init</a></c26><c4>(</c4><c26><a href="../../libstd/rt/mod.rs.html#175">argc</a></c26><c3>,</c3><c27>&nbsp;</c27><c26><a href="../../libstd/rt/mod.rs.html#175">argv</a></c26><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a><a id="n242998"><a id="n242999"><a id="n243000">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/env.rs.html#24">env::init</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a><a id="n243003"><a id="n243002"><a id="n243001">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/local_ptr.rs.html#92">local_ptr::init</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a><a id="n243006"><a id="n243004"><a id="n243005">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/at_exit_imp.rs.html#33">at_exit_imp::init</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;185</ln><a id="185">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;186</ln><a id="186">&nbsp;</a>&nbsp;<c42>///&nbsp;Enqueues&nbsp;a&nbsp;procedure&nbsp;to&nbsp;run&nbsp;when&nbsp;the&nbsp;runtime&nbsp;is&nbsp;cleaned&nbsp;up
+</c42><br/><ln>&nbsp;187</ln><a id="187">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;188</ln><a id="188">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;procedure&nbsp;passed&nbsp;to&nbsp;this&nbsp;function&nbsp;will&nbsp;be&nbsp;executed&nbsp;as&nbsp;part&nbsp;of&nbsp;the
+</c42><br/><ln>&nbsp;189</ln><a id="189">&nbsp;</a>&nbsp;<c42>///&nbsp;runtime&nbsp;cleanup&nbsp;phase.&nbsp;For&nbsp;normal&nbsp;rust&nbsp;programs,&nbsp;this&nbsp;means&nbsp;that&nbsp;it&nbsp;will&nbsp;run
+</c42><br/><ln>&nbsp;190</ln><a id="190">&nbsp;</a>&nbsp;<c42>///&nbsp;after&nbsp;all&nbsp;other&nbsp;tasks&nbsp;have&nbsp;exited.
+</c42><br/><ln>&nbsp;191</ln><a id="191">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;192</ln><a id="192">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;procedure&nbsp;is&nbsp;*not*&nbsp;executed&nbsp;with&nbsp;a&nbsp;local&nbsp;`Task`&nbsp;available&nbsp;to&nbsp;it,&nbsp;so
+</c42><br/><ln>&nbsp;193</ln><a id="193">&nbsp;</a>&nbsp;<c42>///&nbsp;primitives&nbsp;like&nbsp;logging,&nbsp;I/O,&nbsp;channels,&nbsp;spawning,&nbsp;etc,&nbsp;are&nbsp;*not*&nbsp;available.
+</c42><br/><ln>&nbsp;194</ln><a id="194">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;is&nbsp;meant&nbsp;for&nbsp;"bare&nbsp;bones"&nbsp;usage&nbsp;to&nbsp;clean&nbsp;up&nbsp;runtime&nbsp;details,&nbsp;this&nbsp;is
+</c42><br/><ln>&nbsp;195</ln><a id="195">&nbsp;</a>&nbsp;<c42>///&nbsp;not&nbsp;meant&nbsp;as&nbsp;a&nbsp;general-purpose&nbsp;"let's&nbsp;clean&nbsp;everything&nbsp;up"&nbsp;function.
+</c42><br/><ln>&nbsp;196</ln><a id="196">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;197</ln><a id="197">&nbsp;</a>&nbsp;<c42>///&nbsp;It&nbsp;is&nbsp;forbidden&nbsp;for&nbsp;procedures&nbsp;to&nbsp;register&nbsp;more&nbsp;`at_exit`&nbsp;handlers&nbsp;when&nbsp;they
+</c42><br/><ln>&nbsp;198</ln><a id="198">&nbsp;</a><a id="n243009">&nbsp;</a><c42>///&nbsp;are&nbsp;running,&nbsp;and&nbsp;doing&nbsp;so&nbsp;will&nbsp;lead&nbsp;to&nbsp;a&nbsp;process&nbsp;abort.
+</c42><br/><ln>&nbsp;199</ln><a id="199">&nbsp;</a><a id="n243014"><a id="n243012"><a id="n243015"><a id="n243020"><a id="n243013">&nbsp;</a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;at_exit</c30><c4>(</c4><c20><a href="#199_15_refs">f</a></c20><c1>:&nbsp;</c1><c8>proc</c8><c4>()</c4><c8>:Send</c8><c4>)</c4><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;200</ln><a id="200">&nbsp;</a><a id="n243019"><a id="n243018"><a id="n243016"><a id="n243017">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/at_exit_imp.rs.html#42">at_exit_imp::push</a></c26><c4>(</c4><c26><a href="../../libstd/rt/mod.rs.html#199">f</a></c26><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;201</ln><a id="201">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;202</ln><a id="202">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;203</ln><a id="203">&nbsp;</a>&nbsp;<c42>///&nbsp;One-time&nbsp;runtime&nbsp;cleanup.
+</c42><br/><ln>&nbsp;204</ln><a id="204">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;205</ln><a id="205">&nbsp;</a>&nbsp;<c42>///&nbsp;This&nbsp;function&nbsp;is&nbsp;unsafe&nbsp;because&nbsp;it&nbsp;performs&nbsp;no&nbsp;checks&nbsp;to&nbsp;ensure&nbsp;that&nbsp;the
+</c42><br/><ln>&nbsp;206</ln><a id="206">&nbsp;</a>&nbsp;<c42>///&nbsp;runtime&nbsp;has&nbsp;completely&nbsp;ceased&nbsp;running.&nbsp;It&nbsp;is&nbsp;the&nbsp;responsibility&nbsp;of&nbsp;the
+</c42><br/><ln>&nbsp;207</ln><a id="207">&nbsp;</a>&nbsp;<c42>///&nbsp;caller&nbsp;to&nbsp;ensure&nbsp;that&nbsp;the&nbsp;runtime&nbsp;is&nbsp;entirely&nbsp;shut&nbsp;down&nbsp;and&nbsp;nothing&nbsp;will&nbsp;be
+</c42><br/><ln>&nbsp;208</ln><a id="208">&nbsp;</a>&nbsp;<c42>///&nbsp;poking&nbsp;around&nbsp;at&nbsp;the&nbsp;internal&nbsp;components.
+</c42><br/><ln>&nbsp;209</ln><a id="209">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;210</ln><a id="210">&nbsp;</a>&nbsp;<c42>///&nbsp;Invoking&nbsp;cleanup&nbsp;while&nbsp;portions&nbsp;of&nbsp;the&nbsp;runtime&nbsp;are&nbsp;still&nbsp;in&nbsp;use&nbsp;may&nbsp;cause
+</c42><br/><ln>&nbsp;211</ln><a id="211">&nbsp;</a><a id="n243021">&nbsp;</a><c42>///&nbsp;undefined&nbsp;behavior.
+</c42><br/><ln>&nbsp;212</ln><a id="212">&nbsp;</a><a id="n243022"><a id="n243035">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c21>unsafe</c21><c1>&nbsp;</c1><c30>fn&nbsp;cleanup</c30><c4>()</c4><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;213</ln><a id="213">&nbsp;</a><a id="n243025"><a id="n243024"><a id="n243023">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/bookkeeping.rs.html#44">bookkeeping::wait_for_other_tasks</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;214</ln><a id="214">&nbsp;</a><a id="n243026"><a id="n243028"><a id="n243027">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/at_exit_imp.rs.html#54">at_exit_imp::run</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;215</ln><a id="215">&nbsp;</a><a id="n243031"><a id="n243030"><a id="n243029">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/args.rs.html#35">args::cleanup</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;216</ln><a id="216">&nbsp;</a><a id="n243034"><a id="n243033"><a id="n243032">&nbsp;</a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../libstd/rt/local_ptr.rs.html#94">local_ptr::cleanup</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;217</ln><a id="217">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><a id="148_11_refs"><a href="#148"><c40>libstd/rt/mod.rs:148:11-148:11&nbsp;-trait-&nbsp;definition:<br/></c40><pr>///&nbsp;modes.
 <br/>pub&nbsp;trait&nbsp;Runtime&nbsp;{
-<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/task.rs.html"><c40>libstd/rt/task.rs:<br/></c40></a><a href="../../libstd/rt/task.rs.html#228"><c40>228:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;obj:&nbsp;~Runtime&nbsp;=&nbsp;cast::transmute((vtable,&nbsp;obj));
-<br/></a><a href="../../libstd/rt/task.rs.html#198"><c40>198:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;put_runtime(&amp;mut&nbsp;self,&nbsp;ops:&nbsp;~Runtime)&nbsp;{
-<br/></a><a href="../../libstd/rt/task.rs.html#56"><c40>56:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;priv&nbsp;imp:&nbsp;Option&lt;~Runtime&gt;,
+<br/></pr></a></a><c40>references:-</c40><br/><a href="../../libstd/rt/task.rs.html"><c40>libstd/rt/task.rs:<br/></c40></a><a href="../../libstd/rt/task.rs.html#57"><c40>57:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;imp:&nbsp;Option&lt;~Runtime:Send&gt;,
+<br/></a><a href="../../libstd/rt/task.rs.html#229"><c40>229:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;obj:&nbsp;~Runtime:Send&nbsp;=&nbsp;cast::transmute((vtable,&nbsp;obj));
+<br/></a><a href="../../libstd/rt/task.rs.html#199"><c40>199:&nbsp;</c40>&nbsp;&nbsp;&nbsp;&nbsp;pub&nbsp;fn&nbsp;put_runtime(&amp;mut&nbsp;self,&nbsp;ops:&nbsp;~Runtime:Send)&nbsp;{
 <br/></a><br/></div></maintext></div></body>

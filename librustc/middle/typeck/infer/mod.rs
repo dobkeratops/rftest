@@ -10,7 +10,7 @@
 
 /*! See doc.rs for documentation */
 
-#[allow(non_camel_case_types)];
+#![allow(non_camel_case_types)]
 
 pub use middle::ty::IntVarValue;
 pub use middle::typeck::infer::resolve::resolve_and_force_all_but_regions;
@@ -75,26 +75,26 @@ pub type fres<T> = Result<T, fixup_err>; // "fixup result"
 pub type CoerceResult = cres<Option<@ty::AutoAdjustment>>;
 
 pub struct InferCtxt<'a> {
-    tcx: &'a ty::ctxt,
+    pub tcx: &'a ty::ctxt,
 
     // We instantiate ValsAndBindings with bounds<ty::t> because the
     // types that might instantiate a general type variable have an
     // order, represented by its upper and lower bounds.
-    ty_var_bindings: RefCell<ValsAndBindings<ty::TyVid, Bounds<ty::t>>>,
-    ty_var_counter: Cell<uint>,
+    pub ty_var_bindings: RefCell<ValsAndBindings<ty::TyVid, Bounds<ty::t>>>,
+    pub ty_var_counter: Cell<uint>,
 
     // Map from integral variable to the kind of integer it represents
-    int_var_bindings: RefCell<ValsAndBindings<ty::IntVid,
+    pub int_var_bindings: RefCell<ValsAndBindings<ty::IntVid,
                                               Option<IntVarValue>>>,
-    int_var_counter: Cell<uint>,
+    pub int_var_counter: Cell<uint>,
 
     // Map from floating variable to the kind of float it represents
-    float_var_bindings: RefCell<ValsAndBindings<ty::FloatVid,
+    pub float_var_bindings: RefCell<ValsAndBindings<ty::FloatVid,
                                                 Option<ast::FloatTy>>>,
-    float_var_counter: Cell<uint>,
+    pub float_var_counter: Cell<uint>,
 
     // For region variables.
-    region_vars: RegionVarBindings<'a>,
+    pub region_vars: RegionVarBindings<'a>,
 }
 
 /// Why did we require that the two types be related?
@@ -421,19 +421,6 @@ pub fn mk_coercety(cx: &InferCtxt,
     })
 }
 
-pub fn can_mk_coercety(cx: &InferCtxt, a: ty::t, b: ty::t) -> ures {
-    debug!("can_mk_coercety({} -> {})", a.inf_str(cx), b.inf_str(cx));
-    indent(|| {
-        cx.probe(|| {
-            let trace = TypeTrace {
-                origin: Misc(codemap::DUMMY_SP),
-                values: Types(expected_found(true, a, b))
-            };
-            Coerce(cx.combine_fields(true, trace)).tys(a, b)
-        })
-    }).to_ures()
-}
-
 // See comment on the type `resolve_state` below
 pub fn resolve_type(cx: &InferCtxt,
                     a: ty::t,
@@ -631,10 +618,6 @@ impl<'a> InferCtxt<'a> {
         result
     }
 
-    pub fn next_int_var(&self) -> ty::t {
-        ty::mk_int_var(self.tcx, self.next_int_var_id())
-    }
-
     pub fn next_float_var_id(&self) -> FloatVid {
         let mut float_var_counter = self.float_var_counter.get();
         let mut float_var_bindings = self.float_var_bindings.borrow_mut();
@@ -644,19 +627,8 @@ impl<'a> InferCtxt<'a> {
         result
     }
 
-    pub fn next_float_var(&self) -> ty::t {
-        ty::mk_float_var(self.tcx, self.next_float_var_id())
-    }
-
     pub fn next_region_var(&self, origin: RegionVariableOrigin) -> ty::Region {
         ty::ReInfer(ty::ReVar(self.region_vars.new_region_var(origin)))
-    }
-
-    pub fn next_region_vars(&self,
-                            origin: RegionVariableOrigin,
-                            count: uint)
-                            -> Vec<ty::Region> {
-        Vec::from_fn(count, |_| self.next_region_var(origin))
     }
 
     pub fn region_vars_for_defs(&self,
@@ -683,7 +655,7 @@ impl<'a> InferCtxt<'a> {
     }
 
     pub fn tys_to_str(&self, ts: &[ty::t]) -> ~str {
-        let tstrs = ts.map(|t| self.ty_to_str(*t));
+        let tstrs: Vec<~str> = ts.iter().map(|t| self.ty_to_str(*t)).collect();
         format!("({})", tstrs.connect(", "))
     }
 

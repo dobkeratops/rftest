@@ -21,7 +21,7 @@
 </c40><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c40>//!&nbsp;the&nbsp;other&nbsp;two&nbsp;implementations&nbsp;of&nbsp;timers&nbsp;with&nbsp;nothing&nbsp;*that*&nbsp;new&nbsp;showing&nbsp;up.
 </c40><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::comm::Data</c0><c3>;</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::libc</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;libc</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::ptr</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;std::rt::rtio</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c0>
@@ -29,8 +29,8 @@
 </c0><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;io::IoResult</c0><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c31>struct&nbsp;Timer&nbsp;</c31><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>priv</c21><c0>&nbsp;obj:&nbsp;libc::HANDLE</c0><c3>,</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>priv</c21><c0>&nbsp;on_worker:&nbsp;bool</c0><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;obj:&nbsp;libc::HANDLE</c0><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;on_worker:&nbsp;bool</c0><c3>,</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c34>enum&nbsp;Req&nbsp;</c34><c3>{</c3><c0>
@@ -78,7 +78,7 @@
 </c0><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>&nbsp;</c0><c21>else</c21><c0>&nbsp;</c0><c3>{</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;remove&nbsp;=&nbsp;</c0><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>match</c21><c0>&nbsp;&amp;chans</c0><c3>[</c3><c0>idx&nbsp;-&nbsp;1</c0><c3>]</c3><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>match</c21><c0>&nbsp;&amp;chans</c0><c3>[</c3><c0>idx&nbsp;as&nbsp;uint&nbsp;-&nbsp;1</c0><c3>]</c3><c0>&nbsp;</c0><c3>{</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;</c0><c4>(</c4><c21>ref</c21><c0>&nbsp;c</c0><c3>,</c3><c0>&nbsp;oneshot</c0><c4>)</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;!c.try_send</c0><c4>(())</c4><c0>&nbsp;||&nbsp;oneshot
 </c0><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
 </c0><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>};</c3><c0>
@@ -178,7 +178,7 @@
 </c0><br/><ln>&nbsp;178</ln><a id="178">&nbsp;</a>&nbsp;<c3>}</c3><c0>
 </c0><br/><ln>&nbsp;179</ln><a id="179">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;180</ln><a id="180">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;imp&nbsp;</c38><c3>{</c3><c0>
-</c0><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;std::libc::</c0><c3>{</c3><c0>LPSECURITY_ATTRIBUTES</c0><c3>,</c3><c0>&nbsp;BOOL</c0><c3>,</c3><c0>&nbsp;LPCSTR</c0><c3>,</c3><c0>&nbsp;HANDLE</c0><c3>,</c3><c0>&nbsp;LARGE_INTEGER</c0><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;181</ln><a id="181">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;libc::</c0><c3>{</c3><c0>LPSECURITY_ATTRIBUTES</c0><c3>,</c3><c0>&nbsp;BOOL</c0><c3>,</c3><c0>&nbsp;LPCSTR</c0><c3>,</c3><c0>&nbsp;HANDLE</c0><c3>,</c3><c0>&nbsp;LARGE_INTEGER</c0><c3>,</c3><c0>
 </c0><br/><ln>&nbsp;182</ln><a id="182">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONG</c0><c3>,</c3><c0>&nbsp;LPVOID</c0><c3>,</c3><c0>&nbsp;DWORD</c0><c3>,</c3><c0>&nbsp;c_void</c0><c3>};</c3><c0>
 </c0><br/><ln>&nbsp;183</ln><a id="183">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;184</ln><a id="184">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>pub</c21><c0>&nbsp;</c0><c35>type&nbsp;PTIMERAPCROUTINE&nbsp;=&nbsp;*c_void;
