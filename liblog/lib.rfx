@@ -1,1598 +1,1598 @@
-node	lib	963	850	liblog/lib.rs	230	53	736	block	
-node	lib	546	0	<std macros>	3	8	68	static	local_logger
-node	lib	709	710	liblog/lib.rs	188	60	1	path	
-node	lib	1033	1030	liblog/lib.rs	259	4	26	le	
-node	lib	1252	1303	<std macros>	4	18	24	tup	
-node	lib	398	400	liblog/directive.rs	53	33	84	path	
-node	lib	575	570	liblog/lib.rs	171	12	40	ty	
-node	lib	464	460	liblog/directive.rs	60	25	76	call	
-node	lib	91	180	liblog/directive.rs	13	11	4	tup	
-node	lib	278	499	liblog/directive.rs	37	4	1244	pat	
-node	lib	1250	1251	<std macros>	4	44	17	lit	
-node	lib	1132	1130	liblog/lib.rs	282	20	7	field	
-node	lib	277	499	liblog/directive.rs	37	4	1244	addr_of	
-node	lib	385	383	liblog/directive.rs	53	33	84	pat	
-node	lib	1317	1328	liblog/lib.rs	294	16	88	stmt	
-node	lib	241	235	liblog/directive.rs	26	20	12	add	
-node	lib	458	457	liblog/directive.rs	60	25	76	ty	
-node	lib	877	878	liblog/lib.rs	239	15	20	blk	
-node	lib	1235	1249	<std macros>	21	8	119	fn	run_fmt
-node	lib	837	839	liblog/lib.rs	221	15	15	path	
-node	lib	816	814	liblog/lib.rs	216	22	3	ty	
-node	lib	1254	1303	<std macros>	4	18	24	pat	
-node	lib	650	651	liblog/lib.rs	178	49	1	path	
-node	lib	312	478	liblog/directive.rs	40	38	42	tup	
-node	lib	469	470	liblog/directive.rs	60	25	76	path	
-node	lib	1178	1186	<std macros>	4	18	24	path	
-node	lib	941	933	<std macros>	4	18	24	vstore	
-node	lib	883	963	liblog/lib.rs	239	4	48	stmt	
-node	lib	1106	1139	liblog/lib.rs	280	8	134	local	
-node	lib	997	998	liblog/lib.rs	251	4	245	path	
-node	lib	1198	1190	<std macros>	4	18	24	vstore	
-node	lib	255	251	liblog/directive.rs	27	15	28	call	
-node	lib	865	862	liblog/lib.rs	231	28	9	path	
-node	lib	876	875	liblog/lib.rs	239	24	9	path	
-node	lib	478	301	liblog/directive.rs	40	32	971	match	
-node	lib	1005	1024	liblog/lib.rs	252	14	14	field	
-node	lib	1219	1333	<std macros>	3	8	84	stmt	
-node	lib	957	953	<std macros>	24	21	7	call	
-node	lib	961	963	<std macros>	3	8	84	if	
-node	lib	671	617	<std macros>	24	8	43	match	
-node	lib	167	175	liblog/directive.rs	13	11	4	pat	
-node	lib	609	603	<std macros>	21	51	1	ty	
-node	lib	221	226	liblog/directive.rs	25	58	4	ty	
-node	lib	693	769	liblog/lib.rs	188	12	6	pat	
-node	lib	418	419	liblog/directive.rs	61	39	1	addr_of	
-node	lib	779	770	liblog/lib.rs	201	23	4	pat	
-node	lib	1199	1210	<std macros>	4	18	24	stmt	
-node	lib	47	48	liblog/directive.rs	13	17	5	path	
-node	lib	341	415	liblog/directive.rs	49	48	342	block	
-node	lib	86	91	liblog/directive.rs	15	8	18	addr_of	
-node	lib	558	556	liblog/lib.rs	1	0	0	ty	
-node	lib	800	801	liblog/lib.rs	205	66	74	fn_blk	
-node	lib	387	389	liblog/directive.rs	54	47	5	path	
-node	lib	1289	1287	<std macros>	4	18	24	pat	
-node	lib	1216	1162	<std macros>	24	8	43	match	
-node	lib	40	23	liblog/directive.rs	13	17	5	method	clone
-node	lib	1193	1196	<std macros>	4	44	17	path	
-node	lib	1288	1287	<std macros>	4	18	24	ty	
-node	lib	1177	1187	<std macros>	4	18	24	path	
-node	lib	760	756	<std macros>	24	21	7	call	
-node	lib	1024	1003	liblog/lib.rs	252	8	191	match	
-node	lib	744	736	liblog/lib.rs	188	28	30	vstore	
-node	lib	437	438	liblog/directive.rs	60	25	76	path	
-node	lib	445	422	liblog/directive.rs	60	25	76	vec	
-node	lib	103	138	liblog/directive.rs	13	11	4	call	
-node	lib	738	736	liblog/lib.rs	188	28	30	pat	
-node	lib	944	943	<std macros>	4	18	24	ty	
-node	lib	226	227	liblog/directive.rs	25	50	21	fn_blk	
-node	lib	769	688	liblog/lib.rs	187	8	126	match	
-node	lib	550	552	liblog/lib.rs	159	30	12	ty	
-node	lib	813	770	liblog/lib.rs	201	46	404	block	
-node	lib	124	128	liblog/directive.rs	13	11	4	path	
-node	lib	904	905	<std macros>	21	8	119	stmt	
-node	lib	82	181	liblog/directive.rs	13	11	4	pat	
-node	lib	1334	1139	liblog/lib.rs	285	4	465	blk	
-node	lib	1251	1252	<std macros>	4	44	17	addr_of	
-node	lib	254	255	liblog/directive.rs	27	27	15	path	
-node	lib	243	229	liblog/directive.rs	26	8	25	method_call	
-node	lib	1013	1014	liblog/lib.rs	253	60	2	block	
-node	lib	1081	1079	liblog/lib.rs	276	12	4	pat	
-node	lib	1095	1079	liblog/lib.rs	276	19	45	method_call	
-node	lib	363	358	liblog/directive.rs	53	33	84	ty	
-node	lib	596	597	liblog/lib.rs	177	32	4	path	
-node	lib	871	872	liblog/lib.rs	232	4	27	block	
-node	lib	1328	1329	liblog/lib.rs	292	27	222	block	
-node	lib	702	706	<std macros>	22	12	27	path	
-node	lib	1173	1168	<std macros>	4	18	24	ty	
-node	lib	1144	1145	liblog/lib.rs	288	16	10	path	
-node	lib	1167	1216	<std macros>	4	18	24	pat	
-node	lib	334	478	liblog/directive.rs	41	41	312	blk	
-node	lib	818	820	liblog/lib.rs	216	28	20	block	
-node	lib	353	354	liblog/directive.rs	54	47	5	path	
-node	lib	319	321	liblog/directive.rs	44	22	15	path	
-node	lib	286	287	liblog/directive.rs	38	11	1	path	
-node	lib	1329	1229	liblog/lib.rs	292	27	222	blk	
-node	lib	1145	1146	liblog/lib.rs	288	16	20	method_call	
-node	lib	504	258	liblog/directive.rs	35	59	1289	block	
-node	lib	355	409	liblog/directive.rs	53	33	84	tup	
-node	lib	1046	1050	liblog/lib.rs	268	22	35	call	
-node	lib	566	567	liblog/lib.rs	167	41	14	ty	
-node	lib	333	318	liblog/directive.rs	44	16	154	match	
-node	lib	549	550	liblog/lib.rs	159	31	11	ty	
-node	lib	773	770	liblog/lib.rs	201	18	3	ty	
-node	lib	309	312	liblog/directive.rs	40	53	12	method_call	
-node	lib	787	800	liblog/lib.rs	205	69	1	ty	
-node	lib	952	953	<std macros>	4	18	24	stmt	
-node	lib	92	94	liblog/directive.rs	15	8	18	pat	
-node	lib	324	326	liblog/directive.rs	45	34	3	path	
-node	lib	875	877	liblog/lib.rs	239	15	20	block	
-node	lib	1176	1188	<std macros>	4	18	24	call	
-node	lib	310	311	liblog/directive.rs	40	67	5	path	
-node	lib	138	95	liblog/directive.rs	13	11	4	vec	
-node	lib	422	467	liblog/directive.rs	60	25	76	static	__STATIC_FMTSTR
-node	lib	1273	1274	<std macros>	4	18	24	expr_struct	
-node	lib	307	312	liblog/directive.rs	40	39	12	method_call	
-node	lib	295	294	liblog/directive.rs	39	12	0	ty	
-node	lib	290	292	liblog/directive.rs	38	24	12	block	
-node	lib	379	380	liblog/directive.rs	53	33	84	lit	
-node	lib	1008	1011	liblog/lib.rs	253	31	6	path	
-node	lib	171	172	liblog/directive.rs	13	11	4	path	
-node	lib	65	62	liblog/directive.rs	13	11	4	ty	
-node	lib	53	54	liblog/directive.rs	15	8	18	deref	
-node	lib	1266	1271	<std macros>	4	18	24	lit	
-node	lib	617	672	<std macros>	8	33	885	block	
-node	lib	1272	1273	<std macros>	4	18	24	path	
-node	lib	150	151	liblog/directive.rs	16	8	10	call	
-node	lib	440	441	liblog/directive.rs	60	25	76	expr_struct	
-node	lib	939	940	<std macros>	4	44	17	call	
-node	lib	974	0	liblog/lib.rs	248	0	452	fn	enabled
-node	lib	872	963	liblog/lib.rs	232	4	27	blk	
-node	lib	238	239	liblog/directive.rs	26	25	3	ty	
-node	lib	1242	1235	<std macros>	21	53	74	block	
-node	lib	346	414	liblog/directive.rs	51	20	9	pat	
-node	lib	248	256	liblog/directive.rs	27	13	1	ty	
-node	lib	468	471	<std macros>	2	35	30	path	
-node	lib	128	130	liblog/directive.rs	13	11	4	expr_struct	
-node	lib	842	844	liblog/lib.rs	222	20	12	path	
-node	lib	283	497	liblog/directive.rs	37	4	1244	break	
-node	lib	265	267	liblog/directive.rs	35	45	12	ty	
-node	lib	1059	1103	liblog/lib.rs	274	30	1	ty	
-node	lib	887	884	liblog/lib.rs	243	21	21	not	
-node	lib	134	138	liblog/directive.rs	13	11	4	call	
-node	lib	465	457	liblog/directive.rs	60	25	76	blk	
-node	lib	239	241	liblog/directive.rs	26	20	8	cast	
-node	lib	721	722	liblog/lib.rs	188	28	30	lit	
-node	lib	994	1028	liblog/lib.rs	251	4	245	addr_of	
-node	lib	911	953	<std macros>	4	18	24	static	__STATIC_FMTSTR
-node	lib	1302	1303	<std macros>	4	18	24	blk	
-node	lib	1163	1164	<std macros>	4	44	17	lit	
-node	lib	924	927	<std macros>	4	18	24	lit	
-node	lib	480	493	liblog/directive.rs	65	8	4	path	
-node	lib	1083	1084	liblog/lib.rs	276	19	6	field	
-node	lib	1243	1247	<std macros>	22	12	27	path	
-node	lib	758	759	liblog/lib.rs	188	28	30	path	
-node	lib	444	445	liblog/directive.rs	60	25	76	call	
-node	lib	1118	1121	liblog/lib.rs	281	47	7	block	
-node	lib	517	0	liblog/lib.rs	147	0	94	static	DIRECTIVES
-node	lib	1076	1077	liblog/lib.rs	275	62	1	lit	
-node	lib	746	756	liblog/lib.rs	188	28	30	local	
-node	lib	857	858	liblog/lib.rs	230	40	3	ty	
-node	lib	995	1028	liblog/lib.rs	251	4	245	pat	
-node	lib	908	959	<std macros>	4	18	24	tup	
-node	lib	869	871	liblog/lib.rs	232	13	15	method_call	
-node	lib	246	257	liblog/directive.rs	24	4	150	method_call	
-node	lib	1137	1106	liblog/lib.rs	280	20	122	blk	
-node	lib	318	334	liblog/directive.rs	41	41	312	block	
-node	lib	1303	1249	<std macros>	24	8	43	match	
-node	lib	483	489	liblog/directive.rs	66	29	1	ty	
-node	lib	1280	1283	<std macros>	4	44	17	path	
-node	lib	846	847	liblog/lib.rs	223	11	4	path	
-node	lib	1227	1331	liblog/lib.rs	292	8	11	path	
-node	lib	344	414	liblog/directive.rs	50	22	22	call	
-node	lib	1133	1134	liblog/lib.rs	282	16	11	fn_blk	
-node	lib	1078	1097	liblog/lib.rs	275	12	52	stmt	
-node	lib	649	651	liblog/lib.rs	178	49	1	path	
-node	lib	884	888	liblog/lib.rs	243	12	32	block	
-node	lib	784	786	liblog/lib.rs	205	21	15	path	
-node	lib	461	464	liblog/directive.rs	60	25	76	path	
-node	lib	479	495	liblog/directive.rs	40	12	991	stmt	
-node	lib	811	813	liblog/lib.rs	209	4	37	call	
-node	lib	1120	1118	liblog/lib.rs	281	47	7	field	
-node	lib	414	341	liblog/directive.rs	50	16	310	match	
-node	lib	144	146	liblog/directive.rs	15	8	18	path	
-node	lib	662	658	liblog/lib.rs	178	28	19	call	
-node	lib	453	454	liblog/directive.rs	61	39	1	call	
-node	lib	943	953	<std macros>	4	18	24	local	
-node	lib	967	972	liblog/lib.rs	245	27	31	block	
-node	lib	826	821	liblog/lib.rs	220	26	12	ty	
-node	lib	1123	1124	liblog/lib.rs	281	12	43	stmt	
-node	lib	1271	1273	<std macros>	4	18	24	expr_struct	
-node	lib	253	255	liblog/directive.rs	27	24	1	path	
-node	lib	618	619	liblog/lib.rs	178	49	1	path	
-node	lib	364	366	liblog/directive.rs	53	33	84	path	
-node	lib	804	806	liblog/lib.rs	208	15	5	path	
-node	lib	1001	1002	liblog/lib.rs	251	8	9	pat	
-node	lib	87	88	liblog/directive.rs	16	8	10	path	
-node	lib	22	15	liblog/macros.rs	134	0	219	mac	log_enabled
-node	lib	1079	1097	liblog/lib.rs	276	12	52	local	
-node	lib	606	607	<std macros>	21	25	21	ty	
-node	lib	1285	1277	<std macros>	4	18	24	vstore	
-node	lib	1062	1061	liblog/lib.rs	275	12	0	ty	
-node	lib	1259	1260	<std macros>	4	18	24	lit	
-node	lib	133	134	liblog/directive.rs	13	11	4	lit	
-node	lib	690	691	liblog/lib.rs	187	14	11	field	
-node	lib	140	164	liblog/directive.rs	13	11	4	local	
-node	lib	263	258	liblog/directive.rs	35	26	4	pat	
-node	lib	933	953	<std macros>	4	18	24	local	
-node	lib	668	669	<std macros>	24	21	7	addr_of	
-node	lib	1068	1074	liblog/lib.rs	275	41	1	ty	
-node	lib	889	961	<std macros>	3	11	4294954073	not	
-node	lib	58	59	liblog/directive.rs	16	8	10	paren	
-node	lib	147	150	liblog/directive.rs	16	8	10	path	
-node	lib	416	478	liblog/directive.rs	59	12	1	pat	
-node	lib	928	929	<std macros>	4	18	24	path	
-node	lib	959	905	<std macros>	24	8	43	match	
-node	lib	600	678	liblog/lib.rs	177	14	36	call	
-node	lib	78	79	liblog/directive.rs	13	11	4	path	
-node	lib	301	495	liblog/directive.rs	40	12	991	local	
-node	lib	680	0	liblog/lib.rs	184	5	4	trait_ref	
-node	lib	1277	1297	<std macros>	4	18	24	local	
-node	lib	373	374	liblog/directive.rs	53	33	84	path	
-node	lib	122	130	liblog/directive.rs	13	11	4	path	
-node	lib	725	730	liblog/lib.rs	188	28	30	lit	
-node	lib	1147	1218	<std macros>	3	18	74	block	
-node	lib	1190	1210	<std macros>	4	18	24	local	
-node	lib	922	927	<std macros>	4	18	24	lit	
-node	lib	74	62	liblog/directive.rs	13	11	4	pat	
-node	lib	242	243	liblog/directive.rs	26	16	16	fn_blk	
-node	lib	701	694	<std macros>	21	53	74	block	
-node	lib	819	818	liblog/lib.rs	216	37	9	path	
-node	lib	388	389	liblog/directive.rs	54	47	5	path	
-node	lib	946	951	<std macros>	4	18	24	block	
-node	lib	1090	1091	liblog/lib.rs	276	43	1	path	
-node	lib	923	927	<std macros>	4	18	24	path	
-node	lib	104	106	liblog/directive.rs	13	11	4	path	
-node	lib	1003	1025	liblog/lib.rs	251	32	207	block	
-node	lib	717	719	liblog/lib.rs	188	28	30	ty	
-node	lib	491	492	liblog/directive.rs	67	19	9	path	
-node	lib	328	332	liblog/directive.rs	46	29	15	path	
-node	lib	159	161	liblog/directive.rs	13	11	4	path	
-node	lib	370	374	liblog/directive.rs	53	33	84	path	
-node	lib	212	229	liblog/directive.rs	25	12	60	local	
-node	lib	1223	1224	liblog/lib.rs	289	37	11	uniq	
-node	lib	991	974	liblog/lib.rs	249	59	4	ty	
-node	lib	1267	1271	<std macros>	4	18	24	path	
-node	lib	371	374	liblog/directive.rs	53	33	84	lit	
-node	lib	1209	1210	<std macros>	4	18	24	stmt	
-node	lib	1286	1297	<std macros>	4	18	24	stmt	
-node	lib	603	617	<std macros>	21	8	119	fn	run_fmt
-node	lib	1217	1147	<std macros>	4	12	60	blk	
-node	lib	214	212	liblog/directive.rs	25	12	3	pat	
-node	lib	36	23	liblog/directive.rs	13	17	5	impl	LogDirective.::std::clone::Clone
-node	lib	374	376	liblog/directive.rs	53	33	84	expr_struct	
-node	lib	821	0	liblog/lib.rs	220	0	173	fn	set_logger
-node	lib	940	941	<std macros>	4	18	24	vec	
+node	lib	1054	1103	liblog/lib.rs	274	25	1	ty	
+node	lib	1185	1186	<std macros>	4	18	24	path	
+node	lib	428	430	liblog/directive.rs	60	25	76	path	
+node	lib	632	642	liblog/lib.rs	178	28	19	path	
 node	lib	1291	1294	<std macros>	4	18	24	path	
-node	lib	1022	1017	liblog/lib.rs	255	16	31	ret	
-node	lib	1117	1121	liblog/lib.rs	281	47	1	ty	
-node	lib	378	380	liblog/directive.rs	53	33	84	path	
-node	lib	366	381	liblog/directive.rs	53	33	84	call	
-node	lib	1226	1333	liblog/lib.rs	289	8	41	stmt	
-node	lib	186	188	liblog/directive.rs	19	25	12	ty	
-node	lib	667	668	liblog/lib.rs	178	28	19	path	
-node	lib	1038	1036	liblog/lib.rs	267	8	14	pat	
-node	lib	1096	1097	liblog/lib.rs	276	12	52	stmt	
-node	lib	530	0	liblog/lib.rs	151	0	26	static	DEBUG
-node	lib	644	665	liblog/lib.rs	178	28	19	stmt	
-node	lib	216	227	liblog/directive.rs	25	18	22	method_call	
-node	lib	748	746	liblog/lib.rs	188	28	30	pat	
-node	lib	806	813	liblog/lib.rs	208	4	23	method_call	
-node	lib	918	919	<std macros>	4	18	24	lit	
-node	lib	868	869	liblog/lib.rs	232	23	4	path	
-node	lib	1100	1101	liblog/lib.rs	277	17	5	addr_of	
-node	lib	462	464	liblog/directive.rs	60	25	76	path	
-node	lib	475	477	liblog/directive.rs	59	17	147	block	
-node	lib	697	698	<std macros>	21	25	21	ty	
-node	lib	932	953	<std macros>	4	18	24	stmt	
-node	lib	1055	1103	liblog/lib.rs	274	24	1	pat	
-node	lib	244	211	liblog/directive.rs	24	38	115	blk	
-node	lib	797	798	liblog/lib.rs	206	51	12	ty	
-node	lib	1154	1148	<std macros>	21	51	1	ty	
-node	lib	1069	1074	liblog/lib.rs	275	40	1	pat	
-node	lib	1316	1307	liblog/lib.rs	295	16	27	call	
-node	lib	556	555	liblog/lib.rs	167	4	52	type_method	log
-node	lib	902	903	<std macros>	22	54	8	lit	
-node	lib	109	114	liblog/directive.rs	13	11	4	lit	
-node	lib	145	146	liblog/directive.rs	15	8	18	path	
-node	lib	1270	1271	<std macros>	4	18	24	path	
-node	lib	81	82	liblog/directive.rs	16	8	10	pat	
-node	lib	1292	1294	<std macros>	4	18	24	path	
-node	lib	451	453	liblog/directive.rs	61	39	1	path	
-node	lib	1021	1022	liblog/lib.rs	255	23	24	le	
-node	lib	678	594	liblog/lib.rs	177	8	132	match	
-node	lib	1037	1036	liblog/lib.rs	267	8	0	ty	
-node	lib	1324	1325	liblog/lib.rs	296	30	29	ty	
-node	lib	218	226	liblog/directive.rs	25	56	1	ty	
-node	lib	730	732	liblog/lib.rs	188	28	30	expr_struct	
-node	lib	442	444	liblog/directive.rs	60	25	76	path	
-node	lib	891	905	<std macros>	21	8	119	fn	run_fmt
-node	lib	1255	1297	<std macros>	4	18	24	static	__STATIC_FMTSTR
-node	lib	660	662	liblog/lib.rs	178	28	19	path	
-node	lib	1000	1026	liblog/lib.rs	251	4	245	break	
-node	lib	126	128	liblog/directive.rs	13	11	4	path	
-node	lib	808	811	liblog/lib.rs	209	4	15	path	
-node	lib	314	317	liblog/directive.rs	41	13	11	pat	
-node	lib	284	285	liblog/directive.rs	37	8	1	pat	
-node	lib	1074	1075	liblog/lib.rs	275	39	11	fn_blk	
-node	lib	1142	1333	liblog/lib.rs	286	8	21	assign	
-node	lib	835	834	liblog/lib.rs	221	8	0	ty	
-node	lib	836	834	liblog/lib.rs	221	8	4	pat	
-node	lib	55	60	liblog/directive.rs	15	8	18	method_call	
-node	lib	180	181	liblog/directive.rs	13	11	4	match	
-node	lib	375	376	liblog/directive.rs	53	33	84	path	
-node	lib	1186	1187	<std macros>	4	18	24	expr_struct	
-node	lib	426	427	liblog/directive.rs	60	25	76	lit	
-node	lib	160	161	liblog/directive.rs	13	11	4	path	
-node	lib	224	225	liblog/directive.rs	25	66	5	path	
-node	lib	661	662	liblog/lib.rs	178	28	19	path	
-node	lib	927	929	<std macros>	4	18	24	expr_struct	
-node	lib	899	903	<std macros>	22	12	27	path	
-node	lib	1089	1092	liblog/lib.rs	276	43	7	block	
-node	lib	988	974	liblog/lib.rs	249	17	37	ty	
-node	lib	421	473	liblog/directive.rs	60	25	76	pat	
-node	lib	965	973	liblog/lib.rs	245	12	5	path	
-node	lib	136	137	liblog/directive.rs	13	11	4	lit	
-node	lib	54	55	liblog/directive.rs	15	8	18	paren	
-node	lib	498	499	liblog/directive.rs	37	4	1244	loop	
-node	lib	849	821	liblog/lib.rs	220	64	109	block	
-node	lib	810	811	liblog/lib.rs	209	34	6	path	
-node	lib	181	77	liblog/directive.rs	13	11	4	match	
-node	lib	1159	1160	<std macros>	22	54	8	lit	
-node	lib	597	598	liblog/lib.rs	177	32	11	field	
-node	lib	512	509	liblog/lib.rs	140	32	1	lit	
-node	lib	844	849	liblog/lib.rs	222	4	37	call	
-node	lib	190	193	liblog/directive.rs	19	56	6	lit	
-node	lib	532	530	liblog/lib.rs	151	18	3	ty	
-node	lib	46	36	liblog/directive.rs	13	17	5	block	
-node	lib	279	498	liblog/directive.rs	37	4	1244	block	
-node	lib	50	51	liblog/directive.rs	16	8	10	pat	
-node	lib	950	946	<std macros>	4	18	24	call	
-node	lib	102	103	liblog/directive.rs	13	11	4	lit	
-node	lib	859	850	liblog/lib.rs	230	31	6	pat	
-node	lib	1112	1113	liblog/lib.rs	281	18	10	path	
-node	lib	825	826	liblog/lib.rs	220	27	11	ty	
-node	lib	1093	1095	liblog/lib.rs	276	19	32	method_call	
-node	lib	1107	1106	liblog/lib.rs	280	8	0	ty	
-node	lib	199	194	liblog/directive.rs	23	19	5	pat	
-node	lib	711	762	liblog/lib.rs	188	28	30	tup	
-node	lib	101	103	liblog/directive.rs	13	11	4	path	
-node	lib	132	134	liblog/directive.rs	13	11	4	path	
-node	lib	521	522	liblog/lib.rs	147	24	28	ty	
-node	lib	830	831	liblog/lib.rs	220	51	11	ty	
-node	lib	1086	1092	liblog/lib.rs	276	41	1	ty	
-node	lib	332	333	liblog/directive.rs	46	28	30	tup	
-node	lib	1073	1071	liblog/lib.rs	275	43	7	method_call	
-node	lib	1315	1316	liblog/lib.rs	295	32	10	path	
-node	lib	232	242	liblog/directive.rs	26	18	1	ty	
-node	lib	293	495	liblog/directive.rs	38	8	28	stmt	
-node	lib	412	411	liblog/directive.rs	56	20	1	again	
-node	lib	249	256	liblog/directive.rs	27	12	1	pat	
-node	lib	570	0	liblog/lib.rs	170	0	78	struct	DefaultLogger
-node	lib	901	903	<std macros>	22	45	8	lit	
-node	lib	1247	1242	<std macros>	22	12	50	call	
-node	lib	761	762	liblog/lib.rs	188	28	30	blk	
-node	lib	274	276	liblog/directive.rs	37	13	4	path	
-node	lib	582	576	liblog/lib.rs	1	0	0	ty	
-node	lib	954	957	<std macros>	24	21	7	path	
-node	lib	692	693	liblog/lib.rs	188	16	1	pat	
-node	lib	127	128	liblog/directive.rs	13	11	4	path	
-node	lib	168	175	liblog/directive.rs	13	11	4	ty	
-node	lib	1297	1302	<std macros>	4	18	24	block	
-node	lib	867	869	liblog/lib.rs	232	13	4	path	
-node	lib	706	701	<std macros>	22	12	50	call	
-node	lib	930	931	<std macros>	4	18	24	call	
-node	lib	201	203	liblog/directive.rs	23	42	3	ty	
-node	lib	57	58	liblog/directive.rs	16	8	10	deref	
-node	lib	882	963	liblog/lib.rs	239	4	48	if	
-node	lib	1051	1139	liblog/lib.rs	267	8	140	stmt	
-node	lib	919	931	<std macros>	4	18	24	call	
-node	lib	323	333	liblog/directive.rs	45	20	9	pat	
-node	lib	1260	1255	<std macros>	4	18	24	ty	
-node	lib	935	933	<std macros>	4	18	24	pat	
-node	lib	449	447	liblog/directive.rs	60	25	76	pat	
-node	lib	587	576	liblog/lib.rs	176	22	6	pat	
 node	lib	858	850	liblog/lib.rs	230	39	4	ty	
-node	lib	1294	1290	<std macros>	4	18	24	call	
-node	lib	33	26	liblog/directive.rs	16	8	10	struct_field	level
-node	lib	110	114	liblog/directive.rs	13	11	4	path	
-node	lib	814	0	liblog/lib.rs	216	0	50	fn	log_level
-node	lib	866	963	liblog/lib.rs	231	4	34	stmt	
-node	lib	1188	1168	<std macros>	4	18	24	vec	
-node	lib	992	993	liblog/lib.rs	251	21	4	path	
-node	lib	227	212	liblog/directive.rs	25	18	54	method_call	
-node	lib	450	453	liblog/directive.rs	61	39	1	path	
-node	lib	629	631	liblog/lib.rs	178	28	19	path	
-node	lib	240	241	liblog/directive.rs	26	31	1	lit	
-node	lib	653	645	liblog/lib.rs	178	28	19	vstore	
-node	lib	1323	1324	liblog/lib.rs	296	31	28	ty	
-node	lib	304	305	liblog/directive.rs	40	24	4	pat	
-node	lib	978	974	liblog/lib.rs	248	11	5	pat	
-node	lib	1321	1323	liblog/lib.rs	296	35	23	ty	
-node	lib	610	603	<std macros>	21	53	74	block	
-node	lib	1020	1021	liblog/lib.rs	255	32	15	field	
-node	lib	157	162	liblog/directive.rs	13	11	4	block	
-node	lib	433	438	liblog/directive.rs	60	25	76	lit	
-node	lib	639	641	liblog/lib.rs	178	28	19	expr_struct	
-node	lib	1238	1239	<std macros>	21	25	21	ty	
-node	lib	305	301	liblog/directive.rs	40	12	17	pat	
-node	lib	59	60	liblog/directive.rs	16	8	10	method_call	
-node	lib	1214	1210	<std macros>	24	21	7	call	
-node	lib	673	674	liblog/lib.rs	179	15	2	lit	
-node	lib	973	963	liblog/lib.rs	245	4	55	call	
-node	lib	1298	1301	<std macros>	24	21	7	path	
-node	lib	925	927	<std macros>	4	18	24	path	
-node	lib	798	789	liblog/lib.rs	206	8	55	cast	
-node	lib	1290	1295	<std macros>	4	18	24	block	
-node	lib	262	258	liblog/directive.rs	35	32	4	ty	
-node	lib	327	333	liblog/directive.rs	46	20	4	pat	
-node	lib	1006	1007	liblog/lib.rs	253	17	8	pat	
-node	lib	1030	974	liblog/lib.rs	249	64	351	block	
-node	lib	95	164	liblog/directive.rs	13	11	4	static	__STATIC_FMTSTR
-node	lib	367	377	liblog/directive.rs	53	33	84	path	
-node	lib	21	15	liblog/macros.rs	112	0	98	mac	debug
-node	lib	1057	1103	liblog/lib.rs	274	28	1	ty	
+node	lib	748	746	liblog/lib.rs	188	28	30	pat	
+node	lib	1262	1263	<std macros>	4	18	24	lit	
+node	lib	849	821	liblog/lib.rs	220	64	109	block	
+node	lib	1034	0	liblog/lib.rs	266	0	1099	fn	init
+node	lib	765	766	liblog/lib.rs	189	15	2	pat	
+node	lib	1206	1207	<std macros>	4	18	24	path	
+node	lib	1102	1060	liblog/lib.rs	274	30	163	blk	
 node	lib	203	194	liblog/directive.rs	23	35	11	ty	
-node	lib	764	765	liblog/lib.rs	189	15	2	lit	
-node	lib	907	908	<std macros>	4	44	17	addr_of	
-node	lib	1026	996	liblog/lib.rs	251	4	245	match	
-node	lib	1084	1093	liblog/lib.rs	276	19	15	method_call	
-node	lib	446	467	liblog/directive.rs	60	25	76	stmt	
-node	lib	89	90	liblog/directive.rs	16	8	10	paren	
-node	lib	471	467	<std macros>	2	35	30	call	
-node	lib	155	154	liblog/directive.rs	13	11	4	ty	
-node	lib	1309	1311	liblog/lib.rs	294	34	23	ty	
-node	lib	698	694	<std macros>	21	24	22	ty	
-node	lib	404	407	<std macros>	2	35	30	path	
-node	lib	1239	1235	<std macros>	21	24	22	ty	
-node	lib	894	895	<std macros>	21	25	21	ty	
-node	lib	115	116	liblog/directive.rs	13	11	4	path	
-node	lib	594	576	liblog/lib.rs	176	58	148	block	
-node	lib	77	62	liblog/directive.rs	13	11	4	block	
-node	lib	105	106	liblog/directive.rs	13	11	4	lit	
-node	lib	1148	1162	<std macros>	21	8	119	fn	run_fmt
-node	lib	164	179	liblog/directive.rs	13	11	4	block	
-node	lib	1278	1277	<std macros>	4	18	24	ty	
-node	lib	754	746	liblog/lib.rs	188	28	30	blk	
-node	lib	964	973	liblog/lib.rs	245	4	7	path	
-node	lib	211	245	liblog/directive.rs	24	38	115	block	
-node	lib	766	769	liblog/lib.rs	189	12	6	pat	
-node	lib	1101	1097	liblog/lib.rs	277	8	15	method_call	
-node	lib	848	849	liblog/lib.rs	223	4	11	stmt	
-node	lib	593	576	liblog/lib.rs	176	58	0	ty	
-node	lib	1002	1026	liblog/lib.rs	251	4	245	pat	
-node	lib	268	504	liblog/directive.rs	36	8	21	local	
-node	lib	739	742	liblog/lib.rs	188	60	1	path	
-node	lib	509	0	liblog/lib.rs	140	0	34	static	DEFAULT_LOG_LEVEL
-node	lib	1333	1334	liblog/lib.rs	285	4	465	block	
-node	lib	1192	1190	<std macros>	4	18	24	pat	
-node	lib	1130	1133	liblog/lib.rs	282	20	7	block	
-node	lib	982	974	liblog/lib.rs	248	31	4	ty	
-node	lib	474	475	liblog/directive.rs	60	25	76	stmt	
-node	lib	1161	1162	<std macros>	21	8	119	stmt	
-node	lib	839	834	liblog/lib.rs	221	15	29	call	
-node	lib	1014	1024	liblog/lib.rs	253	60	2	blk	
-node	lib	519	521	liblog/lib.rs	147	28	23	ty	
-node	lib	788	800	liblog/lib.rs	205	69	71	block	
-node	lib	710	711	liblog/lib.rs	188	60	1	addr_of	
-node	lib	801	781	liblog/lib.rs	205	21	120	method_call	
-node	lib	427	422	liblog/directive.rs	60	25	76	ty	
-node	lib	63	23	liblog/directive.rs	13	11	4	trait_ref	
-node	lib	1203	1208	<std macros>	4	18	24	block	
-node	lib	1174	1176	<std macros>	4	18	24	path	
-node	lib	400	396	liblog/directive.rs	53	33	84	call	
-node	lib	634	639	liblog/lib.rs	178	28	19	lit	
-node	lib	402	403	liblog/directive.rs	53	33	84	stmt	
-node	lib	958	959	<std macros>	4	18	24	blk	
-node	lib	335	336	liblog/directive.rs	49	18	5	pat	
-node	lib	645	665	liblog/lib.rs	178	28	19	local	
-node	lib	230	243	liblog/directive.rs	26	8	3	path	
-node	lib	759	760	<std macros>	24	21	7	addr_of	
-node	lib	583	576	liblog/lib.rs	176	11	10	pat	
-node	lib	611	615	<std macros>	22	12	27	path	
-node	lib	1138	1139	liblog/lib.rs	280	8	134	stmt	
-node	lib	688	679	liblog/lib.rs	185	23	202	block	
-node	lib	734	714	liblog/lib.rs	188	28	30	vec	
-node	lib	1264	1274	<std macros>	4	18	24	path	
-node	lib	294	495	liblog/directive.rs	39	12	24	local	
-node	lib	1135	1136	liblog/lib.rs	282	39	17	path	
-node	lib	1296	1297	<std macros>	4	18	24	stmt	
-node	lib	704	706	<std macros>	22	45	8	lit	
-node	lib	228	229	liblog/directive.rs	25	12	60	stmt	
-node	lib	1092	1093	liblog/lib.rs	276	39	11	fn_blk	
-node	lib	113	114	liblog/directive.rs	13	11	4	path	
-node	lib	484	489	liblog/directive.rs	66	28	1	pat	
-node	lib	1009	1010	liblog/lib.rs	253	51	4	path	
-node	lib	1007	1024	liblog/lib.rs	253	12	14	pat	
-node	lib	501	502	liblog/directive.rs	70	11	4	path	
-node	lib	689	690	liblog/lib.rs	187	14	4	path	
-node	lib	1146	1218	<std macros>	3	11	4294955503	not	
-node	lib	1129	1133	liblog/lib.rs	282	20	1	ty	
-node	lib	666	669	<std macros>	24	21	7	path	
-node	lib	19	15	liblog/macros.rs	75	0	71	mac	warn
-node	lib	1204	1207	<std macros>	4	18	24	path	
-node	lib	436	438	liblog/directive.rs	60	25	76	path	
-node	lib	677	678	liblog/lib.rs	179	22	2	blk	
-node	lib	338	340	liblog/directive.rs	49	26	11	pat	
-node	lib	592	576	liblog/lib.rs	176	35	4	pat	
-node	lib	1039	1041	liblog/lib.rs	267	31	10	path	
-node	lib	885	886	liblog/lib.rs	243	22	10	path	
-node	lib	1246	1247	<std macros>	22	54	8	lit	
-node	lib	1218	1333	<std macros>	3	8	84	if	
-node	lib	285	497	liblog/directive.rs	37	4	1244	pat	
-node	lib	137	138	liblog/directive.rs	13	11	4	call	
-node	lib	1205	1207	<std macros>	4	18	24	path	
-node	lib	502	504	liblog/directive.rs	70	4	11	ret	
-node	lib	905	960	<std macros>	8	33	885	block	
-node	lib	726	730	liblog/lib.rs	188	28	30	path	
-node	lib	803	806	liblog/lib.rs	208	4	6	path	
-node	lib	156	154	liblog/directive.rs	13	11	4	pat	
-node	lib	1212	1213	<std macros>	4	18	24	path	
-node	lib	664	665	liblog/lib.rs	178	28	19	stmt	
-node	lib	1119	1120	liblog/lib.rs	281	47	1	path	
-node	lib	1104	1139	liblog/lib.rs	274	4	190	method_call	
-node	lib	280	281	liblog/directive.rs	37	4	1244	path	
-node	lib	635	639	liblog/lib.rs	178	28	19	path	
-node	lib	1017	1023	liblog/lib.rs	254	31	63	block	
-node	lib	204	194	liblog/directive.rs	23	47	196	block	
-node	lib	489	490	liblog/directive.rs	66	27	16	fn_blk	
-node	lib	454	455	liblog/directive.rs	60	25	76	vec	
-node	lib	676	677	liblog/lib.rs	179	22	2	block	
-node	lib	152	140	liblog/directive.rs	13	11	4	vstore	
-node	lib	281	497	liblog/directive.rs	37	4	1244	method_call	
-node	lib	915	916	<std macros>	4	18	24	lit	
-node	lib	619	620	liblog/lib.rs	178	49	1	addr_of	
-node	lib	1105	1139	liblog/lib.rs	274	4	190	stmt	
-node	lib	782	781	liblog/lib.rs	205	8	0	ty	
-node	lib	66	23	liblog/directive.rs	13	11	4	method	fmt
-node	lib	392	403	liblog/directive.rs	53	33	84	stmt	
-node	lib	93	94	liblog/directive.rs	16	8	10	pat	
-node	lib	292	495	liblog/directive.rs	38	8	28	if	
-node	lib	1327	1328	liblog/lib.rs	296	12	47	stmt	
-node	lib	728	730	liblog/lib.rs	188	28	30	path	
-node	lib	527	528	liblog/lib.rs	148	10	28	ty	
-node	lib	287	289	liblog/directive.rs	38	11	7	method_call	
-node	lib	368	376	liblog/directive.rs	53	33	84	path	
-node	lib	993	994	liblog/lib.rs	251	21	10	method_call	
-node	lib	544	542	liblog/lib.rs	157	18	3	ty	
-node	lib	220	226	liblog/directive.rs	25	51	5	pat	
-node	lib	302	301	liblog/directive.rs	40	12	0	ty	
-node	lib	942	953	<std macros>	4	18	24	stmt	
-node	lib	774	770	liblog/lib.rs	201	11	5	pat	
-node	lib	1049	1050	liblog/lib.rs	269	16	10	call	
-node	lib	553	554	<std macros>	3	53	22	path	
-node	lib	1111	1109	liblog/lib.rs	281	12	3	pat	
-node	lib	187	188	liblog/directive.rs	19	41	1	lit	
-node	lib	1035	1034	liblog/lib.rs	266	10	0	ty	
-node	lib	322	323	liblog/directive.rs	45	25	3	pat	
-node	lib	670	671	liblog/lib.rs	178	28	19	blk	
-node	lib	733	734	liblog/lib.rs	188	28	30	call	
-node	lib	601	602	liblog/lib.rs	178	16	1	pat	
-node	lib	389	390	liblog/directive.rs	54	47	5	call	
-node	lib	487	488	liblog/directive.rs	66	31	1	path	
-node	lib	508	505	liblog/lib.rs	137	32	3	lit	
-node	lib	1221	1224	liblog/lib.rs	289	21	15	path	
-node	lib	1325	1326	liblog/lib.rs	296	25	34	cast	
-node	lib	481	490	liblog/directive.rs	66	18	4	path	
-node	lib	749	754	liblog/lib.rs	188	28	30	block	
-node	lib	29	30	liblog/directive.rs	15	22	3	ty	
-node	lib	476	475	liblog/directive.rs	63	12	1	again	
-node	lib	890	961	<std macros>	3	18	74	block	
-node	lib	1182	1184	<std macros>	4	18	24	path	
-node	lib	651	652	liblog/lib.rs	178	49	1	call	
-node	lib	790	791	liblog/lib.rs	206	33	10	path	
-node	lib	1109	1124	liblog/lib.rs	281	12	43	local	
-node	lib	1058	1103	liblog/lib.rs	274	27	1	pat	
-node	lib	198	194	liblog/directive.rs	23	26	4	ty	
-node	lib	1200	1210	<std macros>	4	18	24	local	
-node	lib	525	527	liblog/lib.rs	148	14	23	ty	
-node	lib	718	719	liblog/lib.rs	188	28	30	lit	
-node	lib	951	943	<std macros>	4	18	24	blk	
-node	lib	981	982	liblog/lib.rs	248	32	3	ty	
 node	lib	1127	1133	liblog/lib.rs	282	18	1	ty	
-node	lib	996	1027	liblog/lib.rs	251	4	245	block	
-node	lib	384	383	liblog/directive.rs	53	33	84	ty	
-node	lib	878	882	liblog/lib.rs	239	7	28	gt	
-node	lib	750	753	liblog/lib.rs	188	28	30	path	
-node	lib	213	212	liblog/directive.rs	25	12	0	ty	
-node	lib	118	120	liblog/directive.rs	13	11	4	path	
-node	lib	1091	1089	liblog/lib.rs	276	43	7	method_call	
-node	lib	917	919	<std macros>	4	18	24	path	
-node	lib	1304	1234	<std macros>	4	12	60	blk	
-node	lib	916	911	<std macros>	4	18	24	ty	
-node	lib	786	801	liblog/lib.rs	205	21	29	call	
-node	lib	296	294	liblog/directive.rs	39	12	9	pat	
-node	lib	1165	1216	<std macros>	4	18	24	tup	
-node	lib	208	209	liblog/directive.rs	24	20	5	path	
-node	lib	18	15	liblog/macros.rs	57	0	73	mac	error
-node	lib	523	529	liblog/lib.rs	148	4	1	lit	
-node	lib	646	645	liblog/lib.rs	178	28	19	ty	
-node	lib	579	576	liblog/lib.rs	174	16	13	ty	
-node	lib	321	333	liblog/directive.rs	44	22	22	call	
-node	lib	1207	1203	<std macros>	4	18	24	call	
-node	lib	687	679	liblog/lib.rs	185	23	0	ty	
-node	lib	850	0	liblog/lib.rs	230	0	789	fn	mod_enabled
-node	lib	1027	1028	liblog/lib.rs	251	4	245	loop	
-node	lib	1248	1249	<std macros>	21	8	119	stmt	
-node	lib	288	289	liblog/directive.rs	38	22	1	lit	
-node	lib	399	400	liblog/directive.rs	53	33	84	path	
-node	lib	394	393	liblog/directive.rs	53	33	84	ty	
-node	lib	936	939	<std macros>	4	44	17	path	
-node	lib	488	486	liblog/directive.rs	66	31	12	method_call	
-node	lib	146	151	liblog/directive.rs	15	8	18	call	
-node	lib	60	61	liblog/directive.rs	13	17	5	expr_struct	
-node	lib	534	0	liblog/lib.rs	153	0	25	static	INFO
-node	lib	316	317	liblog/directive.rs	41	32	4	pat	
-node	lib	362	363	liblog/directive.rs	53	33	84	lit	
-node	lib	1305	1328	<std macros>	3	8	84	if	
-node	lib	62	23	liblog/directive.rs	13	11	4	impl	LogDirective.::std::fmt::Show
-node	lib	586	576	liblog/lib.rs	176	30	3	ty	
-node	lib	1075	1077	liblog/lib.rs	275	19	32	method_call	
-node	lib	1229	1330	liblog/lib.rs	292	27	222	block	
-node	lib	791	792	liblog/lib.rs	206	33	12	call	
-node	lib	838	839	liblog/lib.rs	221	31	12	path	
-node	lib	1179	1184	<std macros>	4	18	24	lit	
-node	lib	741	742	liblog/lib.rs	188	60	1	path	
-node	lib	641	642	liblog/lib.rs	178	28	19	expr_struct	
-node	lib	809	811	liblog/lib.rs	209	20	12	path	
-node	lib	407	403	<std macros>	2	35	30	call	
-node	lib	953	958	<std macros>	4	18	24	block	
-node	lib	108	116	liblog/directive.rs	13	11	4	path	
-node	lib	43	36	liblog/directive.rs	13	17	5	pat	
-node	lib	616	617	<std macros>	21	8	119	stmt	
-node	lib	705	706	<std macros>	22	54	8	lit	
-node	lib	1064	1065	liblog/lib.rs	275	19	1	path	
-node	lib	654	665	liblog/lib.rs	178	28	19	stmt	
-node	lib	331	332	liblog/directive.rs	46	46	11	call	
-node	lib	513	0	liblog/lib.rs	145	0	42	static	LOG_LEVEL
-node	lib	275	276	liblog/directive.rs	37	24	3	lit	
-node	lib	768	769	liblog/lib.rs	189	22	2	blk	
-node	lib	737	736	liblog/lib.rs	188	28	30	ty	
-node	lib	1225	1333	liblog/lib.rs	289	8	41	assign	
+node	lib	92	94	liblog/directive.rs	15	8	18	pat	
+node	lib	400	396	liblog/directive.rs	53	33	84	call	
+node	lib	402	403	liblog/directive.rs	53	33	84	stmt	
+node	lib	15	0	liblog/lib.rs	132	0	15	mod	macros
+node	lib	538	0	liblog/lib.rs	155	0	25	static	WARN
+node	lib	504	258	liblog/directive.rs	35	59	1289	block	
+node	lib	884	888	liblog/lib.rs	243	12	32	block	
+node	lib	720	722	liblog/lib.rs	188	28	30	path	
+node	lib	602	678	liblog/lib.rs	178	12	6	pat	
+node	lib	327	333	liblog/directive.rs	46	20	4	pat	
 node	lib	895	891	<std macros>	21	24	22	ty	
+node	lib	1199	1210	<std macros>	4	18	24	stmt	
+node	lib	36	23	liblog/directive.rs	13	17	5	impl	LogDirective.::std::clone::Clone
+node	lib	861	850	liblog/lib.rs	230	48	4	ty	
+node	lib	1293	1294	<std macros>	4	18	24	path	
+node	lib	113	114	liblog/directive.rs	13	11	4	path	
+node	lib	978	974	liblog/lib.rs	248	11	5	pat	
+node	lib	1076	1077	liblog/lib.rs	275	62	1	lit	
+node	lib	291	290	liblog/directive.rs	38	35	1	again	
+node	lib	603	617	<std macros>	21	8	119	fn	run_fmt
+node	lib	1109	1124	liblog/lib.rs	281	12	43	local	
+node	lib	476	475	liblog/directive.rs	63	12	1	again	
+node	lib	1082	1083	liblog/lib.rs	276	19	1	path	
+node	lib	1110	1109	liblog/lib.rs	281	12	0	ty	
 node	lib	163	164	liblog/directive.rs	13	11	4	stmt	
-node	lib	448	447	liblog/directive.rs	60	25	76	ty	
-node	lib	1042	1043	liblog/lib.rs	268	13	4	pat	
-node	lib	900	903	<std macros>	22	40	3	path	
-node	lib	881	879	liblog/lib.rs	239	38	12	ret	
-node	lib	897	891	<std macros>	21	51	1	ty	
-node	lib	533	530	liblog/lib.rs	151	24	1	lit	
-node	lib	1194	1196	<std macros>	4	44	17	path	
-node	lib	886	887	liblog/lib.rs	243	22	20	method_call	
-node	lib	1066	1075	liblog/lib.rs	275	19	15	method_call	
-node	lib	752	753	liblog/lib.rs	188	28	30	path	
-node	lib	1253	1254	<std macros>	4	44	17	pat	
-node	lib	1040	1041	liblog/lib.rs	267	42	10	lit	
-node	lib	1168	1210	<std macros>	4	18	24	static	__STATIC_FMTSTR
-node	lib	820	817	liblog/lib.rs	216	28	20	blk	
-node	lib	1172	1173	<std macros>	4	18	24	lit	
-node	lib	1028	1030	liblog/lib.rs	251	4	245	match	
-node	lib	1261	1263	<std macros>	4	18	24	path	
-node	lib	1275	1255	<std macros>	4	18	24	vec	
-node	lib	178	164	liblog/directive.rs	13	11	4	call	
+node	lib	485	489	liblog/directive.rs	66	31	1	ty	
+node	lib	729	730	liblog/lib.rs	188	28	30	path	
+node	lib	349	350	liblog/directive.rs	51	44	5	path	
+node	lib	50	51	liblog/directive.rs	16	8	10	pat	
+node	lib	859	850	liblog/lib.rs	230	31	6	pat	
+node	lib	1157	1160	<std macros>	22	40	3	path	
+node	lib	914	916	<std macros>	4	18	24	ty	
+node	lib	1187	1188	<std macros>	4	18	24	call	
+node	lib	27	26	liblog/directive.rs	15	8	18	struct_field	name
+node	lib	798	789	liblog/lib.rs	206	8	55	cast	
+node	lib	57	58	liblog/directive.rs	16	8	10	deref	
+node	lib	238	239	liblog/directive.rs	26	25	3	ty	
+node	lib	164	179	liblog/directive.rs	13	11	4	block	
+node	lib	1162	1217	<std macros>	8	33	885	block	
+node	lib	1333	1334	liblog/lib.rs	285	4	465	block	
+node	lib	1327	1328	liblog/lib.rs	296	12	47	stmt	
+node	lib	741	742	liblog/lib.rs	188	60	1	path	
+node	lib	785	786	liblog/lib.rs	205	37	12	path	
+node	lib	94	180	liblog/directive.rs	13	11	4	pat	
+node	lib	474	475	liblog/directive.rs	60	25	76	stmt	
+node	lib	427	422	liblog/directive.rs	60	25	76	ty	
+node	lib	411	413	liblog/directive.rs	52	25	183	block	
+node	lib	141	140	liblog/directive.rs	13	11	4	ty	
+node	lib	374	376	liblog/directive.rs	53	33	84	expr_struct	
+node	lib	550	552	liblog/lib.rs	159	30	12	ty	
+node	lib	666	669	<std macros>	24	21	7	path	
+node	lib	909	910	<std macros>	4	44	17	pat	
+node	lib	668	669	<std macros>	24	21	7	addr_of	
+node	lib	847	849	liblog/lib.rs	223	4	11	ret	
+node	lib	904	905	<std macros>	21	8	119	stmt	
+node	lib	735	756	liblog/lib.rs	188	28	30	stmt	
+node	lib	1083	1084	liblog/lib.rs	276	19	6	field	
+node	lib	17	15	liblog/macros.rs	34	0	195	mac	log
+node	lib	489	490	liblog/directive.rs	66	27	16	fn_blk	
+node	lib	1131	1132	liblog/lib.rs	282	20	1	path	
+node	lib	236	239	liblog/directive.rs	26	20	1	path	
 node	lib	1012	1024	liblog/lib.rs	253	30	26	not	
-node	lib	493	495	liblog/directive.rs	65	8	111	method_call	
-node	lib	1155	1148	<std macros>	21	53	74	block	
-node	lib	926	927	<std macros>	4	18	24	path	
-node	lib	537	534	liblog/lib.rs	153	23	1	lit	
+node	lib	403	408	liblog/directive.rs	53	33	84	block	
+node	lib	972	973	liblog/lib.rs	245	27	31	blk	
+node	lib	986	988	liblog/lib.rs	249	30	23	ty	
+node	lib	918	919	<std macros>	4	18	24	lit	
+node	lib	252	255	liblog/directive.rs	27	15	8	path	
+node	lib	1328	1329	liblog/lib.rs	292	27	222	block	
+node	lib	995	1028	liblog/lib.rs	251	4	245	pat	
+node	lib	967	972	liblog/lib.rs	245	27	31	block	
+node	lib	1229	1330	liblog/lib.rs	292	27	222	block	
+node	lib	65	62	liblog/directive.rs	13	11	4	ty	
+node	lib	335	336	liblog/directive.rs	49	18	5	pat	
+node	lib	1068	1074	liblog/lib.rs	275	41	1	ty	
+node	lib	1178	1186	<std macros>	4	18	24	path	
+node	lib	239	241	liblog/directive.rs	26	20	8	cast	
+node	lib	98	100	liblog/directive.rs	13	11	4	ty	
+node	lib	334	478	liblog/directive.rs	41	41	312	blk	
+node	lib	1130	1133	liblog/lib.rs	282	20	7	block	
+node	lib	591	576	liblog/lib.rs	176	41	15	ty	
+node	lib	1161	1162	<std macros>	21	8	119	stmt	
+node	lib	571	570	liblog/lib.rs	171	4	48	struct_field	handle
+node	lib	579	576	liblog/lib.rs	174	16	13	ty	
+node	lib	594	576	liblog/lib.rs	176	58	148	block	
+node	lib	1006	1007	liblog/lib.rs	253	17	8	pat	
+node	lib	1020	1021	liblog/lib.rs	255	32	15	field	
+node	lib	1066	1075	liblog/lib.rs	275	19	15	method_call	
+node	lib	611	615	<std macros>	22	12	27	path	
+node	lib	983	974	liblog/lib.rs	248	23	6	pat	
+node	lib	1261	1263	<std macros>	4	18	24	path	
+node	lib	460	465	liblog/directive.rs	60	25	76	block	
+node	lib	243	229	liblog/directive.rs	26	8	25	method_call	
+node	lib	608	603	<std macros>	21	19	3	pat	
+node	lib	1010	1011	liblog/lib.rs	253	50	5	deref	
+node	lib	1278	1277	<std macros>	4	18	24	ty	
+node	lib	179	180	liblog/directive.rs	13	11	4	blk	
+node	lib	640	641	liblog/lib.rs	178	28	19	path	
+node	lib	30	32	liblog/directive.rs	15	21	4	ty	
+node	lib	1078	1097	liblog/lib.rs	275	12	52	stmt	
+node	lib	848	849	liblog/lib.rs	223	4	11	stmt	
+node	lib	1207	1203	<std macros>	4	18	24	call	
+node	lib	1000	1026	liblog/lib.rs	251	4	245	break	
+node	lib	1230	1231	liblog/lib.rs	293	21	10	path	
+node	lib	810	811	liblog/lib.rs	209	34	6	path	
+node	lib	465	457	liblog/directive.rs	60	25	76	blk	
+node	lib	498	499	liblog/directive.rs	37	4	1244	loop	
+node	lib	920	930	<std macros>	4	18	24	path	
+node	lib	1296	1297	<std macros>	4	18	24	stmt	
+node	lib	280	281	liblog/directive.rs	37	4	1244	path	
+node	lib	527	528	liblog/lib.rs	148	10	28	ty	
+node	lib	1160	1155	<std macros>	22	12	50	call	
+node	lib	1288	1287	<std macros>	4	18	24	ty	
+node	lib	230	243	liblog/directive.rs	26	8	3	path	
+node	lib	1318	1326	liblog/lib.rs	296	12	10	path	
+node	lib	1217	1147	<std macros>	4	12	60	blk	
+node	lib	939	940	<std macros>	4	44	17	call	
+node	lib	305	301	liblog/directive.rs	40	12	17	pat	
+node	lib	346	414	liblog/directive.rs	51	20	9	pat	
+node	lib	894	895	<std macros>	21	25	21	ty	
+node	lib	316	317	liblog/directive.rs	41	32	4	pat	
+node	lib	151	152	liblog/directive.rs	13	11	4	vec	
+node	lib	1087	1092	liblog/lib.rs	276	40	1	pat	
+node	lib	825	826	liblog/lib.rs	220	27	11	ty	
+node	lib	210	245	liblog/directive.rs	24	38	1	ty	
+node	lib	826	821	liblog/lib.rs	220	26	12	ty	
+node	lib	223	225	liblog/directive.rs	25	58	4	path	
+node	lib	659	662	liblog/lib.rs	178	28	19	path	
+node	lib	375	376	liblog/directive.rs	53	33	84	path	
+node	lib	883	963	liblog/lib.rs	239	4	48	stmt	
+node	lib	963	850	liblog/lib.rs	230	53	736	block	
+node	lib	1031	1033	liblog/lib.rs	259	4	5	path	
+node	lib	293	495	liblog/directive.rs	38	8	28	stmt	
+node	lib	780	770	liblog/lib.rs	201	46	0	ty	
+node	lib	1050	1036	liblog/lib.rs	267	25	123	match	
+node	lib	170	174	liblog/directive.rs	13	11	4	path	
+node	lib	1113	1122	liblog/lib.rs	281	18	17	method_call	
+node	lib	643	623	liblog/lib.rs	178	28	19	vec	
+node	lib	889	961	<std macros>	3	11	4294954073	not	
+node	lib	575	570	liblog/lib.rs	171	12	40	ty	
+node	lib	746	756	liblog/lib.rs	188	28	30	local	
+node	lib	1265	1273	<std macros>	4	18	24	path	
+node	lib	732	733	liblog/lib.rs	188	28	30	expr_struct	
+node	lib	120	138	liblog/directive.rs	13	11	4	call	
+node	lib	933	953	<std macros>	4	18	24	local	
+node	lib	667	668	liblog/lib.rs	178	28	19	path	
+node	lib	212	229	liblog/directive.rs	25	12	60	local	
+node	lib	409	411	liblog/directive.rs	53	33	84	match	
+node	lib	536	534	liblog/lib.rs	153	17	3	ty	
+node	lib	455	447	liblog/directive.rs	60	25	76	vstore	
+node	lib	694	708	<std macros>	21	8	119	fn	run_fmt
+node	lib	155	154	liblog/directive.rs	13	11	4	ty	
+node	lib	430	445	liblog/directive.rs	60	25	76	call	
+node	lib	1105	1139	liblog/lib.rs	274	4	190	stmt	
+node	lib	91	180	liblog/directive.rs	13	11	4	tup	
+node	lib	819	818	liblog/lib.rs	216	37	9	path	
+node	lib	449	447	liblog/directive.rs	60	25	76	pat	
+node	lib	697	698	<std macros>	21	25	21	ty	
+node	lib	345	346	liblog/directive.rs	51	25	3	pat	
+node	lib	129	130	liblog/directive.rs	13	11	4	path	
+node	lib	22	15	liblog/macros.rs	134	0	219	mac	log_enabled
+node	lib	1294	1290	<std macros>	4	18	24	call	
+node	lib	325	326	liblog/directive.rs	45	39	4	path	
+node	lib	256	257	liblog/directive.rs	27	11	32	fn_blk	
+node	lib	49	51	liblog/directive.rs	15	8	18	pat	
+node	lib	999	1026	liblog/lib.rs	251	4	245	pat	
+node	lib	160	161	liblog/directive.rs	13	11	4	path	
+node	lib	1144	1145	liblog/lib.rs	288	16	10	path	
+node	lib	487	488	liblog/directive.rs	66	31	1	path	
+node	lib	654	665	liblog/lib.rs	178	28	19	stmt	
+node	lib	503	504	liblog/directive.rs	70	4	11	stmt	
 node	lib	1213	1214	<std macros>	24	21	7	addr_of	
+node	lib	488	486	liblog/directive.rs	66	31	12	method_call	
+node	lib	1093	1095	liblog/lib.rs	276	19	32	method_call	
+node	lib	961	963	<std macros>	3	8	84	if	
+node	lib	1223	1224	liblog/lib.rs	289	37	11	uniq	
+node	lib	153	164	liblog/directive.rs	13	11	4	stmt	
+node	lib	1180	1184	<std macros>	4	18	24	path	
+node	lib	1182	1184	<std macros>	4	18	24	path	
+node	lib	315	317	liblog/directive.rs	41	26	4	pat	
+node	lib	466	467	liblog/directive.rs	60	25	76	stmt	
+node	lib	1324	1325	liblog/lib.rs	296	30	29	ty	
+node	lib	42	36	liblog/lib.rs	1	0	0	ty	
+node	lib	900	903	<std macros>	22	40	3	path	
+node	lib	1017	1023	liblog/lib.rs	254	31	63	block	
+node	lib	450	453	liblog/directive.rs	61	39	1	path	
+node	lib	414	341	liblog/directive.rs	50	16	310	match	
+node	lib	1072	1073	liblog/lib.rs	275	43	1	path	
+node	lib	619	620	liblog/lib.rs	178	49	1	addr_of	
+node	lib	922	927	<std macros>	4	18	24	lit	
+node	lib	1220	1225	liblog/lib.rs	289	8	10	path	
+node	lib	171	172	liblog/directive.rs	13	11	4	path	
+node	lib	272	268	liblog/directive.rs	36	19	10	call	
+node	lib	1001	1002	liblog/lib.rs	251	8	9	pat	
+node	lib	379	380	liblog/directive.rs	53	33	84	lit	
+node	lib	358	403	liblog/directive.rs	53	33	84	static	__STATIC_FMTSTR
+node	lib	1038	1036	liblog/lib.rs	267	8	14	pat	
+node	lib	207	209	liblog/directive.rs	24	4	15	path	
+node	lib	639	641	liblog/lib.rs	178	28	19	expr_struct	
+node	lib	755	756	liblog/lib.rs	188	28	30	stmt	
+node	lib	700	694	<std macros>	21	51	1	ty	
+node	lib	541	538	liblog/lib.rs	155	23	1	lit	
+node	lib	257	204	liblog/directive.rs	24	4	188	method_call	
+node	lib	872	963	liblog/lib.rs	232	4	27	blk	
+node	lib	1014	1024	liblog/lib.rs	253	60	2	blk	
+node	lib	923	927	<std macros>	4	18	24	path	
+node	lib	974	0	liblog/lib.rs	248	0	452	fn	enabled
+node	lib	882	963	liblog/lib.rs	239	4	48	if	
+node	lib	395	393	liblog/directive.rs	53	33	84	pat	
+node	lib	397	400	liblog/directive.rs	53	33	84	path	
+node	lib	326	333	liblog/directive.rs	45	33	11	tup	
+node	lib	386	389	liblog/directive.rs	54	47	5	path	
+node	lib	1260	1255	<std macros>	4	18	24	ty	
+node	lib	768	769	liblog/lib.rs	189	22	2	blk	
+node	lib	436	438	liblog/directive.rs	60	25	76	path	
+node	lib	382	403	liblog/directive.rs	53	33	84	stmt	
+node	lib	677	678	liblog/lib.rs	179	22	2	blk	
+node	lib	1152	1148	<std macros>	21	24	22	ty	
+node	lib	593	576	liblog/lib.rs	176	58	0	ty	
+node	lib	709	710	liblog/lib.rs	188	60	1	path	
+node	lib	1274	1275	<std macros>	4	18	24	call	
+node	lib	1073	1071	liblog/lib.rs	275	43	7	method_call	
+node	lib	145	146	liblog/directive.rs	15	8	18	path	
+node	lib	1166	1167	<std macros>	4	44	17	pat	
+node	lib	1227	1331	liblog/lib.rs	292	8	11	path	
+node	lib	956	957	<std macros>	24	21	7	addr_of	
+node	lib	502	504	liblog/directive.rs	70	4	11	ret	
+node	lib	1025	1026	liblog/lib.rs	251	32	207	blk	
+node	lib	391	383	liblog/directive.rs	53	33	84	vstore	
+node	lib	754	746	liblog/lib.rs	188	28	30	blk	
+node	lib	150	151	liblog/directive.rs	16	8	10	call	
+node	lib	1071	1074	liblog/lib.rs	275	43	7	block	
+node	lib	77	62	liblog/directive.rs	13	11	4	block	
+node	lib	661	662	liblog/lib.rs	178	28	19	path	
+node	lib	727	730	liblog/lib.rs	188	28	30	lit	
+node	lib	128	130	liblog/directive.rs	13	11	4	expr_struct	
+node	lib	156	154	liblog/directive.rs	13	11	4	pat	
+node	lib	988	974	liblog/lib.rs	249	17	37	ty	
+node	lib	977	974	liblog/lib.rs	248	18	3	ty	
+node	lib	369	374	liblog/directive.rs	53	33	84	lit	
+node	lib	1075	1077	liblog/lib.rs	275	19	32	method_call	
+node	lib	749	754	liblog/lib.rs	188	28	30	block	
+node	lib	1208	1200	<std macros>	4	18	24	blk	
+node	lib	809	811	liblog/lib.rs	209	20	12	path	
+node	lib	1240	1235	<std macros>	21	19	3	pat	
+node	lib	1142	1333	liblog/lib.rs	286	8	21	assign	
+node	lib	59	60	liblog/directive.rs	16	8	10	method_call	
+node	lib	486	489	liblog/directive.rs	66	31	12	block	
+node	lib	537	534	liblog/lib.rs	153	23	1	lit	
+node	lib	1091	1089	liblog/lib.rs	276	43	7	method_call	
+node	lib	1140	1142	liblog/lib.rs	286	8	9	path	
+node	lib	905	960	<std macros>	8	33	885	block	
+node	lib	721	722	liblog/lib.rs	188	28	30	lit	
+node	lib	381	358	liblog/directive.rs	53	33	84	vec	
+node	lib	758	759	liblog/lib.rs	188	28	30	path	
+node	lib	908	959	<std macros>	4	18	24	tup	
+node	lib	917	919	<std macros>	4	18	24	path	
+node	lib	214	212	liblog/directive.rs	25	12	3	pat	
+node	lib	788	800	liblog/lib.rs	205	69	71	block	
+node	lib	52	53	liblog/directive.rs	15	8	18	path	
+node	lib	281	497	liblog/directive.rs	37	4	1244	method_call	
+node	lib	479	495	liblog/directive.rs	40	12	991	stmt	
+node	lib	1311	1312	liblog/lib.rs	294	30	28	ty	
+node	lib	1129	1133	liblog/lib.rs	282	20	1	ty	
+node	lib	1051	1139	liblog/lib.rs	267	8	140	stmt	
+node	lib	187	188	liblog/directive.rs	19	41	1	lit	
+node	lib	176	177	liblog/directive.rs	13	11	4	path	
+node	lib	101	103	liblog/directive.rs	13	11	4	path	
+node	lib	199	194	liblog/directive.rs	23	19	5	pat	
+node	lib	562	556	liblog/lib.rs	167	29	3	ty	
+node	lib	1117	1121	liblog/lib.rs	281	47	1	ty	
+node	lib	688	679	liblog/lib.rs	185	23	202	block	
+node	lib	73	62	liblog/directive.rs	13	11	4	ty	
+node	lib	782	781	liblog/lib.rs	205	8	0	ty	
+node	lib	886	887	liblog/lib.rs	243	22	20	method_call	
+node	lib	154	164	liblog/directive.rs	13	11	4	local	
+node	lib	40	23	liblog/directive.rs	13	17	5	method	clone
+node	lib	644	665	liblog/lib.rs	178	28	19	stmt	
+node	lib	1134	1136	liblog/lib.rs	282	8	20	method_call	
+node	lib	178	164	liblog/directive.rs	13	11	4	call	
+node	lib	600	678	liblog/lib.rs	177	14	36	call	
+node	lib	143	146	liblog/directive.rs	15	8	18	path	
+node	lib	664	665	liblog/lib.rs	178	28	19	stmt	
+node	lib	642	643	liblog/lib.rs	178	28	19	call	
+node	lib	943	953	<std macros>	4	18	24	local	
+node	lib	417	418	liblog/directive.rs	61	39	1	path	
+node	lib	1069	1074	liblog/lib.rs	275	40	1	pat	
+node	lib	873	963	liblog/lib.rs	232	4	27	stmt	
+node	lib	261	262	liblog/directive.rs	35	33	3	ty	
+node	lib	877	878	liblog/lib.rs	239	15	20	blk	
+node	lib	1128	1133	liblog/lib.rs	282	17	1	pat	
+node	lib	1098	1101	liblog/lib.rs	277	8	4	path	
+node	lib	39	36	liblog/directive.rs	13	17	5	ty	
+node	lib	278	499	liblog/directive.rs	37	4	1244	pat	
+node	lib	242	243	liblog/directive.rs	26	16	16	fn_blk	
+node	lib	660	662	liblog/lib.rs	178	28	19	path	
+node	lib	937	939	<std macros>	4	44	17	path	
+node	lib	1027	1028	liblog/lib.rs	251	4	245	loop	
+node	lib	351	414	liblog/directive.rs	51	33	18	tup	
+node	lib	1277	1297	<std macros>	4	18	24	local	
+node	lib	1137	1106	liblog/lib.rs	280	20	122	blk	
+node	lib	21	15	liblog/macros.rs	112	0	98	mac	debug
+node	lib	46	36	liblog/directive.rs	13	17	5	block	
+node	lib	931	911	<std macros>	4	18	24	vec	
+node	lib	652	653	liblog/lib.rs	178	28	19	vec	
+node	lib	1299	1300	<std macros>	4	18	24	path	
+node	lib	924	927	<std macros>	4	18	24	lit	
+node	lib	459	457	liblog/directive.rs	60	25	76	pat	
+node	lib	1251	1252	<std macros>	4	44	17	addr_of	
+node	lib	303	305	liblog/directive.rs	40	13	9	pat	
+node	lib	371	374	liblog/directive.rs	53	33	84	lit	
+node	lib	123	128	liblog/directive.rs	13	11	4	lit	
+node	lib	745	756	liblog/lib.rs	188	28	30	stmt	
+node	lib	1323	1324	liblog/lib.rs	296	31	28	ty	
+node	lib	529	517	liblog/lib.rs	148	4	34	cast	
+node	lib	598	600	liblog/lib.rs	177	27	16	addr_of	
+node	lib	954	957	<std macros>	24	21	7	path	
+node	lib	1045	1046	liblog/lib.rs	268	52	4	path	
+node	lib	1003	1025	liblog/lib.rs	251	32	207	block	
+node	lib	380	381	liblog/directive.rs	53	33	84	call	
+node	lib	1270	1271	<std macros>	4	18	24	path	
+node	lib	1321	1323	liblog/lib.rs	296	35	23	ty	
+node	lib	398	400	liblog/directive.rs	53	33	84	path	
+node	lib	964	973	liblog/lib.rs	245	4	7	path	
+node	lib	881	879	liblog/lib.rs	239	38	12	ret	
+node	lib	827	821	liblog/lib.rs	220	18	6	pat	
+node	lib	394	393	liblog/directive.rs	53	33	84	ty	
+node	lib	1281	1283	<std macros>	4	44	17	path	
+node	lib	185	186	liblog/directive.rs	19	34	3	ty	
+node	lib	1272	1273	<std macros>	4	18	24	path	
+node	lib	1202	1200	<std macros>	4	18	24	pat	
+node	lib	497	279	liblog/directive.rs	37	4	1244	match	
+node	lib	76	62	liblog/directive.rs	13	11	4	ty	
+node	lib	830	831	liblog/lib.rs	220	51	11	ty	
+node	lib	419	473	liblog/directive.rs	60	25	76	tup	
+node	lib	866	963	liblog/lib.rs	231	4	34	stmt	
+node	lib	332	333	liblog/directive.rs	46	28	30	tup	
+node	lib	945	943	<std macros>	4	18	24	pat	
+node	lib	353	354	liblog/directive.rs	54	47	5	path	
+node	lib	614	615	<std macros>	22	54	8	lit	
+node	lib	1234	1305	<std macros>	3	18	74	block	
+node	lib	767	768	liblog/lib.rs	189	22	2	block	
+node	lib	857	858	liblog/lib.rs	230	40	3	ty	
+node	lib	232	242	liblog/directive.rs	26	18	1	ty	
+node	lib	60	61	liblog/directive.rs	13	17	5	expr_struct	
+node	lib	674	675	liblog/lib.rs	179	15	2	pat	
+node	lib	1019	1020	liblog/lib.rs	255	32	9	path	
+node	lib	177	178	liblog/directive.rs	13	11	4	addr_of	
+node	lib	437	438	liblog/directive.rs	60	25	76	path	
+node	lib	899	903	<std macros>	22	12	27	path	
+node	lib	1151	1152	<std macros>	21	25	21	ty	
+node	lib	902	903	<std macros>	22	54	8	lit	
+node	lib	789	799	liblog/lib.rs	205	69	71	block	
+node	lib	523	529	liblog/lib.rs	148	4	1	lit	
+node	lib	464	460	liblog/directive.rs	60	25	76	call	
+node	lib	707	708	<std macros>	21	8	119	stmt	
+node	lib	1214	1210	<std macros>	24	21	7	call	
+node	lib	992	993	liblog/lib.rs	251	21	4	path	
+node	lib	66	23	liblog/directive.rs	13	11	4	method	fmt
+node	lib	158	161	liblog/directive.rs	13	11	4	path	
+node	lib	982	974	liblog/lib.rs	248	31	4	ty	
+node	lib	733	734	liblog/lib.rs	188	28	30	call	
+node	lib	840	849	liblog/lib.rs	221	8	36	stmt	
+node	lib	679	0	liblog/lib.rs	184	0	257	impl	DefaultLogger.Drop
+node	lib	665	670	liblog/lib.rs	178	28	19	block	
+node	lib	389	390	liblog/directive.rs	54	47	5	call	
+node	lib	734	714	liblog/lib.rs	188	28	30	vec	
+node	lib	204	194	liblog/directive.rs	23	47	196	block	
+node	lib	1215	1216	<std macros>	4	18	24	blk	
+node	lib	1088	1092	liblog/lib.rs	276	43	1	ty	
+node	lib	1002	1026	liblog/lib.rs	251	4	245	pat	
+node	lib	250	256	liblog/directive.rs	27	15	3	ty	
+node	lib	1028	1030	liblog/lib.rs	251	4	245	match	
+node	lib	433	438	liblog/directive.rs	60	25	76	lit	
+node	lib	567	556	liblog/lib.rs	167	40	15	ty	
+node	lib	1228	1330	liblog/lib.rs	292	27	1	ty	
+node	lib	762	708	<std macros>	24	8	43	match	
+node	lib	33	26	liblog/directive.rs	16	8	10	struct_field	level
+node	lib	876	875	liblog/lib.rs	239	24	9	path	
+node	lib	1033	1030	liblog/lib.rs	259	4	26	le	
+node	lib	294	495	liblog/directive.rs	39	12	24	local	
+node	lib	181	77	liblog/directive.rs	13	11	4	match	
+node	lib	599	600	liblog/lib.rs	177	45	4	path	
+node	lib	18	15	liblog/macros.rs	57	0	73	mac	error
+node	lib	736	756	liblog/lib.rs	188	28	30	local	
+node	lib	805	806	liblog/lib.rs	208	22	4	path	
+node	lib	958	959	<std macros>	4	18	24	blk	
+node	lib	245	246	liblog/directive.rs	24	35	118	fn_blk	
+node	lib	515	513	liblog/lib.rs	145	22	3	ty	
+node	lib	472	473	liblog/directive.rs	60	25	76	blk	
+node	lib	576	0	liblog/lib.rs	174	0	281	impl	DefaultLogger.Logger
+node	lib	1181	1184	<std macros>	4	18	24	lit	
+node	lib	566	567	liblog/lib.rs	167	41	14	ty	
+node	lib	1304	1234	<std macros>	4	12	60	blk	
+node	lib	1269	1271	<std macros>	4	18	24	path	
+node	lib	631	643	liblog/lib.rs	178	28	19	call	
+node	lib	865	862	liblog/lib.rs	231	28	9	path	
+node	lib	651	652	liblog/lib.rs	178	49	1	call	
+node	lib	32	26	liblog/directive.rs	15	14	12	ty	
+node	lib	432	440	liblog/directive.rs	60	25	76	path	
+node	lib	126	128	liblog/directive.rs	13	11	4	path	
+node	lib	1216	1162	<std macros>	24	8	43	match	
+node	lib	629	631	liblog/lib.rs	178	28	19	path	
+node	lib	744	736	liblog/lib.rs	188	28	30	vstore	
+node	lib	874	878	liblog/lib.rs	239	7	5	path	
+node	lib	1221	1224	liblog/lib.rs	289	21	15	path	
+node	lib	610	603	<std macros>	21	53	74	block	
+node	lib	201	203	liblog/directive.rs	23	42	3	ty	
+node	lib	140	164	liblog/directive.rs	13	11	4	local	
+node	lib	803	806	liblog/lib.rs	208	4	6	path	
+node	lib	413	414	liblog/directive.rs	52	25	183	blk	
+node	lib	991	974	liblog/lib.rs	249	59	4	ty	
+node	lib	1248	1249	<std macros>	21	8	119	stmt	
+node	lib	911	953	<std macros>	4	18	24	static	__STATIC_FMTSTR
+node	lib	1263	1275	<std macros>	4	18	24	call	
+node	lib	1283	1284	<std macros>	4	44	17	call	
+node	lib	282	497	liblog/directive.rs	37	4	1244	pat	
+node	lib	544	542	liblog/lib.rs	157	18	3	ty	
+node	lib	1070	1074	liblog/lib.rs	275	43	1	ty	
+node	lib	532	530	liblog/lib.rs	151	18	3	ty	
+node	lib	675	678	liblog/lib.rs	179	12	6	pat	
+node	lib	390	391	liblog/directive.rs	53	33	84	vec	
+node	lib	1305	1328	<std macros>	3	8	84	if	
+node	lib	168	175	liblog/directive.rs	13	11	4	ty	
+node	lib	1138	1139	liblog/lib.rs	280	8	134	stmt	
+node	lib	388	389	liblog/directive.rs	54	47	5	path	
+node	lib	241	235	liblog/directive.rs	26	20	12	add	
+node	lib	373	374	liblog/directive.rs	53	33	84	path	
+node	lib	850	0	liblog/lib.rs	230	0	789	fn	mod_enabled
+node	lib	79	181	liblog/directive.rs	13	11	4	deref	
+node	lib	367	377	liblog/directive.rs	53	33	84	path	
+node	lib	973	963	liblog/lib.rs	245	4	55	call	
+node	lib	556	555	liblog/lib.rs	167	4	52	type_method	log
+node	lib	312	478	liblog/directive.rs	40	38	42	tup	
+node	lib	738	736	liblog/lib.rs	188	28	30	pat	
+node	lib	102	103	liblog/directive.rs	13	11	4	lit	
+node	lib	68	62	liblog/lib.rs	1	0	0	ty	
+node	lib	227	212	liblog/directive.rs	25	18	54	method_call	
+node	lib	166	175	liblog/directive.rs	13	11	4	ty	
+node	lib	344	414	liblog/directive.rs	50	22	22	call	
+node	lib	687	679	liblog/lib.rs	185	23	0	ty	
+node	lib	283	497	liblog/directive.rs	37	4	1244	break	
+node	lib	277	499	liblog/directive.rs	37	4	1244	addr_of	
+node	lib	211	245	liblog/directive.rs	24	38	115	block	
+node	lib	1089	1092	liblog/lib.rs	276	43	7	block	
+node	lib	317	478	liblog/directive.rs	41	12	25	pat	
+node	lib	878	882	liblog/lib.rs	239	7	28	gt	
+node	lib	804	806	liblog/lib.rs	208	15	5	path	
+node	lib	752	753	liblog/lib.rs	188	28	30	path	
+node	lib	864	862	liblog/lib.rs	231	21	4	ty	
+node	lib	493	495	liblog/directive.rs	65	8	111	method_call	
+node	lib	1193	1196	<std macros>	4	44	17	path	
+node	lib	932	953	<std macros>	4	18	24	stmt	
+node	lib	896	891	<std macros>	21	19	3	pat	
+node	lib	137	138	liblog/directive.rs	13	11	4	call	
+node	lib	817	814	liblog/lib.rs	216	26	24	block	
+node	lib	686	679	liblog/lib.rs	185	12	10	pat	
+node	lib	1312	1307	liblog/lib.rs	294	29	29	ty	
+node	lib	225	222	liblog/directive.rs	25	58	13	eq	
+node	lib	234	242	liblog/directive.rs	26	20	1	ty	
+node	lib	1243	1247	<std macros>	22	12	27	path	
+node	lib	490	492	liblog/directive.rs	66	18	26	method_call	
+node	lib	1295	1287	<std macros>	4	18	24	blk	
+node	lib	549	550	liblog/lib.rs	159	31	11	ty	
+node	lib	275	276	liblog/directive.rs	37	24	3	lit	
+node	lib	834	849	liblog/lib.rs	221	8	36	local	
+node	lib	799	788	liblog/lib.rs	205	69	71	blk	
+node	lib	528	529	liblog/lib.rs	148	9	29	ty	
+node	lib	925	927	<std macros>	4	18	24	path	
+node	lib	83	84	liblog/directive.rs	15	8	18	path	
+node	lib	853	850	liblog/lib.rs	230	26	3	ty	
+node	lib	898	891	<std macros>	21	53	74	block	
+node	lib	362	363	liblog/directive.rs	53	33	84	lit	
+node	lib	1273	1274	<std macros>	4	18	24	expr_struct	
+node	lib	1059	1103	liblog/lib.rs	274	30	1	ty	
+node	lib	641	642	liblog/lib.rs	178	28	19	expr_struct	
+node	lib	399	400	liblog/directive.rs	53	33	84	path	
+node	lib	867	869	liblog/lib.rs	232	13	4	path	
+node	lib	994	1028	liblog/lib.rs	251	4	245	addr_of	
+node	lib	942	953	<std macros>	4	18	24	stmt	
+node	lib	1042	1043	liblog/lib.rs	268	13	4	pat	
+node	lib	1254	1303	<std macros>	4	18	24	pat	
+node	lib	188	182	liblog/directive.rs	19	24	19	ty	
+node	lib	595	600	liblog/lib.rs	177	14	12	path	
+node	lib	723	733	liblog/lib.rs	188	28	30	path	
+node	lib	759	760	<std macros>	24	21	7	addr_of	
+node	lib	930	931	<std macros>	4	18	24	call	
+node	lib	1264	1274	<std macros>	4	18	24	path	
+node	lib	919	931	<std macros>	4	18	24	call	
+node	lib	350	351	liblog/directive.rs	51	39	11	call	
+node	lib	1235	1249	<std macros>	21	8	119	fn	run_fmt
+node	lib	285	497	liblog/directive.rs	37	4	1244	pat	
+node	lib	1154	1148	<std macros>	21	51	1	ty	
+node	lib	669	665	<std macros>	24	21	7	call	
+node	lib	712	713	liblog/lib.rs	188	60	1	pat	
+node	lib	35	26	liblog/directive.rs	16	15	3	ty	
+node	lib	618	619	liblog/lib.rs	178	49	1	path	
+node	lib	906	907	<std macros>	4	44	17	lit	
+node	lib	724	732	liblog/lib.rs	188	28	30	path	
+node	lib	1141	1142	liblog/lib.rs	286	20	9	path	
+node	lib	617	672	<std macros>	8	33	885	block	
+node	lib	1313	1307	liblog/lib.rs	294	16	11	pat	
+node	lib	142	140	liblog/directive.rs	13	11	4	pat	
+node	lib	370	374	liblog/directive.rs	53	33	84	path	
+node	lib	657	655	liblog/lib.rs	178	28	19	pat	
+node	lib	663	655	liblog/lib.rs	178	28	19	blk	
+node	lib	377	381	liblog/directive.rs	53	33	84	call	
+node	lib	609	603	<std macros>	21	51	1	ty	
+node	lib	107	117	liblog/directive.rs	13	11	4	path	
+node	lib	1058	1103	liblog/lib.rs	274	27	1	pat	
+node	lib	228	229	liblog/directive.rs	25	12	60	stmt	
+node	lib	934	933	<std macros>	4	18	24	ty	
+node	lib	471	467	<std macros>	2	35	30	call	
+node	lib	1282	1283	<std macros>	4	44	17	path	
+node	lib	1146	1218	<std macros>	3	11	4294955503	not	
+node	lib	623	665	liblog/lib.rs	178	28	19	static	__STATIC_FMTSTR
+node	lib	1032	1033	liblog/lib.rs	259	13	17	path	
+node	lib	1046	1050	liblog/lib.rs	268	22	35	call	
+node	lib	43	36	liblog/directive.rs	13	17	5	pat	
+node	lib	63	23	liblog/directive.rs	13	11	4	trait_ref	
+node	lib	1055	1103	liblog/lib.rs	274	24	1	pat	
+node	lib	846	847	liblog/lib.rs	223	11	4	path	
+node	lib	1007	1024	liblog/lib.rs	253	12	14	pat	
+node	lib	1100	1101	liblog/lib.rs	277	17	5	addr_of	
+node	lib	180	181	liblog/directive.rs	13	11	4	match	
+node	lib	483	489	liblog/directive.rs	66	29	1	ty	
+node	lib	175	178	liblog/directive.rs	13	11	4	fn_blk	
+node	lib	807	813	liblog/lib.rs	208	4	23	stmt	
+node	lib	1191	1190	<std macros>	4	18	24	ty	
+node	lib	701	694	<std macros>	21	53	74	block	
+node	lib	1101	1097	liblog/lib.rs	277	8	15	method_call	
+node	lib	69	62	liblog/directive.rs	13	11	4	pat	
+node	lib	355	409	liblog/directive.rs	53	33	84	tup	
+node	lib	387	389	liblog/directive.rs	54	47	5	path	
+node	lib	1048	1049	liblog/lib.rs	269	16	8	path	
+node	lib	53	54	liblog/directive.rs	15	8	18	deref	
+node	lib	1292	1294	<std macros>	4	18	24	path	
+node	lib	1063	1061	liblog/lib.rs	275	12	4	pat	
+node	lib	467	472	liblog/directive.rs	60	25	76	block	
+node	lib	222	226	liblog/directive.rs	25	58	13	block	
+node	lib	157	162	liblog/directive.rs	13	11	4	block	
+node	lib	621	622	liblog/lib.rs	178	49	1	pat	
+node	lib	875	877	liblog/lib.rs	239	15	20	block	
+node	lib	468	471	<std macros>	2	35	30	path	
+node	lib	322	323	liblog/directive.rs	45	25	3	pat	
+node	lib	1139	1034	liblog/lib.rs	266	10	1089	block	
+node	lib	590	591	liblog/lib.rs	176	42	14	ty	
+node	lib	115	116	liblog/directive.rs	13	11	4	path	
+node	lib	1159	1160	<std macros>	22	54	8	lit	
+node	lib	1244	1247	<std macros>	22	40	3	path	
+node	lib	655	665	liblog/lib.rs	178	28	19	local	
+node	lib	606	607	<std macros>	21	25	21	ty	
+node	lib	703	706	<std macros>	22	40	3	path	
+node	lib	676	677	liblog/lib.rs	179	22	2	block	
+node	lib	1004	1005	liblog/lib.rs	252	14	9	path	
+node	lib	1190	1210	<std macros>	4	18	24	local	
+node	lib	1090	1091	liblog/lib.rs	276	43	1	path	
+node	lib	989	974	liblog/lib.rs	249	11	4	pat	
+node	lib	51	61	liblog/directive.rs	13	17	5	pat	
+node	lib	336	340	liblog/directive.rs	49	13	11	pat	
+node	lib	897	891	<std macros>	21	51	1	ty	
+node	lib	405	406	liblog/directive.rs	53	33	84	path	
+node	lib	1016	1024	liblog/lib.rs	254	23	4	pat	
+node	lib	72	73	liblog/directive.rs	13	11	4	ty	
+node	lib	951	943	<std macros>	4	18	24	blk	
+node	lib	331	332	liblog/directive.rs	46	46	11	call	
+node	lib	689	690	liblog/lib.rs	187	14	4	path	
+node	lib	1145	1146	liblog/lib.rs	288	16	20	method_call	
+node	lib	376	377	liblog/directive.rs	53	33	84	expr_struct	
+node	lib	1249	1304	<std macros>	8	33	885	block	
+node	lib	93	94	liblog/directive.rs	16	8	10	pat	
+node	lib	189	193	liblog/directive.rs	19	47	7	lit	
+node	lib	698	694	<std macros>	21	24	22	ty	
+node	lib	1120	1118	liblog/lib.rs	281	47	7	field	
+node	lib	54	55	liblog/directive.rs	15	8	18	paren	
+node	lib	117	138	liblog/directive.rs	13	11	4	call	
+node	lib	494	495	liblog/directive.rs	65	8	111	stmt	
+node	lib	1179	1184	<std macros>	4	18	24	lit	
+node	lib	408	409	liblog/directive.rs	53	33	84	blk	
+node	lib	814	0	liblog/lib.rs	216	0	50	fn	log_level
+node	lib	1039	1041	liblog/lib.rs	267	31	10	path	
+node	lib	764	765	liblog/lib.rs	189	15	2	lit	
+node	lib	226	227	liblog/directive.rs	25	50	21	fn_blk	
+node	lib	288	289	liblog/directive.rs	38	22	1	lit	
+node	lib	306	307	liblog/directive.rs	40	39	5	path	
+node	lib	268	504	liblog/directive.rs	36	8	21	local	
+node	lib	475	477	liblog/directive.rs	59	17	147	block	
+node	lib	648	651	liblog/lib.rs	178	49	1	path	
+node	lib	891	905	<std macros>	21	8	119	fn	run_fmt
+node	lib	1125	1134	liblog/lib.rs	282	8	3	path	
+node	lib	534	0	liblog/lib.rs	153	0	25	static	INFO
+node	lib	790	791	liblog/lib.rs	206	33	10	path	
+node	lib	833	821	liblog/lib.rs	220	43	20	ty	
+node	lib	880	881	liblog/lib.rs	239	45	5	lit	
+node	lib	23	0	liblog/lib.rs	133	0	14	mod	directive
+node	lib	1009	1010	liblog/lib.rs	253	51	4	path	
+node	lib	628	623	liblog/lib.rs	178	28	19	ty	
+node	lib	1080	1079	liblog/lib.rs	276	12	0	ty	
+node	lib	347	351	liblog/directive.rs	51	34	3	path	
+node	lib	311	312	liblog/directive.rs	40	67	12	method_call	
+node	lib	916	911	<std macros>	4	18	24	ty	
+node	lib	105	106	liblog/directive.rs	13	11	4	lit	
+node	lib	131	138	liblog/directive.rs	13	11	4	call	
+node	lib	966	973	liblog/lib.rs	245	19	6	path	
+node	lib	1222	1223	liblog/lib.rs	289	38	10	path	
+node	lib	960	890	<std macros>	4	12	60	blk	
+node	lib	194	23	liblog/directive.rs	23	0	243	fn	parse_log_level
+node	lib	454	455	liblog/directive.rs	60	25	76	vec	
+node	lib	1047	1050	liblog/lib.rs	269	8	4	pat	
+node	lib	1186	1187	<std macros>	4	18	24	expr_struct	
+node	lib	583	576	liblog/lib.rs	176	11	10	pat	
+node	lib	1218	1333	<std macros>	3	8	84	if	
+node	lib	339	340	liblog/directive.rs	49	39	4	pat	
+node	lib	522	517	liblog/lib.rs	147	23	29	ty	
+node	lib	1303	1249	<std macros>	24	8	43	match	
+node	lib	968	969	liblog/lib.rs	245	38	10	path	
+node	lib	786	801	liblog/lib.rs	205	21	29	call	
+node	lib	743	744	liblog/lib.rs	188	28	30	vec	
+node	lib	597	598	liblog/lib.rs	177	32	11	field	
+node	lib	658	663	liblog/lib.rs	178	28	19	block	
+node	lib	656	655	liblog/lib.rs	178	28	19	ty	
+node	lib	1119	1120	liblog/lib.rs	281	47	1	path	
+node	lib	949	950	<std macros>	4	18	24	path	
+node	lib	769	688	liblog/lib.rs	187	8	126	match	
+node	lib	299	294	liblog/directive.rs	39	24	12	method_call	
+node	lib	1205	1207	<std macros>	4	18	24	path	
+node	lib	1300	1301	<std macros>	24	21	7	addr_of	
+node	lib	1317	1328	liblog/lib.rs	294	16	88	stmt	
+node	lib	193	182	liblog/directive.rs	19	46	81	vec	
+node	lib	580	0	liblog/lib.rs	176	4	202	method	log
+node	lib	457	467	liblog/directive.rs	60	25	76	local	
+node	lib	148	150	liblog/directive.rs	16	8	10	path	
+node	lib	372	374	liblog/directive.rs	53	33	84	path	
+node	lib	1155	1148	<std macros>	21	53	74	block	
+node	lib	953	958	<std macros>	4	18	24	block	
+node	lib	946	951	<std macros>	4	18	24	block	
+node	lib	821	0	liblog/lib.rs	220	0	173	fn	set_logger
+node	lib	1200	1210	<std macros>	4	18	24	local	
+node	lib	274	276	liblog/directive.rs	37	13	4	path	
+node	lib	682	679	liblog/lib.rs	184	14	13	ty	
+node	lib	777	778	liblog/lib.rs	201	30	14	ty	
+node	lib	1013	1014	liblog/lib.rs	253	60	2	block	
+node	lib	1121	1122	liblog/lib.rs	281	43	11	fn_blk	
+node	lib	125	128	liblog/directive.rs	13	11	4	lit	
+node	lib	1331	1333	liblog/lib.rs	292	8	242	call	
+node	lib	393	403	liblog/directive.rs	53	33	84	local	
+node	lib	240	241	liblog/directive.rs	26	31	1	lit	
+node	lib	1290	1295	<std macros>	4	18	24	block	
+node	lib	818	820	liblog/lib.rs	216	28	20	block	
+node	lib	1172	1173	<std macros>	4	18	24	lit	
+node	lib	1334	1139	liblog/lib.rs	285	4	465	blk	
+node	lib	525	527	liblog/lib.rs	148	14	23	ty	
+node	lib	420	421	liblog/directive.rs	61	39	1	pat	
+node	lib	378	380	liblog/directive.rs	53	33	84	path	
+node	lib	693	769	liblog/lib.rs	188	12	6	pat	
+node	lib	935	933	<std macros>	4	18	24	pat	
+node	lib	192	193	liblog/directive.rs	20	47	7	lit	
+node	lib	262	258	liblog/directive.rs	35	32	4	ty	
+node	lib	1115	1121	liblog/lib.rs	281	45	1	ty	
+node	lib	130	131	liblog/directive.rs	13	11	4	expr_struct	
+node	lib	816	814	liblog/lib.rs	216	22	3	ty	
+node	lib	969	970	liblog/lib.rs	245	37	11	deref	
+node	lib	739	742	liblog/lib.rs	188	60	1	path	
+node	lib	1132	1130	liblog/lib.rs	282	20	7	field	
+node	lib	1081	1079	liblog/lib.rs	276	12	4	pat	
+node	lib	650	651	liblog/lib.rs	178	49	1	path	
+node	lib	103	138	liblog/directive.rs	13	11	4	call	
+node	lib	841	844	liblog/lib.rs	222	4	15	path	
+node	lib	1148	1162	<std macros>	21	8	119	fn	run_fmt
+node	lib	1023	1024	liblog/lib.rs	254	31	63	blk	
+node	lib	61	46	liblog/directive.rs	13	17	5	match	
+node	lib	1158	1160	<std macros>	22	45	8	lit	
+node	lib	1297	1302	<std macros>	4	18	24	block	
+node	lib	1224	1225	liblog/lib.rs	289	21	28	call	
+node	lib	396	401	liblog/directive.rs	53	33	84	block	
+node	lib	1133	1134	liblog/lib.rs	282	16	11	fn_blk	
+node	lib	627	628	liblog/lib.rs	178	28	19	lit	
+node	lib	843	844	liblog/lib.rs	222	34	6	path	
+node	lib	1092	1093	liblog/lib.rs	276	39	11	fn_blk	
+node	lib	422	467	liblog/directive.rs	60	25	76	static	__STATIC_FMTSTR
+node	lib	106	138	liblog/directive.rs	13	11	4	call	
+node	lib	124	128	liblog/directive.rs	13	11	4	path	
+node	lib	890	961	<std macros>	3	18	74	block	
+node	lib	1203	1208	<std macros>	4	18	24	block	
+node	lib	186	188	liblog/directive.rs	19	25	12	ty	
+node	lib	146	151	liblog/directive.rs	15	8	18	call	
+node	lib	313	314	liblog/directive.rs	41	18	5	pat	
+node	lib	492	493	liblog/directive.rs	65	18	100	expr_struct	
+node	lib	271	272	liblog/directive.rs	36	19	8	path	
+node	lib	1307	1328	liblog/lib.rs	294	16	88	local	
+node	lib	941	933	<std macros>	4	18	24	vstore	
+node	lib	787	800	liblog/lib.rs	205	69	1	ty	
+node	lib	719	714	liblog/lib.rs	188	28	30	ty	
+node	lib	587	576	liblog/lib.rs	176	22	6	pat	
+node	lib	198	194	liblog/directive.rs	23	26	4	ty	
+node	lib	839	834	liblog/lib.rs	221	15	29	call	
+node	lib	104	106	liblog/directive.rs	13	11	4	path	
+node	lib	725	730	liblog/lib.rs	188	28	30	lit	
+node	lib	287	289	liblog/directive.rs	38	11	7	method_call	
+node	lib	341	415	liblog/directive.rs	49	48	342	block	
+node	lib	612	615	<std macros>	22	40	3	path	
+node	lib	1061	1097	liblog/lib.rs	275	12	52	local	
+node	lib	209	246	liblog/directive.rs	24	4	22	call	
+node	lib	706	701	<std macros>	22	12	50	call	
+node	lib	438	440	liblog/directive.rs	60	25	76	expr_struct	
+node	lib	480	493	liblog/directive.rs	65	8	4	path	
+node	lib	1253	1254	<std macros>	4	44	17	pat	
+node	lib	418	419	liblog/directive.rs	61	39	1	addr_of	
+node	lib	470	471	<std macros>	2	35	30	addr_of	
+node	lib	1239	1235	<std macros>	21	24	22	ty	
+node	lib	229	244	liblog/directive.rs	24	38	115	block	
+node	lib	392	403	liblog/directive.rs	53	33	84	stmt	
+node	lib	730	732	liblog/lib.rs	188	28	30	expr_struct	
+node	lib	596	597	liblog/lib.rs	177	32	4	path	
+node	lib	993	994	liblog/lib.rs	251	21	10	method_call	
+node	lib	678	594	liblog/lib.rs	177	8	132	match	
+node	lib	48	61	liblog/directive.rs	13	17	5	deref	
+node	lib	233	242	liblog/directive.rs	26	17	1	pat	
+node	lib	363	358	liblog/directive.rs	53	33	84	ty	
+node	lib	577	0	liblog/lib.rs	174	5	6	trait_ref	
 node	lib	845	849	liblog/lib.rs	222	4	37	stmt	
-node	lib	722	734	liblog/lib.rs	188	28	30	call	
-node	lib	361	363	liblog/directive.rs	53	33	84	ty	
+node	lib	1302	1303	<std macros>	4	18	24	blk	
+node	lib	1192	1190	<std macros>	4	18	24	pat	
+node	lib	26	23	liblog/directive.rs	14	0	75	struct	LogDirective
+node	lib	761	762	liblog/lib.rs	188	28	30	blk	
+node	lib	998	1026	liblog/lib.rs	251	4	245	method_call	
+node	lib	139	164	liblog/directive.rs	13	11	4	stmt	
+node	lib	477	478	liblog/directive.rs	59	17	147	blk	
+node	lib	357	409	liblog/directive.rs	53	33	84	pat	
+node	lib	965	973	liblog/lib.rs	245	12	5	path	
+node	lib	512	509	liblog/lib.rs	140	32	1	lit	
+node	lib	1064	1065	liblog/lib.rs	275	19	1	path	
+node	lib	1286	1297	<std macros>	4	18	24	stmt	
+node	lib	756	761	liblog/lib.rs	188	28	30	block	
+node	lib	1196	1197	<std macros>	4	44	17	call	
+node	lib	197	198	liblog/directive.rs	23	27	3	ty	
+node	lib	147	150	liblog/directive.rs	16	8	10	path	
+node	lib	673	674	liblog/lib.rs	179	15	2	lit	
+node	lib	213	212	liblog/directive.rs	25	12	0	ty	
+node	lib	1183	1184	<std macros>	4	18	24	path	
+node	lib	1026	996	liblog/lib.rs	251	4	245	match	
+node	lib	111	114	liblog/directive.rs	13	11	4	lit	
+node	lib	638	639	liblog/lib.rs	178	28	19	path	
+node	lib	1112	1113	liblog/lib.rs	281	18	10	path	
+node	lib	950	946	<std macros>	4	18	24	call	
+node	lib	753	749	liblog/lib.rs	188	28	30	call	
+node	lib	410	411	liblog/directive.rs	53	33	84	stmt	
+node	lib	406	407	<std macros>	2	35	30	addr_of	
+node	lib	152	140	liblog/directive.rs	13	11	4	vstore	
+node	lib	582	576	liblog/lib.rs	1	0	0	ty	
+node	lib	1057	1103	liblog/lib.rs	274	28	1	ty	
+node	lib	1201	1200	<std macros>	4	18	24	ty	
+node	lib	634	639	liblog/lib.rs	178	28	19	lit	
+node	lib	1271	1273	<std macros>	4	18	24	expr_struct	
+node	lib	1018	1021	liblog/lib.rs	255	23	5	path	
+node	lib	766	769	liblog/lib.rs	189	12	6	pat	
+node	lib	1065	1066	liblog/lib.rs	275	19	6	field	
+node	lib	731	732	liblog/lib.rs	188	28	30	path	
+node	lib	1024	1003	liblog/lib.rs	252	8	191	match	
+node	lib	521	522	liblog/lib.rs	147	24	28	ty	
+node	lib	616	617	<std macros>	21	8	119	stmt	
+node	lib	149	150	liblog/directive.rs	16	8	10	path	
+node	lib	191	193	liblog/directive.rs	19	64	6	lit	
+node	lib	1276	1297	<std macros>	4	18	24	stmt	
+node	lib	109	114	liblog/directive.rs	13	11	4	lit	
+node	lib	318	334	liblog/directive.rs	41	41	312	block	
+node	lib	770	0	liblog/lib.rs	201	0	450	fn	log
+node	lib	711	762	liblog/lib.rs	188	28	30	tup	
+node	lib	81	82	liblog/directive.rs	16	8	10	pat	
+node	lib	1195	1196	<std macros>	4	44	17	path	
+node	lib	626	628	liblog/lib.rs	178	28	19	ty	
+node	lib	119	120	liblog/directive.rs	13	11	4	lit	
+node	lib	251	256	liblog/directive.rs	27	15	28	block	
+node	lib	540	538	liblog/lib.rs	155	17	3	ty	
+node	lib	495	496	liblog/directive.rs	37	29	1208	block	
+node	lib	354	355	liblog/directive.rs	54	47	5	addr_of	
+node	lib	1194	1196	<std macros>	4	44	17	path	
+node	lib	1008	1011	liblog/lib.rs	253	31	6	path	
+node	lib	791	792	liblog/lib.rs	206	33	12	call	
+node	lib	910	959	<std macros>	4	18	24	pat	
+node	lib	1108	1106	liblog/lib.rs	280	8	9	pat	
+node	lib	1197	1198	<std macros>	4	18	24	vec	
+node	lib	300	495	liblog/directive.rs	39	12	24	stmt	
+node	lib	1136	1124	liblog/lib.rs	282	8	49	method_call	
+node	lib	1246	1247	<std macros>	22	54	8	lit	
+node	lib	114	116	liblog/directive.rs	13	11	4	expr_struct	
+node	lib	714	756	liblog/lib.rs	188	28	30	static	__STATIC_FMTSTR
+node	lib	1326	1328	liblog/lib.rs	296	12	47	assign	
+node	lib	938	939	<std macros>	4	44	17	path	
+node	lib	112	114	liblog/directive.rs	13	11	4	path	
+node	lib	808	811	liblog/lib.rs	209	4	15	path	
+node	lib	401	393	liblog/directive.rs	53	33	84	blk	
+node	lib	435	438	liblog/directive.rs	60	25	76	lit	
+node	lib	481	490	liblog/directive.rs	66	18	4	path	
+node	lib	740	742	liblog/lib.rs	188	60	1	path	
+node	lib	1074	1075	liblog/lib.rs	275	39	11	fn_blk	
+node	lib	517	0	liblog/lib.rs	147	0	94	static	DIRECTIVES
+node	lib	329	331	liblog/directive.rs	46	46	4	path	
+node	lib	248	256	liblog/directive.rs	27	13	1	ty	
+node	lib	348	350	liblog/directive.rs	51	39	4	path	
+node	lib	162	154	liblog/directive.rs	13	11	4	blk	
+node	lib	1285	1277	<std macros>	4	18	24	vstore	
+node	lib	699	694	<std macros>	21	19	3	pat	
+node	lib	505	0	liblog/lib.rs	137	0	36	static	MAX_LOG_LEVEL
+node	lib	717	719	liblog/lib.rs	188	28	30	ty	
+node	lib	690	691	liblog/lib.rs	187	14	11	field	
+node	lib	508	505	liblog/lib.rs	137	32	3	lit	
+node	lib	869	871	liblog/lib.rs	232	13	15	method_call	
+node	lib	1096	1097	liblog/lib.rs	276	12	52	stmt	
+node	lib	662	658	liblog/lib.rs	178	28	19	call	
+node	lib	499	504	liblog/directive.rs	37	4	1244	match	
+node	lib	633	641	liblog/lib.rs	178	28	19	path	
+node	lib	1035	1034	liblog/lib.rs	266	10	0	ty	
+node	lib	959	905	<std macros>	24	8	43	match	
+node	lib	962	963	<std macros>	3	8	84	stmt	
+node	lib	1086	1092	liblog/lib.rs	276	41	1	ty	
+node	lib	74	62	liblog/directive.rs	13	11	4	pat	
+node	lib	319	321	liblog/directive.rs	44	22	15	path	
+node	lib	570	0	liblog/lib.rs	170	0	78	struct	DefaultLogger
+node	lib	320	321	liblog/directive.rs	44	38	5	path	
+node	lib	366	381	liblog/directive.rs	53	33	84	call	
+node	lib	1143	1333	liblog/lib.rs	286	8	21	stmt	
+node	lib	439	440	liblog/directive.rs	60	25	76	path	
+node	lib	1029	1030	liblog/lib.rs	251	4	245	stmt	
+node	lib	58	59	liblog/directive.rs	16	8	10	paren	
+node	lib	649	651	liblog/lib.rs	178	49	1	path	
+node	lib	221	226	liblog/directive.rs	25	58	4	ty	
+node	lib	302	301	liblog/directive.rs	40	12	0	ty	
+node	lib	936	939	<std macros>	4	44	17	path	
+node	lib	1124	1137	liblog/lib.rs	280	20	122	block	
+node	lib	443	444	liblog/directive.rs	60	25	76	lit	
+node	lib	491	492	liblog/directive.rs	67	19	9	path	
+node	lib	708	763	<std macros>	8	33	885	block	
+node	lib	1198	1190	<std macros>	4	18	24	vstore	
+node	lib	301	495	liblog/directive.rs	40	12	991	local	
+node	lib	812	813	liblog/lib.rs	209	4	37	stmt	
+node	lib	1242	1235	<std macros>	21	53	74	block	
+node	lib	773	770	liblog/lib.rs	201	18	3	ty	
+node	lib	208	209	liblog/directive.rs	24	20	5	path	
+node	lib	513	0	liblog/lib.rs	145	0	42	static	LOG_LEVEL
+node	lib	516	513	liblog/lib.rs	145	28	13	path	
+node	lib	133	134	liblog/directive.rs	13	11	4	lit	
+node	lib	172	174	liblog/directive.rs	13	11	4	field	
+node	lib	1275	1255	<std macros>	4	18	24	vec	
+node	lib	246	257	liblog/directive.rs	24	4	150	method_call	
+node	lib	82	181	liblog/directive.rs	13	11	4	pat	
+node	lib	1287	1297	<std macros>	4	18	24	local	
+node	lib	110	114	liblog/directive.rs	13	11	4	path	
+node	lib	1204	1207	<std macros>	4	18	24	path	
+node	lib	542	0	liblog/lib.rs	157	0	26	static	ERROR
+node	lib	84	85	liblog/directive.rs	15	8	18	deref	
+node	lib	55	60	liblog/directive.rs	15	8	18	method_call	
+node	lib	1037	1036	liblog/lib.rs	267	8	0	ty	
+node	lib	342	344	liblog/directive.rs	50	22	15	path	
+node	lib	298	299	liblog/directive.rs	39	32	3	lit	
+node	lib	811	813	liblog/lib.rs	209	4	37	call	
+node	lib	750	753	liblog/lib.rs	188	28	30	path	
+node	lib	447	467	liblog/directive.rs	60	25	76	local	
+node	lib	552	546	<std macros>	3	22	27	ty	
+node	lib	778	770	liblog/lib.rs	201	29	15	ty	
+node	lib	253	255	liblog/directive.rs	27	24	1	path	
+node	lib	292	495	liblog/directive.rs	38	8	28	if	
+node	lib	501	502	liblog/directive.rs	70	11	4	path	
+node	lib	820	817	liblog/lib.rs	216	28	20	blk	
+node	lib	702	706	<std macros>	22	12	27	path	
+node	lib	837	839	liblog/lib.rs	221	15	15	path	
+node	lib	1015	1024	liblog/lib.rs	254	12	8	pat	
+node	lib	1177	1187	<std macros>	4	18	24	path	
+node	lib	265	267	liblog/directive.rs	35	45	12	ty	
+node	lib	806	813	liblog/lib.rs	208	4	23	method_call	
+node	lib	134	138	liblog/directive.rs	13	11	4	call	
+node	lib	421	473	liblog/directive.rs	60	25	76	pat	
+node	lib	507	505	liblog/lib.rs	137	26	3	ty	
+node	lib	478	301	liblog/directive.rs	40	32	971	match	
+node	lib	441	445	liblog/directive.rs	60	25	76	call	
+node	lib	235	242	liblog/directive.rs	26	20	12	block	
+node	lib	323	333	liblog/directive.rs	45	20	9	pat	
+node	lib	89	90	liblog/directive.rs	16	8	10	paren	
+node	lib	509	0	liblog/lib.rs	140	0	34	static	DEFAULT_LOG_LEVEL
+node	lib	87	88	liblog/directive.rs	16	8	10	path	
+node	lib	573	575	liblog/lib.rs	171	31	20	ty	
+node	lib	1097	1102	liblog/lib.rs	274	30	163	block	
+node	lib	330	331	liblog/directive.rs	46	51	5	path	
+node	lib	1188	1168	<std macros>	4	18	24	vec	
+node	lib	800	801	liblog/lib.rs	205	66	74	fn_blk	
+node	lib	47	48	liblog/directive.rs	13	17	5	path	
+node	lib	879	882	liblog/lib.rs	239	36	16	block	
+node	lib	921	929	<std macros>	4	18	24	path	
+node	lib	747	746	liblog/lib.rs	188	28	30	ty	
+node	lib	1164	1165	<std macros>	4	44	17	addr_of	
+node	lib	426	427	liblog/directive.rs	60	25	76	lit	
+node	lib	1266	1271	<std macros>	4	18	24	lit	
+node	lib	286	287	liblog/directive.rs	38	11	1	path	
+node	lib	100	95	liblog/directive.rs	13	11	4	ty	
+node	lib	1174	1176	<std macros>	4	18	24	path	
+node	lib	862	963	liblog/lib.rs	231	4	34	static	INIT
+node	lib	425	427	liblog/directive.rs	60	25	76	ty	
+node	lib	854	850	liblog/lib.rs	230	19	5	pat	
+node	lib	1036	1139	liblog/lib.rs	267	8	140	local	
+node	lib	1171	1173	<std macros>	4	18	24	ty	
+node	lib	218	226	liblog/directive.rs	25	56	1	ty	
+node	lib	37	23	liblog/directive.rs	13	17	5	trait_ref	
+node	lib	1209	1210	<std macros>	4	18	24	stmt	
+node	lib	263	258	liblog/directive.rs	35	26	4	pat	
+node	lib	653	645	liblog/lib.rs	178	28	19	vstore	
+node	lib	1210	1215	<std macros>	4	18	24	block	
+node	lib	1176	1188	<std macros>	4	18	24	call	
+node	lib	56	57	liblog/directive.rs	16	8	10	path	
+node	lib	469	470	liblog/directive.rs	60	25	76	path	
+node	lib	458	457	liblog/directive.rs	60	25	76	ty	
+node	lib	1099	1100	liblog/lib.rs	277	18	4	path	
+node	lib	1250	1251	<std macros>	4	44	17	lit	
+node	lib	1255	1297	<std macros>	4	18	24	static	__STATIC_FMTSTR
+node	lib	116	117	liblog/directive.rs	13	11	4	expr_struct	
+node	lib	338	340	liblog/directive.rs	49	26	11	pat	
+node	lib	337	338	liblog/directive.rs	49	31	5	pat	
+node	lib	1005	1024	liblog/lib.rs	252	14	14	field	
+node	lib	308	309	liblog/directive.rs	40	53	5	path	
+node	lib	713	762	liblog/lib.rs	188	28	30	pat	
+node	lib	442	444	liblog/directive.rs	60	25	76	path	
+node	lib	757	760	<std macros>	24	21	7	path	
+node	lib	1084	1093	liblog/lib.rs	276	19	15	method_call	
+node	lib	887	884	liblog/lib.rs	243	21	21	not	
+node	lib	135	137	liblog/directive.rs	13	11	4	path	
+node	lib	553	554	<std macros>	3	53	22	path	
+node	lib	1021	1022	liblog/lib.rs	255	23	24	le	
+node	lib	122	130	liblog/directive.rs	13	11	4	path	
+node	lib	307	312	liblog/directive.rs	40	39	12	method_call	
+node	lib	637	639	liblog/lib.rs	178	28	19	path	
+node	lib	1060	1103	liblog/lib.rs	274	30	163	block	
+node	lib	484	489	liblog/directive.rs	66	28	1	pat	
+node	lib	254	255	liblog/directive.rs	27	27	15	path	
+node	lib	1156	1160	<std macros>	22	12	27	path	
+node	lib	948	950	<std macros>	4	18	24	path	
+node	lib	519	521	liblog/lib.rs	147	28	23	ty	
+node	lib	1040	1041	liblog/lib.rs	267	42	10	lit	
+node	lib	352	414	liblog/directive.rs	52	20	1	pat	
+node	lib	671	617	<std macros>	24	8	43	match	
+node	lib	445	422	liblog/directive.rs	60	25	76	vec	
+node	lib	844	849	liblog/lib.rs	222	4	37	call	
+node	lib	473	475	liblog/directive.rs	60	25	76	match	
+node	lib	1247	1242	<std macros>	22	12	50	call	
+node	lib	296	294	liblog/directive.rs	39	12	9	pat	
+node	lib	108	116	liblog/directive.rs	13	11	4	path	
+node	lib	796	797	liblog/lib.rs	206	52	11	ty	
+node	lib	258	23	liblog/directive.rs	35	0	1348	fn	parse_logging_spec
+node	lib	144	146	liblog/directive.rs	15	8	18	path	
+node	lib	215	216	liblog/directive.rs	25	18	15	path	
+node	lib	592	576	liblog/lib.rs	176	35	4	pat	
+node	lib	289	292	liblog/directive.rs	38	11	12	eq	
+node	lib	161	157	liblog/directive.rs	13	11	4	call	
+node	lib	797	798	liblog/lib.rs	206	51	12	ty	
+node	lib	404	407	<std macros>	2	35	30	path	
+node	lib	167	175	liblog/directive.rs	13	11	4	pat	
+node	lib	1163	1164	<std macros>	4	44	17	lit	
+node	lib	219	220	liblog/directive.rs	25	52	4	pat	
+node	lib	842	844	liblog/lib.rs	222	20	12	path	
+node	lib	646	645	liblog/lib.rs	178	28	19	ty	
+node	lib	1022	1017	liblog/lib.rs	255	16	31	ret	
+node	lib	1044	1046	liblog/lib.rs	268	22	29	path	
+node	lib	726	730	liblog/lib.rs	188	28	30	path	
+node	lib	304	305	liblog/directive.rs	40	24	4	pat	
+node	lib	792	793	liblog/lib.rs	206	9	38	expr_struct	
+node	lib	20	15	liblog/macros.rs	93	0	71	mac	info
+node	lib	607	603	<std macros>	21	24	22	ty	
+node	lib	1106	1139	liblog/lib.rs	280	8	134	local	
+node	lib	1252	1303	<std macros>	4	18	24	tup	
+node	lib	1043	1050	liblog/lib.rs	268	8	10	pat	
+node	lib	356	357	liblog/directive.rs	54	47	5	pat	
+node	lib	971	967	liblog/lib.rs	245	36	20	method_call	
+node	lib	440	441	liblog/directive.rs	60	25	76	expr_struct	
+node	lib	451	453	liblog/directive.rs	61	39	1	path	
+node	lib	1280	1283	<std macros>	4	44	17	path	
+node	lib	670	671	liblog/lib.rs	178	28	19	blk	
+node	lib	928	929	<std macros>	4	18	24	path	
+node	lib	78	79	liblog/directive.rs	13	11	4	path	
+node	lib	530	0	liblog/lib.rs	151	0	26	static	DEBUG
+node	lib	1315	1316	liblog/lib.rs	295	32	10	path	
+node	lib	19	15	liblog/macros.rs	75	0	71	mac	warn
+node	lib	957	953	<std macros>	24	21	7	call	
+node	lib	1079	1097	liblog/lib.rs	276	12	52	local	
+node	lib	340	478	liblog/directive.rs	49	12	32	pat	
+node	lib	127	128	liblog/directive.rs	13	11	4	path	
+node	lib	835	834	liblog/lib.rs	221	8	0	ty	
+node	lib	546	0	<std macros>	3	8	68	static	local_logger
+node	lib	1231	1232	liblog/lib.rs	293	21	20	method_call	
+node	lib	1241	1235	<std macros>	21	51	1	ty	
+node	lib	728	730	liblog/lib.rs	188	28	30	path	
+node	lib	926	927	<std macros>	4	18	24	path	
+node	lib	915	916	<std macros>	4	18	24	lit	
+node	lib	29	30	liblog/directive.rs	15	22	3	ty	
+node	lib	206	207	liblog/directive.rs	24	15	3	ty	
+node	lib	415	478	liblog/directive.rs	49	48	342	blk	
+node	lib	511	509	liblog/lib.rs	140	26	3	ty	
 node	lib	174	169	liblog/directive.rs	13	11	4	call	
 node	lib	267	258	liblog/directive.rs	35	41	17	ty	
-node	lib	431	441	liblog/directive.rs	60	25	76	path	
-node	lib	1287	1297	<std macros>	4	18	24	local	
-node	lib	870	871	liblog/lib.rs	232	13	15	stmt	
-node	lib	1153	1148	<std macros>	21	19	3	pat	
-node	lib	1191	1190	<std macros>	4	18	24	ty	
-node	lib	691	769	liblog/lib.rs	187	14	19	method_call	
-node	lib	380	381	liblog/directive.rs	53	33	84	call	
-node	lib	540	538	liblog/lib.rs	155	17	3	ty	
-node	lib	300	495	liblog/directive.rs	39	12	24	stmt	
-node	lib	1276	1297	<std macros>	4	18	24	stmt	
-node	lib	123	128	liblog/directive.rs	13	11	4	lit	
-node	lib	743	744	liblog/lib.rs	188	28	30	vec	
-node	lib	879	882	liblog/lib.rs	239	36	16	block	
-node	lib	1071	1074	liblog/lib.rs	275	43	7	block	
-node	lib	807	813	liblog/lib.rs	208	4	23	stmt	
-node	lib	569	556	liblog/lib.rs	167	56	0	ty	
-node	lib	250	256	liblog/directive.rs	27	15	3	ty	
-node	lib	120	138	liblog/directive.rs	13	11	4	call	
-node	lib	999	1026	liblog/lib.rs	251	4	245	pat	
-node	lib	623	665	liblog/lib.rs	178	28	19	static	__STATIC_FMTSTR
-node	lib	257	204	liblog/directive.rs	24	4	188	method_call	
-node	lib	1134	1136	liblog/lib.rs	282	8	20	method_call	
-node	lib	783	781	liblog/lib.rs	205	8	10	pat	
-node	lib	415	478	liblog/directive.rs	49	48	342	blk	
-node	lib	1102	1060	liblog/lib.rs	274	30	163	blk	
-node	lib	1326	1328	liblog/lib.rs	296	12	47	assign	
-node	lib	393	403	liblog/directive.rs	53	33	84	local	
-node	lib	372	374	liblog/directive.rs	53	33	84	path	
-node	lib	1113	1122	liblog/lib.rs	281	18	17	method_call	
-node	lib	1143	1333	liblog/lib.rs	286	8	21	stmt	
-node	lib	42	36	liblog/lib.rs	1	0	0	ty	
-node	lib	1211	1214	<std macros>	24	21	7	path	
-node	lib	395	393	liblog/directive.rs	53	33	84	pat	
-node	lib	405	406	liblog/directive.rs	53	33	84	path	
-node	lib	712	713	liblog/lib.rs	188	60	1	pat	
-node	lib	467	472	liblog/directive.rs	60	25	76	block	
-node	lib	135	137	liblog/directive.rs	13	11	4	path	
-node	lib	1060	1103	liblog/lib.rs	274	30	163	block	
-node	lib	15	0	liblog/lib.rs	132	0	15	mod	macros
-node	lib	1019	1020	liblog/lib.rs	255	32	9	path	
-node	lib	1171	1173	<std macros>	4	18	24	ty	
-node	lib	1052	1104	liblog/lib.rs	274	4	10	path	
-node	lib	1197	1198	<std macros>	4	18	24	vec	
-node	lib	1065	1066	liblog/lib.rs	275	19	6	field	
-node	lib	269	268	liblog/directive.rs	36	8	0	ty	
-node	lib	1299	1300	<std macros>	4	18	24	path	
-node	lib	602	678	liblog/lib.rs	178	12	6	pat	
-node	lib	68	62	liblog/lib.rs	1	0	0	ty	
-node	lib	864	862	liblog/lib.rs	231	21	4	ty	
-node	lib	948	950	<std macros>	4	18	24	path	
-node	lib	30	32	liblog/directive.rs	15	21	4	ty	
-node	lib	745	756	liblog/lib.rs	188	28	30	stmt	
-node	lib	306	307	liblog/directive.rs	40	39	5	path	
-node	lib	674	675	liblog/lib.rs	179	15	2	pat	
-node	lib	1306	1328	<std macros>	3	8	84	stmt	
-node	lib	350	351	liblog/directive.rs	51	39	11	call	
-node	lib	161	157	liblog/directive.rs	13	11	4	call	
-node	lib	376	377	liblog/directive.rs	53	33	84	expr_struct	
-node	lib	229	244	liblog/directive.rs	24	38	115	block	
 node	lib	383	403	liblog/directive.rs	53	33	84	local	
-node	lib	142	140	liblog/directive.rs	13	11	4	pat	
-node	lib	1136	1124	liblog/lib.rs	282	8	49	method_call	
-node	lib	970	971	liblog/lib.rs	245	36	13	paren	
-node	lib	1043	1050	liblog/lib.rs	268	8	10	pat	
-node	lib	834	849	liblog/lib.rs	221	8	36	local	
-node	lib	1045	1046	liblog/lib.rs	268	52	4	path	
-node	lib	729	730	liblog/lib.rs	188	28	30	path	
-node	lib	162	154	liblog/directive.rs	13	11	4	blk	
-node	lib	580	0	liblog/lib.rs	176	4	202	method	log
-node	lib	554	546	<std macros>	3	52	23	addr_of	
-node	lib	409	411	liblog/directive.rs	53	33	84	match	
-node	lib	222	226	liblog/directive.rs	25	58	13	block	
-node	lib	1185	1186	<std macros>	4	18	24	path	
-node	lib	1241	1235	<std macros>	21	51	1	ty	
-node	lib	1047	1050	liblog/lib.rs	269	8	4	pat	
-node	lib	408	409	liblog/directive.rs	53	33	84	blk	
-node	lib	173	174	liblog/directive.rs	13	11	4	path	
-node	lib	329	331	liblog/directive.rs	46	46	4	path	
-node	lib	365	366	liblog/directive.rs	53	33	84	lit	
-node	lib	233	242	liblog/directive.rs	26	17	1	pat	
-node	lib	756	761	liblog/lib.rs	188	28	30	block	
-node	lib	429	430	liblog/directive.rs	60	25	76	lit	
-node	lib	675	678	liblog/lib.rs	179	12	6	pat	
-node	lib	397	400	liblog/directive.rs	53	33	84	path	
-node	lib	1230	1231	liblog/lib.rs	293	21	10	path	
-node	lib	1032	1033	liblog/lib.rs	259	13	17	path	
-node	lib	665	670	liblog/lib.rs	178	28	19	block	
-node	lib	177	178	liblog/directive.rs	13	11	4	addr_of	
-node	lib	956	957	<std macros>	24	21	7	addr_of	
-node	lib	757	760	<std macros>	24	21	7	path	
-node	lib	37	23	liblog/directive.rs	13	17	5	trait_ref	
-node	lib	713	762	liblog/lib.rs	188	28	30	pat	
-node	lib	1029	1030	liblog/lib.rs	251	4	245	stmt	
-node	lib	463	464	liblog/directive.rs	60	25	76	path	
-node	lib	763	769	liblog/lib.rs	188	22	41	blk	
-node	lib	503	504	liblog/directive.rs	70	4	11	stmt	
-node	lib	439	440	liblog/directive.rs	60	25	76	path	
-node	lib	1087	1092	liblog/lib.rs	276	40	1	pat	
-node	lib	1231	1232	liblog/lib.rs	293	21	20	method_call	
-node	lib	311	312	liblog/directive.rs	40	67	12	method_call	
-node	lib	219	220	liblog/directive.rs	25	52	4	pat	
-node	lib	119	120	liblog/directive.rs	13	11	4	lit	
-node	lib	685	679	liblog/lib.rs	1	0	0	ty	
-node	lib	189	193	liblog/directive.rs	19	47	7	lit	
-node	lib	633	641	liblog/lib.rs	178	28	19	path	
-node	lib	79	181	liblog/directive.rs	13	11	4	deref	
-node	lib	352	414	liblog/directive.rs	52	20	1	pat	
-node	lib	169	175	liblog/directive.rs	13	11	4	block	
-node	lib	235	242	liblog/directive.rs	26	20	12	block	
-node	lib	1249	1304	<std macros>	8	33	885	block	
-node	lib	562	556	liblog/lib.rs	167	29	3	ty	
-node	lib	632	642	liblog/lib.rs	178	28	19	path	
-node	lib	968	969	liblog/lib.rs	245	38	10	path	
-node	lib	792	793	liblog/lib.rs	206	9	38	expr_struct	
-node	lib	854	850	liblog/lib.rs	230	19	5	pat	
-node	lib	1108	1106	liblog/lib.rs	280	8	9	pat	
-node	lib	888	889	liblog/lib.rs	243	12	32	blk	
-node	lib	114	116	liblog/directive.rs	13	11	4	expr_struct	
-node	lib	511	509	liblog/lib.rs	140	26	3	ty	
-node	lib	139	164	liblog/directive.rs	13	11	4	stmt	
-node	lib	740	742	liblog/lib.rs	188	60	1	path	
-node	lib	735	756	liblog/lib.rs	188	28	30	stmt	
-node	lib	785	786	liblog/lib.rs	205	37	12	path	
-node	lib	898	891	<std macros>	21	53	74	block	
-node	lib	1189	1210	<std macros>	4	18	24	stmt	
-node	lib	802	813	liblog/lib.rs	205	8	133	stmt	
-node	lib	271	272	liblog/directive.rs	36	19	8	path	
-node	lib	1025	1026	liblog/lib.rs	251	32	207	blk	
-node	lib	949	950	<std macros>	4	18	24	path	
-node	lib	83	84	liblog/directive.rs	15	8	18	path	
-node	lib	669	665	<std macros>	24	21	7	call	
-node	lib	1094	1095	liblog/lib.rs	276	62	1	lit	
-node	lib	896	891	<std macros>	21	19	3	pat	
-node	lib	628	623	liblog/lib.rs	178	28	19	ty	
-node	lib	130	131	liblog/directive.rs	13	11	4	expr_struct	
-node	lib	938	939	<std macros>	4	44	17	path	
-node	lib	1034	0	liblog/lib.rs	266	0	1099	fn	init
-node	lib	719	714	liblog/lib.rs	188	28	30	ty	
-node	lib	762	708	<std macros>	24	8	43	match	
-node	lib	945	943	<std macros>	4	18	24	pat	
-node	lib	934	933	<std macros>	4	18	24	ty	
-node	lib	345	346	liblog/directive.rs	51	25	3	pat	
-node	lib	608	603	<std macros>	21	19	3	pat	
-node	lib	615	610	<std macros>	22	12	50	call	
-node	lib	843	844	liblog/lib.rs	222	34	6	path	
-node	lib	1158	1160	<std macros>	22	45	8	lit	
-node	lib	1041	1050	liblog/lib.rs	267	31	22	call	
-node	lib	100	95	liblog/directive.rs	13	11	4	ty	
-node	lib	432	440	liblog/directive.rs	60	25	76	path	
-node	lib	234	242	liblog/directive.rs	26	20	1	ty	
-node	lib	742	743	liblog/lib.rs	188	60	1	call	
-node	lib	99	100	liblog/directive.rs	13	11	4	lit	
-node	lib	780	770	liblog/lib.rs	201	46	0	ty	
-node	lib	377	381	liblog/directive.rs	53	33	84	call	
-node	lib	403	408	liblog/directive.rs	53	33	84	block	
-node	lib	358	403	liblog/directive.rs	53	33	84	static	__STATIC_FMTSTR
-node	lib	1184	1186	<std macros>	4	18	24	expr_struct	
-node	lib	747	746	liblog/lib.rs	188	28	30	ty	
-node	lib	98	100	liblog/directive.rs	13	11	4	ty	
-node	lib	1156	1160	<std macros>	22	12	27	path	
-node	lib	529	517	liblog/lib.rs	148	4	34	cast	
-node	lib	430	445	liblog/directive.rs	60	25	76	call	
-node	lib	175	178	liblog/directive.rs	13	11	4	fn_blk	
-node	lib	1097	1102	liblog/lib.rs	274	30	163	block	
-node	lib	937	939	<std macros>	4	44	17	path	
-node	lib	441	445	liblog/directive.rs	60	25	76	call	
-node	lib	793	798	liblog/lib.rs	206	8	39	uniq	
-node	lib	986	988	liblog/lib.rs	249	30	23	ty	
-node	lib	652	653	liblog/lib.rs	178	28	19	vec	
-node	lib	708	763	<std macros>	8	33	885	block	
-node	lib	1140	1142	liblog/lib.rs	286	8	9	path	
-node	lib	116	117	liblog/directive.rs	13	11	4	expr_struct	
-node	lib	76	62	liblog/directive.rs	13	11	4	ty	
-node	lib	598	600	liblog/lib.rs	177	27	16	addr_of	
-node	lib	490	492	liblog/directive.rs	66	18	26	method_call	
-node	lib	48	61	liblog/directive.rs	13	17	5	deref	
-node	lib	419	473	liblog/directive.rs	60	25	76	tup	
-node	lib	1054	1103	liblog/lib.rs	274	25	1	ty	
-node	lib	303	305	liblog/directive.rs	40	13	9	pat	
-node	lib	1016	1024	liblog/lib.rs	254	23	4	pat	
-node	lib	473	475	liblog/directive.rs	60	25	76	match	
-node	lib	500	504	liblog/directive.rs	37	4	1244	stmt	
-node	lib	386	389	liblog/directive.rs	54	47	5	path	
-node	lib	1206	1207	<std macros>	4	18	24	path	
-node	lib	342	344	liblog/directive.rs	50	22	15	path	
-node	lib	714	756	liblog/lib.rs	188	28	30	static	__STATIC_FMTSTR
-node	lib	1116	1121	liblog/lib.rs	281	44	1	pat	
-node	lib	32	26	liblog/directive.rs	15	14	12	ty	
-node	lib	1080	1079	liblog/lib.rs	276	12	0	ty	
-node	lib	438	440	liblog/directive.rs	60	25	76	expr_struct	
-node	lib	931	911	<std macros>	4	18	24	vec	
-node	lib	356	357	liblog/directive.rs	54	47	5	pat	
-node	lib	796	797	liblog/lib.rs	206	52	11	ty	
-node	lib	151	152	liblog/directive.rs	13	11	4	vec	
-node	lib	703	706	<std macros>	22	40	3	path	
-node	lib	1070	1074	liblog/lib.rs	275	43	1	ty	
-node	lib	347	351	liblog/directive.rs	51	34	3	path	
-node	lib	555	0	liblog/lib.rs	164	0	232	trait	Logger
-node	lib	472	473	liblog/directive.rs	60	25	76	blk	
-node	lib	998	1026	liblog/lib.rs	251	4	245	method_call	
-node	lib	720	722	liblog/lib.rs	188	28	30	path	
-node	lib	637	639	liblog/lib.rs	178	28	19	path	
-node	lib	1044	1046	liblog/lib.rs	268	22	29	path	
-node	lib	1018	1021	liblog/lib.rs	255	23	5	path	
-node	lib	960	890	<std macros>	4	12	60	blk	
-node	lib	1180	1184	<std macros>	4	18	24	path	
-node	lib	929	930	<std macros>	4	18	24	expr_struct	
-node	lib	121	131	liblog/directive.rs	13	11	4	path	
-node	lib	273	504	liblog/directive.rs	36	8	21	stmt	
-node	lib	85	86	liblog/directive.rs	15	8	18	paren	
-node	lib	1061	1097	liblog/lib.rs	275	12	52	local	
-node	lib	215	216	liblog/directive.rs	25	18	15	path	
-node	lib	1295	1287	<std macros>	4	18	24	blk	
-node	lib	20	15	liblog/macros.rs	93	0	71	mac	info
-node	lib	326	333	liblog/directive.rs	45	33	11	tup	
-node	lib	417	418	liblog/directive.rs	61	39	1	path	
-node	lib	1265	1273	<std macros>	4	18	24	path	
-node	lib	406	407	<std macros>	2	35	30	addr_of	
-node	lib	443	444	liblog/directive.rs	60	25	76	lit	
-node	lib	225	222	liblog/directive.rs	25	58	13	eq	
-node	lib	390	391	liblog/directive.rs	53	33	84	vec	
-node	lib	343	344	liblog/directive.rs	50	38	5	path	
-node	lib	672	678	liblog/lib.rs	178	22	30	blk	
-node	lib	182	23	liblog/directive.rs	19	0	128	static	LOG_LEVEL_NAMES
-node	lib	983	974	liblog/lib.rs	248	23	6	pat	
-node	lib	626	628	liblog/lib.rs	178	28	19	ty	
-node	lib	658	663	liblog/lib.rs	178	28	19	block	
-node	lib	410	411	liblog/directive.rs	53	33	84	stmt	
-node	lib	947	950	<std macros>	4	18	24	path	
-node	lib	1331	1333	liblog/lib.rs	292	8	242	call	
-node	lib	614	615	<std macros>	22	54	8	lit	
-node	lib	751	753	liblog/lib.rs	188	28	30	path	
-node	lib	853	850	liblog/lib.rs	230	26	3	ty	
-node	lib	1224	1225	liblog/lib.rs	289	21	28	call	
-node	lib	781	813	liblog/lib.rs	205	8	133	local	
-node	lib	298	299	liblog/directive.rs	39	32	3	lit	
-node	lib	51	61	liblog/directive.rs	13	17	5	pat	
-node	lib	94	180	liblog/directive.rs	13	11	4	pat	
-node	lib	315	317	liblog/directive.rs	41	26	4	pat	
-node	lib	576	0	liblog/lib.rs	174	0	281	impl	DefaultLogger.Logger
-node	lib	1274	1275	<std macros>	4	18	24	call	
-node	lib	106	138	liblog/directive.rs	13	11	4	call	
-node	lib	179	180	liblog/directive.rs	13	11	4	blk	
-node	lib	765	766	liblog/lib.rs	189	15	2	pat	
-node	lib	112	114	liblog/directive.rs	13	11	4	path	
-node	lib	270	268	liblog/directive.rs	36	8	8	pat	
-node	lib	317	478	liblog/directive.rs	41	12	25	pat	
-node	lib	723	733	liblog/lib.rs	188	28	30	path	
-node	lib	1330	1331	liblog/lib.rs	292	20	229	proc	
-node	lib	1228	1330	liblog/lib.rs	292	27	1	ty	
-node	lib	507	505	liblog/lib.rs	137	26	3	ty	
-node	lib	80	82	liblog/directive.rs	15	8	18	pat	
-node	lib	125	128	liblog/directive.rs	13	11	4	lit	
-node	lib	1263	1275	<std macros>	4	18	24	call	
-node	lib	107	117	liblog/directive.rs	13	11	4	path	
-node	lib	434	438	liblog/directive.rs	60	25	76	path	
-node	lib	1036	1139	liblog/lib.rs	267	8	140	local	
-node	lib	753	749	liblog/lib.rs	188	28	30	call	
-node	lib	577	0	liblog/lib.rs	174	5	6	trait_ref	
-node	lib	683	0	liblog/lib.rs	185	4	221	method	drop
-node	lib	1187	1188	<std macros>	4	18	24	call	
-node	lib	657	655	liblog/lib.rs	178	28	19	pat	
-node	lib	622	671	liblog/lib.rs	178	28	19	pat	
-node	lib	700	694	<std macros>	21	51	1	ty	
-node	lib	357	409	liblog/directive.rs	53	33	84	pat	
-node	lib	545	542	liblog/lib.rs	157	24	1	lit	
-node	lib	1313	1307	liblog/lib.rs	294	16	11	pat	
-node	lib	192	193	liblog/directive.rs	20	47	7	lit	
-node	lib	903	898	<std macros>	22	12	50	call	
-node	lib	1293	1294	<std macros>	4	18	24	path	
-node	lib	49	51	liblog/directive.rs	15	8	18	pat	
-node	lib	1072	1073	liblog/lib.rs	275	43	1	path	
-node	lib	1314	1316	liblog/lib.rs	295	16	15	path	
-node	lib	486	489	liblog/directive.rs	66	31	12	block	
-node	lib	382	403	liblog/directive.rs	53	33	84	stmt	
-node	lib	320	321	liblog/directive.rs	44	38	5	path	
-node	lib	1110	1109	liblog/lib.rs	281	12	0	ty	
-node	lib	1234	1305	<std macros>	3	18	74	block	
-node	lib	840	849	liblog/lib.rs	221	8	36	stmt	
-node	lib	647	645	liblog/lib.rs	178	28	19	pat	
-node	lib	1332	1333	liblog/lib.rs	292	8	242	stmt	
-node	lib	599	600	liblog/lib.rs	177	45	4	path	
-node	lib	573	575	liblog/lib.rs	171	31	20	ty	
-node	lib	966	973	liblog/lib.rs	245	19	6	path	
-node	lib	789	799	liblog/lib.rs	205	69	71	block	
-node	lib	1201	1200	<std macros>	4	18	24	ty	
-node	lib	727	730	liblog/lib.rs	188	28	30	lit	
-node	lib	188	182	liblog/directive.rs	19	24	19	ty	
-node	lib	52	53	liblog/directive.rs	15	8	18	path	
-node	lib	435	438	liblog/directive.rs	60	25	76	lit	
-node	lib	141	140	liblog/directive.rs	13	11	4	ty	
-node	lib	282	497	liblog/directive.rs	37	4	1244	pat	
-node	lib	612	615	<std macros>	22	40	3	path	
-node	lib	1128	1133	liblog/lib.rs	282	17	1	pat	
-node	lib	1215	1216	<std macros>	4	18	24	blk	
-node	lib	391	383	liblog/directive.rs	53	33	84	vstore	
-node	lib	770	0	liblog/lib.rs	201	0	450	fn	log
-node	lib	143	146	liblog/directive.rs	15	8	18	path	
-node	lib	73	62	liblog/directive.rs	13	11	4	ty	
-node	lib	289	292	liblog/directive.rs	38	11	12	eq	
-node	lib	466	467	liblog/directive.rs	60	25	76	stmt	
-node	lib	72	73	liblog/directive.rs	13	11	4	ty	
-node	lib	679	0	liblog/lib.rs	184	0	257	impl	DefaultLogger.Drop
-node	lib	149	150	liblog/directive.rs	16	8	10	path	
-node	lib	1196	1197	<std macros>	4	44	17	call	
-node	lib	485	489	liblog/directive.rs	66	31	1	ty	
-node	lib	642	643	liblog/lib.rs	178	28	19	call	
-node	lib	971	967	liblog/lib.rs	245	36	20	method_call	
-node	lib	909	910	<std macros>	4	44	17	pat	
-node	lib	767	768	liblog/lib.rs	189	22	2	block	
-node	lib	457	467	liblog/directive.rs	60	25	76	local	
-node	lib	1245	1247	<std macros>	22	45	8	lit	
-node	lib	158	161	liblog/directive.rs	13	11	4	path	
-node	lib	1222	1223	liblog/lib.rs	289	38	10	path	
-node	lib	447	467	liblog/directive.rs	60	25	76	local	
-node	lib	536	534	liblog/lib.rs	153	17	3	ty	
-node	lib	251	256	liblog/directive.rs	27	15	28	block	
-node	lib	26	23	liblog/directive.rs	14	0	75	struct	LogDirective
-node	lib	207	209	liblog/directive.rs	24	4	15	path	
-node	lib	552	546	<std macros>	3	22	27	ty	
-node	lib	90	91	liblog/directive.rs	16	8	10	addr_of	
-node	lib	401	393	liblog/directive.rs	53	33	84	blk	
-node	lib	470	471	<std macros>	2	35	30	addr_of	
-node	lib	595	600	liblog/lib.rs	177	14	12	path	
-node	lib	1312	1307	liblog/lib.rs	294	29	29	ty	
-node	lib	1175	1176	<std macros>	4	18	24	lit	
-node	lib	778	770	liblog/lib.rs	201	29	15	ty	
-node	lib	194	23	liblog/directive.rs	23	0	243	fn	parse_log_level
-node	lib	129	130	liblog/directive.rs	13	11	4	path	
-node	lib	541	538	liblog/lib.rs	155	23	1	lit	
-node	lib	699	694	<std macros>	21	19	3	pat	
-node	lib	1088	1092	liblog/lib.rs	276	43	1	ty	
-node	lib	153	164	liblog/directive.rs	13	11	4	stmt	
-node	lib	648	651	liblog/lib.rs	178	49	1	path	
-node	lib	1181	1184	<std macros>	4	18	24	lit	
-node	lib	636	639	liblog/lib.rs	178	28	19	lit	
-node	lib	193	182	liblog/directive.rs	19	46	81	vec	
-node	lib	1220	1225	liblog/lib.rs	289	8	10	path	
-node	lib	336	340	liblog/directive.rs	49	13	11	pat	
-node	lib	61	46	liblog/directive.rs	13	17	5	match	
-node	lib	1082	1083	liblog/lib.rs	276	19	1	path	
-node	lib	627	628	liblog/lib.rs	178	28	19	lit	
-node	lib	170	174	liblog/directive.rs	13	11	4	path	
-node	lib	1152	1148	<std macros>	21	24	22	ty	
-node	lib	1141	1142	liblog/lib.rs	286	20	9	path	
-node	lib	972	973	liblog/lib.rs	245	27	31	blk	
-node	lib	920	930	<std macros>	4	18	24	path	
-node	lib	39	36	liblog/directive.rs	13	17	5	ty	
-node	lib	1011	1012	liblog/lib.rs	253	31	25	method_call	
-node	lib	176	177	liblog/directive.rs	13	11	4	path	
-node	lib	736	756	liblog/lib.rs	188	28	30	local	
-node	lib	1262	1263	<std macros>	4	18	24	lit	
-node	lib	910	959	<std macros>	4	18	24	pat	
-node	lib	496	497	liblog/directive.rs	37	29	1208	blk	
-node	lib	638	639	liblog/lib.rs	178	28	19	path	
-node	lib	805	806	liblog/lib.rs	208	22	4	path	
-node	lib	1115	1121	liblog/lib.rs	281	45	1	ty	
-node	lib	276	277	liblog/directive.rs	37	13	15	method_call	
-node	lib	299	294	liblog/directive.rs	39	24	12	method_call	
-node	lib	69	62	liblog/directive.rs	13	11	4	pat	
-node	lib	369	374	liblog/directive.rs	53	33	84	lit	
-node	lib	245	246	liblog/directive.rs	24	35	118	fn_blk	
-node	lib	206	207	liblog/directive.rs	24	15	3	ty	
-node	lib	492	493	liblog/directive.rs	65	18	100	expr_struct	
-node	lib	291	290	liblog/directive.rs	38	35	1	again	
-node	lib	297	299	liblog/directive.rs	39	24	1	path	
-node	lib	425	427	liblog/directive.rs	60	25	76	ty	
-node	lib	1048	1049	liblog/lib.rs	269	16	8	path	
-node	lib	1125	1134	liblog/lib.rs	282	8	3	path	
-node	lib	1281	1283	<std macros>	4	44	17	path	
-node	lib	349	350	liblog/directive.rs	51	44	5	path	
-node	lib	591	576	liblog/lib.rs	176	41	15	ty	
-node	lib	209	246	liblog/directive.rs	24	4	22	call	
-node	lib	1208	1200	<std macros>	4	18	24	blk	
-node	lib	1050	1036	liblog/lib.rs	267	25	123	match	
-node	lib	396	401	liblog/directive.rs	53	33	84	block	
-node	lib	258	23	liblog/directive.rs	35	0	1348	fn	parse_logging_spec
-node	lib	528	529	liblog/lib.rs	148	9	29	ty	
-node	lib	459	457	liblog/directive.rs	60	25	76	pat	
-node	lib	1103	1104	liblog/lib.rs	274	23	170	fn_blk	
-node	lib	17	15	liblog/macros.rs	34	0	195	mac	log
-node	lib	313	314	liblog/directive.rs	41	18	5	pat	
-node	lib	413	414	liblog/directive.rs	52	25	183	blk	
-node	lib	1015	1024	liblog/lib.rs	254	12	8	pat	
-node	lib	880	881	liblog/lib.rs	239	45	5	lit	
-node	lib	659	662	liblog/lib.rs	178	28	19	path	
-node	lib	330	331	liblog/directive.rs	46	51	5	path	
-node	lib	428	430	liblog/directive.rs	60	25	76	path	
-node	lib	989	974	liblog/lib.rs	249	11	4	pat	
-node	lib	655	665	liblog/lib.rs	178	28	19	local	
-node	lib	1099	1100	liblog/lib.rs	277	18	4	path	
-node	lib	1210	1215	<std macros>	4	18	24	block	
-node	lib	1284	1285	<std macros>	4	18	24	vec	
-node	lib	1301	1297	<std macros>	24	21	7	call	
-node	lib	1151	1152	<std macros>	21	25	21	ty	
-node	lib	831	833	liblog/lib.rs	220	50	12	ty	
-node	lib	1233	1305	<std macros>	3	11	4294955704	not	
-node	lib	1283	1284	<std macros>	4	44	17	call	
-node	lib	1232	1233	liblog/lib.rs	293	20	21	not	
-node	lib	325	326	liblog/directive.rs	45	39	4	path	
-node	lib	1031	1033	liblog/lib.rs	259	4	5	path	
-node	lib	185	186	liblog/directive.rs	19	34	3	ty	
-node	lib	223	225	liblog/directive.rs	25	58	4	path	
-node	lib	411	413	liblog/directive.rs	52	25	183	block	
-node	lib	1183	1184	<std macros>	4	18	24	path	
-node	lib	1122	1109	liblog/lib.rs	281	18	37	method_call	
-node	lib	172	174	liblog/directive.rs	13	11	4	field	
-node	lib	45	36	liblog/directive.rs	13	17	5	ty	
-node	lib	505	0	liblog/lib.rs	137	0	36	static	MAX_LOG_LEVEL
-node	lib	861	850	liblog/lib.rs	230	48	4	ty	
-node	lib	191	193	liblog/directive.rs	19	64	6	lit	
-node	lib	1131	1132	liblog/lib.rs	282	20	1	path	
-node	lib	1258	1260	<std macros>	4	18	24	ty	
-node	lib	1063	1061	liblog/lib.rs	275	12	4	pat	
-node	lib	354	355	liblog/directive.rs	54	47	5	addr_of	
-node	lib	607	603	<std macros>	21	24	22	ty	
-node	lib	111	114	liblog/directive.rs	13	11	4	lit	
-node	lib	494	495	liblog/directive.rs	65	8	111	stmt	
-node	lib	516	513	liblog/lib.rs	145	28	13	path	
-node	lib	1077	1061	liblog/lib.rs	275	19	45	method_call	
-node	lib	35	26	liblog/directive.rs	16	15	3	ty	
-node	lib	640	641	liblog/lib.rs	178	28	19	path	
-node	lib	456	467	liblog/directive.rs	60	25	76	stmt	
-node	lib	620	671	liblog/lib.rs	178	28	19	tup	
-node	lib	724	732	liblog/lib.rs	188	28	30	path	
-node	lib	131	138	liblog/directive.rs	13	11	4	call	
-node	lib	631	643	liblog/lib.rs	178	28	19	call	
 node	lib	452	453	liblog/directive.rs	61	39	1	path	
-node	lib	874	878	liblog/lib.rs	239	7	5	path	
-node	lib	542	0	liblog/lib.rs	157	0	26	static	ERROR
-node	lib	1121	1122	liblog/lib.rs	281	43	11	fn_blk	
-node	lib	906	907	<std macros>	4	44	17	lit	
-node	lib	1268	1271	<std macros>	4	18	24	lit	
-node	lib	1244	1247	<std macros>	22	40	3	path	
-node	lib	1307	1328	liblog/lib.rs	294	16	88	local	
-node	lib	621	622	liblog/lib.rs	178	49	1	pat	
-node	lib	197	198	liblog/directive.rs	23	27	3	ty	
-node	lib	272	268	liblog/directive.rs	36	19	10	call	
-node	lib	873	963	liblog/lib.rs	232	4	27	stmt	
-node	lib	210	245	liblog/directive.rs	24	38	1	ty	
-node	lib	962	963	<std macros>	3	8	84	stmt	
-node	lib	1240	1235	<std macros>	21	19	3	pat	
-node	lib	1279	1277	<std macros>	4	18	24	pat	
-node	lib	1319	1325	liblog/lib.rs	296	25	1	lit	
-node	lib	1023	1024	liblog/lib.rs	254	31	63	blk	
-node	lib	862	963	liblog/lib.rs	231	4	34	static	INIT
-node	lib	337	338	liblog/directive.rs	49	31	5	pat	
-node	lib	1282	1283	<std macros>	4	44	17	path	
-node	lib	1166	1167	<std macros>	4	44	17	pat	
-node	lib	656	655	liblog/lib.rs	178	28	19	ty	
-node	lib	308	309	liblog/directive.rs	40	53	5	path	
-node	lib	1162	1217	<std macros>	8	33	885	block	
-node	lib	731	732	liblog/lib.rs	188	28	30	path	
-node	lib	1160	1155	<std macros>	22	12	50	call	
-node	lib	1164	1165	<std macros>	4	44	17	addr_of	
-node	lib	339	340	liblog/directive.rs	49	39	4	pat	
-node	lib	755	756	liblog/lib.rs	188	28	30	stmt	
-node	lib	812	813	liblog/lib.rs	209	4	37	stmt	
-node	lib	1311	1312	liblog/lib.rs	294	30	28	ty	
-node	lib	261	262	liblog/directive.rs	35	33	3	ty	
-node	lib	694	708	<std macros>	21	8	119	fn	run_fmt
-node	lib	1300	1301	<std macros>	24	21	7	addr_of	
-node	lib	381	358	liblog/directive.rs	53	33	84	vec	
-node	lib	686	679	liblog/lib.rs	185	12	10	pat	
-node	lib	27	26	liblog/directive.rs	15	8	18	struct_field	name
-node	lib	236	239	liblog/directive.rs	26	20	1	path	
-node	lib	497	279	liblog/directive.rs	37	4	1244	match	
-node	lib	663	655	liblog/lib.rs	178	28	19	blk	
-node	lib	538	0	liblog/lib.rs	155	0	25	static	WARN
-node	lib	256	257	liblog/directive.rs	27	11	32	fn_blk	
-node	lib	571	570	liblog/lib.rs	171	4	48	struct_field	handle
-node	lib	613	615	<std macros>	22	45	8	lit	
-node	lib	630	631	liblog/lib.rs	178	28	19	lit	
-node	lib	420	421	liblog/directive.rs	61	39	1	pat	
-node	lib	84	85	liblog/directive.rs	15	8	18	deref	
-node	lib	166	175	liblog/directive.rs	13	11	4	ty	
-node	lib	88	89	liblog/directive.rs	16	8	10	deref	
+node	lib	1135	1136	liblog/lib.rs	282	39	17	path	
+node	lib	1094	1095	liblog/lib.rs	276	62	1	lit	
+node	lib	1284	1285	<std macros>	4	18	24	vec	
+node	lib	1309	1311	liblog/lib.rs	294	34	23	ty	
+node	lib	138	95	liblog/directive.rs	13	11	4	vec	
+node	lib	751	753	liblog/lib.rs	188	28	30	path	
+node	lib	1168	1210	<std macros>	4	18	24	static	__STATIC_FMTSTR
+node	lib	1173	1168	<std macros>	4	18	24	ty	
+node	lib	1259	1260	<std macros>	4	18	24	lit	
+node	lib	1011	1012	liblog/lib.rs	253	31	25	method_call	
+node	lib	622	671	liblog/lib.rs	178	28	19	pat	
+node	lib	462	464	liblog/directive.rs	60	25	76	path	
+node	lib	1167	1216	<std macros>	4	18	24	pat	
+node	lib	431	441	liblog/directive.rs	60	25	76	path	
+node	lib	981	982	liblog/lib.rs	248	32	3	ty	
+node	lib	1225	1333	liblog/lib.rs	289	8	41	assign	
+node	lib	1325	1326	liblog/lib.rs	296	25	34	cast	
+node	lib	813	770	liblog/lib.rs	201	46	404	block	
+node	lib	704	706	<std macros>	22	45	8	lit	
+node	lib	1118	1121	liblog/lib.rs	281	47	7	block	
+node	lib	224	225	liblog/directive.rs	25	66	5	path	
+node	lib	996	1027	liblog/lib.rs	251	4	245	block	
+node	lib	1316	1307	liblog/lib.rs	295	16	27	call	
+node	lib	779	770	liblog/lib.rs	201	23	4	pat	
+node	lib	216	227	liblog/directive.rs	25	18	22	method_call	
+node	lib	645	665	liblog/lib.rs	178	28	19	local	
+node	lib	444	445	liblog/directive.rs	60	25	76	call	
+node	lib	620	671	liblog/lib.rs	178	28	19	tup	
 node	lib	955	956	<std macros>	4	18	24	path	
-node	lib	1139	1034	liblog/lib.rs	266	10	1089	block	
-node	lib	1004	1005	liblog/lib.rs	252	14	9	path	
-node	lib	351	414	liblog/directive.rs	51	33	18	tup	
-node	lib	799	788	liblog/lib.rs	205	69	71	blk	
-node	lib	841	844	liblog/lib.rs	222	4	15	path	
-node	lib	921	929	<std macros>	4	18	24	path	
-node	lib	117	138	liblog/directive.rs	13	11	4	call	
-node	lib	56	57	liblog/directive.rs	16	8	10	path	
-node	lib	1195	1196	<std macros>	4	44	17	path	
-node	lib	777	778	liblog/lib.rs	201	30	14	ty	
-node	lib	340	478	liblog/directive.rs	49	12	32	pat	
-node	lib	148	150	liblog/directive.rs	16	8	10	path	
-node	lib	348	350	liblog/directive.rs	51	39	4	path	
-node	lib	499	504	liblog/directive.rs	37	4	1244	match	
-node	lib	252	255	liblog/directive.rs	27	15	8	path	
-node	lib	847	849	liblog/lib.rs	223	4	11	ret	
-node	lib	914	916	<std macros>	4	18	24	ty	
-node	lib	154	164	liblog/directive.rs	13	11	4	local	
-node	lib	590	591	liblog/lib.rs	176	42	14	ty	
-node	lib	1124	1137	liblog/lib.rs	280	20	122	block	
-node	lib	643	623	liblog/lib.rs	178	28	19	vec	
-node	lib	1098	1101	liblog/lib.rs	277	8	4	path	
-node	lib	460	465	liblog/directive.rs	60	25	76	block	
-node	lib	1202	1200	<std macros>	4	18	24	pat	
-node	lib	1318	1326	liblog/lib.rs	296	12	10	path	
-node	lib	522	517	liblog/lib.rs	147	23	29	ty	
-node	lib	977	974	liblog/lib.rs	248	18	3	ty	
-node	lib	23	0	liblog/lib.rs	133	0	14	mod	directive
-node	lib	567	556	liblog/lib.rs	167	40	15	ty	
-node	lib	827	821	liblog/lib.rs	220	18	6	pat	
-node	lib	1010	1011	liblog/lib.rs	253	50	5	deref	
-node	lib	969	970	liblog/lib.rs	245	37	11	deref	
-node	lib	495	496	liblog/directive.rs	37	29	1208	block	
-node	lib	817	814	liblog/lib.rs	216	26	24	block	
-node	lib	732	733	liblog/lib.rs	188	28	30	expr_struct	
-node	lib	1269	1271	<std macros>	4	18	24	path	
-node	lib	1157	1160	<std macros>	22	40	3	path	
-node	lib	833	821	liblog/lib.rs	220	43	20	ty	
-node	lib	515	513	liblog/lib.rs	145	22	3	ty	
-node	lib	682	679	liblog/lib.rs	184	14	13	ty	
-node	lib	707	708	<std macros>	21	8	119	stmt	
-node	lib	477	478	liblog/directive.rs	59	17	147	blk	
-node	lib	455	447	liblog/directive.rs	60	25	76	vstore	
-jdef	843	lib	827
-jdef	451	std	165026
-jdef	1311	std	55889
-jdef	1066	std	104271
-jdef	425	std	164596
-jdef	281	std	59746
+node	lib	1165	1216	<std macros>	4	18	24	tup	
+node	lib	1211	1214	<std macros>	24	21	7	path	
+node	lib	220	226	liblog/directive.rs	25	51	5	pat	
+node	lib	1329	1229	liblog/lib.rs	292	27	222	blk	
+node	lib	384	383	liblog/directive.rs	53	33	84	ty	
+node	lib	1332	1333	liblog/lib.rs	292	8	242	stmt	
+node	lib	461	464	liblog/directive.rs	60	25	76	path	
+node	lib	1314	1316	liblog/lib.rs	295	16	15	path	
+node	lib	88	89	liblog/directive.rs	16	8	10	deref	
+node	lib	691	769	liblog/lib.rs	187	14	19	method_call	
+node	lib	1267	1271	<std macros>	4	18	24	path	
+node	lib	364	366	liblog/directive.rs	53	33	84	path	
+node	lib	333	318	liblog/directive.rs	44	16	154	match	
+node	lib	500	504	liblog/directive.rs	37	4	1244	stmt	
+node	lib	636	639	liblog/lib.rs	178	28	19	lit	
+node	lib	1298	1301	<std macros>	24	21	7	path	
+node	lib	1175	1176	<std macros>	4	18	24	lit	
+node	lib	555	0	liblog/lib.rs	164	0	232	trait	Logger
+node	lib	683	0	liblog/lib.rs	185	4	221	method	drop
+node	lib	290	292	liblog/directive.rs	38	24	12	block	
+node	lib	970	971	liblog/lib.rs	245	36	13	paren	
+node	lib	907	908	<std macros>	4	44	17	addr_of	
+node	lib	1049	1050	liblog/lib.rs	269	16	10	call	
+node	lib	1184	1186	<std macros>	4	18	24	expr_struct	
+node	lib	737	736	liblog/lib.rs	188	28	30	ty	
+node	lib	1306	1328	<std macros>	3	8	84	stmt	
+node	lib	99	100	liblog/directive.rs	13	11	4	lit	
+node	lib	1189	1210	<std macros>	4	18	24	stmt	
+node	lib	885	886	liblog/lib.rs	243	22	10	path	
+node	lib	136	137	liblog/directive.rs	13	11	4	lit	
+node	lib	244	211	liblog/directive.rs	24	38	115	blk	
+node	lib	407	403	<std macros>	2	35	30	call	
+node	lib	1111	1109	liblog/lib.rs	281	12	3	pat	
+node	lib	1153	1148	<std macros>	21	19	3	pat	
+node	lib	680	0	liblog/lib.rs	184	5	4	trait_ref	
+node	lib	132	134	liblog/directive.rs	13	11	4	path	
+node	lib	343	344	liblog/directive.rs	50	38	5	path	
+node	lib	1123	1124	liblog/lib.rs	281	12	43	stmt	
+node	lib	1052	1104	liblog/lib.rs	274	4	10	path	
+node	lib	297	299	liblog/directive.rs	39	24	1	path	
+node	lib	453	454	liblog/directive.rs	61	39	1	call	
+node	lib	944	943	<std macros>	4	18	24	ty	
+node	lib	85	86	liblog/directive.rs	15	8	18	paren	
+node	lib	672	678	liblog/lib.rs	178	22	30	blk	
+node	lib	871	872	liblog/lib.rs	232	4	27	block	
+node	lib	997	998	liblog/lib.rs	251	4	245	path	
+node	lib	613	615	<std macros>	22	45	8	lit	
+node	lib	868	869	liblog/lib.rs	232	23	4	path	
+node	lib	802	813	liblog/lib.rs	205	8	133	stmt	
+node	lib	630	631	liblog/lib.rs	178	28	19	lit	
+node	lib	269	268	liblog/directive.rs	36	8	0	ty	
+node	lib	1077	1061	liblog/lib.rs	275	19	45	method_call	
+node	lib	1268	1271	<std macros>	4	18	24	lit	
+node	lib	692	693	liblog/lib.rs	188	16	1	pat	
+node	lib	279	498	liblog/directive.rs	37	4	1244	block	
+node	lib	545	542	liblog/lib.rs	157	24	1	lit	
+node	lib	328	332	liblog/directive.rs	46	29	15	path	
+node	lib	173	174	liblog/directive.rs	13	11	4	path	
+node	lib	1301	1297	<std macros>	24	21	7	call	
+node	lib	901	903	<std macros>	22	45	8	lit	
+node	lib	533	530	liblog/lib.rs	151	24	1	lit	
+node	lib	710	711	liblog/lib.rs	188	60	1	addr_of	
+node	lib	1289	1287	<std macros>	4	18	24	pat	
+node	lib	722	734	liblog/lib.rs	188	28	30	call	
+node	lib	685	679	liblog/lib.rs	1	0	0	ty	
+node	lib	385	383	liblog/directive.rs	53	33	84	pat	
+node	lib	801	781	liblog/lib.rs	205	21	120	method_call	
+node	lib	159	161	liblog/directive.rs	13	11	4	path	
+node	lib	276	277	liblog/directive.rs	37	13	15	method_call	
+node	lib	903	898	<std macros>	22	12	50	call	
+node	lib	554	546	<std macros>	3	52	23	addr_of	
+node	lib	1147	1218	<std macros>	3	18	74	block	
+node	lib	190	193	liblog/directive.rs	19	56	6	lit	
+node	lib	255	251	liblog/directive.rs	27	15	28	call	
+node	lib	793	798	liblog/lib.rs	206	8	39	uniq	
+node	lib	249	256	liblog/directive.rs	27	12	1	pat	
+node	lib	1212	1213	<std macros>	4	18	24	path	
+node	lib	1330	1331	liblog/lib.rs	292	20	229	proc	
+node	lib	1245	1247	<std macros>	22	45	8	lit	
+node	lib	1319	1325	liblog/lib.rs	296	25	1	lit	
+node	lib	90	91	liblog/directive.rs	16	8	10	addr_of	
+node	lib	870	871	liblog/lib.rs	232	13	15	stmt	
+node	lib	365	366	liblog/directive.rs	53	33	84	lit	
+node	lib	647	645	liblog/lib.rs	178	28	19	pat	
+node	lib	1233	1305	<std macros>	3	11	4294955704	not	
+node	lib	763	769	liblog/lib.rs	188	22	41	blk	
+node	lib	888	889	liblog/lib.rs	243	12	32	blk	
+node	lib	1238	1239	<std macros>	21	25	21	ty	
+node	lib	558	556	liblog/lib.rs	1	0	0	ty	
+node	lib	1103	1104	liblog/lib.rs	274	23	170	fn_blk	
+node	lib	182	23	liblog/directive.rs	19	0	128	static	LOG_LEVEL_NAMES
+node	lib	80	82	liblog/directive.rs	15	8	18	pat	
+node	lib	615	610	<std macros>	22	12	50	call	
+node	lib	1041	1050	liblog/lib.rs	267	31	22	call	
+node	lib	496	497	liblog/directive.rs	37	29	1208	blk	
+node	lib	784	786	liblog/lib.rs	205	21	15	path	
+node	lib	760	756	<std macros>	24	21	7	call	
+node	lib	434	438	liblog/directive.rs	60	25	76	path	
+node	lib	295	294	liblog/directive.rs	39	12	0	ty	
+node	lib	314	317	liblog/directive.rs	41	13	11	pat	
+node	lib	463	464	liblog/directive.rs	60	25	76	path	
+node	lib	836	834	liblog/lib.rs	221	8	4	pat	
+node	lib	270	268	liblog/directive.rs	36	8	8	pat	
+node	lib	952	953	<std macros>	4	18	24	stmt	
+node	lib	416	478	liblog/directive.rs	59	12	1	pat	
+node	lib	273	504	liblog/directive.rs	36	8	21	stmt	
+node	lib	310	311	liblog/directive.rs	40	67	5	path	
+node	lib	1226	1333	liblog/lib.rs	289	8	41	stmt	
+node	lib	284	285	liblog/directive.rs	37	8	1	pat	
+node	lib	1107	1106	liblog/lib.rs	280	8	0	ty	
+node	lib	1279	1277	<std macros>	4	18	24	pat	
+node	lib	742	743	liblog/lib.rs	188	60	1	call	
+node	lib	95	164	liblog/directive.rs	13	11	4	static	__STATIC_FMTSTR
+node	lib	569	556	liblog/lib.rs	167	56	0	ty	
+node	lib	321	333	liblog/directive.rs	44	22	22	call	
+node	lib	635	639	liblog/lib.rs	178	28	19	path	
+node	lib	940	941	<std macros>	4	18	24	vec	
+node	lib	429	430	liblog/directive.rs	60	25	76	lit	
+node	lib	601	602	liblog/lib.rs	178	16	1	pat	
+node	lib	774	770	liblog/lib.rs	201	11	5	pat	
+node	lib	1116	1121	liblog/lib.rs	281	44	1	pat	
+node	lib	1104	1139	liblog/lib.rs	274	4	190	method_call	
+node	lib	838	839	liblog/lib.rs	221	31	12	path	
+node	lib	1095	1079	liblog/lib.rs	276	19	45	method_call	
+node	lib	1232	1233	liblog/lib.rs	293	20	21	not	
+node	lib	324	326	liblog/directive.rs	45	34	3	path	
+node	lib	121	131	liblog/directive.rs	13	11	4	path	
+node	lib	86	91	liblog/directive.rs	15	8	18	addr_of	
+node	lib	705	706	<std macros>	22	54	8	lit	
+node	lib	927	929	<std macros>	4	18	24	expr_struct	
+node	lib	412	411	liblog/directive.rs	56	20	1	again	
+node	lib	929	930	<std macros>	4	18	24	expr_struct	
+node	lib	448	447	liblog/directive.rs	60	25	76	ty	
+node	lib	1258	1260	<std macros>	4	18	24	ty	
+node	lib	718	719	liblog/lib.rs	188	28	30	lit	
+node	lib	781	813	liblog/lib.rs	205	8	133	local	
+node	lib	1030	974	liblog/lib.rs	249	64	351	block	
+node	lib	586	576	liblog/lib.rs	176	30	3	ty	
+node	lib	456	467	liblog/directive.rs	60	25	76	stmt	
+node	lib	368	376	liblog/directive.rs	53	33	84	path	
+node	lib	831	833	liblog/lib.rs	220	50	12	ty	
+node	lib	309	312	liblog/directive.rs	40	53	12	method_call	
+node	lib	1219	1333	<std macros>	3	8	84	stmt	
+node	lib	45	36	liblog/directive.rs	13	17	5	ty	
+node	lib	62	23	liblog/directive.rs	13	11	4	impl	LogDirective.::std::fmt::Show
+node	lib	1122	1109	liblog/lib.rs	281	18	37	method_call	
+node	lib	169	175	liblog/directive.rs	13	11	4	block	
+node	lib	947	950	<std macros>	4	18	24	path	
+node	lib	118	120	liblog/directive.rs	13	11	4	path	
+node	lib	446	467	liblog/directive.rs	60	25	76	stmt	
+node	lib	1062	1061	liblog/lib.rs	275	12	0	ty	
+node	lib	361	363	liblog/directive.rs	53	33	84	ty	
+node	lib	783	781	liblog/lib.rs	205	8	10	pat	
+jdef	790	std	142478
+jdef	280	lib	278
 jdef	810	lib	783
-jdef	374	std	164628
-jdef	83	lib	80
-jdef	52	lib	49
-jdef	208	lib	199
-jdef	833	std	103651
-jdef	37	std	98535
-jdef	900	lib	896
-jdef	1258	std	164596
-jdef	804	lib	774
-jdef	113	std	164654
-jdef	319	lib	194
-jdef	405	lib	395
-jdef	729	std	164654
-jdef	792	lib	570
-jdef	1045	lib	1042
-jdef	276	std	65331
-jdef	590	std	164830
-jdef	947	std	164803
-jdef	267	std	55889
-jdef	650	lib	621
-jdef	925	std	164654
-jdef	1280	std	166625
-jdef	784	std	119934
-jdef	819	lib	513
-jdef	51	lib	26
-jdef	724	std	164656
-jdef	803	lib	783
-jdef	968	lib	517
-jdef	1309	lib	26
-jdef	635	std	161512
-jdef	1273	std	164612
-jdef	1039	std	128427
-jdef	1099	lib	1081
-jdef	114	std	164628
-jdef	837	std	119934
-jdef	274	lib	263
-jdef	602	std	105116
-jdef	954	lib	891
-jdef	809	lib	546
-jdef	1145	std	71667
-jdef	353	lib	337
-jdef	285	std	103656
-jdef	172	std	164737
-jdef	452	lib	420
-jdef	207	std	75966
-jdef	675	std	105112
-jdef	757	lib	694
-jdef	399	lib	385
-jdef	1185	std	103652
-jdef	1072	lib	1069
-jdef	1104	std	57288
+jdef	1243	std	238343
 jdef	553	std	119730
-jdef	122	std	164656
-jdef	1002	std	103656
-jdef	361	std	164596
-jdef	1299	lib	1289
-jdef	886	std	71667
-jdef	752	lib	738
-jdef	1267	std	161512
-jdef	310	lib	296
-jdef	346	std	103656
-jdef	680	std	74742
-jdef	1136	std	104406
-jdef	751	lib	714
-jdef	72	std	164737
-jdef	516	lib	505
-jdef	1084	std	104271
-jdef	986	lib	26
-jdef	148	std	165026
-jdef	1314	std	157297
-jdef	372	std	164654
-jdef	116	std	164612
-jdef	55	std	104218
-jdef	1077	std	104406
-jdef	936	std	166625
-jdef	1131	lib	1128
-jdef	1009	lib	1006
-jdef	599	lib	592
-jdef	468	std	142967
-jdef	437	std	164654
-jdef	307	std	59746
-jdef	1134	std	104444
-jdef	997	lib	995
-jdef	638	std	164654
+jdef	575	std	131412
+jdef	1048	std	55907
+jdef	353	lib	337
+jdef	436	std	164654
+jdef	966	lib	859
 jdef	1182	std	164654
 jdef	730	std	164628
-jdef	1122	std	243420
-jdef	173	lib	167
-jdef	376	std	164612
-jdef	1318	lib	517
-jdef	306	lib	296
-jdef	1186	std	164612
-jdef	349	lib	335
-jdef	640	std	103652
-jdef	1132	lib	33
-jdef	469	lib	459
-jdef	1091	std	64610
-jdef	723	std	164610
-jdef	203	std	103651
-jdef	964	lib	974
-jdef	702	std	238343
-jdef	324	lib	322
-jdef	741	lib	712
-jdef	549	lib	555
-jdef	1101	std	75696
-jdef	462	lib	422
-jdef	1052	lib	1038
-jdef	1018	lib	978
-jdef	703	lib	699
-jdef	993	std	243422
-jdef	927	std	164628
-jdef	297	lib	284
-jdef	387	std	165026
-jdef	386	std	166625
-jdef	1193	std	166625
-jdef	257	std	104444
-jdef	521	std	55889
-jdef	158	std	164803
-jdef	1231	std	71667
-jdef	338	std	103656
-jdef	1222	lib	1038
-jdef	1171	std	164596
-jdef	637	std	164654
-jdef	450	std	166625
-jdef	1204	std	164803
-jdef	432	std	164656
-jdef	398	lib	358
-jdef	339	std	103652
-jdef	955	lib	945
-jdef	59	std	98784
-jdef	1298	lib	1235
-jdef	1271	std	164628
-jdef	801	std	104424
-jdef	252	std	75853
-jdef	311	std	59746
-jdef	170	std	165311
-jdef	299	std	65331
-jdef	992	lib	989
-jdef	796	lib	555
-jdef	525	lib	26
-jdef	632	std	164610
-jdef	566	std	164830
-jdef	938	lib	909
-jdef	434	std	161512
-jdef	971	std	57258
-jdef	606	std	164830
-jdef	397	std	164803
-jdef	130	std	164612
-jdef	1048	std	55907
-jdef	999	std	103652
-jdef	488	std	66548
-jdef	929	std	164612
-jdef	1082	lib	1058
-jdef	171	lib	74
-jdef	47	lib	43
-jdef	808	std	120506
-jdef	224	lib	199
-jdef	965	lib	854
-jdef	87	lib	81
-jdef	428	std	164602
-jdef	227	std	243418
-jdef	830	lib	555
-jdef	868	lib	1034
-jdef	286	lib	284
-jdef	648	std	166625
-jdef	316	std	103652
-jdef	842	lib	546
-jdef	107	std	164610
-jdef	527	std	55889
-jdef	254	lib	505
-jdef	439	std	103652
-jdef	309	std	59746
-jdef	82	lib	26
-jdef	841	std	120506
-jdef	867	lib	862
-jdef	438	std	164628
-jdef	1135	lib	509
-jdef	740	std	165026
-jdef	124	std	161512
-jdef	112	std	164654
-jdef	1293	lib	1279
-jdef	1206	lib	1192
-jdef	720	std	164602
-jdef	575	std	131412
-jdef	121	std	164610
-jdef	917	std	164602
-jdef	1281	std	165197
-jdef	1261	std	164602
-jdef	618	lib	601
-jdef	1230	lib	517
-jdef	287	std	64595
-jdef	118	std	164602
-jdef	329	std	103656
-jdef	937	std	165197
-jdef	666	lib	603
-jdef	404	std	142967
-jdef	1183	std	164654
-jdef	480	lib	270
-jdef	1151	std	164830
-jdef	926	std	164654
-jdef	838	lib	546
-jdef	388	lib	356
-jdef	375	std	103652
-jdef	65	lib	26
-jdef	1211	lib	1148
-jdef	876	lib	513
-jdef	440	std	164612
-jdef	1064	lib	1055
-jdef	1205	lib	1168
-jdef	104	std	164602
-jdef	493	std	56958
-jdef	343	lib	337
-jdef	144	std	165026
-jdef	132	std	164602
-jdef	1095	std	104406
-jdef	1174	std	164602
-jdef	1238	std	164830
-jdef	1075	std	104444
-jdef	78	lib	69
-jdef	633	std	164656
-jdef	573	std	143060
-jdef	732	std	164612
-jdef	1032	lib	509
-jdef	271	std	55907
-jdef	314	std	103656
-jdef	315	std	103652
-jdef	1177	std	164610
-jdef	32	std	103651
-jdef	1243	std	238343
-jdef	417	lib	284
-jdef	60	lib	26
-jdef	336	std	103656
-jdef	693	std	105116
-jdef	367	std	164610
-jdef	928	std	103652
-jdef	1291	std	164803
-jdef	328	lib	505
-jdef	660	lib	623
-jdef	159	lib	95
-jdef	1019	lib	1001
-jdef	629	std	164602
-jdef	552	std	119721
-jdef	56	lib	50
-jdef	1005	lib	27
-jdef	1073	std	64610
-jdef	129	std	103652
-jdef	327	std	103652
-jdef	717	std	164596
-jdef	519	lib	26
-jdef	1047	std	103652
-jdef	1292	lib	1255
-jdef	1270	std	164654
-jdef	597	lib	571
-jdef	923	std	161512
-jdef	1020	lib	33
-jdef	750	std	164803
-jdef	1156	std	238343
-jdef	1015	std	103656
-jdef	1178	std	164656
-jdef	215	lib	182
-jdef	825	lib	555
-jdef	649	std	165026
-jdef	611	std	238343
-jdef	1220	lib	517
-jdef	1221	std	157297
-jdef	461	std	164803
-jdef	1157	lib	1153
-jdef	966	lib	859
-jdef	110	std	161512
-jdef	253	lib	249
-jdef	626	std	164596
-jdef	595	std	165334
-jdef	223	lib	219
-jdef	149	lib	93
-jdef	280	lib	278
-jdef	885	lib	517
-jdef	899	std	238343
-jdef	128	std	164628
-jdef	126	std	164654
-jdef	490	std	104444
-jdef	1272	std	103652
-jdef	216	std	48731
-jdef	948	lib	911
-jdef	920	std	164610
-jdef	115	std	103652
-jdef	436	std	164654
-jdef	1323	std	55889
-jdef	659	std	164803
-jdef	1184	std	164628
-jdef	442	std	164602
-jdef	661	lib	647
-jdef	282	std	103652
-jdef	176	lib	156
-jdef	758	lib	748
-jdef	487	lib	484
-jdef	988	std	54506
-jdef	501	lib	270
-jdef	914	std	164596
-jdef	846	lib	836
-jdef	1264	std	164610
-jdef	1004	lib	1001
-jdef	1180	std	161512
-jdef	1227	std	243009
-jdef	481	lib	304
-jdef	265	lib	26
-jdef	373	std	164654
-jdef	320	lib	313
-jdef	874	lib	854
-jdef	347	lib	345
-jdef	1144	lib	517
-jdef	378	std	164602
-jdef	728	std	164654
-jdef	596	lib	583
-jdef	145	lib	92
-jdef	491	lib	303
-jdef	1112	lib	1038
-jdef	612	lib	608
-jdef	1265	std	164656
-jdef	364	std	164602
-jdef	463	lib	449
-jdef	1098	lib	1063
-jdef	368	std	164656
-jdef	1083	lib	27
-jdef	1212	lib	1202
-jdef	1125	lib	1111
-jdef	667	lib	657
-jdef	641	std	164612
-jdef	308	lib	296
-jdef	949	lib	935
-jdef	39	lib	26
-jdef	639	std	164628
-jdef	766	std	105112
-jdef	998	std	92083
-jdef	1031	lib	978
-jdef	1016	std	103652
-jdef	1093	std	104444
-jdef	98	std	164596
-jdef	739	std	166625
-jdef	1140	lib	513
-jdef	1119	lib	1116
-jdef	1090	lib	1087
-jdef	579	lib	570
-jdef	1194	std	165197
-jdef	1141	lib	1108
-jdef	127	std	164654
-jdef	1007	std	103656
-jdef	492	lib	26
-jdef	690	lib	571
-jdef	785	lib	546
-jdef	325	std	103652
-jdef	160	lib	142
-jdef	894	std	164830
-jdef	108	std	164656
-jdef	865	sync	6539
-jdef	1044	lib	258
-jdef	864	sync	6529
-jdef	1195	lib	1166
-jdef	431	std	164610
-jdef	143	std	166625
-jdef	1043	std	103656
-jdef	689	lib	686
-jdef	726	std	161512
-jdef	869	sync	6549
-jdef	101	std	164602
-jdef	1244	lib	1240
-jdef	147	std	166625
-jdef	1315	lib	517
-jdef	697	std	164830
-jdef	243	std	104444
-jdef	323	std	103656
-jdef	370	std	161512
-jdef	709	lib	692
-jdef	330	lib	313
-jdef	691	std	131568
-jdef	682	lib	570
-jdef	342	lib	194
-jdef	1008	lib	983
-jdef	246	std	104701
+jdef	516	lib	505
 jdef	135	std	164602
-jdef	1065	lib	27
-jdef	63	std	164846
-jdef	76	std	164733
-jdef	790	std	142478
-jdef	45	lib	26
-jdef	1011	std	66153
-jdef	230	lib	214
-jdef	805	lib	779
-jdef	1269	std	164654
-jdef	731	std	103652
-jdef	1113	std	57258
-jdef	1282	lib	1253
-jdef	921	std	164656
-jdef	577	lib	555
-jdef	236	lib	233
-jdef	1321	lib	26
-jdef	777	std	164830
+jdef	257	std	104444
+jdef	1052	lib	1038
+jdef	709	lib	692
+jdef	39	lib	26
+jdef	55	std	104218
+jdef	343	lib	337
+jdef	405	lib	395
+jdef	724	std	164656
+jdef	144	std	165026
 jdef	348	std	103656
+jdef	336	std	103656
+jdef	1204	std	164803
+jdef	158	std	164803
+jdef	309	std	59746
+jdef	796	lib	555
+jdef	327	std	103652
+jdef	1044	lib	258
+jdef	869	sync	6549
+jdef	1064	lib	1055
+jdef	299	std	65331
+jdef	1101	std	75696
+jdef	841	std	120506
+jdef	804	lib	774
+jdef	297	lib	284
+jdef	640	std	103652
+jdef	702	std	238343
+jdef	432	std	164656
+jdef	837	std	119934
+jdef	566	std	164830
+jdef	955	lib	945
+jdef	998	std	92083
+jdef	399	lib	385
+jdef	899	std	238343
+jdef	1083	lib	27
+jdef	920	std	164610
+jdef	387	std	165026
+jdef	1174	std	164602
+jdef	1065	lib	27
+jdef	1122	std	243420
+jdef	689	lib	686
+jdef	997	lib	995
+jdef	635	std	161512
+jdef	1194	std	165197
+jdef	330	lib	313
+jdef	1073	std	64610
+jdef	98	std	164596
+jdef	629	std	164602
+jdef	428	std	164602
+jdef	160	lib	142
+jdef	126	std	164654
+jdef	361	std	164596
+jdef	938	lib	909
+jdef	926	std	164654
+jdef	596	lib	583
+jdef	1212	lib	1202
+jdef	1072	lib	1069
+jdef	320	lib	313
+jdef	842	lib	546
+jdef	306	lib	296
+jdef	929	std	164612
+jdef	693	std	105116
+jdef	129	std	103652
+jdef	1318	lib	517
+jdef	1230	lib	517
+jdef	253	lib	249
+jdef	936	std	166625
+jdef	819	lib	513
+jdef	1291	std	164803
+jdef	375	std	103652
+jdef	1039	std	128427
+jdef	739	std	166625
+jdef	1280	std	166625
+jdef	720	std	164602
+jdef	659	std	164803
+jdef	825	lib	555
+jdef	1282	lib	1253
+jdef	367	std	164610
+jdef	1112	lib	1038
+jdef	1104	std	57288
+jdef	1135	lib	509
+jdef	999	std	103652
+jdef	750	std	164803
+jdef	1019	lib	1001
+jdef	785	lib	546
+jdef	809	lib	546
+jdef	463	lib	449
+jdef	378	std	164602
+jdef	468	std	142967
+jdef	254	lib	505
+jdef	1091	std	64610
+jdef	114	std	164628
+jdef	488	std	66548
+jdef	697	std	164830
+jdef	925	std	164654
+jdef	128	std	164628
+jdef	223	lib	219
+jdef	803	lib	783
+jdef	208	lib	199
+jdef	1077	std	104406
+jdef	792	lib	570
+jdef	110	std	161512
+jdef	639	std	164628
+jdef	1125	lib	1111
+jdef	1047	std	103652
+jdef	992	lib	989
+jdef	649	std	165026
+jdef	1231	std	71667
+jdef	660	lib	623
+jdef	316	std	103652
+jdef	740	std	165026
+jdef	921	std	164656
+jdef	72	std	164737
+jdef	480	lib	270
+jdef	917	std	164602
+jdef	1270	std	164654
+jdef	1008	lib	983
+jdef	370	std	161512
+jdef	159	lib	95
+jdef	830	lib	555
+jdef	864	sync	6529
+jdef	731	std	103652
+jdef	993	std	243422
+jdef	307	std	59746
+jdef	527	std	55889
+jdef	342	lib	194
+jdef	282	std	103652
+jdef	501	lib	270
+jdef	590	std	164830
+jdef	577	lib	555
+jdef	1264	std	164610
+jdef	364	std	164602
+jdef	1066	std	104271
+jdef	452	lib	420
+jdef	1171	std	164596
+jdef	121	std	164610
+jdef	1298	lib	1235
+jdef	286	lib	284
+jdef	285	std	103656
+jdef	108	std	164656
+jdef	650	lib	621
+jdef	680	std	74742
+jdef	493	std	56958
+jdef	1032	lib	509
+jdef	986	lib	26
+jdef	203	std	103651
+jdef	682	lib	570
+jdef	1292	lib	1255
+jdef	1211	lib	1148
+jdef	1031	lib	978
+jdef	481	lib	304
+jdef	1095	std	104406
+jdef	314	std	103656
+jdef	1178	std	164656
+jdef	521	std	55889
+jdef	752	lib	738
+jdef	1281	std	165197
+jdef	252	std	75853
+jdef	267	std	55889
+jdef	491	lib	303
+jdef	172	std	164737
+jdef	325	std	103652
+jdef	492	lib	26
+jdef	1184	std	164628
+jdef	171	lib	74
+jdef	438	std	164628
+jdef	145	lib	92
+jdef	1075	std	104444
+jdef	47	lib	43
+jdef	308	lib	296
+jdef	346	std	103656
+jdef	1315	lib	517
+jdef	874	lib	854
+jdef	964	lib	974
+jdef	947	std	164803
+jdef	1321	lib	26
+jdef	641	std	164612
+jdef	216	std	48731
+jdef	602	std	105116
+jdef	729	std	164654
+jdef	927	std	164628
+jdef	1093	std	104444
+jdef	637	std	164654
+jdef	611	std	238343
+jdef	78	lib	69
+jdef	107	std	164610
+jdef	732	std	164612
+jdef	1157	lib	1153
+jdef	894	std	164830
+jdef	60	lib	26
+jdef	1221	std	157297
+jdef	372	std	164654
+jdef	691	std	131568
+jdef	1222	lib	1038
+jdef	525	lib	26
+jdef	339	std	103652
+jdef	661	lib	647
+jdef	1186	std	164612
+jdef	1323	std	55889
+jdef	112	std	164654
+jdef	1132	lib	33
+jdef	224	lib	199
+jdef	51	lib	26
+jdef	63	std	164846
+jdef	1016	std	103652
+jdef	948	lib	911
+jdef	265	lib	26
+jdef	487	lib	484
+jdef	130	std	164612
+jdef	519	lib	26
+jdef	1004	lib	1001
+jdef	1183	std	164654
+jdef	328	lib	505
+jdef	612	lib	608
+jdef	207	std	75966
+jdef	338	std	103656
+jdef	347	lib	345
+jdef	287	std	64595
+jdef	954	lib	891
+jdef	1005	lib	27
+jdef	1309	lib	26
+jdef	1314	std	157297
+jdef	971	std	57258
+jdef	398	lib	358
+jdef	83	lib	80
+jdef	885	lib	517
+jdef	116	std	164612
+jdef	431	std	164610
+jdef	1090	lib	1087
+jdef	32	std	103651
+jdef	124	std	161512
+jdef	434	std	161512
+jdef	451	std	165026
+jdef	1267	std	161512
+jdef	461	std	164803
+jdef	1299	lib	1289
+jdef	757	lib	694
+jdef	1141	lib	1108
+jdef	319	lib	194
+jdef	324	lib	322
+jdef	227	std	243418
+jdef	349	lib	335
+jdef	633	std	164656
+jdef	373	std	164654
+jdef	310	lib	296
+jdef	606	std	164830
+jdef	271	std	55907
+jdef	1144	lib	517
+jdef	281	std	59746
+jdef	65	lib	26
+jdef	1193	std	166625
+jdef	846	lib	836
+jdef	599	lib	592
+jdef	867	lib	862
+jdef	1272	std	103652
+jdef	1269	std	164654
+jdef	573	std	143060
+jdef	1206	lib	1192
+jdef	865	sync	6539
+jdef	76	std	164733
+jdef	82	lib	26
+jdef	928	std	103652
+jdef	1009	lib	1006
+jdef	666	lib	603
+jdef	1045	lib	1042
+jdef	703	lib	699
+jdef	386	std	166625
+jdef	618	lib	601
+jdef	1134	std	104444
+jdef	440	std	164612
+jdef	808	std	120506
+jdef	595	std	165334
+jdef	37	std	98535
+jdef	323	std	103656
+jdef	87	lib	81
+jdef	838	lib	546
+jdef	417	lib	284
+jdef	113	std	164654
+jdef	1258	std	164596
+jdef	1099	lib	1081
+jdef	425	std	164596
+jdef	965	lib	854
+jdef	1311	std	55889
+jdef	469	lib	459
+jdef	274	lib	263
+jdef	717	std	164596
+jdef	766	std	105112
+jdef	1113	std	57258
+jdef	833	std	103651
+jdef	1015	std	103656
+jdef	801	std	104424
+jdef	101	std	164602
+jdef	329	std	103656
+jdef	1119	lib	1116
+jdef	741	lib	712
+jdef	1084	std	104271
+jdef	404	std	142967
+jdef	988	std	54506
+jdef	462	lib	422
+jdef	626	std	164596
+jdef	450	std	166625
+jdef	1293	lib	1279
+jdef	784	std	119934
+jdef	1145	std	71667
+jdef	276	std	65331
+jdef	1244	lib	1240
+jdef	243	std	104444
+jdef	728	std	164654
+jdef	1131	lib	1128
+jdef	675	std	105112
+jdef	215	lib	182
+jdef	311	std	59746
+jdef	1177	std	164610
+jdef	176	lib	156
+jdef	1205	lib	1168
+jdef	1238	std	164830
+jdef	968	lib	517
+jdef	149	lib	93
+jdef	1156	std	238343
+jdef	59	std	98784
+jdef	1265	std	164656
+jdef	388	lib	356
+jdef	1271	std	164628
+jdef	1043	std	103656
+jdef	1082	lib	1058
+jdef	1002	std	103656
+jdef	886	std	71667
+jdef	1261	std	164602
+jdef	1227	std	243009
+jdef	439	std	103652
+jdef	777	std	164830
+jdef	1098	lib	1063
+jdef	1011	std	66153
+jdef	1007	std	103656
+jdef	549	lib	555
+jdef	690	lib	571
+jdef	45	lib	26
+jdef	1185	std	103652
+jdef	1180	std	161512
+jdef	246	std	104701
+jdef	638	std	164654
+jdef	1273	std	164612
+jdef	552	std	119721
+jdef	437	std	164654
+jdef	374	std	164628
+jdef	1140	lib	513
+jdef	1195	lib	1166
+jdef	230	lib	214
+jdef	315	std	103652
+jdef	143	std	166625
+jdef	868	lib	1034
+jdef	122	std	164656
+jdef	170	std	165311
+jdef	56	lib	50
+jdef	236	lib	233
+jdef	632	std	164610
+jdef	900	lib	896
+jdef	490	std	104444
+jdef	914	std	164596
+jdef	751	lib	714
+jdef	597	lib	571
+jdef	397	std	164803
+jdef	876	lib	513
+jdef	442	std	164602
+jdef	949	lib	935
+jdef	726	std	161512
+jdef	1136	std	104406
+jdef	147	std	166625
+jdef	52	lib	49
+jdef	667	lib	657
+jdef	843	lib	827
+jdef	1018	lib	978
+jdef	368	std	164656
+jdef	579	lib	570
+jdef	805	lib	779
+jdef	104	std	164602
+jdef	127	std	164654
+jdef	937	std	165197
+jdef	1220	lib	517
+jdef	115	std	103652
+jdef	118	std	164602
+jdef	923	std	161512
+jdef	723	std	164610
+jdef	173	lib	167
+jdef	1151	std	164830
+jdef	376	std	164612
+jdef	1020	lib	33
+jdef	648	std	166625
+jdef	758	lib	748
+jdef	148	std	165026
+jdef	132	std	164602
