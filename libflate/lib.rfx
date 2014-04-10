@@ -1,288 +1,288 @@
-node	lib	59	15	libflate/lib.rs	49	47	11	ty	
-node	lib	68	0	libflate/lib.rs	55	0	49	static	TDEFL_WRITE_ZLIB_HEADER
-node	lib	226	227	libflate/lib.rs	83	12	276	stmt	
-node	lib	203	201	libflate/lib.rs	82	24	6	ty	
-node	lib	259	260	libflate/lib.rs	95	30	2	ty	
-node	lib	272	273	libflate/lib.rs	96	34	1	lit	
-node	lib	277	278	libflate/lib.rs	99	35	2	ty	
-node	lib	142	143	libflate/lib.rs	66	15	28	blk	
-node	lib	143	116	libflate/lib.rs	64	8	156	if	
-node	lib	214	215	libflate/lib.rs	83	74	6	ty	
-node	lib	144	89	libflate/lib.rs	58	4	497	blk	
-node	lib	162	158	libflate/lib.rs	73	4	38	call	
-node	lib	216	225	libflate/lib.rs	83	55	25	cast	
-node	lib	266	268	libflate/lib.rs	95	45	8	ty	
-node	lib	250	231	libflate/lib.rs	88	12	80	call	
-node	lib	149	150	libflate/lib.rs	72	29	4	ty	
-node	lib	268	256	libflate/lib.rs	95	38	16	ty	
-node	lib	183	0	libflate/lib.rs	80	0	587	fn	inflate_bytes_internal
-node	lib	75	76	libflate/lib.rs	57	35	2	ty	
-node	lib	243	248	libflate/lib.rs	88	75	4	ty	
-node	lib	200	183	libflate/lib.rs	80	74	513	block	
-node	lib	82	72	libflate/lib.rs	57	40	5	pat	
-node	lib	119	143	libflate/lib.rs	64	11	14	not	
-node	lib	210	225	libflate/lib.rs	83	18	36	path	
 node	lib	178	182	libflate/lib.rs	77	27	5	path	
-node	lib	51	15	libflate/lib.rs	47	54	11	ty	
-node	lib	279	274	libflate/lib.rs	99	33	5	ty	
-node	lib	188	183	libflate/lib.rs	80	33	5	ty	
-node	lib	209	207	libflate/lib.rs	83	12	3	pat	
-node	lib	186	187	libflate/lib.rs	80	35	2	ty	
-node	lib	284	286	libflate/lib.rs	99	50	8	ty	
-node	lib	64	0	libflate/lib.rs	54	0	50	static	TINFL_FLAG_PARSE_ZLIB_HEADER
-node	lib	107	110	libflate/lib.rs	61	53	11	method_call	
-node	lib	159	162	libflate/lib.rs	73	4	22	path	
-node	lib	60	0	libflate/lib.rs	53	0	30	static	LZ_NORM
-node	lib	72	0	libflate/lib.rs	57	0	579	fn	deflate_bytes_internal
-node	lib	89	72	libflate/lib.rs	57	74	505	block	
-node	lib	161	162	libflate/lib.rs	73	34	7	path	
-node	lib	33	15	libflate/lib.rs	42	49	5	ty	
-node	lib	274	0	libflate/lib.rs	99	0	127	fn	inflate_bytes_zlib
-node	lib	245	247	libflate/lib.rs	88	75	10	path	
-node	lib	24	15	libflate/lib.rs	40	55	6	ty	
-node	lib	212	216	libflate/lib.rs	83	55	14	method_call	
-node	lib	211	212	libflate/lib.rs	83	55	5	path	
-node	lib	28	29	libflate/lib.rs	41	57	6	ty	
-node	lib	148	149	libflate/lib.rs	72	30	2	ty	
-node	lib	171	173	libflate/lib.rs	76	55	2	ty	
-node	lib	242	249	libflate/lib.rs	88	53	13	cast	
-node	lib	126	127	libflate/lib.rs	65	44	7	ty	
-node	lib	62	60	libflate/lib.rs	53	17	5	ty	
-node	lib	78	72	libflate/lib.rs	57	26	5	pat	
-node	lib	95	116	libflate/lib.rs	59	12	22	stmt	
-node	lib	288	291	libflate/lib.rs	100	4	22	path	
-node	lib	121	139	libflate/lib.rs	65	12	4	path	
-node	lib	58	59	libflate/lib.rs	49	52	6	ty	
-node	lib	123	127	libflate/lib.rs	65	37	3	path	
-node	lib	50	51	libflate/lib.rs	47	59	6	ty	
-node	lib	150	145	libflate/lib.rs	72	28	5	ty	
-node	lib	187	188	libflate/lib.rs	80	34	4	ty	
-node	lib	103	104	libflate/lib.rs	60	72	6	ty	
-node	lib	76	77	libflate/lib.rs	57	34	4	ty	
-node	lib	63	60	libflate/lib.rs	53	25	4	lit	
-node	lib	105	114	libflate/lib.rs	60	53	25	cast	
-node	lib	55	15	libflate/lib.rs	48	51	5	ty	
-node	lib	290	291	libflate/lib.rs	100	34	28	path	
-node	lib	70	68	libflate/lib.rs	55	33	5	ty	
-node	lib	231	254	libflate/lib.rs	87	26	104	block	
-node	lib	176	163	libflate/lib.rs	76	60	72	block	
-node	lib	253	254	libflate/lib.rs	89	15	28	blk	
-node	lib	113	114	libflate/lib.rs	63	53	5	path	
-node	lib	173	175	libflate/lib.rs	76	50	8	ty	
-node	lib	223	225	libflate/lib.rs	85	55	10	addr_of	
-node	lib	229	230	libflate/lib.rs	87	12	13	method_call	
-node	lib	225	207	libflate/lib.rs	83	18	270	call	
-node	lib	114	96	libflate/lib.rs	60	18	262	call	
-node	lib	167	168	libflate/lib.rs	76	34	4	ty	
-node	lib	41	42	libflate/lib.rs	45	55	6	ty	
-node	lib	193	183	libflate/lib.rs	80	40	5	pat	
-node	lib	138	139	libflate/lib.rs	65	17	74	call	
-node	lib	21	15	libflate/lib.rs	39	42	8	pat	
-node	lib	234	238	libflate/lib.rs	88	37	3	path	
-node	lib	197	199	libflate/lib.rs	80	64	8	ty	
-node	lib	71	68	libflate/lib.rs	55	41	7	lit	
-node	lib	291	287	libflate/lib.rs	100	4	59	call	
-node	lib	47	15	libflate/lib.rs	46	44	11	pat	
-node	lib	127	138	libflate/lib.rs	65	37	14	cast	
-node	lib	241	242	libflate/lib.rs	88	62	4	ty	
-node	lib	215	216	libflate/lib.rs	83	73	7	ty	
-node	lib	181	182	libflate/lib.rs	77	34	33	bitor	
-node	lib	77	72	libflate/lib.rs	57	33	5	ty	
-node	lib	261	256	libflate/lib.rs	95	28	5	ty	
-node	lib	130	131	libflate/lib.rs	65	62	4	ty	
-node	lib	237	238	libflate/lib.rs	88	44	7	ty	
-node	lib	232	250	libflate/lib.rs	88	12	4	path	
-node	lib	163	0	libflate/lib.rs	76	0	132	fn	deflate_bytes_zlib
-node	lib	109	110	libflate/lib.rs	61	68	6	ty	
-node	lib	222	223	libflate/lib.rs	85	60	5	path	
-node	lib	220	221	libflate/lib.rs	84	70	6	ty	
-node	lib	20	15	libflate/lib.rs	39	52	7	ty	
-node	lib	255	200	libflate/lib.rs	81	4	505	blk	
-node	lib	19	20	libflate/lib.rs	39	53	6	ty	
-node	lib	228	229	libflate/lib.rs	87	12	3	path	
-node	lib	140	142	libflate/lib.rs	66	15	28	block	
-node	lib	86	88	libflate/lib.rs	57	64	8	ty	
-node	lib	217	218	libflate/lib.rs	84	55	5	path	
-node	lib	262	256	libflate/lib.rs	95	21	5	pat	
-node	lib	9	0	libflate/lib.rs	35	0	738	mod	rustrt
-node	lib	208	207	libflate/lib.rs	83	12	0	ty	
-node	lib	177	182	libflate/lib.rs	77	4	22	path	
-node	lib	94	90	libflate/lib.rs	59	33	1	lit	
-node	lib	189	183	libflate/lib.rs	80	26	5	pat	
-node	lib	252	251	libflate/lib.rs	90	12	4	path	
-node	lib	155	157	libflate/lib.rs	72	45	8	ty	
-node	lib	205	201	libflate/lib.rs	82	33	1	lit	
-node	lib	251	253	libflate/lib.rs	89	15	28	block	
-node	lib	204	201	libflate/lib.rs	82	12	9	pat	
-node	lib	118	119	libflate/lib.rs	64	12	13	method_call	
-node	lib	111	112	libflate/lib.rs	62	58	5	path	
-node	lib	131	138	libflate/lib.rs	65	53	13	cast	
-node	lib	132	137	libflate/lib.rs	65	75	4	ty	
-node	lib	93	90	libflate/lib.rs	59	12	9	pat	
-node	lib	278	279	libflate/lib.rs	99	34	4	ty	
-node	lib	287	274	libflate/lib.rs	99	60	67	block	
-node	lib	25	15	libflate/lib.rs	40	42	11	pat	
-node	lib	273	269	libflate/lib.rs	96	4	32	call	
-node	lib	168	163	libflate/lib.rs	76	33	5	ty	
-node	lib	99	114	libflate/lib.rs	60	18	34	path	
-node	lib	280	274	libflate/lib.rs	99	26	5	pat	
-node	lib	169	163	libflate/lib.rs	76	26	5	pat	
-node	lib	180	181	libflate/lib.rs	77	44	23	path	
-node	lib	160	162	libflate/lib.rs	73	27	5	path	
-node	lib	221	225	libflate/lib.rs	84	55	21	cast	
-node	lib	137	138	libflate/lib.rs	65	68	22	proc	
 node	lib	122	138	libflate/lib.rs	65	17	19	path	
-node	lib	264	266	libflate/lib.rs	95	50	2	ty	
-node	lib	286	274	libflate/lib.rs	99	43	16	ty	
-node	lib	42	15	libflate/lib.rs	45	54	7	ty	
-node	lib	106	107	libflate/lib.rs	61	53	5	path	
-node	lib	282	284	libflate/lib.rs	99	55	2	ty	
-node	lib	270	273	libflate/lib.rs	96	4	22	path	
-node	lib	153	155	libflate/lib.rs	72	50	2	ty	
-node	lib	175	163	libflate/lib.rs	76	43	16	ty	
-node	lib	43	15	libflate/lib.rs	45	44	8	pat	
-node	lib	125	126	libflate/lib.rs	65	49	2	ty	
-node	lib	244	248	libflate/lib.rs	88	75	15	block	
-node	lib	98	96	libflate/lib.rs	60	12	3	pat	
-node	lib	269	256	libflate/lib.rs	95	55	40	block	
-node	lib	133	137	libflate/lib.rs	65	75	15	block	
-node	lib	128	131	libflate/lib.rs	65	53	5	path	
-node	lib	100	101	libflate/lib.rs	60	53	5	path	
-node	lib	136	133	libflate/lib.rs	65	75	15	call	
-node	lib	90	116	libflate/lib.rs	59	12	22	local	
-node	lib	116	144	libflate/lib.rs	58	4	497	block	
-node	lib	141	140	libflate/lib.rs	67	12	4	path	
-node	lib	289	291	libflate/lib.rs	100	27	5	path	
-node	lib	206	227	libflate/lib.rs	82	12	22	stmt	
-node	lib	201	227	libflate/lib.rs	82	12	22	local	
-node	lib	151	145	libflate/lib.rs	72	21	5	pat	
-node	lib	230	254	libflate/lib.rs	87	11	14	not	
-node	lib	120	143	libflate/lib.rs	64	26	104	block	
-node	lib	46	15	libflate/lib.rs	46	57	6	ty	
-node	lib	254	227	libflate/lib.rs	87	8	156	if	
-node	lib	158	145	libflate/lib.rs	72	55	46	block	
-node	lib	246	247	libflate/lib.rs	88	86	3	path	
-node	lib	227	255	libflate/lib.rs	81	4	505	block	
-node	lib	112	114	libflate/lib.rs	62	53	10	addr_of	
-node	lib	52	15	libflate/lib.rs	47	44	8	pat	
-node	lib	179	181	libflate/lib.rs	77	34	7	path	
-node	lib	37	15	libflate/lib.rs	43	45	11	ty	
-node	lib	236	237	libflate/lib.rs	88	49	2	ty	
-node	lib	218	221	libflate/lib.rs	84	55	11	method_call	
-node	lib	224	225	libflate/lib.rs	86	55	5	path	
-node	lib	110	114	libflate/lib.rs	61	53	21	cast	
-node	lib	66	64	libflate/lib.rs	54	38	5	ty	
-node	lib	67	64	libflate/lib.rs	54	46	3	lit	
-node	lib	260	261	libflate/lib.rs	95	29	4	ty	
-node	lib	134	136	libflate/lib.rs	65	75	10	path	
-node	lib	207	227	libflate/lib.rs	83	12	276	local	
-node	lib	29	15	libflate/lib.rs	41	52	11	ty	
-node	lib	104	105	libflate/lib.rs	60	71	7	ty	
-node	lib	182	176	libflate/lib.rs	77	4	64	call	
-node	lib	15	9	libflate/lib.rs	38	4	631	foreign_mod	
-node	lib	248	249	libflate/lib.rs	88	68	22	proc	
-node	lib	249	250	libflate/lib.rs	88	17	74	call	
-node	lib	115	116	libflate/lib.rs	60	12	268	stmt	
-node	lib	101	105	libflate/lib.rs	60	53	14	method_call	
-node	lib	56	15	libflate/lib.rs	48	44	5	pat	
-node	lib	199	183	libflate/lib.rs	80	57	16	ty	
-node	lib	233	249	libflate/lib.rs	88	17	19	path	
-node	lib	247	244	libflate/lib.rs	88	75	15	call	
-node	lib	88	72	libflate/lib.rs	57	57	16	ty	
-node	lib	92	90	libflate/lib.rs	59	24	6	ty	
-node	lib	157	145	libflate/lib.rs	72	38	16	ty	
-node	lib	36	37	libflate/lib.rs	43	50	6	ty	
-node	lib	117	118	libflate/lib.rs	64	12	3	path	
-node	lib	238	249	libflate/lib.rs	88	37	14	cast	
-node	lib	195	197	libflate/lib.rs	80	69	2	ty	
-node	lib	239	242	libflate/lib.rs	88	53	5	path	
-node	lib	34	15	libflate/lib.rs	42	42	5	pat	
-node	lib	271	273	libflate/lib.rs	96	27	5	path	
-node	lib	256	0	libflate/lib.rs	95	0	95	fn	inflate_bytes
-node	lib	96	116	libflate/lib.rs	60	12	268	local	
-node	lib	30	15	libflate/lib.rs	41	42	8	pat	
-node	lib	192	183	libflate/lib.rs	80	47	5	ty	
-node	lib	166	167	libflate/lib.rs	76	35	2	ty	
-node	lib	145	0	libflate/lib.rs	72	0	101	fn	deflate_bytes
-node	lib	139	120	libflate/lib.rs	65	12	80	call	
-node	lib	135	136	libflate/lib.rs	65	86	3	path	
-node	lib	97	96	libflate/lib.rs	60	12	0	ty	
+node	lib	215	216	libflate/lib.rs	83	73	7	ty	
+node	lib	205	201	libflate/lib.rs	82	33	1	lit	
+node	lib	287	274	libflate/lib.rs	99	60	67	block	
 node	lib	81	72	libflate/lib.rs	57	47	5	ty	
+node	lib	228	229	libflate/lib.rs	87	12	3	path	
+node	lib	90	116	libflate/lib.rs	59	12	22	local	
+node	lib	107	110	libflate/lib.rs	61	53	11	method_call	
+node	lib	238	249	libflate/lib.rs	88	37	14	cast	
+node	lib	136	133	libflate/lib.rs	65	75	15	call	
+node	lib	76	77	libflate/lib.rs	57	34	4	ty	
+node	lib	51	15	libflate/lib.rs	47	54	11	ty	
+node	lib	210	225	libflate/lib.rs	83	18	36	path	
+node	lib	86	88	libflate/lib.rs	57	64	8	ty	
+node	lib	197	199	libflate/lib.rs	80	64	8	ty	
+node	lib	186	187	libflate/lib.rs	80	35	2	ty	
+node	lib	260	261	libflate/lib.rs	95	29	4	ty	
+node	lib	204	201	libflate/lib.rs	82	12	9	pat	
+node	lib	243	248	libflate/lib.rs	88	75	4	ty	
+node	lib	138	139	libflate/lib.rs	65	17	74	call	
+node	lib	132	137	libflate/lib.rs	65	75	4	ty	
+node	lib	58	59	libflate/lib.rs	49	52	6	ty	
+node	lib	218	221	libflate/lib.rs	84	55	11	method_call	
+node	lib	246	247	libflate/lib.rs	88	86	3	path	
+node	lib	99	114	libflate/lib.rs	60	18	34	path	
+node	lib	149	150	libflate/lib.rs	72	29	4	ty	
+node	lib	25	15	libflate/lib.rs	40	42	11	pat	
+node	lib	113	114	libflate/lib.rs	63	53	5	path	
+node	lib	288	291	libflate/lib.rs	100	4	22	path	
+node	lib	209	207	libflate/lib.rs	83	12	3	pat	
+node	lib	106	107	libflate/lib.rs	61	53	5	path	
+node	lib	251	253	libflate/lib.rs	89	15	28	block	
+node	lib	237	238	libflate/lib.rs	88	44	7	ty	
+node	lib	169	163	libflate/lib.rs	76	26	5	pat	
+node	lib	123	127	libflate/lib.rs	65	37	3	path	
+node	lib	55	15	libflate/lib.rs	48	51	5	ty	
+node	lib	125	126	libflate/lib.rs	65	49	2	ty	
+node	lib	225	207	libflate/lib.rs	83	18	270	call	
+node	lib	118	119	libflate/lib.rs	64	12	13	method_call	
+node	lib	254	227	libflate/lib.rs	87	8	156	if	
+node	lib	229	230	libflate/lib.rs	87	12	13	method_call	
+node	lib	159	162	libflate/lib.rs	73	4	22	path	
+node	lib	264	266	libflate/lib.rs	95	50	2	ty	
+node	lib	157	145	libflate/lib.rs	72	38	16	ty	
+node	lib	224	225	libflate/lib.rs	86	55	5	path	
+node	lib	134	136	libflate/lib.rs	65	75	10	path	
+node	lib	67	64	libflate/lib.rs	54	46	3	lit	
+node	lib	222	223	libflate/lib.rs	85	60	5	path	
+node	lib	284	286	libflate/lib.rs	99	50	8	ty	
+node	lib	131	138	libflate/lib.rs	65	53	13	cast	
+node	lib	226	227	libflate/lib.rs	83	12	276	stmt	
+node	lib	28	29	libflate/lib.rs	41	57	6	ty	
+node	lib	155	157	libflate/lib.rs	72	45	8	ty	
+node	lib	173	175	libflate/lib.rs	76	50	8	ty	
+node	lib	250	231	libflate/lib.rs	88	12	80	call	
+node	lib	214	215	libflate/lib.rs	83	74	6	ty	
+node	lib	279	274	libflate/lib.rs	99	33	5	ty	
+node	lib	236	237	libflate/lib.rs	88	49	2	ty	
+node	lib	272	273	libflate/lib.rs	96	34	1	lit	
+node	lib	247	244	libflate/lib.rs	88	75	15	call	
+node	lib	161	162	libflate/lib.rs	73	34	7	path	
+node	lib	89	72	libflate/lib.rs	57	74	505	block	
+node	lib	189	183	libflate/lib.rs	80	26	5	pat	
+node	lib	33	15	libflate/lib.rs	42	49	5	ty	
+node	lib	259	260	libflate/lib.rs	95	30	2	ty	
+node	lib	153	155	libflate/lib.rs	72	50	2	ty	
+node	lib	36	37	libflate/lib.rs	43	50	6	ty	
+node	lib	41	42	libflate/lib.rs	45	55	6	ty	
+node	lib	93	90	libflate/lib.rs	59	12	9	pat	
+node	lib	56	15	libflate/lib.rs	48	44	5	pat	
+node	lib	92	90	libflate/lib.rs	59	24	6	ty	
+node	lib	143	116	libflate/lib.rs	64	8	156	if	
+node	lib	77	72	libflate/lib.rs	57	33	5	ty	
+node	lib	88	72	libflate/lib.rs	57	57	16	ty	
+node	lib	171	173	libflate/lib.rs	76	55	2	ty	
+node	lib	30	15	libflate/lib.rs	41	42	8	pat	
+node	lib	126	127	libflate/lib.rs	65	44	7	ty	
+node	lib	111	112	libflate/lib.rs	62	58	5	path	
+node	lib	110	114	libflate/lib.rs	61	53	21	cast	
+node	lib	68	0	libflate/lib.rs	55	0	49	static	TDEFL_WRITE_ZLIB_HEADER
+node	lib	188	183	libflate/lib.rs	80	33	5	ty	
+node	lib	130	131	libflate/lib.rs	65	62	4	ty	
+node	lib	144	89	libflate/lib.rs	58	4	497	blk	
+node	lib	255	200	libflate/lib.rs	81	4	505	blk	
+node	lib	201	227	libflate/lib.rs	82	12	22	local	
+node	lib	208	207	libflate/lib.rs	83	12	0	ty	
+node	lib	207	227	libflate/lib.rs	83	12	276	local	
+node	lib	291	287	libflate/lib.rs	100	4	59	call	
+node	lib	52	15	libflate/lib.rs	47	44	8	pat	
+node	lib	103	104	libflate/lib.rs	60	72	6	ty	
+node	lib	34	15	libflate/lib.rs	42	42	5	pat	
+node	lib	211	212	libflate/lib.rs	83	55	5	path	
+node	lib	128	131	libflate/lib.rs	65	53	5	path	
+node	lib	177	182	libflate/lib.rs	77	4	22	path	
+node	lib	227	255	libflate/lib.rs	81	4	505	block	
+node	lib	78	72	libflate/lib.rs	57	26	5	pat	
+node	lib	242	249	libflate/lib.rs	88	53	13	cast	
+node	lib	19	20	libflate/lib.rs	39	53	6	ty	
+node	lib	75	76	libflate/lib.rs	57	35	2	ty	
+node	lib	140	142	libflate/lib.rs	66	15	28	block	
+node	lib	98	96	libflate/lib.rs	60	12	3	pat	
+node	lib	270	273	libflate/lib.rs	96	4	22	path	
+node	lib	50	51	libflate/lib.rs	47	59	6	ty	
+node	lib	43	15	libflate/lib.rs	45	44	8	pat	
+node	lib	135	136	libflate/lib.rs	65	86	3	path	
+node	lib	59	15	libflate/lib.rs	49	47	11	ty	
+node	lib	148	149	libflate/lib.rs	72	30	2	ty	
+node	lib	112	114	libflate/lib.rs	62	53	10	addr_of	
+node	lib	24	15	libflate/lib.rs	40	55	6	ty	
+node	lib	145	0	libflate/lib.rs	72	0	101	fn	deflate_bytes
+node	lib	141	140	libflate/lib.rs	67	12	4	path	
+node	lib	231	254	libflate/lib.rs	87	26	104	block	
+node	lib	193	183	libflate/lib.rs	80	40	5	pat	
+node	lib	96	116	libflate/lib.rs	60	12	268	local	
+node	lib	158	145	libflate/lib.rs	72	55	46	block	
+node	lib	179	181	libflate/lib.rs	77	34	7	path	
+node	lib	42	15	libflate/lib.rs	45	54	7	ty	
+node	lib	72	0	libflate/lib.rs	57	0	579	fn	deflate_bytes_internal
+node	lib	278	279	libflate/lib.rs	99	34	4	ty	
+node	lib	160	162	libflate/lib.rs	73	27	5	path	
+node	lib	280	274	libflate/lib.rs	99	26	5	pat	
+node	lib	47	15	libflate/lib.rs	46	44	11	pat	
+node	lib	244	248	libflate/lib.rs	88	75	15	block	
+node	lib	192	183	libflate/lib.rs	80	47	5	ty	
+node	lib	271	273	libflate/lib.rs	96	27	5	path	
 node	lib	84	86	libflate/lib.rs	57	69	2	ty	
-jdef	101	std	49277
-jdef	229	std	71745
-jdef	24	libc	535
-jdef	284	std	127569
-jdef	203	libc	535
-jdef	217	lib	189
-jdef	252	std	103652
-jdef	117	lib	98
+node	lib	60	0	libflate/lib.rs	53	0	30	static	LZ_NORM
+node	lib	15	9	libflate/lib.rs	38	4	631	foreign_mod	
+node	lib	133	137	libflate/lib.rs	65	75	15	block	
+node	lib	142	143	libflate/lib.rs	66	15	28	blk	
+node	lib	163	0	libflate/lib.rs	76	0	132	fn	deflate_bytes_zlib
+node	lib	62	60	libflate/lib.rs	53	17	5	ty	
+node	lib	199	183	libflate/lib.rs	80	57	16	ty	
+node	lib	241	242	libflate/lib.rs	88	62	4	ty	
+node	lib	104	105	libflate/lib.rs	60	71	7	ty	
+node	lib	166	167	libflate/lib.rs	76	35	2	ty	
+node	lib	252	251	libflate/lib.rs	90	12	4	path	
+node	lib	249	250	libflate/lib.rs	88	17	74	call	
+node	lib	82	72	libflate/lib.rs	57	40	5	pat	
+node	lib	95	116	libflate/lib.rs	59	12	22	stmt	
+node	lib	181	182	libflate/lib.rs	77	34	33	bitor	
+node	lib	127	138	libflate/lib.rs	65	37	14	cast	
+node	lib	277	278	libflate/lib.rs	99	35	2	ty	
+node	lib	101	105	libflate/lib.rs	60	53	14	method_call	
+node	lib	20	15	libflate/lib.rs	39	52	7	ty	
+node	lib	232	250	libflate/lib.rs	88	12	4	path	
+node	lib	248	249	libflate/lib.rs	88	68	22	proc	
+node	lib	66	64	libflate/lib.rs	54	38	5	ty	
+node	lib	137	138	libflate/lib.rs	65	68	22	proc	
+node	lib	282	284	libflate/lib.rs	99	55	2	ty	
+node	lib	286	274	libflate/lib.rs	99	43	16	ty	
+node	lib	105	114	libflate/lib.rs	60	53	25	cast	
+node	lib	168	163	libflate/lib.rs	76	33	5	ty	
+node	lib	217	218	libflate/lib.rs	84	55	5	path	
+node	lib	71	68	libflate/lib.rs	55	41	7	lit	
+node	lib	162	158	libflate/lib.rs	73	4	38	call	
+node	lib	64	0	libflate/lib.rs	54	0	50	static	TINFL_FLAG_PARSE_ZLIB_HEADER
+node	lib	121	139	libflate/lib.rs	65	12	4	path	
+node	lib	290	291	libflate/lib.rs	100	34	28	path	
+node	lib	269	256	libflate/lib.rs	95	55	40	block	
+node	lib	151	145	libflate/lib.rs	72	21	5	pat	
+node	lib	245	247	libflate/lib.rs	88	75	10	path	
+node	lib	200	183	libflate/lib.rs	80	74	513	block	
+node	lib	114	96	libflate/lib.rs	60	18	262	call	
+node	lib	203	201	libflate/lib.rs	82	24	6	ty	
+node	lib	94	90	libflate/lib.rs	59	33	1	lit	
+node	lib	195	197	libflate/lib.rs	80	69	2	ty	
+node	lib	289	291	libflate/lib.rs	100	27	5	path	
+node	lib	119	143	libflate/lib.rs	64	11	14	not	
+node	lib	230	254	libflate/lib.rs	87	11	14	not	
+node	lib	234	238	libflate/lib.rs	88	37	3	path	
+node	lib	29	15	libflate/lib.rs	41	52	11	ty	
+node	lib	9	0	libflate/lib.rs	35	0	738	mod	rustrt
+node	lib	176	163	libflate/lib.rs	76	60	72	block	
+node	lib	256	0	libflate/lib.rs	95	0	95	fn	inflate_bytes
+node	lib	183	0	libflate/lib.rs	80	0	587	fn	inflate_bytes_internal
+node	lib	268	256	libflate/lib.rs	95	38	16	ty	
+node	lib	274	0	libflate/lib.rs	99	0	127	fn	inflate_bytes_zlib
+node	lib	261	256	libflate/lib.rs	95	28	5	ty	
+node	lib	220	221	libflate/lib.rs	84	70	6	ty	
+node	lib	182	176	libflate/lib.rs	77	4	64	call	
+node	lib	167	168	libflate/lib.rs	76	34	4	ty	
+node	lib	63	60	libflate/lib.rs	53	25	4	lit	
+node	lib	262	256	libflate/lib.rs	95	21	5	pat	
+node	lib	37	15	libflate/lib.rs	43	45	11	ty	
+node	lib	46	15	libflate/lib.rs	46	57	6	ty	
+node	lib	115	116	libflate/lib.rs	60	12	268	stmt	
+node	lib	120	143	libflate/lib.rs	64	26	104	block	
+node	lib	266	268	libflate/lib.rs	95	45	8	ty	
+node	lib	223	225	libflate/lib.rs	85	55	10	addr_of	
+node	lib	221	225	libflate/lib.rs	84	55	21	cast	
+node	lib	100	101	libflate/lib.rs	60	53	5	path	
+node	lib	139	120	libflate/lib.rs	65	12	80	call	
+node	lib	117	118	libflate/lib.rs	64	12	3	path	
+node	lib	216	225	libflate/lib.rs	83	55	25	cast	
+node	lib	187	188	libflate/lib.rs	80	34	4	ty	
+node	lib	116	144	libflate/lib.rs	58	4	497	block	
+node	lib	21	15	libflate/lib.rs	39	42	8	pat	
+node	lib	109	110	libflate/lib.rs	61	68	6	ty	
+node	lib	175	163	libflate/lib.rs	76	43	16	ty	
+node	lib	233	249	libflate/lib.rs	88	17	19	path	
+node	lib	253	254	libflate/lib.rs	89	15	28	blk	
+node	lib	206	227	libflate/lib.rs	82	12	22	stmt	
+node	lib	239	242	libflate/lib.rs	88	53	5	path	
+node	lib	180	181	libflate/lib.rs	77	44	23	path	
+node	lib	273	269	libflate/lib.rs	96	4	32	call	
+node	lib	150	145	libflate/lib.rs	72	28	5	ty	
+node	lib	97	96	libflate/lib.rs	60	12	0	ty	
+node	lib	212	216	libflate/lib.rs	83	55	14	method_call	
+node	lib	70	68	libflate/lib.rs	55	33	5	ty	
+jdef	155	std	127569
+jdef	224	lib	193
+jdef	289	lib	280
+jdef	239	lib	204
+jdef	233	std	127710
+jdef	109	libc	535
+jdef	177	lib	72
+jdef	103	libc	269
 jdef	286	std	103651
-jdef	220	libc	535
-jdef	199	std	103651
+jdef	121	std	103656
 jdef	41	libc	269
-jdef	86	std	127569
-jdef	58	libc	269
+jdef	203	libc	535
+jdef	161	lib	60
+jdef	284	std	127569
+jdef	36	libc	269
+jdef	211	lib	189
+jdef	123	lib	98
+jdef	232	std	103656
 jdef	175	std	103651
-jdef	288	lib	183
+jdef	229	std	71745
+jdef	212	std	49277
+jdef	100	lib	78
+jdef	178	lib	169
+jdef	58	libc	269
+jdef	135	lib	98
+jdef	217	lib	189
+jdef	210	lib	38
+jdef	160	lib	151
+jdef	118	std	71745
+jdef	117	lib	98
+jdef	106	lib	78
+jdef	24	libc	535
+jdef	252	std	103652
+jdef	128	lib	93
+jdef	122	std	127710
+jdef	28	libc	535
+jdef	70	libc	517
+jdef	222	lib	204
+jdef	141	std	103652
+jdef	266	std	127569
+jdef	55	libc	517
+jdef	159	lib	72
+jdef	19	libc	269
+jdef	270	lib	183
+jdef	101	std	49277
+jdef	99	lib	16
+jdef	245	libc	2724
+jdef	173	std	127569
+jdef	179	lib	60
 jdef	66	libc	517
+jdef	228	lib	209
+jdef	111	lib	93
+jdef	199	std	103651
+jdef	50	libc	535
+jdef	92	libc	535
+jdef	218	std	48039
+jdef	234	lib	209
+jdef	88	std	103651
+jdef	290	lib	64
+jdef	86	std	127569
+jdef	246	lib	209
+jdef	197	std	127569
+jdef	214	libc	269
+jdef	220	libc	535
+jdef	81	libc	517
+jdef	107	std	48039
+jdef	271	lib	262
+jdef	268	std	103651
+jdef	134	libc	2724
+jdef	288	lib	183
+jdef	113	lib	82
+jdef	33	libc	517
 jdef	157	std	103651
 jdef	62	libc	517
-jdef	128	lib	93
-jdef	178	lib	169
-jdef	173	std	127569
-jdef	197	std	127569
-jdef	268	std	103651
-jdef	28	libc	535
-jdef	19	libc	269
-jdef	134	libc	2724
-jdef	109	libc	535
-jdef	159	lib	72
-jdef	192	libc	517
-jdef	232	std	103656
-jdef	122	std	127710
-jdef	224	lib	193
-jdef	271	lib	262
-jdef	179	lib	60
-jdef	118	std	71745
-jdef	141	std	103652
-jdef	107	std	48039
-jdef	212	std	49277
-jdef	123	lib	98
-jdef	70	libc	517
-jdef	246	lib	209
-jdef	135	lib	98
-jdef	218	std	48039
-jdef	92	libc	535
-jdef	55	libc	517
-jdef	81	libc	517
-jdef	33	libc	517
-jdef	266	std	127569
-jdef	222	lib	204
-jdef	99	lib	16
-jdef	228	lib	209
-jdef	233	std	127710
-jdef	245	libc	2724
-jdef	289	lib	280
-jdef	161	lib	60
-jdef	50	libc	535
-jdef	211	lib	189
-jdef	214	libc	269
-jdef	210	lib	38
-jdef	103	libc	269
-jdef	177	lib	72
-jdef	111	lib	93
-jdef	100	lib	78
-jdef	121	std	103656
-jdef	88	std	103651
-jdef	234	lib	209
-jdef	270	lib	183
 jdef	180	lib	68
-jdef	106	lib	78
-jdef	239	lib	204
-jdef	160	lib	151
-jdef	113	lib	82
-jdef	155	std	127569
-jdef	36	libc	269
+jdef	192	libc	517
 jdef	46	libc	535
-jdef	290	lib	64

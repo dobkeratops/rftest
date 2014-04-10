@@ -7,6 +7,7 @@ update:
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libstd/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libgreen/lib.rs 
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librustuv/lib.rs
+	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) liblibc/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libnative/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libflate/lib.rs 
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libarena/lib.rs 
@@ -43,6 +44,7 @@ push:
 	cp -r $(RUST_PATH)/src/libstd .
 	cp -r $(RUST_PATH)/src/libcollections .
 	cp -r $(RUST_PATH)/src/librustdoc .
+	cp -r $(RUST_PATH)/src/liblibc .
 	cp -r $(RUST_PATH)/src/libsyntax .
 	cp -r $(RUST_PATH)/src/liblog .
 	cp -r $(RUST_PATH)/src/librustc .
