@@ -40,6 +40,7 @@ rustc:
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librustc/lib.rs
 
 push: 
+	cp $(RUST_PATH)/src/index.html .
 	cp $(RUST_PATH)/src/*.rfx .
 	cp -r $(RUST_PATH)/src/libstd .
 	cp -r $(RUST_PATH)/src/libcollections .
