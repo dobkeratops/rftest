@@ -22,7 +22,6 @@ update:
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libcollections/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libnum/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libtest/lib.rs
-	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libtime/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librand/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libworkcache/lib.rs
 #	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libextra/lib.rs
@@ -35,6 +34,7 @@ update:
 
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libfourcc/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libhexfloat/lib.rs
+	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libtime/lib.rs
 
 rustc:
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librustc/lib.rs
