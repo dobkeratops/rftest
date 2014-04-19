@@ -133,7 +133,6 @@ use middle::typeck::MethodCall;
 use middle::pat_util;
 use util::ppaux::{ty_to_str, region_to_str, Repr};
 
-use syntax::ast::{ManagedSigil, OwnedSigil, BorrowedSigil};
 use syntax::ast::{DefArg, DefBinding, DefLocal, DefUpvar};
 use syntax::ast;
 use syntax::ast_util;
@@ -175,9 +174,9 @@ fn region_of_def(fcx: &FnCtxt, def: ast::Def) -> ty::Region {
             tcx.region_maps.var_region(node_id)
         }
         DefUpvar(_, subdef, closure_id, body_id) => {
-            match ty::ty_closure_sigil(fcx.node_ty(closure_id)) {
-                BorrowedSigil => region_of_def(fcx, *subdef),
-                ManagedSigil | OwnedSigil => ReScope(body_id)
+            match ty::ty_closure_store(fcx.node_ty(closure_id)) {
+                ty::RegionTraitStore(..) => region_of_def(fcx, *subdef),
+                ty::UniqTraitStore => ReScope(body_id)
             }
         }
         _ => {
@@ -419,7 +418,7 @@ fn visit_expr(rcx: &mut Rcx, expr: &ast::Expr) {
                         infer::AutoBorrow(expr.span));
                 }
             }
-            ty::AutoObject(ast::BorrowedSigil, Some(trait_region), _, _, _, _) => {
+            ty::AutoObject(ty::RegionTraitStore(trait_region, _), _, _, _) => {
                 // Determine if we are casting `expr` to an trait
                 // instance.  If so, we have to be sure that the type of
                 // the source obeys the trait's region bound.
@@ -540,7 +539,9 @@ fn visit_expr(rcx: &mut Rcx, expr: &ast::Expr) {
             // explaining how it goes about doing that.
             let target_ty = rcx.resolve_node_type(expr.id);
             match ty::get(target_ty).sty {
-                ty::ty_trait(~ty::TyTrait { store: ty::RegionTraitStore(trait_region), .. }) => {
+                ty::ty_trait(~ty::TyTrait {
+                    store: ty::RegionTraitStore(trait_region, _), ..
+                }) => {
                     let source_ty = rcx.resolve_expr_type_adjusted(source);
                     constrain_regions_in_type(
                         rcx,
@@ -609,7 +610,7 @@ fn check_expr_fn_block(rcx: &mut Rcx,
     let function_type = rcx.resolve_node_type(expr.id);
     match ty::get(function_type).sty {
         ty::ty_closure(~ty::ClosureTy {
-                sigil: ast::BorrowedSigil, region: region, ..}) => {
+                store: ty::RegionTraitStore(region, _), ..}) => {
             let freevars = freevars::get_freevars(tcx, expr.id);
             if freevars.is_empty() {
                 // No free variables means that the environment
@@ -633,7 +634,7 @@ fn check_expr_fn_block(rcx: &mut Rcx,
     rcx.set_repeating_scope(repeating_scope);
 
     match ty::get(function_type).sty {
-        ty::ty_closure(~ty::ClosureTy {sigil: ast::BorrowedSigil, ..}) => {
+        ty::ty_closure(~ty::ClosureTy {store: ty::RegionTraitStore(..), ..}) => {
             let freevars = freevars::get_freevars(tcx, expr.id);
             propagate_upupvar_borrow_kind(rcx, expr, freevars);
         }
@@ -747,8 +748,12 @@ fn constrain_callee(rcx: &mut Rcx,
     match ty::get(callee_ty).sty {
         ty::ty_bare_fn(..) => { }
         ty::ty_closure(ref closure_ty) => {
+            let region = match closure_ty.store {
+                ty::RegionTraitStore(r, _) => r,
+                ty::UniqTraitStore => ty::ReStatic
+            };
             rcx.fcx.mk_subr(true, infer::InvokeClosure(callee_expr.span),
-                            call_region, closure_ty.region);
+                            call_region, region);
         }
         _ => {
             // this should not happen, but it does if the program is
@@ -923,8 +928,8 @@ fn constrain_index(rcx: &mut Rcx,
 
     let r_index_expr = ty::ReScope(index_expr.id);
     match ty::get(indexed_ty).sty {
-        ty::ty_str(ty::vstore_slice(r_ptr)) |
-        ty::ty_vec(_, ty::vstore_slice(r_ptr)) => {
+        ty::ty_str(ty::VstoreSlice(r_ptr, ())) |
+        ty::ty_vec(_, ty::VstoreSlice(r_ptr, _)) => {
             rcx.fcx.mk_subr(true, infer::IndexSlice(index_expr.span),
                             r_index_expr, r_ptr);
         }
@@ -1118,13 +1123,8 @@ fn link_autoref(rcx: &mut Rcx,
             link_region(mc.typer, expr.span, r, m, cmt_index);
         }
 
-        ty::AutoBorrowFn(r) => {
-            let cmt_deref = mc.cat_deref_fn_or_obj(expr, expr_cmt, 0);
-            link_region(mc.typer, expr.span, r, ast::MutImmutable, cmt_deref);
-        }
-
         ty::AutoBorrowObj(r, m) => {
-            let cmt_deref = mc.cat_deref_fn_or_obj(expr, expr_cmt, 0);
+            let cmt_deref = mc.cat_deref_obj(expr, expr_cmt);
             link_region(mc.typer, expr.span, r, m, cmt_deref);
         }
 

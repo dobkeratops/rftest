@@ -1,903 +1,911 @@
-node	lib	541	542	libhexfloat/lib.rs	139	42	44	vec	
-node	lib	121	122	libhexfloat/lib.rs	78	42	26	call	
-node	lib	122	124	libhexfloat/lib.rs	78	35	33	ret	
-node	lib	553	554	libhexfloat/lib.rs	139	42	44	stmt	
-node	lib	100	101	libhexfloat/lib.rs	77	42	26	call	
-node	lib	159	161	libhexfloat/lib.rs	80	72	1	path	
-node	lib	494	495	libhexfloat/lib.rs	137	41	44	call	
-node	lib	534	554	libhexfloat/lib.rs	139	42	44	local	
-node	lib	45	46	libhexfloat/lib.rs	63	4	165	stmt	
-node	lib	390	421	libhexfloat/lib.rs	103	19	6	path	
-node	lib	57	58	libhexfloat/lib.rs	73	47	4	ty	
-node	lib	465	466	libhexfloat/lib.rs	129	12	38	stmt	
-node	lib	648	625	libhexfloat/lib.rs	159	12	286	addr_of	
-node	lib	35	36	libhexfloat/lib.rs	63	27	10	lit	
-node	lib	237	238	libhexfloat/lib.rs	84	16	1	lit	
-node	lib	273	345	libhexfloat/lib.rs	87	72	4	assign_add	
-node	lib	405	420	libhexfloat/lib.rs	106	21	16	call	
-node	lib	148	171	libhexfloat/lib.rs	80	4	93	pat	
-node	lib	594	596	libhexfloat/lib.rs	150	23	2	path	
-node	lib	336	337	libhexfloat/lib.rs	92	25	26	lit	
-node	lib	371	372	libhexfloat/lib.rs	100	60	14	ty	
-node	lib	277	280	libhexfloat/lib.rs	88	23	4	path	
-node	lib	285	289	libhexfloat/lib.rs	88	34	23	block	
-node	lib	409	410	libhexfloat/lib.rs	107	26	10	path	
-node	lib	98	99	libhexfloat/lib.rs	77	51	15	vstore	
-node	lib	203	208	libhexfloat/lib.rs	83	34	1	ty	
-node	lib	286	288	libhexfloat/lib.rs	88	50	1	path	
-node	lib	368	359	libhexfloat/lib.rs	100	43	2	pat	
-node	lib	610	605	libhexfloat/lib.rs	158	13	2	pat	
-node	lib	441	442	libhexfloat/lib.rs	123	28	4	path	
-node	lib	597	591	libhexfloat/lib.rs	150	4	28	call	
-node	lib	83	87	libhexfloat/lib.rs	76	34	23	block	
-node	lib	218	232	libhexfloat/lib.rs	83	4	93	pat	
-node	lib	380	381	libhexfloat/lib.rs	101	15	6	pat	
-node	lib	563	565	libhexfloat/lib.rs	140	23	27	path	
-node	lib	201	208	libhexfloat/lib.rs	83	32	1	ty	
-node	lib	388	387	libhexfloat/lib.rs	103	8	0	ty	
-node	lib	269	345	libhexfloat/lib.rs	87	4	67	if	
-node	lib	423	591	libhexfloat/lib.rs	115	8	534	local	
-node	lib	69	68	libhexfloat/lib.rs	75	8	0	ty	
-node	lib	592	597	libhexfloat/lib.rs	150	4	6	path	
-node	lib	64	65	libhexfloat/lib.rs	74	20	1	path	
-node	lib	427	468	libhexfloat/lib.rs	115	18	9	field	
-node	lib	575	591	libhexfloat/lib.rs	146	8	108	local	
-node	lib	663	700	libhexfloat/lib.rs	165	38	20	block	
-node	lib	560	561	libhexfloat/lib.rs	139	34	63	match	
-node	lib	236	238	libhexfloat/lib.rs	84	7	5	path	
-node	lib	82	83	libhexfloat/lib.rs	76	36	12	stmt	
-node	lib	63	61	libhexfloat/lib.rs	74	8	9	pat	
-node	lib	168	169	libhexfloat/lib.rs	80	56	34	blk	
-node	lib	649	712	libhexfloat/lib.rs	159	8	290	stmt	
-node	lib	160	161	libhexfloat/lib.rs	80	75	1	lit	
-node	lib	448	449	libhexfloat/lib.rs	124	23	31	call	
-node	lib	359	0	libhexfloat/lib.rs	100	0	1661	fn	expand_syntax_ext
-node	lib	191	192	libhexfloat/lib.rs	81	75	1	lit	
-node	lib	109	345	libhexfloat/lib.rs	77	72	4	stmt	
-node	lib	173	174	libhexfloat/lib.rs	81	7	5	path	
-node	lib	467	468	libhexfloat/lib.rs	127	13	127	blk	
-node	lib	197	194	libhexfloat/lib.rs	82	20	1	lit	
-node	lib	476	470	libhexfloat/lib.rs	134	18	26	call	
-node	lib	660	662	libhexfloat/lib.rs	165	16	7	field	
-node	lib	570	572	libhexfloat/lib.rs	142	12	1	pat	
-node	lib	209	210	libhexfloat/lib.rs	83	13	42	method_call	
-node	lib	338	339	libhexfloat/lib.rs	92	20	32	tup	
-node	lib	703	705	libhexfloat/lib.rs	174	7	7	field	
-node	lib	346	347	libhexfloat/lib.rs	94	10	5	path	
-node	lib	539	540	libhexfloat/lib.rs	139	88	7	path	
-node	lib	296	305	libhexfloat/lib.rs	90	13	5	path	
-node	lib	675	670	libhexfloat/lib.rs	169	17	9	field	
-node	lib	309	310	libhexfloat/lib.rs	90	4	84	path	
-node	lib	129	345	libhexfloat/lib.rs	78	72	4	assign_add	
-node	lib	404	405	libhexfloat/lib.rs	106	26	10	path	
-node	lib	176	177	libhexfloat/lib.rs	81	28	3	lit	
-node	lib	657	656	libhexfloat/lib.rs	165	8	0	ty	
-node	lib	398	399	libhexfloat/lib.rs	105	59	5	path	
-node	lib	555	558	<std macros>	3	21	18	path	
-node	lib	177	178	libhexfloat/lib.rs	81	23	9	call	
-node	lib	225	230	libhexfloat/lib.rs	83	72	4	stmt	
-node	lib	416	417	libhexfloat/lib.rs	109	16	61	stmt	
-node	lib	640	641	libhexfloat/lib.rs	162	58	1	path	
-node	lib	473	476	libhexfloat/lib.rs	134	18	17	path	
-node	lib	145	146	libhexfloat/lib.rs	80	30	24	fn_blk	
-node	lib	577	575	libhexfloat/lib.rs	146	8	3	pat	
-node	lib	425	423	libhexfloat/lib.rs	115	8	1	pat	
+node	lib	414	413	libhexfloat/lib.rs	107	21	4	path	
+node	lib	236	234	libhexfloat/lib.rs	83	87	1	lit	
+node	lib	309	308	libhexfloat/lib.rs	90	34	1	path	
+node	lib	670	669	libhexfloat/lib.rs	167	11	193	block	
+node	lib	556	523	libhexfloat/lib.rs	139	42	44	stmt	
+node	lib	35	33	libhexfloat/lib.rs	63	4	165	call	
+node	lib	609	608	libhexfloat/lib.rs	158	18	7	ty	
+node	lib	508	505	libhexfloat/lib.rs	138	27	31	call	
+node	lib	608	606	libhexfloat/lib.rs	158	17	8	ty	
+node	lib	111	61	libhexfloat/lib.rs	78	4	77	stmt	
+node	lib	326	321	libhexfloat/lib.rs	90	64	4	assign_add	
+node	lib	515	513	libhexfloat/lib.rs	139	28	4	path	
+node	lib	77	76	libhexfloat/lib.rs	76	7	12	method_call	
+node	lib	560	557	libhexfloat/lib.rs	139	42	44	blk	
+node	lib	219	218	libhexfloat/lib.rs	83	4	93	path	
+node	lib	287	285	libhexfloat/lib.rs	88	36	12	method_call	
+node	lib	81	79	libhexfloat/lib.rs	76	28	4	addr_of	
+node	lib	474	473	libhexfloat/lib.rs	133	4	457	block	
+node	lib	134	133	libhexfloat/lib.rs	79	8	0	ty	
+node	lib	701	700	libhexfloat/lib.rs	172	39	5	path	
+node	lib	524	523	libhexfloat/lib.rs	139	42	44	stmt	
+node	lib	606	0	libhexfloat/lib.rs	158	0	747	fn	parse_tts
+node	lib	699	698	libhexfloat/lib.rs	172	26	5	path	
+node	lib	177	176	libhexfloat/lib.rs	81	7	12	method_call	
+node	lib	211	210	libhexfloat/lib.rs	83	34	20	method_call	
+node	lib	636	632	libhexfloat/lib.rs	160	44	8	method_call	
+node	lib	256	61	libhexfloat/lib.rs	87	4	77	if	
+node	lib	179	176	libhexfloat/lib.rs	81	23	9	call	
+node	lib	567	566	<std macros>	3	21	18	path	
+node	lib	23	21	libhexfloat/lib.rs	62	34	4	ty	
+node	lib	716	714	libhexfloat/lib.rs	177	9	2	path	
+node	lib	192	61	libhexfloat/lib.rs	81	82	4	assign_add	
+node	lib	577	378	libhexfloat/lib.rs	146	8	108	stmt	
+node	lib	281	278	libhexfloat/lib.rs	88	23	10	call	
+node	lib	686	684	libhexfloat/lib.rs	170	12	5	pat	
+node	lib	386	385	libhexfloat/lib.rs	101	25	9	path	
+node	lib	380	378	libhexfloat/lib.rs	101	8	35	local	
+node	lib	578	378	libhexfloat/lib.rs	146	8	108	local	
+node	lib	693	690	libhexfloat/lib.rs	171	17	14	field	
+node	lib	707	706	libhexfloat/lib.rs	174	7	7	field	
+node	lib	59	58	libhexfloat/lib.rs	73	48	3	ty	
+node	lib	278	277	libhexfloat/lib.rs	88	7	26	eq	
+node	lib	372	371	libhexfloat/lib.rs	100	60	14	ty	
+node	lib	85	83	libhexfloat/lib.rs	76	36	12	method_call	
+node	lib	258	257	libhexfloat/lib.rs	87	7	12	method_call	
+node	lib	195	61	libhexfloat/lib.rs	82	8	13	stmt	
+node	lib	497	496	libhexfloat/lib.rs	137	26	9	field	
+node	lib	617	606	libhexfloat/lib.rs	158	27	3	pat	
+node	lib	551	550	libhexfloat/lib.rs	139	42	44	vec	
+node	lib	226	225	libhexfloat/lib.rs	83	58	12	stmt	
+node	lib	687	684	libhexfloat/lib.rs	170	20	15	method_call	
+node	lib	390	378	libhexfloat/lib.rs	103	8	342	local	
+node	lib	425	378	libhexfloat/lib.rs	115	8	526	stmt	
+node	lib	361	359	libhexfloat/lib.rs	100	29	12	ty	
+node	lib	415	413	libhexfloat/lib.rs	107	26	10	path	
+node	lib	261	260	libhexfloat/lib.rs	87	23	4	path	
+node	lib	473	378	libhexfloat/lib.rs	133	4	457	blk	
+node	lib	517	516	libhexfloat/lib.rs	139	42	44	tup	
+node	lib	534	532	libhexfloat/lib.rs	139	42	44	lit	
+node	lib	533	532	libhexfloat/lib.rs	139	42	44	path	
+node	lib	427	426	libhexfloat/lib.rs	115	8	0	ty	
+node	lib	569	568	libhexfloat/lib.rs	139	42	44	path	
+node	lib	198	196	libhexfloat/lib.rs	82	8	9	pat	
+node	lib	53	47	libhexfloat/lib.rs	73	33	20	ty	
+node	lib	475	474	libhexfloat/lib.rs	134	12	32	stmt	
+node	lib	101	100	libhexfloat/lib.rs	77	42	36	call	
+node	lib	262	260	libhexfloat/lib.rs	87	28	3	lit	
+node	lib	191	61	libhexfloat/lib.rs	81	82	4	stmt	
+node	lib	176	175	libhexfloat/lib.rs	81	7	25	ne	
+node	lib	646	642	libhexfloat/lib.rs	162	56	1	ty	
+node	lib	21	19	libhexfloat/lib.rs	62	33	23	ty	
+node	lib	382	380	libhexfloat/lib.rs	101	8	14	pat	
+node	lib	254	253	libhexfloat/lib.rs	85	24	47	lit	
+node	lib	679	677	libhexfloat/lib.rs	169	12	2	pat	
+node	lib	328	326	libhexfloat/lib.rs	90	67	1	lit	
+node	lib	496	495	libhexfloat/lib.rs	137	26	12	field	
+node	lib	466	462	libhexfloat/lib.rs	128	35	26	lit	
+node	lib	147	142	libhexfloat/lib.rs	80	34	20	block	
+node	lib	501	499	libhexfloat/lib.rs	137	73	11	add	
+node	lib	433	432	libhexfloat/lib.rs	117	21	3	pat	
+node	lib	283	281	libhexfloat/lib.rs	88	28	4	addr_of	
+node	lib	586	584	libhexfloat/lib.rs	147	40	1	path	
+node	lib	654	653	libhexfloat/lib.rs	164	8	0	ty	
+node	lib	250	249	libhexfloat/lib.rs	85	15	4	path	
+node	lib	106	105	libhexfloat/lib.rs	77	51	14	lit	
+node	lib	677	670	libhexfloat/lib.rs	169	12	14	local	
+node	lib	657	656	libhexfloat/lib.rs	164	13	1	path	
+node	lib	131	129	libhexfloat/lib.rs	78	85	1	lit	
+node	lib	30	21	libhexfloat/lib.rs	62	56	0	ty	
+node	lib	421	420	libhexfloat/lib.rs	109	16	2	path	
+node	lib	525	523	libhexfloat/lib.rs	139	42	44	static	__STATIC_FMTSTR
+node	lib	391	390	libhexfloat/lib.rs	103	8	0	ty	
+node	lib	248	246	libhexfloat/lib.rs	85	8	76	ret	
+node	lib	371	370	libhexfloat/lib.rs	100	59	16	ty	
+node	lib	548	547	libhexfloat/lib.rs	139	42	44	ty	
+node	lib	470	469	libhexfloat/lib.rs	129	19	23	path	
 node	lib	32	19	libhexfloat/lib.rs	62	58	0	ty	
-node	lib	134	131	libhexfloat/lib.rs	79	20	1	lit	
-node	lib	626	625	libhexfloat/lib.rs	159	8	0	ty	
-node	lib	228	230	libhexfloat/lib.rs	83	78	10	assign_add	
-node	lib	313	314	libhexfloat/lib.rs	90	8	1	pat	
-node	lib	181	182	libhexfloat/lib.rs	81	52	14	lit	
-node	lib	382	385	libhexfloat/lib.rs	101	25	9	path	
-node	lib	583	584	libhexfloat/lib.rs	148	14	2	pat	
-node	lib	364	359	libhexfloat/lib.rs	100	25	2	pat	
-node	lib	58	60	libhexfloat/lib.rs	73	40	12	ty	
-node	lib	650	712	libhexfloat/lib.rs	164	8	19	local	
-node	lib	265	266	libhexfloat/lib.rs	87	42	26	call	
-node	lib	131	345	libhexfloat/lib.rs	79	8	13	local	
-node	lib	183	184	libhexfloat/lib.rs	81	47	20	tup	
-node	lib	488	489	libhexfloat/lib.rs	137	26	9	field	
-node	lib	533	554	libhexfloat/lib.rs	139	42	44	stmt	
-node	lib	261	264	libhexfloat/lib.rs	87	48	1	path	
-node	lib	444	451	libhexfloat/lib.rs	123	16	58	method_call	
-node	lib	463	464	libhexfloat/lib.rs	129	19	31	call	
-node	lib	130	345	libhexfloat/lib.rs	78	72	4	stmt	
-node	lib	658	656	libhexfloat/lib.rs	165	8	2	pat	
-node	lib	305	306	libhexfloat/lib.rs	90	13	34	method_call	
-node	lib	655	712	libhexfloat/lib.rs	164	8	19	stmt	
-node	lib	36	44	libhexfloat/lib.rs	63	13	25	call	
-node	lib	327	308	libhexfloat/lib.rs	90	4	84	match	
-node	lib	117	120	libhexfloat/lib.rs	78	48	1	path	
-node	lib	645	646	libhexfloat/lib.rs	161	44	80	method_call	
-node	lib	556	557	libhexfloat/lib.rs	139	42	44	path	
-node	lib	447	448	libhexfloat/lib.rs	124	51	2	path	
-node	lib	40	41	libhexfloat/lib.rs	64	18	95	expr_struct	
-node	lib	445	451	libhexfloat/lib.rs	123	16	58	stmt	
-node	lib	195	194	libhexfloat/lib.rs	82	8	0	ty	
-node	lib	276	281	libhexfloat/lib.rs	88	7	12	method_call	
-node	lib	489	495	libhexfloat/lib.rs	137	26	12	field	
-node	lib	362	363	libhexfloat/lib.rs	100	34	7	ty	
-node	lib	84	86	libhexfloat/lib.rs	76	50	1	path	
-node	lib	75	78	libhexfloat/lib.rs	76	23	4	path	
-node	lib	243	248	libhexfloat/lib.rs	85	15	4	path	
-node	lib	259	269	libhexfloat/lib.rs	87	7	25	ne	
-node	lib	37	43	libhexfloat/lib.rs	64	8	8	path	
-node	lib	531	532	libhexfloat/lib.rs	139	42	44	call	
-node	lib	595	596	libhexfloat/lib.rs	150	27	3	path	
-node	lib	337	338	libhexfloat/lib.rs	92	24	27	vstore	
-node	lib	536	534	libhexfloat/lib.rs	139	42	44	pat	
-node	lib	558	554	<std macros>	3	21	18	call	
-node	lib	239	241	libhexfloat/lib.rs	84	21	5	path	
-node	lib	508	509	libhexfloat/lib.rs	139	88	7	addr_of	
-node	lib	515	517	libhexfloat/lib.rs	139	42	44	ty	
-node	lib	439	453	libhexfloat/lib.rs	122	12	1	pat	
-node	lib	38	40	libhexfloat/lib.rs	65	22	17	path	
-node	lib	602	598	libhexfloat/lib.rs	155	4	10	struct_field	span
-node	lib	651	650	libhexfloat/lib.rs	164	8	0	ty	
-node	lib	356	357	libhexfloat/lib.rs	96	24	30	tup	
-node	lib	511	560	libhexfloat/lib.rs	139	42	44	pat	
-node	lib	391	421	libhexfloat/lib.rs	104	8	4	pat	
-node	lib	270	345	libhexfloat/lib.rs	87	4	67	stmt	
-node	lib	44	46	libhexfloat/lib.rs	63	4	165	call	
-node	lib	461	463	libhexfloat/lib.rs	129	19	27	path	
-node	lib	549	551	libhexfloat/lib.rs	139	42	44	path	
-node	lib	462	463	libhexfloat/lib.rs	129	47	2	path	
-node	lib	379	381	libhexfloat/lib.rs	101	9	4	pat	
-node	lib	107	108	libhexfloat/lib.rs	77	75	1	lit	
-node	lib	249	251	libhexfloat/lib.rs	85	8	66	ret	
-node	lib	171	345	libhexfloat/lib.rs	80	4	93	match	
-node	lib	502	503	libhexfloat/lib.rs	138	54	3	path	
-node	lib	639	644	libhexfloat/lib.rs	162	56	12	block	
-node	lib	628	647	libhexfloat/lib.rs	159	17	26	path	
-node	lib	172	345	libhexfloat/lib.rs	80	4	93	stmt	
-node	lib	367	359	libhexfloat/lib.rs	100	47	4	ty	
-node	lib	492	493	libhexfloat/lib.rs	137	83	1	lit	
-node	lib	525	528	libhexfloat/lib.rs	139	42	44	lit	
-node	lib	291	345	libhexfloat/lib.rs	89	8	13	local	
-node	lib	182	183	libhexfloat/lib.rs	81	51	15	vstore	
-node	lib	23	30	libhexfloat/lib.rs	62	34	4	ty	
-node	lib	352	357	libhexfloat/lib.rs	96	19	4	path	
-node	lib	509	560	libhexfloat/lib.rs	139	42	44	tup	
-node	lib	46	19	libhexfloat/lib.rs	62	58	174	block	
-node	lib	564	565	libhexfloat/lib.rs	140	51	2	path	
-node	lib	554	559	libhexfloat/lib.rs	139	42	44	block	
-node	lib	255	259	libhexfloat/lib.rs	87	7	12	method_call	
-node	lib	487	488	libhexfloat/lib.rs	137	26	4	path	
-node	lib	711	712	libhexfloat/lib.rs	174	4	56	stmt	
-node	lib	215	232	libhexfloat/lib.rs	83	4	93	pat	
-node	lib	544	554	libhexfloat/lib.rs	139	42	44	local	
-node	lib	114	115	libhexfloat/lib.rs	78	23	9	call	
-node	lib	450	451	libhexfloat/lib.rs	124	16	38	stmt	
-node	lib	526	528	libhexfloat/lib.rs	139	42	44	path	
-node	lib	372	373	libhexfloat/lib.rs	100	59	16	ty	
-node	lib	400	420	libhexfloat/lib.rs	105	42	29	method_call	
-node	lib	431	453	libhexfloat/lib.rs	117	35	8	field	
-node	lib	294	291	libhexfloat/lib.rs	89	20	1	lit	
-node	lib	520	532	libhexfloat/lib.rs	139	42	44	call	
-node	lib	123	124	libhexfloat/lib.rs	78	35	33	stmt	
-node	lib	484	568	libhexfloat/lib.rs	137	20	65	local	
-node	lib	661	662	libhexfloat/lib.rs	165	27	10	path	
-node	lib	694	696	libhexfloat/lib.rs	172	45	2	path	
-node	lib	135	345	libhexfloat/lib.rs	79	8	13	stmt	
-node	lib	419	420	libhexfloat/lib.rs	108	17	115	blk	
-node	lib	99	100	libhexfloat/lib.rs	77	47	20	tup	
-node	lib	596	597	libhexfloat/lib.rs	150	11	20	method_call	
-node	lib	548	551	libhexfloat/lib.rs	139	42	44	path	
-node	lib	226	228	libhexfloat/lib.rs	83	78	5	path	
-node	lib	314	327	libhexfloat/lib.rs	90	4	84	pat	
-node	lib	95	100	libhexfloat/lib.rs	77	42	4	path	
-node	lib	585	588	libhexfloat/lib.rs	148	21	13	path	
-node	lib	91	93	libhexfloat/lib.rs	77	23	4	path	
-node	lib	497	568	libhexfloat/lib.rs	138	20	38	local	
-node	lib	246	247	libhexfloat/lib.rs	85	24	48	vstore	
-node	lib	60	47	libhexfloat/lib.rs	73	33	20	ty	
-node	lib	170	171	libhexfloat/lib.rs	80	4	93	loop	
-node	lib	647	648	libhexfloat/lib.rs	159	17	281	call	
-node	lib	615	605	libhexfloat/lib.rs	158	32	17	ty	
-node	lib	54	58	libhexfloat/lib.rs	73	41	4	ty	
-node	lib	224	230	libhexfloat/lib.rs	83	72	4	assign_add	
-node	lib	701	712	libhexfloat/lib.rs	165	8	249	stmt	
-node	lib	386	591	libhexfloat/lib.rs	101	8	35	stmt	
-node	lib	469	591	libhexfloat/lib.rs	115	8	534	stmt	
-node	lib	618	619	libhexfloat/lib.rs	158	56	9	ty	
-node	lib	141	145	libhexfloat/lib.rs	80	34	20	block	
-node	lib	165	167	libhexfloat/lib.rs	80	78	10	assign_add	
-node	lib	188	345	libhexfloat/lib.rs	81	4	67	if	
-node	lib	321	322	libhexfloat/lib.rs	90	64	4	stmt	
-node	lib	128	129	libhexfloat/lib.rs	78	75	1	lit	
-node	lib	219	220	libhexfloat/lib.rs	83	58	5	path	
-node	lib	298	304	libhexfloat/lib.rs	90	32	1	ty	
-node	lib	679	677	libhexfloat/lib.rs	170	12	5	pat	
-node	lib	74	79	libhexfloat/lib.rs	76	7	12	method_call	
-node	lib	428	429	libhexfloat/lib.rs	117	21	3	pat	
-node	lib	408	410	libhexfloat/lib.rs	107	21	4	path	
-node	lib	454	468	libhexfloat/lib.rs	127	8	1	pat	
-node	lib	204	208	libhexfloat/lib.rs	83	34	20	block	
-node	lib	672	670	libhexfloat/lib.rs	169	12	2	pat	
-node	lib	528	530	libhexfloat/lib.rs	139	42	44	expr_struct	
-node	lib	434	453	libhexfloat/lib.rs	119	12	21	pat	
-node	lib	151	169	libhexfloat/lib.rs	80	4	93	method_call	
-node	lib	299	304	libhexfloat/lib.rs	90	31	1	pat	
-node	lib	695	696	libhexfloat/lib.rs	172	49	2	path	
-node	lib	535	534	libhexfloat/lib.rs	139	42	44	ty	
-node	lib	194	345	libhexfloat/lib.rs	82	8	13	local	
-node	lib	272	273	libhexfloat/lib.rs	87	75	1	lit	
-node	lib	102	103	libhexfloat/lib.rs	77	35	33	stmt	
-node	lib	438	453	libhexfloat/lib.rs	119	37	41	blk	
-node	lib	623	624	libhexfloat/lib.rs	158	67	13	ty	
-node	lib	621	623	libhexfloat/lib.rs	158	74	5	ty	
-node	lib	598	0	libhexfloat/lib.rs	153	0	54	struct	Ident
-node	lib	213	214	libhexfloat/lib.rs	83	4	93	path	
-node	lib	605	0	libhexfloat/lib.rs	158	0	747	fn	parse_tts
-node	lib	557	558	<std macros>	3	21	18	addr_of	
-node	lib	669	690	libhexfloat/lib.rs	168	8	23	stmt	
-node	lib	330	345	libhexfloat/lib.rs	90	4	84	stmt	
-node	lib	569	572	libhexfloat/lib.rs	136	40	317	blk	
-node	lib	510	511	libhexfloat/lib.rs	139	88	7	pat	
-node	lib	116	121	libhexfloat/lib.rs	78	42	4	path	
-node	lib	86	83	libhexfloat/lib.rs	76	50	5	assign_add	
-node	lib	707	709	libhexfloat/lib.rs	175	8	14	method_call	
-node	lib	39	40	libhexfloat/lib.rs	66	18	4	path	
-node	lib	491	493	libhexfloat/lib.rs	137	73	7	path	
-node	lib	287	288	libhexfloat/lib.rs	88	54	1	lit	
-node	lib	178	188	libhexfloat/lib.rs	81	7	25	ne	
-node	lib	312	327	libhexfloat/lib.rs	90	4	84	break	
-node	lib	664	663	libhexfloat/lib.rs	166	8	4	path	
-node	lib	659	660	libhexfloat/lib.rs	165	16	1	path	
-node	lib	481	482	libhexfloat/lib.rs	136	27	7	pat	
-node	lib	112	114	libhexfloat/lib.rs	78	23	4	path	
-node	lib	319	320	libhexfloat/lib.rs	90	67	1	lit	
-node	lib	220	230	libhexfloat/lib.rs	83	58	12	method_call	
-node	lib	92	93	libhexfloat/lib.rs	77	28	3	lit	
-node	lib	304	305	libhexfloat/lib.rs	90	30	16	fn_blk	
-node	lib	235	345	libhexfloat/lib.rs	83	4	93	stmt	
-node	lib	341	342	libhexfloat/lib.rs	92	8	45	stmt	
-node	lib	156	157	libhexfloat/lib.rs	80	58	5	path	
-node	lib	266	268	libhexfloat/lib.rs	87	35	33	ret	
-node	lib	157	167	libhexfloat/lib.rs	80	58	12	method_call	
-node	lib	150	151	libhexfloat/lib.rs	80	4	93	path	
-node	lib	562	568	libhexfloat/lib.rs	139	16	81	stmt	
-node	lib	631	632	libhexfloat/lib.rs	160	44	2	path	
-node	lib	692	697	libhexfloat/lib.rs	172	26	5	path	
-node	lib	311	327	libhexfloat/lib.rs	90	4	84	pat	
-node	lib	601	598	libhexfloat/lib.rs	154	11	10	ty	
-node	lib	593	596	libhexfloat/lib.rs	150	11	2	path	
-node	lib	453	468	libhexfloat/lib.rs	117	29	300	match	
-node	lib	709	710	libhexfloat/lib.rs	174	29	31	block	
-node	lib	678	677	libhexfloat/lib.rs	170	12	0	ty	
-node	lib	210	234	libhexfloat/lib.rs	83	4	93	addr_of	
-node	lib	260	265	libhexfloat/lib.rs	87	42	4	path	
-node	lib	572	478	libhexfloat/lib.rs	135	8	399	match	
-node	lib	624	605	libhexfloat/lib.rs	158	54	27	ty	
-node	lib	496	568	libhexfloat/lib.rs	137	20	65	stmt	
-node	lib	684	683	libhexfloat/lib.rs	171	12	0	ty	
-node	lib	240	241	libhexfloat/lib.rs	84	30	1	lit	
-node	lib	470	478	libhexfloat/lib.rs	134	12	32	local	
-node	lib	155	169	libhexfloat/lib.rs	80	4	93	pat	
-node	lib	674	675	libhexfloat/lib.rs	169	17	6	field	
-node	lib	381	377	libhexfloat/lib.rs	101	8	14	pat	
-node	lib	62	61	libhexfloat/lib.rs	74	8	0	ty	
-node	lib	307	329	libhexfloat/lib.rs	90	4	84	pat	
-node	lib	668	690	libhexfloat/lib.rs	168	8	23	method_call	
-node	lib	436	437	libhexfloat/lib.rs	120	16	1	path	
-node	lib	538	540	libhexfloat/lib.rs	139	88	7	path	
-node	lib	306	329	libhexfloat/lib.rs	90	4	84	addr_of	
-node	lib	482	483	libhexfloat/lib.rs	136	17	18	pat	
-node	lib	161	167	libhexfloat/lib.rs	80	72	4	assign_add	
-node	lib	238	242	libhexfloat/lib.rs	84	7	10	eq	
-node	lib	414	415	libhexfloat/lib.rs	109	34	42	lit	
-node	lib	343	345	libhexfloat/lib.rs	91	4	76	if	
-node	lib	700	656	libhexfloat/lib.rs	165	13	244	if	
-node	lib	79	87	libhexfloat/lib.rs	76	7	26	eq	
-node	lib	96	99	libhexfloat/lib.rs	77	48	1	path	
-node	lib	167	168	libhexfloat/lib.rs	80	56	34	block	
-node	lib	355	356	libhexfloat/lib.rs	96	28	25	vstore	
-node	lib	52	47	libhexfloat/lib.rs	73	21	1	pat	
-node	lib	162	167	libhexfloat/lib.rs	80	72	4	stmt	
-node	lib	326	327	libhexfloat/lib.rs	90	48	33	blk	
-node	lib	574	591	libhexfloat/lib.rs	133	4	461	stmt	
-node	lib	377	591	libhexfloat/lib.rs	101	8	35	local	
-node	lib	588	589	libhexfloat/lib.rs	148	21	20	call	
-node	lib	537	540	libhexfloat/lib.rs	139	88	7	path	
-node	lib	543	554	libhexfloat/lib.rs	139	42	44	stmt	
-node	lib	451	452	libhexfloat/lib.rs	122	17	147	block	
-node	lib	518	520	libhexfloat/lib.rs	139	42	44	path	
-node	lib	542	534	libhexfloat/lib.rs	139	42	44	vstore	
-node	lib	65	66	libhexfloat/lib.rs	74	20	9	method_call	
-node	lib	387	591	libhexfloat/lib.rs	103	8	342	local	
-node	lib	567	568	libhexfloat/lib.rs	140	16	38	stmt	
-node	lib	641	642	libhexfloat/lib.rs	162	57	2	deref	
-node	lib	421	387	libhexfloat/lib.rs	103	13	337	match	
-node	lib	403	405	libhexfloat/lib.rs	106	21	4	path	
-node	lib	452	453	libhexfloat/lib.rs	122	17	147	blk	
-node	lib	437	435	libhexfloat/lib.rs	120	16	9	method_call	
-node	lib	504	568	libhexfloat/lib.rs	138	20	38	stmt	
-node	lib	207	204	libhexfloat/lib.rs	83	34	20	method_call	
-node	lib	389	387	libhexfloat/lib.rs	103	8	2	pat	
-node	lib	493	494	libhexfloat/lib.rs	137	73	11	add	
-node	lib	561	568	libhexfloat/lib.rs	139	16	81	method_call	
-node	lib	252	345	libhexfloat/lib.rs	84	4	111	if	
-node	lib	68	345	libhexfloat/lib.rs	75	8	9	local	
-node	lib	459	466	libhexfloat/lib.rs	128	12	50	method_call	
-node	lib	281	289	libhexfloat/lib.rs	88	7	26	eq	
-node	lib	180	183	libhexfloat/lib.rs	81	48	1	path	
-node	lib	474	475	libhexfloat/lib.rs	134	36	1	path	
-node	lib	527	528	libhexfloat/lib.rs	139	42	44	path	
-node	lib	662	700	libhexfloat/lib.rs	165	16	21	eq	
-node	lib	233	234	libhexfloat/lib.rs	83	4	93	loop	
-node	lib	241	242	libhexfloat/lib.rs	84	21	10	eq	
-node	lib	376	359	libhexfloat/lib.rs	100	80	15	ty	
-node	lib	586	588	libhexfloat/lib.rs	148	35	1	path	
-node	lib	163	165	libhexfloat/lib.rs	80	78	5	path	
-node	lib	499	497	libhexfloat/lib.rs	138	20	4	pat	
-node	lib	242	252	libhexfloat/lib.rs	84	7	24	and	
-node	lib	654	650	libhexfloat/lib.rs	164	13	14	method_call	
-node	lib	608	609	libhexfloat/lib.rs	158	18	7	ty	
-node	lib	505	561	libhexfloat/lib.rs	139	16	2	path	
-node	lib	565	566	libhexfloat/lib.rs	140	23	31	call	
-node	lib	582	589	libhexfloat/lib.rs	147	16	26	call	
-node	lib	609	605	libhexfloat/lib.rs	158	17	8	ty	
-node	lib	290	345	libhexfloat/lib.rs	88	4	53	stmt	
-node	lib	708	709	libhexfloat/lib.rs	175	8	14	stmt	
-node	lib	667	668	libhexfloat/lib.rs	168	17	13	addr_of	
-node	lib	105	345	libhexfloat/lib.rs	77	4	67	stmt	
-node	lib	153	169	libhexfloat/lib.rs	80	4	93	break	
-node	lib	334	339	libhexfloat/lib.rs	92	15	4	path	
-node	lib	619	624	libhexfloat/lib.rs	158	55	10	ty	
-node	lib	43	44	libhexfloat/lib.rs	64	8	120	call	
-node	lib	522	530	libhexfloat/lib.rs	139	42	44	path	
-node	lib	374	359	libhexfloat/lib.rs	100	53	3	pat	
-node	lib	477	478	libhexfloat/lib.rs	134	12	32	stmt	
-node	lib	351	358	libhexfloat/lib.rs	96	8	7	pat	
-node	lib	230	231	libhexfloat/lib.rs	83	56	34	block	
-node	lib	696	697	libhexfloat/lib.rs	172	39	13	call	
-node	lib	479	572	libhexfloat/lib.rs	135	14	3	path	
-node	lib	503	497	libhexfloat/lib.rs	138	27	31	call	
-node	lib	530	531	libhexfloat/lib.rs	139	42	44	expr_struct	
-node	lib	546	544	libhexfloat/lib.rs	139	42	44	pat	
-node	lib	614	615	libhexfloat/lib.rs	158	33	16	ty	
-node	lib	523	528	libhexfloat/lib.rs	139	42	44	lit	
-node	lib	485	484	libhexfloat/lib.rs	137	20	0	ty	
-node	lib	420	421	libhexfloat/lib.rs	105	36	258	match	
-node	lib	464	466	libhexfloat/lib.rs	129	12	38	ret	
-node	lib	110	111	libhexfloat/lib.rs	78	7	5	path	
-node	lib	29	30	libhexfloat/lib.rs	62	56	0	ty	
-node	lib	501	503	libhexfloat/lib.rs	138	50	3	path	
-node	lib	642	643	libhexfloat/lib.rs	162	56	4	paren	
-node	lib	288	285	libhexfloat/lib.rs	88	50	5	assign_add	
-node	lib	591	359	libhexfloat/lib.rs	100	96	1565	block	
-node	lib	192	345	libhexfloat/lib.rs	81	72	4	assign_add	
-node	lib	88	345	libhexfloat/lib.rs	76	4	53	stmt	
-node	lib	34	36	libhexfloat/lib.rs	63	13	13	path	
-node	lib	411	420	libhexfloat/lib.rs	108	12	1	pat	
-node	lib	124	125	libhexfloat/lib.rs	78	33	38	block	
-node	lib	706	707	libhexfloat/lib.rs	175	8	1	path	
-node	lib	280	281	libhexfloat/lib.rs	88	23	10	call	
-node	lib	480	482	libhexfloat/lib.rs	136	18	7	pat	
-node	lib	258	259	libhexfloat/lib.rs	87	23	9	call	
+node	lib	232	230	libhexfloat/lib.rs	83	75	1	lit	
+node	lib	344	342	libhexfloat/lib.rs	92	24	37	method_call	
+node	lib	630	628	libhexfloat/lib.rs	159	8	1	pat	
+node	lib	521	520	libhexfloat/lib.rs	139	88	7	pat	
+node	lib	394	393	libhexfloat/lib.rs	103	19	6	path	
+node	lib	447	446	libhexfloat/lib.rs	123	16	58	stmt	
+node	lib	675	674	libhexfloat/lib.rs	168	18	12	path	
+node	lib	535	531	libhexfloat/lib.rs	139	42	44	call	
+node	lib	549	547	libhexfloat/lib.rs	139	42	44	pat	
+node	lib	620	619	libhexfloat/lib.rs	158	56	9	ty	
+node	lib	480	479	libhexfloat/lib.rs	134	18	17	path	
+node	lib	183	182	libhexfloat/lib.rs	81	35	43	stmt	
+node	lib	411	401	libhexfloat/lib.rs	107	12	5	pat	
+node	lib	279	278	libhexfloat/lib.rs	88	7	12	method_call	
+node	lib	178	177	libhexfloat/lib.rs	81	7	5	path	
+node	lib	601	599	libhexfloat/lib.rs	154	11	10	ty	
+node	lib	667	662	libhexfloat/lib.rs	165	38	20	block	
+node	lib	298	61	libhexfloat/lib.rs	90	4	84	match	
+node	lib	164	162	libhexfloat/lib.rs	80	58	12	method_call	
+node	lib	563	562	libhexfloat/lib.rs	139	42	44	path	
+node	lib	688	687	libhexfloat/lib.rs	170	20	1	path	
+node	lib	333	61	libhexfloat/lib.rs	91	4	86	if	
+node	lib	221	217	libhexfloat/lib.rs	83	4	93	break	
+node	lib	572	571	libhexfloat/lib.rs	140	23	27	call	
+node	lib	331	329	libhexfloat/lib.rs	90	79	1	lit	
+node	lib	439	437	libhexfloat/lib.rs	119	31	1	pat	
+node	lib	119	112	libhexfloat/lib.rs	78	33	48	block	
+node	lib	653	626	libhexfloat/lib.rs	164	8	19	local	
 node	lib	19	0	libhexfloat/lib.rs	62	0	232	fn	macro_registrar
-node	lib	392	421	libhexfloat/lib.rs	104	16	4	path	
+node	lib	172	171	libhexfloat/lib.rs	80	78	5	path	
+node	lib	392	390	libhexfloat/lib.rs	103	8	2	pat	
+node	lib	155	154	libhexfloat/lib.rs	80	4	93	method_call	
+node	lib	34	33	libhexfloat/lib.rs	63	4	165	stmt	
+node	lib	681	680	libhexfloat/lib.rs	169	17	6	field	
+node	lib	127	126	libhexfloat/lib.rs	78	51	14	lit	
+node	lib	417	401	libhexfloat/lib.rs	108	17	115	blk	
+node	lib	708	707	libhexfloat/lib.rs	174	7	1	path	
+node	lib	456	455	libhexfloat/lib.rs	124	23	23	path	
+node	lib	249	248	libhexfloat/lib.rs	85	15	69	call	
+node	lib	545	537	libhexfloat/lib.rs	139	42	44	path	
+node	lib	491	490	libhexfloat/lib.rs	137	20	65	stmt	
+node	lib	156	155	libhexfloat/lib.rs	80	4	93	path	
+node	lib	175	61	libhexfloat/lib.rs	81	4	77	if	
+node	lib	257	256	libhexfloat/lib.rs	87	7	25	ne	
+node	lib	351	346	libhexfloat/lib.rs	96	8	7	pat	
+node	lib	469	468	libhexfloat/lib.rs	129	19	27	call	
+node	lib	122	121	libhexfloat/lib.rs	78	42	36	call	
+node	lib	247	246	libhexfloat/lib.rs	85	8	76	stmt	
+node	lib	595	593	libhexfloat/lib.rs	150	17	20	method_call	
+node	lib	297	61	libhexfloat/lib.rs	90	4	84	stmt	
+node	lib	320	313	libhexfloat/lib.rs	90	48	33	blk	
+node	lib	340	339	libhexfloat/lib.rs	92	15	48	call	
+node	lib	276	61	libhexfloat/lib.rs	88	4	53	stmt	
+node	lib	335	334	libhexfloat/lib.rs	91	7	5	path	
+node	lib	583	581	libhexfloat/lib.rs	147	8	4	pat	
+node	lib	87	83	libhexfloat/lib.rs	76	50	5	assign_add	
+node	lib	329	321	libhexfloat/lib.rs	90	70	10	assign_add	
+node	lib	395	393	libhexfloat/lib.rs	104	8	4	pat	
+node	lib	112	61	libhexfloat/lib.rs	78	4	77	if	
+node	lib	214	201	libhexfloat/lib.rs	83	4	93	pat	
+node	lib	536	535	libhexfloat/lib.rs	139	42	44	path	
+node	lib	676	670	libhexfloat/lib.rs	169	12	14	stmt	
+node	lib	541	539	libhexfloat/lib.rs	139	42	44	path	
+node	lib	507	505	libhexfloat/lib.rs	138	20	4	pat	
+node	lib	462	460	libhexfloat/lib.rs	128	12	50	method_call	
+node	lib	542	539	libhexfloat/lib.rs	139	42	44	lit	
+node	lib	573	572	libhexfloat/lib.rs	140	23	23	path	
+node	lib	270	268	libhexfloat/lib.rs	87	51	25	method_call	
+node	lib	429	426	libhexfloat/lib.rs	115	12	522	match	
+node	lib	275	273	libhexfloat/lib.rs	87	85	1	lit	
+node	lib	418	417	libhexfloat/lib.rs	108	17	115	block	
+node	lib	196	61	libhexfloat/lib.rs	82	8	13	local	
+node	lib	163	162	libhexfloat/lib.rs	80	58	12	stmt	
+node	lib	704	626	libhexfloat/lib.rs	174	4	56	stmt	
+node	lib	300	299	libhexfloat/lib.rs	90	13	34	method_call	
+node	lib	102	101	libhexfloat/lib.rs	77	42	4	path	
+node	lib	193	192	libhexfloat/lib.rs	81	82	1	path	
+node	lib	99	98	libhexfloat/lib.rs	77	35	43	stmt	
+node	lib	157	154	libhexfloat/lib.rs	80	4	93	pat	
+node	lib	498	497	libhexfloat/lib.rs	137	26	4	path	
+node	lib	652	626	libhexfloat/lib.rs	164	8	19	stmt	
+node	lib	672	670	libhexfloat/lib.rs	168	8	23	method_call	
+node	lib	522	516	libhexfloat/lib.rs	139	42	44	blk	
+node	lib	95	92	libhexfloat/lib.rs	77	23	9	call	
+node	lib	671	670	libhexfloat/lib.rs	168	8	23	stmt	
+node	lib	215	201	libhexfloat/lib.rs	83	4	93	loop	
+node	lib	238	61	libhexfloat/lib.rs	84	4	121	if	
+node	lib	423	420	libhexfloat/lib.rs	109	34	42	lit	
+node	lib	338	337	libhexfloat/lib.rs	92	8	55	stmt	
+node	lib	627	626	libhexfloat/lib.rs	159	8	290	stmt	
+node	lib	481	479	libhexfloat/lib.rs	134	36	7	method_call	
+node	lib	123	122	libhexfloat/lib.rs	78	42	4	path	
+node	lib	114	113	libhexfloat/lib.rs	78	7	12	method_call	
+node	lib	72	70	libhexfloat/lib.rs	75	8	5	pat	
+node	lib	637	636	libhexfloat/lib.rs	160	44	2	path	
+node	lib	359	0	libhexfloat/lib.rs	100	0	1656	fn	expand_syntax_ext
+node	lib	277	61	libhexfloat/lib.rs	88	4	53	if	
+node	lib	658	626	libhexfloat/lib.rs	165	8	249	stmt	
+node	lib	265	263	libhexfloat/lib.rs	87	35	43	ret	
+node	lib	212	211	libhexfloat/lib.rs	83	34	1	path	
+node	lib	410	408	libhexfloat/lib.rs	106	26	10	path	
+node	lib	465	464	libhexfloat/lib.rs	128	24	4	path	
+node	lib	376	375	libhexfloat/lib.rs	100	81	15	ty	
+node	lib	580	578	libhexfloat/lib.rs	146	8	3	pat	
+node	lib	655	653	libhexfloat/lib.rs	164	8	2	pat	
+node	lib	713	712	libhexfloat/lib.rs	175	8	1	path	
+node	lib	98	91	libhexfloat/lib.rs	77	33	48	block	
+node	lib	222	217	libhexfloat/lib.rs	83	4	93	pat	
+node	lib	346	61	libhexfloat/lib.rs	94	4	114	match	
+node	lib	327	326	libhexfloat/lib.rs	90	64	1	path	
+node	lib	66	63	libhexfloat/lib.rs	74	20	20	method_call	
+node	lib	594	593	libhexfloat/lib.rs	150	4	12	path	
+node	lib	684	670	libhexfloat/lib.rs	170	12	23	local	
+node	lib	375	359	libhexfloat/lib.rs	100	80	16	ty	
+node	lib	451	450	libhexfloat/lib.rs	123	28	4	path	
+node	lib	306	302	libhexfloat/lib.rs	90	34	1	ty	
+node	lib	299	298	libhexfloat/lib.rs	90	4	84	addr_of	
+node	lib	184	182	libhexfloat/lib.rs	81	35	43	ret	
+node	lib	207	205	libhexfloat/lib.rs	83	32	1	ty	
+node	lib	116	113	libhexfloat/lib.rs	78	23	9	call	
+node	lib	381	380	libhexfloat/lib.rs	101	8	0	ty	
+node	lib	405	403	libhexfloat/lib.rs	105	59	5	path	
+node	lib	406	401	libhexfloat/lib.rs	106	12	5	pat	
+node	lib	557	523	libhexfloat/lib.rs	139	42	44	local	
+node	lib	593	378	libhexfloat/lib.rs	150	4	34	call	
+node	lib	242	240	libhexfloat/lib.rs	84	16	1	lit	
+node	lib	639	638	libhexfloat/lib.rs	161	44	80	method_call	
+node	lib	546	523	libhexfloat/lib.rs	139	42	44	stmt	
+node	lib	430	429	libhexfloat/lib.rs	115	18	9	field	
+node	lib	453	446	libhexfloat/lib.rs	124	16	34	stmt	
+node	lib	268	266	libhexfloat/lib.rs	87	47	30	tup	
+node	lib	108	61	libhexfloat/lib.rs	77	82	4	assign_add	
+node	lib	472	378	libhexfloat/lib.rs	133	4	457	stmt	
+node	lib	105	103	libhexfloat/lib.rs	77	51	25	method_call	
+node	lib	234	225	libhexfloat/lib.rs	83	78	10	assign_add	
+node	lib	305	302	libhexfloat/lib.rs	90	31	1	pat	
+node	lib	282	281	libhexfloat/lib.rs	88	23	4	path	
+node	lib	674	672	libhexfloat/lib.rs	168	17	13	addr_of	
+node	lib	374	359	libhexfloat/lib.rs	100	53	3	pat	
+node	lib	38	37	libhexfloat/lib.rs	63	13	13	path	
+node	lib	413	401	libhexfloat/lib.rs	107	21	16	call	
+node	lib	92	91	libhexfloat/lib.rs	77	7	25	ne	
+node	lib	450	448	libhexfloat/lib.rs	123	28	9	field	
+node	lib	171	162	libhexfloat/lib.rs	80	78	10	assign_add	
+node	lib	153	152	libhexfloat/lib.rs	80	4	93	block	
+node	lib	441	440	libhexfloat/lib.rs	119	37	41	block	
+node	lib	280	279	libhexfloat/lib.rs	88	7	5	path	
+node	lib	575	483	libhexfloat/lib.rs	142	12	1	pat	
+node	lib	531	525	libhexfloat/lib.rs	139	42	44	vec	
+node	lib	576	483	libhexfloat/lib.rs	142	17	2	lit	
+node	lib	349	346	libhexfloat/lib.rs	95	8	4	pat	
+node	lib	668	667	libhexfloat/lib.rs	166	8	4	path	
+node	lib	520	516	libhexfloat/lib.rs	139	42	44	pat	
+node	lib	63	61	libhexfloat/lib.rs	74	8	32	local	
+node	lib	426	378	libhexfloat/lib.rs	115	8	526	local	
+node	lib	711	710	libhexfloat/lib.rs	175	8	14	stmt	
+node	lib	166	162	libhexfloat/lib.rs	80	72	4	stmt	
+node	lib	216	215	libhexfloat/lib.rs	83	4	93	block	
+node	lib	362	361	libhexfloat/lib.rs	100	34	7	ty	
+node	lib	420	418	libhexfloat/lib.rs	109	16	61	method_call	
+node	lib	273	61	libhexfloat/lib.rs	87	82	4	assign_add	
+node	lib	353	346	libhexfloat/lib.rs	96	19	46	call	
+node	lib	629	628	libhexfloat/lib.rs	159	8	0	ty	
+node	lib	244	243	libhexfloat/lib.rs	84	21	5	path	
+node	lib	584	581	libhexfloat/lib.rs	147	16	26	call	
+node	lib	290	289	libhexfloat/lib.rs	88	50	1	path	
+node	lib	133	61	libhexfloat/lib.rs	79	8	13	local	
+node	lib	666	663	libhexfloat/lib.rs	165	27	10	path	
+node	lib	461	460	libhexfloat/lib.rs	128	12	50	stmt	
+node	lib	203	202	libhexfloat/lib.rs	83	13	42	method_call	
+node	lib	205	203	libhexfloat/lib.rs	83	30	24	fn_blk	
+node	lib	113	112	libhexfloat/lib.rs	78	7	25	ne	
+node	lib	553	552	libhexfloat/lib.rs	139	88	7	path	
+node	lib	132	61	libhexfloat/lib.rs	79	8	13	stmt	
+node	lib	597	595	libhexfloat/lib.rs	150	29	2	path	
+node	lib	570	490	libhexfloat/lib.rs	140	16	34	stmt	
+node	lib	468	460	libhexfloat/lib.rs	129	12	34	ret	
+node	lib	274	273	libhexfloat/lib.rs	87	82	1	path	
+node	lib	437	434	libhexfloat/lib.rs	119	12	21	pat	
+node	lib	702	700	libhexfloat/lib.rs	172	45	2	path	
+node	lib	251	249	libhexfloat/lib.rs	85	20	63	tup	
+node	lib	357	355	libhexfloat/lib.rs	96	28	35	method_call	
+node	lib	555	552	libhexfloat/lib.rs	139	88	7	path	
+node	lib	86	85	libhexfloat/lib.rs	76	36	5	path	
+node	lib	341	340	libhexfloat/lib.rs	92	15	4	path	
+node	lib	339	337	libhexfloat/lib.rs	92	8	55	ret	
+node	lib	73	70	libhexfloat/lib.rs	75	16	1	lit	
+node	lib	452	448	libhexfloat/lib.rs	123	39	34	lit	
+node	lib	322	321	libhexfloat/lib.rs	90	50	12	stmt	
+node	lib	540	539	libhexfloat/lib.rs	139	42	44	lit	
+node	lib	41	40	libhexfloat/lib.rs	64	8	8	path	
+node	lib	223	222	libhexfloat/lib.rs	83	8	1	pat	
+node	lib	709	706	libhexfloat/lib.rs	174	18	10	path	
+node	lib	217	216	libhexfloat/lib.rs	83	4	93	match	
+node	lib	79	76	libhexfloat/lib.rs	76	23	10	call	
+node	lib	200	61	libhexfloat/lib.rs	83	4	93	stmt	
+node	lib	700	698	libhexfloat/lib.rs	172	39	13	call	
+node	lib	624	622	libhexfloat/lib.rs	158	74	5	ty	
+node	lib	37	35	libhexfloat/lib.rs	63	13	25	call	
+node	lib	396	393	libhexfloat/lib.rs	104	16	4	path	
+node	lib	161	154	libhexfloat/lib.rs	80	56	34	blk	
+node	lib	125	124	libhexfloat/lib.rs	78	48	1	path	
+node	lib	714	626	libhexfloat/lib.rs	177	4	8	tup	
+node	lib	120	119	libhexfloat/lib.rs	78	35	43	stmt	
+node	lib	310	298	libhexfloat/lib.rs	90	4	84	pat	
+node	lib	342	340	libhexfloat/lib.rs	92	20	42	tup	
+node	lib	393	390	libhexfloat/lib.rs	103	13	337	match	
+node	lib	129	61	libhexfloat/lib.rs	78	82	4	assign_add	
+node	lib	632	631	libhexfloat/lib.rs	159	17	281	call	
+node	lib	170	162	libhexfloat/lib.rs	80	78	10	stmt	
+node	lib	516	513	libhexfloat/lib.rs	139	34	63	match	
+node	lib	272	61	libhexfloat/lib.rs	87	82	4	stmt	
+node	lib	27	21	libhexfloat/lib.rs	62	40	15	ty	
+node	lib	162	161	libhexfloat/lib.rs	80	56	34	block	
+node	lib	518	517	libhexfloat/lib.rs	139	88	7	addr_of	
+node	lib	662	659	libhexfloat/lib.rs	165	13	244	if	
+node	lib	685	684	libhexfloat/lib.rs	170	12	0	ty	
+node	lib	36	35	libhexfloat/lib.rs	63	4	8	path	
+node	lib	669	662	libhexfloat/lib.rs	167	11	193	blk	
+node	lib	269	268	libhexfloat/lib.rs	87	48	1	path	
+node	lib	397	393	libhexfloat/lib.rs	105	8	24	pat	
+node	lib	422	420	libhexfloat/lib.rs	109	28	4	path	
+node	lib	656	653	libhexfloat/lib.rs	164	13	14	method_call	
+node	lib	550	547	libhexfloat/lib.rs	139	42	44	vstore	
+node	lib	613	606	libhexfloat/lib.rs	158	32	17	ty	
+node	lib	352	351	libhexfloat/lib.rs	96	13	1	pat	
+node	lib	52	47	libhexfloat/lib.rs	73	21	1	pat	
+node	lib	384	382	libhexfloat/lib.rs	101	15	6	pat	
+node	lib	694	693	libhexfloat/lib.rs	171	17	11	field	
+node	lib	185	184	libhexfloat/lib.rs	81	42	36	call	
+node	lib	315	314	libhexfloat/lib.rs	90	4	84	path	
+node	lib	482	481	libhexfloat/lib.rs	134	36	1	path	
+node	lib	477	476	libhexfloat/lib.rs	134	12	0	ty	
+node	lib	165	164	libhexfloat/lib.rs	80	58	5	path	
+node	lib	571	490	libhexfloat/lib.rs	140	16	34	ret	
+node	lib	140	139	libhexfloat/lib.rs	80	13	42	method_call	
+node	lib	454	446	libhexfloat/lib.rs	124	16	34	ret	
+node	lib	348	347	libhexfloat/lib.rs	94	10	5	path	
+node	lib	180	179	libhexfloat/lib.rs	81	23	4	path	
+node	lib	698	696	libhexfloat/lib.rs	172	13	40	expr_struct	
+node	lib	495	492	libhexfloat/lib.rs	137	26	59	add	
+node	lib	255	61	libhexfloat/lib.rs	87	4	77	stmt	
+node	lib	58	55	libhexfloat/lib.rs	73	47	4	ty	
+node	lib	383	382	libhexfloat/lib.rs	101	9	4	pat	
+node	lib	308	307	libhexfloat/lib.rs	90	34	12	method_call	
+node	lib	651	650	libhexfloat/lib.rs	162	58	1	path	
+node	lib	598	595	libhexfloat/lib.rs	150	33	3	path	
+node	lib	493	492	libhexfloat/lib.rs	137	20	0	ty	
+node	lib	146	142	libhexfloat/lib.rs	80	34	1	ty	
+node	lib	33	19	libhexfloat/lib.rs	62	58	174	block	
+node	lib	471	469	libhexfloat/lib.rs	129	43	2	path	
+node	lib	237	61	libhexfloat/lib.rs	84	4	121	stmt	
+node	lib	96	95	libhexfloat/lib.rs	77	23	4	path	
+node	lib	368	359	libhexfloat/lib.rs	100	43	2	pat	
+node	lib	618	606	libhexfloat/lib.rs	158	54	27	ty	
+node	lib	49	47	libhexfloat/lib.rs	73	24	4	ty	
+node	lib	582	581	libhexfloat/lib.rs	146	20	2	path	
+node	lib	83	75	libhexfloat/lib.rs	76	34	23	block	
+node	lib	55	53	libhexfloat/lib.rs	73	40	12	ty	
+node	lib	458	429	libhexfloat/lib.rs	127	8	1	pat	
+node	lib	641	640	libhexfloat/lib.rs	161	44	3	path	
+node	lib	210	205	libhexfloat/lib.rs	83	34	20	block	
+node	lib	233	225	libhexfloat/lib.rs	83	78	10	stmt	
+node	lib	611	606	libhexfloat/lib.rs	158	13	2	pat	
+node	lib	514	513	libhexfloat/lib.rs	139	16	2	path	
+node	lib	590	589	libhexfloat/lib.rs	148	21	13	path	
+node	lib	347	346	libhexfloat/lib.rs	94	10	12	method_call	
+node	lib	403	402	libhexfloat/lib.rs	105	42	23	call	
+node	lib	186	185	libhexfloat/lib.rs	81	42	4	path	
+node	lib	448	446	libhexfloat/lib.rs	123	16	58	method_call	
+node	lib	628	626	libhexfloat/lib.rs	159	8	290	local	
+node	lib	103	101	libhexfloat/lib.rs	77	47	30	tup	
+node	lib	130	129	libhexfloat/lib.rs	78	82	1	path	
+node	lib	239	238	libhexfloat/lib.rs	84	7	24	and	
+node	lib	209	205	libhexfloat/lib.rs	83	34	1	ty	
+node	lib	145	142	libhexfloat/lib.rs	80	31	1	pat	
+node	lib	159	154	libhexfloat/lib.rs	80	4	93	pat	
+node	lib	62	61	libhexfloat/lib.rs	74	8	32	stmt	
+node	lib	109	108	libhexfloat/lib.rs	77	82	1	path	
+node	lib	622	618	libhexfloat/lib.rs	158	67	13	ty	
+node	lib	626	606	libhexfloat/lib.rs	158	82	665	block	
+node	lib	673	672	libhexfloat/lib.rs	168	8	1	path	
+node	lib	399	398	libhexfloat/lib.rs	105	19	5	pat	
+node	lib	151	138	libhexfloat/lib.rs	80	4	93	pat	
+node	lib	259	258	libhexfloat/lib.rs	87	7	5	path	
+node	lib	436	435	libhexfloat/lib.rs	117	35	3	path	
+node	lib	345	344	libhexfloat/lib.rs	92	24	26	lit	
+node	lib	385	380	libhexfloat/lib.rs	101	25	18	call	
+node	lib	224	217	libhexfloat/lib.rs	83	56	34	blk	
+node	lib	561	560	libhexfloat/lib.rs	139	42	44	block	
+node	lib	554	552	libhexfloat/lib.rs	139	88	7	path	
+node	lib	696	670	libhexfloat/lib.rs	172	8	46	call	
+node	lib	585	584	libhexfloat/lib.rs	147	16	23	path	
+node	lib	660	659	libhexfloat/lib.rs	165	8	0	ty	
+node	lib	307	302	libhexfloat/lib.rs	90	34	12	block	
+node	lib	325	321	libhexfloat/lib.rs	90	64	4	stmt	
+node	lib	43	42	libhexfloat/lib.rs	64	18	95	expr_struct	
+node	lib	460	459	libhexfloat/lib.rs	127	13	123	block	
+node	lib	689	670	libhexfloat/lib.rs	171	12	19	stmt	
+node	lib	75	61	libhexfloat/lib.rs	76	4	53	if	
+node	lib	225	224	libhexfloat/lib.rs	83	56	34	block	
+node	lib	589	581	libhexfloat/lib.rs	148	21	20	call	
+node	lib	313	312	libhexfloat/lib.rs	90	4	84	match	
+node	lib	499	495	libhexfloat/lib.rs	137	41	44	call	
+node	lib	398	397	libhexfloat/lib.rs	105	13	18	pat	
+node	lib	160	159	libhexfloat/lib.rs	80	8	1	pat	
 node	lib	31	19	libhexfloat/lib.rs	62	23	8	pat	
-node	lib	315	316	libhexfloat/lib.rs	90	50	5	path	
-node	lib	699	700	libhexfloat/lib.rs	167	11	193	blk	
-node	lib	256	258	libhexfloat/lib.rs	87	23	4	path	
-node	lib	275	276	libhexfloat/lib.rs	88	7	5	path	
-node	lib	704	705	libhexfloat/lib.rs	174	18	10	path	
-node	lib	89	90	libhexfloat/lib.rs	77	7	5	path	
-node	lib	136	146	libhexfloat/lib.rs	80	13	5	path	
-node	lib	169	149	libhexfloat/lib.rs	80	4	93	match	
-node	lib	76	77	libhexfloat/lib.rs	76	29	3	lit	
-node	lib	133	131	libhexfloat/lib.rs	79	8	9	pat	
-node	lib	93	94	libhexfloat/lib.rs	77	23	9	call	
-node	lib	579	589	libhexfloat/lib.rs	147	8	4	pat	
-node	lib	158	167	libhexfloat/lib.rs	80	58	12	stmt	
-node	lib	568	569	libhexfloat/lib.rs	136	40	317	block	
-node	lib	486	484	libhexfloat/lib.rs	137	20	3	pat	
-node	lib	56	57	libhexfloat/lib.rs	73	48	3	ty	
-node	lib	320	322	libhexfloat/lib.rs	90	64	4	assign_add	
-node	lib	599	598	libhexfloat/lib.rs	154	4	17	struct_field	ident
-node	lib	202	208	libhexfloat/lib.rs	83	31	1	pat	
-node	lib	633	634	libhexfloat/lib.rs	161	44	3	path	
-node	lib	573	591	libhexfloat/lib.rs	133	4	461	blk	
-node	lib	78	79	libhexfloat/lib.rs	76	23	10	call	
-node	lib	289	345	libhexfloat/lib.rs	88	4	53	if	
-node	lib	282	283	libhexfloat/lib.rs	88	36	5	path	
-node	lib	184	185	libhexfloat/lib.rs	81	42	26	call	
-node	lib	685	683	libhexfloat/lib.rs	171	12	2	pat	
-node	lib	705	710	libhexfloat/lib.rs	174	7	21	ne	
-node	lib	295	345	libhexfloat/lib.rs	89	8	13	stmt	
-node	lib	532	512	libhexfloat/lib.rs	139	42	44	vec	
-node	lib	472	470	libhexfloat/lib.rs	134	12	3	pat	
-node	lib	415	417	libhexfloat/lib.rs	109	16	61	method_call	
-node	lib	680	681	libhexfloat/lib.rs	170	20	1	path	
-node	lib	347	358	libhexfloat/lib.rs	94	10	12	method_call	
-node	lib	335	338	libhexfloat/lib.rs	92	21	1	path	
-node	lib	317	322	libhexfloat/lib.rs	90	50	12	stmt	
-node	lib	186	187	libhexfloat/lib.rs	81	35	33	stmt	
-node	lib	410	420	libhexfloat/lib.rs	107	21	16	call	
-node	lib	413	415	libhexfloat/lib.rs	109	28	4	path	
-node	lib	399	400	libhexfloat/lib.rs	105	42	23	call	
-node	lib	253	345	libhexfloat/lib.rs	84	4	111	stmt	
-node	lib	206	207	libhexfloat/lib.rs	83	51	2	lit	
-node	lib	550	551	libhexfloat/lib.rs	139	42	44	path	
-node	lib	283	285	libhexfloat/lib.rs	88	36	12	method_call	
-node	lib	108	345	libhexfloat/lib.rs	77	72	4	assign_add	
-node	lib	257	258	libhexfloat/lib.rs	87	28	3	lit	
-node	lib	301	304	libhexfloat/lib.rs	90	34	12	block	
-node	lib	632	647	libhexfloat/lib.rs	160	44	8	method_call	
-node	lib	397	399	libhexfloat/lib.rs	105	42	16	path	
-node	lib	144	141	libhexfloat/lib.rs	80	34	20	method_call	
-node	lib	714	715	libhexfloat/lib.rs	177	9	2	path	
-node	lib	417	419	libhexfloat/lib.rs	108	17	115	block	
-node	lib	132	131	libhexfloat/lib.rs	79	8	0	ty	
-node	lib	199	209	libhexfloat/lib.rs	83	13	5	path	
-node	lib	580	582	libhexfloat/lib.rs	147	16	23	path	
-node	lib	221	230	libhexfloat/lib.rs	83	58	12	stmt	
-node	lib	383	385	libhexfloat/lib.rs	101	35	2	path	
-node	lib	363	359	libhexfloat/lib.rs	100	29	12	ty	
-node	lib	71	68	libhexfloat/lib.rs	75	16	1	lit	
-node	lib	166	167	libhexfloat/lib.rs	80	78	10	stmt	
-node	lib	72	345	libhexfloat/lib.rs	75	8	9	stmt	
-node	lib	244	247	libhexfloat/lib.rs	85	21	1	path	
-node	lib	47	0	libhexfloat/lib.rs	73	0	1185	fn	hex_float_lit_err
-node	lib	143	144	libhexfloat/lib.rs	80	51	2	lit	
-node	lib	329	345	libhexfloat/lib.rs	90	4	84	match	
-node	lib	222	224	libhexfloat/lib.rs	83	72	1	path	
-node	lib	106	108	libhexfloat/lib.rs	77	72	1	path	
-node	lib	208	209	libhexfloat/lib.rs	83	30	24	fn_blk	
-node	lib	540	541	libhexfloat/lib.rs	139	88	7	call	
-node	lib	113	114	libhexfloat/lib.rs	78	28	3	lit	
-node	lib	581	582	libhexfloat/lib.rs	147	40	1	path	
-node	lib	402	420	libhexfloat/lib.rs	106	12	5	pat	
-node	lib	104	345	libhexfloat/lib.rs	77	4	67	if	
-node	lib	126	345	libhexfloat/lib.rs	78	4	67	stmt	
-node	lib	73	74	libhexfloat/lib.rs	76	7	5	path	
-node	lib	358	345	libhexfloat/lib.rs	94	4	104	match	
-node	lib	412	415	libhexfloat/lib.rs	109	16	2	path	
-node	lib	87	345	libhexfloat/lib.rs	76	4	53	if	
-node	lib	179	184	libhexfloat/lib.rs	81	42	4	path	
-node	lib	247	248	libhexfloat/lib.rs	85	20	53	tup	
-node	lib	571	572	libhexfloat/lib.rs	142	17	2	lit	
-node	lib	551	547	libhexfloat/lib.rs	139	42	44	call	
-node	lib	115	125	libhexfloat/lib.rs	78	7	25	ne	
-node	lib	328	329	libhexfloat/lib.rs	90	4	84	loop	
-node	lib	529	530	libhexfloat/lib.rs	139	42	44	path	
-node	lib	127	129	libhexfloat/lib.rs	78	72	1	path	
-node	lib	547	552	libhexfloat/lib.rs	139	42	44	block	
-node	lib	475	476	libhexfloat/lib.rs	134	36	7	method_call	
-node	lib	333	343	libhexfloat/lib.rs	91	7	10	eq	
-node	lib	393	395	libhexfloat/lib.rs	105	19	5	pat	
-node	lib	250	251	libhexfloat/lib.rs	85	8	66	stmt	
-node	lib	433	434	libhexfloat/lib.rs	119	31	1	pat	
-node	lib	506	561	libhexfloat/lib.rs	139	28	4	path	
-node	lib	139	145	libhexfloat/lib.rs	80	31	1	pat	
-node	lib	524	528	libhexfloat/lib.rs	139	42	44	path	
-node	lib	689	690	libhexfloat/lib.rs	171	12	19	stmt	
-node	lib	443	444	libhexfloat/lib.rs	123	39	34	lit	
-node	lib	630	647	libhexfloat/lib.rs	159	44	15	method_call	
-node	lib	293	291	libhexfloat/lib.rs	89	8	9	pat	
-node	lib	332	333	libhexfloat/lib.rs	91	16	1	lit	
-node	lib	271	273	libhexfloat/lib.rs	87	72	1	path	
-node	lib	490	494	libhexfloat/lib.rs	137	41	31	path	
-node	lib	349	358	libhexfloat/lib.rs	95	16	4	path	
-node	lib	354	355	libhexfloat/lib.rs	96	29	24	lit	
-node	lib	604	598	libhexfloat/lib.rs	155	10	4	ty	
-node	lib	449	451	libhexfloat/lib.rs	124	16	38	ret	
-node	lib	284	285	libhexfloat/lib.rs	88	36	12	stmt	
-node	lib	198	345	libhexfloat/lib.rs	82	8	13	stmt	
-node	lib	712	605	libhexfloat/lib.rs	158	82	665	block	
-node	lib	85	86	libhexfloat/lib.rs	76	54	1	lit	
-node	lib	61	345	libhexfloat/lib.rs	74	8	32	local	
-node	lib	142	144	libhexfloat/lib.rs	80	34	1	path	
-node	lib	149	170	libhexfloat/lib.rs	80	4	93	block	
-node	lib	566	568	libhexfloat/lib.rs	140	16	38	ret	
-node	lib	466	467	libhexfloat/lib.rs	127	13	127	block	
-node	lib	407	420	libhexfloat/lib.rs	107	12	5	pat	
-node	lib	263	264	libhexfloat/lib.rs	87	51	15	vstore	
-node	lib	214	232	libhexfloat/lib.rs	83	4	93	method_call	
-node	lib	440	444	libhexfloat/lib.rs	123	16	2	path	
-node	lib	205	207	libhexfloat/lib.rs	83	34	1	path	
-node	lib	435	438	libhexfloat/lib.rs	119	37	41	block	
-node	lib	507	508	libhexfloat/lib.rs	139	88	7	path	
-node	lib	94	104	libhexfloat/lib.rs	77	7	25	ne	
-node	lib	644	645	libhexfloat/lib.rs	162	52	16	fn_blk	
-node	lib	345	47	libhexfloat/lib.rs	73	54	1131	block	
-node	lib	66	61	libhexfloat/lib.rs	74	20	20	method_call	
-node	lib	456	457	libhexfloat/lib.rs	128	24	4	path	
-node	lib	140	145	libhexfloat/lib.rs	80	34	1	ty	
-node	lib	670	690	libhexfloat/lib.rs	169	12	14	local	
-node	lib	245	246	libhexfloat/lib.rs	85	25	47	lit	
-node	lib	468	423	libhexfloat/lib.rs	115	12	530	match	
-node	lib	322	326	libhexfloat/lib.rs	90	48	33	block	
-node	lib	395	396	libhexfloat/lib.rs	105	13	18	pat	
-node	lib	378	377	libhexfloat/lib.rs	101	8	0	ty	
-node	lib	687	688	libhexfloat/lib.rs	171	17	11	field	
-node	lib	691	698	libhexfloat/lib.rs	172	8	4	path	
-node	lib	385	377	libhexfloat/lib.rs	101	25	18	call	
-node	lib	318	320	libhexfloat/lib.rs	90	64	1	path	
-node	lib	681	677	libhexfloat/lib.rs	170	20	15	method_call	
-node	lib	190	192	libhexfloat/lib.rs	81	72	1	path	
-node	lib	559	560	libhexfloat/lib.rs	139	42	44	blk	
-node	lib	394	395	libhexfloat/lib.rs	105	26	4	pat	
-node	lib	521	531	libhexfloat/lib.rs	139	42	44	path	
-node	lib	590	591	libhexfloat/lib.rs	146	8	108	stmt	
-node	lib	671	670	libhexfloat/lib.rs	169	12	0	ty	
-node	lib	637	644	libhexfloat/lib.rs	162	53	1	pat	
-node	lib	625	712	libhexfloat/lib.rs	159	8	290	local	
-node	lib	42	43	libhexfloat/lib.rs	68	8	4	path	
-node	lib	164	165	libhexfloat/lib.rs	80	87	1	lit	
-node	lib	331	333	libhexfloat/lib.rs	91	7	5	path	
-node	lib	418	417	libhexfloat/lib.rs	110	16	4	path	
-node	lib	231	232	libhexfloat/lib.rs	83	56	34	blk	
-node	lib	442	444	libhexfloat/lib.rs	123	28	9	field	
-node	lib	495	484	libhexfloat/lib.rs	137	26	59	add	
-node	lib	446	448	libhexfloat/lib.rs	124	23	27	path	
-node	lib	589	575	libhexfloat/lib.rs	146	14	102	match	
-node	lib	627	625	libhexfloat/lib.rs	159	8	1	pat	
-node	lib	688	683	libhexfloat/lib.rs	171	17	14	field	
-node	lib	426	427	libhexfloat/lib.rs	115	18	4	path	
-node	lib	232	212	libhexfloat/lib.rs	83	4	93	match	
-node	lib	324	325	libhexfloat/lib.rs	90	79	1	lit	
-node	lib	424	423	libhexfloat/lib.rs	115	8	0	ty	
-node	lib	310	327	libhexfloat/lib.rs	90	4	84	method_call	
-node	lib	653	654	libhexfloat/lib.rs	164	13	1	path	
-node	lib	262	263	libhexfloat/lib.rs	87	52	14	lit	
-node	lib	223	224	libhexfloat/lib.rs	83	75	1	lit	
-node	lib	552	544	libhexfloat/lib.rs	139	42	44	blk	
-node	lib	264	265	libhexfloat/lib.rs	87	47	20	tup	
-node	lib	652	650	libhexfloat/lib.rs	164	8	2	pat	
-node	lib	429	468	libhexfloat/lib.rs	117	8	17	pat	
-node	lib	229	230	libhexfloat/lib.rs	83	78	10	stmt	
-node	lib	673	674	libhexfloat/lib.rs	169	17	1	path	
-node	lib	353	356	libhexfloat/lib.rs	96	25	1	path	
-node	lib	303	301	libhexfloat/lib.rs	90	34	12	method_call	
-node	lib	97	98	libhexfloat/lib.rs	77	52	14	lit	
-node	lib	27	30	libhexfloat/lib.rs	62	40	15	ty	
-node	lib	500	503	libhexfloat/lib.rs	138	27	22	path	
-node	lib	138	145	libhexfloat/lib.rs	80	32	1	ty	
-node	lib	33	44	libhexfloat/lib.rs	63	4	8	path	
-node	lib	636	644	libhexfloat/lib.rs	162	54	1	ty	
-node	lib	323	325	libhexfloat/lib.rs	90	70	5	path	
-node	lib	67	345	libhexfloat/lib.rs	74	8	32	stmt	
-node	lib	713	715	libhexfloat/lib.rs	177	5	2	path	
-node	lib	103	104	libhexfloat/lib.rs	77	33	38	block	
-node	lib	683	690	libhexfloat/lib.rs	171	12	19	local	
-node	lib	401	402	libhexfloat/lib.rs	106	12	8	lit	
-node	lib	677	690	libhexfloat/lib.rs	170	12	23	local	
-node	lib	267	268	libhexfloat/lib.rs	87	35	33	stmt	
-node	lib	344	345	libhexfloat/lib.rs	91	4	76	stmt	
-node	lib	676	690	libhexfloat/lib.rs	169	12	14	stmt	
-node	lib	698	690	libhexfloat/lib.rs	172	8	46	call	
-node	lib	119	120	libhexfloat/lib.rs	78	51	15	vstore	
-node	lib	339	340	libhexfloat/lib.rs	92	15	38	call	
-node	lib	211	234	libhexfloat/lib.rs	83	4	93	pat	
-node	lib	702	703	libhexfloat/lib.rs	174	7	1	path	
-node	lib	682	690	libhexfloat/lib.rs	170	12	23	stmt	
-node	lib	111	115	libhexfloat/lib.rs	78	7	12	method_call	
-node	lib	643	639	libhexfloat/lib.rs	162	56	12	method_call	
-node	lib	693	696	libhexfloat/lib.rs	172	39	5	path	
-node	lib	325	322	libhexfloat/lib.rs	90	70	10	assign_add	
-node	lib	120	121	libhexfloat/lib.rs	78	47	20	tup	
-node	lib	432	434	libhexfloat/lib.rs	119	24	5	pat	
-node	lib	175	177	libhexfloat/lib.rs	81	23	4	path	
-node	lib	30	19	libhexfloat/lib.rs	62	33	23	ty	
-node	lib	80	81	libhexfloat/lib.rs	76	36	5	path	
-node	lib	101	103	libhexfloat/lib.rs	77	35	33	ret	
-node	lib	478	573	libhexfloat/lib.rs	133	4	461	block	
-node	lib	350	351	libhexfloat/lib.rs	96	13	1	pat	
-node	lib	212	233	libhexfloat/lib.rs	83	4	93	block	
-node	lib	686	687	libhexfloat/lib.rs	171	17	1	path	
-node	lib	516	517	libhexfloat/lib.rs	139	42	44	lit	
-node	lib	51	47	libhexfloat/lib.rs	73	24	4	ty	
-node	lib	498	497	libhexfloat/lib.rs	138	20	0	ty	
-node	lib	584	589	libhexfloat/lib.rs	148	8	9	pat	
-node	lib	50	51	libhexfloat/lib.rs	73	25	3	ty	
-node	lib	125	345	libhexfloat/lib.rs	78	4	67	if	
-node	lib	519	520	libhexfloat/lib.rs	139	42	44	lit	
-node	lib	227	228	libhexfloat/lib.rs	83	87	1	lit	
-node	lib	278	279	libhexfloat/lib.rs	88	29	3	lit	
-node	lib	455	459	libhexfloat/lib.rs	128	12	2	path	
-node	lib	189	345	libhexfloat/lib.rs	81	4	67	stmt	
-node	lib	545	544	libhexfloat/lib.rs	139	42	44	ty	
-node	lib	430	431	libhexfloat/lib.rs	117	35	3	path	
-node	lib	81	83	libhexfloat/lib.rs	76	36	12	method_call	
-node	lib	646	647	libhexfloat/lib.rs	161	44	138	method_call	
-node	lib	512	554	libhexfloat/lib.rs	139	42	44	static	__STATIC_FMTSTR
-node	lib	616	605	libhexfloat/lib.rs	158	27	3	pat	
-node	lib	629	630	libhexfloat/lib.rs	159	44	2	path	
-node	lib	217	218	libhexfloat/lib.rs	83	8	1	pat	
-node	lib	77	78	libhexfloat/lib.rs	76	28	4	addr_of	
-node	lib	118	119	libhexfloat/lib.rs	78	52	14	lit	
-node	lib	248	249	libhexfloat/lib.rs	85	15	59	call	
-node	lib	457	459	libhexfloat/lib.rs	128	24	9	field	
-node	lib	710	712	libhexfloat/lib.rs	174	4	56	if	
-node	lib	384	385	libhexfloat/lib.rs	101	39	3	path	
-node	lib	254	255	libhexfloat/lib.rs	87	7	5	path	
-node	lib	90	94	libhexfloat/lib.rs	77	7	12	method_call	
-node	lib	634	645	libhexfloat/lib.rs	161	44	10	method_call	
-node	lib	152	169	libhexfloat/lib.rs	80	4	93	pat	
-node	lib	576	575	libhexfloat/lib.rs	146	8	0	ty	
-node	lib	587	588	libhexfloat/lib.rs	148	38	2	path	
-node	lib	185	187	libhexfloat/lib.rs	81	35	33	ret	
-node	lib	406	407	libhexfloat/lib.rs	107	12	8	lit	
-node	lib	517	512	libhexfloat/lib.rs	139	42	44	ty	
-node	lib	638	644	libhexfloat/lib.rs	162	56	1	ty	
-node	lib	690	699	libhexfloat/lib.rs	167	11	193	block	
-node	lib	268	269	libhexfloat/lib.rs	87	33	38	block	
-node	lib	666	667	libhexfloat/lib.rs	168	18	12	path	
-node	lib	396	421	libhexfloat/lib.rs	105	8	24	pat	
-node	lib	613	614	libhexfloat/lib.rs	158	34	14	ty	
-node	lib	316	322	libhexfloat/lib.rs	90	50	12	method_call	
-node	lib	154	155	libhexfloat/lib.rs	80	8	1	pat	
-node	lib	308	328	libhexfloat/lib.rs	90	4	84	block	
-node	lib	279	280	libhexfloat/lib.rs	88	28	4	addr_of	
-node	lib	342	343	libhexfloat/lib.rs	91	18	62	block	
-node	lib	471	470	libhexfloat/lib.rs	134	12	0	ty	
-node	lib	70	68	libhexfloat/lib.rs	75	8	5	pat	
-node	lib	300	304	libhexfloat/lib.rs	90	34	1	ty	
-node	lib	460	466	libhexfloat/lib.rs	128	12	50	stmt	
-node	lib	292	291	libhexfloat/lib.rs	89	8	0	ty	
-node	lib	656	712	libhexfloat/lib.rs	165	8	249	local	
-node	lib	251	252	libhexfloat/lib.rs	84	32	83	block	
-node	lib	41	43	libhexfloat/lib.rs	64	17	96	uniq	
-node	lib	697	698	libhexfloat/lib.rs	172	13	40	expr_struct	
-node	lib	373	359	libhexfloat/lib.rs	100	58	17	ty	
-node	lib	187	188	libhexfloat/lib.rs	81	33	38	block	
-node	lib	274	345	libhexfloat/lib.rs	87	72	4	stmt	
-node	lib	340	342	libhexfloat/lib.rs	92	8	45	ret	
-node	lib	665	668	libhexfloat/lib.rs	168	8	1	path	
-node	lib	146	147	libhexfloat/lib.rs	80	13	42	method_call	
-node	lib	422	591	libhexfloat/lib.rs	103	8	342	stmt	
-node	lib	196	194	libhexfloat/lib.rs	82	8	9	pat	
-node	lib	174	178	libhexfloat/lib.rs	81	7	12	method_call	
-node	lib	357	358	libhexfloat/lib.rs	96	19	36	call	
-node	lib	715	712	libhexfloat/lib.rs	177	4	8	tup	
-node	lib	147	171	libhexfloat/lib.rs	80	4	93	addr_of	
-node	lib	234	345	libhexfloat/lib.rs	83	4	93	match	
-node	lib	458	459	libhexfloat/lib.rs	128	35	26	lit	
-node	lib	193	345	libhexfloat/lib.rs	81	72	4	stmt	
-node	lib	483	572	libhexfloat/lib.rs	136	12	24	pat	
-node	lib	216	232	libhexfloat/lib.rs	83	4	93	break	
-node	lib	302	303	libhexfloat/lib.rs	90	34	1	path	
-node	lib	348	358	libhexfloat/lib.rs	95	8	4	pat	
-node	lib	578	589	libhexfloat/lib.rs	146	20	2	path	
-jdef	444	syntax	164436
-jdef	440	lib	364
-jdef	581	lib	425
-jdef	500	syntax	11602
-jdef	702	lib	627
-jdef	431	syntax	11020
-jdef	490	syntax	9818
-jdef	693	syntax	11602
-jdef	220	std	95128
-jdef	515	std	164596
-jdef	459	syntax	164436
-jdef	190	lib	70
-jdef	613	syntax	47294
-jdef	442	syntax	39302
-jdef	418	std	103652
-jdef	646	std	244398
-jdef	436	lib	432
-jdef	479	lib	472
-jdef	398	lib	393
-jdef	296	lib	63
-jdef	427	syntax	39302
-jdef	335	lib	70
-jdef	585	syntax	50607
-jdef	96	lib	70
-jdef	661	syntax	120423
-jdef	117	lib	70
-jdef	199	lib	63
-jdef	352	std	103656
-jdef	283	std	95128
-jdef	529	std	103652
-jdef	310	std	95421
-jdef	654	syntax	109750
-jdef	142	lib	139
-jdef	608	syntax	164113
-jdef	144	std	15296
-jdef	27	syntax	163730
-jdef	491	lib	480
-jdef	634	std	48731
-jdef	367	syntax	10775
-jdef	311	std	103652
-jdef	64	lib	52
-jdef	282	lib	63
-jdef	530	std	164612
-jdef	403	std	103656
-jdef	455	lib	364
-jdef	593	lib	364
-jdef	621	lib	598
-jdef	633	lib	616
-jdef	127	lib	70
-jdef	316	std	95128
-jdef	548	std	164803
-jdef	334	std	103656
-jdef	528	std	164628
-jdef	74	std	95218
-jdef	441	lib	379
-jdef	537	std	166625
-jdef	409	syntax	55837
-jdef	640	lib	637
-jdef	314	std	103656
-jdef	653	lib	627
-jdef	687	syntax	100180
-jdef	66	std	243596
-jdef	631	lib	610
-jdef	703	syntax	100180
-jdef	243	std	103656
-jdef	90	std	95128
-jdef	578	lib	389
-jdef	271	lib	70
-jdef	351	std	103656
-jdef	116	std	103656
-jdef	505	lib	364
-jdef	462	lib	368
-jdef	395	lib	598
-jdef	521	std	164610
-jdef	346	lib	63
-jdef	323	lib	293
-jdef	586	lib	425
-jdef	219	lib	63
-jdef	447	lib	368
-jdef	39	std	103652
-jdef	632	syntax	164240
-jdef	502	lib	486
-jdef	244	lib	70
-jdef	413	lib	394
-jdef	461	syntax	163652
-jdef	376	syntax	163609
-jdef	474	lib	425
-jdef	487	lib	379
-jdef	391	std	103652
-jdef	488	syntax	39302
-jdef	75	std	103656
-jdef	65	std	65254
-jdef	501	lib	486
-jdef	659	lib	627
-jdef	686	lib	627
-jdef	456	lib	379
-jdef	555	std	165447
-jdef	665	lib	627
-jdef	209	std	244514
-jdef	397	syntax	131951
-jdef	522	std	164656
-jdef	643	syntax	48444
-jdef	180	lib	70
-jdef	33	lib	31
-jdef	73	lib	63
-jdef	112	std	103656
-jdef	215	std	103652
-jdef	146	std	244514
-jdef	595	lib	577
-jdef	579	std	103652
-jdef	136	lib	63
-jdef	305	std	244514
-jdef	629	lib	610
-jdef	561	syntax	164436
-jdef	179	std	103656
-jdef	580	syntax	50611
-jdef	437	syntax	131648
-jdef	349	std	103652
-jdef	315	lib	63
-jdef	714	lib	658
-jdef	457	syntax	39302
-jdef	666	syntax	120343
-jdef	549	lib	512
-jdef	40	syntax	163391
-jdef	95	std	103656
-jdef	239	lib	196
-jdef	673	lib	627
-jdef	584	std	103656
-jdef	150	lib	148
-jdef	91	std	103656
-jdef	34	syntax	131977
-jdef	675	syntax	10775
-jdef	601	syntax	16134
-jdef	550	lib	536
-jdef	371	syntax	47294
-jdef	156	lib	63
-jdef	275	lib	63
-jdef	392	std	103652
-jdef	412	lib	364
-jdef	475	syntax	131692
-jdef	286	lib	70
-jdef	518	std	164602
-jdef	688	syntax	10775
-jdef	261	lib	70
-jdef	564	lib	368
-jdef	404	syntax	55836
-jdef	205	lib	202
-jdef	348	std	103652
-jdef	37	syntax	163748
-jdef	302	lib	299
-jdef	704	syntax	120423
-jdef	434	syntax	50570
-jdef	674	syntax	100180
-jdef	38	lib	359
-jdef	303	std	15285
-jdef	664	std	103652
-jdef	430	lib	428
-jdef	415	syntax	164436
-jdef	89	lib	63
-jdef	106	lib	70
-jdef	214	std	95421
-jdef	175	std	103656
-jdef	630	syntax	164229
-jdef	318	lib	70
-jdef	255	std	95128
-jdef	426	lib	379
-jdef	596	syntax	187703
-jdef	80	lib	63
-jdef	383	lib	364
-jdef	623	std	103651
-jdef	277	std	103656
-jdef	152	std	103652
-jdef	276	std	95218
-jdef	628	syntax	137966
-jdef	396	std	103656
-jdef	408	std	103656
-jdef	256	std	103656
-jdef	618	syntax	39302
-jdef	84	lib	70
-jdef	42	std	103652
-jdef	706	lib	627
-jdef	695	lib	685
-jdef	563	syntax	163652
-jdef	694	lib	672
-jdef	23	syntax	16836
-jdef	260	std	103656
-jdef	226	lib	196
-jdef	713	lib	652
-jdef	174	std	95128
-jdef	173	lib	63
-jdef	660	syntax	100180
-jdef	680	lib	627
-jdef	155	std	103656
-jdef	382	lib	605
-jdef	697	lib	598
-jdef	506	lib	499
-jdef	707	syntax	100377
-jdef	222	lib	70
-jdef	538	std	165026
-jdef	213	lib	211
-jdef	236	lib	133
-jdef	110	lib	63
-jdef	390	lib	380
-jdef	489	syntax	10775
-jdef	587	lib	583
-jdef	331	lib	293
-jdef	157	std	95128
-jdef	400	syntax	131692
-jdef	254	lib	63
-jdef	681	syntax	101319
-jdef	218	std	103656
-jdef	159	lib	70
-jdef	594	lib	368
-jdef	353	lib	70
-jdef	592	syntax	163614
-jdef	692	lib	679
-jdef	556	lib	546
-jdef	524	std	161512
-jdef	347	std	95128
-jdef	60	std	103651
-jdef	429	syntax	39841
-jdef	483	std	103656
-jdef	527	std	164654
-jdef	151	std	95421
-jdef	539	lib	510
-jdef	645	std	243395
-jdef	111	std	95128
-jdef	446	syntax	163652
-jdef	163	lib	133
-jdef	507	lib	481
-jdef	81	std	95128
-jdef	473	lib	47
-jdef	691	std	103656
-jdef	604	syntax	10775
-jdef	362	syntax	164113
-jdef	309	lib	307
-jdef	207	std	15296
-jdef	668	syntax	100449
-jdef	526	std	164654
-jdef	384	lib	374
+node	lib	336	334	libhexfloat/lib.rs	91	16	1	lit	
+node	lib	264	263	libhexfloat/lib.rs	87	35	43	stmt	
+node	lib	197	196	libhexfloat/lib.rs	82	8	0	ty	
+node	lib	323	321	libhexfloat/lib.rs	90	50	12	method_call	
+node	lib	366	359	libhexfloat/lib.rs	100	47	4	ty	
+node	lib	246	238	libhexfloat/lib.rs	84	32	93	block	
+node	lib	503	501	libhexfloat/lib.rs	137	83	1	lit	
+node	lib	228	227	libhexfloat/lib.rs	83	58	5	path	
+node	lib	271	270	libhexfloat/lib.rs	87	51	14	lit	
+node	lib	428	426	libhexfloat/lib.rs	115	8	1	pat	
+node	lib	152	138	libhexfloat/lib.rs	80	4	93	loop	
+node	lib	70	61	libhexfloat/lib.rs	75	8	9	local	
+node	lib	512	490	libhexfloat/lib.rs	139	16	81	stmt	
+node	lib	378	359	libhexfloat/lib.rs	100	97	1559	block	
+node	lib	424	418	libhexfloat/lib.rs	110	16	4	path	
+node	lib	330	329	libhexfloat/lib.rs	90	70	5	path	
+node	lib	252	251	libhexfloat/lib.rs	85	21	1	path	
+node	lib	202	201	libhexfloat/lib.rs	83	4	93	addr_of	
+node	lib	488	486	libhexfloat/lib.rs	136	27	7	pat	
+node	lib	182	175	libhexfloat/lib.rs	81	33	48	block	
+node	lib	316	313	libhexfloat/lib.rs	90	4	84	pat	
+node	lib	467	460	libhexfloat/lib.rs	129	12	34	stmt	
+node	lib	82	81	libhexfloat/lib.rs	76	29	3	lit	
+node	lib	187	185	libhexfloat/lib.rs	81	47	30	tup	
+node	lib	167	162	libhexfloat/lib.rs	80	72	4	assign_add	
+node	lib	107	61	libhexfloat/lib.rs	77	82	4	stmt	
+node	lib	487	486	libhexfloat/lib.rs	136	18	7	pat	
+node	lib	409	408	libhexfloat/lib.rs	106	21	4	path	
+node	lib	631	628	libhexfloat/lib.rs	159	12	286	addr_of	
+node	lib	543	539	libhexfloat/lib.rs	139	42	44	path	
+node	lib	494	492	libhexfloat/lib.rs	137	20	3	pat	
+node	lib	94	93	libhexfloat/lib.rs	77	7	5	path	
+node	lib	42	40	libhexfloat/lib.rs	64	17	96	uniq	
+node	lib	40	35	libhexfloat/lib.rs	64	8	120	call	
+node	lib	544	539	libhexfloat/lib.rs	139	42	44	path	
+node	lib	230	225	libhexfloat/lib.rs	83	72	4	assign_add	
+node	lib	370	359	libhexfloat/lib.rs	100	58	17	ty	
+node	lib	438	437	libhexfloat/lib.rs	119	24	5	pat	
+node	lib	74	61	libhexfloat/lib.rs	76	4	53	stmt	
+node	lib	568	566	<std macros>	3	21	18	addr_of	
+node	lib	574	572	libhexfloat/lib.rs	140	47	2	path	
+node	lib	199	196	libhexfloat/lib.rs	82	20	1	lit	
+node	lib	400	398	libhexfloat/lib.rs	105	26	4	pat	
+node	lib	121	119	libhexfloat/lib.rs	78	35	43	ret	
+node	lib	64	63	libhexfloat/lib.rs	74	8	0	ty	
+node	lib	511	508	libhexfloat/lib.rs	138	54	3	path	
+node	lib	446	445	libhexfloat/lib.rs	122	17	143	block	
+node	lib	65	63	libhexfloat/lib.rs	74	8	9	pat	
+node	lib	126	124	libhexfloat/lib.rs	78	51	25	method_call	
+node	lib	464	462	libhexfloat/lib.rs	128	24	9	field	
+node	lib	89	87	libhexfloat/lib.rs	76	54	1	lit	
+node	lib	435	434	libhexfloat/lib.rs	117	35	8	field	
+node	lib	295	293	libhexfloat/lib.rs	89	8	9	pat	
+node	lib	388	385	libhexfloat/lib.rs	101	39	3	path	
+node	lib	80	79	libhexfloat/lib.rs	76	23	4	path	
+node	lib	603	599	libhexfloat/lib.rs	155	4	10	struct_field	span
+node	lib	614	613	libhexfloat/lib.rs	158	33	16	ty	
+node	lib	301	300	libhexfloat/lib.rs	90	13	5	path	
+node	lib	168	167	libhexfloat/lib.rs	80	72	1	path	
+node	lib	334	333	libhexfloat/lib.rs	91	7	10	eq	
+node	lib	587	581	libhexfloat/lib.rs	148	8	9	pat	
+node	lib	291	289	libhexfloat/lib.rs	88	54	1	lit	
+node	lib	263	256	libhexfloat/lib.rs	87	33	48	block	
+node	lib	404	403	libhexfloat/lib.rs	105	42	16	path	
+node	lib	706	705	libhexfloat/lib.rs	174	7	21	ne	
+node	lib	492	490	libhexfloat/lib.rs	137	20	65	local	
+node	lib	50	49	libhexfloat/lib.rs	73	25	3	ty	
+node	lib	169	167	libhexfloat/lib.rs	80	75	1	lit	
+node	lib	692	690	libhexfloat/lib.rs	171	12	2	pat	
+node	lib	61	47	libhexfloat/lib.rs	73	54	1201	block	
+node	lib	302	300	libhexfloat/lib.rs	90	30	16	fn_blk	
+node	lib	444	434	libhexfloat/lib.rs	122	12	1	pat	
+node	lib	703	700	libhexfloat/lib.rs	172	49	2	path	
+node	lib	513	490	libhexfloat/lib.rs	139	16	81	method_call	
+node	lib	56	55	libhexfloat/lib.rs	73	41	4	ty	
+node	lib	401	393	libhexfloat/lib.rs	105	36	258	match	
+node	lib	292	61	libhexfloat/lib.rs	89	8	13	stmt	
+node	lib	502	501	libhexfloat/lib.rs	137	73	7	path	
+node	lib	449	448	libhexfloat/lib.rs	123	16	2	path	
+node	lib	564	562	libhexfloat/lib.rs	139	42	44	path	
+node	lib	659	626	libhexfloat/lib.rs	165	8	249	local	
+node	lib	640	639	libhexfloat/lib.rs	161	44	10	method_call	
+node	lib	705	626	libhexfloat/lib.rs	174	4	56	if	
+node	lib	596	595	libhexfloat/lib.rs	150	17	2	path	
+node	lib	523	522	libhexfloat/lib.rs	139	42	44	block	
+node	lib	354	353	libhexfloat/lib.rs	96	19	4	path	
+node	lib	124	122	libhexfloat/lib.rs	78	47	30	tup	
+node	lib	615	614	libhexfloat/lib.rs	158	34	14	ty	
+node	lib	150	148	libhexfloat/lib.rs	80	51	2	lit	
+node	lib	260	257	libhexfloat/lib.rs	87	23	9	call	
+node	lib	44	43	libhexfloat/lib.rs	65	22	17	path	
+node	lib	504	490	libhexfloat/lib.rs	138	20	38	stmt	
+node	lib	288	287	libhexfloat/lib.rs	88	36	5	path	
+node	lib	201	61	libhexfloat/lib.rs	83	4	93	match	
+node	lib	337	333	libhexfloat/lib.rs	91	18	72	block	
+node	lib	88	87	libhexfloat/lib.rs	76	50	1	path	
+node	lib	457	455	libhexfloat/lib.rs	124	47	2	path	
+node	lib	78	77	libhexfloat/lib.rs	76	7	5	path	
+node	lib	486	485	libhexfloat/lib.rs	136	17	18	pat	
+node	lib	128	61	libhexfloat/lib.rs	78	82	4	stmt	
+node	lib	100	98	libhexfloat/lib.rs	77	35	43	ret	
+node	lib	633	632	libhexfloat/lib.rs	159	17	26	path	
+node	lib	419	418	libhexfloat/lib.rs	109	16	61	stmt	
+node	lib	387	385	libhexfloat/lib.rs	101	35	2	path	
+node	lib	358	357	libhexfloat/lib.rs	96	28	24	lit	
+node	lib	90	61	libhexfloat/lib.rs	77	4	77	stmt	
+node	lib	110	108	libhexfloat/lib.rs	77	85	1	lit	
+node	lib	267	266	libhexfloat/lib.rs	87	42	4	path	
+node	lib	619	618	libhexfloat/lib.rs	158	55	10	ty	
+node	lib	84	83	libhexfloat/lib.rs	76	36	12	stmt	
+node	lib	189	187	libhexfloat/lib.rs	81	51	25	method_call	
+node	lib	647	642	libhexfloat/lib.rs	162	56	12	block	
+node	lib	558	557	libhexfloat/lib.rs	139	42	44	ty	
+node	lib	592	589	libhexfloat/lib.rs	148	38	2	path	
+node	lib	459	429	libhexfloat/lib.rs	127	13	123	blk	
+node	lib	440	434	libhexfloat/lib.rs	119	37	41	blk	
+node	lib	645	642	libhexfloat/lib.rs	162	53	1	pat	
+node	lib	285	277	libhexfloat/lib.rs	88	34	23	block	
+node	lib	479	476	libhexfloat/lib.rs	134	18	26	call	
+node	lib	138	61	libhexfloat/lib.rs	80	4	93	match	
+node	lib	463	462	libhexfloat/lib.rs	128	12	2	path	
+node	lib	712	710	libhexfloat/lib.rs	175	8	14	method_call	
+node	lib	538	537	libhexfloat/lib.rs	139	42	44	path	
+node	lib	39	37	libhexfloat/lib.rs	63	27	10	lit	
+node	lib	243	239	libhexfloat/lib.rs	84	21	10	eq	
+node	lib	664	663	libhexfloat/lib.rs	165	16	7	field	
+node	lib	241	240	libhexfloat/lib.rs	84	7	5	path	
+node	lib	266	265	libhexfloat/lib.rs	87	42	36	call	
+node	lib	478	476	libhexfloat/lib.rs	134	12	3	pat	
+node	lib	490	489	libhexfloat/lib.rs	136	40	313	block	
+node	lib	284	283	libhexfloat/lib.rs	88	29	3	lit	
+node	lib	115	114	libhexfloat/lib.rs	78	7	5	path	
+node	lib	104	103	libhexfloat/lib.rs	77	48	1	path	
+node	lib	680	677	libhexfloat/lib.rs	169	17	9	field	
+node	lib	432	429	libhexfloat/lib.rs	117	8	17	pat	
+node	lib	343	342	libhexfloat/lib.rs	92	21	1	path	
+node	lib	76	75	libhexfloat/lib.rs	76	7	26	eq	
+node	lib	581	578	libhexfloat/lib.rs	146	14	102	match	
+node	lib	485	483	libhexfloat/lib.rs	136	12	24	pat	
+node	lib	588	587	libhexfloat/lib.rs	148	14	2	pat	
+node	lib	355	353	libhexfloat/lib.rs	96	24	40	tup	
+node	lib	678	677	libhexfloat/lib.rs	169	12	0	ty	
+node	lib	69	61	libhexfloat/lib.rs	75	8	9	stmt	
+node	lib	135	133	libhexfloat/lib.rs	79	8	9	pat	
+node	lib	562	561	libhexfloat/lib.rs	139	42	44	call	
+node	lib	682	681	libhexfloat/lib.rs	169	17	1	path	
+node	lib	476	474	libhexfloat/lib.rs	134	12	32	local	
+node	lib	510	508	libhexfloat/lib.rs	138	50	3	path	
+node	lib	194	192	libhexfloat/lib.rs	81	85	1	lit	
+node	lib	379	378	libhexfloat/lib.rs	101	8	35	stmt	
+node	lib	506	505	libhexfloat/lib.rs	138	20	0	ty	
+node	lib	710	705	libhexfloat/lib.rs	174	29	31	block	
+node	lib	314	313	libhexfloat/lib.rs	90	4	84	method_call	
+node	lib	648	647	libhexfloat/lib.rs	162	56	12	method_call	
+node	lib	319	318	libhexfloat/lib.rs	90	8	1	pat	
+node	lib	364	359	libhexfloat/lib.rs	100	25	2	pat	
+node	lib	356	355	libhexfloat/lib.rs	96	25	1	path	
+node	lib	661	659	libhexfloat/lib.rs	165	8	2	pat	
+node	lib	638	632	libhexfloat/lib.rs	161	44	138	method_call	
+node	lib	604	599	libhexfloat/lib.rs	155	10	4	ty	
+node	lib	158	154	libhexfloat/lib.rs	80	4	93	break	
+node	lib	559	557	libhexfloat/lib.rs	139	42	44	pat	
+node	lib	144	142	libhexfloat/lib.rs	80	32	1	ty	
+node	lib	173	171	libhexfloat/lib.rs	80	87	1	lit	
+node	lib	566	523	<std macros>	3	21	18	call	
+node	lib	218	217	libhexfloat/lib.rs	83	4	93	method_call	
+node	lib	188	187	libhexfloat/lib.rs	81	48	1	path	
+node	lib	253	251	libhexfloat/lib.rs	85	24	58	method_call	
+node	lib	455	454	libhexfloat/lib.rs	124	23	27	call	
+node	lib	141	140	libhexfloat/lib.rs	80	13	5	path	
+node	lib	235	234	libhexfloat/lib.rs	83	78	5	path	
+node	lib	489	483	libhexfloat/lib.rs	136	40	313	blk	
+node	lib	139	138	libhexfloat/lib.rs	80	4	93	addr_of	
+node	lib	324	323	libhexfloat/lib.rs	90	50	5	path	
+node	lib	530	526	libhexfloat/lib.rs	139	42	44	lit	
+node	lib	117	116	libhexfloat/lib.rs	78	23	4	path	
+node	lib	220	217	libhexfloat/lib.rs	83	4	93	pat	
+node	lib	445	434	libhexfloat/lib.rs	122	17	143	blk	
+node	lib	149	148	libhexfloat/lib.rs	80	34	1	path	
+node	lib	431	430	libhexfloat/lib.rs	115	18	4	path	
+node	lib	137	61	libhexfloat/lib.rs	80	4	93	stmt	
+node	lib	408	401	libhexfloat/lib.rs	106	21	16	call	
+node	lib	565	562	libhexfloat/lib.rs	139	42	44	path	
+node	lib	321	320	libhexfloat/lib.rs	90	48	33	block	
+node	lib	691	690	libhexfloat/lib.rs	171	12	0	ty	
+node	lib	231	230	libhexfloat/lib.rs	83	72	1	path	
+node	lib	500	499	libhexfloat/lib.rs	137	41	31	path	
+node	lib	332	61	libhexfloat/lib.rs	91	4	86	stmt	
+node	lib	142	140	libhexfloat/lib.rs	80	30	24	fn_blk	
+node	lib	634	632	libhexfloat/lib.rs	159	44	15	method_call	
+node	lib	289	285	libhexfloat/lib.rs	88	50	5	assign_add	
+node	lib	174	61	libhexfloat/lib.rs	81	4	77	stmt	
+node	lib	240	239	libhexfloat/lib.rs	84	7	10	eq	
+node	lib	416	401	libhexfloat/lib.rs	108	12	1	pat	
+node	lib	635	634	libhexfloat/lib.rs	159	44	2	path	
+node	lib	434	429	libhexfloat/lib.rs	117	29	296	match	
+node	lib	697	696	libhexfloat/lib.rs	172	8	4	path	
+node	lib	600	599	libhexfloat/lib.rs	154	4	17	struct_field	ident
+node	lib	154	153	libhexfloat/lib.rs	80	4	93	match	
+node	lib	318	313	libhexfloat/lib.rs	90	4	84	pat	
+node	lib	537	535	libhexfloat/lib.rs	139	42	44	expr_struct	
+node	lib	579	578	libhexfloat/lib.rs	146	8	0	ty	
+node	lib	312	311	libhexfloat/lib.rs	90	4	84	block	
+node	lib	294	293	libhexfloat/lib.rs	89	8	0	ty	
+node	lib	715	714	libhexfloat/lib.rs	177	5	2	path	
+node	lib	97	95	libhexfloat/lib.rs	77	28	3	lit	
+node	lib	407	406	libhexfloat/lib.rs	106	12	8	lit	
+node	lib	519	518	libhexfloat/lib.rs	139	88	7	path	
+node	lib	642	639	libhexfloat/lib.rs	162	52	16	fn_blk	
+node	lib	690	670	libhexfloat/lib.rs	171	12	19	local	
+node	lib	591	589	libhexfloat/lib.rs	148	35	1	path	
+node	lib	402	401	libhexfloat/lib.rs	105	42	29	method_call	
+node	lib	67	66	libhexfloat/lib.rs	74	20	9	method_call	
+node	lib	527	526	libhexfloat/lib.rs	139	42	44	ty	
+node	lib	389	378	libhexfloat/lib.rs	103	8	342	stmt	
+node	lib	317	313	libhexfloat/lib.rs	90	4	84	break	
+node	lib	649	648	libhexfloat/lib.rs	162	56	4	paren	
+node	lib	350	346	libhexfloat/lib.rs	95	16	4	path	
+node	lib	599	0	libhexfloat/lib.rs	153	0	54	struct	Ident
+node	lib	190	189	libhexfloat/lib.rs	81	51	14	lit	
+node	lib	484	483	libhexfloat/lib.rs	135	14	3	path	
+node	lib	46	40	libhexfloat/lib.rs	68	8	4	path	
+node	lib	532	531	libhexfloat/lib.rs	139	42	44	call	
+node	lib	526	525	libhexfloat/lib.rs	139	42	44	ty	
+node	lib	93	92	libhexfloat/lib.rs	77	7	12	method_call	
+node	lib	539	537	libhexfloat/lib.rs	139	42	44	expr_struct	
+node	lib	68	67	libhexfloat/lib.rs	74	20	1	path	
+node	lib	136	133	libhexfloat/lib.rs	79	20	1	lit	
+node	lib	229	225	libhexfloat/lib.rs	83	72	4	stmt	
+node	lib	483	474	libhexfloat/lib.rs	135	8	395	match	
+node	lib	181	179	libhexfloat/lib.rs	81	28	3	lit	
+node	lib	91	61	libhexfloat/lib.rs	77	4	77	if	
+node	lib	505	490	libhexfloat/lib.rs	138	20	38	local	
+node	lib	47	0	libhexfloat/lib.rs	73	0	1255	fn	hex_float_lit_err
+node	lib	663	662	libhexfloat/lib.rs	165	16	21	eq	
+node	lib	245	243	libhexfloat/lib.rs	84	30	1	lit	
+node	lib	45	43	libhexfloat/lib.rs	66	18	4	path	
+node	lib	118	116	libhexfloat/lib.rs	78	28	3	lit	
+node	lib	509	508	libhexfloat/lib.rs	138	27	22	path	
+node	lib	304	302	libhexfloat/lib.rs	90	32	1	ty	
+node	lib	148	147	libhexfloat/lib.rs	80	34	20	method_call	
+node	lib	293	61	libhexfloat/lib.rs	89	8	13	local	
+node	lib	442	441	libhexfloat/lib.rs	120	16	9	method_call	
+node	lib	311	298	libhexfloat/lib.rs	90	4	84	loop	
+node	lib	443	442	libhexfloat/lib.rs	120	16	1	path	
+node	lib	547	523	libhexfloat/lib.rs	139	42	44	local	
+node	lib	412	411	libhexfloat/lib.rs	107	12	8	lit	
+node	lib	695	694	libhexfloat/lib.rs	171	17	1	path	
+node	lib	665	664	libhexfloat/lib.rs	165	16	1	path	
+node	lib	644	642	libhexfloat/lib.rs	162	54	1	ty	
+node	lib	227	225	libhexfloat/lib.rs	83	58	12	method_call	
+node	lib	296	293	libhexfloat/lib.rs	89	20	1	lit	
+node	lib	683	670	libhexfloat/lib.rs	170	12	23	stmt	
+node	lib	552	551	libhexfloat/lib.rs	139	88	7	call	
+node	lib	650	649	libhexfloat/lib.rs	162	57	2	deref	
+node	lib	204	203	libhexfloat/lib.rs	83	13	5	path	
+node	lib	208	205	libhexfloat/lib.rs	83	31	1	pat	
+node	lib	71	70	libhexfloat/lib.rs	75	8	0	ty	
+node	lib	213	211	libhexfloat/lib.rs	83	51	2	lit	
+node	lib	286	285	libhexfloat/lib.rs	88	36	12	stmt	
+jdef	357	std	64748
+jdef	288	lib	65
+jdef	123	std	102620
+jdef	680	syntax	10814
+jdef	634	syntax	164673
+jdef	282	std	102620
+jdef	38	syntax	132464
+jdef	341	std	102620
+jdef	597	lib	368
+jdef	96	std	102620
+jdef	41	syntax	164183
+jdef	402	syntax	132179
+jdef	701	syntax	11641
+jdef	583	std	102619
+jdef	203	std	244096
+jdef	537	std	164008
+jdef	227	std	93566
+jdef	498	lib	383
+jdef	587	std	102620
+jdef	442	syntax	132135
+jdef	497	syntax	38945
+jdef	396	std	102619
+jdef	500	syntax	9857
+jdef	502	lib	487
+jdef	193	lib	72
+jdef	702	lib	679
+jdef	188	lib	72
+jdef	93	std	93566
+jdef	536	std	164002
+jdef	514	lib	364
+jdef	212	lib	208
+jdef	664	syntax	100566
+jdef	414	std	102620
+jdef	533	std	163993
+jdef	27	syntax	164174
+jdef	274	lib	72
+jdef	635	lib	611
+jdef	300	std	244096
+jdef	651	lib	645
+jdef	432	syntax	39480
+jdef	324	lib	65
+jdef	204	lib	65
+jdef	347	std	93566
+jdef	639	std	242962
+jdef	323	std	93566
+jdef	633	syntax	138460
+jdef	404	syntax	132438
+jdef	465	lib	383
+jdef	681	syntax	100566
+jdef	316	std	102619
+jdef	394	lib	384
+jdef	541	std	160873
+jdef	582	lib	392
+jdef	484	lib	478
+jdef	554	std	164422
+jdef	592	lib	588
+jdef	259	lib	65
+jdef	172	lib	135
+jdef	344	std	64748
+jdef	485	std	102620
+jdef	448	syntax	164880
+jdef	573	syntax	164070
+jdef	78	lib	65
+jdef	509	syntax	11641
+jdef	398	lib	599
+jdef	105	std	64748
+jdef	595	syntax	188123
+jdef	615	syntax	46937
+jdef	77	std	93656
+jdef	451	lib	383
+jdef	694	syntax	100566
+jdef	666	syntax	120904
+jdef	314	std	93859
+jdef	622	std	102618
+jdef	235	lib	198
+jdef	591	lib	428
+jdef	708	lib	630
+jdef	409	std	102620
+jdef	713	lib	630
+jdef	114	std	93566
+jdef	687	syntax	101705
+jdef	636	syntax	164684
+jdef	601	syntax	16178
+jdef	335	lib	295
+jdef	715	lib	655
+jdef	350	std	102619
+jdef	586	lib	428
+jdef	387	lib	364
+jdef	553	std	166021
+jdef	165	lib	65
+jdef	149	lib	145
+jdef	44	lib	359
+jdef	637	lib	611
+jdef	463	lib	364
+jdef	481	syntax	132179
+jdef	102	std	102620
+jdef	327	lib	72
+jdef	496	syntax	10814
+jdef	424	std	102619
+jdef	431	lib	383
+jdef	315	lib	310
+jdef	189	std	64748
+jdef	707	syntax	100566
+jdef	258	std	93566
+jdef	668	std	102619
+jdef	430	syntax	38945
+jdef	698	lib	599
+jdef	241	lib	135
+jdef	665	lib	630
+jdef	211	std	15384
+jdef	159	std	102620
+jdef	688	lib	630
+jdef	436	lib	433
+jdef	596	lib	364
+jdef	301	lib	65
+jdef	604	syntax	10814
+jdef	543	std	164050
+jdef	574	lib	368
+jdef	437	syntax	50207
+jdef	675	syntax	120824
+jdef	388	lib	374
+jdef	156	lib	151
+jdef	709	syntax	120904
+jdef	682	lib	630
+jdef	117	std	102620
+jdef	712	syntax	100763
+jdef	279	std	93656
+jdef	539	std	164024
+jdef	443	lib	438
+jdef	567	std	164843
+jdef	46	std	102619
+jdef	693	syntax	10814
+jdef	464	syntax	38945
+jdef	53	std	102618
+jdef	180	std	102620
+jdef	555	lib	521
+jdef	482	lib	428
+jdef	287	std	93566
+jdef	565	lib	549
+jdef	435	syntax	11059
+jdef	372	syntax	46937
+jdef	220	std	102619
+jdef	222	std	102620
+jdef	244	lib	198
+jdef	716	lib	661
+jdef	178	lib	65
+jdef	410	syntax	55481
+jdef	309	lib	305
+jdef	456	syntax	164070
+jdef	397	std	102620
+jdef	569	lib	559
+jdef	43	syntax	163659
+jdef	66	std	243163
+jdef	141	lib	65
+jdef	415	syntax	55482
+jdef	354	std	102620
+jdef	157	std	102619
+jdef	253	std	64748
+jdef	36	lib	31
+jdef	449	lib	364
+jdef	356	lib	72
+jdef	270	std	64748
+jdef	104	lib	72
+jdef	519	lib	488
+jdef	395	std	102619
+jdef	280	lib	65
+jdef	269	lib	72
+jdef	290	lib	72
+jdef	23	syntax	16880
+jdef	422	lib	400
+jdef	85	std	93566
+jdef	421	lib	364
+jdef	348	lib	65
+jdef	544	std	164050
+jdef	231	lib	72
+jdef	638	std	243980
+jdef	186	std	102620
+jdef	420	syntax	164880
+jdef	527	std	163992
+jdef	94	lib	65
+jdef	125	lib	72
+jdef	609	syntax	164557
+jdef	695	lib	630
+jdef	657	lib	630
+jdef	386	lib	606
+jdef	45	std	102619
+jdef	515	lib	507
+jdef	480	lib	47
+jdef	177	std	93566
+jdef	349	std	102619
+jdef	267	std	102620
+jdef	130	lib	72
+jdef	699	lib	686
+jdef	86	lib	65
+jdef	366	syntax	10814
+jdef	126	std	64748
+jdef	620	syntax	38945
+jdef	545	std	102619
+jdef	362	syntax	164557
+jdef	250	std	102620
+jdef	656	syntax	110243
+jdef	228	lib	65
+jdef	115	lib	65
+jdef	68	lib	52
+jdef	168	lib	72
+jdef	330	lib	295
+jdef	80	std	102620
+jdef	563	std	164199
+jdef	450	syntax	38945
+jdef	88	lib	72
+jdef	590	syntax	50244
+jdef	261	std	102620
+jdef	564	lib	525
+jdef	140	std	244096
+jdef	109	lib	72
+jdef	585	syntax	50251
+jdef	318	std	102620
+jdef	376	syntax	163859
+jdef	67	std	63451
+jdef	641	lib	617
+jdef	164	std	93566
+jdef	510	lib	494
+jdef	343	lib	72
+jdef	703	lib	692
+jdef	624	lib	599
+jdef	457	lib	368
+jdef	648	syntax	48087
+jdef	218	std	93859
+jdef	308	std	15373
+jdef	471	lib	368
+jdef	351	std	102620
+jdef	511	lib	494
+jdef	405	lib	399
+jdef	155	std	93859
+jdef	640	std	48682
+jdef	672	syntax	100835
+jdef	697	std	102620
+jdef	538	std	164052
+jdef	148	std	15384
+jdef	252	lib	72
+jdef	470	syntax	164070
+jdef	219	lib	214
+jdef	513	syntax	164880
+jdef	462	syntax	164880
+jdef	673	lib	630
+jdef	594	syntax	163930
+jdef	598	lib	580

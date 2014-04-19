@@ -124,7 +124,6 @@ enum Family {
     Trait,                 // I
     Struct,                // S
     PublicField,           // g
-    PrivateField,          // j
     InheritedField         // N
 }
 
@@ -149,7 +148,6 @@ fn item_family(item: ebml::Doc) -> Family {
       'I' => Trait,
       'S' => Struct,
       'g' => PublicField,
-      'j' => PrivateField,
       'N' => InheritedField,
        c => fail!("unexpected family char: {}", c)
     }
@@ -161,7 +159,6 @@ fn item_visibility(item: ebml::Doc) -> ast::Visibility {
         Some(visibility_doc) => {
             match reader::doc_as_u8(visibility_doc) as char {
                 'y' => ast::Public,
-                'n' => ast::Private,
                 'i' => ast::Inherited,
                 _ => fail!("unknown visibility character")
             }
@@ -330,11 +327,11 @@ fn item_to_def_like(item: ebml::Doc, did: ast::DefId, cnum: ast::CrateNum)
         MutStatic => DlDef(ast::DefStatic(did, true)),
         Struct    => DlDef(ast::DefStruct(did)),
         UnsafeFn  => DlDef(ast::DefFn(did, ast::UnsafeFn)),
-        Fn        => DlDef(ast::DefFn(did, ast::ImpureFn)),
+        Fn        => DlDef(ast::DefFn(did, ast::NormalFn)),
         ForeignFn => DlDef(ast::DefFn(did, ast::ExternFn)),
         StaticMethod | UnsafeStaticMethod => {
-            let purity = if fam == UnsafeStaticMethod { ast::UnsafeFn } else
-                { ast::ImpureFn };
+            let fn_style = if fam == UnsafeStaticMethod { ast::UnsafeFn } else
+                { ast::NormalFn };
             // def_static_method carries an optional field of its enclosing
             // trait or enclosing impl (if this is an inherent static method).
             // So we need to detect whether this is in a trait or not, which
@@ -348,7 +345,7 @@ fn item_to_def_like(item: ebml::Doc, did: ast::DefId, cnum: ast::CrateNum)
                 ast::FromImpl(item_reqd_and_translated_parent_item(cnum,
                                                                    item))
             };
-            DlDef(ast::DefStaticMethod(did, provenance, purity))
+            DlDef(ast::DefStaticMethod(did, provenance, fn_style))
         }
         Type | ForeignType => DlDef(ast::DefTy(did)),
         Mod => DlDef(ast::DefMod(did)),
@@ -364,7 +361,7 @@ fn item_to_def_like(item: ebml::Doc, did: ast::DefId, cnum: ast::CrateNum)
         Trait => DlDef(ast::DefTrait(did)),
         Enum => DlDef(ast::DefTy(did)),
         Impl => DlImpl(did),
-        PublicField | PrivateField | InheritedField => DlField,
+        PublicField | InheritedField => DlField,
     }
 }
 
@@ -905,17 +902,17 @@ pub fn get_static_methods_if_impl(intr: Rc<IdentInterner>,
         let family = item_family(impl_method_doc);
         match family {
             StaticMethod | UnsafeStaticMethod => {
-                let purity;
+                let fn_style;
                 match item_family(impl_method_doc) {
-                    StaticMethod => purity = ast::ImpureFn,
-                    UnsafeStaticMethod => purity = ast::UnsafeFn,
+                    StaticMethod => fn_style = ast::NormalFn,
+                    UnsafeStaticMethod => fn_style = ast::UnsafeFn,
                     _ => fail!()
                 }
 
                 static_impl_methods.push(StaticMethodInfo {
                     ident: item_name(&*intr, impl_method_doc),
                     def_id: item_def_id(impl_method_doc, cdata),
-                    purity: purity,
+                    fn_style: fn_style,
                     vis: item_visibility(impl_method_doc),
                 });
             }
@@ -962,7 +959,6 @@ pub fn get_item_attrs(cdata: Cmd,
 fn struct_field_family_to_visibility(family: Family) -> ast::Visibility {
     match family {
       PublicField => ast::Public,
-      PrivateField => ast::Private,
       InheritedField => ast::Inherited,
       _ => fail!()
     }
@@ -975,7 +971,7 @@ pub fn get_struct_fields(intr: Rc<IdentInterner>, cdata: Cmd, id: ast::NodeId)
     let mut result = Vec::new();
     reader::tagged_docs(item, tag_item_field, |an_item| {
         let f = item_family(an_item);
-        if f == PublicField || f == PrivateField || f == InheritedField {
+        if f == PublicField || f == InheritedField {
             // FIXME #6993: name should be of type Name, not Ident
             let name = item_name(&*intr, an_item);
             let did = item_def_id(an_item, cdata);
@@ -1235,9 +1231,9 @@ pub fn get_native_libraries(cdata: Cmd) -> Vec<(cstore::NativeLibaryKind, ~str)>
     return result;
 }
 
-pub fn get_macro_registrar_fn(cdata: Cmd) -> Option<ast::DefId> {
+pub fn get_macro_registrar_fn(cdata: Cmd) -> Option<ast::NodeId> {
     reader::maybe_get_doc(reader::Doc(cdata.data()), tag_macro_registrar_fn)
-        .map(|doc| item_def_id(doc, cdata))
+        .map(|doc| FromPrimitive::from_u32(reader::doc_as_u32(doc)).unwrap())
 }
 
 pub fn get_exported_macros(cdata: Cmd) -> Vec<~str> {

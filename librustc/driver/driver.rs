@@ -161,7 +161,7 @@ impl Input {
     fn filestem(&self) -> ~str {
         match *self {
             FileInput(ref ifile) => ifile.filestem_str().unwrap().to_str(),
-            StrInput(_) => ~"rust_out",
+            StrInput(_) => "rust_out".to_owned(),
         }
     }
 }
@@ -310,10 +310,10 @@ pub fn phase_3_run_analysis_passes(sess: Session,
     time(time_passes, "looking for entry point", (),
          |_| middle::entry::find_entry_point(&sess, krate, &ast_map));
 
-    *sess.macro_registrar_fn.borrow_mut() =
+    sess.macro_registrar_fn.set(
         time(time_passes, "looking for macro registrar", (), |_|
             syntax::ext::registrar::find_macro_registrar(
-                sess.diagnostic(), krate));
+                sess.diagnostic(), krate)));
 
     let freevars = time(time_passes, "freevar finding", (), |_|
                         freevars::annotate_freevars(def_map, krate));
@@ -615,7 +615,7 @@ impl pprust::PpAnn for IdentifiedAnnotation {
             }
             pprust::NodeBlock(blk) => {
                 try!(pp::space(&mut s.s));
-                s.synth_comment(~"block " + blk.id.to_str())
+                s.synth_comment("block ".to_owned() + blk.id.to_str())
             }
             pprust::NodeExpr(expr) => {
                 try!(pp::space(&mut s.s));
@@ -624,7 +624,7 @@ impl pprust::PpAnn for IdentifiedAnnotation {
             }
             pprust::NodePat(pat) => {
                 try!(pp::space(&mut s.s));
-                s.synth_comment(~"pat " + pat.id.to_str())
+                s.synth_comment("pat ".to_owned() + pat.id.to_str())
             }
         }
     }
@@ -664,7 +664,8 @@ impl pprust::PpAnn for TypedAnnotation {
 pub fn pretty_print_input(sess: Session,
                           cfg: ast::CrateConfig,
                           input: &Input,
-                          ppm: PpMode) {
+                          ppm: PpMode,
+                          ofile: Option<Path>) {
     let krate = phase_1_parse_input(&sess, cfg, input);
     let id = link::find_crate_id(krate.attrs.as_slice(), input.filestem());
 
@@ -682,6 +683,17 @@ pub fn pretty_print_input(sess: Session,
     let src = Vec::from_slice(sess.codemap().get_filemap(src_name).src.as_bytes());
     let mut rdr = MemReader::new(src);
 
+    let out = match ofile {
+        None => ~io::stdout() as ~Writer,
+        Some(p) => {
+            let r = io::File::create(&p);
+            match r {
+                Ok(w) => ~w as ~Writer,
+                Err(e) => fail!("print-print failed to open {} due to {}",
+                                p.display(), e),
+            }
+        }
+    };
     match ppm {
         PpmIdentified | PpmExpandedIdentified => {
             pprust::print_crate(sess.codemap(),
@@ -689,7 +701,7 @@ pub fn pretty_print_input(sess: Session,
                                 &krate,
                                 src_name,
                                 &mut rdr,
-                                ~io::stdout(),
+                                out,
                                 &IdentifiedAnnotation,
                                 is_expanded)
         }
@@ -704,7 +716,7 @@ pub fn pretty_print_input(sess: Session,
                                 &krate,
                                 src_name,
                                 &mut rdr,
-                                ~io::stdout(),
+                                out,
                                 &annotation,
                                 is_expanded)
         }
@@ -714,7 +726,7 @@ pub fn pretty_print_input(sess: Session,
                                 &krate,
                                 src_name,
                                 &mut rdr,
-                                ~io::stdout(),
+                                out,
                                 &pprust::NoAnn,
                                 is_expanded)
         }
@@ -1042,7 +1054,7 @@ pub fn build_session_(sopts: session::Options,
         // For a library crate, this is always none
         entry_fn: RefCell::new(None),
         entry_type: Cell::new(None),
-        macro_registrar_fn: RefCell::new(None),
+        macro_registrar_fn: Cell::new(None),
         default_sysroot: default_sysroot,
         building_library: Cell::new(false),
         local_crate_source_file: local_crate_source_file,
@@ -1084,14 +1096,14 @@ pub fn optgroups() -> Vec<getopts::OptGroup> {
   optflag("", "crate-name", "Output the crate name and exit"),
   optflag("", "crate-file-name", "Output the file(s) that would be written if compilation \
           continued and exit"),
-  optflag("",  "ls",  "List the symbols defined by a library crate"),
   optflag("g",  "",  "Equivalent to --debuginfo=2"),
   optopt("",  "debuginfo",  "Emit DWARF debug info to the objects created:
          0 = no debug info,
          1 = line-tables only (for stacktraces and breakpoints),
          2 = full debug info with variable and type information (same as -g)", "LEVEL"),
   optflag("", "no-trans", "Run all passes except translation; no output"),
-  optflag("", "no-analysis", "Parse and expand the output, but run no analysis or produce output"),
+  optflag("", "no-analysis",
+          "Parse and expand the source, but run no analysis and produce no output"),
   optflag("O", "", "Equivalent to --opt-level=2"),
   optopt("o", "", "Write output to <filename>", "FILENAME"),
   optopt("", "opt-level", "Optimize with possible levels 0-3", "LEVEL"),
@@ -1104,7 +1116,9 @@ pub fn optgroups() -> Vec<getopts::OptGroup> {
               typed (crates expanded, with type annotations),
               or identified (fully parenthesized,
               AST nodes and blocks with IDs)", "TYPE"),
-  optflagopt("", "dep-info", "Output dependency info to <filename> after compiling", "FILENAME"),
+  optflagopt("", "dep-info",
+             "Output dependency info to <filename> after compiling, \
+              in a format suitable for use by Makefiles", "FILENAME"),
   optopt("", "sysroot", "Override the system root", "PATH"),
   optflag("", "test", "Build a test harness"),
   optopt("", "target", "Target triple cpu-manufacturer-kernel[-os]
@@ -1228,7 +1242,7 @@ mod test {
     #[test]
     fn test_switch_implies_cfg_test() {
         let matches =
-            &match getopts([~"--test"], optgroups().as_slice()) {
+            &match getopts(["--test".to_owned()], optgroups().as_slice()) {
               Ok(m) => m,
               Err(f) => fail!("test_switch_implies_cfg_test: {}", f.to_err_msg())
             };
@@ -1243,7 +1257,7 @@ mod test {
     #[test]
     fn test_switch_implies_cfg_test_unless_cfg_test() {
         let matches =
-            &match getopts([~"--test", ~"--cfg=test"],
+            &match getopts(["--test".to_owned(), "--cfg=test".to_owned()],
                            optgroups().as_slice()) {
               Ok(m) => m,
               Err(f) => {

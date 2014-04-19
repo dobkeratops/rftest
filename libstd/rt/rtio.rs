@@ -20,6 +20,7 @@ use path::Path;
 use result::Err;
 use rt::local::Local;
 use rt::task::Task;
+use vec::Vec;
 
 use ai = io::net::addrinfo;
 use io;
@@ -145,7 +146,8 @@ impl<'a> LocalIo<'a> {
 
 pub trait IoFactory {
     // networking
-    fn tcp_connect(&mut self, addr: SocketAddr) -> IoResult<~RtioTcpStream:Send>;
+    fn tcp_connect(&mut self, addr: SocketAddr,
+                   timeout: Option<u64>) -> IoResult<~RtioTcpStream:Send>;
     fn tcp_bind(&mut self, addr: SocketAddr) -> IoResult<~RtioTcpListener:Send>;
     fn udp_bind(&mut self, addr: SocketAddr) -> IoResult<~RtioUdpSocket:Send>;
     fn unix_bind(&mut self, path: &CString)
@@ -168,7 +170,7 @@ pub trait IoFactory {
     fn fs_rmdir(&mut self, path: &CString) -> IoResult<()>;
     fn fs_rename(&mut self, path: &CString, to: &CString) -> IoResult<()>;
     fn fs_readdir(&mut self, path: &CString, flags: c_int) ->
-        IoResult<~[Path]>;
+        IoResult<Vec<Path>>;
     fn fs_lstat(&mut self, path: &CString) -> IoResult<FileStat>;
     fn fs_chown(&mut self, path: &CString, uid: int, gid: int) ->
         IoResult<()>;

@@ -22,8 +22,8 @@ use middle::typeck::infer::{cres, InferCtxt};
 use middle::typeck::infer::{TypeTrace, Subtype};
 use middle::typeck::infer::fold_regions_in_sig;
 use syntax::ast::{Many, Once, MutImmutable, MutMutable};
-use syntax::ast::{ExternFn, ImpureFn, UnsafeFn, NodeId};
-use syntax::ast::{Onceness, Purity};
+use syntax::ast::{ExternFn, NormalFn, UnsafeFn, NodeId};
+use syntax::ast::{Onceness, FnStyle};
 use collections::HashMap;
 use util::common::{indenter};
 use util::ppaux::mt_to_str;
@@ -36,7 +36,7 @@ impl<'f> Glb<'f> {
 
 impl<'f> Combine for Glb<'f> {
     fn infcx<'a>(&'a self) -> &'a InferCtxt<'a> { self.get_ref().infcx }
-    fn tag(&self) -> ~str { ~"glb" }
+    fn tag(&self) -> ~str { "glb".to_owned() }
     fn a_is_expected(&self) -> bool { self.get_ref().a_is_expected }
     fn trace(&self) -> TypeTrace { self.get_ref().trace }
 
@@ -81,10 +81,10 @@ impl<'f> Combine for Glb<'f> {
         Lub(*self.get_ref()).tys(a, b)
     }
 
-    fn purities(&self, a: Purity, b: Purity) -> cres<Purity> {
+    fn fn_styles(&self, a: FnStyle, b: FnStyle) -> cres<FnStyle> {
         match (a, b) {
           (ExternFn, _) | (_, ExternFn) => Ok(ExternFn),
-          (ImpureFn, _) | (_, ImpureFn) => Ok(ImpureFn),
+          (NormalFn, _) | (_, NormalFn) => Ok(NormalFn),
           (UnsafeFn, UnsafeFn) => Ok(UnsafeFn)
         }
     }

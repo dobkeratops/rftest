@@ -188,7 +188,7 @@ fn decl_fn(llmod: ModuleRef, name: &str, cc: lib::llvm::CallConv,
         // FIXME #6750 ~Trait cannot be directly marked as
         // noalias because the actual object pointer is nested.
         ty::ty_uniq(..) | // ty::ty_trait(_, _, ty::UniqTraitStore, _, _) |
-        ty::ty_vec(_, ty::vstore_uniq) | ty::ty_str(ty::vstore_uniq) => {
+        ty::ty_vec(_, ty::VstoreUniq) | ty::ty_str(ty::VstoreUniq) => {
             unsafe {
                 llvm::LLVMAddReturnAttribute(llfn, lib::llvm::NoAliasAttribute as c_uint);
             }
@@ -259,8 +259,8 @@ pub fn decl_rust_fn(ccx: &CrateContext, has_env: bool,
             // FIXME #6750 ~Trait cannot be directly marked as
             // noalias because the actual object pointer is nested.
             ty::ty_uniq(..) | // ty::ty_trait(_, _, ty::UniqTraitStore, _, _) |
-            ty::ty_vec(_, ty::vstore_uniq) | ty::ty_str(ty::vstore_uniq) |
-            ty::ty_closure(~ty::ClosureTy {sigil: ast::OwnedSigil, ..}) => {
+            ty::ty_vec(_, ty::VstoreUniq) | ty::ty_str(ty::VstoreUniq) |
+            ty::ty_closure(~ty::ClosureTy {store: ty::UniqTraitStore, ..}) => {
                 unsafe {
                     llvm::LLVMAddAttribute(llarg, lib::llvm::NoAliasAttribute as c_uint);
                 }
@@ -445,8 +445,8 @@ pub fn set_llvm_fn_attrs(attrs: &[ast::Attribute], llfn: ValueRef) {
     }
 
     // Add the no-split-stack attribute if requested
-    if contains_name(attrs, "no_split_stack") {
-        set_no_split_stack(llfn);
+    if !contains_name(attrs, "no_split_stack") {
+        set_split_stack(llfn);
     }
 
     if contains_name(attrs, "cold") {
@@ -458,8 +458,8 @@ pub fn set_always_inline(f: ValueRef) {
     lib::llvm::SetFunctionAttribute(f, lib::llvm::AlwaysInlineAttribute)
 }
 
-pub fn set_no_split_stack(f: ValueRef) {
-    "no-split-stack".with_c_str(|buf| {
+pub fn set_split_stack(f: ValueRef) {
+    "split-stack".with_c_str(|buf| {
         unsafe { llvm::LLVMAddFunctionAttrString(f, buf); }
     })
 }
@@ -468,7 +468,7 @@ pub fn set_no_split_stack(f: ValueRef) {
 // silently mangles such symbols, breaking our linkage model.
 pub fn note_unique_llvm_symbol(ccx: &CrateContext, sym: ~str) {
     if ccx.all_llvm_symbols.borrow().contains(&sym) {
-        ccx.sess().bug(~"duplicate LLVM symbol: " + sym);
+        ccx.sess().bug("duplicate LLVM symbol: ".to_owned() + sym);
     }
     ccx.all_llvm_symbols.borrow_mut().insert(sym);
 }
@@ -657,10 +657,10 @@ pub fn iter_structural_ty<'r,
               }
           })
       }
-      ty::ty_str(ty::vstore_fixed(_)) |
-      ty::ty_vec(_, ty::vstore_fixed(_)) => {
-        let (base, len) = tvec::get_base_and_byte_len(cx, av, t);
+      ty::ty_str(ty::VstoreFixed(n)) |
+      ty::ty_vec(_, ty::VstoreFixed(n)) => {
         let unit_ty = ty::sequence_element_type(cx.tcx(), t);
+        let (base, len) = tvec::get_fixed_base_and_byte_len(cx, av, unit_ty, n);
         cx = tvec::iter_vec_raw(cx, base, unit_ty, len, f);
       }
       ty::ty_tup(ref args) => {
@@ -696,7 +696,7 @@ pub fn iter_structural_ty<'r,
 
                   for variant in (*variants).iter() {
                       let variant_cx =
-                          fcx.new_temp_block(~"enum-iter-variant-" +
+                          fcx.new_temp_block("enum-iter-variant-".to_owned() +
                                              variant.disr_val.to_str());
                       match adt::trans_case(cx, repr, variant.disr_val) {
                           _match::single_result(r) => {
@@ -795,7 +795,7 @@ pub fn fail_if_zero<'a>(
         ICmp(cx, lib::llvm::IntEQ, rhs, zero)
       }
       _ => {
-        cx.sess().bug(~"fail-if-zero on unexpected type: " +
+        cx.sess().bug("fail-if-zero on unexpected type: ".to_owned() +
                       ty_to_str(cx.tcx(), rhs_t));
       }
     };
@@ -936,7 +936,7 @@ pub fn init_local<'a>(bcx: &'a Block<'a>, local: &ast::Local)
         // Handle let _ = e; just like e;
         match local.init {
             Some(init) => {
-              return expr::trans_into(bcx, init, expr::Ignore);
+                return controlflow::trans_stmt_semi(bcx, init)
             }
             None => { return bcx; }
         }
@@ -977,7 +977,7 @@ pub fn call_memcpy(cx: &Block, dst: ValueRef, src: ValueRef, n_bytes: ValueRef, 
         X86 | Arm | Mips => "llvm.memcpy.p0i8.p0i8.i32",
         X86_64 => "llvm.memcpy.p0i8.p0i8.i64"
     };
-    let memcpy = ccx.intrinsics.get_copy(&key);
+    let memcpy = ccx.get_intrinsic(&key);
     let src_ptr = PointerCast(cx, src, Type::i8p(ccx));
     let dst_ptr = PointerCast(cx, dst, Type::i8p(ccx));
     let size = IntCast(cx, n_bytes, ccx.int_type);
@@ -1022,7 +1022,7 @@ fn memzero(b: &Builder, llptr: ValueRef, ty: Type) {
         X86_64 => "llvm.memset.p0i8.i64"
     };
 
-    let llintrinsicfn = ccx.intrinsics.get_copy(&intrinsic_key);
+    let llintrinsicfn = ccx.get_intrinsic(&intrinsic_key);
     let llptr = b.pointercast(llptr, Type::i8(ccx).ptr_to());
     let llzeroval = C_u8(ccx, 0);
     let size = machine::llsize_of(ccx, ty);
@@ -1108,7 +1108,7 @@ pub fn new_fn_ctxt<'a>(ccx: &'a CrateContext,
     for p in param_substs.iter() { p.validate(); }
 
     debug!("new_fn_ctxt(path={}, id={}, param_substs={})",
-           if id == -1 { ~"" } else { ccx.tcx.map.path_to_str(id) },
+           if id == -1 { "".to_owned() } else { ccx.tcx.map.path_to_str(id) },
            id, param_substs.repr(ccx.tcx()));
 
     let substd_output_type = match param_substs {
@@ -1554,8 +1554,8 @@ impl<'a> Visitor<()> for TransItemVisitor<'a> {
 pub fn trans_item(ccx: &CrateContext, item: &ast::Item) {
     let _icx = push_ctxt("trans_item");
     match item.node {
-      ast::ItemFn(decl, purity, _abi, ref generics, body) => {
-        if purity == ast::ExternFn  {
+      ast::ItemFn(decl, fn_style, _abi, ref generics, body) => {
+        if fn_style == ast::ExternFn  {
             let llfndecl = get_item_val(ccx, item.id);
             foreign::trans_rust_fn_with_foreign_abi(
                 ccx, decl, body, item.attrs.as_slice(), llfndecl, item.id);
@@ -1899,8 +1899,8 @@ pub fn get_item_val(ccx: &CrateContext, id: ast::NodeId) -> ValueRef {
                     }
                 }
 
-                ast::ItemFn(_, purity, _, _, _) => {
-                    let llfn = if purity != ast::ExternFn {
+                ast::ItemFn(_, fn_style, _, _, _) => {
+                    let llfn = if fn_style != ast::ExternFn {
                         register_fn(ccx, i.span, sym, i.id, ty)
                     } else {
                         foreign::register_rust_fn_with_foreign_abi(ccx,
@@ -2040,168 +2040,6 @@ fn register_method(ccx: &CrateContext, id: ast::NodeId,
 pub fn p2i(ccx: &CrateContext, v: ValueRef) -> ValueRef {
     unsafe {
         return llvm::LLVMConstPtrToInt(v, ccx.int_type.to_ref());
-    }
-}
-
-
-pub fn declare_intrinsics(ccx: &mut CrateContext) {
-    macro_rules! ifn (
-        ($name:expr fn() -> $ret:expr) => ({
-            let name = $name;
-            // HACK(eddyb) dummy output type, shouln't affect anything.
-            let f = decl_cdecl_fn(ccx.llmod, name, Type::func([], &$ret), ty::mk_nil());
-            ccx.intrinsics.insert(name, f);
-        });
-        ($name:expr fn($($arg:expr),*) -> $ret:expr) => ({
-            let name = $name;
-            // HACK(eddyb) dummy output type, shouln't affect anything.
-            let f = decl_cdecl_fn(ccx.llmod, name,
-                                  Type::func([$($arg),*], &$ret), ty::mk_nil());
-            ccx.intrinsics.insert(name, f);
-        })
-    )
-    macro_rules! mk_struct (
-        ($($field_ty:expr),*) => (Type::struct_(ccx, [$($field_ty),*], false))
-    )
-
-    let i8p = Type::i8p(ccx);
-    let void = Type::void(ccx);
-    let i1 = Type::i1(ccx);
-    let t_i8 = Type::i8(ccx);
-    let t_i16 = Type::i16(ccx);
-    let t_i32 = Type::i32(ccx);
-    let t_i64 = Type::i64(ccx);
-    let t_f32 = Type::f32(ccx);
-    let t_f64 = Type::f64(ccx);
-
-    ifn!("llvm.memcpy.p0i8.p0i8.i32" fn(i8p, i8p, t_i32, t_i32, i1) -> void);
-    ifn!("llvm.memcpy.p0i8.p0i8.i64" fn(i8p, i8p, t_i64, t_i32, i1) -> void);
-    ifn!("llvm.memmove.p0i8.p0i8.i32" fn(i8p, i8p, t_i32, t_i32, i1) -> void);
-    ifn!("llvm.memmove.p0i8.p0i8.i64" fn(i8p, i8p, t_i64, t_i32, i1) -> void);
-    ifn!("llvm.memset.p0i8.i32" fn(i8p, t_i8, t_i32, t_i32, i1) -> void);
-    ifn!("llvm.memset.p0i8.i64" fn(i8p, t_i8, t_i64, t_i32, i1) -> void);
-
-    ifn!("llvm.trap" fn() -> void);
-    ifn!("llvm.debugtrap" fn() -> void);
-    ifn!("llvm.frameaddress" fn(t_i32) -> i8p);
-
-    ifn!("llvm.powi.f32" fn(t_f32, t_i32) -> t_f32);
-    ifn!("llvm.powi.f64" fn(t_f64, t_i32) -> t_f64);
-    ifn!("llvm.pow.f32" fn(t_f32, t_f32) -> t_f32);
-    ifn!("llvm.pow.f64" fn(t_f64, t_f64) -> t_f64);
-
-    ifn!("llvm.sqrt.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.sqrt.f64" fn(t_f64) -> t_f64);
-    ifn!("llvm.sin.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.sin.f64" fn(t_f64) -> t_f64);
-    ifn!("llvm.cos.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.cos.f64" fn(t_f64) -> t_f64);
-    ifn!("llvm.exp.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.exp.f64" fn(t_f64) -> t_f64);
-    ifn!("llvm.exp2.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.exp2.f64" fn(t_f64) -> t_f64);
-    ifn!("llvm.log.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.log.f64" fn(t_f64) -> t_f64);
-    ifn!("llvm.log10.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.log10.f64" fn(t_f64) -> t_f64);
-    ifn!("llvm.log2.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.log2.f64" fn(t_f64) -> t_f64);
-
-    ifn!("llvm.fma.f32" fn(t_f32, t_f32, t_f32) -> t_f32);
-    ifn!("llvm.fma.f64" fn(t_f64, t_f64, t_f64) -> t_f64);
-
-    ifn!("llvm.fabs.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.fabs.f64" fn(t_f64) -> t_f64);
-
-    ifn!("llvm.floor.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.floor.f64" fn(t_f64) -> t_f64);
-    ifn!("llvm.ceil.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.ceil.f64" fn(t_f64) -> t_f64);
-    ifn!("llvm.trunc.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.trunc.f64" fn(t_f64) -> t_f64);
-
-    ifn!("llvm.rint.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.rint.f64" fn(t_f64) -> t_f64);
-    ifn!("llvm.nearbyint.f32" fn(t_f32) -> t_f32);
-    ifn!("llvm.nearbyint.f64" fn(t_f64) -> t_f64);
-
-    ifn!("llvm.ctpop.i8" fn(t_i8) -> t_i8);
-    ifn!("llvm.ctpop.i16" fn(t_i16) -> t_i16);
-    ifn!("llvm.ctpop.i32" fn(t_i32) -> t_i32);
-    ifn!("llvm.ctpop.i64" fn(t_i64) -> t_i64);
-
-    ifn!("llvm.ctlz.i8" fn(t_i8 , i1) -> t_i8);
-    ifn!("llvm.ctlz.i16" fn(t_i16, i1) -> t_i16);
-    ifn!("llvm.ctlz.i32" fn(t_i32, i1) -> t_i32);
-    ifn!("llvm.ctlz.i64" fn(t_i64, i1) -> t_i64);
-
-    ifn!("llvm.cttz.i8" fn(t_i8 , i1) -> t_i8);
-    ifn!("llvm.cttz.i16" fn(t_i16, i1) -> t_i16);
-    ifn!("llvm.cttz.i32" fn(t_i32, i1) -> t_i32);
-    ifn!("llvm.cttz.i64" fn(t_i64, i1) -> t_i64);
-
-    ifn!("llvm.bswap.i16" fn(t_i16) -> t_i16);
-    ifn!("llvm.bswap.i32" fn(t_i32) -> t_i32);
-    ifn!("llvm.bswap.i64" fn(t_i64) -> t_i64);
-
-    ifn!("llvm.sadd.with.overflow.i8" fn(t_i8, t_i8) -> mk_struct!{t_i8, i1});
-    ifn!("llvm.sadd.with.overflow.i16" fn(t_i16, t_i16) -> mk_struct!{t_i16, i1});
-    ifn!("llvm.sadd.with.overflow.i32" fn(t_i32, t_i32) -> mk_struct!{t_i32, i1});
-    ifn!("llvm.sadd.with.overflow.i64" fn(t_i64, t_i64) -> mk_struct!{t_i64, i1});
-
-    ifn!("llvm.uadd.with.overflow.i8" fn(t_i8, t_i8) -> mk_struct!{t_i8, i1});
-    ifn!("llvm.uadd.with.overflow.i16" fn(t_i16, t_i16) -> mk_struct!{t_i16, i1});
-    ifn!("llvm.uadd.with.overflow.i32" fn(t_i32, t_i32) -> mk_struct!{t_i32, i1});
-    ifn!("llvm.uadd.with.overflow.i64" fn(t_i64, t_i64) -> mk_struct!{t_i64, i1});
-
-    ifn!("llvm.ssub.with.overflow.i8" fn(t_i8, t_i8) -> mk_struct!{t_i8, i1});
-    ifn!("llvm.ssub.with.overflow.i16" fn(t_i16, t_i16) -> mk_struct!{t_i16, i1});
-    ifn!("llvm.ssub.with.overflow.i32" fn(t_i32, t_i32) -> mk_struct!{t_i32, i1});
-    ifn!("llvm.ssub.with.overflow.i64" fn(t_i64, t_i64) -> mk_struct!{t_i64, i1});
-
-    ifn!("llvm.usub.with.overflow.i8" fn(t_i8, t_i8) -> mk_struct!{t_i8, i1});
-    ifn!("llvm.usub.with.overflow.i16" fn(t_i16, t_i16) -> mk_struct!{t_i16, i1});
-    ifn!("llvm.usub.with.overflow.i32" fn(t_i32, t_i32) -> mk_struct!{t_i32, i1});
-    ifn!("llvm.usub.with.overflow.i64" fn(t_i64, t_i64) -> mk_struct!{t_i64, i1});
-
-    ifn!("llvm.smul.with.overflow.i8" fn(t_i8, t_i8) -> mk_struct!{t_i8, i1});
-    ifn!("llvm.smul.with.overflow.i16" fn(t_i16, t_i16) -> mk_struct!{t_i16, i1});
-    ifn!("llvm.smul.with.overflow.i32" fn(t_i32, t_i32) -> mk_struct!{t_i32, i1});
-    ifn!("llvm.smul.with.overflow.i64" fn(t_i64, t_i64) -> mk_struct!{t_i64, i1});
-
-    ifn!("llvm.umul.with.overflow.i8" fn(t_i8, t_i8) -> mk_struct!{t_i8, i1});
-    ifn!("llvm.umul.with.overflow.i16" fn(t_i16, t_i16) -> mk_struct!{t_i16, i1});
-    ifn!("llvm.umul.with.overflow.i32" fn(t_i32, t_i32) -> mk_struct!{t_i32, i1});
-    ifn!("llvm.umul.with.overflow.i64" fn(t_i64, t_i64) -> mk_struct!{t_i64, i1});
-
-    ifn!("llvm.expect.i1" fn(i1, i1) -> i1);
-
-    // Some intrinsics were introduced in later versions of LLVM, but they have
-    // fallbacks in libc or libm and such. Currently, all of these intrinsics
-    // were introduced in LLVM 3.4, so we case on that.
-    macro_rules! compatible_ifn (
-        ($name:expr, $cname:ident ($($arg:expr),*) -> $ret:expr) => ({
-            let name = $name;
-            if unsafe { llvm::LLVMVersionMinor() >= 4 } {
-                ifn!(name fn($($arg),*) -> $ret);
-            } else {
-                let f = decl_cdecl_fn(ccx.llmod, stringify!($cname),
-                                      Type::func([$($arg),*], &$ret),
-                                      ty::mk_nil());
-                ccx.intrinsics.insert(name, f);
-            }
-        })
-    )
-
-    compatible_ifn!("llvm.copysign.f32", copysignf(t_f32, t_f32) -> t_f32);
-    compatible_ifn!("llvm.copysign.f64", copysign(t_f64, t_f64) -> t_f64);
-    compatible_ifn!("llvm.round.f32", roundf(t_f32) -> t_f32);
-    compatible_ifn!("llvm.round.f64", round(t_f64) -> t_f64);
-
-
-    if ccx.sess().opts.debuginfo != NoDebugInfo {
-        ifn!("llvm.dbg.declare" fn(Type::metadata(ccx), Type::metadata(ccx)) -> void);
-        ifn!("llvm.dbg.value" fn(Type::metadata(ccx), t_i64, Type::metadata(ccx)) -> void);
     }
 }
 
@@ -2350,10 +2188,12 @@ pub fn trans_crate(krate: ast::Crate,
     // symbol. This symbol is required for use by the libmorestack library that
     // we link in, so we must ensure that this symbol is not internalized (if
     // defined in the crate).
-    reachable.push(~"main");
-    reachable.push(~"rust_stack_exhausted");
-    reachable.push(~"rust_eh_personality"); // referenced from .eh_frame section on some platforms
-    reachable.push(~"rust_eh_personality_catch"); // referenced from rt/rust_try.ll
+    reachable.push("main".to_owned());
+    reachable.push("rust_stack_exhausted".to_owned());
+
+    // referenced from .eh_frame section on some platforms
+    reachable.push("rust_eh_personality".to_owned());
+    reachable.push("rust_eh_personality_catch".to_owned()); // referenced from rt/rust_try.ll
 
     let metadata_module = ccx.metadata_llmod;
 

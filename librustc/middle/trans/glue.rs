@@ -93,7 +93,7 @@ fn get_drop_glue_type(ccx: &CrateContext, t: ty::t) -> ty::t {
             }
         }
 
-        ty::ty_vec(mt, ty::vstore_uniq) if !ty::type_needs_drop(tcx, mt.ty) =>
+        ty::ty_vec(ty, ty::VstoreUniq) if !ty::type_needs_drop(tcx, ty) =>
             ty::mk_uniq(tcx, ty::mk_i8()),
 
         _ => t
@@ -289,7 +289,7 @@ fn make_drop_glue<'a>(bcx: &'a Block<'a>, v0: ValueRef, t: ty::t) -> &'a Block<'
                 trans_exchange_free(bcx, llbox)
             })
         }
-        ty::ty_vec(_, ty::vstore_uniq) | ty::ty_str(ty::vstore_uniq) => {
+        ty::ty_vec(_, ty::VstoreUniq) | ty::ty_str(ty::VstoreUniq) => {
             let llbox = Load(bcx, v0);
             let not_null = IsNotNull(bcx, llbox);
             with_cond(bcx, not_null, |bcx| {
@@ -323,7 +323,7 @@ fn make_drop_glue<'a>(bcx: &'a Block<'a>, v0: ValueRef, t: ty::t) -> &'a Block<'
                 bcx
             })
         }
-        ty::ty_closure(ref f) if f.sigil == ast::OwnedSigil => {
+        ty::ty_closure(ref f) if f.store == ty::UniqTraitStore => {
             let box_cell_v = GEPi(bcx, v0, [0u, abi::fn_field_box]);
             let env = Load(bcx, box_cell_v);
             let env_ptr_ty = Type::at_box(bcx.ccx(), Type::i8(bcx.ccx())).ptr_to();
@@ -433,7 +433,7 @@ pub fn declare_tydesc(ccx: &CrateContext, t: ty::t) -> @tydesc_info {
 fn declare_generic_glue(ccx: &CrateContext, t: ty::t, llfnty: Type,
                         name: &str) -> ValueRef {
     let _icx = push_ctxt("declare_generic_glue");
-    let fn_nm = mangle_internal_name_by_type_and_seq(ccx, t, ~"glue_" + name);
+    let fn_nm = mangle_internal_name_by_type_and_seq(ccx, t, "glue_".to_owned() + name);
     debug!("{} is for type {}", fn_nm, ppaux::ty_to_str(ccx.tcx(), t));
     let llfn = decl_cdecl_fn(ccx.llmod, fn_nm, llfnty, ty::mk_nil());
     note_unique_llvm_symbol(ccx, fn_nm);

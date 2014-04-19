@@ -93,10 +93,11 @@ impl<'a> TypeFolder for SubstFolder<'a> {
                     let root_msg = match self.root_ty {
                         Some(root) => format!(" in the substitution of `{}`",
                                               root.repr(self.tcx)),
-                        None => ~""
+                        None => "".to_owned()
                     };
-                    let m = format!("missing type param `{}`{}",
-                                    t.repr(self.tcx), root_msg);
+                    let m = format!("can't use type parameters from outer \
+                                    function{}; try using a local type \
+                                    parameter instead", root_msg);
                     match self.span {
                         Some(span) => self.tcx.sess.span_err(span, m),
                         None => self.tcx.sess.err(m)
@@ -111,7 +112,7 @@ impl<'a> TypeFolder for SubstFolder<'a> {
                         let root_msg = match self.root_ty {
                             Some(root) => format!(" in the substitution of `{}`",
                                                   root.repr(self.tcx)),
-                            None => ~""
+                            None => "".to_owned()
                         };
                         let m = format!("missing `Self` type param{}", root_msg);
                         match self.span {

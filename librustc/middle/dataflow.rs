@@ -18,8 +18,8 @@
 
 
 use std::io;
+use std::strbuf::StrBuf;
 use std::uint;
-use std::slice;
 use syntax::ast;
 use syntax::ast_util;
 use syntax::ast_util::IdRange;
@@ -103,14 +103,14 @@ impl<'a, O:DataFlowOperator> pprust::PpAnn for DataFlowContext<'a, O> {
             let gens_str = if gens.iter().any(|&u| u != 0) {
                 format!(" gen: {}", bits_to_str(gens))
             } else {
-                ~""
+                "".to_owned()
             };
 
             let kills = self.kills.slice(start, end);
             let kills_str = if kills.iter().any(|&u| u != 0) {
                 format!(" kill: {}", bits_to_str(kills))
             } else {
-                ~""
+                "".to_owned()
             };
 
             try!(ps.synth_comment(format!("id {}: {}{}{}", id, entry_str,
@@ -307,13 +307,13 @@ impl<'a, O:DataFlowOperator+Clone+'static> DataFlowContext<'a, O> {
                 changed: true
             };
 
-            let mut temp = slice::from_elem(self.words_per_id, 0u);
+            let mut temp = Vec::from_elem(self.words_per_id, 0u);
             let mut loop_scopes = Vec::new();
 
             while propcx.changed {
                 propcx.changed = false;
-                propcx.reset(temp);
-                propcx.walk_block(blk, temp, &mut loop_scopes);
+                propcx.reset(temp.as_mut_slice());
+                propcx.walk_block(blk, temp.as_mut_slice(), &mut loop_scopes);
             }
         }
 
@@ -832,7 +832,7 @@ fn mut_bits_to_str(words: &mut [uint]) -> ~str {
 }
 
 fn bits_to_str(words: &[uint]) -> ~str {
-    let mut result = ~"";
+    let mut result = StrBuf::new();
     let mut sep = '[';
 
     // Note: this is a little endian printout of bytes.
@@ -847,7 +847,7 @@ fn bits_to_str(words: &[uint]) -> ~str {
         }
     }
     result.push_char(']');
-    return result;
+    return result.into_owned();
 }
 
 fn copy_bits(in_vec: &[uint], out_vec: &mut [uint]) -> bool {

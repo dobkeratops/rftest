@@ -28,9 +28,10 @@ use reflect::{MovePtr, align};
 use result::{Ok, Err};
 use str::StrSlice;
 use to_str::ToStr;
-use slice::{Vector, OwnedVector};
+use slice::Vector;
 use intrinsics::{Disr, Opaque, TyDesc, TyVisitor, get_tydesc, visit_tydesc};
 use raw;
+use vec::Vec;
 
 macro_rules! try( ($me:expr, $e:expr) => (
     match $e {
@@ -102,8 +103,8 @@ enum VariantState {
 
 pub struct ReprVisitor<'a> {
     ptr: *u8,
-    ptr_stk: ~[*u8],
-    var_stk: ~[VariantState],
+    ptr_stk: Vec<*u8>,
+    var_stk: Vec<VariantState>,
     writer: &'a mut io::Writer,
     last_err: Option<io::IoError>,
 }
@@ -112,8 +113,8 @@ pub fn ReprVisitor<'a>(ptr: *u8,
                        writer: &'a mut io::Writer) -> ReprVisitor<'a> {
     ReprVisitor {
         ptr: ptr,
-        ptr_stk: ~[],
-        var_stk: ~[],
+        ptr_stk: vec!(),
+        var_stk: vec!(),
         writer: writer,
         last_err: None,
     }
@@ -154,8 +155,8 @@ impl<'a> ReprVisitor<'a> {
             // issues we have to recreate it here.
             let u = ReprVisitor {
                 ptr: ptr,
-                ptr_stk: ~[],
-                var_stk: ~[],
+                ptr_stk: vec!(),
+                var_stk: vec!(),
                 writer: ::cast::transmute_copy(&self.writer),
                 last_err: None,
             };
@@ -505,7 +506,7 @@ impl<'a> TyVisitor for ReprVisitor<'a> {
                                 _offset: uint,
                                 inner: *TyDesc)
                                 -> bool {
-        match self.var_stk[self.var_stk.len() - 1] {
+        match *self.var_stk.get(self.var_stk.len() - 1) {
             Matched => {
                 if i != 0 {
                     try!(self, self.writer.write(", ".as_bytes()));
@@ -523,7 +524,7 @@ impl<'a> TyVisitor for ReprVisitor<'a> {
                                 _disr_val: Disr,
                                 n_fields: uint,
                                 _name: &str) -> bool {
-        match self.var_stk[self.var_stk.len() - 1] {
+        match *self.var_stk.get(self.var_stk.len() - 1) {
             Matched => {
                 if n_fields > 0 {
                     try!(self, self.writer.write([')' as u8]));
@@ -635,7 +636,8 @@ fn test_repr() {
     exact_test(&false, "false");
     exact_test(&1.234, "1.234f64");
     exact_test(&(&"hello"), "\"hello\"");
-    exact_test(&(~"he\u10f3llo"), "~\"he\\u10f3llo\"");
+    // FIXME What do I do about this one?
+    exact_test(&("he\u10f3llo".to_owned()), "~\"he\\u10f3llo\"");
 
     exact_test(&(@10), "@10");
     exact_test(&(~10), "~10");
@@ -657,13 +659,13 @@ fn test_repr() {
                "@repr::P{a: 10, b: 1.234f64}");
     exact_test(&(~P{a:10, b:1.234}),
                "~repr::P{a: 10, b: 1.234f64}");
-    exact_test(&(10u8, ~"hello"),
+    exact_test(&(10u8, "hello".to_owned()),
                "(10u8, ~\"hello\")");
-    exact_test(&(10u16, ~"hello"),
+    exact_test(&(10u16, "hello".to_owned()),
                "(10u16, ~\"hello\")");
-    exact_test(&(10u32, ~"hello"),
+    exact_test(&(10u32, "hello".to_owned()),
                "(10u32, ~\"hello\")");
-    exact_test(&(10u64, ~"hello"),
+    exact_test(&(10u64, "hello".to_owned()),
                "(10u64, ~\"hello\")");
 
     exact_test(&(&[1, 2]), "&[1, 2]");

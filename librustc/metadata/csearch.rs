@@ -28,7 +28,7 @@ use syntax::parse::token;
 pub struct StaticMethodInfo {
     pub ident: ast::Ident,
     pub def_id: ast::DefId,
-    pub purity: ast::Purity,
+    pub fn_style: ast::FnStyle,
     pub vis: ast::Visibility,
 }
 
@@ -279,7 +279,7 @@ pub fn get_trait_of_method(cstore: &cstore::CStore,
 
 pub fn get_macro_registrar_fn(cstore: &cstore::CStore,
                               crate_num: ast::CrateNum)
-                              -> Option<ast::DefId> {
+                              -> Option<ast::NodeId> {
     let cdata = cstore.get_crate_data(crate_num);
     decoder::get_macro_registrar_fn(cdata)
 }

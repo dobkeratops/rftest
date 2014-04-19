@@ -15,6 +15,8 @@ use std::os;
 use std::io::fs;
 use collections::HashSet;
 
+use myfs = util::fs;
+
 pub enum FileMatch { FileMatches, FileDoesntMatch }
 
 // A module for searching for libraries
@@ -156,17 +158,10 @@ fn make_rustpkg_target_lib_path(sysroot: &Path,
 pub fn get_or_default_sysroot() -> Path {
     // Follow symlinks.  If the resolved path is relative, make it absolute.
     fn canonicalize(path: Option<Path>) -> Option<Path> {
-        path.and_then(|mut path|
-            match fs::readlink(&path) {
-                Ok(canon) => {
-                    if canon.is_absolute() {
-                        Some(canon)
-                    } else {
-                        path.pop();
-                        Some(path.join(canon))
-                    }
-                },
-                Err(..) => Some(path),
+        path.and_then(|path|
+            match myfs::realpath(&path) {
+                Ok(canon) => Some(canon),
+                Err(e) => fail!("failed to get realpath: {}", e),
             })
     }
 
@@ -246,21 +241,21 @@ fn find_libdir(sysroot: &Path) -> ~str {
     }
 
     #[cfg(target_word_size = "64")]
-    fn primary_libdir_name() -> ~str { ~"lib64" }
+    fn primary_libdir_name() -> ~str { "lib64".to_owned() }
 
     #[cfg(target_word_size = "32")]
-    fn primary_libdir_name() -> ~str { ~"lib32" }
+    fn primary_libdir_name() -> ~str { "lib32".to_owned() }
 
-    fn secondary_libdir_name() -> ~str { ~"lib" }
+    fn secondary_libdir_name() -> ~str { "lib".to_owned() }
 }
 
 #[cfg(windows)]
 fn find_libdir(_sysroot: &Path) -> ~str {
-    ~"bin"
+    "bin".to_owned()
 }
 
 // The name of rustc's own place to organize libraries.
 // Used to be "rustc", now the default is "rustlib"
 pub fn rustlibdir() -> ~str {
-    ~"rustlib"
+    "rustlib".to_owned()
 }

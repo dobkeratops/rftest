@@ -200,14 +200,14 @@ pub fn ensure_trait_methods(ccx: &CrateCtxt, trait_id: ast::NodeId) {
                                 ty_method_of_trait_method(
                                     ccx, trait_id, &trait_ty_generics,
                                     &m.id, &m.ident, &m.explicit_self,
-                                    &m.generics, &m.purity, m.decl)
+                                    &m.generics, &m.fn_style, m.decl)
                             }
 
                             &ast::Provided(ref m) => {
                                 ty_method_of_trait_method(
                                     ccx, trait_id, &trait_ty_generics,
                                     &m.id, &m.ident, &m.explicit_self,
-                                    &m.generics, &m.purity, m.decl)
+                                    &m.generics, &m.fn_style, m.decl)
                             }
                         };
 
@@ -376,11 +376,11 @@ pub fn ensure_trait_methods(ccx: &CrateCtxt, trait_id: ast::NodeId) {
                                  m_ident: &ast::Ident,
                                  m_explicit_self: &ast::ExplicitSelf,
                                  m_generics: &ast::Generics,
-                                 m_purity: &ast::Purity,
+                                 m_fn_style: &ast::FnStyle,
                                  m_decl: &ast::FnDecl) -> ty::Method
     {
         let trait_self_ty = ty::mk_self(this.tcx, local_def(trait_id));
-        let fty = astconv::ty_of_method(this, *m_id, *m_purity, trait_self_ty,
+        let fty = astconv::ty_of_method(this, *m_id, *m_fn_style, trait_self_ty,
                                         *m_explicit_self, m_decl);
         let num_trait_type_params = trait_generics.type_param_defs().len();
         let ty_generics = ty_generics_for_fn_or_method(this, m_generics,
@@ -508,7 +508,7 @@ fn convert_methods(ccx: &CrateCtxt,
                     rcvr_generics: &ast::Generics,
                     rcvr_visibility: ast::Visibility) -> ty::Method
     {
-        let fty = astconv::ty_of_method(ccx, m.id, m.purity,
+        let fty = astconv::ty_of_method(ccx, m.id, m.fn_style,
                                         untransformed_rcvr_ty,
                                         m.explicit_self, m.decl);
 
@@ -818,11 +818,11 @@ pub fn ty_of_item(ccx: &CrateCtxt, it: &ast::Item)
             tcx.tcache.borrow_mut().insert(local_def(it.id), tpt.clone());
             return tpt;
         }
-        ast::ItemFn(decl, purity, abi, ref generics, _) => {
+        ast::ItemFn(decl, fn_style, abi, ref generics, _) => {
             let ty_generics = ty_generics_for_fn_or_method(ccx, generics, 0);
             let tofd = astconv::ty_of_bare_fn(ccx,
                                               it.id,
-                                              purity,
+                                              fn_style,
                                               abi,
                                               decl);
             let tpt = ty_param_bounds_and_ty {
@@ -945,7 +945,24 @@ pub fn ty_generics(ccx: &CrateCtxt,
                 let param_ty = ty::param_ty {idx: base_index + offset,
                                              def_id: local_def(param.id)};
                 let bounds = @compute_bounds(ccx, param_ty, &param.bounds);
-                let default = param.default.map(|x| ast_ty_to_ty(ccx, &ExplicitRscope, x));
+                let default = param.default.map(|path| {
+                    let ty = ast_ty_to_ty(ccx, &ExplicitRscope, path);
+                    let cur_idx = param_ty.idx;
+
+                    ty::walk_ty(ty, |t| {
+                        match ty::get(t).sty {
+                            ty::ty_param(p) => if p.idx > cur_idx {
+                                ccx.tcx.sess.span_err(path.span,
+                                                        "type parameters with a default cannot use \
+                                                        forward declared identifiers")
+                            },
+                            _ => {}
+                        }
+                    });
+
+                    ty
+                });
+
                 let def = ty::TypeParameterDef {
                     ident: param.ident,
                     def_id: local_def(param.id),
@@ -1029,7 +1046,7 @@ pub fn ty_of_foreign_fn_decl(ccx: &CrateCtxt,
         ccx.tcx,
         ty::BareFnTy {
             abi: abi,
-            purity: ast::UnsafeFn,
+            fn_style: ast::UnsafeFn,
             sig: ty::FnSig {binder_id: def_id.node,
                             inputs: input_tys,
                             output: output_ty,

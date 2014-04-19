@@ -31,10 +31,11 @@ use syntax::owned_slice::OwnedSlice;
 use syntax::visit;
 use syntax::visit::Visitor;
 
-use std::cell::{Cell, RefCell};
-use std::uint;
-use std::mem::replace;
 use collections::{HashMap, HashSet};
+use std::cell::{Cell, RefCell};
+use std::mem::replace;
+use std::strbuf::StrBuf;
+use std::uint;
 
 // Definition mapping
 pub type DefMap = @RefCell<NodeMap<Def>>;
@@ -141,6 +142,12 @@ impl NamespaceResult {
     fn is_unknown(&self) -> bool {
         match *self {
             UnknownResult => true,
+            _ => false
+        }
+    }
+    fn is_unbound(&self) -> bool {
+        match *self {
+            UnboundResult => true,
             _ => false
         }
     }
@@ -1182,11 +1189,11 @@ impl<'a> Resolver<'a> {
                     (DefStatic(local_def(item.id), mutbl), sp, is_public);
                 parent
             }
-            ItemFn(_, purity, _, _, _) => {
+            ItemFn(_, fn_style, _, _, _) => {
               let (name_bindings, new_parent) =
                 self.add_child(ident, parent, ForbidDuplicateValues, sp);
 
-                let def = DefFn(local_def(item.id), purity);
+                let def = DefFn(local_def(item.id), fn_style);
                 name_bindings.define_value(def, sp, is_public);
                 new_parent
             }
@@ -1313,7 +1320,7 @@ impl<'a> Resolver<'a> {
                                     DefStaticMethod(local_def(method.id),
                                                       FromImpl(local_def(
                                                         item.id)),
-                                                      method.purity)
+                                                      method.fn_style)
                                 }
                                 _ => {
                                     // Non-static methods become
@@ -1364,7 +1371,7 @@ impl<'a> Resolver<'a> {
                             // Static methods become `def_static_method`s.
                             DefStaticMethod(local_def(ty_m.id),
                                               FromTrait(local_def(item.id)),
-                                              ty_m.purity)
+                                              ty_m.fn_style)
                         }
                         _ => {
                             // Non-static methods become `def_method`s.
@@ -1414,12 +1421,8 @@ impl<'a> Resolver<'a> {
                                        variant: &Variant,
                                        item_id: DefId,
                                        parent: ReducedGraphParent,
-                                       parent_public: bool) {
+                                       is_public: bool) {
         let ident = variant.node.name;
-        // FIXME: this is unfortunate to have to do this privacy calculation
-        //      here. This should be living in middle::privacy, but it's
-        //      necessary to keep around in some form becaues of glob imports...
-        let is_public = parent_public && variant.node.vis != ast::Private;
 
         match variant.node.kind {
             TupleVariantKind(_) => {
@@ -1661,12 +1664,11 @@ impl<'a> Resolver<'a> {
             // We assume the parent is visible, or else we wouldn't have seen
             // it. Also variants are public-by-default if the parent was also
             // public.
-            let is_public = vis != ast::Private;
             if is_struct {
-                child_name_bindings.define_type(def, DUMMY_SP, is_public);
+                child_name_bindings.define_type(def, DUMMY_SP, true);
                 self.structs.insert(variant_id);
             } else {
-                child_name_bindings.define_value(def, DUMMY_SP, is_public);
+                child_name_bindings.define_value(def, DUMMY_SP, true);
             }
           }
           DefFn(..) | DefStaticMethod(..) | DefStatic(..) => {
@@ -1869,7 +1871,7 @@ impl<'a> Resolver<'a> {
                                                        DUMMY_SP);
                                     let def = DefFn(
                                         static_method_info.def_id,
-                                        static_method_info.purity);
+                                        static_method_info.fn_style);
 
                                     method_name_bindings.define_value(
                                         def, DUMMY_SP,
@@ -1976,6 +1978,7 @@ impl<'a> Resolver<'a> {
                         // the source of this name is different now
                         resolution.type_id.set(id);
                         resolution.value_id.set(id);
+                        resolution.is_public.set(is_public);
                     }
                     None => {
                         debug!("(building import directive) creating new");
@@ -2096,7 +2099,7 @@ impl<'a> Resolver<'a> {
 
     fn idents_to_str(&mut self, idents: &[Ident]) -> ~str {
         let mut first = true;
-        let mut result = ~"";
+        let mut result = StrBuf::new();
         for ident in idents.iter() {
             if first {
                 first = false
@@ -2105,7 +2108,7 @@ impl<'a> Resolver<'a> {
             }
             result.push_str(token::get_ident(*ident).get());
         };
-        return result;
+        result.into_owned()
     }
 
     fn path_idents_to_str(&mut self, path: &Path) -> ~str {
@@ -2123,7 +2126,7 @@ impl<'a> Resolver<'a> {
             SingleImport(_, source) => {
                 token::get_ident(source).get().to_str()
             }
-            GlobImport => ~"*"
+            GlobImport => "*".to_owned()
         }
     }
 
@@ -2286,10 +2289,12 @@ impl<'a> Resolver<'a> {
             }
             Some(child_name_bindings) => {
                 if child_name_bindings.defined_in_namespace(ValueNS) {
+                    debug!("(resolving single import) found value binding");
                     value_result = BoundResult(containing_module,
                                                *child_name_bindings);
                 }
                 if child_name_bindings.defined_in_namespace(TypeNS) {
+                    debug!("(resolving single import) found type binding");
                     type_result = BoundResult(containing_module,
                                               *child_name_bindings);
                 }
@@ -2320,6 +2325,7 @@ impl<'a> Resolver<'a> {
                                                           .borrow();
                 match import_resolutions.find(&source.name) {
                     None => {
+                        debug!("(resolving single import) no import");
                         // The containing module definitely doesn't have an
                         // exported import with the name in question. We can
                         // therefore accurately report that the names are
@@ -2353,6 +2359,8 @@ impl<'a> Resolver<'a> {
                                     return UnboundResult;
                                 }
                                 Some(target) => {
+                                    debug!("(resolving single import) found \
+                                            import in ns {:?}", namespace);
                                     let id = import_resolution.id(namespace);
                                     this.used_imports.insert((id, namespace));
                                     return BoundResult(target.target_module,
@@ -2396,6 +2404,8 @@ impl<'a> Resolver<'a> {
                                        .find_copy(&source.name) {
                     None => {} // Continue.
                     Some(module) => {
+                        debug!("(resolving single import) found external \
+                                module");
                         let name_bindings =
                             @Resolver::create_name_bindings_from_module(
                                 module);
@@ -2442,8 +2452,7 @@ impl<'a> Resolver<'a> {
             }
         }
 
-        if import_resolution.value_target.borrow().is_none() &&
-           import_resolution.type_target.borrow().is_none() {
+        if value_result.is_unbound() && type_result.is_unbound() {
             let msg = format!("unresolved import: there is no \
                                `{}` in `{}`",
                               token::get_ident(source),
@@ -2669,7 +2678,8 @@ impl<'a> Resolver<'a> {
             match self.resolve_name_in_module(search_module,
                                               name,
                                               TypeNS,
-                                              name_search_type) {
+                                              name_search_type,
+                                              false) {
                 Failed => {
                     let segment_name = token::get_ident(name);
                     let module_name = self.module_to_str(search_module);
@@ -2977,7 +2987,8 @@ impl<'a> Resolver<'a> {
             match self.resolve_name_in_module(search_module,
                                               name,
                                               namespace,
-                                              PathSearch) {
+                                              PathSearch,
+                                              true) {
                 Failed => {
                     // Continue up the search chain.
                 }
@@ -3141,7 +3152,8 @@ impl<'a> Resolver<'a> {
                               module_: @Module,
                               name: Ident,
                               namespace: Namespace,
-                              name_search_type: NameSearchType)
+                              name_search_type: NameSearchType,
+                              allow_private_imports: bool)
                               -> ResolveResult<(Target, bool)> {
         debug!("(resolving name in module) resolving `{}` in `{}`",
                token::get_ident(name),
@@ -3172,7 +3184,9 @@ impl<'a> Resolver<'a> {
 
         // Check the list of resolved imports.
         match module_.import_resolutions.borrow().find(&name.name) {
-            Some(import_resolution) => {
+            Some(import_resolution) if allow_private_imports ||
+                                       import_resolution.is_public.get() => {
+
                 if import_resolution.is_public.get() &&
                         import_resolution.outstanding_references.get() != 0 {
                     debug!("(resolving name in module) import \
@@ -3193,7 +3207,7 @@ impl<'a> Resolver<'a> {
                     }
                 }
             }
-            None => {} // Continue.
+            Some(..) | None => {} // Continue.
         }
 
         // Finally, search through external children.
@@ -3493,8 +3507,9 @@ impl<'a> Resolver<'a> {
                         // its scope.
 
                         self.resolve_error(span,
-                                              "attempt to use a type \
-                                              argument out of scope");
+                                              "can't use type parameters from \
+                                              outer function; try using a local \
+                                              type parameter instead");
                     }
 
                     return None;
@@ -3516,8 +3531,9 @@ impl<'a> Resolver<'a> {
                         // its scope.
 
                         self.resolve_error(span,
-                                              "attempt to use a type \
-                                              argument out of scope");
+                                              "can't use type parameters from \
+                                              outer function; try using a local \
+                                              type parameter instead");
                     }
 
                     return None;
@@ -4255,7 +4271,7 @@ impl<'a> Resolver<'a> {
                 });
             }
 
-            TyClosure(c) => {
+            TyClosure(c, _) | TyProc(c) => {
                 c.bounds.as_ref().map(|bounds| {
                     for bound in bounds.iter() {
                         self.resolve_type_parameter_bound(ty.id, bound);
@@ -4601,7 +4617,7 @@ impl<'a> Resolver<'a> {
                     self.session.add_lint(UnnecessaryQualification,
                                           id,
                                           path.span,
-                                          ~"unnecessary qualification");
+                                          "unnecessary qualification".to_owned());
                 }
                 _ => ()
             }
@@ -5284,7 +5300,8 @@ impl<'a> Resolver<'a> {
                         ViewPathGlob(_, id) => {
                             if !self.used_imports.contains(&(id, TypeNS)) &&
                                !self.used_imports.contains(&(id, ValueNS)) {
-                                self.session.add_lint(UnusedImports, id, p.span, ~"unused import");
+                                self.session.add_lint(UnusedImports, id, p.span,
+                                                      "unused import".to_owned());
                             }
                         },
                     }
@@ -5305,7 +5322,7 @@ impl<'a> Resolver<'a> {
 
         if !self.used_imports.contains(&(id, TypeNS)) &&
            !self.used_imports.contains(&(id, ValueNS)) {
-            self.session.add_lint(UnusedImports, id, span, ~"unused import");
+            self.session.add_lint(UnusedImports, id, span, "unused import".to_owned());
         }
 
         let (v_priv, t_priv) = match self.last_private.find(&id) {
@@ -5370,7 +5387,7 @@ impl<'a> Resolver<'a> {
         }
 
         if idents.len() == 0 {
-            return ~"???";
+            return "???".to_owned();
         }
         return self.idents_to_str(idents.move_iter()
                                         .rev()
@@ -5393,18 +5410,18 @@ impl<'a> Resolver<'a> {
         for (&name, import_resolution) in import_resolutions.iter() {
             let value_repr;
             match import_resolution.target_for_namespace(ValueNS) {
-                None => { value_repr = ~""; }
+                None => { value_repr = "".to_owned(); }
                 Some(_) => {
-                    value_repr = ~" value:?";
+                    value_repr = " value:?".to_owned();
                     // FIXME #4954
                 }
             }
 
             let type_repr;
             match import_resolution.target_for_namespace(TypeNS) {
-                None => { type_repr = ~""; }
+                None => { type_repr = "".to_owned(); }
                 Some(_) => {
-                    type_repr = ~" type:?";
+                    type_repr = " type:?".to_owned();
                     // FIXME #4954
                 }
             }

@@ -23,8 +23,8 @@ use middle::typeck::infer::fold_regions_in_sig;
 use middle::typeck::infer::{TypeTrace, Subtype};
 use collections::HashMap;
 use syntax::ast::{Many, Once, NodeId};
-use syntax::ast::{ExternFn, ImpureFn, UnsafeFn};
-use syntax::ast::{Onceness, Purity};
+use syntax::ast::{ExternFn, NormalFn, UnsafeFn};
+use syntax::ast::{Onceness, FnStyle};
 use util::ppaux::mt_to_str;
 
 pub struct Lub<'f>(pub CombineFields<'f>);  // least-upper-bound: common supertype
@@ -35,7 +35,7 @@ impl<'f> Lub<'f> {
 
 impl<'f> Combine for Lub<'f> {
     fn infcx<'a>(&'a self) -> &'a InferCtxt<'a> { self.get_ref().infcx }
-    fn tag(&self) -> ~str { ~"lub" }
+    fn tag(&self) -> ~str { "lub".to_owned() }
     fn a_is_expected(&self) -> bool { self.get_ref().a_is_expected }
     fn trace(&self) -> TypeTrace { self.get_ref().trace }
 
@@ -75,10 +75,10 @@ impl<'f> Combine for Lub<'f> {
         Glb(*self.get_ref()).tys(a, b)
     }
 
-    fn purities(&self, a: Purity, b: Purity) -> cres<Purity> {
+    fn fn_styles(&self, a: FnStyle, b: FnStyle) -> cres<FnStyle> {
         match (a, b) {
           (UnsafeFn, _) | (_, UnsafeFn) => Ok(UnsafeFn),
-          (ImpureFn, _) | (_, ImpureFn) => Ok(ImpureFn),
+          (NormalFn, _) | (_, NormalFn) => Ok(NormalFn),
           (ExternFn, ExternFn) => Ok(ExternFn),
         }
     }

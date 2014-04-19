@@ -917,12 +917,10 @@ fn check_heap_type(cx: &Context, span: Span, ty: ty::t) {
                 ty::ty_box(_) => {
                     n_box += 1;
                 }
-                ty::ty_uniq(_) | ty::ty_str(ty::vstore_uniq) |
-                ty::ty_vec(_, ty::vstore_uniq) |
-                ty::ty_trait(~ty::TyTrait { store: ty::UniqTraitStore, .. }) => {
-                    n_uniq += 1;
-                }
-                ty::ty_closure(ref c) if c.sigil == ast::OwnedSigil => {
+                ty::ty_uniq(_) | ty::ty_str(ty::VstoreUniq) |
+                ty::ty_vec(_, ty::VstoreUniq) |
+                ty::ty_trait(~ty::TyTrait { store: ty::UniqTraitStore, .. }) |
+                ty::ty_closure(~ty::ClosureTy { store: ty::UniqTraitStore, .. }) => {
                     n_uniq += 1;
                 }
 
@@ -1063,7 +1061,7 @@ fn check_attrs_usage(cx: &Context, attrs: &[ast::Attribute]) {
             if name.equiv(crate_attr) {
                 let msg = match attr.node.style {
                     ast::AttrOuter => "crate-level attribute should be an inner attribute: \
-                                       add semicolon at end",
+                                       add an exclamation mark: #![foo]",
                     ast::AttrInner => "crate-level attribute should be in the root module",
                 };
                 cx.span_lint(AttributeUsage, attr.span, msg);
@@ -1158,7 +1156,7 @@ fn check_unused_result(cx: &Context, s: &ast::Stmt) {
 fn check_deprecated_owned_vector(cx: &Context, e: &ast::Expr) {
     let t = ty::expr_ty(cx.tcx, e);
     match ty::get(t).sty {
-        ty::ty_vec(_, ty::vstore_uniq) => {
+        ty::ty_vec(_, ty::VstoreUniq) => {
             cx.span_lint(DeprecatedOwnedVector, e.span,
                          "use of deprecated `~[]` vector; replaced by `std::vec::Vec`")
         }

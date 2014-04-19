@@ -210,8 +210,8 @@ pub enum MethodProvenance {
 
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
 pub enum Def {
-    DefFn(DefId, Purity),
-    DefStaticMethod(/* method */ DefId, MethodProvenance, Purity),
+    DefFn(DefId, FnStyle),
+    DefStaticMethod(/* method */ DefId, MethodProvenance, FnStyle),
     DefSelfTy(/* trait id */ NodeId),
     DefMod(DefId),
     DefForeignMod(DefId),
@@ -357,23 +357,6 @@ pub enum Pat_ {
 pub enum Mutability {
     MutMutable,
     MutImmutable,
-}
-
-#[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
-pub enum Sigil {
-    BorrowedSigil,
-    OwnedSigil,
-    ManagedSigil
-}
-
-impl fmt::Show for Sigil {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            BorrowedSigil => "&".fmt(f),
-            OwnedSigil => "~".fmt(f),
-            ManagedSigil => "@".fmt(f),
-         }
-    }
 }
 
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
@@ -696,7 +679,7 @@ pub struct TypeField {
 pub struct TypeMethod {
     pub ident: Ident,
     pub attrs: Vec<Attribute>,
-    pub purity: Purity,
+    pub fn_style: FnStyle,
     pub decl: P<FnDecl>,
     pub generics: Generics,
     pub explicit_self: ExplicitSelf,
@@ -724,7 +707,7 @@ pub enum IntTy {
 
 impl fmt::Show for IntTy {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f.buf, "{}", ast_util::int_ty_to_str(*self))
+        write!(f.buf, "{}", ast_util::int_ty_to_str(*self, None))
     }
 }
 
@@ -739,7 +722,7 @@ pub enum UintTy {
 
 impl fmt::Show for UintTy {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f.buf, "{}", ast_util::uint_ty_to_str(*self))
+        write!(f.buf, "{}", ast_util::uint_ty_to_str(*self, None))
     }
 }
 
@@ -791,10 +774,8 @@ impl fmt::Show for Onceness {
 
 #[deriving(Eq, TotalEq, Encodable, Decodable, Hash)]
 pub struct ClosureTy {
-    pub sigil: Sigil,
-    pub region: Option<Lifetime>,
     pub lifetimes: Vec<Lifetime>,
-    pub purity: Purity,
+    pub fn_style: FnStyle,
     pub onceness: Onceness,
     pub decl: P<FnDecl>,
     // Optional optvec distinguishes between "fn()" and "fn:()" so we can
@@ -806,7 +787,7 @@ pub struct ClosureTy {
 
 #[deriving(Eq, TotalEq, Encodable, Decodable, Hash)]
 pub struct BareFnTy {
-    pub purity: Purity,
+    pub fn_style: FnStyle,
     pub abi: Abi,
     pub lifetimes: Vec<Lifetime>,
     pub decl: P<FnDecl>
@@ -822,7 +803,8 @@ pub enum Ty_ {
     TyFixedLengthVec(P<Ty>, @Expr),
     TyPtr(MutTy),
     TyRptr(Option<Lifetime>, MutTy),
-    TyClosure(@ClosureTy),
+    TyClosure(@ClosureTy, Option<Lifetime>),
+    TyProc(@ClosureTy),
     TyBareFn(@BareFnTy),
     TyTup(Vec<P<Ty>> ),
     TyPath(Path, Option<OwnedSlice<TyParamBound>>, NodeId), // for #7264; see above
@@ -886,16 +868,16 @@ pub struct FnDecl {
 }
 
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
-pub enum Purity {
+pub enum FnStyle {
     UnsafeFn, // declared with "unsafe fn"
-    ImpureFn, // declared with "fn"
+    NormalFn, // declared with "fn"
     ExternFn, // declared with "extern fn"
 }
 
-impl fmt::Show for Purity {
+impl fmt::Show for FnStyle {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            ImpureFn => "impure".fmt(f),
+            NormalFn => "normal".fmt(f),
             UnsafeFn => "unsafe".fmt(f),
             ExternFn => "extern".fmt(f),
         }
@@ -925,7 +907,7 @@ pub struct Method {
     pub attrs: Vec<Attribute>,
     pub generics: Generics,
     pub explicit_self: ExplicitSelf,
-    pub purity: Purity,
+    pub fn_style: FnStyle,
     pub decl: P<FnDecl>,
     pub body: P<Block>,
     pub id: NodeId,
@@ -1056,7 +1038,6 @@ pub struct TraitRef {
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
 pub enum Visibility {
     Public,
-    Private,
     Inherited,
 }
 
@@ -1064,7 +1045,7 @@ impl Visibility {
     pub fn inherit_from(&self, parent_visibility: Visibility) -> Visibility {
         match self {
             &Inherited => parent_visibility,
-            &Public | &Private => *self
+            &Public => *self
         }
     }
 }
@@ -1119,7 +1100,7 @@ pub struct Item {
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
 pub enum Item_ {
     ItemStatic(P<Ty>, Mutability, @Expr),
-    ItemFn(P<FnDecl>, Purity, Abi, Generics, P<Block>),
+    ItemFn(P<FnDecl>, FnStyle, Abi, Generics, P<Block>),
     ItemMod(Mod),
     ItemForeignMod(ForeignMod),
     ItemTy(P<Ty>, Generics),

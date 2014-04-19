@@ -76,7 +76,7 @@ use syntax::parse::token;
 pub enum categorization {
     cat_rvalue(ty::Region),            // temporary val, argument is its scope
     cat_static_item,
-    cat_copied_upvar(CopiedUpvar),     // upvar copied into @fn or ~fn env
+    cat_copied_upvar(CopiedUpvar),     // upvar copied into proc env
     cat_upvar(ty::UpvarId, ty::UpvarBorrow), // by ref upvar from stack closure
     cat_local(ast::NodeId),            // local variable
     cat_arg(ast::NodeId),              // formal argument
@@ -170,26 +170,24 @@ pub fn opt_deref_kind(t: ty::t) -> Option<deref_kind> {
     match ty::get(t).sty {
         ty::ty_uniq(_) |
         ty::ty_trait(~ty::TyTrait { store: ty::UniqTraitStore, .. }) |
-        ty::ty_vec(_, ty::vstore_uniq) |
-        ty::ty_str(ty::vstore_uniq) |
-        ty::ty_closure(~ty::ClosureTy {sigil: ast::OwnedSigil, ..}) => {
+        ty::ty_vec(_, ty::VstoreUniq) |
+        ty::ty_str(ty::VstoreUniq) |
+        ty::ty_closure(~ty::ClosureTy {store: ty::UniqTraitStore, ..}) => {
             Some(deref_ptr(OwnedPtr))
         }
 
-        ty::ty_rptr(r, mt) |
-        ty::ty_vec(mt, ty::vstore_slice(r)) => {
+        ty::ty_rptr(r, mt) => {
             let kind = ty::BorrowKind::from_mutbl(mt.mutbl);
             Some(deref_ptr(BorrowedPtr(kind, r)))
         }
-
-        ty::ty_trait(~ty::TyTrait { store: ty::RegionTraitStore(r), mutability: m, .. }) => {
-            let kind = ty::BorrowKind::from_mutbl(m);
+        ty::ty_vec(_, ty::VstoreSlice(r, mutbl)) |
+        ty::ty_trait(~ty::TyTrait { store: ty::RegionTraitStore(r, mutbl), .. }) => {
+            let kind = ty::BorrowKind::from_mutbl(mutbl);
             Some(deref_ptr(BorrowedPtr(kind, r)))
         }
 
-        ty::ty_str(ty::vstore_slice(r)) |
-        ty::ty_closure(~ty::ClosureTy {sigil: ast::BorrowedSigil,
-                                      region: r, ..}) => {
+        ty::ty_str(ty::VstoreSlice(r, ())) |
+        ty::ty_closure(~ty::ClosureTy {store: ty::RegionTraitStore(r, _), ..}) => {
             Some(deref_ptr(BorrowedPtr(ty::ImmBorrow, r)))
         }
 
@@ -206,8 +204,8 @@ pub fn opt_deref_kind(t: ty::t) -> Option<deref_kind> {
             Some(deref_interior(InteriorField(PositionalField(0))))
         }
 
-        ty::ty_vec(_, ty::vstore_fixed(_)) |
-        ty::ty_str(ty::vstore_fixed(_)) => {
+        ty::ty_vec(_, ty::VstoreFixed(_)) |
+        ty::ty_str(ty::VstoreFixed(_)) => {
             Some(deref_interior(InteriorElement(element_kind(t))))
         }
 
@@ -541,15 +539,14 @@ impl<TYPER:Typer> MemCategorizationContext<TYPER> {
                       // Decide whether to use implicit reference or by copy/move
                       // capture for the upvar. This, combined with the onceness,
                       // determines whether the closure can move out of it.
-                      let var_is_refd = match (closure_ty.sigil, closure_ty.onceness) {
+                      let var_is_refd = match (closure_ty.store, closure_ty.onceness) {
                           // Many-shot stack closures can never move out.
-                          (ast::BorrowedSigil, ast::Many) => true,
+                          (ty::RegionTraitStore(..), ast::Many) => true,
                           // 1-shot stack closures can move out.
-                          (ast::BorrowedSigil, ast::Once) => false,
+                          (ty::RegionTraitStore(..), ast::Once) => false,
                           // Heap closures always capture by copy/move, and can
                           // move out if they are once.
-                          (ast::OwnedSigil, _) |
-                          (ast::ManagedSigil, _) => false,
+                          (ty::UniqTraitStore, _) => false,
 
                       };
                       if var_is_refd {
@@ -689,19 +686,8 @@ impl<TYPER:Typer> MemCategorizationContext<TYPER> {
         }
     }
 
-    pub fn cat_deref_fn_or_obj<N:ast_node>(&mut self,
-                                           node: &N,
-                                           base_cmt: cmt,
-                                           deref_cnt: uint)
-                                           -> cmt {
-        // Bit of a hack: the "dereference" of a function pointer like
-        // `@fn()` is a mere logical concept. We interpret it as
-        // dereferencing the environment pointer; of course, we don't
-        // know what type lies at the other end, so we just call it
-        // `()` (the empty tuple).
-
-        let opaque_ty = ty::mk_tup(self.tcx(), Vec::new());
-        self.cat_deref_common(node, base_cmt, deref_cnt, opaque_ty)
+    pub fn cat_deref_obj<N:ast_node>(&mut self, node: &N, base_cmt: cmt) -> cmt {
+        self.cat_deref_common(node, base_cmt, 0, ty::mk_nil())
     }
 
     fn cat_deref<N:ast_node>(&mut self,
@@ -799,7 +785,7 @@ impl<TYPER:Typer> MemCategorizationContext<TYPER> {
         //!   the implicit index deref, if any (see above)
 
         let element_ty = match ty::index(base_cmt.ty) {
-          Some(ref mt) => mt.ty,
+          Some(ty) => ty,
           None => {
             self.tcx().sess.span_bug(
                 elt.span(),
@@ -882,8 +868,8 @@ impl<TYPER:Typer> MemCategorizationContext<TYPER> {
              */
 
             match ty::get(slice_ty).sty {
-                ty::ty_vec(slice_mt, ty::vstore_slice(slice_r)) => {
-                    (slice_mt.mutbl, slice_r)
+                ty::ty_vec(_, ty::VstoreSlice(slice_r, mutbl)) => {
+                    (mutbl, slice_r)
                 }
 
                 ty::ty_rptr(_, ref mt) => {
@@ -1103,19 +1089,19 @@ impl<TYPER:Typer> MemCategorizationContext<TYPER> {
     pub fn cmt_to_str(&self, cmt: cmt) -> ~str {
         match cmt.cat {
           cat_static_item => {
-              ~"static item"
+              "static item".to_owned()
           }
           cat_copied_upvar(_) => {
-              ~"captured outer variable in a heap closure"
+              "captured outer variable in a proc".to_owned()
           }
           cat_rvalue(..) => {
-              ~"non-lvalue"
+              "non-lvalue".to_owned()
           }
           cat_local(_) => {
-              ~"local variable"
+              "local variable".to_owned()
           }
           cat_arg(..) => {
-              ~"argument"
+              "argument".to_owned()
           }
           cat_deref(base, _, pk) => {
               match base.cat {
@@ -1128,22 +1114,22 @@ impl<TYPER:Typer> MemCategorizationContext<TYPER> {
               }
           }
           cat_interior(_, InteriorField(NamedField(_))) => {
-              ~"field"
+              "field".to_owned()
           }
           cat_interior(_, InteriorField(PositionalField(_))) => {
-              ~"anonymous field"
+              "anonymous field".to_owned()
           }
           cat_interior(_, InteriorElement(VecElement)) => {
-              ~"vec content"
+              "vec content".to_owned()
           }
           cat_interior(_, InteriorElement(StrElement)) => {
-              ~"str content"
+              "str content".to_owned()
           }
           cat_interior(_, InteriorElement(OtherElement)) => {
-              ~"indexed content"
+              "indexed content".to_owned()
           }
           cat_upvar(..) => {
-              ~"captured outer variable"
+              "captured outer variable".to_owned()
           }
           cat_discr(cmt, _) => {
             self.cmt_to_str(cmt)
@@ -1314,7 +1300,7 @@ impl Repr for InteriorKind {
                 token::get_name(fld).get().to_str()
             }
             InteriorField(PositionalField(i)) => format!("\\#{:?}", i),
-            InteriorElement(_) => ~"[]",
+            InteriorElement(_) => "[]".to_owned(),
         }
     }
 }

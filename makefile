@@ -1,6 +1,7 @@
 # for the minute we do this manually because dependancy/order matters -
 # it requires the '.rfx' from one library to create links from any other
 RUSTFIND=~/rustfind/rustfind -x .
+RUSTC_EXPORT= export CFG_VERSION=0;export CFG_COMPILER=0;export CFG_PREFIX=0;export CFG_LIBDIR_RELATIVE=0; export CFG_RUSTLIBDIR=0;export CFG_COMPILER_HOST_TRIPLE=0; export CFG_COMPILER_TRIPLE=0;
 update: 
 	cd $(RUST_PATH)/src;pwd;
 
@@ -29,15 +30,16 @@ update:
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) liblog/lib.rs
 
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libsyntax/lib.rs
-	export CFG_VERSION=0;export CFG_COMPILER=0;export CFG_PREFIX=0;export CFG_LIBDIR_RELATIVE=0; export CFG_RUSTLIBDIR=0;export CFG_COMPILER_HOST_TRIPLE=0; export CFG_COMPILER_TRIPLE=0;cd $(RUST_SRC);pwd; $(RUSTFIND) librustc/lib.rs
-	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librustdoc/lib.rs
 
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libfourcc/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libhexfloat/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libtime/lib.rs
 
+	$(RUSTC_EXPORT) cd $(RUST_SRC);pwd; $(RUSTFIND) librustc/lib.rs
+	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librustdoc/lib.rs
+
 rustc:
-	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librustc/lib.rs
+	$(RUSTC_EXPORT) cd $(RUST_SRC);pwd; $(RUSTFIND) librustc/lib.rs
 
 push: 
 	cp $(RUST_PATH)/src/index.html .

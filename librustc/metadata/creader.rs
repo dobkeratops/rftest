@@ -16,7 +16,6 @@ use back::link;
 use back::svh::Svh;
 use driver::{driver, session};
 use driver::session::Session;
-use metadata::csearch;
 use metadata::cstore;
 use metadata::cstore::CStore;
 use metadata::decoder;
@@ -190,7 +189,7 @@ fn visit_item(e: &Env, i: &ast::Item) {
                 } else {
                     None
                 })
-                .collect::<~[&ast::Attribute]>();
+                .collect::<Vec<&ast::Attribute>>();
             for m in link_args.iter() {
                 match m.value_str() {
                     Some(linkarg) => e.sess.cstore.add_used_link_args(linkarg.get()),
@@ -205,7 +204,7 @@ fn visit_item(e: &Env, i: &ast::Item) {
                 } else {
                     None
                 })
-                .collect::<~[&ast::Attribute]>();
+                .collect::<Vec<&ast::Attribute>>();
             for m in link_args.iter() {
                 match m.meta_item_list() {
                     Some(items) => {
@@ -301,10 +300,6 @@ fn resolve_crate<'a>(e: &mut Env,
                 dylib, rlib, metadata
             } = load_ctxt.load_library_crate(root);
 
-            // Claim this crate number and cache it
-            let cnum = e.next_crate_num;
-            e.next_crate_num += 1;
-
             // Stash paths for top-most crate locally if necessary.
             let crate_paths = if root.is_none() {
                 Some(CratePaths {
@@ -323,6 +318,17 @@ fn resolve_crate<'a>(e: &mut Env,
                 resolve_crate_deps(e, root, metadata.as_slice(), span)
             } else {
                 @RefCell::new(HashMap::new())
+            };
+
+            // Claim this crate number and cache it if we're linking to the
+            // crate, otherwise it's a syntax-only crate and we don't need to
+            // reserve a number
+            let cnum = if should_link {
+                let n = e.next_crate_num;
+                e.next_crate_num += 1;
+                n
+            } else {
+                -1
             };
 
             let cmeta = @cstore::crate_metadata {
@@ -397,13 +403,14 @@ impl<'a> Loader<'a> {
 impl<'a> CrateLoader for Loader<'a> {
     fn load_crate(&mut self, krate: &ast::ViewItem) -> MacroCrate {
         let info = extract_crate_info(&self.env, krate).unwrap();
-        let (cnum, data, library) = resolve_crate(&mut self.env, &None,
-                                                  info.ident, &info.crate_id,
-                                                  None, true, krate.span);
+        let (_, data, library) = resolve_crate(&mut self.env, &None,
+                                               info.ident, &info.crate_id,
+                                               None, info.should_link,
+                                               krate.span);
         let macros = decoder::get_exported_macros(data);
-        let cstore = &self.env.sess.cstore;
-        let registrar = csearch::get_macro_registrar_fn(cstore, cnum)
-                            .map(|did| csearch::get_symbol(cstore, did));
+        let registrar = decoder::get_macro_registrar_fn(data).map(|id| {
+            decoder::get_symbol(data.data.as_slice(), id)
+        });
         MacroCrate {
             lib: library.dylib,
             macros: macros.move_iter().collect(),

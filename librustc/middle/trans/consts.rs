@@ -191,7 +191,7 @@ pub fn const_expr(cx: &CrateContext, e: &ast::Expr, is_local: bool) -> (ValueRef
         None => { }
         Some(adj) => {
             match *adj {
-                ty::AutoAddEnv(ty::ReStatic, ast::BorrowedSigil) => {
+                ty::AutoAddEnv(ty::RegionTraitStore(ty::ReStatic, _)) => {
                     let def = ty::resolve_expr(cx.tcx(), e);
                     let wrapper = closure::get_wrapper_for_bare_fn(cx,
                                                                    ety_adjusted,
@@ -200,13 +200,11 @@ pub fn const_expr(cx: &CrateContext, e: &ast::Expr, is_local: bool) -> (ValueRef
                                                                    is_local);
                     llconst = C_struct(cx, [wrapper, C_null(Type::i8p(cx))], false)
                 }
-                ty::AutoAddEnv(ref r, ref s) => {
+                ty::AutoAddEnv(store) => {
                     cx.sess()
                       .span_bug(e.span,
-                                format!("unexpected static function: region \
-                                         {:?} sigil {:?}",
-                                        *r,
-                                        *s))
+                                format!("unexpected static function: {:?}",
+                                        store))
                 }
                 ty::AutoObject(..) => {
                     cx.sess()
@@ -246,7 +244,7 @@ pub fn const_expr(cx: &CrateContext, e: &ast::Expr, is_local: bool) -> (ValueRef
                                     assert_eq!(abi::slice_elt_base, 0);
                                     assert_eq!(abi::slice_elt_len, 1);
                                     match ty::get(ty).sty {
-                                        ty::ty_vec(_, ty::vstore_fixed(len)) => {
+                                        ty::ty_vec(_, ty::VstoreFixed(len)) => {
                                             llconst = C_struct(cx, [
                                                 llptr,
                                                 C_uint(cx, len)
@@ -434,20 +432,14 @@ fn const_expr_unadjusted(cx: &CrateContext, e: &ast::Expr,
                                           "index is not an integer-constant expression")
               };
               let (arr, len) = match ty::get(bt).sty {
-                  ty::ty_vec(_, vstore) | ty::ty_str(vstore) =>
-                      match vstore {
-                      ty::vstore_fixed(u) =>
-                          (bv, C_uint(cx, u)),
-
-                      ty::vstore_slice(_) => {
-                          let e1 = const_get_elt(cx, bv, [0]);
-                          (const_deref_ptr(cx, e1), const_get_elt(cx, bv, [1]))
-                      },
-                      _ => cx.sess().span_bug(base.span,
-                                              "index-expr base must be fixed-size or slice")
+                  ty::ty_vec(_, ty::VstoreFixed(u)) => (bv, C_uint(cx, u)),
+                  ty::ty_vec(_, ty::VstoreSlice(..)) |
+                  ty::ty_str(ty::VstoreSlice(..)) => {
+                    let e1 = const_get_elt(cx, bv, [0]);
+                    (const_deref_ptr(cx, e1), const_get_elt(cx, bv, [1]))
                   },
-                  _ =>  cx.sess().span_bug(base.span,
-                                           "index-expr base must be a vector or string type")
+                  _ => cx.sess().span_bug(base.span,
+                        "index-expr base must be a fixed-size vector or a slice")
               };
 
               let len = llvm::LLVMConstIntGetZExtValue(len) as u64;
@@ -601,11 +593,11 @@ fn const_expr_unadjusted(cx: &CrateContext, e: &ast::Expr,
                 const_eval::const_uint(i) => i as uint,
                 _ => cx.sess().span_bug(count.span, "count must be integral const expression.")
             };
-            let vs = slice::from_elem(n, const_expr(cx, elem, is_local).val0());
+            let vs = Vec::from_elem(n, const_expr(cx, elem, is_local).val0());
             let v = if vs.iter().any(|vi| val_ty(*vi) != llunitty) {
-                C_struct(cx, vs, false)
+                C_struct(cx, vs.as_slice(), false)
             } else {
-                C_array(llunitty, vs)
+                C_array(llunitty, vs.as_slice())
             };
             (v, true)
           }
@@ -615,7 +607,7 @@ fn const_expr_unadjusted(cx: &CrateContext, e: &ast::Expr,
 
             let opt_def = cx.tcx().def_map.borrow().find_copy(&e.id);
             match opt_def {
-                Some(ast::DefFn(def_id, _purity)) => {
+                Some(ast::DefFn(def_id, _fn_style)) => {
                     if !ast_util::is_local(def_id) {
                         let ty = csearch::get_type(cx.tcx(), def_id).ty;
                         (base::trans_external_path(cx, def_id, ty), true)

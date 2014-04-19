@@ -1,543 +1,522 @@
-node	lib	208	267	libfourcc/lib.rs	114	4	401	pat	
-node	lib	102	115	libfourcc/lib.rs	84	24	28	call	
-node	lib	188	118	libfourcc/lib.rs	92	12	716	match	
-node	lib	319	338	libfourcc/lib.rs	138	17	26	path	
-node	lib	429	430	libfourcc/lib.rs	161	40	8	lit	
-node	lib	67	285	libfourcc/lib.rs	77	8	35	local	
-node	lib	180	181	libfourcc/lib.rs	109	61	10	path	
-node	lib	93	115	libfourcc/lib.rs	82	24	4	lit	
-node	lib	400	401	libfourcc/lib.rs	153	29	31	block	
-node	lib	265	266	libfourcc/lib.rs	114	45	352	block	
-node	lib	266	267	libfourcc/lib.rs	114	45	352	blk	
-node	lib	386	387	libfourcc/lib.rs	151	49	2	path	
-node	lib	338	339	libfourcc/lib.rs	138	17	281	call	
-node	lib	330	335	libfourcc/lib.rs	141	56	12	block	
-node	lib	137	139	libfourcc/lib.rs	98	32	9	field	
-node	lib	370	368	libfourcc/lib.rs	149	12	5	pat	
-node	lib	145	144	libfourcc/lib.rs	100	16	1	path	
-node	lib	72	75	libfourcc/lib.rs	77	25	9	path	
-node	lib	237	239	libfourcc/lib.rs	123	13	3	path	
-node	lib	374	381	libfourcc/lib.rs	150	12	19	local	
-node	lib	434	435	libfourcc/lib.rs	160	8	135	stmt	
-node	lib	263	265	libfourcc/lib.rs	122	8	130	assign	
-node	lib	349	347	libfourcc/lib.rs	144	8	2	pat	
-node	lib	144	146	libfourcc/lib.rs	96	37	183	block	
-node	lib	324	325	libfourcc/lib.rs	140	44	3	path	
-node	lib	245	247	libfourcc/lib.rs	123	26	13	paren	
-node	lib	153	165	libfourcc/lib.rs	103	16	56	stmt	
-node	lib	264	265	libfourcc/lib.rs	122	8	130	stmt	
-node	lib	312	314	libfourcc/lib.rs	137	74	5	ty	
-node	lib	316	403	libfourcc/lib.rs	138	8	290	local	
-node	lib	120	118	libfourcc/lib.rs	92	8	1	pat	
-node	lib	170	171	libfourcc/lib.rs	108	24	4	path	
-node	lib	282	283	libfourcc/lib.rs	128	28	36	call	
-node	lib	410	411	libfourcc/lib.rs	159	29	7	ty	
-node	lib	321	338	libfourcc/lib.rs	138	44	15	method_call	
-node	lib	190	285	libfourcc/lib.rs	113	8	14	local	
-node	lib	329	335	libfourcc/lib.rs	141	56	1	ty	
-node	lib	87	89	libfourcc/lib.rs	81	42	16	path	
-node	lib	199	200	libfourcc/lib.rs	114	21	23	method_call	
-node	lib	396	401	libfourcc/lib.rs	153	7	21	ne	
-node	lib	337	338	libfourcc/lib.rs	140	44	138	method_call	
-node	lib	280	282	libfourcc/lib.rs	128	41	10	cast	
-node	lib	212	215	libfourcc/lib.rs	115	22	9	path	
-node	lib	382	389	libfourcc/lib.rs	151	8	4	path	
-node	lib	425	426	libfourcc/lib.rs	160	58	15	lit	
-node	lib	336	337	libfourcc/lib.rs	140	44	80	method_call	
-node	lib	146	167	libfourcc/lib.rs	96	37	183	blk	
-node	lib	388	389	libfourcc/lib.rs	151	13	40	expr_struct	
-node	lib	114	115	libfourcc/lib.rs	85	17	134	blk	
-node	lib	421	419	libfourcc/lib.rs	160	8	4	pat	
-node	lib	398	400	libfourcc/lib.rs	154	8	14	method_call	
-node	lib	418	407	libfourcc/lib.rs	159	51	4	ty	
-node	lib	109	114	libfourcc/lib.rs	85	17	134	block	
-node	lib	320	321	libfourcc/lib.rs	138	44	2	path	
-node	lib	366	361	libfourcc/lib.rs	148	17	9	field	
-node	lib	344	345	libfourcc/lib.rs	143	13	1	path	
-node	lib	194	285	libfourcc/lib.rs	113	8	14	stmt	
-node	lib	47	48	libfourcc/lib.rs	68	4	163	stmt	
-node	lib	111	113	libfourcc/lib.rs	87	37	2	path	
-node	lib	230	226	libfourcc/lib.rs	119	12	15	cast	
-node	lib	362	361	libfourcc/lib.rs	148	12	0	ty	
-node	lib	89	90	libfourcc/lib.rs	81	42	23	call	
-node	lib	333	334	libfourcc/lib.rs	141	56	4	paren	
-node	lib	223	224	libfourcc/lib.rs	116	12	70	stmt	
-node	lib	107	109	libfourcc/lib.rs	86	16	56	method_call	
-node	lib	247	248	libfourcc/lib.rs	123	26	19	shl	
-node	lib	304	305	libfourcc/lib.rs	137	34	14	ty	
-node	lib	215	217	libfourcc/lib.rs	115	22	16	cast	
-node	lib	142	144	libfourcc/lib.rs	97	16	133	if	
-node	lib	135	139	libfourcc/lib.rs	98	20	2	path	
+node	lib	244	242	libfourcc/lib.rs	123	35	3	ty	
+node	lib	341	340	libfourcc/lib.rs	144	16	7	field	
+node	lib	377	375	libfourcc/lib.rs	151	39	13	call	
+node	lib	368	367	libfourcc/lib.rs	150	12	0	ty	
+node	lib	243	242	libfourcc/lib.rs	123	27	4	path	
 node	lib	54	49	libfourcc/lib.rs	76	25	2	pat	
-node	lib	435	407	libfourcc/lib.rs	159	56	188	block	
-node	lib	94	95	libfourcc/lib.rs	83	12	8	lit	
-node	lib	283	271	libfourcc/lib.rs	128	12	53	method_call	
-node	lib	148	152	libfourcc/lib.rs	103	16	2	path	
-node	lib	430	432	libfourcc/lib.rs	161	20	29	call	
-node	lib	318	316	libfourcc/lib.rs	138	8	1	pat	
-node	lib	214	215	libfourcc/lib.rs	115	35	3	ty	
-node	lib	368	381	libfourcc/lib.rs	149	12	23	local	
-node	lib	71	67	libfourcc/lib.rs	77	8	14	pat	
-node	lib	171	173	libfourcc/lib.rs	108	24	9	field	
-node	lib	419	435	libfourcc/lib.rs	160	8	135	local	
-node	lib	162	163	libfourcc/lib.rs	104	23	55	call	
-node	lib	358	359	libfourcc/lib.rs	147	17	13	addr_of	
-node	lib	115	116	libfourcc/lib.rs	81	36	311	match	
-node	lib	178	181	libfourcc/lib.rs	109	42	12	path	
-node	lib	122	188	libfourcc/lib.rs	92	18	9	field	
-node	lib	405	406	libfourcc/lib.rs	156	9	2	path	
-node	lib	110	113	libfourcc/lib.rs	87	16	20	path	
-node	lib	360	381	libfourcc/lib.rs	147	8	23	stmt	
-node	lib	249	236	libfourcc/lib.rs	123	12	34	bitor	
-node	lib	35	46	libfourcc/lib.rs	68	4	8	path	
-node	lib	252	253	libfourcc/lib.rs	125	20	1	lit	
-node	lib	289	0	libfourcc/lib.rs	132	0	54	struct	Ident
-node	lib	305	306	libfourcc/lib.rs	137	33	16	ty	
-node	lib	310	315	libfourcc/lib.rs	137	55	10	ty	
-node	lib	79	77	libfourcc/lib.rs	79	8	6	pat	
-node	lib	317	316	libfourcc/lib.rs	138	8	0	ty	
-node	lib	44	45	libfourcc/lib.rs	73	8	4	path	
-node	lib	143	144	libfourcc/lib.rs	97	16	133	stmt	
-node	lib	383	388	libfourcc/lib.rs	151	26	5	path	
-node	lib	63	49	libfourcc/lib.rs	76	58	17	ty	
-node	lib	377	378	libfourcc/lib.rs	150	17	1	path	
-node	lib	167	188	libfourcc/lib.rs	94	29	464	match	
-node	lib	306	296	libfourcc/lib.rs	137	32	17	ty	
-node	lib	121	122	libfourcc/lib.rs	92	18	4	path	
-node	lib	428	430	libfourcc/lib.rs	161	20	19	path	
-node	lib	432	433	libfourcc/lib.rs	161	8	58	call	
-node	lib	436	441	libfourcc/lib.rs	162	4	8	path	
-node	lib	125	126	libfourcc/lib.rs	94	35	3	path	
-node	lib	335	336	libfourcc/lib.rs	141	52	16	fn_blk	
-node	lib	151	152	libfourcc/lib.rs	103	39	32	lit	
-node	lib	372	368	libfourcc/lib.rs	149	20	15	method_call	
-node	lib	259	260	libfourcc/lib.rs	125	25	13	paren	
-node	lib	80	116	libfourcc/lib.rs	79	23	6	path	
-node	lib	220	222	libfourcc/lib.rs	116	24	9	field	
-node	lib	39	45	libfourcc/lib.rs	69	8	8	path	
-node	lib	88	89	libfourcc/lib.rs	81	59	5	path	
-node	lib	127	129	libfourcc/lib.rs	96	24	5	pat	
-node	lib	379	374	libfourcc/lib.rs	150	17	14	field	
-node	lib	433	419	libfourcc/lib.rs	160	15	128	method_call	
-node	lib	416	407	libfourcc/lib.rs	159	38	2	pat	
-node	lib	260	250	libfourcc/lib.rs	125	12	26	bitor	
-node	lib	314	315	libfourcc/lib.rs	137	67	13	ty	
-node	lib	359	381	libfourcc/lib.rs	147	8	23	method_call	
-node	lib	254	260	libfourcc/lib.rs	125	12	10	paren	
-node	lib	166	167	libfourcc/lib.rs	102	17	169	blk	
-node	lib	163	165	libfourcc/lib.rs	104	16	62	ret	
-node	lib	376	374	libfourcc/lib.rs	150	12	2	pat	
-node	lib	210	209	libfourcc/lib.rs	115	12	0	ty	
-node	lib	211	209	libfourcc/lib.rs	115	12	4	pat	
-node	lib	136	137	libfourcc/lib.rs	98	32	4	path	
-node	lib	31	32	libfourcc/lib.rs	67	56	0	ty	
-node	lib	159	160	libfourcc/lib.rs	104	65	10	path	
-node	lib	175	183	libfourcc/lib.rs	109	19	6	path	
-node	lib	340	403	libfourcc/lib.rs	138	8	290	stmt	
-node	lib	299	300	libfourcc/lib.rs	137	18	7	ty	
-node	lib	123	124	libfourcc/lib.rs	94	21	3	pat	
-node	lib	364	365	libfourcc/lib.rs	148	17	1	path	
-node	lib	37	38	libfourcc/lib.rs	68	27	8	lit	
-node	lib	426	433	libfourcc/lib.rs	160	38	36	call	
-node	lib	219	220	libfourcc/lib.rs	116	24	4	path	
-node	lib	104	107	libfourcc/lib.rs	86	16	2	path	
-node	lib	32	21	libfourcc/lib.rs	67	33	23	ty	
-node	lib	108	109	libfourcc/lib.rs	86	16	56	stmt	
-node	lib	197	199	libfourcc/lib.rs	114	21	15	method_call	
-node	lib	76	285	libfourcc/lib.rs	77	8	35	stmt	
-node	lib	156	161	libfourcc/lib.rs	104	42	2	path	
-node	lib	232	209	libfourcc/lib.rs	115	19	183	if	
-node	lib	152	165	libfourcc/lib.rs	103	16	56	method_call	
-node	lib	128	129	libfourcc/lib.rs	96	31	1	pat	
-node	lib	300	296	libfourcc/lib.rs	137	17	8	ty	
-node	lib	347	403	libfourcc/lib.rs	144	8	249	local	
-node	lib	192	190	libfourcc/lib.rs	113	8	7	pat	
-node	lib	407	0	libfourcc/lib.rs	159	0	244	fn	target_endian_little
-node	lib	411	407	libfourcc/lib.rs	159	28	8	ty	
-node	lib	69	71	libfourcc/lib.rs	77	9	4	pat	
-node	lib	172	173	libfourcc/lib.rs	108	35	24	lit	
-node	lib	52	53	libfourcc/lib.rs	76	34	7	ty	
-node	lib	40	42	libfourcc/lib.rs	70	22	17	path	
-node	lib	91	92	libfourcc/lib.rs	82	12	11	lit	
-node	lib	371	372	libfourcc/lib.rs	149	20	1	path	
-node	lib	132	134	libfourcc/lib.rs	97	19	18	method_call	
-node	lib	179	181	libfourcc/lib.rs	109	55	4	lit	
-node	lib	286	288	libfourcc/lib.rs	129	4	6	path	
-node	lib	92	115	libfourcc/lib.rs	82	12	8	pat	
-node	lib	277	280	libfourcc/lib.rs	128	41	3	path	
-node	lib	325	336	libfourcc/lib.rs	140	44	10	method_call	
-node	lib	198	199	libfourcc/lib.rs	114	42	1	lit	
-node	lib	384	387	libfourcc/lib.rs	151	39	5	path	
-node	lib	334	330	libfourcc/lib.rs	141	56	12	method_call	
-node	lib	112	113	libfourcc/lib.rs	87	41	2	path	
-node	lib	406	403	libfourcc/lib.rs	156	4	8	tup	
-node	lib	287	288	libfourcc/lib.rs	129	11	1	path	
-node	lib	58	49	libfourcc/lib.rs	76	43	2	pat	
-node	lib	378	379	libfourcc/lib.rs	150	17	11	field	
-node	lib	238	239	libfourcc/lib.rs	123	20	1	lit	
-node	lib	202	268	libfourcc/lib.rs	114	4	401	block	
-node	lib	391	347	libfourcc/lib.rs	144	13	244	if	
-node	lib	98	115	libfourcc/lib.rs	84	12	8	pat	
-node	lib	203	204	libfourcc/lib.rs	114	4	401	path	
-node	lib	118	285	libfourcc/lib.rs	92	8	720	local	
-node	lib	331	332	libfourcc/lib.rs	141	58	1	path	
-node	lib	427	432	libfourcc/lib.rs	161	8	11	path	
-node	lib	253	254	libfourcc/lib.rs	125	13	8	shl	
-node	lib	235	262	libfourcc/lib.rs	122	17	6	path	
-node	lib	234	263	libfourcc/lib.rs	122	8	3	path	
-node	lib	395	396	libfourcc/lib.rs	153	18	10	path	
-node	lib	343	341	libfourcc/lib.rs	143	8	2	pat	
-node	lib	307	296	libfourcc/lib.rs	137	27	3	pat	
-node	lib	218	222	libfourcc/lib.rs	116	12	2	path	
-node	lib	275	283	libfourcc/lib.rs	128	24	2	path	
-node	lib	216	217	libfourcc/lib.rs	115	41	4	lit	
-node	lib	83	85	libfourcc/lib.rs	81	19	5	pat	
-node	lib	389	381	libfourcc/lib.rs	151	8	46	call	
-node	lib	227	230	libfourcc/lib.rs	119	12	9	path	
-node	lib	64	49	libfourcc/lib.rs	76	53	3	pat	
-node	lib	97	98	libfourcc/lib.rs	84	12	11	lit	
-node	lib	393	394	libfourcc/lib.rs	153	7	1	path	
-node	lib	354	391	libfourcc/lib.rs	144	38	20	block	
-node	lib	74	75	libfourcc/lib.rs	77	39	3	path	
-node	lib	106	107	libfourcc/lib.rs	86	34	37	lit	
-node	lib	42	43	libfourcc/lib.rs	69	18	95	expr_struct	
-node	lib	68	67	libfourcc/lib.rs	77	8	0	ty	
-node	lib	129	167	libfourcc/lib.rs	96	12	21	pat	
-node	lib	373	381	libfourcc/lib.rs	149	12	23	stmt	
-node	lib	61	62	libfourcc/lib.rs	76	60	14	ty	
-node	lib	322	323	libfourcc/lib.rs	139	44	2	path	
-node	lib	332	333	libfourcc/lib.rs	141	57	2	deref	
-node	lib	138	139	libfourcc/lib.rs	98	43	41	lit	
-node	lib	285	49	libfourcc/lib.rs	76	96	1694	block	
-node	lib	77	285	libfourcc/lib.rs	79	8	400	local	
-node	lib	375	374	libfourcc/lib.rs	150	12	0	ty	
-node	lib	258	259	libfourcc/lib.rs	125	26	11	cast	
-node	lib	328	335	libfourcc/lib.rs	141	53	1	pat	
-node	lib	273	271	libfourcc/lib.rs	128	8	1	pat	
-node	lib	415	407	libfourcc/lib.rs	159	42	4	ty	
-node	lib	133	134	libfourcc/lib.rs	97	41	1	lit	
-node	lib	341	403	libfourcc/lib.rs	143	8	19	local	
-node	lib	401	403	libfourcc/lib.rs	153	4	56	if	
-node	lib	103	115	libfourcc/lib.rs	85	12	1	pat	
-node	lib	440	441	libfourcc/lib.rs	162	34	4	path	
-node	lib	351	353	libfourcc/lib.rs	144	16	7	field	
-node	lib	385	387	libfourcc/lib.rs	151	45	2	path	
-node	lib	85	86	libfourcc/lib.rs	81	13	18	pat	
-node	lib	404	406	libfourcc/lib.rs	156	5	2	path	
-node	lib	274	283	libfourcc/lib.rs	128	12	2	path	
-node	lib	224	232	libfourcc/lib.rs	115	46	111	block	
-node	lib	113	109	libfourcc/lib.rs	87	16	28	call	
-node	lib	105	107	libfourcc/lib.rs	86	28	4	path	
-node	lib	356	359	libfourcc/lib.rs	147	8	1	path	
-node	lib	381	390	libfourcc/lib.rs	146	11	193	block	
-node	lib	431	432	libfourcc/lib.rs	161	51	14	path	
-node	lib	262	263	libfourcc/lib.rs	122	14	124	if	
-node	lib	164	165	libfourcc/lib.rs	104	16	62	stmt	
-node	lib	165	166	libfourcc/lib.rs	102	17	169	block	
-node	lib	206	267	libfourcc/lib.rs	114	4	401	break	
-node	lib	357	358	libfourcc/lib.rs	147	18	12	path	
-node	lib	269	285	libfourcc/lib.rs	114	4	401	match	
-node	lib	90	115	libfourcc/lib.rs	81	42	29	method_call	
-node	lib	195	196	libfourcc/lib.rs	114	21	1	path	
-node	lib	345	341	libfourcc/lib.rs	143	13	14	method_call	
-node	lib	231	232	libfourcc/lib.rs	118	15	39	blk	
-node	lib	140	141	libfourcc/lib.rs	98	20	65	stmt	
-node	lib	239	240	libfourcc/lib.rs	123	13	8	shr	
-node	lib	21	0	libfourcc/lib.rs	67	0	230	fn	macro_registrar
-node	lib	365	366	libfourcc/lib.rs	148	17	6	field	
-node	lib	397	398	libfourcc/lib.rs	154	8	1	path	
-node	lib	169	173	libfourcc/lib.rs	108	12	2	path	
-node	lib	158	160	libfourcc/lib.rs	104	59	4	lit	
-node	lib	131	132	libfourcc/lib.rs	97	19	7	method_call	
-node	lib	380	381	libfourcc/lib.rs	150	12	19	stmt	
-node	lib	422	433	libfourcc/lib.rs	160	15	2	path	
-node	lib	402	403	libfourcc/lib.rs	153	4	56	stmt	
-node	lib	66	49	libfourcc/lib.rs	76	80	15	ty	
-node	lib	205	267	libfourcc/lib.rs	114	4	401	pat	
-node	lib	209	265	libfourcc/lib.rs	115	12	190	local	
-node	lib	441	435	libfourcc/lib.rs	162	4	35	call	
-node	lib	438	439	libfourcc/lib.rs	162	13	8	method_call	
-node	lib	86	116	libfourcc/lib.rs	81	8	24	pat	
-node	lib	424	426	libfourcc/lib.rs	160	38	19	path	
-node	lib	279	280	libfourcc/lib.rs	128	48	3	ty	
-node	lib	248	249	libfourcc/lib.rs	123	25	21	paren	
-node	lib	62	63	libfourcc/lib.rs	76	59	16	ty	
-node	lib	268	269	libfourcc/lib.rs	114	4	401	loop	
-node	lib	250	261	libfourcc/lib.rs	124	15	50	block	
-node	lib	271	285	libfourcc/lib.rs	128	8	57	local	
-node	lib	189	285	libfourcc/lib.rs	92	8	720	stmt	
-node	lib	257	258	libfourcc/lib.rs	125	34	3	ty	
-node	lib	200	269	libfourcc/lib.rs	114	4	401	addr_of	
-node	lib	361	381	libfourcc/lib.rs	148	12	14	local	
-node	lib	48	21	libfourcc/lib.rs	67	58	172	block	
-node	lib	437	438	libfourcc/lib.rs	162	13	2	path	
-node	lib	412	407	libfourcc/lib.rs	159	24	2	pat	
-node	lib	439	441	libfourcc/lib.rs	162	13	19	method_call	
-node	lib	387	388	libfourcc/lib.rs	151	39	13	call	
-node	lib	29	32	libfourcc/lib.rs	67	40	15	ty	
-node	lib	399	400	libfourcc/lib.rs	154	8	14	stmt	
-node	lib	236	262	libfourcc/lib.rs	122	24	58	block	
-node	lib	75	67	libfourcc/lib.rs	77	25	18	call	
-node	lib	217	232	libfourcc/lib.rs	115	22	23	gt	
-node	lib	46	48	libfourcc/lib.rs	68	4	163	call	
-node	lib	367	381	libfourcc/lib.rs	148	12	14	stmt	
-node	lib	154	162	libfourcc/lib.rs	104	23	6	path	
-node	lib	327	335	libfourcc/lib.rs	141	54	1	ty	
-node	lib	363	361	libfourcc/lib.rs	148	12	2	pat	
-node	lib	101	102	libfourcc/lib.rs	84	49	2	path	
-node	lib	160	161	libfourcc/lib.rs	104	46	30	call	
-node	lib	240	249	libfourcc/lib.rs	123	12	10	paren	
-node	lib	243	244	libfourcc/lib.rs	123	35	3	ty	
-node	lib	25	32	libfourcc/lib.rs	67	34	4	ty	
-node	lib	207	208	libfourcc/lib.rs	114	8	9	pat	
-node	lib	186	187	libfourcc/lib.rs	107	13	149	block	
-node	lib	355	354	libfourcc/lib.rs	145	8	4	path	
-node	lib	53	49	libfourcc/lib.rs	76	29	12	ty	
-node	lib	134	142	libfourcc/lib.rs	97	19	23	ne	
-node	lib	177	182	libfourcc/lib.rs	109	38	2	path	
-node	lib	141	142	libfourcc/lib.rs	97	43	106	block	
-node	lib	309	310	libfourcc/lib.rs	137	56	9	ty	
-node	lib	272	271	libfourcc/lib.rs	128	8	0	ty	
-node	lib	403	296	libfourcc/lib.rs	137	82	665	block	
-node	lib	204	267	libfourcc/lib.rs	114	4	401	method_call	
-node	lib	116	77	libfourcc/lib.rs	79	17	391	match	
-node	lib	352	353	libfourcc/lib.rs	144	27	10	path	
-node	lib	41	42	libfourcc/lib.rs	71	18	4	path	
-node	lib	168	188	libfourcc/lib.rs	107	8	1	pat	
-node	lib	139	141	libfourcc/lib.rs	98	20	65	method_call	
-node	lib	251	253	libfourcc/lib.rs	125	13	3	path	
-node	lib	57	49	libfourcc/lib.rs	76	47	4	ty	
-node	lib	281	282	libfourcc/lib.rs	128	53	10	path	
-node	lib	99	102	libfourcc/lib.rs	84	24	20	path	
-node	lib	353	391	libfourcc/lib.rs	144	16	21	eq	
-node	lib	350	351	libfourcc/lib.rs	144	16	1	path	
-node	lib	185	186	libfourcc/lib.rs	109	12	62	stmt	
-node	lib	95	115	libfourcc/lib.rs	83	12	5	pat	
-node	lib	119	118	libfourcc/lib.rs	92	8	0	ty	
-node	lib	96	115	libfourcc/lib.rs	83	21	5	lit	
-node	lib	191	190	libfourcc/lib.rs	113	8	0	ty	
-node	lib	233	265	libfourcc/lib.rs	115	12	190	stmt	
-node	lib	295	289	libfourcc/lib.rs	134	10	4	ty	
-node	lib	34	21	libfourcc/lib.rs	67	58	0	ty	
-node	lib	130	131	libfourcc/lib.rs	97	19	1	path	
-node	lib	270	285	libfourcc/lib.rs	114	4	401	stmt	
-node	lib	394	396	libfourcc/lib.rs	153	7	7	field	
-node	lib	246	247	libfourcc/lib.rs	123	43	2	lit	
-node	lib	150	152	libfourcc/lib.rs	103	28	9	field	
-node	lib	182	183	libfourcc/lib.rs	109	26	47	method_call	
-node	lib	157	160	libfourcc/lib.rs	104	46	12	path	
-node	lib	392	403	libfourcc/lib.rs	144	8	249	stmt	
-node	lib	229	230	libfourcc/lib.rs	119	25	2	ty	
-node	lib	124	188	libfourcc/lib.rs	94	8	17	pat	
-node	lib	244	245	libfourcc/lib.rs	123	27	11	cast	
-node	lib	174	186	libfourcc/lib.rs	108	12	48	stmt	
-node	lib	43	45	libfourcc/lib.rs	69	17	96	uniq	
-node	lib	149	150	libfourcc/lib.rs	103	28	4	path	
-node	lib	38	46	libfourcc/lib.rs	68	13	23	call	
-node	lib	290	289	libfourcc/lib.rs	133	4	17	struct_field	ident
-node	lib	45	46	libfourcc/lib.rs	69	8	120	call	
-node	lib	255	258	libfourcc/lib.rs	125	26	4	path	
-node	lib	423	433	libfourcc/lib.rs	160	34	2	path	
-node	lib	84	85	libfourcc/lib.rs	81	26	4	pat	
-node	lib	70	71	libfourcc/lib.rs	77	15	6	pat	
-node	lib	292	289	libfourcc/lib.rs	133	11	10	ty	
-node	lib	221	222	libfourcc/lib.rs	116	35	46	lit	
-node	lib	241	244	libfourcc/lib.rs	123	27	4	path	
-node	lib	183	184	libfourcc/lib.rs	109	19	55	call	
-node	lib	222	224	libfourcc/lib.rs	116	12	70	method_call	
-node	lib	117	285	libfourcc/lib.rs	79	8	400	stmt	
-node	lib	420	419	libfourcc/lib.rs	160	8	0	ty	
-node	lib	73	75	libfourcc/lib.rs	77	35	2	path	
-node	lib	193	190	libfourcc/lib.rs	113	18	4	lit	
-node	lib	155	161	libfourcc/lib.rs	104	30	2	path	
-node	lib	261	262	libfourcc/lib.rs	124	15	50	blk	
-node	lib	346	403	libfourcc/lib.rs	143	8	19	stmt	
-node	lib	147	167	libfourcc/lib.rs	102	12	1	pat	
-node	lib	78	77	libfourcc/lib.rs	79	8	0	ty	
-node	lib	81	116	libfourcc/lib.rs	80	8	4	pat	
-node	lib	126	167	libfourcc/lib.rs	94	35	8	field	
-node	lib	339	316	libfourcc/lib.rs	138	12	286	addr_of	
-node	lib	293	289	libfourcc/lib.rs	134	4	10	struct_field	span
-node	lib	176	182	libfourcc/lib.rs	109	26	2	path	
-node	lib	296	0	libfourcc/lib.rs	137	0	747	fn	parse_tts
-node	lib	390	391	libfourcc/lib.rs	146	11	193	blk	
-node	lib	225	224	libfourcc/lib.rs	117	12	3	lit	
-node	lib	369	368	libfourcc/lib.rs	149	12	0	ty	
-node	lib	288	285	libfourcc/lib.rs	129	4	9	call	
-node	lib	348	347	libfourcc/lib.rs	144	8	0	ty	
-node	lib	342	341	libfourcc/lib.rs	143	8	0	ty	
-node	lib	36	38	libfourcc/lib.rs	68	13	13	path	
-node	lib	100	102	libfourcc/lib.rs	84	45	2	path	
-node	lib	226	231	libfourcc/lib.rs	118	15	39	block	
-node	lib	187	188	libfourcc/lib.rs	107	13	149	blk	
-node	lib	284	285	libfourcc/lib.rs	128	8	57	stmt	
-node	lib	196	197	libfourcc/lib.rs	114	21	7	method_call	
-node	lib	82	116	libfourcc/lib.rs	80	16	5	lit	
-node	lib	161	162	libfourcc/lib.rs	104	30	47	method_call	
-node	lib	49	0	libfourcc/lib.rs	76	0	1790	fn	expand_syntax_ext
-node	lib	267	202	libfourcc/lib.rs	114	4	401	match	
-node	lib	323	338	libfourcc/lib.rs	139	44	8	method_call	
-node	lib	276	282	libfourcc/lib.rs	128	28	12	path	
-node	lib	181	182	libfourcc/lib.rs	109	42	30	call	
-node	lib	301	296	libfourcc/lib.rs	137	13	2	pat	
-node	lib	201	269	libfourcc/lib.rs	114	4	401	pat	
-node	lib	315	296	libfourcc/lib.rs	137	54	27	ty	
-node	lib	184	186	libfourcc/lib.rs	109	12	62	ret	
+node	lib	393	391	libfourcc/lib.rs	156	9	2	path	
+node	lib	48	42	libfourcc/lib.rs	73	8	4	path	
+node	lib	192	184	libfourcc/lib.rs	114	4	401	loop	
+node	lib	166	124	libfourcc/lib.rs	107	13	120	blk	
+node	lib	196	195	libfourcc/lib.rs	114	4	401	path	
+node	lib	216	214	libfourcc/lib.rs	116	12	70	method_call	
+node	lib	138	136	libfourcc/lib.rs	97	16	133	if	
+node	lib	363	361	libfourcc/lib.rs	149	12	5	pat	
+node	lib	299	295	libfourcc/lib.rs	137	67	13	ty	
+node	lib	332	330	libfourcc/lib.rs	143	8	2	pat	
+node	lib	327	326	libfourcc/lib.rs	141	57	2	deref	
+node	lib	74	72	libfourcc/lib.rs	77	15	6	pat	
+node	lib	281	276	libfourcc/lib.rs	134	10	4	ty	
+node	lib	316	315	libfourcc/lib.rs	140	44	80	method_call	
+node	lib	308	305	libfourcc/lib.rs	138	12	286	addr_of	
+node	lib	416	414	libfourcc/lib.rs	160	58	15	lit	
+node	lib	296	295	libfourcc/lib.rs	137	55	10	ty	
+node	lib	286	285	libfourcc/lib.rs	137	18	7	ty	
+node	lib	131	130	libfourcc/lib.rs	94	35	3	path	
+node	lib	188	187	libfourcc/lib.rs	114	21	7	method_call	
+node	lib	410	408	libfourcc/lib.rs	160	8	4	pat	
+node	lib	324	319	libfourcc/lib.rs	141	56	12	block	
+node	lib	371	370	libfourcc/lib.rs	150	17	11	field	
+node	lib	120	68	libfourcc/lib.rs	92	8	662	stmt	
+node	lib	242	241	libfourcc/lib.rs	123	27	11	cast	
+node	lib	274	273	libfourcc/lib.rs	129	4	12	path	
+node	lib	154	153	libfourcc/lib.rs	102	17	140	block	
+node	lib	77	75	libfourcc/lib.rs	77	35	2	path	
+node	lib	95	93	libfourcc/lib.rs	81	59	5	path	
+node	lib	145	144	libfourcc/lib.rs	98	20	65	stmt	
+node	lib	62	61	libfourcc/lib.rs	76	60	14	ty	
+node	lib	305	303	libfourcc/lib.rs	138	8	290	local	
+node	lib	104	91	libfourcc/lib.rs	84	24	28	call	
+node	lib	328	327	libfourcc/lib.rs	141	58	1	path	
+node	lib	335	303	libfourcc/lib.rs	144	8	249	stmt	
+node	lib	44	42	libfourcc/lib.rs	69	17	96	uniq	
+node	lib	144	138	libfourcc/lib.rs	97	43	106	block	
+node	lib	360	347	libfourcc/lib.rs	149	12	23	stmt	
+node	lib	25	23	libfourcc/lib.rs	67	34	4	ty	
+node	lib	278	276	libfourcc/lib.rs	133	11	10	ty	
+node	lib	182	179	libfourcc/lib.rs	113	18	4	lit	
+node	lib	167	166	libfourcc/lib.rs	107	13	120	block	
+node	lib	136	135	libfourcc/lib.rs	96	37	183	block	
+node	lib	202	201	libfourcc/lib.rs	114	45	352	block	
+node	lib	190	186	libfourcc/lib.rs	114	42	1	lit	
+node	lib	219	218	libfourcc/lib.rs	116	24	4	path	
+node	lib	374	373	libfourcc/lib.rs	151	8	4	path	
+node	lib	414	411	libfourcc/lib.rs	160	38	36	call	
+node	lib	260	68	libfourcc/lib.rs	128	8	57	local	
+node	lib	345	344	libfourcc/lib.rs	145	8	4	path	
+node	lib	337	336	libfourcc/lib.rs	144	8	0	ty	
+node	lib	81	80	libfourcc/lib.rs	79	8	0	ty	
+node	lib	421	419	libfourcc/lib.rs	161	40	8	lit	
+node	lib	80	68	libfourcc/lib.rs	79	8	400	local	
+node	lib	203	202	libfourcc/lib.rs	115	12	190	stmt	
+node	lib	71	70	libfourcc/lib.rs	77	8	0	ty	
+node	lib	29	23	libfourcc/lib.rs	67	40	15	ty	
+node	lib	137	136	libfourcc/lib.rs	97	16	133	stmt	
+node	lib	338	336	libfourcc/lib.rs	144	8	2	pat	
+node	lib	208	207	libfourcc/lib.rs	115	22	23	gt	
+node	lib	295	283	libfourcc/lib.rs	137	54	27	ty	
+node	lib	159	158	libfourcc/lib.rs	103	28	4	path	
+node	lib	186	185	libfourcc/lib.rs	114	21	23	method_call	
+node	lib	49	0	libfourcc/lib.rs	76	0	1739	fn	expand_syntax_ext
+node	lib	175	174	libfourcc/lib.rs	109	19	27	call	
+node	lib	248	247	libfourcc/lib.rs	124	15	50	block	
+node	lib	351	349	libfourcc/lib.rs	147	17	13	addr_of	
+node	lib	425	423	libfourcc/lib.rs	162	13	19	method_call	
+node	lib	155	154	libfourcc/lib.rs	103	16	56	stmt	
+node	lib	88	87	libfourcc/lib.rs	81	13	18	pat	
+node	lib	126	125	libfourcc/lib.rs	92	18	4	path	
+node	lib	317	316	libfourcc/lib.rs	140	44	10	method_call	
+node	lib	261	260	libfourcc/lib.rs	128	8	0	ty	
+node	lib	115	112	libfourcc/lib.rs	86	34	37	lit	
+node	lib	93	92	libfourcc/lib.rs	81	42	23	call	
+node	lib	174	167	libfourcc/lib.rs	109	12	34	ret	
+node	lib	364	361	libfourcc/lib.rs	149	20	15	method_call	
+node	lib	259	68	libfourcc/lib.rs	128	8	57	stmt	
+node	lib	344	339	libfourcc/lib.rs	144	38	20	block	
+node	lib	51	49	libfourcc/lib.rs	76	29	12	ty	
+node	lib	415	414	libfourcc/lib.rs	160	38	19	path	
+node	lib	111	110	libfourcc/lib.rs	86	16	56	stmt	
+node	lib	122	121	libfourcc/lib.rs	92	8	0	ty	
+node	lib	390	389	libfourcc/lib.rs	154	8	1	path	
+node	lib	46	45	libfourcc/lib.rs	70	22	17	path	
+node	lib	406	394	libfourcc/lib.rs	159	56	188	block	
+node	lib	107	104	libfourcc/lib.rs	84	49	2	path	
+node	lib	43	42	libfourcc/lib.rs	69	8	8	path	
+node	lib	218	216	libfourcc/lib.rs	116	24	9	field	
+node	lib	301	299	libfourcc/lib.rs	137	74	5	ty	
+node	lib	388	387	libfourcc/lib.rs	154	8	14	stmt	
+node	lib	382	303	libfourcc/lib.rs	153	4	56	if	
+node	lib	236	235	libfourcc/lib.rs	123	13	8	shr	
+node	lib	392	391	libfourcc/lib.rs	156	5	2	path	
+node	lib	418	417	libfourcc/lib.rs	161	8	11	path	
+node	lib	318	317	libfourcc/lib.rs	140	44	3	path	
+node	lib	35	21	libfourcc/lib.rs	67	58	172	block	
 node	lib	33	21	libfourcc/lib.rs	67	23	8	pat	
-node	lib	173	186	libfourcc/lib.rs	108	12	48	method_call	
-jdef	73	lib	54
-jdef	295	syntax	10775
-jdef	382	std	103656
-jdef	379	syntax	10775
-jdef	255	lib	211
-jdef	312	lib	289
-jdef	25	syntax	16836
-jdef	377	lib	318
-jdef	35	lib	33
-jdef	320	lib	301
-jdef	436	syntax	2553
-jdef	219	lib	69
-jdef	437	lib	412
-jdef	110	lib	407
-jdef	137	syntax	39302
-jdef	393	lib	318
-jdef	132	std	65700
-jdef	139	syntax	164436
-jdef	124	syntax	39841
-jdef	178	syntax	50596
-jdef	99	lib	407
-jdef	323	syntax	164240
-jdef	334	syntax	48444
-jdef	52	syntax	164113
-jdef	175	syntax	163614
-jdef	39	syntax	163748
-jdef	121	lib	69
-jdef	111	lib	54
-jdef	319	syntax	137966
-jdef	195	lib	120
-jdef	152	syntax	164436
-jdef	438	syntax	164240
-jdef	275	lib	58
-jdef	352	syntax	120423
-jdef	41	std	103652
-jdef	203	lib	201
-jdef	126	syntax	11020
-jdef	304	syntax	47294
-jdef	386	lib	376
-jdef	135	lib	54
-jdef	218	lib	54
-jdef	395	syntax	120423
-jdef	157	syntax	50596
-jdef	122	syntax	39302
-jdef	85	lib	289
-jdef	180	syntax	55246
-jdef	104	lib	54
-jdef	154	syntax	163614
-jdef	87	syntax	131951
-jdef	321	syntax	164229
-jdef	101	lib	58
-jdef	366	syntax	10775
-jdef	394	syntax	100180
-jdef	344	lib	318
-jdef	357	syntax	120343
-jdef	423	lib	416
-jdef	171	syntax	39302
-jdef	405	lib	349
-jdef	337	std	244398
-jdef	155	lib	54
-jdef	199	std	243600
-jdef	159	syntax	55246
-jdef	324	lib	307
-jdef	431	syntax	50176
-jdef	156	lib	58
-jdef	161	syntax	187703
-jdef	384	syntax	11602
-jdef	205	std	103652
-jdef	80	lib	70
-jdef	36	syntax	131977
-jdef	322	lib	301
-jdef	433	syntax	189820
-jdef	112	lib	58
-jdef	66	syntax	163609
-jdef	440	lib	421
-jdef	251	lib	192
-jdef	125	lib	123
-jdef	350	lib	318
-jdef	88	lib	83
-jdef	136	lib	69
-jdef	57	syntax	10775
-jdef	292	syntax	16134
-jdef	81	std	103652
-jdef	204	std	95769
-jdef	220	syntax	39302
-jdef	173	syntax	164436
-jdef	29	syntax	163730
-jdef	385	lib	363
-jdef	314	std	103651
-jdef	398	syntax	100377
-jdef	345	syntax	109750
-jdef	336	std	243395
-jdef	299	syntax	164113
-jdef	388	lib	289
-jdef	197	std	65254
-jdef	182	syntax	187703
-jdef	422	lib	412
-jdef	371	lib	318
-jdef	351	syntax	100180
-jdef	365	syntax	100180
-jdef	415	syntax	10775
-jdef	410	syntax	164113
-jdef	383	lib	370
-jdef	148	lib	54
-jdef	309	syntax	39302
-jdef	237	lib	192
-jdef	372	syntax	101319
-jdef	40	lib	49
-jdef	397	lib	318
-jdef	196	syntax	131692
-jdef	100	lib	54
-jdef	145	lib	127
-jdef	378	syntax	100180
-jdef	359	syntax	100449
-jdef	281	syntax	55246
-jdef	227	lib	207
-jdef	222	syntax	164436
-jdef	355	std	103652
-jdef	331	lib	328
-jdef	90	syntax	131692
-jdef	325	std	48731
-jdef	61	syntax	47294
-jdef	149	lib	69
-jdef	129	syntax	50570
-jdef	241	lib	211
-jdef	439	std	58208
-jdef	283	syntax	187703
-jdef	72	lib	296
-jdef	404	lib	343
-jdef	86	std	103656
-jdef	44	std	103652
-jdef	208	std	103656
-jdef	131	syntax	131692
-jdef	234	lib	192
-jdef	74	lib	64
-jdef	286	syntax	163614
-jdef	356	lib	318
-jdef	364	lib	318
-jdef	427	syntax	50570
-jdef	107	syntax	164436
-jdef	212	lib	207
-jdef	42	syntax	163391
-jdef	235	lib	79
-jdef	176	lib	54
-jdef	105	lib	84
-jdef	169	lib	54
+node	lib	370	367	libfourcc/lib.rs	150	17	14	field	
+node	lib	257	255	libfourcc/lib.rs	125	34	3	ty	
+node	lib	232	231	libfourcc/lib.rs	122	17	6	path	
+node	lib	205	204	libfourcc/lib.rs	115	12	0	ty	
+node	lib	101	91	libfourcc/lib.rs	83	21	5	lit	
+node	lib	140	139	libfourcc/lib.rs	97	19	18	method_call	
+node	lib	163	162	libfourcc/lib.rs	104	23	23	path	
+node	lib	97	96	libfourcc/lib.rs	82	12	11	lit	
+node	lib	58	49	libfourcc/lib.rs	76	43	2	pat	
+node	lib	134	132	libfourcc/lib.rs	96	31	1	pat	
+node	lib	270	268	libfourcc/lib.rs	128	48	3	ty	
+node	lib	267	266	libfourcc/lib.rs	128	28	12	path	
+node	lib	280	276	libfourcc/lib.rs	134	4	10	struct_field	span
+node	lib	37	35	libfourcc/lib.rs	68	4	163	call	
+node	lib	214	207	libfourcc/lib.rs	115	46	111	block	
+node	lib	207	204	libfourcc/lib.rs	115	19	183	if	
+node	lib	283	0	libfourcc/lib.rs	137	0	747	fn	parse_tts
+node	lib	408	406	libfourcc/lib.rs	160	8	135	local	
+node	lib	118	116	libfourcc/lib.rs	87	37	2	path	
+node	lib	173	169	libfourcc/lib.rs	108	35	24	lit	
+node	lib	330	303	libfourcc/lib.rs	143	8	19	local	
+node	lib	195	194	libfourcc/lib.rs	114	4	401	method_call	
+node	lib	352	351	libfourcc/lib.rs	147	18	12	path	
+node	lib	380	377	libfourcc/lib.rs	151	49	2	path	
+node	lib	347	346	libfourcc/lib.rs	146	11	193	block	
+node	lib	322	319	libfourcc/lib.rs	141	53	1	pat	
+node	lib	266	263	libfourcc/lib.rs	128	28	36	call	
+node	lib	139	138	libfourcc/lib.rs	97	19	23	ne	
+node	lib	153	129	libfourcc/lib.rs	102	17	140	blk	
+node	lib	348	347	libfourcc/lib.rs	147	8	23	stmt	
+node	lib	72	70	libfourcc/lib.rs	77	8	14	pat	
+node	lib	177	175	libfourcc/lib.rs	109	43	2	path	
+node	lib	366	347	libfourcc/lib.rs	150	12	19	stmt	
+node	lib	66	65	libfourcc/lib.rs	76	81	15	ty	
+node	lib	110	109	libfourcc/lib.rs	85	17	134	block	
+node	lib	241	240	libfourcc/lib.rs	123	26	13	paren	
+node	lib	312	311	libfourcc/lib.rs	138	44	2	path	
+node	lib	158	156	libfourcc/lib.rs	103	28	9	field	
+node	lib	151	136	libfourcc/lib.rs	100	16	1	path	
+node	lib	353	347	libfourcc/lib.rs	148	12	14	stmt	
+node	lib	132	129	libfourcc/lib.rs	96	12	21	pat	
+node	lib	306	305	libfourcc/lib.rs	138	8	0	ty	
+node	lib	263	260	libfourcc/lib.rs	128	12	53	method_call	
+node	lib	375	373	libfourcc/lib.rs	151	13	40	expr_struct	
+node	lib	252	251	libfourcc/lib.rs	125	13	3	path	
+node	lib	185	184	libfourcc/lib.rs	114	4	401	addr_of	
+node	lib	313	309	libfourcc/lib.rs	139	44	8	method_call	
+node	lib	181	179	libfourcc/lib.rs	113	8	7	pat	
+node	lib	108	91	libfourcc/lib.rs	85	12	1	pat	
+node	lib	142	141	libfourcc/lib.rs	97	19	1	path	
+node	lib	314	313	libfourcc/lib.rs	139	44	2	path	
+node	lib	268	266	libfourcc/lib.rs	128	41	10	cast	
+node	lib	156	154	libfourcc/lib.rs	103	16	56	method_call	
+node	lib	184	68	libfourcc/lib.rs	114	4	401	match	
+node	lib	336	303	libfourcc/lib.rs	144	8	249	local	
+node	lib	391	303	libfourcc/lib.rs	156	4	8	tup	
+node	lib	234	233	libfourcc/lib.rs	123	12	34	bitor	
+node	lib	164	162	libfourcc/lib.rs	104	47	2	path	
+node	lib	367	347	libfourcc/lib.rs	150	12	19	local	
+node	lib	240	239	libfourcc/lib.rs	123	26	19	shl	
+node	lib	106	104	libfourcc/lib.rs	84	45	2	path	
+node	lib	83	80	libfourcc/lib.rs	79	17	391	match	
+node	lib	381	303	libfourcc/lib.rs	153	4	56	stmt	
+node	lib	112	110	libfourcc/lib.rs	86	16	56	method_call	
+node	lib	288	283	libfourcc/lib.rs	137	13	2	pat	
+node	lib	329	303	libfourcc/lib.rs	143	8	19	stmt	
+node	lib	427	426	libfourcc/lib.rs	162	13	2	path	
+node	lib	247	231	libfourcc/lib.rs	124	15	50	blk	
+node	lib	235	234	libfourcc/lib.rs	123	12	10	paren	
+node	lib	116	110	libfourcc/lib.rs	87	16	28	call	
+node	lib	396	394	libfourcc/lib.rs	159	28	8	ty	
+node	lib	384	383	libfourcc/lib.rs	153	7	7	field	
+node	lib	428	423	libfourcc/lib.rs	162	34	4	path	
+node	lib	262	260	libfourcc/lib.rs	128	8	1	pat	
+node	lib	61	60	libfourcc/lib.rs	76	59	16	ty	
+node	lib	171	169	libfourcc/lib.rs	108	24	9	field	
+node	lib	200	199	libfourcc/lib.rs	114	8	9	pat	
+node	lib	409	408	libfourcc/lib.rs	160	8	0	ty	
+node	lib	64	49	libfourcc/lib.rs	76	53	3	pat	
+node	lib	321	319	libfourcc/lib.rs	141	54	1	ty	
+node	lib	233	231	libfourcc/lib.rs	122	24	58	block	
+node	lib	78	75	libfourcc/lib.rs	77	39	3	path	
+node	lib	98	91	libfourcc/lib.rs	82	24	4	lit	
+node	lib	355	354	libfourcc/lib.rs	148	12	0	ty	
+node	lib	69	68	libfourcc/lib.rs	77	8	35	stmt	
+node	lib	34	21	libfourcc/lib.rs	67	58	0	ty	
+node	lib	426	425	libfourcc/lib.rs	162	13	8	method_call	
+node	lib	307	305	libfourcc/lib.rs	138	8	1	pat	
+node	lib	165	124	libfourcc/lib.rs	107	8	1	pat	
+node	lib	65	49	libfourcc/lib.rs	76	80	16	ty	
+node	lib	249	248	libfourcc/lib.rs	125	12	26	bitor	
+node	lib	113	112	libfourcc/lib.rs	86	16	2	path	
+node	lib	331	330	libfourcc/lib.rs	143	8	0	ty	
+node	lib	255	254	libfourcc/lib.rs	125	26	11	cast	
+node	lib	304	303	libfourcc/lib.rs	138	8	290	stmt	
+node	lib	89	88	libfourcc/lib.rs	81	19	5	pat	
+node	lib	143	139	libfourcc/lib.rs	97	41	1	lit	
+node	lib	387	382	libfourcc/lib.rs	153	29	31	block	
+node	lib	91	83	libfourcc/lib.rs	81	36	311	match	
+node	lib	272	266	libfourcc/lib.rs	128	53	10	path	
+node	lib	117	116	libfourcc/lib.rs	87	16	20	path	
+node	lib	94	93	libfourcc/lib.rs	81	42	16	path	
+node	lib	150	146	libfourcc/lib.rs	98	43	41	lit	
+node	lib	76	75	libfourcc/lib.rs	77	25	9	path	
+node	lib	397	396	libfourcc/lib.rs	159	29	7	ty	
+node	lib	201	194	libfourcc/lib.rs	114	45	352	blk	
+node	lib	129	124	libfourcc/lib.rs	94	29	435	match	
+node	lib	90	88	libfourcc/lib.rs	81	26	4	pat	
+node	lib	123	121	libfourcc/lib.rs	92	8	1	pat	
+node	lib	47	45	libfourcc/lib.rs	71	18	4	path	
+node	lib	326	325	libfourcc/lib.rs	141	56	4	paren	
+node	lib	342	341	libfourcc/lib.rs	144	16	1	path	
+node	lib	225	224	libfourcc/lib.rs	119	12	9	path	
+node	lib	211	209	libfourcc/lib.rs	115	35	3	ty	
+node	lib	92	91	libfourcc/lib.rs	81	42	29	method_call	
+node	lib	369	367	libfourcc/lib.rs	150	12	2	pat	
+node	lib	394	0	libfourcc/lib.rs	159	0	244	fn	target_endian_little
+node	lib	178	68	libfourcc/lib.rs	113	8	14	stmt	
+node	lib	250	249	libfourcc/lib.rs	125	12	10	paren	
+node	lib	133	132	libfourcc/lib.rs	96	24	5	pat	
+node	lib	170	169	libfourcc/lib.rs	108	12	2	path	
+node	lib	68	49	libfourcc/lib.rs	76	97	1642	block	
+node	lib	290	283	libfourcc/lib.rs	137	32	17	ty	
+node	lib	84	83	libfourcc/lib.rs	79	23	6	path	
+node	lib	79	68	libfourcc/lib.rs	79	8	400	stmt	
+node	lib	102	91	libfourcc/lib.rs	84	12	8	pat	
+node	lib	39	37	libfourcc/lib.rs	68	13	23	call	
+node	lib	373	347	libfourcc/lib.rs	151	8	46	call	
+node	lib	52	51	libfourcc/lib.rs	76	34	7	ty	
+node	lib	423	406	libfourcc/lib.rs	162	4	35	call	
+node	lib	419	417	libfourcc/lib.rs	161	20	29	call	
+node	lib	401	394	libfourcc/lib.rs	159	42	4	ty	
+node	lib	125	124	libfourcc/lib.rs	92	18	9	field	
+node	lib	193	192	libfourcc/lib.rs	114	4	401	block	
+node	lib	152	129	libfourcc/lib.rs	102	12	1	pat	
+node	lib	362	361	libfourcc/lib.rs	149	12	0	ty	
+node	lib	246	240	libfourcc/lib.rs	123	43	2	lit	
+node	lib	147	146	libfourcc/lib.rs	98	20	2	path	
+node	lib	169	167	libfourcc/lib.rs	108	12	48	method_call	
+node	lib	60	49	libfourcc/lib.rs	76	58	17	ty	
+node	lib	210	209	libfourcc/lib.rs	115	22	9	path	
+node	lib	386	383	libfourcc/lib.rs	153	18	10	path	
+node	lib	172	171	libfourcc/lib.rs	108	24	4	path	
+node	lib	45	44	libfourcc/lib.rs	69	18	95	expr_struct	
+node	lib	130	129	libfourcc/lib.rs	94	35	8	field	
+node	lib	189	188	libfourcc/lib.rs	114	21	1	path	
+node	lib	161	154	libfourcc/lib.rs	104	16	34	ret	
+node	lib	309	308	libfourcc/lib.rs	138	17	281	call	
+node	lib	404	394	libfourcc/lib.rs	159	51	4	ty	
+node	lib	148	146	libfourcc/lib.rs	98	32	9	field	
+node	lib	239	234	libfourcc/lib.rs	123	25	21	paren	
+node	lib	333	330	libfourcc/lib.rs	143	13	14	method_call	
+node	lib	215	214	libfourcc/lib.rs	116	12	70	stmt	
+node	lib	223	222	libfourcc/lib.rs	118	15	39	block	
+node	lib	160	156	libfourcc/lib.rs	103	39	32	lit	
+node	lib	40	39	libfourcc/lib.rs	68	13	13	path	
+node	lib	217	216	libfourcc/lib.rs	116	12	2	path	
+node	lib	251	250	libfourcc/lib.rs	125	13	8	shl	
+node	lib	350	349	libfourcc/lib.rs	147	8	1	path	
+node	lib	220	216	libfourcc/lib.rs	116	35	46	lit	
+node	lib	417	411	libfourcc/lib.rs	161	8	58	call	
+node	lib	75	70	libfourcc/lib.rs	77	25	18	call	
+node	lib	230	229	libfourcc/lib.rs	122	8	3	path	
+node	lib	379	377	libfourcc/lib.rs	151	45	2	path	
+node	lib	149	148	libfourcc/lib.rs	98	32	4	path	
+node	lib	303	283	libfourcc/lib.rs	137	82	665	block	
+node	lib	334	333	libfourcc/lib.rs	143	13	1	path	
+node	lib	85	83	libfourcc/lib.rs	80	8	4	pat	
+node	lib	23	21	libfourcc/lib.rs	67	33	23	ty	
+node	lib	385	384	libfourcc/lib.rs	153	7	1	path	
+node	lib	420	419	libfourcc/lib.rs	161	20	19	path	
+node	lib	357	354	libfourcc/lib.rs	148	17	9	field	
+node	lib	365	364	libfourcc/lib.rs	149	20	1	path	
+node	lib	273	68	libfourcc/lib.rs	129	4	15	call	
+node	lib	213	208	libfourcc/lib.rs	115	41	4	lit	
+node	lib	103	102	libfourcc/lib.rs	84	12	11	lit	
+node	lib	96	91	libfourcc/lib.rs	82	12	8	pat	
+node	lib	135	129	libfourcc/lib.rs	96	37	183	blk	
+node	lib	168	167	libfourcc/lib.rs	108	12	48	stmt	
+node	lib	294	283	libfourcc/lib.rs	137	27	3	pat	
+node	lib	87	83	libfourcc/lib.rs	81	8	24	pat	
+node	lib	412	411	libfourcc/lib.rs	160	15	2	path	
+node	lib	162	161	libfourcc/lib.rs	104	23	27	call	
+node	lib	354	347	libfourcc/lib.rs	148	12	14	local	
+node	lib	191	184	libfourcc/lib.rs	114	4	401	pat	
+node	lib	70	68	libfourcc/lib.rs	77	8	35	local	
+node	lib	269	268	libfourcc/lib.rs	128	41	3	path	
+node	lib	32	23	libfourcc/lib.rs	67	56	0	ty	
+node	lib	254	249	libfourcc/lib.rs	125	25	13	paren	
+node	lib	180	179	libfourcc/lib.rs	113	8	0	ty	
+node	lib	157	156	libfourcc/lib.rs	103	16	2	path	
+node	lib	109	91	libfourcc/lib.rs	85	17	134	blk	
+node	lib	222	207	libfourcc/lib.rs	118	15	39	blk	
+node	lib	340	339	libfourcc/lib.rs	144	16	21	eq	
+node	lib	128	127	libfourcc/lib.rs	94	21	3	pat	
+node	lib	264	263	libfourcc/lib.rs	128	12	2	path	
+node	lib	422	417	libfourcc/lib.rs	161	51	14	path	
+node	lib	291	290	libfourcc/lib.rs	137	33	16	ty	
+node	lib	228	202	libfourcc/lib.rs	122	8	130	stmt	
+node	lib	339	336	libfourcc/lib.rs	144	13	244	if	
+node	lib	114	112	libfourcc/lib.rs	86	28	4	path	
+node	lib	21	0	libfourcc/lib.rs	67	0	230	fn	macro_registrar
+node	lib	42	37	libfourcc/lib.rs	69	8	120	call	
+node	lib	226	224	libfourcc/lib.rs	119	25	2	ty	
+node	lib	256	255	libfourcc/lib.rs	125	26	4	path	
+node	lib	124	121	libfourcc/lib.rs	92	12	658	match	
+node	lib	285	283	libfourcc/lib.rs	137	17	8	ty	
+node	lib	206	204	libfourcc/lib.rs	115	12	4	pat	
+node	lib	325	324	libfourcc/lib.rs	141	56	12	method_call	
+node	lib	292	291	libfourcc/lib.rs	137	34	14	ty	
+node	lib	311	309	libfourcc/lib.rs	138	44	15	method_call	
+node	lib	424	423	libfourcc/lib.rs	162	4	8	path	
+node	lib	56	49	libfourcc/lib.rs	76	47	4	ty	
+node	lib	361	347	libfourcc/lib.rs	149	12	23	local	
+node	lib	389	387	libfourcc/lib.rs	154	8	14	method_call	
+node	lib	221	214	libfourcc/lib.rs	117	12	3	lit	
+node	lib	197	194	libfourcc/lib.rs	114	4	401	pat	
+node	lib	399	394	libfourcc/lib.rs	159	24	2	pat	
+node	lib	297	296	libfourcc/lib.rs	137	56	9	ty	
+node	lib	359	358	libfourcc/lib.rs	148	17	1	path	
+node	lib	82	80	libfourcc/lib.rs	79	8	6	pat	
+node	lib	265	263	libfourcc/lib.rs	128	24	2	path	
+node	lib	229	202	libfourcc/lib.rs	122	8	130	assign	
+node	lib	378	377	libfourcc/lib.rs	151	39	5	path	
+node	lib	413	411	libfourcc/lib.rs	160	34	2	path	
+node	lib	315	309	libfourcc/lib.rs	140	44	138	method_call	
+node	lib	146	144	libfourcc/lib.rs	98	20	65	method_call	
+node	lib	38	37	libfourcc/lib.rs	68	4	8	path	
+node	lib	276	0	libfourcc/lib.rs	132	0	54	struct	Ident
+node	lib	275	273	libfourcc/lib.rs	129	17	1	path	
+node	lib	99	91	libfourcc/lib.rs	83	12	5	pat	
+node	lib	343	340	libfourcc/lib.rs	144	27	10	path	
+node	lib	194	193	libfourcc/lib.rs	114	4	401	match	
+node	lib	141	140	libfourcc/lib.rs	97	19	7	method_call	
+node	lib	183	68	libfourcc/lib.rs	114	4	401	stmt	
+node	lib	407	406	libfourcc/lib.rs	160	8	135	stmt	
+node	lib	36	35	libfourcc/lib.rs	68	4	163	stmt	
+node	lib	411	408	libfourcc/lib.rs	160	15	128	method_call	
+node	lib	403	394	libfourcc/lib.rs	159	38	2	pat	
+node	lib	356	354	libfourcc/lib.rs	148	12	2	pat	
+node	lib	105	104	libfourcc/lib.rs	84	24	20	path	
+node	lib	323	319	libfourcc/lib.rs	141	56	1	ty	
+node	lib	121	68	libfourcc/lib.rs	92	8	662	local	
+node	lib	199	194	libfourcc/lib.rs	114	4	401	pat	
+node	lib	310	309	libfourcc/lib.rs	138	17	26	path	
+node	lib	179	68	libfourcc/lib.rs	113	8	14	local	
+node	lib	224	223	libfourcc/lib.rs	119	12	15	cast	
+node	lib	127	124	libfourcc/lib.rs	94	8	17	pat	
+node	lib	176	175	libfourcc/lib.rs	109	19	23	path	
+node	lib	383	382	libfourcc/lib.rs	153	7	21	ne	
+node	lib	119	116	libfourcc/lib.rs	87	41	2	path	
+node	lib	86	83	libfourcc/lib.rs	80	16	5	lit	
+node	lib	238	236	libfourcc/lib.rs	123	20	1	lit	
+node	lib	73	72	libfourcc/lib.rs	77	9	4	pat	
+node	lib	372	371	libfourcc/lib.rs	150	17	1	path	
+node	lib	198	194	libfourcc/lib.rs	114	4	401	break	
+node	lib	204	202	libfourcc/lib.rs	115	12	190	local	
+node	lib	253	251	libfourcc/lib.rs	125	20	1	lit	
+node	lib	237	236	libfourcc/lib.rs	123	13	3	path	
+node	lib	349	347	libfourcc/lib.rs	147	8	23	method_call	
+node	lib	187	186	libfourcc/lib.rs	114	21	15	method_call	
+node	lib	100	99	libfourcc/lib.rs	83	12	8	lit	
+node	lib	358	357	libfourcc/lib.rs	148	17	6	field	
+node	lib	376	375	libfourcc/lib.rs	151	26	5	path	
+node	lib	209	208	libfourcc/lib.rs	115	22	16	cast	
+node	lib	231	229	libfourcc/lib.rs	122	14	124	if	
+node	lib	41	39	libfourcc/lib.rs	68	27	8	lit	
+node	lib	346	339	libfourcc/lib.rs	146	11	193	blk	
+node	lib	277	276	libfourcc/lib.rs	133	4	17	struct_field	ident
+node	lib	319	316	libfourcc/lib.rs	141	52	16	fn_blk	
+jdef	390	lib	307
+jdef	43	syntax	164183
+jdef	186	std	243167
+jdef	62	syntax	46937
+jdef	314	lib	288
+jdef	365	lib	307
+jdef	56	syntax	10814
+jdef	196	lib	191
+jdef	125	syntax	38945
+jdef	426	syntax	164684
+jdef	413	lib	403
+jdef	85	std	102619
+jdef	117	lib	394
+jdef	52	syntax	164557
+jdef	370	syntax	10814
+jdef	325	syntax	48087
+jdef	316	std	242962
+jdef	372	lib	307
+jdef	379	lib	356
+jdef	219	lib	73
+jdef	84	lib	74
+jdef	427	lib	399
+jdef	147	lib	54
+jdef	188	syntax	132179
+jdef	328	lib	322
+jdef	364	syntax	101705
+jdef	217	lib	54
+jdef	218	syntax	38945
+jdef	45	syntax	163659
+jdef	297	syntax	38945
+jdef	281	syntax	10814
+jdef	292	syntax	46937
+jdef	343	syntax	120904
+jdef	350	lib	307
+jdef	171	syntax	38945
+jdef	272	syntax	54890
+jdef	371	syntax	100566
+jdef	342	lib	307
+jdef	77	lib	54
+jdef	149	lib	73
+jdef	197	std	102619
+jdef	157	lib	54
+jdef	148	syntax	38945
+jdef	119	lib	58
+jdef	232	lib	82
+jdef	252	lib	181
+jdef	422	syntax	49819
+jdef	424	syntax	2585
+jdef	301	lib	276
+jdef	92	syntax	132179
+jdef	393	lib	338
+jdef	132	syntax	50207
+jdef	386	syntax	120904
+jdef	286	syntax	164557
+jdef	411	syntax	190240
+jdef	176	syntax	164070
+jdef	146	syntax	164880
+jdef	106	lib	54
+jdef	78	lib	64
+jdef	265	lib	58
+jdef	425	std	56605
+jdef	38	lib	33
+jdef	47	std	102619
+jdef	95	lib	89
+jdef	310	syntax	138460
+jdef	210	lib	200
+jdef	334	lib	307
+jdef	29	syntax	164174
+jdef	267	syntax	50233
+jdef	66	syntax	163859
+jdef	126	lib	73
+jdef	163	syntax	164070
+jdef	76	lib	283
+jdef	169	syntax	164880
+jdef	256	lib	206
+jdef	172	lib	73
+jdef	105	lib	394
+jdef	151	lib	133
+jdef	127	syntax	39480
+jdef	313	syntax	164684
+jdef	48	std	102619
+jdef	374	std	102620
+jdef	315	std	243980
+jdef	195	std	94207
+jdef	159	lib	73
+jdef	312	lib	288
+jdef	94	syntax	132438
+jdef	333	syntax	110243
+jdef	412	lib	399
+jdef	397	syntax	164557
+jdef	401	syntax	10814
+jdef	230	lib	181
+jdef	114	lib	90
+jdef	142	lib	133
+jdef	156	syntax	164880
+jdef	189	lib	123
+jdef	349	syntax	100835
+jdef	375	lib	276
+jdef	199	std	102620
+jdef	88	lib	276
+jdef	107	lib	58
+jdef	420	syntax	132155
+jdef	25	syntax	16880
+jdef	352	syntax	120824
+jdef	357	syntax	10814
+jdef	385	lib	307
+jdef	415	syntax	132155
+jdef	274	syntax	163930
+jdef	358	syntax	100566
+jdef	392	lib	332
+jdef	359	lib	307
 jdef	177	lib	58
-jdef	428	syntax	131668
-jdef	277	lib	192
-jdef	287	lib	273
-jdef	424	syntax	131668
-jdef	130	lib	127
-jdef	170	lib	69
-jdef	274	lib	54
-jdef	150	syntax	39302
-jdef	276	syntax	50596
+jdef	264	lib	54
+jdef	299	std	102618
+jdef	87	std	102620
+jdef	216	syntax	164880
+jdef	376	lib	363
+jdef	317	std	48682
+jdef	428	lib	410
+jdef	311	syntax	164673
+jdef	40	syntax	132464
+jdef	141	syntax	132179
+jdef	318	lib	294
+jdef	380	lib	369
+jdef	389	syntax	100763
+jdef	164	lib	58
+jdef	275	lib	262
+jdef	384	syntax	100566
+jdef	237	lib	181
+jdef	418	syntax	50207
+jdef	187	std	63451
+jdef	130	syntax	11059
+jdef	243	lib	206
+jdef	46	lib	49
+jdef	158	syntax	38945
+jdef	278	syntax	16178
+jdef	378	syntax	11641
+jdef	140	std	63897
+jdef	112	syntax	164880
+jdef	118	lib	54
+jdef	131	lib	128
+jdef	113	lib	54
+jdef	345	std	102619
+jdef	269	lib	181
+jdef	263	syntax	188123
+jdef	225	lib	200
+jdef	341	syntax	100566
+jdef	170	lib	54

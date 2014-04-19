@@ -166,10 +166,10 @@ pub fn check_pat_variant(pcx: &pat_ctxt, pat: &ast::Pat, path: &ast::Path,
                     // See [Note-Type-error-reporting] in middle/typeck/infer/mod.rs
                     fcx.infcx().type_error_message_str_with_expected(pat.span,
                                                        |expected, actual| {
-                                                       expected.map_or(~"", |e| {
+                                                       expected.map_or("".to_owned(), |e| {
                         format!("mismatched types: expected `{}` but found {}",
                              e, actual)})},
-                             Some(expected), ~"a structure pattern",
+                             Some(expected), "a structure pattern".to_owned(),
                              None);
                     fcx.write_error(pat.id);
                     kind_name = "[error]";
@@ -217,10 +217,10 @@ pub fn check_pat_variant(pcx: &pat_ctxt, pat: &ast::Pat, path: &ast::Path,
             // See [Note-Type-error-reporting] in middle/typeck/infer/mod.rs
             fcx.infcx().type_error_message_str_with_expected(pat.span,
                                                |expected, actual| {
-                                               expected.map_or(~"", |e| {
+                                               expected.map_or("".to_owned(), |e| {
                     format!("mismatched types: expected `{}` but found {}",
                          e, actual)})},
-                    Some(expected), ~"an enum or structure pattern",
+                    Some(expected), "an enum or structure pattern".to_owned(),
                     None);
             fcx.write_error(pat.id);
             kind_name = "[error]";
@@ -446,7 +446,7 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
         debug!("pat_range ending type: {:?}", e_ty);
         if !require_same_types(
             tcx, Some(fcx.infcx()), false, pat.span, b_ty, e_ty,
-            || ~"mismatched types in range")
+            || "mismatched types in range".to_owned())
         {
             // no-op
         } else if !ty::type_is_numeric(b_ty) && !ty::type_is_char(b_ty) {
@@ -540,10 +540,10 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
                // See [Note-Type-error-reporting] in middle/typeck/infer/mod.rs
                 fcx.infcx().type_error_message_str_with_expected(pat.span,
                                                                 |expected, actual| {
-                            expected.map_or(~"", |e| {
+                            expected.map_or("".to_owned(), |e| {
                                     format!("mismatched types: expected `{}` but found {}",
                                          e, actual)})},
-                                         Some(expected), ~"a structure pattern",
+                                         Some(expected), "a structure pattern".to_owned(),
                                          None);
                 match tcx.def_map.borrow().find(&pat.id) {
                     Some(&ast::DefStruct(supplied_def_id)) => {
@@ -597,9 +597,10 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
                 };
                 // See [Note-Type-error-reporting] in middle/typeck/infer/mod.rs
                 fcx.infcx().type_error_message_str_with_expected(pat.span, |expected, actual| {
-                expected.map_or(~"", |e| {
-                    format!("mismatched types: expected `{}` but found {}",
-                                     e, actual)})}, Some(expected), ~"tuple", Some(&type_error));
+                        expected.map_or("".to_owned(), |e| {
+                            format!("mismatched types: expected `{}` but found {}",
+                                             e, actual)})},
+                    Some(expected), "tuple".to_owned(), Some(&type_error));
                 fcx.write_error(pat.id);
             }
         }
@@ -615,13 +616,13 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
             fcx.infcx().next_region_var(
                 infer::PatternRegion(pat.span));
 
-        let (elt_type, region_var) = match *structure_of(fcx,
-                                                         pat.span,
-                                                         expected) {
-          ty::ty_vec(mt, vstore) => {
-            let region_var = match vstore {
-                ty::vstore_slice(r) => r,
-                ty::vstore_uniq => {
+        let (elt_type, region_var, mutbl) = match *structure_of(fcx,
+                                                                pat.span,
+                                                                expected) {
+          ty::ty_vec(ty, vstore) => {
+            match vstore {
+                ty::VstoreSlice(r, m) => (ty, r, m),
+                ty::VstoreUniq => {
                     fcx.type_error_message(pat.span,
                                            |_| {
                                             ~"unique vector patterns are no \
@@ -629,13 +630,12 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
                                            },
                                            expected,
                                            None);
-                    default_region_var
+                    (ty, default_region_var, ast::MutImmutable)
                 }
-                ty::vstore_fixed(_) => {
-                    default_region_var
+                ty::VstoreFixed(_) => {
+                    (ty, default_region_var, ast::MutImmutable)
                 }
-            };
-            (mt, region_var)
+            }
           }
           _ => {
               for &elt in before.iter() {
@@ -651,31 +651,31 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
               fcx.infcx().type_error_message_str_with_expected(
                   pat.span,
                   |expected, actual| {
-                      expected.map_or(~"", |e| {
+                      expected.map_or("".to_owned(), |e| {
                           format!("mismatched types: expected `{}` but found {}",
                                e, actual)})},
                   Some(expected),
-                  ~"a vector pattern",
+                  "a vector pattern".to_owned(),
                   None);
               fcx.write_error(pat.id);
               return;
           }
         };
         for elt in before.iter() {
-            check_pat(pcx, *elt, elt_type.ty);
+            check_pat(pcx, *elt, elt_type);
         }
         match slice {
             Some(slice_pat) => {
                 let slice_ty = ty::mk_vec(tcx,
-                    ty::mt {ty: elt_type.ty, mutbl: elt_type.mutbl},
-                    ty::vstore_slice(region_var)
+                    elt_type,
+                    ty::VstoreSlice(region_var, mutbl)
                 );
                 check_pat(pcx, slice_pat, slice_ty);
             }
             None => ()
         }
         for elt in after.iter() {
-            check_pat(pcx, *elt, elt_type.ty);
+            check_pat(pcx, *elt, elt_type);
         }
         fcx.write_ty(pat.id, expected);
       }
@@ -707,7 +707,7 @@ pub fn check_pointer_pat(pcx: &pat_ctxt,
             fcx.infcx().type_error_message_str_with_expected(
                 span,
                 |expected, actual| {
-                    expected.map_or(~"", |e| {
+                    expected.map_or("".to_owned(), |e| {
                         format!("mismatched types: expected `{}` but found {}",
                              e, actual)})},
                 Some(expected),

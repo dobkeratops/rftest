@@ -1,4 +1,4 @@
-<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libsync/">libsync</a></c0><c1>/</c1><c0><a href="./../libsync/lib.rs.html">lib.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8801d89&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#13399&nbsp;:&nbsp;SimonSapin/rust/patch-8,&nbsp;r=cmr<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Wed&nbsp;Apr&nbsp;&nbsp;9&nbsp;17:27:03&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libsync/">libsync</a></c0><c1>/</c1><c0><a href="./../libsync/lib.rs.html">lib.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c7553ea&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#13609&nbsp;:&nbsp;richo/rust/str-type-vim,&nbsp;r=alexcrichton<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Wed&nbsp;Apr&nbsp;&nbsp;9&nbsp;17:27:03&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012-2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
 </c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
@@ -38,13 +38,13 @@
 </c40><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;raw::</c0><c3>{</c3><c0>Semaphore</c0><c3>,</c3><c0>&nbsp;SemaphoreGuard</c0><c3>};</c3><c0>
 </c0><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n22">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n461">&nbsp;</a><c21>mod</c21><c38>&nbsp;arc;
-</c38><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n593">&nbsp;</a><c21>mod</c21><c38>&nbsp;comm;
-</c38><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n824">&nbsp;</a><c21>mod</c21><c38>&nbsp;future;
-</c38><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n1957">&nbsp;</a><c21>mod</c21><c38>&nbsp;lock;
-</c38><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n2314">&nbsp;</a><c21>mod</c21><c38>&nbsp;mpsc_intrusive;
+</c38><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n599">&nbsp;</a><c21>mod</c21><c38>&nbsp;comm;
+</c38><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a><a id="n830">&nbsp;</a><c21>mod</c21><c38>&nbsp;future;
+</c38><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a><a id="n1963">&nbsp;</a><c21>mod</c21><c38>&nbsp;lock;
+</c38><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n2320">&nbsp;</a><c21>mod</c21><c38>&nbsp;mpsc_intrusive;
 </c38><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;task_pool;
-</c38><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n2598">&nbsp;</a><c0>
-</c0><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n4154">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;raw;
-</c38><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n6522">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;mutex;
+</c38><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n2604">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n4088">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;raw;
+</c38><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n6450">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;mutex;
 </c38><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;one;
 </c38><br/><div class="refblock"></div></maintext></div></body>

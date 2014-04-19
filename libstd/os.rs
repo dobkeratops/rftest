@@ -28,10 +28,6 @@
 
 #![allow(missing_doc)]
 
-#[cfg(target_os = "macos")]
-#[cfg(windows)]
-use iter::range;
-
 use clone::Clone;
 use container::Container;
 use libc;
@@ -49,6 +45,7 @@ use path::{Path, GenericPath};
 use iter::Iterator;
 use slice::{Vector, CloneableVector, ImmutableVector, MutableVector, OwnedVector};
 use ptr::RawPtr;
+use vec::Vec;
 
 #[cfg(unix)]
 use c_str::ToCStr;
@@ -96,15 +93,16 @@ pub fn getcwd() -> Path {
 
 #[cfg(windows)]
 pub mod win32 {
+    use iter::Iterator;
     use libc::types::os::arch::extra::DWORD;
     use libc;
     use option::{None, Option};
     use option;
     use os::TMPBUF_SZ;
+    use slice::{MutableVector, ImmutableVector, OwnedVector};
     use str::StrSlice;
     use str;
-    use slice::{MutableVector, ImmutableVector, OwnedVector};
-    use slice;
+    use vec::Vec;
 
     pub fn fill_utf16_buf_and_decode(f: |*mut u16, DWORD| -> DWORD)
         -> Option<~str> {
@@ -114,7 +112,7 @@ pub mod win32 {
             let mut res = None;
             let mut done = false;
             while !done {
-                let mut buf = slice::from_elem(n as uint, 0u16);
+                let mut buf = Vec::from_elem(n as uint, 0u16);
                 let k = f(buf.as_mut_ptr(), n);
                 if k == (0 as DWORD) {
                     done = true;
@@ -142,7 +140,7 @@ pub mod win32 {
     }
 
     pub fn as_utf16_p<T>(s: &str, f: |*u16| -> T) -> T {
-        let mut t = s.to_utf16();
+        let mut t = s.to_utf16().move_iter().collect::<Vec<u16>>();
         // Null terminate before passing on.
         t.push(0u16);
         f(t.as_ptr())
@@ -182,7 +180,7 @@ pub fn env() -> ~[(~str,~str)] {
 pub fn env_as_bytes() -> ~[(~[u8],~[u8])] {
     unsafe {
         #[cfg(windows)]
-        unsafe fn get_env_pairs() -> ~[~[u8]] {
+        unsafe fn get_env_pairs() -> Vec<~[u8]> {
             use c_str;
             use str::StrSlice;
 
@@ -195,7 +193,7 @@ pub fn env_as_bytes() -> ~[(~[u8],~[u8])] {
                 fail!("os::env() failure getting env string from OS: {}",
                        os::last_os_error());
             }
-            let mut result = ~[];
+            let mut result = Vec::new();
             c_str::from_c_multistring(ch as *c_char, None, |cstr| {
                 result.push(cstr.as_bytes_no_nul().to_owned());
             });
@@ -203,7 +201,7 @@ pub fn env_as_bytes() -> ~[(~[u8],~[u8])] {
             result
         }
         #[cfg(unix)]
-        unsafe fn get_env_pairs() -> ~[~[u8]] {
+        unsafe fn get_env_pairs() -> Vec<~[u8]> {
             use c_str::CString;
 
             extern {
@@ -214,7 +212,7 @@ pub fn env_as_bytes() -> ~[(~[u8],~[u8])] {
                 fail!("os::env() failure getting env string from OS: {}",
                        os::last_os_error());
             }
-            let mut result = ~[];
+            let mut result = Vec::new();
             ptr::array_each(environ, |e| {
                 let env_pair = CString::new(e, false).as_bytes_no_nul().to_owned();
                 result.push(env_pair);
@@ -222,8 +220,8 @@ pub fn env_as_bytes() -> ~[(~[u8],~[u8])] {
             result
         }
 
-        fn env_convert(input: ~[~[u8]]) -> ~[(~[u8], ~[u8])] {
-            let mut pairs = ~[];
+        fn env_convert(input: Vec<~[u8]>) -> Vec<(~[u8], ~[u8])> {
+            let mut pairs = Vec::new();
             for p in input.iter() {
                 let vs: ~[&[u8]] = p.splitn(1, |b| *b == '=' as u8).collect();
                 let key = vs[0].to_owned();
@@ -234,7 +232,7 @@ pub fn env_as_bytes() -> ~[(~[u8],~[u8])] {
         }
         with_env_lock(|| {
             let unparsed_environ = get_env_pairs();
-            env_convert(unparsed_environ)
+            env_convert(unparsed_environ).move_iter().collect()
         })
     }
 }
@@ -457,15 +455,14 @@ pub fn self_exe_name() -> Option<Path> {
     fn load_self() -> Option<~[u8]> {
         unsafe {
             use libc::funcs::extra::_NSGetExecutablePath;
-            use slice;
             let mut sz: u32 = 0;
             _NSGetExecutablePath(ptr::mut_null(), &mut sz);
             if sz == 0 { return None; }
-            let mut v: ~[u8] = slice::with_capacity(sz as uint);
+            let mut v: Vec<u8> = Vec::with_capacity(sz as uint);
             let err = _NSGetExecutablePath(v.as_mut_ptr() as *mut i8, &mut sz);
             if err != 0 { return None; }
             v.set_len(sz as uint - 1); // chop off trailing NUL
-            Some(v)
+            Some(v.move_iter().collect())
         }
     }
 
@@ -795,11 +792,9 @@ pub fn get_exit_status() -> int {
 unsafe fn load_argc_and_argv(argc: int, argv: **c_char) -> ~[~[u8]] {
     use c_str::CString;
 
-    let mut args = ~[];
-    for i in range(0u, argc as uint) {
-        args.push(CString::new(*argv.offset(i as int), false).as_bytes_no_nul().to_owned())
-    }
-    args
+    Vec::from_fn(argc as uint, |i| {
+        CString::new(*argv.offset(i as int), false).as_bytes_no_nul().to_owned()
+    }).move_iter().collect()
 }
 
 /**
@@ -842,27 +837,24 @@ fn real_args() -> ~[~str] {
     let lpCmdLine = unsafe { GetCommandLineW() };
     let szArgList = unsafe { CommandLineToArgvW(lpCmdLine, lpArgCount) };
 
-    let mut args = ~[];
-    for i in range(0u, nArgs as uint) {
-        unsafe {
-            // Determine the length of this argument.
-            let ptr = *szArgList.offset(i as int);
-            let mut len = 0;
-            while *ptr.offset(len as int) != 0 { len += 1; }
+    let args = Vec::from_fn(nArgs as uint, |i| unsafe {
+        // Determine the length of this argument.
+        let ptr = *szArgList.offset(i as int);
+        let mut len = 0;
+        while *ptr.offset(len as int) != 0 { len += 1; }
 
-            // Push it onto the list.
-            let opt_s = slice::raw::buf_as_slice(ptr, len, |buf| {
-                    str::from_utf16(str::truncate_utf16_at_nul(buf))
-                });
-            args.push(opt_s.expect("CommandLineToArgvW returned invalid UTF-16"));
-        }
-    }
+        // Push it onto the list.
+        let opt_s = slice::raw::buf_as_slice(ptr, len, |buf| {
+            str::from_utf16(str::truncate_utf16_at_nul(buf))
+        });
+        opt_s.expect("CommandLineToArgvW returned invalid UTF-16")
+    });
 
     unsafe {
         LocalFree(szArgList as *c_void);
     }
 
-    return args;
+    return args.move_iter().collect();
 }
 
 #[cfg(windows)]
@@ -1294,37 +1286,47 @@ impl Drop for MemoryMap {
 /// Various useful system-specific constants.
 pub mod consts {
     #[cfg(unix)]
-    pub use os::consts::unix::*;
+    pub use os::consts::unix::FAMILY;
 
     #[cfg(windows)]
-    pub use os::consts::windows::*;
+    pub use os::consts::windows::FAMILY;
 
     #[cfg(target_os = "macos")]
-    pub use os::consts::macos::*;
+    pub use os::consts::macos::{SYSNAME, DLL_PREFIX, DLL_SUFFIX, DLL_EXTENSION};
+    #[cfg(target_os = "macos")]
+    pub use os::consts::macos::{EXE_SUFFIX, EXE_EXTENSION};
 
     #[cfg(target_os = "freebsd")]
-    pub use os::consts::freebsd::*;
+    pub use os::consts::freebsd::{SYSNAME, DLL_PREFIX, DLL_SUFFIX, DLL_EXTENSION};
+    #[cfg(target_os = "freebsd")]
+    pub use os::consts::freebsd::{EXE_SUFFIX, EXE_EXTENSION};
 
     #[cfg(target_os = "linux")]
-    pub use os::consts::linux::*;
+    pub use os::consts::linux::{SYSNAME, DLL_PREFIX, DLL_SUFFIX, DLL_EXTENSION};
+    #[cfg(target_os = "linux")]
+    pub use os::consts::linux::{EXE_SUFFIX, EXE_EXTENSION};
 
     #[cfg(target_os = "android")]
-    pub use os::consts::android::*;
+    pub use os::consts::android::{SYSNAME, DLL_PREFIX, DLL_SUFFIX, DLL_EXTENSION};
+    #[cfg(target_os = "android")]
+    pub use os::consts::android::{EXE_SUFFIX, EXE_EXTENSION};
 
     #[cfg(target_os = "win32")]
-    pub use os::consts::win32::*;
+    pub use os::consts::win32::{SYSNAME, DLL_PREFIX, DLL_SUFFIX, DLL_EXTENSION};
+    #[cfg(target_os = "win32")]
+    pub use os::consts::win32::{EXE_SUFFIX, EXE_EXTENSION};
 
     #[cfg(target_arch = "x86")]
-    pub use os::consts::x86::*;
+    pub use os::consts::x86::{ARCH};
 
     #[cfg(target_arch = "x86_64")]
-    pub use os::consts::x86_64::*;
+    pub use os::consts::x86_64::{ARCH};
 
     #[cfg(target_arch = "arm")]
-    pub use os::consts::arm::*;
+    pub use os::consts::arm::{ARCH};
 
     #[cfg(target_arch = "mips")]
-    pub use os::consts::mips::*;
+    pub use os::consts::mips::{ARCH};
 
     /// Constants for Unix systems.
     pub mod unix {
@@ -1523,7 +1525,7 @@ mod tests {
 
     fn make_rand_name() -> ~str {
         let mut rng = rand::task_rng();
-        let n = ~"TEST" + rng.gen_ascii_str(10u);
+        let n = "TEST".to_owned() + rng.gen_ascii_str(10u);
         assert!(getenv(n).is_none());
         n
     }
@@ -1532,7 +1534,7 @@ mod tests {
     fn test_setenv() {
         let n = make_rand_name();
         setenv(n, "VALUE");
-        assert_eq!(getenv(n), option::Some(~"VALUE"));
+        assert_eq!(getenv(n), option::Some("VALUE".to_owned()));
     }
 
     #[test]
@@ -1549,9 +1551,9 @@ mod tests {
         let n = make_rand_name();
         setenv(n, "1");
         setenv(n, "2");
-        assert_eq!(getenv(n), option::Some(~"2"));
+        assert_eq!(getenv(n), option::Some("2".to_owned()));
         setenv(n, "");
-        assert_eq!(getenv(n), option::Some(~""));
+        assert_eq!(getenv(n), option::Some("".to_owned()));
     }
 
     // Windows GetEnvironmentVariable requires some extra work to make sure
@@ -1559,7 +1561,7 @@ mod tests {
     #[test]
     #[ignore]
     fn test_getenv_big() {
-        let mut s = ~"";
+        let mut s = "".to_owned();
         let mut i = 0;
         while i < 100 {
             s = s + "aaaaaaaaaa";
@@ -1625,10 +1627,10 @@ mod tests {
 
         let mut e = env();
         setenv(n, "VALUE");
-        assert!(!e.contains(&(n.clone(), ~"VALUE")));
+        assert!(!e.contains(&(n.clone(), "VALUE".to_owned())));
 
         e = env();
-        assert!(e.contains(&(n, ~"VALUE")));
+        assert!(e.contains(&(n, "VALUE".to_owned())));
     }
 
     #[test]

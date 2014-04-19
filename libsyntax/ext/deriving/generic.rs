@@ -619,7 +619,7 @@ impl<'a> MethodDef<'a> {
             attrs: attrs,
             generics: fn_generics,
             explicit_self: explicit_self,
-            purity: ast::ImpureFn,
+            fn_style: ast::NormalFn,
             decl: fn_decl,
             body: body_block,
             id: ast::DUMMY_NODE_ID,
@@ -864,7 +864,7 @@ impl<'a> MethodDef<'a> {
 
         } else {  // there are still matches to create
             let current_match_str = if match_count == 0 {
-                ~"__self"
+                "__self".to_owned()
             } else {
                 format!("__arg_{}", match_count)
             };

@@ -62,7 +62,7 @@ use middle::trans::type_of;
 use middle::trans::write_guard;
 use middle::ty::struct_fields;
 use middle::ty::{AutoBorrowObj, AutoDerefRef, AutoAddEnv, AutoObject, AutoUnsafe};
-use middle::ty::{AutoPtr, AutoBorrowVec, AutoBorrowVecRef, AutoBorrowFn};
+use middle::ty::{AutoPtr, AutoBorrowVec, AutoBorrowVecRef};
 use middle::ty;
 use middle::typeck::MethodCall;
 use util::common::indenter;
@@ -71,7 +71,6 @@ use util::nodemap::NodeMap;
 use middle::trans::machine::{llsize_of, llsize_of_alloc};
 use middle::trans::type_::Type;
 
-use std::slice;
 use syntax::ast;
 use syntax::codemap;
 use syntax::print::pprust::{expr_to_str};
@@ -91,7 +90,7 @@ impl Dest {
     pub fn to_str(&self, ccx: &CrateContext) -> ~str {
         match *self {
             SaveIn(v) => format!("SaveIn({})", ccx.tn.val_to_str(v)),
-            Ignore => ~"Ignore"
+            Ignore => "Ignore".to_owned()
         }
     }
 }
@@ -200,14 +199,6 @@ fn apply_adjustments<'a>(bcx: &'a Block<'a>,
                 Some(AutoBorrowVecRef(..)) => {
                     unpack_datum!(bcx, auto_slice_and_ref(bcx, expr, datum))
                 }
-                Some(AutoBorrowFn(..)) => {
-                    let adjusted_ty = ty::adjust_ty(bcx.tcx(), expr.span, expr.id, datum.ty,
-                                                    Some(adjustment), |method_call| {
-                        bcx.ccx().maps.method_map.borrow()
-                           .find(&method_call).map(|method| method.ty)
-                    });
-                    unpack_datum!(bcx, auto_borrow_fn(bcx, adjusted_ty, datum))
-                }
                 Some(AutoBorrowObj(..)) => {
                     unpack_datum!(bcx, auto_borrow_obj(bcx, expr, datum))
                 }
@@ -224,20 +215,6 @@ fn apply_adjustments<'a>(bcx: &'a Block<'a>,
     }
     debug!("after adjustments, datum={}", datum.to_str(bcx.ccx()));
     return DatumBlock {bcx: bcx, datum: datum};
-
-    fn auto_borrow_fn<'a>(
-                      bcx: &'a Block<'a>,
-                      adjusted_ty: ty::t,
-                      datum: Datum<Expr>)
-                      -> DatumBlock<'a, Expr> {
-        // Currently, all closure types are represented precisely the
-        // same, so no runtime adjustment is required, but we still
-        // must patchup the type.
-        DatumBlock {bcx: bcx,
-                    datum: Datum {val: datum.val,
-                                  ty: adjusted_ty,
-                                  kind: datum.kind}}
-    }
 
     fn auto_slice<'a>(
                   bcx: &'a Block<'a>,
@@ -263,9 +240,8 @@ fn apply_adjustments<'a>(bcx: &'a Block<'a>,
 
         // this type may have a different region/mutability than the
         // real one, but it will have the same runtime representation
-        let slice_ty = ty::mk_vec(tcx,
-                                  ty::mt { ty: unit_ty, mutbl: ast::MutImmutable },
-                                  ty::vstore_slice(ty::ReStatic));
+        let slice_ty = ty::mk_vec(tcx, unit_ty,
+                                  ty::VstoreSlice(ty::ReStatic, ast::MutImmutable));
 
         let scratch = rvalue_scratch_datum(bcx, slice_ty, "__adjust");
         Store(bcx, base, GEPi(bcx, scratch.val, [0u, abi::slice_elt_base]));
@@ -513,7 +489,7 @@ fn trans_index<'a>(bcx: &'a Block<'a>,
     debug!("trans_index: len {}", bcx.val_to_str(len));
 
     let bounds_check = ICmp(bcx, lib::llvm::IntUGE, ix_val, len);
-    let expect = ccx.intrinsics.get_copy(&("llvm.expect.i1"));
+    let expect = ccx.get_intrinsic(&("llvm.expect.i1"));
     let expected = Call(bcx, expect, [bounds_check, C_i1(ccx, false)], []);
     let bcx = with_cond(bcx, expected, |bcx| {
             controlflow::trans_fail_bounds_check(bcx, index_expr.span, ix_val, len)
@@ -732,10 +708,10 @@ fn trans_rvalue_dps_unadjusted<'a>(bcx: &'a Block<'a>,
         ast::ExprFnBlock(decl, body) |
         ast::ExprProc(decl, body) => {
             let expr_ty = expr_ty(bcx, expr);
-            let sigil = ty::ty_closure_sigil(expr_ty);
+            let store = ty::ty_closure_store(expr_ty);
             debug!("translating block function {} with type {}",
                    expr_to_str(expr), expr_ty.repr(tcx));
-            closure::trans_expr_fn(bcx, sigil, decl, body, expr.id, dest)
+            closure::trans_expr_fn(bcx, store, decl, body, expr.id, dest)
         }
         ast::ExprCall(f, ref args) => {
             callee::trans_call(bcx, expr, f, callee::ArgExprs(args.as_slice()), dest)
@@ -992,7 +968,7 @@ fn trans_rec_or_struct<'a>(
     let ty = node_id_type(bcx, id);
     let tcx = bcx.tcx();
     with_field_tys(tcx, ty, Some(id), |discr, field_tys| {
-        let mut need_base = slice::from_elem(field_tys.len(), true);
+        let mut need_base = Vec::from_elem(field_tys.len(), true);
 
         let numbered_fields = fields.iter().map(|field| {
             let opt_pos =
@@ -1000,7 +976,7 @@ fn trans_rec_or_struct<'a>(
                                           field_ty.ident.name == field.ident.node.name);
             match opt_pos {
                 Some(i) => {
-                    need_base[i] = false;
+                    *need_base.get_mut(i) = false;
                     (i, field.expr)
                 }
                 None => {

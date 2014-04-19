@@ -19,6 +19,7 @@
 use middle::ty;
 
 use std::str;
+use std::strbuf::StrBuf;
 use std::uint;
 use syntax::abi;
 use syntax::ast;
@@ -136,36 +137,28 @@ pub fn parse_substs_data(data: &[u8], crate_num: ast::CrateNum, pos: uint, tcx: 
     parse_substs(&mut st, conv)
 }
 
-fn parse_sigil(st: &mut PState) -> ast::Sigil {
-    match next(st) {
-        '@' => ast::ManagedSigil,
-        '~' => ast::OwnedSigil,
-        '&' => ast::BorrowedSigil,
-        c => st.tcx.sess.bug(format!("parse_sigil(): bad input '{}'", c))
-    }
-}
-
-fn parse_vstore(st: &mut PState, conv: conv_did) -> ty::vstore {
+fn parse_vstore<M>(st: &mut PState, conv: conv_did,
+                   parse_mut: |&mut PState| -> M) -> ty::Vstore<M> {
     assert_eq!(next(st), '/');
 
     let c = peek(st);
     if '0' <= c && c <= '9' {
         let n = parse_uint(st);
         assert_eq!(next(st), '|');
-        return ty::vstore_fixed(n);
+        return ty::VstoreFixed(n);
     }
 
     match next(st) {
-      '~' => ty::vstore_uniq,
-      '&' => ty::vstore_slice(parse_region(st, conv)),
-      c => st.tcx.sess.bug(format!("parse_vstore(): bad input '{}'", c))
+        '~' => ty::VstoreUniq,
+        '&' => ty::VstoreSlice(parse_region(st, conv), parse_mut(st)),
+        c => st.tcx.sess.bug(format!("parse_vstore(): bad input '{}'", c))
     }
 }
 
 fn parse_trait_store(st: &mut PState, conv: conv_did) -> ty::TraitStore {
     match next(st) {
         '~' => ty::UniqTraitStore,
-        '&' => ty::RegionTraitStore(parse_region(st, conv)),
+        '&' => ty::RegionTraitStore(parse_region(st, conv), parse_mutability(st)),
         c => st.tcx.sess.bug(format!("parse_trait_store(): bad input '{}'", c))
     }
 }
@@ -276,14 +269,14 @@ fn parse_opt<T>(st: &mut PState, f: |&mut PState| -> T) -> Option<T> {
 }
 
 fn parse_str(st: &mut PState, term: char) -> ~str {
-    let mut result = ~"";
+    let mut result = StrBuf::new();
     while peek(st) != term {
         unsafe {
-            str::raw::push_byte(&mut result, next_byte(st));
+            result.push_bytes([next_byte(st)])
         }
     }
     next(st);
-    return result;
+    return result.into_owned();
 }
 
 fn parse_trait_ref(st: &mut PState, conv: conv_did) -> ty::TraitRef {
@@ -327,10 +320,9 @@ fn parse_ty(st: &mut PState, conv: conv_did) -> ty::t {
         let def = parse_def(st, NominalType, |x,y| conv(x,y));
         let substs = parse_substs(st, |x,y| conv(x,y));
         let store = parse_trait_store(st, |x,y| conv(x,y));
-        let mt = parse_mutability(st);
         let bounds = parse_bounds(st, |x,y| conv(x,y));
         assert_eq!(next(st), ']');
-        return ty::mk_trait(st.tcx, def, substs, store, mt, bounds.builtin_bounds);
+        return ty::mk_trait(st.tcx, def, substs, store, bounds.builtin_bounds);
       }
       'p' => {
         let did = parse_def(st, TypeParameter, |x,y| conv(x,y));
@@ -350,12 +342,12 @@ fn parse_ty(st: &mut PState, conv: conv_did) -> ty::t {
         return ty::mk_rptr(st.tcx, r, mt);
       }
       'V' => {
-        let mt = parse_mt(st, |x,y| conv(x,y));
-        let v = parse_vstore(st, |x,y| conv(x,y));
-        return ty::mk_vec(st.tcx, mt, v);
+        let ty = parse_ty(st, |x,y| conv(x,y));
+        let v = parse_vstore(st, |x,y| conv(x,y), parse_mutability);
+        return ty::mk_vec(st.tcx, ty, v);
       }
       'v' => {
-        let v = parse_vstore(st, |x,y| conv(x,y));
+        let v = parse_vstore(st, |x,y| conv(x,y), |_| ());
         return ty::mk_str(st.tcx, v);
       }
       'T' => {
@@ -449,12 +441,12 @@ fn parse_hex(st: &mut PState) -> uint {
     };
 }
 
-fn parse_purity(c: char) -> Purity {
+fn parse_fn_style(c: char) -> FnStyle {
     match c {
         'u' => UnsafeFn,
-        'i' => ImpureFn,
+        'n' => NormalFn,
         'c' => ExternFn,
-        _ => fail!("parse_purity: bad purity {}", c)
+        _ => fail!("parse_fn_style: bad fn_style {}", c)
     }
 }
 
@@ -475,28 +467,26 @@ fn parse_onceness(c: char) -> ast::Onceness {
 }
 
 fn parse_closure_ty(st: &mut PState, conv: conv_did) -> ty::ClosureTy {
-    let sigil = parse_sigil(st);
-    let purity = parse_purity(next(st));
+    let fn_style = parse_fn_style(next(st));
     let onceness = parse_onceness(next(st));
-    let region = parse_region(st, |x,y| conv(x,y));
+    let store = parse_trait_store(st, |x,y| conv(x,y));
     let bounds = parse_bounds(st, |x,y| conv(x,y));
     let sig = parse_sig(st, |x,y| conv(x,y));
     ty::ClosureTy {
-        purity: purity,
-        sigil: sigil,
+        fn_style: fn_style,
         onceness: onceness,
-        region: region,
+        store: store,
         bounds: bounds.builtin_bounds,
         sig: sig
     }
 }
 
 fn parse_bare_fn_ty(st: &mut PState, conv: conv_did) -> ty::BareFnTy {
-    let purity = parse_purity(next(st));
+    let fn_style = parse_fn_style(next(st));
     let abi = parse_abi_set(st);
     let sig = parse_sig(st, |x,y| conv(x,y));
     ty::BareFnTy {
-        purity: purity,
+        fn_style: fn_style,
         abi: abi,
         sig: sig
     }
