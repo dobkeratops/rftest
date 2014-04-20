@@ -1,0 +1,1778 @@
+digraph callgraph {
+	node [style=filled, color="#f0f0f0", fontsize=12 ];
+	edge [color="#00000020"];
+		subgraph cluster_libstd_cmp_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_cmp
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_io_buffered_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_io_buffered
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_htmlwriter_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=htmlwriter
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		htmlwriter_rs_begin_tag_anchor[ label="method begin_tag_anchor" URL="htmlwriter.rs.html#119"];
+		htmlwriter_rs_as_str[ label="method as_str" URL="htmlwriter.rs.html#137"];
+		htmlwriter_rs_as_bytes[ label="method as_bytes" URL="htmlwriter.rs.html#140"];
+		htmlwriter_rs_write_tagged[ label="method write_tagged" URL="htmlwriter.rs.html#106"];
+		htmlwriter_rs_write_space[ label="method write_space" URL="htmlwriter.rs.html#128"];
+		htmlwriter_rs_end_tag[ label="method end_tag" URL="htmlwriter.rs.html#71"];
+		htmlwriter_rs_write_tag_ext[ label="method write_tag_ext" URL="htmlwriter.rs.html#52"];
+		htmlwriter_rs_new[ label="method new" URL="htmlwriter.rs.html#32"];
+		htmlwriter_rs_write_tag[ label="method write_tag" URL="htmlwriter.rs.html#55"];
+		htmlwriter_rs_xlat[ label="struct_field xlat" URL="htmlwriter.rs.html#7"];
+		htmlwriter_rs_writeln[ label="method writeln" URL="htmlwriter.rs.html#112"];
+		htmlwriter_rs_HtmlWriter[fontcolor="#e53700", fontsize=16, label="struct HtmlWriter" URL="htmlwriter.rs.html#4"];
+		htmlwriter_rs_write_html[ label="method write_html" URL="htmlwriter.rs.html#102"];
+		htmlwriter_rs_depth[ label="method depth" URL="htmlwriter.rs.html#82"];
+		htmlwriter_rs_tag_stack[ label="struct_field tag_stack" URL="htmlwriter.rs.html#6"];
+		htmlwriter_rs_check_depth[ label="method check_depth" URL="htmlwriter.rs.html#132"];
+		htmlwriter_rs_end_all_tags[ label="method end_all_tags" URL="htmlwriter.rs.html#88"];
+		htmlwriter_rs_write_tag_sub[ label="method write_tag_sub" URL="htmlwriter.rs.html#59"];
+		htmlwriter_rs_begin_tag_link[ label="method begin_tag_link" URL="htmlwriter.rs.html#123"];
+		htmlwriter_rs_doc[ label="struct_field doc" URL="htmlwriter.rs.html#5"];
+		htmlwriter_rs_begin_tag_ext[ label="method begin_tag_ext" URL="htmlwriter.rs.html#40"];
+		htmlwriter_rs_end_tag_check[ label="method end_tag_check" URL="htmlwriter.rs.html#83"];
+		htmlwriter_rs_writeln_tagged[ label="method writeln_tagged" URL="htmlwriter.rs.html#109"];
+		htmlwriter_rs_HtmlWriter[fontcolor="#e04730", fontsize=16, label="impl HtmlWriter" URL="htmlwriter.rs.html#31"];
+		htmlwriter_rs_begin_tag_check[ label="method begin_tag_check" URL="htmlwriter.rs.html#48"];
+		htmlwriter_rs_mk_xlat_table[fontcolor="#8c6067", fontsize=14, label="fn mk_xlat_table" URL="htmlwriter.rs.html#11"];
+		htmlwriter_rs_write_quoted_str[ label="method write_quoted_str" URL="htmlwriter.rs.html#34"];
+		htmlwriter_rs_begin_tag[ label="method begin_tag" URL="htmlwriter.rs.html#45"];
+		htmlwriter_rs_write[ label="method write" URL="htmlwriter.rs.html#94"];
+		htmlwriter_rs_write_u8_[ label="method write_u8_" URL="htmlwriter.rs.html#115"];
+		}
+		subgraph cluster_librustc_metadata_cstore_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=librustc_metadata_cstore
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_crosscratemap_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=crosscratemap
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		crosscratemap_rs_find_local_node[ label="method find_local_node" URL="crosscratemap.rs.html#53"];
+		crosscratemap_rs_CrossCrateMapItem[fontcolor="#e53700", fontsize=16, label="struct CrossCrateMapItem" URL="crosscratemap.rs.html#25"];
+		crosscratemap_rs_file_name[ label="struct_field file_name" URL="crosscratemap.rs.html#27"];
+		crosscratemap_rs_read_cross_crate_map[fontcolor="#8c6067", fontsize=14, label="fn read_cross_crate_map" URL="crosscratemap.rs.html#61"];
+		crosscratemap_rs_cross_crate_map_combine_current_crate[fontcolor="#8c6067", fontsize=14, label="fn cross_crate_map_combine_current_crate" URL="crosscratemap.rs.html#134"];
+		crosscratemap_rs_hash[ label="method hash" URL="crosscratemap.rs.html#24"];
+		crosscratemap_rs_CrossCrateMap[ label="NK_AS_STR_TODO CrossCrateMap" URL="crosscratemap.rs.html#42"];
+		crosscratemap_rs_eq[ label="method eq" URL="crosscratemap.rs.html#24"];
+		crosscratemap_rs_line[ label="struct_field line" URL="crosscratemap.rs.html#28"];
+		crosscratemap_rs_assert_receiver_is_total_eq[ label="method assert_receiver_is_total_eq" URL="crosscratemap.rs.html#24"];
+		crosscratemap_rs_cross_crate_map_write[fontcolor="#8c6067", fontsize=14, label="fn cross_crate_map_write" URL="crosscratemap.rs.html#162"];
+		crosscratemap_rs_get_def_id_name[fontcolor="#8c6067", fontsize=14, label="fn get_def_id_name" URL="crosscratemap.rs.html#45"];
+		crosscratemap_rs_ne[ label="method ne" URL="crosscratemap.rs.html#24"];
+		crosscratemap_rs_clone[ label="method clone" URL="crosscratemap.rs.html#24"];
+		crosscratemap_rs_FindNode[fontcolor="#ed9603", fontsize=16, label="trait FindNode" URL="crosscratemap.rs.html#49"];
+		crosscratemap_rs_find_local_node[ label="ty_method find_local_node" URL="crosscratemap.rs.html#50"];
+		crosscratemap_rs_kind[ label="struct_field kind" URL="crosscratemap.rs.html#31"];
+		crosscratemap_rs_len[ label="struct_field len" URL="crosscratemap.rs.html#30"];
+		crosscratemap_rs_cross_crate_map_read_into[fontcolor="#8c6067", fontsize=14, label="fn cross_crate_map_read_into" URL="crosscratemap.rs.html#129"];
+		crosscratemap_rs_ZeroBasedIndex[ label="NK_AS_STR_TODO ZeroBasedIndex" URL="crosscratemap.rs.html#18"];
+		crosscratemap_rs_col[ label="struct_field col" URL="crosscratemap.rs.html#29"];
+		crosscratemap_rs_cross_crate_map_combine[fontcolor="#8c6067", fontsize=14, label="fn cross_crate_map_combine" URL="crosscratemap.rs.html#124"];
+		crosscratemap_rs_item_name[ label="struct_field item_name" URL="crosscratemap.rs.html#26"];
+		crosscratemap_rs_get_crate_name[fontcolor="#8c6067", fontsize=14, label="fn get_crate_name" URL="crosscratemap.rs.html#155"];
+		}
+		subgraph cluster_text_formatting_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=text_formatting
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		text_formatting_rs_indent[ label="method indent" URL="text_formatting.rs.html#8"];
+		text_formatting_rs_change_indent[fontcolor="#8c6067", fontsize=14, label="fn change_indent" URL="text_formatting.rs.html#10"];
+		text_formatting_rs_Indent[fontcolor="#ed9603", fontsize=16, label="trait Indent" URL="text_formatting.rs.html#3"];
+		text_formatting_rs_indent[ label="ty_method indent" URL="text_formatting.rs.html#4"];
+		}
+		subgraph cluster_libcollections_hashmap_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libcollections_hashmap
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_rsfind_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=rsfind
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		rsfind_rs_SDM_Line[ label="variant SDM_Line" URL="rsfind.rs.html#51"];
+		rsfind_rs_ne[ label="method ne" URL="rsfind.rs.html#49"];
+		rsfind_rs_for_some[ label="method for_some" URL="rsfind.rs.html#63"];
+		rsfind_rs_do_some[ label="method do_some" URL="rsfind.rs.html#69"];
+		rsfind_rs_eq[ label="method eq" URL="rsfind.rs.html#49"];
+		rsfind_rs_do_some[ label="ty_method do_some" URL="rsfind.rs.html#60"];
+		rsfind_rs_MyOption[fontcolor="#ed9603", fontsize=16, label="trait MyOption" URL="rsfind.rs.html#58"];
+		rsfind_rs_SDM_LineCol[ label="variant SDM_LineCol" URL="rsfind.rs.html#52"];
+		rsfind_rs_encode[ label="method encode" URL="rsfind.rs.html#49"];
+		rsfind_rs_decode[ label="method decode" URL="rsfind.rs.html#49"];
+		rsfind_rs_ShowDefMode[fontcolor="#5e9766", fontsize=16, label="enum ShowDefMode" URL="rsfind.rs.html#50"];
+		rsfind_rs_SDM_GeditCmd[ label="variant SDM_GeditCmd" URL="rsfind.rs.html#54"];
+		rsfind_rs_clone[ label="method clone" URL="rsfind.rs.html#49"];
+		rsfind_rs_for_some[ label="ty_method for_some" URL="rsfind.rs.html#59"];
+		rsfind_rs_SDM_Source[ label="variant SDM_Source" URL="rsfind.rs.html#53"];
+		}
+		subgraph cluster_librustc_middle_ty_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=librustc_middle_ty
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_io_fs_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_io_fs
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_clone_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_clone
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_util_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=util
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		util_rs_flatten_to_str_ng[fontcolor="#8c6067", fontsize=14, label="fn flatten_to_str_ng" URL="util.rs.html#65"];
+		util_rs_text_offset_to_line_pos[fontcolor="#8c6067", fontsize=14, label="fn text_offset_to_line_pos" URL="util.rs.html#31"];
+		util_rs_text_line_pos_to_offset[fontcolor="#8c6067", fontsize=14, label="fn text_line_pos_to_offset" URL="util.rs.html#4"];
+		util_rs_get_filename_only[fontcolor="#8c6067", fontsize=14, label="fn get_filename_only" URL="util.rs.html#25"];
+		util_rs_flatten_to_str[fontcolor="#8c6067", fontsize=14, label="fn flatten_to_str" URL="util.rs.html#53"];
+		}
+		subgraph cluster_libstd_cast_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_cast
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_fmt_mod_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_fmt_mod
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_librustc_driver_driver_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=librustc_driver_driver
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_rust2html_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=rust2html
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		rust2html_rs_is_whitespace[fontcolor="#8c6067", fontsize=14, label="fn is_whitespace" URL="rust2html.rs.html#761"];
+		rust2html_rs_contains_val[ label="method contains_val" URL="rust2html.rs.html#860"];
+		rust2html_rs_SourceCodeWriter[fontcolor="#e53700", fontsize=16, label="struct SourceCodeWriter" URL="rust2html.rs.html#442"];
+		rust2html_rs_write_line_attr_links[fontcolor="#8c6067", fontsize=14, label="fn write_line_attr_links" URL="rust2html.rs.html#707"];
+		rust2html_rs_ColorIndex[ label="NK_AS_STR_TODO ColorIndex" URL="rust2html.rs.html#399"];
+		rust2html_rs_NodesPerLinePerFile[fontcolor="#e04730", fontsize=16, label="impl NodesPerLinePerFile" URL="rust2html.rs.html#288"];
+		rust2html_rs_get_index_file_pos[fontcolor="#8c6067", fontsize=14, label="fn get_index_file_pos" URL="rust2html.rs.html#1135"];
+		rust2html_rs_get_source_line[fontcolor="#8c6067", fontsize=14, label="fn get_source_line" URL="rust2html.rs.html#791"];
+		rust2html_rs_source_view_page_begin[fontcolor="#8c6067", fontsize=14, label="fn source_view_page_begin" URL="rust2html.rs.html#133"];
+		rust2html_rs_make_html_name_rel[fontcolor="#8c6067", fontsize=14, label="fn make_html_name_rel" URL="rust2html.rs.html#1168"];
+		rust2html_rs_write_file_ref[ label="method write_file_ref" URL="rust2html.rs.html#1083"];
+		rust2html_rs_new[ label="method new" URL="rust2html.rs.html#453"];
+		rust2html_rs_pad_to_length[fontcolor="#8c6067", fontsize=14, label="fn pad_to_length" URL="rust2html.rs.html#249"];
+		rust2html_rs_new[ label="method new" URL="rust2html.rs.html#842"];
+		rust2html_rs_g_default_css[ label="static g_default_css" URL="rust2html.rs.html#183"];
+		rust2html_rs_FileLineNodes[fontcolor="#e53700", fontsize=16, label="struct FileLineNodes" URL="rust2html.rs.html#261"];
+		rust2html_rs_contains[ label="method contains" URL="rust2html.rs.html#844"];
+		rust2html_rs_make_html_from_source[fontcolor="#8c6067", fontsize=14, label="fn make_html_from_source" URL="rust2html.rs.html#54"];
+		rust2html_rs_intersection[ label="method intersection" URL="rust2html.rs.html#847"];
+		rust2html_rs_link_to_refs[ label="static link_to_refs" URL="rust2html.rs.html#461"];
+		rust2html_rs_write_symbol_references[fontcolor="#8c6067", fontsize=14, label="fn write_symbol_references" URL="rust2html.rs.html#884"];
+		rust2html_rs_in_string[ label="struct_field in_string" URL="rust2html.rs.html#448"];
+		rust2html_rs_node_color_index[fontcolor="#8c6067", fontsize=14, label="fn node_color_index" URL="rust2html.rs.html#349"];
+		rust2html_rs_overlaps[ label="method overlaps" URL="rust2html.rs.html#857"];
+		rust2html_rs_link_debug[ label="static link_debug" URL="rust2html.rs.html#462"];
+		rust2html_rs_write_head[fontcolor="#8c6067", fontsize=14, label="fn write_head" URL="rust2html.rs.html#195"];
+		rust2html_rs_file_get_time_stamp_str[fontcolor="#8c6067", fontsize=14, label="fn file_get_time_stamp_str" URL="rust2html.rs.html#45"];
+		rust2html_rs_get_str_hash[fontcolor="#8c6067", fontsize=14, label="fn get_str_hash" URL="rust2html.rs.html#235"];
+		rust2html_rs_line_index[ label="struct_field line_index" URL="rust2html.rs.html#449"];
+		rust2html_rs_num_source_lines[fontcolor="#8c6067", fontsize=14, label="fn num_source_lines" URL="rust2html.rs.html#806"];
+		rust2html_rs_lo[ label="struct_field lo" URL="rust2html.rs.html#815"];
+		rust2html_rs_new[ label="method new" URL="rust2html.rs.html#289"];
+		rust2html_rs_no_link[ label="static no_link" URL="rust2html.rs.html#460"];
+		rust2html_rs_get_file_index[fontcolor="#8c6067", fontsize=14, label="fn get_file_index" URL="rust2html.rs.html#271"];
+		rust2html_rs_is_alphanumeric_u8[fontcolor="#8c6067", fontsize=14, label="fn is_alphanumeric_u8" URL="rust2html.rs.html#393"];
+		rust2html_rs_new_from_value[ label="method new_from_value" URL="rust2html.rs.html#843"];
+		rust2html_rs_include[ label="method include" URL="rust2html.rs.html#854"];
+		rust2html_rs_include_val[ label="method include_val" URL="rust2html.rs.html#863"];
+		rust2html_rs_NodesPerLinePerFile[fontcolor="#e53700", fontsize=16, label="struct NodesPerLinePerFile" URL="rust2html.rs.html#266"];
+		rust2html_rs_make_def_link_str[fontcolor="#8c6067", fontsize=14, label="fn make_def_link_str" URL="rust2html.rs.html#659"];
+		rust2html_rs_doc[ label="struct_field doc" URL="rust2html.rs.html#443"];
+		rust2html_rs_nodes_per_line[ label="struct_field nodes_per_line" URL="rust2html.rs.html#262"];
+		rust2html_rs_dump[ label="method dump" URL="rust2html.rs.html#335"];
+		rust2html_rs_count_chars_in[fontcolor="#8c6067", fontsize=14, label="fn count_chars_in" URL="rust2html.rs.html#1147"];
+		rust2html_rs_source_view_page_end[fontcolor="#8c6067", fontsize=14, label="fn source_view_page_end" URL="rust2html.rs.html#140"];
+		rust2html_rs_resolve_link[fontcolor="#8c6067", fontsize=14, label="fn resolve_link" URL="rust2html.rs.html#642"];
+		rust2html_rs_write_line_with_links[fontcolor="#8c6067", fontsize=14, label="fn write_line_with_links" URL="rust2html.rs.html#465"];
+		rust2html_rs_is_valid_filename[fontcolor="#8c6067", fontsize=14, label="fn is_valid_filename" URL="rust2html.rs.html#185"];
+		rust2html_rs_Extents[fontcolor="#e53700", fontsize=16, label="struct Extents" URL="rust2html.rs.html#814"];
+		rust2html_rs_write_refs_header[ label="method write_refs_header" URL="rust2html.rs.html#1047"];
+		rust2html_rs_symbol_refs_link_str[fontcolor="#8c6067", fontsize=14, label="fn symbol_refs_link_str" URL="rust2html.rs.html#689"];
+		rust2html_rs_make_html_name[fontcolor="#8c6067", fontsize=14, label="fn make_html_name" URL="rust2html.rs.html#1143"];
+		rust2html_rs_is_text_here[fontcolor="#8c6067", fontsize=14, label="fn is_text_here" URL="rust2html.rs.html#401"];
+		rust2html_rs_multiline_comment_depth[ label="struct_field multiline_comment_depth" URL="rust2html.rs.html#444"];
+		rust2html_rs_brace_depth[ label="struct_field brace_depth" URL="rust2html.rs.html#445"];
+		rust2html_rs_def_nodes_per_line[ label="struct_field def_nodes_per_line" URL="rust2html.rs.html#263"];
+		rust2html_rs_color_index_to_tag[fontcolor="#8c6067", fontsize=14, label="fn color_index_to_tag" URL="rust2html.rs.html#384"];
+		rust2html_rs_htmlwriter[fontcolor="#4d76ae", fontsize=16, label="mod htmlwriter" URL="rust2html.rs.html#26"];
+		rust2html_rs_make_html_name_reloc[fontcolor="#8c6067", fontsize=14, label="fn make_html_name_reloc" URL="rust2html.rs.html#1154"];
+		rust2html_rs_find_defs_in_file[fontcolor="#8c6067", fontsize=14, label="fn find_defs_in_file" URL="rust2html.rs.html#743"];
+		rust2html_rs_hi[ label="struct_field hi" URL="rust2html.rs.html#815"];
+		rust2html_rs_angle_bracket_depth[ label="struct_field angle_bracket_depth" URL="rust2html.rs.html#447"];
+		rust2html_rs_pri_of[fontcolor="#8c6067", fontsize=14, label="fn pri_of" URL="rust2html.rs.html#937"];
+		rust2html_rs_is_alphanumeric[fontcolor="#8c6067", fontsize=14, label="fn is_alphanumeric" URL="rust2html.rs.html#387"];
+		rust2html_rs_bracket_depth[ label="struct_field bracket_depth" URL="rust2html.rs.html#446"];
+		rust2html_rs_get_git_branch_info[fontcolor="#8c6067", fontsize=14, label="fn get_git_branch_info" URL="rust2html.rs.html#215"];
+		rust2html_rs_write_path_links[ label="method write_path_links" URL="rust2html.rs.html#1096"];
+		rust2html_rs_file[ label="struct_field file" URL="rust2html.rs.html#267"];
+		rust2html_rs_file_write_bytes_as[fontcolor="#8c6067", fontsize=14, label="fn file_write_bytes_as" URL="rust2html.rs.html#175"];
+		rust2html_rs_ref_page_file_name[fontcolor="#8c6067", fontsize=14, label="fn ref_page_file_name" URL="rust2html.rs.html#868"];
+		rust2html_rs_num_digits[fontcolor="#8c6067", fontsize=14, label="fn num_digits" URL="rust2html.rs.html#243"];
+		rust2html_rs_get_source_line_filtered[fontcolor="#8c6067", fontsize=14, label="fn get_source_line_filtered" URL="rust2html.rs.html#767"];
+		rust2html_rs_get_crate_name[fontcolor="#8c6067", fontsize=14, label="fn get_crate_name" URL="rust2html.rs.html#283"];
+		rust2html_rs_write_css_link[fontcolor="#8c6067", fontsize=14, label="fn write_css_link" URL="rust2html.rs.html#199"];
+		rust2html_rs_clone[ label="method clone" URL="rust2html.rs.html#813"];
+		rust2html_rs_write_crate_as_html_sub[fontcolor="#8c6067", fontsize=14, label="fn write_crate_as_html_sub" URL="rust2html.rs.html#147"];
+		rust2html_rs_sub_match[fontcolor="#8c6067", fontsize=14, label="fn sub_match" URL="rust2html.rs.html#416"];
+		}
+		subgraph cluster_libstd_os_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_os
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libsyntax_codemap_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libsyntax_codemap
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_strbuf_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_strbuf
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_rfserver_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=rfserver
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		rfserver_rs_run_server[fontcolor="#8c6067", fontsize=14, label="fn run_server" URL="rfserver.rs.html#12"];
+		}
+		subgraph cluster_libstd_option_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_option
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_rf_ast_ut_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=rf_ast_ut
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		rf_ast_ut_rs_auto_deref_ty[fontcolor="#8c6067", fontsize=14, label="fn auto_deref_ty" URL="rf_ast_ut.rs.html#34"];
+		rf_ast_ut_rs_get_def_id[fontcolor="#8c6067", fontsize=14, label="fn get_def_id" URL="rf_ast_ut.rs.html#4"];
+		rf_ast_ut_rs_dump_ctxt_def_map[fontcolor="#8c6067", fontsize=14, label="fn dump_ctxt_def_map" URL="rf_ast_ut.rs.html#49"];
+		rf_ast_ut_rs_find_named_struct_field[fontcolor="#8c6067", fontsize=14, label="fn find_named_struct_field" URL="rf_ast_ut.rs.html#101"];
+		rf_ast_ut_rs_get_struct_def[fontcolor="#8c6067", fontsize=14, label="fn get_struct_def" URL="rf_ast_ut.rs.html#86"];
+		}
+		subgraph cluster_libstd_path_posix_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_path_posix
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libsyntax_ast_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libsyntax_ast
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_hash_mod_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_hash_mod
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_from_str_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_from_str
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_callgraph_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=callgraph
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		callgraph_rs_module_subgraph_begin[fontcolor="#8c6067", fontsize=14, label="fn module_subgraph_begin" URL="callgraph.rs.html#192"];
+		callgraph_rs_write_call_graph_sub[fontcolor="#8c6067", fontsize=14, label="fn write_call_graph_sub" URL="callgraph.rs.html#75"];
+		callgraph_rs_RefCCMItem[ label="NK_AS_STR_TODO RefCCMItem" URL="callgraph.rs.html#59"];
+		callgraph_rs_CG_Options[fontcolor="#e04730", fontsize=16, label="impl CG_Options" URL="callgraph.rs.html#51"];
+		callgraph_rs_SetOfItems[ label="NK_AS_STR_TODO SetOfItems" URL="callgraph.rs.html#60"];
+		callgraph_rs_gather_fn_decl[fontcolor="#8c6067", fontsize=14, label="fn gather_fn_decl" URL="callgraph.rs.html#406"];
+		callgraph_rs_gather_type[fontcolor="#8c6067", fontsize=14, label="fn gather_type" URL="callgraph.rs.html#431"];
+		callgraph_rs_gather_use_graph_module[fontcolor="#8c6067", fontsize=14, label="fn gather_use_graph_module" URL="callgraph.rs.html#248"];
+		callgraph_rs_gather_use_graph_item[fontcolor="#8c6067", fontsize=14, label="fn gather_use_graph_item" URL="callgraph.rs.html#317"];
+		callgraph_rs_new[ label="method new" URL="callgraph.rs.html#52"];
+		callgraph_rs_gather_use_graph[fontcolor="#8c6067", fontsize=14, label="fn gather_use_graph" URL="callgraph.rs.html#243"];
+		callgraph_rs_indent[fontcolor="#8c6067", fontsize=14, label="fn indent" URL="callgraph.rs.html#188"];
+		callgraph_rs_to_dotfile_symbol[fontcolor="#8c6067", fontsize=14, label="fn to_dotfile_symbol" URL="callgraph.rs.html#209"];
+		callgraph_rs_debug_callgraph[ label="static debug_callgraph" URL="callgraph.rs.html#239"];
+		callgraph_rs_module_subgraph_end[fontcolor="#8c6067", fontsize=14, label="fn module_subgraph_end" URL="callgraph.rs.html#206"];
+		callgraph_rs_gather_node_id_def[fontcolor="#8c6067", fontsize=14, label="fn gather_node_id_def" URL="callgraph.rs.html#301"];
+		callgraph_rs_local_only[ label="struct_field local_only" URL="callgraph.rs.html#49"];
+		callgraph_rs_gather_trait_ref[fontcolor="#8c6067", fontsize=14, label="fn gather_trait_ref" URL="callgraph.rs.html#416"];
+		callgraph_rs_dump_functions[fontcolor="#8c6067", fontsize=14, label="fn dump_functions" URL="callgraph.rs.html#37"];
+		callgraph_rs_CG_Options[fontcolor="#e53700", fontsize=16, label="struct CG_Options" URL="callgraph.rs.html#47"];
+		callgraph_rs_gather_use_graph_rec[fontcolor="#8c6067", fontsize=14, label="fn gather_use_graph_rec" URL="callgraph.rs.html#258"];
+		callgraph_rs_is_main[fontcolor="#8c6067", fontsize=14, label="fn is_main" URL="callgraph.rs.html#227"];
+		callgraph_rs_write_call_graph[fontcolor="#8c6067", fontsize=14, label="fn write_call_graph" URL="callgraph.rs.html#64"];
+		}
+		subgraph cluster_libstd_to_str_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_to_str
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_rt_unwind_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_rt_unwind
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_codemaput_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=codemaput
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		codemaput_rs_get_str_at[ label="method get_str_at" URL="codemaput.rs.html#157"];
+		codemaput_rs_file_index[ label="struct_field file_index" URL="codemaput.rs.html#250"];
+		codemaput_rs_get_span_str[fontcolor="#8c6067", fontsize=14, label="fn get_span_str" URL="codemaput.rs.html#186"];
+		codemaput_rs_to_text_file_pos[ label="method to_text_file_pos" URL="codemaput.rs.html#75"];
+		codemaput_rs_len[ label="struct_field len" URL="codemaput.rs.html#169"];
+		codemaput_rs_get_str[ label="method get_str" URL="codemaput.rs.html#181"];
+		codemaput_rs_to_scalar[ label="method to_scalar" URL="codemaput.rs.html#44"];
+		codemaput_rs_to_byte_pos[ label="method to_byte_pos" URL="codemaput.rs.html#177"];
+		codemaput_rs_eq[ label="method eq" URL="codemaput.rs.html#51"];
+		codemaput_rs_line[ label="struct_field line" URL="codemaput.rs.html#35"];
+		codemaput_rs_to_str[ label="method to_str" URL="codemaput.rs.html#123"];
+		codemaput_rs_dump_cstore_info[fontcolor="#8c6067", fontsize=14, label="fn dump_cstore_info" URL="codemaput.rs.html#299"];
+		codemaput_rs_tfp[ label="struct_field tfp" URL="codemaput.rs.html#168"];
+		codemaput_rs_zget_file_line_str[fontcolor="#8c6067", fontsize=14, label="fn zget_file_line_str" URL="codemaput.rs.html#355"];
+		codemaput_rs_lt[ label="method lt" URL="codemaput.rs.html#57"];
+		codemaput_rs_ZTextFilePos[fontcolor="#e04730", fontsize=16, label="impl ZTextFilePos" URL="codemaput.rs.html#118"];
+		codemaput_rs_name[ label="struct_field name" URL="codemaput.rs.html#34"];
+		codemaput_rs_ZTextFilePosLen[fontcolor="#e04730", fontsize=16, label="impl ZTextFilePosLen" URL="codemaput.rs.html#172"];
+		codemaput_rs_ge[ label="method ge" URL="codemaput.rs.html#69"];
+		codemaput_rs_ZIndexFilePos[fontcolor="#e53700", fontsize=16, label="struct ZIndexFilePos" URL="codemaput.rs.html#249"];
+		codemaput_rs_le[ label="method le" URL="codemaput.rs.html#65"];
+		codemaput_rs_to_index_file_pos[ label="method to_index_file_pos" URL="codemaput.rs.html#259"];
+		codemaput_rs_col[ label="struct_field col" URL="codemaput.rs.html#36"];
+		codemaput_rs_new[ label="method new" URL="codemaput.rs.html#119"];
+		codemaput_rs_byte_pos_from_text_file_pos_str[fontcolor="#8c6067", fontsize=14, label="fn byte_pos_from_text_file_pos_str" URL="codemaput.rs.html#381"];
+		codemaput_rs_text_span[fontcolor="#8c6067", fontsize=14, label="fn text_span" URL="codemaput.rs.html#294"];
+		codemaput_rs_dump_span[fontcolor="#8c6067", fontsize=14, label="fn dump_span" URL="codemaput.rs.html#374"];
+		codemaput_rs_ToZIndexFilePos[fontcolor="#ed9603", fontsize=16, label="trait ToZIndexFilePos" URL="codemaput.rs.html#254"];
+		codemaput_rs_col[ label="struct_field col" URL="codemaput.rs.html#252"];
+		codemaput_rs_ZTextFilePosLen[fontcolor="#e53700", fontsize=16, label="struct ZTextFilePosLen" URL="codemaput.rs.html#167"];
+		codemaput_rs_new[ label="method new" URL="codemaput.rs.html#173"];
+		codemaput_rs_loc_to_str[fontcolor="#8c6067", fontsize=14, label="fn loc_to_str" URL="codemaput.rs.html#351"];
+		codemaput_rs_to_byte_pos_len[ label="method to_byte_pos_len" URL="codemaput.rs.html#145"];
+		codemaput_rs_gt[ label="method gt" URL="codemaput.rs.html#61"];
+		codemaput_rs_ZTextFilePos[fontcolor="#e53700", fontsize=16, label="struct ZTextFilePos" URL="codemaput.rs.html#33"];
+		codemaput_rs_from_str[ label="method from_str" URL="codemaput.rs.html#99"];
+		codemaput_rs_line[ label="struct_field line" URL="codemaput.rs.html#251"];
+		codemaput_rs_ToZTextFilePos[fontcolor="#ed9603", fontsize=16, label="trait ToZTextFilePos" URL="codemaput.rs.html#39"];
+		codemaput_rs_ne[ label="method ne" URL="codemaput.rs.html#52"];
+		codemaput_rs_to_byte_pos[ label="method to_byte_pos" URL="codemaput.rs.html#127"];
+		codemaput_rs_to_index_file_pos[ label="ty_method to_index_file_pos" URL="codemaput.rs.html#255"];
+		codemaput_rs_ZIndexFilePos[fontcolor="#e04730", fontsize=16, label="impl ZIndexFilePos" URL="codemaput.rs.html#43"];
+		codemaput_rs_to_text_file_pos[ label="ty_method to_text_file_pos" URL="codemaput.rs.html#40"];
+		codemaput_rs_get_crate_name[fontcolor="#8c6067", fontsize=14, label="fn get_crate_name" URL="codemaput.rs.html#285"];
+		}
+		subgraph cluster_libstd_mem_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_mem
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libtime_lib_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libtime_lib
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_slice_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_slice
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_librustc_driver_session_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=librustc_driver_session
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_ioutil_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=ioutil
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		ioutil_rs_fileSaveStr[fontcolor="#8c6067", fontsize=14, label="fn fileSaveStr" URL="ioutil.rs.html#190"];
+		ioutil_rs_fileReadBytes[fontcolor="#8c6067", fontsize=14, label="fn fileReadBytes" URL="ioutil.rs.html#133"];
+		ioutil_rs_as_void_ptr[ label="method as_void_ptr" URL="ioutil.rs.html#76"];
+		ioutil_rs_fileLoad[fontcolor="#8c6067", fontsize=14, label="fn fileLoad" URL="ioutil.rs.html#149"];
+		ioutil_rs_dbprint[ label="ty_method dbprint" URL="ioutil.rs.html#49"];
+		ioutil_rs_as_void_ptr[ label="ty_method as_void_ptr" URL="ioutil.rs.html#72"];
+		ioutil_rs_fileRead[fontcolor="#8c6067", fontsize=14, label="fn fileRead" URL="ioutil.rs.html#126"];
+		ioutil_rs_EndianSwap[fontcolor="#ed9603", fontsize=16, label="trait EndianSwap" URL="ioutil.rs.html#51"];
+		ioutil_rs_as_mut_void_ptr[fontcolor="#8c6067", fontsize=14, label="fn as_mut_void_ptr" URL="ioutil.rs.html#68"];
+		ioutil_rs_copy_folder[fontcolor="#8c6067", fontsize=14, label="fn copy_folder" URL="ioutil.rs.html#201"];
+		ioutil_rs_Size_t[ label="NK_AS_STR_TODO Size_t" URL="ioutil.rs.html#15"];
+		ioutil_rs_as_void_ptr[fontcolor="#8c6067", fontsize=14, label="fn as_void_ptr" URL="ioutil.rs.html#67"];
+		ioutil_rs_fileSaveArray[fontcolor="#8c6067", fontsize=14, label="fn fileSaveArray" URL="ioutil.rs.html#176"];
+		ioutil_rs_fileWriteRange[fontcolor="#8c6067", fontsize=14, label="fn fileWriteRange" URL="ioutil.rs.html#167"];
+		ioutil_rs_sizeofArray[fontcolor="#8c6067", fontsize=14, label="fn sizeofArray" URL="ioutil.rs.html#172"];
+		ioutil_rs_VoidPtr[fontcolor="#ed9603", fontsize=16, label="trait VoidPtr" URL="ioutil.rs.html#71"];
+		ioutil_rs_printStr[fontcolor="#8c6067", fontsize=14, label="fn printStr" URL="ioutil.rs.html#80"];
+		ioutil_rs_expect[ label="method expect" URL="ioutil.rs.html#242"];
+		ioutil_rs_as_mut_void_ptr[ label="ty_method as_mut_void_ptr" URL="ioutil.rs.html#73"];
+		ioutil_rs_file_create_with_dirs[fontcolor="#8c6067", fontsize=14, label="fn file_create_with_dirs" URL="ioutil.rs.html#94"];
+		ioutil_rs_expect[ label="ty_method expect" URL="ioutil.rs.html#238"];
+		ioutil_rs_fileOpen[fontcolor="#8c6067", fontsize=14, label="fn fileOpen" URL="ioutil.rs.html#90"];
+		ioutil_rs_fileWrite[fontcolor="#8c6067", fontsize=14, label="fn fileWrite" URL="ioutil.rs.html#115"];
+		ioutil_rs_fileWriteStruct[fontcolor="#8c6067", fontsize=14, label="fn fileWriteStruct" URL="ioutil.rs.html#121"];
+		ioutil_rs_endian_swap[ label="ty_method endian_swap" URL="ioutil.rs.html#52"];
+		ioutil_rs_sizeofArrayElem[fontcolor="#8c6067", fontsize=14, label="fn sizeofArrayElem" URL="ioutil.rs.html#173"];
+		ioutil_rs_Dbprint[fontcolor="#ed9603", fontsize=16, label="trait Dbprint" URL="ioutil.rs.html#49"];
+		ioutil_rs_c_str[fontcolor="#8c6067", fontsize=14, label="fn c_str" URL="ioutil.rs.html#82"];
+		ioutil_rs_fileSize[fontcolor="#8c6067", fontsize=14, label="fn fileSize" URL="ioutil.rs.html#141"];
+		ioutil_rs_promptInput[fontcolor="#8c6067", fontsize=14, label="fn promptInput" URL="ioutil.rs.html#62"];
+		ioutil_rs_ResultUtil[fontcolor="#ed9603", fontsize=16, label="trait ResultUtil" URL="ioutil.rs.html#237"];
+		ioutil_rs_dbprint[ label="method dbprint" URL="ioutil.rs.html#57"];
+		ioutil_rs_as_mut_void_ptr[ label="method as_mut_void_ptr" URL="ioutil.rs.html#77"];
+		}
+		subgraph cluster_libstd_hash_sip_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_hash_sip
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libgetopts_lib_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libgetopts_lib
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_c_str_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_c_str
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_find_ast_node_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=find_ast_node
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		find_ast_node_rs_assert_receiver_is_total_eq[ label="method assert_receiver_is_total_eq" URL="find_ast_node.rs.html#57"];
+		find_ast_node_rs_NodeTreeLoc[ label="NK_AS_STR_TODO NodeTreeLoc" URL="find_ast_node.rs.html#341"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#746"];
+		find_ast_node_rs_NK_Proc[ label="variant NK_Proc" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_get_node_source[fontcolor="#8c6067", fontsize=14, label="fn get_node_source" URL="find_ast_node.rs.html#1013"];
+		find_ast_node_rs_NK_Shl[ label="variant NK_Shl" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_hash[ label="method hash" URL="find_ast_node.rs.html#57"];
+		find_ast_node_rs_kind_to_str[ label="method kind_to_str" URL="find_ast_node.rs.html#483"];
+		find_ast_node_rs_NK_While[ label="variant NK_While" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Shr[ label="variant NK_Shr" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_ErrorShouldNeverHaveThis[ label="variant NK_ErrorShouldNeverHaveThis" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#659"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#707"];
+		find_ast_node_rs_NK_Extern[ label="variant NK_Extern" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_ident[ label="ty_method rf_get_ident" URL="find_ast_node.rs.html#351"];
+		find_ast_node_rs_to_json_str[ label="method to_json_str" URL="find_ast_node.rs.html#449"];
+		find_ast_node_rs_iter[ label="method iter" URL="find_ast_node.rs.html#291"];
+		find_ast_node_rs_NK_Eq[ label="variant NK_Eq" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_build_node_info_map[fontcolor="#8c6067", fontsize=14, label="fn build_node_info_map" URL="find_ast_node.rs.html#406"];
+		find_ast_node_rs_NK_Lt[ label="variant NK_Lt" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#696"];
+		find_ast_node_rs_parent_id[ label="struct_field parent_id" URL="find_ast_node.rs.html#105"];
+		find_ast_node_rs_FNodeInfo[fontcolor="#e53700", fontsize=16, label="struct FNodeInfo" URL="find_ast_node.rs.html#98"];
+		find_ast_node_rs_children[ label="struct_field children" URL="find_ast_node.rs.html#106"];
+		find_ast_node_rs_astnode_ty_method[ label="variant astnode_ty_method" URL="find_ast_node.rs.html#79"];
+		find_ast_node_rs_NK_Add[ label="variant NK_Add" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#851"];
+		find_ast_node_rs_get_ast_node_of_node_id[fontcolor="#8c6067", fontsize=14, label="fn get_ast_node_of_node_id" URL="find_ast_node.rs.html#881"];
+		find_ast_node_rs_ty_to_str[fontcolor="#8c6067", fontsize=14, label="fn ty_to_str" URL="find_ast_node.rs.html#923"];
+		find_ast_node_rs_AstNodeAccessors[fontcolor="#ed9603", fontsize=16, label="trait AstNodeAccessors" URL="find_ast_node.rs.html#349"];
+		find_ast_node_rs_NK_Neg[ label="variant NK_Neg" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_find_node_tree_loc_at_byte_pos[fontcolor="#8c6067", fontsize=14, label="fn find_node_tree_loc_at_byte_pos" URL="find_ast_node.rs.html#392"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#125"];
+		find_ast_node_rs_KindToStr[fontcolor="#ed9603", fontsize=16, label="trait KindToStr" URL="find_ast_node.rs.html#353"];
+		find_ast_node_rs_NK_Match[ label="variant NK_Match" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_fni_hashmap[ label="struct_field fni_hashmap" URL="find_ast_node.rs.html#270"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#678"];
+		find_ast_node_rs_rf_span[ label="method rf_span" URL="find_ast_node.rs.html#132"];
+		find_ast_node_rs_to_json_str[ label="ty_method to_json_str" URL="find_ast_node.rs.html#357"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#672"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#822"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#701"];
+		find_ast_node_rs_NK_AssignShr[ label="variant NK_AssignShr" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Gt[ label="variant NK_Gt" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#781"];
+		find_ast_node_rs_NK_Break[ label="variant NK_Break" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_new[ label="method new" URL="find_ast_node.rs.html#275"];
+		find_ast_node_rs_astnode_pat[ label="variant astnode_pat" URL="find_ast_node.rs.html#75"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#773"];
+		find_ast_node_rs_NK_As[ label="variant NK_As" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_mkAstSPtr2[fontcolor="#8c6067", fontsize=14, label="fn mkAstSPtr2" URL="find_ast_node.rs.html#45"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#790"];
+		find_ast_node_rs_node[ label="struct_field node" URL="find_ast_node.rs.html#104"];
+		find_ast_node_rs_astnode_ty[ label="variant astnode_ty" URL="find_ast_node.rs.html#78"];
+		find_ast_node_rs_astnode_variant[ label="variant astnode_variant" URL="find_ast_node.rs.html#85"];
+		find_ast_node_rs_NK_AssignAnd[ label="variant NK_AssignAnd" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_verify_parent_links[fontcolor="#8c6067", fontsize=14, label="fn verify_parent_links" URL="find_ast_node.rs.html#1036"];
+		find_ast_node_rs_NK_AssignShl[ label="variant NK_AssignShl" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_TypeParam[ label="variant NK_TypeParam" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_astnode_local[ label="variant astnode_local" URL="find_ast_node.rs.html#71"];
+		find_ast_node_rs_NK_AssignBitAnd[ label="variant NK_AssignBitAnd" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#124"];
+		find_ast_node_rs_get_kind[ label="method get_kind" URL="find_ast_node.rs.html#486"];
+		find_ast_node_rs_NK_Assign[ label="variant NK_Assign" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_In[ label="variant NK_In" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Fn[ label="variant NK_Fn" URL="find_ast_node.rs.html#59"];
+		find_ast_node_rs_NK_Tup[ label="variant NK_Tup" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Cast[ label="variant NK_Cast" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Field[ label="variant NK_Field" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Decl[ label="variant NK_Decl" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_AssignOr[ label="variant NK_AssignOr" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_is_expr[ label="method rf_is_expr" URL="find_ast_node.rs.html#198"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#785"];
+		find_ast_node_rs_NK_Struct[ label="variant NK_Struct" URL="find_ast_node.rs.html#59"];
+		find_ast_node_rs_NK_AssignSub[ label="variant NK_AssignSub" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_root_node[fontcolor="#8c6067", fontsize=14, label="fn rf_get_root_node" URL="find_ast_node.rs.html#316"];
+		find_ast_node_rs_NK_Trait[ label="variant NK_Trait" URL="find_ast_node.rs.html#59"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#807"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#750"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#697"];
+		find_ast_node_rs_NK_Arm[ label="variant NK_Arm" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_to_json_str[ label="ty_method to_json_str" URL="find_ast_node.rs.html#416"];
+		find_ast_node_rs_NK_Vec[ label="variant NK_Vec" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_StructField[ label="variant NK_StructField" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_TyMethod[ label="variant NK_TyMethod" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_find_node_at_byte_pos[fontcolor="#8c6067", fontsize=14, label="fn find_node_at_byte_pos" URL="find_ast_node.rs.html#385"];
+		find_ast_node_rs_rf_as_ast_node[ label="method rf_as_ast_node" URL="find_ast_node.rs.html#159"];
+		find_ast_node_rs_rf_kind[ label="method rf_kind" URL="find_ast_node.rs.html#131"];
+		find_ast_node_rs_safe_node_id_to_type[fontcolor="#8c6067", fontsize=14, label="fn safe_node_id_to_type" URL="find_ast_node.rs.html#997"];
+		find_ast_node_rs_NK_Le[ label="variant NK_Le" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_clone[ label="method clone" URL="find_ast_node.rs.html#65"];
+		find_ast_node_rs_astnode_expr[ label="variant astnode_expr" URL="find_ast_node.rs.html#77"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#786"];
+		find_ast_node_rs_NK_Path[ label="variant NK_Path" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Sub[ label="variant NK_Sub" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_id[ label="ty_method rf_get_id" URL="find_ast_node.rs.html#350"];
+		find_ast_node_rs_NK_AssignAdd[ label="variant NK_AssignAdd" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_dump_node_tree_loc[fontcolor="#8c6067", fontsize=14, label="fn dump_node_tree_loc" URL="find_ast_node.rs.html#342"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#758"];
+		find_ast_node_rs_NK_Variant[ label="variant NK_Variant" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Enum[ label="variant NK_Enum" URL="find_ast_node.rs.html#59"];
+		find_ast_node_rs_mkAstSPtr[fontcolor="#8c6067", fontsize=14, label="fn mkAstSPtr" URL="find_ast_node.rs.html#37"];
+		find_ast_node_rs_path_to_str[fontcolor="#8c6067", fontsize=14, label="fn path_to_str" URL="find_ast_node.rs.html#890"];
+		find_ast_node_rs_rf_clear_root_node[fontcolor="#8c6067", fontsize=14, label="fn rf_clear_root_node" URL="find_ast_node.rs.html#312"];
+		find_ast_node_rs_NK_Call[ label="variant NK_Call" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_to_json_str[ label="method to_json_str" URL="find_ast_node.rs.html#458"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#826"];
+		find_ast_node_rs_def_of_symbol_to_str[fontcolor="#8c6067", fontsize=14, label="fn def_of_symbol_to_str" URL="find_ast_node.rs.html#1007"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#789"];
+		find_ast_node_rs_rf_as_fn_decl[ label="method rf_as_fn_decl" URL="find_ast_node.rs.html#167"];
+		find_ast_node_rs_rf_visit_children[ label="method rf_visit_children" URL="find_ast_node.rs.html#135"];
+		find_ast_node_rs_NK_ForLoop[ label="variant NK_ForLoop" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_ViewItem[ label="variant NK_ViewItem" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_kind_to_str[ label="method kind_to_str" URL="find_ast_node.rs.html#494"];
+		find_ast_node_rs_astnode_trait_ref[ label="variant astnode_trait_ref" URL="find_ast_node.rs.html#84"];
+		find_ast_node_rs_NK_Index[ label="variant NK_Index" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Mul[ label="variant NK_Mul" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_as_str[ label="method as_str" URL="find_ast_node.rs.html#213"];
+		find_ast_node_rs_NK_Loop[ label="variant NK_Loop" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_VStore[ label="variant NK_VStore" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Ty[ label="variant NK_Ty" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_astnode_none[ label="variant astnode_none" URL="find_ast_node.rs.html#87"];
+		find_ast_node_rs_AstSPtr[ label="NK_AS_STR_TODO AstSPtr" URL="find_ast_node.rs.html#33"];
+		find_ast_node_rs_NK_Deref[ label="variant NK_Deref" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_If[ label="variant NK_If" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_AssignOp[ label="variant NK_AssignOp" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#777"];
+		find_ast_node_rs_from_str[ label="method from_str" URL="find_ast_node.rs.html#241"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#716"];
+		find_ast_node_rs_kind_to_str[ label="ty_method kind_to_str" URL="find_ast_node.rs.html#354"];
+		find_ast_node_rs_NK_For[ label="variant NK_For" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_astnode_block[ label="variant astnode_block" URL="find_ast_node.rs.html#72"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#798"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#719"];
+		find_ast_node_rs_astnode_trait_method[ label="variant astnode_trait_method" URL="find_ast_node.rs.html#80"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#821"];
+		find_ast_node_rs_NK_BitOr[ label="variant NK_BitOr" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_BitAnd[ label="variant NK_BitAnd" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Return[ label="variant NK_Return" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Type[ label="variant NK_Type" URL="find_ast_node.rs.html#59"];
+		find_ast_node_rs_NK_AssignBitXor[ label="variant NK_AssignBitXor" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_as_item[ label="method rf_as_item" URL="find_ast_node.rs.html#152"];
+		find_ast_node_rs_rf_as_expr[ label="method rf_as_expr" URL="find_ast_node.rs.html#192"];
+		find_ast_node_rs_NK_AssignRem[ label="variant NK_AssignRem" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_astnode_item[ label="variant astnode_item" URL="find_ast_node.rs.html#70"];
+		find_ast_node_rs_NK_AssignDiv[ label="variant NK_AssignDiv" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_parent_id[ label="method rf_get_parent_id" URL="find_ast_node.rs.html#134"];
+		find_ast_node_rs_get_kind[ label="ty_method get_kind" URL="find_ast_node.rs.html#355"];
+		find_ast_node_rs_NK_Again[ label="variant NK_Again" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_AstNode_[fontcolor="#5e9766", fontsize=16, label="enum AstNode_" URL="find_ast_node.rs.html#66"];
+		find_ast_node_rs_ne[ label="method ne" URL="find_ast_node.rs.html#57"];
+		find_ast_node_rs_NK_FnBlock[ label="variant NK_FnBlock" URL="find_ast_node.rs.html#59"];
+		find_ast_node_rs_astnode_stmt[ label="variant astnode_stmt" URL="find_ast_node.rs.html#73"];
+		find_ast_node_rs_NK_TraitRef[ label="variant NK_TraitRef" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Mod[ label="variant NK_Mod" URL="find_ast_node.rs.html#59"];
+		find_ast_node_rs_ToJsonStrFc[fontcolor="#ed9603", fontsize=16, label="trait ToJsonStrFc" URL="find_ast_node.rs.html#416"];
+		find_ast_node_rs_rf_node[ label="method rf_node" URL="find_ast_node.rs.html#133"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#668"];
+		find_ast_node_rs_find_or_insert[ label="method find_or_insert" URL="find_ast_node.rs.html#287"];
+		find_ast_node_rs_NK_Impl[ label="variant NK_Impl" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_And[ label="variant NK_And" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#772"];
+		find_ast_node_rs_astnode_struct_field[ label="variant astnode_struct_field" URL="find_ast_node.rs.html#83"];
+		find_ast_node_rs_get_kind[ label="method get_kind" URL="find_ast_node.rs.html#497"];
+		find_ast_node_rs_NK_Keyword[ label="variant NK_Keyword" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Not[ label="variant NK_Not" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_InlineAsm[ label="variant NK_InlineAsm" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_kind[ label="struct_field kind" URL="find_ast_node.rs.html#102"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#795"];
+		find_ast_node_rs_pat_to_str[fontcolor="#8c6067", fontsize=14, label="fn pat_to_str" URL="find_ast_node.rs.html#902"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#679"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#782"];
+		find_ast_node_rs_NK_Root[ label="variant NK_Root" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#749"];
+		find_ast_node_rs_astnode_view_item[ label="variant astnode_view_item" URL="find_ast_node.rs.html#69"];
+		find_ast_node_rs_NK_De[ label="variant NK_De" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#745"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#764"];
+		find_ast_node_rs_NK_Do[ label="variant NK_Do" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Repeat[ label="variant NK_Repeat" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_find[ label="method find" URL="find_ast_node.rs.html#278"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#754"];
+		find_ast_node_rs_SPtr[ label="NK_AS_STR_TODO SPtr" URL="find_ast_node.rs.html#116"];
+		find_ast_node_rs_NK_AssignBitOr[ label="variant NK_AssignBitOr" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_AssignMul[ label="variant NK_AssignMul" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_astnode_arm[ label="variant astnode_arm" URL="find_ast_node.rs.html#74"];
+		find_ast_node_rs_astnode_struct_def[ label="variant astnode_struct_def" URL="find_ast_node.rs.html#82"];
+		find_ast_node_rs_NK_BinOp[ label="variant NK_BinOp" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_find_mut[ label="method find_mut" URL="find_ast_node.rs.html#281"];
+		find_ast_node_rs_ToJsonStr[fontcolor="#ed9603", fontsize=16, label="trait ToJsonStr" URL="find_ast_node.rs.html#357"];
+		find_ast_node_rs_NodeKind[fontcolor="#e04730", fontsize=16, label="impl NodeKind" URL="find_ast_node.rs.html#211"];
+		find_ast_node_rs_get_node_info_str[fontcolor="#8c6067", fontsize=14, label="fn get_node_info_str" URL="find_ast_node.rs.html#888"];
+		find_ast_node_rs_rf_ty_node_id[ label="method rf_ty_node_id" URL="find_ast_node.rs.html#602"];
+		find_ast_node_rs_NK_Box[ label="variant NK_Box" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_expr_to_str[fontcolor="#8c6067", fontsize=14, label="fn expr_to_str" URL="find_ast_node.rs.html#942"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#741"];
+		find_ast_node_rs_NK_Stmt[ label="variant NK_Stmt" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_eq[ label="method eq" URL="find_ast_node.rs.html#57"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#645"];
+		find_ast_node_rs_NK_Ne[ label="variant NK_Ne" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Div[ label="variant NK_Div" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_ForeignMod[ label="variant NK_ForeignMod" URL="find_ast_node.rs.html#59"];
+		find_ast_node_rs_astnode_root[ label="variant astnode_root" URL="find_ast_node.rs.html#86"];
+		find_ast_node_rs_get_kind[ label="method get_kind" URL="find_ast_node.rs.html#617"];
+		find_ast_node_rs_clone[ label="method clone" URL="find_ast_node.rs.html#97"];
+		find_ast_node_rs_rf_is_fn_decl[ label="method rf_is_fn_decl" URL="find_ast_node.rs.html#191"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#813"];
+		find_ast_node_rs_mkAstSPtrClone[fontcolor="#8c6067", fontsize=14, label="fn mkAstSPtrClone" URL="find_ast_node.rs.html#42"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#727"];
+		find_ast_node_rs_NK_Or[ label="variant NK_Or" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_g_root_node[ label="static g_root_node" URL="find_ast_node.rs.html#298"];
+		find_ast_node_rs_NK_Pat[ label="variant NK_Pat" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_kind_to_str[ label="method kind_to_str" URL="find_ast_node.rs.html#513"];
+		find_ast_node_rs_NK_Block[ label="variant NK_Block" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_span[ label="struct_field span" URL="find_ast_node.rs.html#103"];
+		find_ast_node_rs_NK_Rem[ label="variant NK_Rem" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_get_kind[ label="method get_kind" URL="find_ast_node.rs.html#517"];
+		find_ast_node_rs_NK_MethodCall[ label="variant NK_MethodCall" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_len[ label="method len" URL="find_ast_node.rs.html#290"];
+		find_ast_node_rs_NK_Uniq[ label="variant NK_Uniq" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_kind_to_str[ label="method kind_to_str" URL="find_ast_node.rs.html#614"];
+		find_ast_node_rs_NK_Lit[ label="variant NK_Lit" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_astnode_method[ label="variant astnode_method" URL="find_ast_node.rs.html#81"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#673"];
+		find_ast_node_rs_insert[ label="method insert" URL="find_ast_node.rs.html#284"];
+		find_ast_node_rs_dump_node_source_for_single_file_only[fontcolor="#8c6067", fontsize=14, label="fn dump_node_source_for_single_file_only" URL="find_ast_node.rs.html#1026"];
+		find_ast_node_rs_NK_Ge[ label="variant NK_Ge" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_AddrOf[ label="variant NK_AddrOf" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NodeKind[fontcolor="#5e9766", fontsize=16, label="enum NodeKind" URL="find_ast_node.rs.html#58"];
+		find_ast_node_rs_NK_Unknown[ label="variant NK_Unknown" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_node_spans_table_to_json_sub[fontcolor="#8c6067", fontsize=14, label="fn node_spans_table_to_json_sub" URL="find_ast_node.rs.html#418"];
+		find_ast_node_rs_FNodeInfoMap[fontcolor="#e53700", fontsize=16, label="struct FNodeInfoMap" URL="find_ast_node.rs.html#269"];
+		find_ast_node_rs_NK_Paren[ label="variant NK_Paren" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_BitXor[ label="variant NK_BitXor" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Crate[ label="variant NK_Crate" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Static[ label="variant NK_Static" URL="find_ast_node.rs.html#59"];
+		find_ast_node_rs_NK_Local[ label="variant NK_Local" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#733"];
+		find_ast_node_rs_NK_Mac[ label="variant NK_Mac" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_astnode_decl[ label="variant astnode_decl" URL="find_ast_node.rs.html#76"];
+		find_ast_node_rs_clone[ label="method clone" URL="find_ast_node.rs.html#57"];
+		find_ast_node_rs_NK_None[ label="variant NK_None" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_NK_Unsafe[ label="variant NK_Unsafe" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#667"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#776"];
+		find_ast_node_rs_NK_TraitMethod[ label="variant NK_TraitMethod" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_astnode_mod[ label="variant astnode_mod" URL="find_ast_node.rs.html#68"];
+		find_ast_node_rs_rf_get_id[ label="method rf_get_id" URL="find_ast_node.rs.html#753"];
+		find_ast_node_rs_NK_Method[ label="variant NK_Method" URL="find_ast_node.rs.html#60"];
+		find_ast_node_rs_rf_get_ident[ label="method rf_get_ident" URL="find_ast_node.rs.html#730"];
+		find_ast_node_rs_rf_set_root_node[fontcolor="#8c6067", fontsize=14, label="fn rf_set_root_node" URL="find_ast_node.rs.html#299"];
+		}
+		subgraph cluster_libstd_io_stdio_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_io_stdio
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libsyntax_owned_slice_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libsyntax_owned_slice
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_rfindctx_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=rfindctx
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		rfindctx_rs_str_of_opt_ident[fontcolor="#8c6067", fontsize=14, label="fn str_of_opt_ident" URL="rfindctx.rs.html#52"];
+		rfindctx_rs_cstore[ label="method cstore" URL="rfindctx.rs.html#20"];
+		rfindctx_rs_find_file_name_in[fontcolor="#8c6067", fontsize=14, label="fn find_file_name_in" URL="rfindctx.rs.html#36"];
+		rfindctx_rs_RustFindCtx[fontcolor="#e53700", fontsize=16, label="struct RustFindCtx" URL="rfindctx.rs.html#10"];
+		rfindctx_rs_session[ label="method session" URL="rfindctx.rs.html#19"];
+		rfindctx_rs_get_source_loc[fontcolor="#8c6067", fontsize=14, label="fn get_source_loc" URL="rfindctx.rs.html#47"];
+		rfindctx_rs_RustFindCtx[fontcolor="#e04730", fontsize=16, label="impl RustFindCtx" URL="rfindctx.rs.html#17"];
+		rfindctx_rs_first_file_name[fontcolor="#8c6067", fontsize=14, label="fn first_file_name" URL="rfindctx.rs.html#31"];
+		rfindctx_rs_codemap[ label="method codemap" URL="rfindctx.rs.html#18"];
+		rfindctx_rs_crate_[ label="struct_field crate_" URL="rfindctx.rs.html#11"];
+		rfindctx_rs_tycx_val[ label="method tycx_val" URL="rfindctx.rs.html#24"];
+		rfindctx_rs_str_of_ident[fontcolor="#8c6067", fontsize=14, label="fn str_of_ident" URL="rfindctx.rs.html#58"];
+		rfindctx_rs_ctxtkey[ label="static ctxtkey" URL="rfindctx.rs.html#29"];
+		rfindctx_rs_ca[ label="struct_field ca" URL="rfindctx.rs.html#14"];
+		rfindctx_rs_tycx_ref[ label="method tycx_ref" URL="rfindctx.rs.html#21"];
+		}
+		subgraph cluster_liblibc_lib_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=liblibc_lib
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_str_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_str
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_vec_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_vec
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_tuple_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_tuple
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libsyntax_visit_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libsyntax_visit
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_cell_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_cell
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_timer_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=timer
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		timer_rs_drop[ label="method drop" URL="timer.rs.html#58"];
+		timer_rs_HR_MULTIPLIER[ label="static HR_MULTIPLIER" URL="timer.rs.html#8"];
+		timer_rs_name[ label="struct_field name" URL="timer.rs.html#42"];
+		timer_rs_end_time[ label="struct_field end_time" URL="timer.rs.html#12"];
+		timer_rs_time[ label="struct_field time" URL="timer.rs.html#41"];
+		timer_rs_start_time[ label="struct_field start_time" URL="timer.rs.html#11"];
+		timer_rs_SEC_MULTIPLIER[ label="static SEC_MULTIPLIER" URL="timer.rs.html#6"];
+		timer_rs_end[ label="method end" URL="timer.rs.html#22"];
+		timer_rs_format_number[fontcolor="#8c6067", fontsize=14, label="fn format_number" URL="timer.rs.html#117"];
+		timer_rs_start[ label="method start" URL="timer.rs.html#19"];
+		timer_rs_Timer[fontcolor="#e53700", fontsize=16, label="struct Timer" URL="timer.rs.html#10"];
+		timer_rs_Timer[fontcolor="#e04730", fontsize=16, label="impl Timer" URL="timer.rs.html#15"];
+		timer_rs_new[ label="method new" URL="timer.rs.html#50"];
+		timer_rs_MIN_MULTIPLIER[ label="static MIN_MULTIPLIER" URL="timer.rs.html#7"];
+		timer_rs_show_time[ label="method show_time" URL="timer.rs.html#31"];
+		timer_rs_get_total_time[ label="method get_total_time" URL="timer.rs.html#28"];
+		timer_rs_format_as_time[fontcolor="#8c6067", fontsize=14, label="fn format_as_time" URL="timer.rs.html#65"];
+		timer_rs_show_time_of[ label="method show_time_of" URL="timer.rs.html#34"];
+		timer_rs_new[ label="method new" URL="timer.rs.html#16"];
+		timer_rs_Profiler[fontcolor="#e04730", fontsize=16, label="impl Profiler" URL="timer.rs.html#48"];
+		timer_rs_get_time_string[ label="method get_time_string" URL="timer.rs.html#25"];
+		timer_rs_g_depth[ label="static g_depth" URL="timer.rs.html#45"];
+		timer_rs_Profiler[fontcolor="#e53700", fontsize=16, label="struct Profiler" URL="timer.rs.html#40"];
+		}
+		subgraph cluster_rustfind_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=rustfind
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		rustfind_rs_main[fontcolor=white, color="#00000040", fontsize=32, label="fn main" URL="rustfind.rs.html#170"];
+		rustfind_rs_krate[ label="struct_field krate" URL="rustfind.rs.html#94"];
+		rustfind_rs_write_crate_as_html_and_rfx[fontcolor="#8c6067", fontsize=14, label="fn write_crate_as_html_and_rfx" URL="rustfind.rs.html#407"];
+		rustfind_rs_jumptodefmap[fontcolor="#4d76ae", fontsize=16, label="mod jumptodefmap" URL="rustfind.rs.html#61"];
+		rustfind_rs_rsfind[fontcolor="#4d76ae", fontsize=16, label="mod rsfind" URL="rustfind.rs.html#56"];
+		rustfind_rs_rf_find_local_node[ label="method rf_find_local_node" URL="rustfind.rs.html#100"];
+		rustfind_rs_output_dir[ label="struct_field output_dir" URL="rustfind.rs.html#72"];
+		rustfind_rs_rf_find_source[ label="method rf_find_source" URL="rustfind.rs.html#97"];
+		rustfind_rs_write_file_path[ label="struct_field write_file_path" URL="rustfind.rs.html#68"];
+		rustfind_rs_new[ label="method new" URL="rustfind.rs.html#77"];
+		rustfind_rs_get_ast_and_resolve[fontcolor="#8c6067", fontsize=14, label="fn get_ast_and_resolve" URL="rustfind.rs.html#284"];
+		rustfind_rs_RF_Options[fontcolor="#e53700", fontsize=16, label="struct RF_Options" URL="rustfind.rs.html#67"];
+		rustfind_rs_node_info_map[ label="struct_field node_info_map" URL="rustfind.rs.html#90"];
+		rustfind_rs_NodeMaps[fontcolor="#e53700", fontsize=16, label="struct NodeMaps" URL="rustfind.rs.html#89"];
+		rustfind_rs_rfserver[fontcolor="#4d76ae", fontsize=16, label="mod rfserver" URL="rustfind.rs.html#58"];
+		rustfind_rs_RF_Options[fontcolor="#e04730", fontsize=16, label="impl RF_Options" URL="rustfind.rs.html#76"];
+		rustfind_rs_crosscratemap[fontcolor="#4d76ae", fontsize=16, label="mod crosscratemap" URL="rustfind.rs.html#57"];
+		rustfind_rs_rustdoc_url[ label="struct_field rustdoc_url" URL="rustfind.rs.html#73"];
+		rustfind_rs_debug_test[fontcolor="#8c6067", fontsize=14, label="fn debug_test" URL="rustfind.rs.html#333"];
+		rustfind_rs_callgraph_opt[ label="struct_field callgraph_opt" URL="rustfind.rs.html#74"];
+		rustfind_rs_ioutil[fontcolor="#4d76ae", fontsize=16, label="mod ioutil" URL="rustfind.rs.html#51"];
+		rustfind_rs_write_html[ label="struct_field write_html" URL="rustfind.rs.html#71"];
+		rustfind_rs_rf_ast_ut[fontcolor="#4d76ae", fontsize=16, label="mod rf_ast_ut" URL="rustfind.rs.html#60"];
+		rustfind_rs_timer[fontcolor="#4d76ae", fontsize=16, label="mod timer" URL="rustfind.rs.html#62"];
+		rustfind_rs_jump_def_map[ label="struct_field jump_def_map" URL="rustfind.rs.html#91"];
+		rustfind_rs_codemaput[fontcolor="#4d76ae", fontsize=16, label="mod codemaput" URL="rustfind.rs.html#54"];
+		rustfind_rs_callgraph[fontcolor="#4d76ae", fontsize=16, label="mod callgraph" URL="rustfind.rs.html#64"];
+		rustfind_rs_jump_ref_map[ label="struct_field jump_ref_map" URL="rustfind.rs.html#92"];
+		rustfind_rs_util[fontcolor="#4d76ae", fontsize=16, label="mod util" URL="rustfind.rs.html#59"];
+		rustfind_rs_find_ast_node[fontcolor="#4d76ae", fontsize=16, label="mod find_ast_node" URL="rustfind.rs.html#49"];
+		rustfind_rs_usage[fontcolor="#8c6067", fontsize=14, label="fn usage" URL="rustfind.rs.html#156"];
+		rustfind_rs_rf_common[fontcolor="#4d76ae", fontsize=16, label="mod rf_common" URL="rustfind.rs.html#48"];
+		rustfind_rs_optgroups[fontcolor="#8c6067", fontsize=14, label="fn optgroups" URL="rustfind.rs.html#137"];
+		rustfind_rs_visit_rust_ast[fontcolor="#4d76ae", fontsize=16, label="mod visit_rust_ast" URL="rustfind.rs.html#65"];
+		rustfind_rs_write_callgraph[ label="struct_field write_callgraph" URL="rustfind.rs.html#70"];
+		rustfind_rs_write_references[ label="struct_field write_references" URL="rustfind.rs.html#69"];
+		rustfind_rs_text_formatting[fontcolor="#4d76ae", fontsize=16, label="mod text_formatting" URL="rustfind.rs.html#50"];
+		rustfind_rs_xcmap[ label="struct_field xcmap" URL="rustfind.rs.html#93"];
+		rustfind_rs_indexpage[fontcolor="#4d76ae", fontsize=16, label="mod indexpage" URL="rustfind.rs.html#63"];
+		rustfind_rs_rust2html[fontcolor="#4d76ae", fontsize=16, label="mod rust2html" URL="rustfind.rs.html#53"];
+		rustfind_rs_rfindctx[fontcolor="#4d76ae", fontsize=16, label="mod rfindctx" URL="rustfind.rs.html#55"];
+		}
+		subgraph cluster_visit_rust_ast_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=visit_rust_ast
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		visit_rust_ast_rs_rf_push_parent_child[fontcolor="#8c6067", fontsize=14, label="fn rf_push_parent_child" URL="visit_rust_ast.rs.html#40"];
+		visit_rust_ast_rs_visit_stmt[ label="method visit_stmt" URL="visit_rust_ast.rs.html#272"];
+		visit_rust_ast_rs_trait_ref[ label="method trait_ref" URL="visit_rust_ast.rs.html#30"];
+		visit_rust_ast_rs_visit_block[ label="method visit_block" URL="visit_rust_ast.rs.html#264"];
+		visit_rust_ast_rs_visit_ty[ label="method visit_ty" URL="visit_rust_ast.rs.html#312"];
+		visit_rust_ast_rs_visit_block[ label="method visit_block" URL="visit_rust_ast.rs.html#146"];
+		visit_rust_ast_rs_visit_arm[ label="method visit_arm" URL="visit_rust_ast.rs.html#280"];
+		visit_rust_ast_rs_span_contains[fontcolor="#8c6067", fontsize=14, label="fn span_contains" URL="visit_rust_ast.rs.html#237"];
+		visit_rust_ast_rs_variant[ label="method variant" URL="visit_rust_ast.rs.html#34"];
+		visit_rust_ast_rs_visit_pat[ label="method visit_pat" URL="visit_rust_ast.rs.html#288"];
+		visit_rust_ast_rs_visit_view_item[ label="method visit_view_item" URL="visit_rust_ast.rs.html#242"];
+		visit_rust_ast_rs_push_span[fontcolor="#8c6067", fontsize=14, label="fn push_span" URL="visit_rust_ast.rs.html#48"];
+		visit_rust_ast_rs_Finder[fontcolor="#e53700", fontsize=16, label="struct Finder" URL="visit_rust_ast.rs.html#220"];
+		visit_rust_ast_rs_clone[ label="method clone" URL="visit_rust_ast.rs.html#212"];
+		visit_rust_ast_rs_FNodeInfoMapBuilder[fontcolor="#e53700", fontsize=16, label="struct FNodeInfoMapBuilder" URL="visit_rust_ast.rs.html#16"];
+		visit_rust_ast_rs_visit_generics[ label="method visit_generics" URL="visit_rust_ast.rs.html#91"];
+		visit_rust_ast_rs_result[ label="struct_field result" URL="visit_rust_ast.rs.html#214"];
+		visit_rust_ast_rs_visit_expr[ label="method visit_expr" URL="visit_rust_ast.rs.html#304"];
+		visit_rust_ast_rs_push_spanned[fontcolor="#8c6067", fontsize=14, label="fn push_spanned" URL="visit_rust_ast.rs.html#65"];
+		visit_rust_ast_rs_new[ label="method new" URL="visit_rust_ast.rs.html#225"];
+		visit_rust_ast_rs_visit_expr[ label="method visit_expr" URL="visit_rust_ast.rs.html#176"];
+		visit_rust_ast_rs_visit_item[ label="method visit_item" URL="visit_rust_ast.rs.html#249"];
+		visit_rust_ast_rs_visit_local[ label="method visit_local" URL="visit_rust_ast.rs.html#256"];
+		visit_rust_ast_rs_visit_ty[ label="method visit_ty" URL="visit_rust_ast.rs.html#185"];
+		visit_rust_ast_rs_all_nodes[ label="struct_field all_nodes" URL="visit_rust_ast.rs.html#17"];
+		visit_rust_ast_rs_visit_decl[ label="method visit_decl" URL="visit_rust_ast.rs.html#167"];
+		visit_rust_ast_rs_visit_ty_method[ label="method visit_ty_method" URL="visit_rust_ast.rs.html#200"];
+		visit_rust_ast_rs_visit_decl[ label="method visit_decl" URL="visit_rust_ast.rs.html#296"];
+		visit_rust_ast_rs_visit_pat[ label="method visit_pat" URL="visit_rust_ast.rs.html#161"];
+		visit_rust_ast_rs_FNodeInfoMapBuilder_new[fontcolor="#8c6067", fontsize=14, label="fn FNodeInfoMapBuilder_new" URL="visit_rust_ast.rs.html#20"];
+		visit_rust_ast_rs_visit_struct_field[ label="method visit_struct_field" URL="visit_rust_ast.rs.html#194"];
+		visit_rust_ast_rs_FindAstNodeSt[fontcolor="#e53700", fontsize=16, label="struct FindAstNodeSt" URL="visit_rust_ast.rs.html#213"];
+		visit_rust_ast_rs_expr_get_ident[fontcolor="#8c6067", fontsize=14, label="fn expr_get_ident" URL="visit_rust_ast.rs.html#208"];
+		visit_rust_ast_rs_visit_local[ label="method visit_local" URL="visit_rust_ast.rs.html#140"];
+		visit_rust_ast_rs_env[ label="struct_field env" URL="visit_rust_ast.rs.html#221"];
+		visit_rust_ast_rs_item_get_ident[fontcolor="#8c6067", fontsize=14, label="fn item_get_ident" URL="visit_rust_ast.rs.html#207"];
+		visit_rust_ast_rs_visit_stmt[ label="method visit_stmt" URL="visit_rust_ast.rs.html#152"];
+		visit_rust_ast_rs_stop[ label="struct_field stop" URL="visit_rust_ast.rs.html#216"];
+		visit_rust_ast_rs_visit_item[ label="method visit_item" URL="visit_rust_ast.rs.html#108"];
+		visit_rust_ast_rs_location[ label="struct_field location" URL="visit_rust_ast.rs.html#215"];
+		visit_rust_ast_rs_visit_struct_field[ label="method visit_struct_field" URL="visit_rust_ast.rs.html#324"];
+		}
+		subgraph cluster_indexpage_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=indexpage
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		indexpage_rs_write_grid_of_text_links[fontcolor="#8c6067", fontsize=14, label="fn write_grid_of_text_links" URL="indexpage.rs.html#96"];
+		indexpage_rs_write_index_html[fontcolor="#8c6067", fontsize=14, label="fn write_index_html" URL="indexpage.rs.html#17"];
+		}
+		subgraph cluster_libserialize_serialize_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libserialize_serialize
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_fmt_rt_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_fmt_rt
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libsyntax_diagnostic_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libsyntax_diagnostic
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_result_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_result
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_libstd_iter_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libstd_iter
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+		subgraph cluster_jumptodefmap_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=jumptodefmap
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		jumptodefmap_rs_find[ label="method find" URL="jumptodefmap.rs.html#306"];
+		jumptodefmap_rs_build_node_def_node_table[fontcolor="#8c6067", fontsize=14, label="fn build_node_def_node_table" URL="jumptodefmap.rs.html#322"];
+		jumptodefmap_rs_lookup_def_of_node_tree_loc[fontcolor="#8c6067", fontsize=14, label="fn lookup_def_of_node_tree_loc" URL="jumptodefmap.rs.html#240"];
+		jumptodefmap_rs_lookup_def_node_of_node[fontcolor="#8c6067", fontsize=14, label="fn lookup_def_node_of_node" URL="jumptodefmap.rs.html#94"];
+		jumptodefmap_rs_build_jump_to_def_map[fontcolor="#8c6067", fontsize=14, label="fn build_jump_to_def_map" URL="jumptodefmap.rs.html#117"];
+		jumptodefmap_rs_def_node_id_from_node_id[fontcolor="#8c6067", fontsize=14, label="fn def_node_id_from_node_id" URL="jumptodefmap.rs.html#339"];
+		jumptodefmap_rs_lookup_def_of_node[fontcolor="#8c6067", fontsize=14, label="fn lookup_def_of_node" URL="jumptodefmap.rs.html#244"];
+		jumptodefmap_rs_MultiMap[fontcolor="#e53700", fontsize=16, label="struct MultiMap" URL="jumptodefmap.rs.html#296"];
+		jumptodefmap_rs_node_from_text_file_pos_str[fontcolor="#8c6067", fontsize=14, label="fn node_from_text_file_pos_str" URL="jumptodefmap.rs.html#225"];
+		jumptodefmap_rs_mk_result[fontcolor="#8c6067", fontsize=14, label="fn mk_result" URL="jumptodefmap.rs.html#256"];
+		jumptodefmap_rs_indices[ label="struct_field indices" URL="jumptodefmap.rs.html#298"];
+		jumptodefmap_rs_def_info_from_node_id[fontcolor="#8c6067", fontsize=14, label="fn def_info_from_node_id" URL="jumptodefmap.rs.html#153"];
+		jumptodefmap_rs_insert[ label="method insert" URL="jumptodefmap.rs.html#313"];
+		jumptodefmap_rs_lookup_def_of_node_sub[fontcolor="#8c6067", fontsize=14, label="fn lookup_def_of_node_sub" URL="jumptodefmap.rs.html#252"];
+		jumptodefmap_rs_JumpToRefMap[ label="NK_AS_STR_TODO JumpToRefMap" URL="jumptodefmap.rs.html#37"];
+		jumptodefmap_rs_JumpToDefMap[ label="NK_AS_STR_TODO JumpToDefMap" URL="jumptodefmap.rs.html#38"];
+		jumptodefmap_rs_lookup_def_at_text_file_pos_str[fontcolor="#8c6067", fontsize=14, label="fn lookup_def_at_text_file_pos_str" URL="jumptodefmap.rs.html#212"];
+		jumptodefmap_rs_items[ label="struct_field items" URL="jumptodefmap.rs.html#299"];
+		jumptodefmap_rs_lookup_def_at_byte_pos[fontcolor="#8c6067", fontsize=14, label="fn lookup_def_at_byte_pos" URL="jumptodefmap.rs.html#235"];
+		jumptodefmap_rs_lookup_def_at_text_file_pos[fontcolor="#8c6067", fontsize=14, label="fn lookup_def_at_text_file_pos" URL="jumptodefmap.rs.html#205"];
+		jumptodefmap_rs_empty[ label="struct_field empty" URL="jumptodefmap.rs.html#300"];
+		jumptodefmap_rs_dump_json[fontcolor="#8c6067", fontsize=14, label="fn dump_json" URL="jumptodefmap.rs.html#174"];
+		jumptodefmap_rs_new[ label="method new" URL="jumptodefmap.rs.html#303"];
+		jumptodefmap_rs_node_id_from_text_file_pos_str[fontcolor="#8c6067", fontsize=14, label="fn node_id_from_text_file_pos_str" URL="jumptodefmap.rs.html#219"];
+		jumptodefmap_rs_make_jump_to_def_map[fontcolor="#8c6067", fontsize=14, label="fn make_jump_to_def_map" URL="jumptodefmap.rs.html#284"];
+		jumptodefmap_rs_lookup_def_of_expr[fontcolor="#8c6067", fontsize=14, label="fn lookup_def_of_expr" URL="jumptodefmap.rs.html#45"];
+		jumptodefmap_rs_next_index[ label="struct_field next_index" URL="jumptodefmap.rs.html#297"];
+		}
+		subgraph cluster_libsyntax_parse_token_rs{
+		graph[
+				style=filled,
+				color="#00000008",
+				label=libsyntax_parse_token
+				];
+		node [style=filled, color="#00000010"];
+		edge [color="#00000010"];
+		}
+	edge [len=4.0];
+	codemaput_rs_ZIndexFilePos -> codemaput_rs_ZIndexFilePos[color="#e5370020"]
+	jumptodefmap_rs_lookup_def_at_byte_pos -> jumptodefmap_rs_lookup_def_of_node_tree_loc[color="#8c606720"]
+	find_ast_node_rs_find_node_tree_loc_at_byte_pos -> find_ast_node_rs_AstSPtr[color="#8c606720"]
+	callgraph_rs_gather_use_graph_rec -> callgraph_rs_gather_use_graph_item[color="#8c606720"]
+	rust2html_rs_NodesPerLinePerFile -> codemaput_rs_to_index_file_pos[color="#e0373020"]
+	rust2html_rs_resolve_link -> rust2html_rs_make_def_link_str[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_expr -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_read_into -> crosscratemap_rs_CrossCrateMap[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> rustfind_rs_RF_Options[color="#e5370020"]
+	codemaput_rs_byte_pos_from_text_file_pos_str -> codemaput_rs_new[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_text_file_pos_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	jumptodefmap_rs_lookup_def_node_of_node -> find_ast_node_rs_AstNode_[color="#5e976620"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_write[color="#e0373020"]
+	rfserver_rs_run_server -> jumptodefmap_rs_lookup_def_at_text_file_pos_str[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> jumptodefmap_rs_JumpToDefMap[color="#8c606720"]
+	rust2html_rs_make_def_link_str -> rust2html_rs_make_html_name_reloc[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_source_view_page_begin[color="#8c606720"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_write_tag[color="#e0373020"]
+	codemaput_rs_ZTextFilePosLen -> codemaput_rs_new[color="#e0373020"]
+	rust2html_rs_write_line_attr_links -> rust2html_rs_SourceCodeWriter[color="#e5370020"]
+	ioutil_rs_fileLoad -> ioutil_rs_printStr[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_check_depth[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_write[color="#8c606720"]
+	indexpage_rs_write_index_html -> htmlwriter_rs_as_bytes[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> rust2html_rs_write_refs_header[color="#8c606720"]
+	rust2html_rs_write_head -> htmlwriter_rs_HtmlWriter[color="#e5370020"]
+	ioutil_rs_fileWrite -> ioutil_rs_as_void_ptr[color="#8c606720"]
+	rfserver_rs_run_server -> jumptodefmap_rs_make_jump_to_def_map[color="#8c606720"]
+	indexpage_rs_write_index_html -> htmlwriter_rs_begin_tag_check[color="#8c606720"]
+	rust2html_rs_write_line_with_links -> find_ast_node_rs_rf_span[color="#8c606720"]
+	jumptodefmap_rs_make_jump_to_def_map -> timer_rs_new[color="#8c606720"]
+	codemaput_rs_ZTextFilePos -> codemaput_rs_get_span_str[color="#8c606720"]
+	rustfind_rs_write_crate_as_html_and_rfx -> rust2html_rs_write_crate_as_html_sub[color="#8c606720"]
+	rustfind_rs_write_crate_as_html_and_rfx -> timer_rs_new[color="#8c606720"]
+	jumptodefmap_rs_dump_json -> find_ast_node_rs_to_json_str[color="#8c606720"]
+	rustfind_rs_main -> rustfind_rs_get_ast_and_resolve[color="#8c606720"]
+	rustfind_rs_write_crate_as_html_and_rfx -> crosscratemap_rs_cross_crate_map_combine_current_crate[color="#8c606720"]
+	jumptodefmap_rs_make_jump_to_def_map -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	callgraph_rs_gather_node_id_def -> callgraph_rs_SetOfItems[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> htmlwriter_rs_begin_tag_ext[color="#8c606720"]
+	find_ast_node_rs_get_node_source -> find_ast_node_rs_find[color="#8c606720"]
+	callgraph_rs_module_subgraph_begin -> callgraph_rs_indent[color="#8c606720"]
+	rustfind_rs_debug_test -> jumptodefmap_rs_make_jump_to_def_map[color="#8c606720"]
+	jumptodefmap_rs_node_from_text_file_pos_str -> codemaput_rs_byte_pos_from_text_file_pos_str[color="#8c606720"]
+	callgraph_rs_gather_use_graph_rec -> find_ast_node_rs_rf_visit_children[color="#8c606720"]
+	ioutil_rs_fileWriteRange -> ioutil_rs_sizeofArray[color="#8c606720"]
+	find_ast_node_rs_find_node_at_byte_pos -> find_ast_node_rs_clone[color="#8c606720"]
+	rust2html_rs_symbol_refs_link_str -> rust2html_rs_make_def_link_str[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_tree_loc -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_write_line_attr_links -> _std macros__run_fmt[color="#8c606720"]
+	rust2html_rs_write_css_link -> htmlwriter_rs_HtmlWriter[color="#e5370020"]
+	rfserver_rs_run_server -> find_ast_node_rs_def_of_symbol_to_str[color="#8c606720"]
+	rust2html_rs_ref_page_file_name -> rust2html_rs_make_html_name[color="#8c606720"]
+	rust2html_rs_get_index_file_pos -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	jumptodefmap_rs_dump_json -> jumptodefmap_rs_build_node_def_node_table[color="#8c606720"]
+	callgraph_rs_write_call_graph_sub -> callgraph_rs_gather_use_graph[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	find_ast_node_rs_get_ast_node_of_node_id -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	rust2html_rs_write_symbol_references -> htmlwriter_rs_begin_tag_link[color="#8c606720"]
+	crosscratemap_rs_get_def_id_name -> crosscratemap_rs_CrossCrateMap[color="#8c606720"]
+	jumptodefmap_rs_dump_json -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	codemaput_rs_ZTextFilePos -> codemaput_rs_to_byte_pos[color="#e0373020"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_begin_tag[color="#8c606720"]
+	crosscratemap_rs_read_cross_crate_map -> crosscratemap_rs_CrossCrateMap[color="#8c606720"]
+	rust2html_rs_write_crate_as_html_sub -> rust2html_rs_file_write_bytes_as[color="#8c606720"]
+	find_ast_node_rs_dump_node_tree_loc -> find_ast_node_rs_kind_to_str[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_get_git_branch_info[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> find_ast_node_rs_find[color="#8c606720"]
+	rust2html_rs_write_crate_as_html_sub -> rust2html_rs_make_html_name[color="#8c606720"]
+	callgraph_rs_gather_use_graph_item -> rustfind_rs_NodeMaps[color="#e5370020"]
+	rust2html_rs_write_crate_as_html_sub -> rfindctx_rs_codemap[color="#8c606720"]
+	visit_rust_ast_rs_push_spanned -> find_ast_node_rs_AstNode_[color="#5e976620"]
+	rust2html_rs_NodesPerLinePerFile -> rfindctx_rs_tycx_ref[color="#e0373020"]
+	rust2html_rs_write_symbol_references -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	jumptodefmap_rs_build_jump_to_def_map -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	find_ast_node_rs_verify_parent_links -> find_ast_node_rs_iter[color="#8c606720"]
+	rustfind_rs_NodeMaps -> crosscratemap_rs_CrossCrateMap[color="#e5370020"]
+	find_ast_node_rs_dump_node_tree_loc -> find_ast_node_rs_NodeTreeLoc[color="#8c606720"]
+	find_ast_node_rs_ty_to_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	visit_rust_ast_rs_push_span -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	crosscratemap_rs_cross_crate_map_write -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_find_defs_in_file -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_write_path_links[color="#8c606720"]
+	ioutil_rs_fileLoad -> ioutil_rs_fileSize[color="#8c606720"]
+	rustfind_rs_main -> rustfind_rs_debug_test[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_depth[color="#8c606720"]
+	rfindctx_rs_get_source_loc -> rfindctx_rs_codemap[color="#8c606720"]
+	rust2html_rs_is_text_here -> rust2html_rs_ColorIndex[color="#8c606720"]
+	rf_ast_ut_rs_get_def_id -> rf_ast_ut_rs_[color="#8c606720"]
+	codemaput_rs_ZTextFilePos -> codemaput_rs_to_byte_pos_len[color="#e0373020"]
+	ioutil_rs_fileSaveArray -> ioutil_rs_fileWrite[color="#8c606720"]
+	indexpage_rs_write_grid_of_text_links -> htmlwriter_rs_write_tag[color="#8c606720"]
+	indexpage_rs_write_index_html -> htmlwriter_rs_new[color="#8c606720"]
+	rust2html_rs_make_def_link_str -> rfindctx_rs_codemap[color="#8c606720"]
+	timer_rs_Profiler -> timer_rs_new[color="#e0373020"]
+	callgraph_rs_gather_use_graph_rec -> callgraph_rs_gather_use_graph_rec[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> jumptodefmap_rs_find[color="#8c606720"]
+	jumptodefmap_rs_node_id_from_text_file_pos_str -> find_ast_node_rs_rf_get_id[color="#8c606720"]
+	rust2html_rs_source_view_page_end -> htmlwriter_rs_end_tag[color="#8c606720"]
+	rust2html_rs_make_def_link_str -> rustfind_rs_rf_find_source[color="#8c606720"]
+	rust2html_rs_source_view_page_begin -> rustfind_rs_RF_Options[color="#e5370020"]
+	rust2html_rs_resolve_link -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_check_depth[color="#e0373020"]
+	jumptodefmap_rs_lookup_def_node_of_node -> jumptodefmap_rs_def_info_from_node_id[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_text_file_pos -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rustfind_rs_write_crate_as_html_and_rfx -> crosscratemap_rs_cross_crate_map_read_into[color="#8c606720"]
+	rust2html_rs_make_def_link_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rustfind_rs_debug_test -> jumptodefmap_rs_lookup_def_at_text_file_pos[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> htmlwriter_rs_writeln[color="#8c606720"]
+	rust2html_rs_NodesPerLinePerFile -> find_ast_node_rs_iter[color="#e0373020"]
+	jumptodefmap_rs_def_info_from_node_id -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_write_line_with_links -> rust2html_rs_write_line_attr_links[color="#8c606720"]
+	find_ast_node_rs_expr_to_str -> find_ast_node_rs_ty_to_str[color="#8c606720"]
+	rust2html_rs_symbol_refs_link_str -> rust2html_rs_get_index_file_pos[color="#8c606720"]
+	find_ast_node_rs_get_node_info_str -> find_ast_node_rs_NodeTreeLoc[color="#8c606720"]
+	callgraph_rs_write_call_graph_sub -> find_ast_node_rs_iter[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_node_of_node -> find_ast_node_rs_rf_ty_node_id[color="#8c606720"]
+	visit_rust_ast_rs_push_span -> find_ast_node_rs_insert[color="#8c606720"]
+	callgraph_rs_write_call_graph_sub -> callgraph_rs_module_subgraph_end[color="#8c606720"]
+	rfserver_rs_run_server -> rfindctx_rs_first_file_name[color="#8c606720"]
+	callgraph_rs_to_dotfile_symbol -> callgraph_rs_RefCCMItem[color="#8c606720"]
+	jumptodefmap_rs_mk_result -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	callgraph_rs_write_call_graph_sub -> rustfind_rs_NodeMaps[color="#e5370020"]
+	jumptodefmap_rs_mk_result -> find_ast_node_rs_find[color="#8c606720"]
+	rfindctx_rs_find_file_name_in -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	codemaput_rs_ZTextFilePosLen -> codemaput_rs_to_byte_pos_len[color="#e0373020"]
+	crosscratemap_rs_cross_crate_map_write -> ioutil_rs_file_create_with_dirs[color="#8c606720"]
+	find_ast_node_rs_dump_node_source_for_single_file_only -> find_ast_node_rs_find[color="#8c606720"]
+	jumptodefmap_rs_make_jump_to_def_map -> find_ast_node_rs_build_node_info_map[color="#8c606720"]
+	rust2html_rs_get_index_file_pos -> find_ast_node_rs_find[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_NodesPerLinePerFile -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	visit_rust_ast_rs_push_spanned -> find_ast_node_rs_NodeKind[color="#5e976620"]
+	rust2html_rs_source_view_page_end -> htmlwriter_rs_HtmlWriter[color="#e5370020"]
+	jumptodefmap_rs_build_node_def_node_table -> rf_ast_ut_rs_get_def_id[color="#8c606720"]
+	jumptodefmap_rs_dump_json -> find_ast_node_rs_build_node_info_map[color="#8c606720"]
+	rustfind_rs_main -> rustfind_rs_usage[color="#8c606720"]
+	rust2html_rs_NodesPerLinePerFile -> find_ast_node_rs_rf_span[color="#e0373020"]
+	ioutil_rs_fileRead -> ioutil_rs_Size_t[color="#8c606720"]
+	rustfind_rs_write_crate_as_html_and_rfx -> jumptodefmap_rs_insert[color="#8c606720"]
+	rust2html_rs_write_line_with_links -> rust2html_rs_SourceCodeWriter[color="#e5370020"]
+	callgraph_rs_gather_type -> callgraph_rs_SetOfItems[color="#8c606720"]
+	rust2html_rs_write_crate_as_html_sub -> indexpage_rs_write_index_html[color="#8c606720"]
+	rust2html_rs_write_crate_as_html_sub -> rust2html_rs_make_html_from_source[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_node_of_node -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_make_html_from_source -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	ioutil_rs_fileWrite -> ioutil_rs_printStr[color="#8c606720"]
+	find_ast_node_rs_dump_node_source_for_single_file_only -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	indexpage_rs_write_index_html -> htmlwriter_rs_begin_tag[color="#8c606720"]
+	rust2html_rs_find_defs_in_file -> find_ast_node_rs_rf_span[color="#8c606720"]
+	rust2html_rs_write_line_attr_links -> htmlwriter_rs_end_tag[color="#8c606720"]
+	rustfind_rs_main -> rustfind_rs_new[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_expr -> rf_ast_ut_rs_find_named_struct_field[color="#8c606720"]
+	callgraph_rs_dump_functions -> rustfind_rs_NodeMaps[color="#e5370020"]
+	callgraph_rs_write_call_graph -> rustfind_rs_NodeMaps[color="#e5370020"]
+	jumptodefmap_rs_lookup_def_of_node -> find_ast_node_rs_build_node_info_map[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_tree_loc -> find_ast_node_rs_NodeTreeLoc[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> rust2html_rs_pri_of[color="#8c606720"]
+	rfindctx_rs_find_file_name_in -> rfindctx_rs_codemap[color="#8c606720"]
+	rust2html_rs_source_view_page_end -> rustfind_rs_RF_Options[color="#e5370020"]
+	callgraph_rs_gather_use_graph_item -> callgraph_rs_gather_trait_ref[color="#8c606720"]
+	callgraph_rs_gather_type -> rustfind_rs_NodeMaps[color="#e5370020"]
+	find_ast_node_rs_build_node_info_map -> visit_rust_ast_rs_FNodeInfoMapBuilder_new[color="#8c606720"]
+	find_ast_node_rs_FNodeInfo -> find_ast_node_rs_NodeKind[color="#e5370020"]
+	find_ast_node_rs_build_node_info_map -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	ioutil_rs_fileRead -> ioutil_rs_as_mut_void_ptr[color="#8c606720"]
+	rust2html_rs_write_head -> rust2html_rs_write_css_link[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> rust2html_rs_make_html_name_rel[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	rustfind_rs_debug_test -> codemaput_rs_get_span_str[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_begin_tag_anchor[color="#8c606720"]
+	text_formatting_rs_Indent -> text_formatting_rs_Indent[color="#ed960320"]
+	rust2html_rs_resolve_link -> rust2html_rs_symbol_refs_link_str[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_new[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_num_digits[color="#8c606720"]
+	rust2html_rs_make_html_name_rel -> rust2html_rs_make_html_name_reloc[color="#8c606720"]
+	rust2html_rs_write_line_with_links -> rust2html_rs_is_alphanumeric_u8[color="#8c606720"]
+	jumptodefmap_rs_def_info_from_node_id -> find_ast_node_rs_find[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> find_ast_node_rs_AstNode_[color="#5e976620"]
+	rust2html_rs_write_symbol_references -> _std macros__run_fmt[color="#8c606720"]
+	rust2html_rs_pri_of -> find_ast_node_rs_FNodeInfo[color="#e5370020"]
+	jumptodefmap_rs_build_node_def_node_table -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	visit_rust_ast_rs_push_spanned -> find_ast_node_rs_rf_get_id[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_end_tag[color="#8c606720"]
+	callgraph_rs_write_call_graph -> callgraph_rs_CG_Options[color="#e5370020"]
+	rust2html_rs_make_def_link_str -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> htmlwriter_rs_write_tagged[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> rfindctx_rs_str_of_opt_ident[color="#8c606720"]
+	visit_rust_ast_rs_push_spanned -> visit_rust_ast_rs_rf_push_parent_child[color="#8c606720"]
+	jumptodefmap_rs_build_jump_to_def_map -> jumptodefmap_rs_lookup_def_node_of_node[color="#8c606720"]
+	jumptodefmap_rs_def_node_id_from_node_id -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	rustfind_rs_write_crate_as_html_and_rfx -> crosscratemap_rs_cross_crate_map_write[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_byte_pos -> find_ast_node_rs_find_node_tree_loc_at_byte_pos[color="#8c606720"]
+	find_ast_node_rs_build_node_info_map -> timer_rs_new[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> rfindctx_rs_str_of_opt_ident[color="#8c606720"]
+	callgraph_rs_dump_functions -> find_ast_node_rs_rf_as_fn_decl[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> htmlwriter_rs_check_depth[color="#8c606720"]
+	callgraph_rs_gather_fn_decl -> callgraph_rs_SetOfItems[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_text_file_pos -> codemaput_rs_ZTextFilePos[color="#e5370020"]
+	codemaput_rs_ZTextFilePos -> codemaput_rs_ZTextFilePos[color="#e5370020"]
+	jumptodefmap_rs_lookup_def_of_expr -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	jumptodefmap_rs_build_jump_to_def_map -> find_ast_node_rs_rf_node[color="#8c606720"]
+	rust2html_rs_write_line_attr_links -> htmlwriter_rs_depth[color="#8c606720"]
+	jumptodefmap_rs_make_jump_to_def_map -> jumptodefmap_rs_build_jump_to_def_map[color="#8c606720"]
+	rustfind_rs_debug_test -> jumptodefmap_rs_def_info_from_node_id[color="#8c606720"]
+	ioutil_rs_fileReadBytes -> ioutil_rs_Size_t[color="#8c606720"]
+	jumptodefmap_rs_make_jump_to_def_map -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	rust2html_rs_symbol_refs_link_str -> rustfind_rs_NodeMaps[color="#e5370020"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> find_ast_node_rs_rf_get_ident[color="#8c606720"]
+	callgraph_rs_gather_use_graph_module -> callgraph_rs_gather_use_graph_item[color="#8c606720"]
+	jumptodefmap_rs_def_info_from_node_id -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> rfindctx_rs_cstore[color="#8c606720"]
+	find_ast_node_rs_NodeKind -> find_ast_node_rs_NodeKind[color="#5e976620"]
+	rust2html_rs_write_crate_as_html_sub -> rust2html_rs_is_valid_filename[color="#8c606720"]
+	find_ast_node_rs_node_spans_table_to_json_sub -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	jumptodefmap_rs_lookup_def_of_node -> jumptodefmap_rs_build_node_def_node_table[color="#8c606720"]
+	callgraph_rs_CG_Options -> callgraph_rs_CG_Options[color="#e5370020"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_write_tag_sub[color="#e0373020"]
+	rust2html_rs_write_symbol_references -> find_ast_node_rs_rf_span[color="#8c606720"]
+	rustfind_rs_RF_Options -> callgraph_rs_new[color="#e0373020"]
+	jumptodefmap_rs_node_id_from_text_file_pos_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_write_symbol_references -> find_ast_node_rs_find[color="#8c606720"]
+	rf_ast_ut_rs_get_def_id -> rf_ast_ut_rs_get_def_id[color="#8c606720"]
+	rust2html_rs_get_crate_name -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	jumptodefmap_rs_build_jump_to_def_map -> find_ast_node_rs_iter[color="#8c606720"]
+	rust2html_rs_write_line_with_links -> jumptodefmap_rs_find[color="#8c606720"]
+	rust2html_rs_write_crate_as_html_sub -> rustfind_rs_NodeMaps[color="#e5370020"]
+	find_ast_node_rs_FNodeInfo -> find_ast_node_rs_AstNode_[color="#e5370020"]
+	visit_rust_ast_rs_push_span -> find_ast_node_rs_AstNode_[color="#5e976620"]
+	jumptodefmap_rs_lookup_def_node_of_node -> jumptodefmap_rs_lookup_def_of_expr[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> find_ast_node_rs_get_node_source[color="#8c606720"]
+	find_ast_node_rs_find_node_tree_loc_at_byte_pos -> visit_rust_ast_rs_new[color="#8c606720"]
+	codemaput_rs_byte_pos_from_text_file_pos_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	crosscratemap_rs_CrossCrateMapItem -> find_ast_node_rs_NodeKind[color="#e5370020"]
+	rust2html_rs_get_source_line_filtered -> rust2html_rs_is_whitespace[color="#8c606720"]
+	rust2html_rs_write_head -> htmlwriter_rs_end_tag[color="#8c606720"]
+	rust2html_rs_node_color_index -> find_ast_node_rs_FNodeInfo[color="#e5370020"]
+	jumptodefmap_rs_mk_result -> rfindctx_rs_get_source_loc[color="#8c606720"]
+	timer_rs_Profiler -> timer_rs_Timer[color="#e5370020"]
+	ioutil_rs_fileLoad -> ioutil_rs_fileReadBytes[color="#8c606720"]
+	rust2html_rs_make_def_link_str -> rust2html_rs_get_index_file_pos[color="#8c606720"]
+	find_ast_node_rs_get_node_info_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_FileLineNodes[color="#e5370020"]
+	callgraph_rs_module_subgraph_end -> callgraph_rs_indent[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> crosscratemap_rs_CrossCrateMap[color="#8c606720"]
+	visit_rust_ast_rs_push_span -> visit_rust_ast_rs_rf_push_parent_child[color="#8c606720"]
+	codemaput_rs_byte_pos_from_text_file_pos_str -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_file_get_time_stamp_str[color="#8c606720"]
+	find_ast_node_rs_node_spans_table_to_json_sub -> codemaput_rs_to_index_file_pos[color="#8c606720"]
+	rfserver_rs_run_server -> rfindctx_rs_codemap[color="#8c606720"]
+	find_ast_node_rs_rf_clear_root_node -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	codemaput_rs_byte_pos_from_text_file_pos_str -> codemaput_rs_to_byte_pos[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_write_line_with_links[color="#8c606720"]
+	callgraph_rs_gather_use_graph_rec -> rustfind_rs_rf_find_source[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> find_ast_node_rs_rf_span[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_node_of_node -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	crosscratemap_rs_cross_crate_map_write -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	indexpage_rs_write_index_html -> indexpage_rs_write_grid_of_text_links[color="#8c606720"]
+	callgraph_rs_gather_use_graph -> rustfind_rs_NodeMaps[color="#e5370020"]
+	visit_rust_ast_rs_Finder -> visit_rust_ast_rs_FindAstNodeSt[color="#e5370020"]
+	rustfind_rs_debug_test -> codemaput_rs_get_str[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_source_view_page_end[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> htmlwriter_rs_depth[color="#8c606720"]
+	rust2html_rs_find_defs_in_file -> find_ast_node_rs_iter[color="#8c606720"]
+	rust2html_rs_source_view_page_begin -> rust2html_rs_write_head[color="#8c606720"]
+	jumptodefmap_rs_make_jump_to_def_map -> jumptodefmap_rs_JumpToDefMap[color="#8c606720"]
+	jumptodefmap_rs_mk_result -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	rfindctx_rs_RustFindCtx -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_symbol_refs_link_str -> jumptodefmap_rs_find[color="#8c606720"]
+	ioutil_rs_fileOpen -> ioutil_rs_c_str[color="#8c606720"]
+	rustfind_rs_debug_test -> rf_ast_ut_rs_dump_ctxt_def_map[color="#8c606720"]
+	find_ast_node_rs_node_spans_table_to_json_sub -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_begin_tag_check[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> find_ast_node_rs_rf_get_parent_id[color="#8c606720"]
+	rustfind_rs_debug_test -> find_ast_node_rs_safe_node_id_to_type[color="#8c606720"]
+	find_ast_node_rs_get_node_info_str -> find_ast_node_rs_path_to_str[color="#8c606720"]
+	indexpage_rs_write_grid_of_text_links -> htmlwriter_rs_begin_tag_link[color="#8c606720"]
+	callgraph_rs_gather_trait_ref -> rustfind_rs_NodeMaps[color="#e5370020"]
+	find_ast_node_rs_expr_to_str -> find_ast_node_rs_expr_to_str[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> rfindctx_rs_get_source_loc[color="#8c606720"]
+	rust2html_rs_write_line_with_links -> rustfind_rs_NodeMaps[color="#e5370020"]
+	rustfind_rs_main -> rustfind_rs_optgroups[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	indexpage_rs_write_grid_of_text_links -> htmlwriter_rs_end_tag[color="#8c606720"]
+	ioutil_rs_fileLoad -> ioutil_rs_fileOpen[color="#8c606720"]
+	rustfind_rs_debug_test -> codemaput_rs_new[color="#8c606720"]
+	callgraph_rs_write_call_graph_sub -> rustfind_rs_rf_find_local_node[color="#8c606720"]
+	rustfind_rs_write_crate_as_html_and_rfx -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	indexpage_rs_write_index_html -> rust2html_rs_file_write_bytes_as[color="#8c606720"]
+	visit_rust_ast_rs_push_span -> find_ast_node_rs_NodeKind[color="#5e976620"]
+	rust2html_rs_make_html_name_reloc -> rust2html_rs_count_chars_in[color="#8c606720"]
+	callgraph_rs_gather_fn_decl -> callgraph_rs_gather_type[color="#8c606720"]
+	rfindctx_rs_RustFindCtx -> rfindctx_rs_session[color="#e0373020"]
+	timer_rs_Timer -> timer_rs_Timer[color="#e5370020"]
+	rfindctx_rs_get_source_loc -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	ioutil_rs_fileSize -> ioutil_rs_Size_t[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_text_file_pos_str -> rsfind_rs_ShowDefMode[color="#5e976620"]
+	rust2html_rs_write_head -> htmlwriter_rs_write_tag_ext[color="#8c606720"]
+	find_ast_node_rs_find_node_tree_loc_at_byte_pos -> find_ast_node_rs_NodeTreeLoc[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> rfindctx_rs_codemap[color="#8c606720"]
+	crosscratemap_rs_read_cross_crate_map -> ioutil_rs_fileLoad[color="#8c606720"]
+	ioutil_rs_EndianSwap -> ioutil_rs_EndianSwap[color="#ed960320"]
+	jumptodefmap_rs_lookup_def_at_text_file_pos -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> rust2html_rs_ref_page_file_name[color="#8c606720"]
+	rustfind_rs_main -> jumptodefmap_rs_dump_json[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_writeln[color="#8c606720"]
+	rust2html_rs_ref_page_file_name -> rustfind_rs_RF_Options[color="#e5370020"]
+	callgraph_rs_gather_use_graph_rec -> find_ast_node_rs_find[color="#8c606720"]
+	find_ast_node_rs_mkAstSPtrClone -> find_ast_node_rs_AstSPtr[color="#8c606720"]
+	callgraph_rs_gather_use_graph_item -> rustfind_rs_rf_find_source[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	rust2html_rs_NodesPerLinePerFile -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	find_ast_node_rs_find_node_at_byte_pos -> find_ast_node_rs_find_node_tree_loc_at_byte_pos[color="#8c606720"]
+	callgraph_rs_write_call_graph -> callgraph_rs_write_call_graph_sub[color="#8c606720"]
+	find_ast_node_rs_get_node_info_str -> find_ast_node_rs_ty_to_str[color="#8c606720"]
+	visit_rust_ast_rs_FNodeInfoMapBuilder -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	rustfind_rs_debug_test -> find_ast_node_rs_find_node_tree_loc_at_byte_pos[color="#8c606720"]
+	find_ast_node_rs_ty_to_str -> find_ast_node_rs_ty_to_str[color="#8c606720"]
+	find_ast_node_rs_get_node_source -> codemaput_rs_get_span_str[color="#8c606720"]
+	rust2html_rs_node_color_index -> find_ast_node_rs_rf_kind[color="#8c606720"]
+	jumptodefmap_rs_build_jump_to_def_map -> jumptodefmap_rs_JumpToDefMap[color="#8c606720"]
+	jumptodefmap_rs_def_info_from_node_id -> rf_ast_ut_rs_get_def_id[color="#8c606720"]
+	callgraph_rs_gather_use_graph_item -> callgraph_rs_gather_type[color="#8c606720"]
+	crosscratemap_rs_CrossCrateMapItem -> crosscratemap_rs_ZeroBasedIndex[color="#e5370020"]
+	rust2html_rs_write_symbol_references -> rust2html_rs_get_source_line_filtered[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_byte_pos -> rsfind_rs_ShowDefMode[color="#5e976620"]
+	rust2html_rs_write_symbol_references -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	indexpage_rs_write_grid_of_text_links -> htmlwriter_rs_write[color="#8c606720"]
+	jumptodefmap_rs_dump_json -> jumptodefmap_rs_build_jump_to_def_map[color="#8c606720"]
+	util_rs_flatten_to_str -> util_rs_[color="#8c606720"]
+	callgraph_rs_gather_fn_decl -> rustfind_rs_NodeMaps[color="#e5370020"]
+	rust2html_rs_write_line_attr_links -> htmlwriter_rs_begin_tag[color="#8c606720"]
+	rfserver_rs_run_server -> ioutil_rs_expect[color="#8c606720"]
+	jumptodefmap_rs_mk_result -> find_ast_node_rs_get_node_source[color="#8c606720"]
+	jumptodefmap_rs_build_jump_to_def_map -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_write_line_with_links -> rust2html_rs_resolve_link[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> find_ast_node_rs_rf_kind[color="#8c606720"]
+	rfindctx_rs_first_file_name -> rfindctx_rs_codemap[color="#8c606720"]
+	rfindctx_rs_first_file_name -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	callgraph_rs_write_call_graph_sub -> callgraph_rs_CG_Options[color="#e5370020"]
+	jumptodefmap_rs_build_node_def_node_table -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> rust2html_rs_write_file_ref[color="#8c606720"]
+	find_ast_node_rs_node_spans_table_to_json_sub -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> find_ast_node_rs_iter[color="#8c606720"]
+	find_ast_node_rs_get_node_info_str -> find_ast_node_rs_pat_to_str[color="#8c606720"]
+	rustfind_rs_main -> jumptodefmap_rs_lookup_def_at_text_file_pos_str[color="#8c606720"]
+	crosscratemap_rs_read_cross_crate_map -> find_ast_node_rs_from_str[color="#8c606720"]
+	rust2html_rs_NodesPerLinePerFile -> rust2html_rs_NodesPerLinePerFile[color="#e5370020"]
+	callgraph_rs_write_call_graph -> callgraph_rs_gather_use_graph[color="#8c606720"]
+	jumptodefmap_rs_node_id_from_text_file_pos_str -> jumptodefmap_rs_node_from_text_file_pos_str[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> htmlwriter_rs_writeln_tagged[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> rustfind_rs_NodeMaps[color="#e5370020"]
+	ioutil_rs_fileWriteRange -> ioutil_rs_printStr[color="#8c606720"]
+	crosscratemap_rs_get_crate_name -> rfindctx_rs_codemap[color="#8c606720"]
+	rustfind_rs_get_ast_and_resolve -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rustfind_rs_write_crate_as_html_and_rfx -> jumptodefmap_rs_new[color="#8c606720"]
+	timer_rs_Profiler -> timer_rs_start[color="#e0373020"]
+	find_ast_node_rs_get_node_info_str -> find_ast_node_rs_expr_to_str[color="#8c606720"]
+	rust2html_rs_write_line_attr_links -> rust2html_rs_color_index_to_tag[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_expr -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rustfind_rs_debug_test -> find_ast_node_rs_get_node_source[color="#8c606720"]
+	ioutil_rs_sizeofArray -> ioutil_rs_Size_t[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> htmlwriter_rs_HtmlWriter[color="#e5370020"]
+	rust2html_rs_get_file_index -> rfindctx_rs_codemap[color="#8c606720"]
+	rust2html_rs_pri_of -> find_ast_node_rs_rf_kind[color="#8c606720"]
+	rust2html_rs_make_html_name_reloc -> rust2html_rs_make_html_name[color="#8c606720"]
+	rust2html_rs_symbol_refs_link_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rustfind_rs_debug_test -> rfindctx_rs_get_source_loc[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine -> crosscratemap_rs_CrossCrateMap[color="#8c606720"]
+	find_ast_node_rs_verify_parent_links -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	rustfind_rs_write_crate_as_html_and_rfx -> rfindctx_rs_cstore[color="#8c606720"]
+	timer_rs_format_as_time -> timer_rs_format_number[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_new[color="#8c606720"]
+	visit_rust_ast_rs_rf_push_parent_child -> find_ast_node_rs_find_mut[color="#8c606720"]
+	rfserver_rs_run_server -> jumptodefmap_rs_dump_json[color="#8c606720"]
+	callgraph_rs_gather_type -> callgraph_rs_gather_type[color="#8c606720"]
+	find_ast_node_rs_ty_to_str -> find_ast_node_rs_path_to_str[color="#8c606720"]
+	find_ast_node_rs_get_node_source -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	rust2html_rs_sub_match -> rust2html_rs_is_alphanumeric_u8[color="#8c606720"]
+	rust2html_rs_source_view_page_begin -> htmlwriter_rs_HtmlWriter[color="#e5370020"]
+	rust2html_rs_write_line_with_links -> codemaput_rs_to_index_file_pos[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_read_into -> crosscratemap_rs_cross_crate_map_combine[color="#8c606720"]
+	rust2html_rs_write_crate_as_html_sub -> rust2html_rs_new[color="#8c606720"]
+	callgraph_rs_gather_use_graph_item -> callgraph_rs_gather_fn_decl[color="#8c606720"]
+	jumptodefmap_rs_def_node_id_from_node_id -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	codemaput_rs_dump_span -> codemaput_rs_text_span[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> htmlwriter_rs_end_tag[color="#8c606720"]
+	visit_rust_ast_rs_rf_push_parent_child -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	jumptodefmap_rs_def_info_from_node_id -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	crosscratemap_rs_cross_crate_map_write -> crosscratemap_rs_get_crate_name[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> jumptodefmap_rs_JumpToDefMap[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node -> jumptodefmap_rs_lookup_def_of_node_sub[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> timer_rs_new[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node -> find_ast_node_rs_rf_get_id[color="#8c606720"]
+	rust2html_rs_source_view_page_begin -> htmlwriter_rs_begin_tag[color="#8c606720"]
+	jumptodefmap_rs_dump_json -> util_rs_flatten_to_str_ng[color="#8c606720"]
+	find_ast_node_rs_expr_to_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_HtmlWriter[color="#e5370020"]
+	indexpage_rs_write_grid_of_text_links -> htmlwriter_rs_HtmlWriter[color="#e5370020"]
+	indexpage_rs_write_index_html -> htmlwriter_rs_end_tag[color="#8c606720"]
+	rust2html_rs_write_line_with_links -> rust2html_rs_sub_match[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> find_ast_node_rs_rf_span[color="#8c606720"]
+	jumptodefmap_rs_node_from_text_file_pos_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	callgraph_rs_gather_trait_ref -> callgraph_rs_SetOfItems[color="#8c606720"]
+	rust2html_rs_write_crate_as_html_sub -> rustfind_rs_RF_Options[color="#e5370020"]
+	rust2html_rs_ref_page_file_name -> rustfind_rs_NodeMaps[color="#e5370020"]
+	rustfind_rs_debug_test -> codemaput_rs_to_byte_pos[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> find_ast_node_rs_rf_kind[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_text_file_pos -> codemaput_rs_to_byte_pos[color="#8c606720"]
+	indexpage_rs_write_index_html -> htmlwriter_rs_write[color="#8c606720"]
+	rustfind_rs_debug_test -> find_ast_node_rs_rf_span[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> find_ast_node_rs_rf_get_ident[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> codemaput_rs_to_text_file_pos[color="#8c606720"]
+	rust2html_rs_get_crate_name -> codemaput_rs_get_crate_name[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> find_ast_node_rs_rf_kind[color="#8c606720"]
+	ioutil_rs_fileSaveArray -> ioutil_rs_fileOpen[color="#8c606720"]
+	rustfind_rs_debug_test -> codemaput_rs_zget_file_line_str[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_tree_loc -> jumptodefmap_rs_lookup_def_of_node[color="#8c606720"]
+	ioutil_rs_fileWriteRange -> ioutil_rs_as_void_ptr[color="#8c606720"]
+	find_ast_node_rs_node_spans_table_to_json_sub -> find_ast_node_rs_as_str[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_byte_pos -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_symbol_refs_link_str -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	jumptodefmap_rs_def_node_id_from_node_id -> rf_ast_ut_rs_get_def_id[color="#8c606720"]
+	rust2html_rs_get_index_file_pos -> codemaput_rs_to_index_file_pos[color="#8c606720"]
+	callgraph_rs_dump_functions -> find_ast_node_rs_iter[color="#8c606720"]
+	rustfind_rs_debug_test -> codemaput_rs_new[color="#8c606720"]
+	rustfind_rs_debug_test -> find_ast_node_rs_rf_get_id[color="#8c606720"]
+	rust2html_rs_write_line_attr_links -> htmlwriter_rs_begin_tag_link[color="#8c606720"]
+	find_ast_node_rs_AstNode_ -> find_ast_node_rs_AstSPtr[color="#5e976620"]
+	rustfind_rs_debug_test -> find_ast_node_rs_to_json_str[color="#8c606720"]
+	rf_ast_ut_rs_find_named_struct_field -> rf_ast_ut_rs_get_struct_def[color="#8c606720"]
+	codemaput_rs_dump_span -> util_rs_text_offset_to_line_pos[color="#8c606720"]
+	jumptodefmap_rs_mk_result -> rsfind_rs_ShowDefMode[color="#5e976620"]
+	indexpage_rs_write_index_html -> rust2html_rs_get_git_branch_info[color="#8c606720"]
+	rustfind_rs_NodeMaps -> jumptodefmap_rs_JumpToRefMap[color="#e5370020"]
+	rustfind_rs_debug_test -> find_ast_node_rs_get_node_info_str[color="#8c606720"]
+	ioutil_rs_sizeofArrayElem -> ioutil_rs_Size_t[color="#8c606720"]
+	find_ast_node_rs_rf_get_root_node -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	callgraph_rs_write_call_graph_sub -> callgraph_rs_to_dotfile_symbol[color="#8c606720"]
+	callgraph_rs_gather_use_graph -> callgraph_rs_gather_use_graph_module[color="#8c606720"]
+	ioutil_rs_fileWriteRange -> ioutil_rs_sizeofArrayElem[color="#8c606720"]
+	callgraph_rs_gather_node_id_def -> rustfind_rs_NodeMaps[color="#e5370020"]
+	callgraph_rs_gather_use_graph_module -> rustfind_rs_NodeMaps[color="#e5370020"]
+	crosscratemap_rs_cross_crate_map_combine -> crosscratemap_rs_clone[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> rust2html_rs_find_defs_in_file[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_write_tagged[color="#8c606720"]
+	rust2html_rs_get_crate_name -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	rust2html_rs_NodesPerLinePerFile -> rsfind_rs_for_some[color="#e0373020"]
+	rust2html_rs_make_def_link_str -> rustfind_rs_NodeMaps[color="#e5370020"]
+	rfserver_rs_run_server -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	callgraph_rs_gather_fn_decl -> callgraph_rs_gather_use_graph_rec[color="#8c606720"]
+	rustfind_rs_debug_test -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	callgraph_rs_is_main -> callgraph_rs_RefCCMItem[color="#8c606720"]
+	rust2html_rs_write_line_with_links -> rust2html_rs_is_text_here[color="#8c606720"]
+	rust2html_rs_write_line_attr_links -> rust2html_rs_[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_expr -> rf_ast_ut_rs_auto_deref_ty[color="#8c606720"]
+	rust2html_rs_get_source_line_filtered -> rust2html_rs_get_source_line[color="#8c606720"]
+	rustfind_rs_debug_test -> find_ast_node_rs_to_json_str[color="#8c606720"]
+	find_ast_node_rs_ToJsonStrFc -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	visit_rust_ast_rs_FindAstNodeSt -> find_ast_node_rs_NodeTreeLoc[color="#e5370020"]
+	rustfind_rs_usage -> rustfind_rs_optgroups[color="#8c606720"]
+	find_ast_node_rs_expr_to_str -> find_ast_node_rs_path_to_str[color="#8c606720"]
+	indexpage_rs_write_index_html -> htmlwriter_rs_writeln[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_text_file_pos -> jumptodefmap_rs_lookup_def_at_byte_pos[color="#8c606720"]
+	crosscratemap_rs_get_crate_name -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	timer_rs_Timer -> timer_rs_format_as_time[color="#8c606720"]
+	jumptodefmap_rs_dump_json -> find_ast_node_rs_to_json_str[color="#8c606720"]
+	find_ast_node_rs_def_of_symbol_to_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_get_file_index -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	find_ast_node_rs_get_ast_node_of_node_id -> find_ast_node_rs_find[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_tree_loc -> rsfind_rs_ShowDefMode[color="#5e976620"]
+	find_ast_node_rs_rf_get_root_node -> find_ast_node_rs_find[color="#8c606720"]
+	ioutil_rs_fileWriteStruct -> ioutil_rs_as_void_ptr[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node -> find_ast_node_rs_AstNode_[color="#5e976620"]
+	rust2html_rs_write_line_with_links -> find_ast_node_rs_find[color="#8c606720"]
+	jumptodefmap_rs_dump_json -> rfindctx_rs_codemap[color="#8c606720"]
+	find_ast_node_rs_find_node_at_byte_pos -> find_ast_node_rs_AstSPtr[color="#8c606720"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_get_str_hash[color="#8c606720"]
+	rustfind_rs_debug_test -> find_ast_node_rs_rf_ty_node_id[color="#8c606720"]
+	rust2html_rs_is_text_here -> rust2html_rs_is_alphanumeric[color="#8c606720"]
+	find_ast_node_rs_mkAstSPtr2 -> find_ast_node_rs_AstSPtr[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> find_ast_node_rs_rf_span[color="#8c606720"]
+	timer_rs_Timer -> timer_rs_get_total_time[color="#e0373020"]
+	rfserver_rs_run_server -> rfindctx_rs_find_file_name_in[color="#8c606720"]
+	rustfind_rs_main -> rfserver_rs_run_server[color="#8c606720"]
+	callgraph_rs_write_call_graph_sub -> find_ast_node_rs_as_str[color="#8c606720"]
+	find_ast_node_rs_dump_node_source_for_single_file_only -> codemaput_rs_dump_span[color="#8c606720"]
+	codemaput_rs_ZTextFilePosLen -> codemaput_rs_ZTextFilePos[color="#e5370020"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> jumptodefmap_rs_mk_result[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node -> rsfind_rs_ShowDefMode[color="#5e976620"]
+	find_ast_node_rs_pat_to_str -> find_ast_node_rs_pat_to_str[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> rustfind_rs_NodeMaps[color="#e5370020"]
+	callgraph_rs_gather_use_graph_rec -> rustfind_rs_NodeMaps[color="#e5370020"]
+	timer_rs_Profiler -> timer_rs_Profiler[color="#e5370020"]
+	rust2html_rs_write_line_with_links -> rust2html_rs_is_alphanumeric[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> find_ast_node_rs_iter[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	jumptodefmap_rs_mk_result -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	ioutil_rs_fileSaveArray -> ioutil_rs_printStr[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_text_file_pos -> rsfind_rs_ShowDefMode[color="#5e976620"]
+	find_ast_node_rs_KindToStr -> find_ast_node_rs_NodeKind[color="#ed960320"]
+	rust2html_rs_resolve_link -> rustfind_rs_NodeMaps[color="#e5370020"]
+	rust2html_rs_NodesPerLinePerFile -> rfindctx_rs_codemap[color="#e0373020"]
+	rustfind_rs_main -> util_rs_get_filename_only[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> rsfind_rs_ShowDefMode[color="#5e976620"]
+	visit_rust_ast_rs_FNodeInfoMapBuilder_new -> find_ast_node_rs_new[color="#8c606720"]
+	find_ast_node_rs_node_spans_table_to_json_sub -> find_ast_node_rs_iter[color="#8c606720"]
+	ioutil_rs_fileReadBytes -> ioutil_rs_as_mut_void_ptr[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> codemaput_rs_to_text_file_pos[color="#8c606720"]
+	rust2html_rs_get_index_file_pos -> find_ast_node_rs_rf_span[color="#8c606720"]
+	ioutil_rs_fileWrite -> ioutil_rs_sizeofArray[color="#8c606720"]
+	find_ast_node_rs_find_node_at_byte_pos -> find_ast_node_rs_AstNode_[color="#5e976620"]
+	rust2html_rs_write_line_attr_links -> htmlwriter_rs_write_u8_[color="#8c606720"]
+	jumptodefmap_rs_build_jump_to_def_map -> timer_rs_new[color="#8c606720"]
+	callgraph_rs_write_call_graph_sub -> callgraph_rs_is_main[color="#8c606720"]
+	codemaput_rs_ZTextFilePosLen -> codemaput_rs_get_str_at[color="#e0373020"]
+	rust2html_rs_write_line_with_links -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	find_ast_node_rs_def_of_symbol_to_str -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	callgraph_rs_dump_functions -> rfindctx_rs_str_of_ident[color="#8c606720"]
+	timer_rs_Timer -> timer_rs_get_time_string[color="#e0373020"]
+	rust2html_rs_write_symbol_references -> rustfind_rs_RF_Options[color="#e5370020"]
+	visit_rust_ast_rs_push_spanned -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	rustfind_rs_write_crate_as_html_and_rfx -> callgraph_rs_write_call_graph[color="#8c606720"]
+	indexpage_rs_write_index_html -> rust2html_rs_write_head[color="#8c606720"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_depth[color="#e0373020"]
+	crosscratemap_rs_cross_crate_map_read_into -> crosscratemap_rs_read_cross_crate_map[color="#8c606720"]
+	callgraph_rs_gather_use_graph_rec -> find_ast_node_rs_rf_node[color="#8c606720"]
+	rust2html_rs_write_line_with_links -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	rust2html_rs_make_def_link_str -> rust2html_rs_make_html_name_rel[color="#8c606720"]
+	rustfind_rs_main -> rustfind_rs_write_crate_as_html_and_rfx[color="#8c606720"]
+	callgraph_rs_write_call_graph_sub -> callgraph_rs_[color="#8c606720"]
+	jumptodefmap_rs_mk_result -> find_ast_node_rs_rf_span[color="#8c606720"]
+	rust2html_rs_write_line_with_links -> rust2html_rs_node_color_index[color="#8c606720"]
+	rust2html_rs_write_symbol_references -> _std macros__run_fmt[color="#8c606720"]
+	find_ast_node_rs_rf_set_root_node -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	visit_rust_ast_rs_FNodeInfoMapBuilder_new -> visit_rust_ast_rs_FNodeInfoMapBuilder[color="#e5370020"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_pad_to_length[color="#8c606720"]
+	indexpage_rs_write_index_html -> rustfind_rs_RF_Options[color="#e5370020"]
+	rustfind_rs_write_crate_as_html_and_rfx -> jumptodefmap_rs_make_jump_to_def_map[color="#8c606720"]
+	indexpage_rs_write_index_html -> htmlwriter_rs_begin_tag_link[color="#8c606720"]
+	util_rs_flatten_to_str_ng -> util_rs_[color="#8c606720"]
+	rust2html_rs_get_source_line_filtered -> rust2html_rs_num_source_lines[color="#8c606720"]
+	rust2html_rs_write_crate_as_html_sub -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rustfind_rs_RF_Options -> callgraph_rs_CG_Options[color="#e5370020"]
+	jumptodefmap_rs_lookup_def_of_node_sub -> jumptodefmap_rs_lookup_def_node_of_node[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> crosscratemap_rs_get_crate_name[color="#8c606720"]
+	visit_rust_ast_rs_push_spanned -> find_ast_node_rs_insert[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_combine_current_crate -> rfindctx_rs_tycx_ref[color="#8c606720"]
+	find_ast_node_rs_pat_to_str -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	rust2html_rs_make_html_from_source -> htmlwriter_rs_end_tag_check[color="#8c606720"]
+	callgraph_rs_write_call_graph_sub -> find_ast_node_rs_rf_node[color="#8c606720"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_begin_tag[color="#e0373020"]
+	rustfind_rs_NodeMaps -> find_ast_node_rs_FNodeInfoMap[color="#e5370020"]
+	rust2html_rs_write_css_link -> htmlwriter_rs_write_tag_ext[color="#8c606720"]
+	rustfind_rs_debug_test -> rfindctx_rs_RustFindCtx[color="#e5370020"]
+	callgraph_rs_gather_use_graph_rec -> callgraph_rs_SetOfItems[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_text_file_pos_str -> jumptodefmap_rs_lookup_def_at_byte_pos[color="#8c606720"]
+	rustfind_rs_write_crate_as_html_and_rfx -> rustfind_rs_RF_Options[color="#e5370020"]
+	crosscratemap_rs_FindNode -> crosscratemap_rs_CrossCrateMapItem[color="#e5370020"]
+	callgraph_rs_write_call_graph_sub -> callgraph_rs_module_subgraph_begin[color="#8c606720"]
+	rust2html_rs_write_head -> rustfind_rs_RF_Options[color="#e5370020"]
+	find_ast_node_rs_build_node_info_map -> find_ast_node_rs_AstSPtr[color="#8c606720"]
+	find_ast_node_rs_pat_to_str -> find_ast_node_rs_path_to_str[color="#8c606720"]
+	crosscratemap_rs_cross_crate_map_write -> find_ast_node_rs_as_str[color="#8c606720"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_write_quoted_str[color="#e0373020"]
+	rust2html_rs_make_html_from_source -> rust2html_rs_write_symbol_references[color="#8c606720"]
+	rust2html_rs_write_head -> htmlwriter_rs_begin_tag[color="#8c606720"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_end_tag[color="#e0373020"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_mk_xlat_table[color="#8c606720"]
+	codemaput_rs_ZTextFilePosLen -> codemaput_rs_ZTextFilePosLen[color="#e5370020"]
+	rust2html_rs_write_symbol_references -> codemaput_rs_to_index_file_pos[color="#8c606720"]
+	find_ast_node_rs_mkAstSPtr -> find_ast_node_rs_AstSPtr[color="#8c606720"]
+	jumptodefmap_rs_lookup_def_at_text_file_pos_str -> codemaput_rs_byte_pos_from_text_file_pos_str[color="#8c606720"]
+	jumptodefmap_rs_make_jump_to_def_map -> jumptodefmap_rs_build_node_def_node_table[color="#8c606720"]
+	jumptodefmap_rs_node_from_text_file_pos_str -> find_ast_node_rs_find_node_tree_loc_at_byte_pos[color="#8c606720"]
+	callgraph_rs_gather_use_graph_item -> callgraph_rs_gather_use_graph_module[color="#8c606720"]
+	rustfind_rs_RF_Options -> rustfind_rs_RF_Options[color="#e5370020"]
+	rust2html_rs_write_line_attr_links -> _std macros__run_fmt[color="#8c606720"]
+	rustfind_rs_NodeMaps -> jumptodefmap_rs_JumpToDefMap[color="#e5370020"]
+	htmlwriter_rs_HtmlWriter -> htmlwriter_rs_begin_tag_ext[color="#e0373020"]
+}
