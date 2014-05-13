@@ -1,0 +1,21 @@
+<head><link href="../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../libcore/">libcore</a></c0><c1>/</c1><c0><a href="./../../libcore/num/">num</a></c0><c1>/</c1><c0><a href="./../../libcore/num/float_macros.rs.html">float_macros.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5200215&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#14035&nbsp;:&nbsp;alexcrichton/rust/experimental,&nbsp;r=huonw<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Fri&nbsp;May&nbsp;&nbsp;9&nbsp;13:02:28&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2014&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c50>#!</c50><c3>[</c3><c50>macro_escape</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c50>#!</c50><c3>[</c3><c50>doc</c50><c4>(</c4><c50>hidden</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c37>macro_rules!&nbsp;assert_approx_eq</c37><c4>(</c4><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c4>(</c4><c0>$a:expr</c0><c3>,</c3><c0>&nbsp;$b:expr</c0><c4>)</c4><c0>&nbsp;</c0><c4>=&gt;</c4><c0>&nbsp;</c0><c4>(</c4><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c4>(</c4><c0>a</c0><c3>,</c3><c0>&nbsp;b</c0><c4>)</c4><c0>&nbsp;=&nbsp;</c0><c4>(</c4><c0>&amp;$a</c0><c3>,</c3><c0>&nbsp;&amp;$b</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>((</c4><c0>*a&nbsp;-&nbsp;*b</c0><c4>)</c4><c0>.abs</c0><c4>()</c4><c0>&nbsp;&lt;&nbsp;1.0e-6</c0><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"</c0><c3>{}</c3><c0>&nbsp;is&nbsp;not&nbsp;approximately&nbsp;equal&nbsp;to&nbsp;</c0><c3>{}</c3><c0>"</c0><c3>,</c3><c0>&nbsp;*a</c0><c3>,</c3><c0>&nbsp;*b</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c4>)</c4><c0>
+</c0><br/><div class="refblock"></div></maintext></div></body>

@@ -1,0 +1,195 @@
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libcore/">libcore</a></c0><c1>/</c1><c0><a href="./../libcore/finally.rs.html">finally.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5200215&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#14035&nbsp;:&nbsp;alexcrichton/rust/experimental,&nbsp;r=huonw<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Fri&nbsp;May&nbsp;&nbsp;9&nbsp;13:02:28&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c41>/*!
+</c41><br/><ln>&nbsp;&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c41>The&nbsp;Finally&nbsp;trait&nbsp;provides&nbsp;a&nbsp;method,&nbsp;`finally`&nbsp;on
+</c41><br/><ln>&nbsp;&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c41>stack&nbsp;closures&nbsp;that&nbsp;emulates&nbsp;Java-style&nbsp;try/finally&nbsp;blocks.
+</c41><br/><ln>&nbsp;&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c41>Using&nbsp;the&nbsp;`finally`&nbsp;method&nbsp;is&nbsp;sometimes&nbsp;convenient,&nbsp;but&nbsp;the&nbsp;type&nbsp;rules
+</c41><br/><ln>&nbsp;&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c41>prohibit&nbsp;any&nbsp;shared,&nbsp;mutable&nbsp;state&nbsp;between&nbsp;the&nbsp;"try"&nbsp;case&nbsp;and&nbsp;the
+</c41><br/><ln>&nbsp;&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c41>"finally"&nbsp;case.&nbsp;For&nbsp;advanced&nbsp;cases,&nbsp;the&nbsp;`try_finally`&nbsp;function&nbsp;can
+</c41><br/><ln>&nbsp;&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c41>also&nbsp;be&nbsp;used.&nbsp;See&nbsp;that&nbsp;function&nbsp;for&nbsp;more&nbsp;details.
+</c41><br/><ln>&nbsp;&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c41>#&nbsp;Example
+</c41><br/><ln>&nbsp;&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c41>```
+</c41><br/><ln>&nbsp;&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c41>use&nbsp;std::unstable::finally::Finally;
+</c41><br/><ln>&nbsp;&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c41>(||&nbsp;{
+</c41><br/><ln>&nbsp;&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;...
+</c41><br/><ln>&nbsp;&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c41>}).finally(||&nbsp;{
+</c41><br/><ln>&nbsp;&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;this&nbsp;code&nbsp;is&nbsp;always&nbsp;run
+</c41><br/><ln>&nbsp;&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c41>})
+</c41><br/><ln>&nbsp;&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c41>```
+</c41><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c41>*/
+</c41><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c50>#!</c50><c3>[</c3><c50>experimental</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;ops::Drop</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c42>///&nbsp;A&nbsp;trait&nbsp;for&nbsp;executing&nbsp;a&nbsp;destructor&nbsp;unconditionally&nbsp;after&nbsp;a&nbsp;block&nbsp;of&nbsp;code,
+</c42><br/><ln>&nbsp;&nbsp;38</ln><a id="38">&nbsp;</a><a id="n78760">&nbsp;</a><c42>///&nbsp;regardless&nbsp;of&nbsp;whether&nbsp;the&nbsp;blocked&nbsp;fails.
+</c42><br/><ln>&nbsp;&nbsp;39</ln><a id="39">&nbsp;</a>&nbsp;<c21>pub</c21><c32><a href="#line38_col45_refs">&nbsp;</a></c32><c32>trait</c32><c32><a href="#line38_col45_refs">&nbsp;Finally</a></c32><c5><a href="#line38_col45_refs">&lt;T&gt;</a></c5><c32><a href="#line38_col45_refs">&nbsp;</a></c32><c3>{</c3><c32><a href="#line38_col45_refs">
+</a></c32><br/><ln>&nbsp;&nbsp;40</ln><a id="40">&nbsp;</a>&nbsp;<c32><a href="#line38_col45_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c42>///&nbsp;Executes&nbsp;this&nbsp;object,&nbsp;unconditionally&nbsp;running&nbsp;`dtor`&nbsp;after&nbsp;this&nbsp;block&nbsp;of
+</c42><br/><ln>&nbsp;&nbsp;41</ln><a id="41">&nbsp;</a>&nbsp;<c32><a href="#line38_col45_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c42>///&nbsp;code&nbsp;has&nbsp;run.
+</c42><br/><ln>&nbsp;&nbsp;42</ln><a id="42">&nbsp;</a><a id="n78761"><a id="n78767"><a id="n78766"><a id="n78769">&nbsp;</a></a></a></a><c32><a href="#line38_col45_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c32><c30>fn</c30><c30><a href="#line38_col45_refs">&nbsp;finally</a></c30><c4>(</c4><c18><a href="#line38_col45_refs">&amp;mut&nbsp;self</a></c18><c3>,</c3><c18><a href="#line38_col45_refs">&nbsp;dtor:&nbsp;</a></c18><c1><a href="#line38_col45_refs">||</a></c1><c4>)</c4><c18><a href="#line38_col45_refs">&nbsp;</a></c18><c4>-&gt;</c4><c18><a href="#line38_col45_refs">&nbsp;</a></c18><c1><nop>T</nop></c1><c3>;</c3><c32><a href="#line38_col45_refs">
+</a></c32><br/><ln>&nbsp;&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;44</ln><a id="44">&nbsp;</a><a id="n78772">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;45</ln><a id="45">&nbsp;</a><a id="n78775"><a id="n78779"><a id="n78778"><a id="n78776">&nbsp;</a></a></a></a><c33>impl</c33><c5>&lt;'a,T&gt;</c5><c33>&nbsp;</c33><c33><a href="../libcore/finally.rs.html#38">Finally</a></c33><c5><a href="../libcore/finally.rs.html#38">&lt;</a></c5><c5><nop>T</nop></c5><c5><a href="../libcore/finally.rs.html#38">&gt;</a></c5><c33>&nbsp;for&nbsp;||:&nbsp;'a&nbsp;-&gt;</c33><c5>&nbsp;</c5><c5><nop>T</nop></c5><c5>&nbsp;</c5><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;46</ln><a id="46">&nbsp;</a><a id="n78782"><a id="n78787"><a id="n78790"><a id="n78789"><a id="n78788"><a id="n78785"><a id="n78792">&nbsp;</a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;finally</c30><c4>(</c4><c20><a href="../libcore/finally.rs.html#47">&amp;mut&nbsp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="../libcore/finally.rs.html#49">dtor</a></c20><c18>:&nbsp;</c18><c1>||</c1><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c1><nop>T</nop></c1><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;47</ln><a id="47">&nbsp;</a><a id="n78794"><a id="n78796"><a id="n78797"><a id="n78795"><a id="n78793">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libcore/finally.rs.html#92">try_finally</a></c26><c4>(</c4><c5>&amp;mut&nbsp;</c5><c4>()</c4><c3>,</c3><c27>&nbsp;</c27><c26><a href="../libcore/finally.rs.html#46">self</a></c26><c3>,</c3><c27>
+</c27><br/><ln>&nbsp;&nbsp;48</ln><a id="48">&nbsp;</a><a id="n78808"><a id="n78809"><a id="n78806"><a id="n78805"><a id="n78810"><a id="n78803"><a id="n78801"><a id="n78804"><a id="n78800"><a id="n78807"><a id="n78798">&nbsp;</a></a></a></a></a></a></a></a></a></a></a><c27>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c27><c22>|</c22><c20>_</c20><c3>,</c3><c22>&nbsp;</c22><c20><a href="../libcore/finally.rs.html#48">f</a></c20><c1>|</c1><c22>&nbsp;</c22><c4>(</c4><c5>*</c5><c26><a href="../libcore/finally.rs.html#48">f</a></c26><c4>)()</c4><c3>,</c3><c27>
+</c27><br/><ln>&nbsp;&nbsp;49</ln><a id="49">&nbsp;</a><a id="n78818"><a id="n78815"><a id="n78813"><a id="n78817"><a id="n78816"><a id="n78811"><a id="n78814">&nbsp;</a></a></a></a></a></a></a><c27>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c27><c22>|</c22><c20>_</c20><c1>|</c1><c22>&nbsp;</c22><c1><a href="../libcore/finally.rs.html#46">dtor</a></c1><c4>())</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;52</ln><a id="52">&nbsp;</a><a id="n78819">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;&nbsp;53</ln><a id="53">&nbsp;</a><a id="n78824"><a id="n78825"><a id="n78822"><a id="n78821">&nbsp;</a></a></a></a><c33>impl</c33><c5>&lt;T&gt;</c5><c33>&nbsp;</c33><c33><a href="../libcore/finally.rs.html#38">Finally</a></c33><c5><a href="../libcore/finally.rs.html#38">&lt;</a></c5><c5><nop>T</nop></c5><c5><a href="../libcore/finally.rs.html#38">&gt;</a></c5><c33>&nbsp;for&nbsp;fn</c33><c4>()</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c1><nop>T</nop></c1><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;54</ln><a id="54">&nbsp;</a><a id="n78835"><a id="n78834"><a id="n78830"><a id="n78837"><a id="n78833"><a id="n78827"><a id="n78832">&nbsp;</a></a></a></a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;finally</c30><c4>(</c4><c20><a href="../libcore/finally.rs.html#56">&amp;mut&nbsp;self</a></c20><c3>,</c3><c18>&nbsp;</c18><c20><a href="../libcore/finally.rs.html#57">dtor</a></c20><c18>:&nbsp;</c18><c1>||</c1><c4>)</c4><c18>&nbsp;</c18><c4>-&gt;</c4><c18>&nbsp;</c18><c1><nop>T</nop></c1><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;&nbsp;55</ln><a id="55">&nbsp;</a><a id="n78842"><a id="n78840"><a id="n78841"><a id="n78839"><a id="n78838">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../libcore/finally.rs.html#92">try_finally</a></c26><c4>(</c4><c5>&amp;mut&nbsp;</c5><c4>()</c4><c3>,</c3><c27>&nbsp;</c27><c4>()</c4><c3>,</c3><c27>
+</c27><br/><ln>&nbsp;&nbsp;56</ln><a id="56">&nbsp;</a><a id="n78846"><a id="n78848"><a id="n78845"><a id="n78854"><a id="n78850"><a id="n78843"><a id="n78852"><a id="n78853"><a id="n78855"><a id="n78849"><a id="n78851">&nbsp;</a></a></a></a></a></a></a></a></a></a></a><c27>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c27><c22>|</c22><c20>_</c20><c3>,</c3><c22>&nbsp;</c22><c20>_</c20><c1>|</c1><c22>&nbsp;</c22><c4>(</c4><c5>*</c5><c26><a href="../libcore/finally.rs.html#54">self</a></c26><c4>)()</c4><c3>,</c3><c27>
+</c27><br/><ln>&nbsp;&nbsp;57</ln><a id="57">&nbsp;</a><a id="n78859"><a id="n78861"><a id="n78862"><a id="n78858"><a id="n78860"><a id="n78863"><a id="n78856">&nbsp;</a></a></a></a></a></a></a><c27>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c27><c22>|</c22><c20>_</c20><c1>|</c1><c22>&nbsp;</c22><c26><a href="../libcore/finally.rs.html#54">dtor</a></c26><c4>())</c4><c22>
+</c22><br/><ln>&nbsp;&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c41>/**
+</c41><br/><ln>&nbsp;&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;The&nbsp;most&nbsp;general&nbsp;form&nbsp;of&nbsp;the&nbsp;`finally`&nbsp;functions.&nbsp;The&nbsp;function
+</c41><br/><ln>&nbsp;&nbsp;63</ln><a id="63">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;`try_fn`&nbsp;will&nbsp;be&nbsp;invoked&nbsp;first;&nbsp;whether&nbsp;or&nbsp;not&nbsp;it&nbsp;fails,&nbsp;the
+</c41><br/><ln>&nbsp;&nbsp;64</ln><a id="64">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;function&nbsp;`finally_fn`&nbsp;will&nbsp;be&nbsp;invoked&nbsp;next.&nbsp;The&nbsp;two&nbsp;parameters
+</c41><br/><ln>&nbsp;&nbsp;65</ln><a id="65">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;`mutate`&nbsp;and&nbsp;`drop`&nbsp;are&nbsp;used&nbsp;to&nbsp;thread&nbsp;state&nbsp;through&nbsp;the&nbsp;two
+</c41><br/><ln>&nbsp;&nbsp;66</ln><a id="66">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;closures.&nbsp;`mutate`&nbsp;is&nbsp;used&nbsp;for&nbsp;any&nbsp;shared,&nbsp;mutable&nbsp;state&nbsp;that&nbsp;both
+</c41><br/><ln>&nbsp;&nbsp;67</ln><a id="67">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;closures&nbsp;require&nbsp;access&nbsp;to;&nbsp;`drop`&nbsp;is&nbsp;used&nbsp;for&nbsp;any&nbsp;state&nbsp;that&nbsp;the
+</c41><br/><ln>&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;`try_fn`&nbsp;requires&nbsp;ownership&nbsp;of.
+</c41><br/><ln>&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;**WARNING:**&nbsp;While&nbsp;shared,&nbsp;mutable&nbsp;state&nbsp;between&nbsp;the&nbsp;try&nbsp;and&nbsp;finally
+</c41><br/><ln>&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;function&nbsp;is&nbsp;often&nbsp;necessary,&nbsp;one&nbsp;must&nbsp;be&nbsp;very&nbsp;careful;&nbsp;the&nbsp;`try`
+</c41><br/><ln>&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;function&nbsp;could&nbsp;have&nbsp;failed&nbsp;at&nbsp;any&nbsp;point,&nbsp;so&nbsp;the&nbsp;values&nbsp;of&nbsp;the&nbsp;shared
+</c41><br/><ln>&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;state&nbsp;may&nbsp;be&nbsp;inconsistent.
+</c41><br/><ln>&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a>&nbsp;<c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;#&nbsp;Example
+</c41><br/><ln>&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;```
+</c41><br/><ln>&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;use&nbsp;std::unstable::finally::try_finally;
+</c41><br/><ln>&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c41>&nbsp;*
+</c41><br/><ln>&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;struct&nbsp;State&lt;'a&gt;&nbsp;{&nbsp;buffer:&nbsp;&amp;'a&nbsp;mut&nbsp;[u8],&nbsp;len:&nbsp;uint&nbsp;}
+</c41><br/><ln>&nbsp;&nbsp;81</ln><a id="81">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;#&nbsp;let&nbsp;mut&nbsp;buf&nbsp;=&nbsp;[];
+</c41><br/><ln>&nbsp;&nbsp;82</ln><a id="82">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;let&nbsp;mut&nbsp;state&nbsp;=&nbsp;State&nbsp;{&nbsp;buffer:&nbsp;buf,&nbsp;len:&nbsp;0&nbsp;};
+</c41><br/><ln>&nbsp;&nbsp;83</ln><a id="83">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;try_finally(
+</c41><br/><ln>&nbsp;&nbsp;84</ln><a id="84">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut&nbsp;state,&nbsp;(),
+</c41><br/><ln>&nbsp;&nbsp;85</ln><a id="85">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|state,&nbsp;()|&nbsp;{
+</c41><br/><ln>&nbsp;&nbsp;86</ln><a id="86">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;use&nbsp;state.buffer,&nbsp;state.len
+</c41><br/><ln>&nbsp;&nbsp;87</ln><a id="87">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},
+</c41><br/><ln>&nbsp;&nbsp;88</ln><a id="88">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|state|&nbsp;{
+</c41><br/><ln>&nbsp;&nbsp;89</ln><a id="89">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;use&nbsp;state.buffer,&nbsp;state.len&nbsp;to&nbsp;cleanup
+</c41><br/><ln>&nbsp;&nbsp;90</ln><a id="90">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;})
+</c41><br/><ln>&nbsp;&nbsp;91</ln><a id="91">&nbsp;</a>&nbsp;<c41>&nbsp;*&nbsp;```
+</c41><br/><ln>&nbsp;&nbsp;92</ln><a id="92">&nbsp;</a><a id="n78864">&nbsp;</a><c42>&nbsp;*/
+</c42><br/><ln>&nbsp;&nbsp;93</ln><a id="93">&nbsp;</a><a id="n78869"><a id="n78867"><a id="n78866">&nbsp;</a></a></a><c21>pub</c21><c1><a href="#line92_col4_refs">&nbsp;</a></c1><c30>fn</c30><c30><a href="#line92_col4_refs">&nbsp;try_finally</a></c30><c5><a href="#line92_col4_refs">&lt;T</a></c5><c5>,</c5><c5><a href="#line92_col4_refs">U</a></c5><c5>,</c5><c5><a href="#line92_col4_refs">R&gt;</a></c5><c4>(</c4><c20><a href="../libcore/finally.rs.html#99">mutate</a></c20><c1><a href="#line92_col4_refs">:&nbsp;&amp;mut&nbsp;</a></c1><c1><nop>T</nop></c1><c3>,</c3><c1><a href="#line92_col4_refs">
+</a></c1><br/><ln>&nbsp;&nbsp;94</ln><a id="94">&nbsp;</a><a id="n78871"><a id="n78873">&nbsp;</a></a><c1><a href="#line92_col4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c1><c20><a href="../libcore/finally.rs.html#102">drop</a></c20><c1><a href="#line92_col4_refs">:&nbsp;</a></c1><c1><nop>U</nop></c1><c3>,</c3><c1><a href="#line92_col4_refs">
+</a></c1><br/><ln>&nbsp;&nbsp;95</ln><a id="95">&nbsp;</a><a id="n78875"><a id="n78887"><a id="n78877"><a id="n78882"><a id="n78885"><a id="n78878">&nbsp;</a></a></a></a></a></a><c1><a href="#line92_col4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c1><c20><a href="../libcore/finally.rs.html#102">try_fn</a></c20><c1><a href="#line92_col4_refs">:&nbsp;|&amp;mut&nbsp;</a></c1><c1><nop>T</nop></c1><c3>,</c3><c1><a href="#line92_col4_refs">&nbsp;</a></c1><c1><nop>U</nop></c1><c1><a href="#line92_col4_refs">|&nbsp;</a></c1><c4>-&gt;</c4><c1><a href="#line92_col4_refs">&nbsp;</a></c1><c1><nop>R</nop></c1><c3>,</c3><c1><a href="#line92_col4_refs">
+</a></c1><br/><ln>&nbsp;&nbsp;96</ln><a id="96">&nbsp;</a><a id="n78889"><a id="n78896"><a id="n78891"><a id="n78895"><a id="n78892">&nbsp;</a></a></a></a></a><c1><a href="#line92_col4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c1><c20><a href="../libcore/finally.rs.html#100">finally_fn</a></c20><c1><a href="#line92_col4_refs">:&nbsp;|&amp;mut&nbsp;</a></c1><c1><nop>T</nop></c1><c1><a href="#line92_col4_refs">|</a></c1><c4>)</c4><c1><a href="#line92_col4_refs">
+</a></c1><br/><ln>&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a><a id="n78897"><a id="n78902">&nbsp;</a></a><c1><a href="#line92_col4_refs">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></c1><c4>-&gt;</c4><c1><a href="#line92_col4_refs">&nbsp;</a></c1><c1><nop>R</nop></c1><c1><a href="#line92_col4_refs">&nbsp;</a></c1><c3>{</c3><c22><a href="#line92_col4_refs">
+</a></c22><br/><ln>&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a><a id="n78906"><a id="n78903"><a id="n78907"><a id="n78904"><a id="n78905">&nbsp;</a></a></a></a></a><c22><a href="#line92_col4_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c21>let</c21><c22><a href="#line92_col4_refs">&nbsp;</a></c22><c20><a href="../libcore/finally.rs.html#102">f</a></c20><c16><a href="#line92_col4_refs">&nbsp;=&nbsp;</a></c16><c31><a href="../libcore/finally.rs.html#104">Finallyalizer&nbsp;</a></c31><c3>{</c3><c31><a href="../libcore/finally.rs.html#104">
+</a></c31><br/><ln>&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a><a id="n78908">&nbsp;</a><c31><a href="../libcore/finally.rs.html#104">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mutate:&nbsp;</a></c31><c26><a href="../libcore/finally.rs.html#93">mutate</a></c26><c3>,</c3><c31><a href="../libcore/finally.rs.html#104">
+</a></c31><br/><ln>&nbsp;100</ln><a id="100">&nbsp;</a><a id="n78909">&nbsp;</a><c31><a href="../libcore/finally.rs.html#104">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dtor:&nbsp;</a></c31><c26><a href="../libcore/finally.rs.html#96">finally_fn</a></c26><c3>,</c3><c31><a href="../libcore/finally.rs.html#104">
+</a></c31><br/><ln>&nbsp;101</ln><a id="101">&nbsp;</a>&nbsp;<c31><a href="../libcore/finally.rs.html#104">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c3>};</c3><c22><a href="#line92_col4_refs">
+</a></c22><br/><ln>&nbsp;102</ln><a id="102">&nbsp;</a><a id="n78910"><a id="n78916"><a id="n78911"><a id="n78915"><a id="n78912"><a id="n78914"><a id="n78913">&nbsp;</a></a></a></a></a></a></a><c22><a href="#line92_col4_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c22><c26><a href="../libcore/finally.rs.html#95">try_fn</a></c26><c4>(</c4><c5><a href="#line92_col4_refs">&amp;mut&nbsp;*</a></c5><c26><a href="../libcore/finally.rs.html#98">f</a></c26><c24><a href="../libcore/finally.rs.html#106">.mutate</a></c24><c3>,</c3><c27><a href="#line92_col4_refs">&nbsp;</a></c27><c26><a href="../libcore/finally.rs.html#94">drop</a></c26><c4>)</c4><c22><a href="#line92_col4_refs">
+</a></c22><br/><ln>&nbsp;103</ln><a id="103">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;104</ln><a id="104">&nbsp;</a><a id="n78917">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;105</ln><a id="105">&nbsp;</a>&nbsp;<c31>struct</c31><c31><a href="#line104_col1_refs">&nbsp;Finallyalizer</a></c31><c5><a href="#line104_col1_refs">&lt;'a</a></c5><c5>,</c5><c5><a href="#line104_col1_refs">A&gt;</a></c5><c31><a href="#line104_col1_refs">&nbsp;</a></c31><c3>{</c3><c31><a href="#line104_col1_refs">
+</a></c31><br/><ln>&nbsp;106</ln><a id="106">&nbsp;</a><a id="n78921"><a id="n78918"><a id="n78919">&nbsp;</a></a></a><c31><a href="#line104_col1_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c24><a href="#line106_col4_refs">mutate:&nbsp;</a></c24><c1><a href="#line106_col4_refs">&amp;'a&nbsp;mut&nbsp;</a></c1><c1><nop>A</nop></c1><c3>,</c3><c31><a href="#line104_col1_refs">
+</a></c31><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a><a id="n78924"><a id="n78923"><a id="n78926"><a id="n78927"><a id="n78930">&nbsp;</a></a></a></a></a><c31><a href="#line104_col1_refs">&nbsp;&nbsp;&nbsp;&nbsp;</a></c31><c24><a href="../libcore/finally.rs.html#114">dtor:&nbsp;</a></c24><c1><a href="../libcore/finally.rs.html#114">|&amp;mut&nbsp;</a></c1><c1><nop>A</nop></c1><c1><a href="../libcore/finally.rs.html#114">|:&nbsp;'a</a></c1><c31><a href="#line104_col1_refs">
+</a></c31><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a><a id="n78934">&nbsp;</a><c50>#</c50><c3>[</c3><c50>unsafe_destructor</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a><a id="n78941"><a id="n78937"><a id="n78938">&nbsp;</a></a></a><c33>impl</c33><c5>&lt;'a,A&gt;</c5><c33>&nbsp;</c33><c33><a href="../libcore/ops.rs.html#81">Drop</a></c33><c33>&nbsp;for&nbsp;</c33><c33><a href="../libcore/finally.rs.html#104">Finallyalizer</a></c33><c5><a href="../libcore/finally.rs.html#104">&lt;'a</a></c5><c5>,</c5><c5><nop>A</nop></c5><c5><a href="../libcore/finally.rs.html#104">&gt;</a></c5><c33>&nbsp;</c33><c3>{</c3><c33>
+</c33><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c33>&nbsp;&nbsp;&nbsp;&nbsp;#</c33><c3>[</c3><c33>inline</c33><c3>]</c3><c33>
+</c33><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a><a id="n78946"><a id="n78943"><a id="n78947"><a id="n78948">&nbsp;</a></a></a></a><c33>&nbsp;&nbsp;&nbsp;&nbsp;</c33><c30>fn&nbsp;drop</c30><c4>(</c4><c20><a href="#line113_col12_refs">&amp;mut&nbsp;self</a></c20><c4>)</c4><c18>&nbsp;</c18><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;114</ln><a id="114">&nbsp;</a><a id="n78950"><a id="n78951"><a id="n78955"><a id="n78954"><a id="n78953"><a id="n78952"><a id="n78949">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>(</c4><c26><a href="../libcore/finally.rs.html#113">self</a></c26><c24><a href="../libcore/finally.rs.html#107">.dtor</a></c24><c4>)(</c4><c26><a href="../libcore/finally.rs.html#113">self</a></c26><c24><a href="../libcore/finally.rs.html#106">.mutate</a></c24><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;115</ln><a id="115">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c33>
+</c33><br/><ln>&nbsp;116</ln><a id="116">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;117</ln><a id="117">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;118</ln><a id="118">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;119</ln><a id="119">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;test&nbsp;</c38><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;120</ln><a id="120">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::</c0><c3>{</c3><c0>try_finally</c0><c3>,</c3><c0>&nbsp;Finally</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;121</ln><a id="121">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;realstd::task::failing</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;122</ln><a id="122">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;123</ln><a id="123">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;124</ln><a id="124">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_success</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;125</ln><a id="125">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;i&nbsp;=&nbsp;0</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;126</ln><a id="126">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try_finally</c0><c4>(</c4><c0>
+</c0><br/><ln>&nbsp;127</ln><a id="127">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;</c0><c21>mut</c21><c0>&nbsp;i</c0><c3>,</c3><c0>&nbsp;</c0><c4>()</c4><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;128</ln><a id="128">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|i</c0><c3>,</c3><c0>&nbsp;</c0><c4>()</c4><c0>|&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;129</ln><a id="129">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*i&nbsp;=&nbsp;10</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;130</ln><a id="130">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>},</c3><c0>
+</c0><br/><ln>&nbsp;131</ln><a id="131">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|i|&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;132</ln><a id="132">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>!failing</c0><c4>())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;133</ln><a id="133">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*i</c0><c3>,</c3><c0>&nbsp;10</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;134</ln><a id="134">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*i&nbsp;=&nbsp;20</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;135</ln><a id="135">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;136</ln><a id="136">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>i</c0><c3>,</c3><c0>&nbsp;20</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;137</ln><a id="137">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;138</ln><a id="138">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;139</ln><a id="139">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;140</ln><a id="140">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>should_fail</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;141</ln><a id="141">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_fail</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;142</ln><a id="142">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;i&nbsp;=&nbsp;0</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;143</ln><a id="143">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try_finally</c0><c4>(</c4><c0>
+</c0><br/><ln>&nbsp;144</ln><a id="144">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;</c0><c21>mut</c21><c0>&nbsp;i</c0><c3>,</c3><c0>&nbsp;</c0><c4>()</c4><c3>,</c3><c0>
+</c0><br/><ln>&nbsp;145</ln><a id="145">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|i</c0><c3>,</c3><c0>&nbsp;</c0><c4>()</c4><c0>|&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;146</ln><a id="146">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*i&nbsp;=&nbsp;10</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;147</ln><a id="147">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail!</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;148</ln><a id="148">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>},</c3><c0>
+</c0><br/><ln>&nbsp;149</ln><a id="149">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|i|&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;150</ln><a id="150">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>failing</c0><c4>())</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;151</ln><a id="151">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>*i</c0><c3>,</c3><c0>&nbsp;10</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;152</ln><a id="152">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c4>)</c4><c0>
+</c0><br/><ln>&nbsp;153</ln><a id="153">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;154</ln><a id="154">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;155</ln><a id="155">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;156</ln><a id="156">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_retval</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;157</ln><a id="157">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;closure:&nbsp;||&nbsp;</c0><c4>-&gt;</c4><c0>&nbsp;int&nbsp;=&nbsp;||&nbsp;10</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;158</ln><a id="158">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;i&nbsp;=&nbsp;closure.finally</c0><c4>(</c4><c0>||&nbsp;</c0><c3>{</c3><c0>&nbsp;</c0><c3>}</c3><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;159</ln><a id="159">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert_eq!</c0><c4>(</c4><c0>i</c0><c3>,</c3><c0>&nbsp;10</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;160</ln><a id="160">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;161</ln><a id="161">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;162</ln><a id="162">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;163</ln><a id="163">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;test_compact</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;164</ln><a id="164">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;do_some_fallible_work</c30><c4>()</c4><c0>&nbsp;</c0><c3>{}</c3><c0>
+</c0><br/><ln>&nbsp;165</ln><a id="165">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;but_always_run_this_function</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;166</ln><a id="166">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;f&nbsp;=&nbsp;do_some_fallible_work</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;167</ln><a id="167">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f.finally</c0><c4>(</c4><c0>but_always_run_this_function</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;168</ln><a id="168">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"><br/><br/><a id="line104_col1_refs"><c43>libcore/finally.rs:104:1-104:1&nbsp;-struct-&nbsp;definition:<br/></c43><a href="#104"><pr>struct&nbsp;Finallyalizer&lt;'a,A&gt;&nbsp;{
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;mutate:&nbsp;&amp;'a&nbsp;mut&nbsp;A,
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;dtor:&nbsp;|&amp;mut&nbsp;A|:&nbsp;'a
+<br/></pr></a></a><c43>references:-&nbsp;2</c43><br/><a href="../libcore/finally.rs.html#98"><c40>97:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;R&nbsp;{
+</c2><br/><c41>98:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;f&nbsp;=&nbsp;Finallyalizer&nbsp;{
+</c1><br/><c40>99:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mutate:&nbsp;mutate,
+</c2><br/></a>--<br/><a href="../libcore/finally.rs.html#111"><c41>111:&nbsp;</c41><c1>impl&lt;'a,A&gt;&nbsp;Drop&nbsp;for&nbsp;Finallyalizer&lt;'a,A&gt;&nbsp;{
+</c1><br/><c40>112:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
+</c2><br/></a><br/><br/><a id="line38_col45_refs"><c43>libcore/finally.rs:38:45-38:45&nbsp;-trait-&nbsp;definition:<br/></c43><a href="#38"><pr>///&nbsp;regardless&nbsp;of&nbsp;whether&nbsp;the&nbsp;blocked&nbsp;fails.
+<br/>pub&nbsp;trait&nbsp;Finally&lt;T&gt;&nbsp;{
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;Executes&nbsp;this&nbsp;object,&nbsp;unconditionally&nbsp;running&nbsp;`dtor`&nbsp;after&nbsp;this&nbsp;block&nbsp;of
+<br/></pr></a></a><c43>references:-&nbsp;2</c43><br/><a href="../libcore/finally.rs.html#53"><c41>53:&nbsp;</c41><c1>impl&lt;T&gt;&nbsp;Finally&lt;T&gt;&nbsp;for&nbsp;fn()&nbsp;-&gt;&nbsp;T&nbsp;{
+</c1><br/><c40>54:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;finally(&amp;mut&nbsp;self,&nbsp;dtor:&nbsp;||)&nbsp;-&gt;&nbsp;T&nbsp;{
+</c2><br/></a><a href="../libcore/finally.rs.html#45"></a><br/><br/><a id="line92_col4_refs"><c43>libcore/finally.rs:92:4-92:4&nbsp;-fn-&nbsp;definition:<br/></c43><a href="#92"><pr>&nbsp;*/
+<br/>pub&nbsp;fn&nbsp;try_finally&lt;T,U,R&gt;(mutate:&nbsp;&amp;mut&nbsp;T,
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drop:&nbsp;U,
+<br/></pr></a></a><c43>references:-&nbsp;3</c43><br/><a href="../libcore/finally.rs.html#47"><c40>46:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;finally(&amp;mut&nbsp;self,&nbsp;dtor:&nbsp;||)&nbsp;-&gt;&nbsp;T&nbsp;{
+</c2><br/><c41>47:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try_finally(&amp;mut&nbsp;(),&nbsp;self,
+</c1><br/><c40>48:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_,&nbsp;f|&nbsp;(*f)(),
+</c2><br/></a>--<br/><a href="../libcore/finally.rs.html#55"><c40>54:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;finally(&amp;mut&nbsp;self,&nbsp;dtor:&nbsp;||)&nbsp;-&gt;&nbsp;T&nbsp;{
+</c2><br/><c41>55:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try_finally(&amp;mut&nbsp;(),&nbsp;(),
+</c1><br/><c40>56:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_,&nbsp;_|&nbsp;(*self)(),
+</c2><br/></a><a href="../libcore/should_not_exist.rs.html"><c40>libcore/should_not_exist.rs:<br/></c40></a><a href="../libcore/should_not_exist.rs.html#162"><c40>161:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;p&nbsp;=&nbsp;&amp;mut&nbsp;(*ret).data&nbsp;as&nbsp;*mut&nbsp;_&nbsp;as&nbsp;*mut&nbsp;A;
+</c2><br/><c41>162:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try_finally(
+</c1><br/><c40>163:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut&nbsp;i,&nbsp;(),
+</c2><br/></a></div></maintext></div></body>

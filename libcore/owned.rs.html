@@ -1,0 +1,58 @@
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libcore/">libcore</a></c0><c1>/</c1><c0><a href="./../libcore/owned.rs.html">owned.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5200215&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#14035&nbsp;:&nbsp;alexcrichton/rust/experimental,&nbsp;r=huonw<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Fri&nbsp;May&nbsp;&nbsp;9&nbsp;13:02:28&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c40>//!&nbsp;Operations&nbsp;on&nbsp;unique&nbsp;pointer&nbsp;types
+</c40><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c40>//&nbsp;FIXME:&nbsp;this&nbsp;module&nbsp;should&nbsp;not&nbsp;exist&nbsp;in&nbsp;libcore.&nbsp;It&nbsp;must&nbsp;currently&nbsp;because&nbsp;the
+</c40><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c40>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Box&nbsp;implementation&nbsp;is&nbsp;quite&nbsp;ad-hoc&nbsp;in&nbsp;the&nbsp;compiler.&nbsp;Once&nbsp;there&nbsp;is
+</c40><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c40>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proper&nbsp;support&nbsp;in&nbsp;the&nbsp;compiler&nbsp;this&nbsp;type&nbsp;will&nbsp;be&nbsp;able&nbsp;to&nbsp;be&nbsp;defined&nbsp;in
+</c40><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c40>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;its&nbsp;own&nbsp;module.
+</c40><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a>&nbsp;<c42>///&nbsp;A&nbsp;value&nbsp;that&nbsp;represents&nbsp;the&nbsp;global&nbsp;exchange&nbsp;heap.&nbsp;This&nbsp;is&nbsp;the&nbsp;default
+</c42><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a>&nbsp;<c42>///&nbsp;place&nbsp;that&nbsp;the&nbsp;`box`&nbsp;keyword&nbsp;allocates&nbsp;into&nbsp;when&nbsp;no&nbsp;place&nbsp;is&nbsp;supplied.
+</c42><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a>&nbsp;<c42>///&nbsp;The&nbsp;following&nbsp;two&nbsp;examples&nbsp;are&nbsp;equivalent:
+</c42><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c42>///
+</c42><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;foo&nbsp;=&nbsp;box(HEAP)&nbsp;Bar::new(...);
+</c42><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a>&nbsp;<c42>///&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;foo&nbsp;=&nbsp;box&nbsp;Bar::new(...);
+</c42><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>lang="exchange_heap"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a><a id="n25846">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a><a id="n25847"><a id="n25848">&nbsp;</a></a><c21>pub</c21><c1>&nbsp;</c1><c36>static&nbsp;HEAP:&nbsp;</c36><c4>()</c4><c1>&nbsp;=&nbsp;</c1><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c36>static&nbsp;HEAP:&nbsp;</c36><c4>()</c4><c0>&nbsp;=&nbsp;</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c42>///&nbsp;A&nbsp;type&nbsp;that&nbsp;represents&nbsp;a&nbsp;uniquely-owned&nbsp;value.
+</c42><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>lang="owned_box"</c50><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n25849">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n25851"><a id="n25850"><a id="n25852">&nbsp;</a></a></a><c21>pub</c21><c31><a href="#line34_col18_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#line34_col18_refs">&nbsp;Box</a></c31><c5><a href="#line34_col18_refs">&lt;T&gt;</a></c5><c4>(</c4><c1><a href="#line34_col18_refs">*</a></c1><c1><nop>T</nop></c1><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c31>struct&nbsp;Box</c31><c5>&lt;T&gt;</c5><c4>(</c4><c0>*T</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><div class="refblock"><br/><br/><a id="line34_col18_refs"><c43>libcore/owned.rs:34:18-34:18&nbsp;-struct-&nbsp;definition:<br/></c43><a href="#34"><pr>pub&nbsp;struct&nbsp;Box&lt;T&gt;(*T);
+<br/>pub&nbsp;struct&nbsp;Box&lt;T&gt;(*T);
+<br/><br/></pr></a></a><c43>references:-&nbsp;20</c43><br/><a href="../libcore/clone.rs.html"><c40>libcore/clone.rs:<br/></c40></a><a href="../libcore/clone.rs.html#51"><c40>50:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
+</c2><br/><c41>51:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone_from(&amp;mut&nbsp;self,&nbsp;source:&nbsp;&amp;Box&lt;T&gt;)&nbsp;{
+</c1><br/><c40>52:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(**self).clone_from(&amp;(**source));
+</c2><br/></a><a href="../libcore/clone.rs.html#47"></a><a href="../libcore/clone.rs.html#44"></a><a href="../libcore/default.rs.html"><c40>libcore/default.rs:<br/></c40></a><a href="../libcore/default.rs.html#26"><c40>25:&nbsp;</c40><c2>impl&lt;T:&nbsp;Default&gt;&nbsp;Default&nbsp;for&nbsp;Box&lt;T&gt;&nbsp;{
+</c2><br/><c41>26:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;default()&nbsp;-&gt;&nbsp;Box&lt;T&gt;&nbsp;{&nbsp;box&nbsp;Default::default()&nbsp;}
+</c1><br/><c40>27:&nbsp;</c40><c2>}
+</c2><br/></a><a href="../libcore/default.rs.html#25"></a><a href="../libcore/any.rs.html"><c40>libcore/any.rs:<br/></c40></a><a href="../libcore/any.rs.html#129"><c40>128:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
+</c2><br/><c41>129:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;move&lt;T:&nbsp;'static&gt;(self)&nbsp;-&gt;&nbsp;Result&lt;Box&lt;T&gt;,&nbsp;Box&lt;Any&gt;&gt;&nbsp;{
+</c1><br/><c40>130:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;self.is::&lt;T&gt;()&nbsp;{
+</c2><br/></a><a href="../libcore/any.rs.html#124"></a><a href="../libcore/any.rs.html#127"></a><a href="../libcore/any.rs.html#129"></a><a href="../libcore/cmp.rs.html"><c40>libcore/cmp.rs:<br/></c40></a><a href="../libcore/cmp.rs.html#257"><c40>256:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
+</c2><br/><c41>257:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;ge(&amp;self,&nbsp;other:&nbsp;&amp;Box&lt;T&gt;)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;*(*self)&nbsp;&gt;=&nbsp;*(*other)&nbsp;}
+</c1><br/><c40>258:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
+</c2><br/></a><a href="../libcore/cmp.rs.html#255"></a><a href="../libcore/cmp.rs.html#251"></a>--<br/><a href="../libcore/cmp.rs.html#263"><c40>262:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
+</c2><br/><c41>263:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;cmp(&amp;self,&nbsp;other:&nbsp;&amp;Box&lt;T&gt;)&nbsp;-&gt;&nbsp;Ordering&nbsp;{&nbsp;(**self).cmp(*other)&nbsp;}
+</c1><br/><c40>264:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c2><br/></a><a href="../libcore/cmp.rs.html#245"></a><a href="../libcore/cmp.rs.html#253"></a><a href="../libcore/cmp.rs.html#249"></a><a href="../libcore/cmp.rs.html#247"></a><a href="../libcore/cmp.rs.html#261"></a><a href="../libcore/cmp.rs.html#259"></a><a href="../libcore/cmp.rs.html#265"><c41>265:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;T:&nbsp;TotalEq&gt;&nbsp;TotalEq&nbsp;for&nbsp;Box&lt;T&gt;&nbsp;{}
+</c1><br/><c40>266:&nbsp;</c40><c2>}
+</c2><br/></a></div></maintext></div></body>
