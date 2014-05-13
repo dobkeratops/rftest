@@ -1,0 +1,3455 @@
+node	lib	1090	895	liblibc/lib.rs	2029	12	39	static	MAP_SHARED
+node	lib	1404	895	liblibc/lib.rs	2113	12	28	static	EADV
+node	lib	2252	2249	liblibc/lib.rs	2598	48	2	lit	
+node	lib	1958	1957	liblibc/lib.rs	2488	35	5	type	
+node	lib	457	444	liblibc/lib.rs	359	16	386	struct	glob_t
+node	lib	1536	895	liblibc/lib.rs	2146	12	36	static	ENETUNREACH
+node	lib	4057	2329	liblibc/lib.rs	3909	4	3215	mod	posix01
+node	lib	3307	3280	liblibc/lib.rs	3751	30	2	NK_AS_STR_TODO	
+node	lib	2232	2229	liblibc/lib.rs	2593	51	2	lit	
+node	lib	1345	1344	liblibc/lib.rs	2096	30	5	type	
+node	lib	2192	2189	liblibc/lib.rs	2583	48	2	lit	
+node	lib	657	638	liblibc/lib.rs	640	16	22	NK_AS_STR_TODO	c_uint
+node	lib	1940	1937	liblibc/lib.rs	2482	47	3	lit	
+node	lib	2859	2751	liblibc/lib.rs	3536	53	6	type	
+node	lib	2080	2079	liblibc/lib.rs	2529	40	5	type	
+node	lib	2410	2335	liblibc/lib.rs	3456	32	1	NK_AS_STR_TODO	
+node	lib	3236	3202	liblibc/lib.rs	3724	63	5	type	
+node	lib	2209	2103	liblibc/lib.rs	2588	12	43	static	_SC_DELAYTIMER_MAX
+node	lib	2450	2449	liblibc/lib.rs	3467	67	4	type	
+node	lib	2042	2039	liblibc/lib.rs	2517	41	7	lit	
+node	lib	4400	4292	liblibc/lib.rs	4052	63	5	type	
+node	lib	3749	3463	liblibc/lib.rs	3843	45	5	type	
+node	lib	1745	1742	liblibc/lib.rs	2414	51	1	lit	
+node	lib	1823	1822	liblibc/lib.rs	2435	49	5	type	
+node	lib	427	411	liblibc/lib.rs	333	12	24	NK_AS_STR_TODO	uint16_t
+node	lib	2300	2297	liblibc/lib.rs	2610	46	2	lit	
+node	lib	2044	2043	liblibc/lib.rs	2518	33	5	type	
+node	lib	2309	2103	liblibc/lib.rs	2613	12	40	static	_SC_2_C_VERSION
+node	lib	1239	1236	liblibc/lib.rs	2068	41	2	lit	
+node	lib	1649	1648	liblibc/lib.rs	2175	37	5	type	
+node	lib	4278	4263	liblibc/lib.rs	4002	40	5	type	
+node	lib	3935	3925	liblibc/lib.rs	3879	44	3	NK_AS_STR_TODO	
+node	lib	4248	4217	liblibc/lib.rs	3989	28	5	NK_AS_STR_TODO	
+node	lib	3803	3463	liblibc/lib.rs	3850	31	4	NK_AS_STR_TODO	
+node	lib	2052	2051	liblibc/lib.rs	2521	40	5	type	
+node	lib	792	754	liblibc/lib.rs	691	39	6	type	
+node	lib	4344	4292	liblibc/lib.rs	4046	26	6	NK_AS_STR_TODO	
+node	lib	493	489	liblibc/lib.rs	373	24	20	struct_field	tv_usec
+node	lib	3869	3463	liblibc/lib.rs	3858	30	2	NK_AS_STR_TODO	
+node	lib	3551	3463	liblibc/lib.rs	3815	30	4	NK_AS_STR_TODO	
+node	lib	2448	2437	liblibc/lib.rs	3467	48	4	NK_AS_STR_TODO	
+node	lib	3016	3015	liblibc/lib.rs	3562	36	6	type	
+node	lib	1459	1456	liblibc/lib.rs	2126	40	2	lit	
+node	lib	4513	4292	liblibc/lib.rs	4063	26	5	NK_AS_STR_TODO	
+node	lib	2528	2437	liblibc/lib.rs	3478	37	6	type	
+node	lib	3432	3406	liblibc/lib.rs	3790	55	0	type	
+node	lib	1300	895	liblibc/lib.rs	2085	12	30	static	ENOMSG
+node	lib	2624	2437	liblibc/lib.rs	3496	35	6	type	
+node	lib	512	507	liblibc/lib.rs	388	16	25	NK_AS_STR_TODO	socklen_t
+node	lib	3291	3280	liblibc/lib.rs	3749	47	4	NK_AS_STR_TODO	
+node	lib	2555	2437	liblibc/lib.rs	3483	34	11	type	
+node	lib	1165	1164	liblibc/lib.rs	2050	33	5	type	
+node	lib	3417	3406	liblibc/lib.rs	3789	39	4	type	
+node	lib	1879	1878	liblibc/lib.rs	2457	42	6	type	
+node	lib	1175	1172	liblibc/lib.rs	2052	40	2	lit	
+node	lib	2941	2940	liblibc/lib.rs	3556	51	6	type	
+node	lib	1369	1368	liblibc/lib.rs	2104	31	5	type	
+node	lib	1894	828	liblibc/lib.rs	2467	8	27	mod	posix08
+node	lib	3463	3441	liblibc/lib.rs	3806	12	3064	foreign_mod	
+node	lib	515	507	liblibc/lib.rs	389	16	27	NK_AS_STR_TODO	sa_family_t
+node	lib	1001	998	liblibc/lib.rs	2004	46	1	lit	
+node	lib	633	628	liblibc/lib.rs	440	34	15	type	
+node	lib	2505	2437	liblibc/lib.rs	3473	48	7	NK_AS_STR_TODO	
+node	lib	2355	2335	liblibc/lib.rs	3448	44	5	type	
+node	lib	1272	895	liblibc/lib.rs	2078	12	31	static	EDEADLK
+node	lib	1867	1866	liblibc/lib.rs	2446	52	5	type	
+node	lib	977	974	liblibc/lib.rs	1998	41	3	lit	
+node	lib	1734	1668	liblibc/lib.rs	2411	12	37	static	GLOB_NOMATCH
+node	lib	898	895	liblibc/lib.rs	1979	12	32	static	O_RDONLY
+node	lib	807	754	liblibc/lib.rs	696	34	13	type	
+node	lib	2991	2990	liblibc/lib.rs	3560	48	6	type	
+node	lib	2602	2437	liblibc/lib.rs	3493	28	1	NK_AS_STR_TODO	
+node	lib	2161	2103	liblibc/lib.rs	2576	12	44	static	_SC_SYNCHRONIZED_IO
+node	lib	4394	4292	liblibc/lib.rs	4051	46	7	NK_AS_STR_TODO	
+node	lib	1897	1895	liblibc/lib.rs	2472	12	35	static	MADV_NORMAL
+node	lib	574	564	liblibc/lib.rs	414	24	19	struct_field	sin6_addr
+node	lib	2427	2330	liblibc/lib.rs	3462	8	2590	mod	stdio
+node	lib	413	412	liblibc/lib.rs	328	30	2	type	
+node	lib	707	703	liblibc/lib.rs	660	16	21	NK_AS_STR_TODO	dev_t
+node	lib	1724	1723	liblibc/lib.rs	2407	47	1	lit	
+node	lib	1067	1066	liblibc/lib.rs	2021	33	5	type	
+node	lib	2058	2055	liblibc/lib.rs	2522	46	11	lit	
+node	lib	801	754	liblibc/lib.rs	694	34	6	type	
+node	lib	2292	2289	liblibc/lib.rs	2608	48	2	lit	
+node	lib	2306	2305	liblibc/lib.rs	2612	41	5	type	
+node	lib	4317	4292	liblibc/lib.rs	4042	42	7	NK_AS_STR_TODO	
+node	lib	3385	3384	liblibc/lib.rs	3781	53	3	type	
+node	lib	1479	1476	liblibc/lib.rs	2131	41	2	lit	
+node	lib	2607	2437	liblibc/lib.rs	3494	33	5	type	
+node	lib	3166	2918	liblibc/lib.rs	3579	30	2	NK_AS_STR_TODO	
+node	lib	725	703	liblibc/lib.rs	666	16	22	NK_AS_STR_TODO	mode_t
+node	lib	2265	2103	liblibc/lib.rs	2602	12	42	static	_SC_EXPR_NEST_MAX
+node	lib	1743	1742	liblibc/lib.rs	2414	43	5	type	
+node	lib	2132	2129	liblibc/lib.rs	2568	48	1	lit	
+node	lib	3259	3202	liblibc/lib.rs	3731	45	4	NK_AS_STR_TODO	
+node	lib	3563	3463	liblibc/lib.rs	3815	61	4	NK_AS_STR_TODO	
+node	lib	578	564	liblibc/lib.rs	415	39	3	type	
+node	lib	2301	2103	liblibc/lib.rs	2611	12	40	static	_SC_2_LOCALEDEF
+node	lib	501	496	liblibc/lib.rs	378	33	6	type	
+node	lib	849	848	liblibc/lib.rs	1957	38	1	lit	
+node	lib	2954	2953	liblibc/lib.rs	3558	34	6	type	
+node	lib	3389	3377	liblibc/lib.rs	3783	39	4	type	
+node	lib	3748	3463	liblibc/lib.rs	3843	30	3	NK_AS_STR_TODO	
+node	lib	1814	1668	liblibc/lib.rs	2433	12	55	static	_SC_THREAD_PRIORITY_SCHEDULING
+node	lib	2827	2751	liblibc/lib.rs	3532	65	5	type	
+node	lib	2894	2751	liblibc/lib.rs	3542	33	7	type	
+node	lib	3481	3463	liblibc/lib.rs	3808	49	6	type	
+node	lib	2233	2103	liblibc/lib.rs	2594	12	42	static	_SC_SEM_VALUE_MAX
+node	lib	2754	2751	liblibc/lib.rs	3524	30	5	type	
+node	lib	4015	3925	liblibc/lib.rs	3894	35	5	type	
+node	lib	2026	2025	liblibc/lib.rs	2507	32	5	type	
+node	lib	1448	895	liblibc/lib.rs	2124	12	31	static	ELIBACC
+node	lib	3537	3463	liblibc/lib.rs	3814	29	4	NK_AS_STR_TODO	
+node	lib	752	751	liblibc/lib.rs	677	36	3	type	
+node	lib	4414	4292	liblibc/lib.rs	4053	59	4	NK_AS_STR_TODO	
+node	lib	2120	2117	liblibc/lib.rs	2565	49	1	lit	
+node	lib	836	833	liblibc/lib.rs	1954	46	1	lit	
+node	lib	1853	1850	liblibc/lib.rs	2442	52	2	lit	
+node	lib	2403	2335	liblibc/lib.rs	3455	31	1	NK_AS_STR_TODO	
+node	lib	3431	3406	liblibc/lib.rs	3790	43	3	NK_AS_STR_TODO	
+node	lib	4498	4292	liblibc/lib.rs	4062	34	5	type	
+node	lib	4046	3925	liblibc/lib.rs	3898	61	4	NK_AS_STR_TODO	
+node	lib	2455	2454	liblibc/lib.rs	3468	42	6	type	
+node	lib	2551	2437	liblibc/lib.rs	3482	47	5	type	
+node	lib	1521	1520	liblibc/lib.rs	2142	37	5	type	
+node	lib	1826	1668	liblibc/lib.rs	2436	12	50	static	_SC_THREAD_PROCESS_SHARED
+node	lib	2680	2437	liblibc/lib.rs	3507	29	6	NK_AS_STR_TODO	
+node	lib	1216	895	liblibc/lib.rs	2063	12	31	static	EISDIR
+node	lib	1451	1448	liblibc/lib.rs	2124	40	2	lit	
+node	lib	4131	4085	liblibc/lib.rs	3942	59	9	NK_AS_STR_TODO	
+node	lib	2599	2437	liblibc/lib.rs	3493	31	7	type	
+node	lib	2109	2103	liblibc/lib.rs	2563	12	37	static	_SC_CHILD_MAX
+node	lib	2459	2437	liblibc/lib.rs	3468	56	7	type	
+node	lib	546	545	liblibc/lib.rs	402	24	23	struct_field	sin_family
+node	lib	1361	1360	liblibc/lib.rs	2100	32	5	type	
+node	lib	3324	3195	liblibc/lib.rs	3756	8	409	mod	fcntl
+node	lib	903	902	liblibc/lib.rs	1980	34	5	type	
+node	lib	2693	2692	liblibc/lib.rs	3509	40	4	type	
+node	lib	3672	3671	liblibc/lib.rs	3834	34	6	type	
+node	lib	1512	895	liblibc/lib.rs	2140	12	34	static	EOPNOTSUPP
+node	lib	1954	1953	liblibc/lib.rs	2487	36	5	type	
+node	lib	2673	2437	liblibc/lib.rs	3506	32	5	type	
+node	lib	825	637	liblibc/lib.rs	710	12	29	mod	bsd44
+node	lib	882	829	liblibc/lib.rs	1966	12	44	static	FILENAME_MAX
+node	lib	1699	1696	liblibc/lib.rs	2403	47	6	NK_AS_STR_TODO	
+node	lib	1898	1897	liblibc/lib.rs	2472	37	5	type	
+node	lib	3241	3240	liblibc/lib.rs	3730	36	6	type	
+node	lib	3312	3280	liblibc/lib.rs	3751	41	4	NK_AS_STR_TODO	
+node	lib	1629	1628	liblibc/lib.rs	2170	36	5	type	
+node	lib	2799	2798	liblibc/lib.rs	3530	34	6	type	
+node	lib	1312	895	liblibc/lib.rs	2088	12	32	static	EL2NSYNC
+node	lib	684	638	liblibc/lib.rs	649	16	27	NK_AS_STR_TODO	suseconds_t
+node	lib	4335	4292	liblibc/lib.rs	4045	37	9	type	
+node	lib	3496	3463	liblibc/lib.rs	3810	29	4	NK_AS_STR_TODO	
+node	lib	1055	1054	liblibc/lib.rs	2018	33	5	type	
+node	lib	3559	3463	liblibc/lib.rs	3815	67	8	type	
+node	lib	4074	4063	liblibc/lib.rs	3918	44	3	NK_AS_STR_TODO	
+node	lib	3253	3252	liblibc/lib.rs	3731	37	6	type	
+node	lib	2194	2193	liblibc/lib.rs	2584	51	5	type	
+node	lib	927	926	liblibc/lib.rs	1986	33	5	type	
+node	lib	1304	895	liblibc/lib.rs	2086	12	29	static	EIDRM
+node	lib	700	690	liblibc/lib.rs	656	16	26	NK_AS_STR_TODO	uintptr_t
+node	lib	3208	3202	liblibc/lib.rs	3718	29	4	NK_AS_STR_TODO	
+node	lib	3255	3202	liblibc/lib.rs	3731	30	4	NK_AS_STR_TODO	
+node	lib	1905	1895	liblibc/lib.rs	2474	12	39	static	MADV_SEQUENTIAL
+node	lib	611	600	liblibc/lib.rs	432	37	5	type	
+node	lib	2285	2103	liblibc/lib.rs	2607	12	36	static	_SC_2_C_DEV
+node	lib	2790	2789	liblibc/lib.rs	3529	49	7	type	
+node	lib	490	489	liblibc/lib.rs	372	24	14	struct_field	tv_sec
+node	lib	438	436	liblibc/lib.rs	339	12	20	enum	dirent_t
+node	lib	3102	2918	liblibc/lib.rs	3568	43	2	NK_AS_STR_TODO	
+node	lib	397	0	liblibc/lib.rs	293	4	4	variant	Null
+node	lib	3817	3463	liblibc/lib.rs	3852	31	2	NK_AS_STR_TODO	
+node	lib	4545	4543	liblibc/lib.rs	4146	38	5	type	
+node	lib	2310	2309	liblibc/lib.rs	2613	41	5	type	
+node	lib	1857	1854	liblibc/lib.rs	2443	47	2	lit	
+node	lib	708	707	liblibc/lib.rs	660	33	3	type	
+node	lib	4094	4093	liblibc/lib.rs	3932	42	6	type	
+node	lib	1845	1842	liblibc/lib.rs	2440	48	2	lit	
+node	lib	1368	895	liblibc/lib.rs	2104	12	30	static	EBFONT
+node	lib	1033	1030	liblibc/lib.rs	2012	40	1	lit	
+node	lib	1483	1480	liblibc/lib.rs	2132	39	2	lit	
+node	lib	1271	1268	liblibc/lib.rs	2076	40	2	lit	
+node	lib	632	628	liblibc/lib.rs	440	24	25	struct_field	sun_path
+node	lib	2871	2751	liblibc/lib.rs	3537	43	0	type	
+node	lib	1289	1288	liblibc/lib.rs	2082	34	5	type	
+node	lib	4115	4085	liblibc/lib.rs	3940	47	5	type	
+node	lib	1232	895	liblibc/lib.rs	2067	12	31	static	ENOTTY
+node	lib	797	754	liblibc/lib.rs	693	24	21	struct_field	st_mtime_nsec
+node	lib	4105	4085	liblibc/lib.rs	3936	33	5	type	
+node	lib	1251	1248	liblibc/lib.rs	2071	40	2	lit	
+node	lib	1197	1196	liblibc/lib.rs	2058	31	5	type	
+node	lib	922	895	liblibc/lib.rs	1985	12	33	static	O_TRUNC
+node	lib	2936	2935	liblibc/lib.rs	3556	37	6	type	
+node	lib	697	690	liblibc/lib.rs	655	16	24	NK_AS_STR_TODO	intptr_t
+node	lib	786	754	liblibc/lib.rs	689	35	8	type	
+node	lib	2761	2751	liblibc/lib.rs	3525	31	6	type	
+node	lib	1568	895	liblibc/lib.rs	2154	12	37	static	ETOOMANYREFS
+node	lib	1327	1324	liblibc/lib.rs	2091	39	2	lit	
+node	lib	2830	2751	liblibc/lib.rs	3533	34	7	type	
+node	lib	1288	895	liblibc/lib.rs	2082	12	33	static	ENOTEMPTY
+node	lib	1713	1711	liblibc/lib.rs	2405	52	1	lit	
+node	lib	1473	1472	liblibc/lib.rs	2130	33	5	type	
+node	lib	2848	2751	liblibc/lib.rs	3535	30	4	NK_AS_STR_TODO	
+node	lib	1380	895	liblibc/lib.rs	2107	12	29	static	ETIME
+node	lib	2084	2083	liblibc/lib.rs	2530	36	5	type	
+node	lib	3067	2918	liblibc/lib.rs	3566	35	7	type	
+node	lib	3836	3835	liblibc/lib.rs	3854	46	6	type	
+node	lib	1372	895	liblibc/lib.rs	2105	12	30	static	ENOSTR
+node	lib	2352	2335	liblibc/lib.rs	3448	34	5	type	
+node	lib	4201	4194	liblibc/lib.rs	3976	51	10	type	
+node	lib	556	545	liblibc/lib.rs	405	34	9	type	
+node	lib	561	560	liblibc/lib.rs	408	24	17	struct_field	s_addr
+node	lib	2142	2141	liblibc/lib.rs	2571	46	5	type	
+node	lib	2737	2437	liblibc/lib.rs	3513	30	1	NK_AS_STR_TODO	
+node	lib	1423	1420	liblibc/lib.rs	2117	42	2	lit	
+node	lib	3648	3463	liblibc/lib.rs	3828	33	5	type	
+node	lib	1357	1356	liblibc/lib.rs	2099	32	5	type	
+node	lib	1089	1086	liblibc/lib.rs	2028	42	6	lit	
+node	lib	3604	3463	liblibc/lib.rs	3820	65	7	type	
+node	lib	4375	4374	liblibc/lib.rs	4049	60	8	type	
+node	lib	2032	2029	liblibc/lib.rs	2508	40	1	lit	
+node	lib	1376	895	liblibc/lib.rs	2106	12	31	static	ENODATA
+node	lib	2001	1895	liblibc/lib.rs	2500	12	34	static	TCP_NODELAY
+node	lib	1259	1256	liblibc/lib.rs	2073	40	2	lit	
+node	lib	1071	1070	liblibc/lib.rs	2023	35	5	type	
+node	lib	2250	2249	liblibc/lib.rs	2598	40	5	type	
+node	lib	1074	895	liblibc/lib.rs	2024	12	33	static	PROT_READ
+node	lib	3986	3925	liblibc/lib.rs	3890	31	11	type	
+node	lib	2126	2125	liblibc/lib.rs	2567	40	5	type	
+node	lib	971	970	liblibc/lib.rs	1997	33	5	type	
+node	lib	828	827	liblibc/lib.rs	1950	4	30569	mod	os
+node	lib	2981	2980	liblibc/lib.rs	3559	71	6	type	
+node	lib	1224	895	liblibc/lib.rs	2065	12	31	static	ENFILE
+node	lib	1908	1905	liblibc/lib.rs	2474	49	1	lit	
+node	lib	1367	1364	liblibc/lib.rs	2102	42	7	path	
+node	lib	701	700	liblibc/lib.rs	656	37	4	type	
+node	lib	1635	1632	liblibc/lib.rs	2171	42	3	lit	
+node	lib	3746	3463	liblibc/lib.rs	3843	35	5	type	
+node	lib	3273	3202	liblibc/lib.rs	3736	62	5	type	
+node	lib	969	966	liblibc/lib.rs	1996	41	3	lit	
+node	lib	1632	895	liblibc/lib.rs	2171	12	34	static	ECANCELED
+node	lib	1997	1895	liblibc/lib.rs	2498	12	44	static	IPV6_DROP_MEMBERSHIP
+node	lib	1331	1328	liblibc/lib.rs	2092	40	2	lit	
+node	lib	2986	2985	liblibc/lib.rs	3560	35	6	type	
+node	lib	3760	3463	liblibc/lib.rs	3844	59	5	type	
+node	lib	2218	2217	liblibc/lib.rs	2590	37	5	type	
+node	lib	2895	2894	liblibc/lib.rs	3542	34	6	type	
+node	lib	934	895	liblibc/lib.rs	1988	12	35	static	S_IFBLK
+node	lib	646	645	liblibc/lib.rs	636	35	2	type	
+node	lib	690	637	liblibc/lib.rs	652	12	198	mod	c99
+node	lib	3260	3202	liblibc/lib.rs	3731	62	5	type	
+node	lib	3647	3463	liblibc/lib.rs	3827	59	6	NK_AS_STR_TODO	
+node	lib	1213	1212	liblibc/lib.rs	2062	33	5	type	
+node	lib	961	958	liblibc/lib.rs	1994	42	3	lit	
+node	lib	4441	4292	liblibc/lib.rs	4056	31	5	type	
+node	lib	2286	2285	liblibc/lib.rs	2607	37	5	type	
+node	lib	2726	2437	liblibc/lib.rs	3512	38	5	type	
+node	lib	681	638	liblibc/lib.rs	648	16	22	NK_AS_STR_TODO	time_t
+node	lib	1841	1838	liblibc/lib.rs	2439	55	2	lit	
+node	lib	3808	3463	liblibc/lib.rs	3851	37	5	type	
+node	lib	4383	4292	liblibc/lib.rs	4050	63	5	type	
+node	lib	2580	2437	liblibc/lib.rs	3485	39	6	NK_AS_STR_TODO	
+node	lib	431	430	liblibc/lib.rs	334	32	3	type	
+node	lib	2730	2437	liblibc/lib.rs	3512	48	5	type	
+node	lib	1811	1810	liblibc/lib.rs	2432	51	5	type	
+node	lib	533	507	liblibc/lib.rs	396	16	184	struct	sockaddr_storage
+node	lib	1223	1220	liblibc/lib.rs	2064	40	2	lit	
+node	lib	4088	4085	liblibc/lib.rs	3931	38	7	type	
+node	lib	3321	3280	liblibc/lib.rs	3752	30	6	NK_AS_STR_TODO	
+node	lib	3769	3463	liblibc/lib.rs	3846	30	3	NK_AS_STR_TODO	
+node	lib	1364	895	liblibc/lib.rs	2102	12	38	static	EDEADLOCK
+node	lib	3858	3463	liblibc/lib.rs	3856	54	5	NK_AS_STR_TODO	
+node	lib	1082	895	liblibc/lib.rs	2026	12	33	static	PROT_EXEC
+node	lib	4326	4292	liblibc/lib.rs	4044	32	5	type	
+node	lib	3155	2918	liblibc/lib.rs	3573	35	8	type	
+node	lib	3063	2918	liblibc/lib.rs	3565	59	6	type	
+node	lib	2094	2091	liblibc/lib.rs	2532	46	7	lit	
+node	lib	3554	3553	liblibc/lib.rs	3815	52	7	type	
+node	lib	2331	2330	liblibc/lib.rs	3442	8	784	mod	ctype
+node	lib	2575	2437	liblibc/lib.rs	3485	29	1	NK_AS_STR_TODO	
+node	lib	1604	895	liblibc/lib.rs	2163	12	32	static	ENOTNAM
+node	lib	664	663	liblibc/lib.rs	642	35	3	type	
+node	lib	2224	2221	liblibc/lib.rs	2591	46	2	lit	
+node	lib	4435	4292	liblibc/lib.rs	4055	39	3	NK_AS_STR_TODO	
+node	lib	1992	1989	liblibc/lib.rs	2496	51	2	lit	
+node	lib	1204	895	liblibc/lib.rs	2060	12	30	static	EXDEV
+node	lib	3460	3459	liblibc/lib.rs	3804	37	5	type	
+node	lib	470	457	liblibc/lib.rs	364	35	7	type	
+node	lib	2961	2918	liblibc/lib.rs	3558	42	2	NK_AS_STR_TODO	
+node	lib	850	829	liblibc/lib.rs	1958	12	32	static	SEEK_SET
+node	lib	2082	2079	liblibc/lib.rs	2529	48	7	lit	
+node	lib	1637	1636	liblibc/lib.rs	2172	31	5	type	
+node	lib	783	754	liblibc/lib.rs	688	36	9	type	
+node	lib	3099	2918	liblibc/lib.rs	3568	47	7	type	
+node	lib	3004	3003	liblibc/lib.rs	3561	49	6	type	
+node	lib	942	895	liblibc/lib.rs	1990	12	35	static	S_IFREG
+node	lib	3810	3463	liblibc/lib.rs	3851	33	2	NK_AS_STR_TODO	
+node	lib	630	628	liblibc/lib.rs	439	36	11	type	
+node	lib	729	728	liblibc/lib.rs	667	35	3	type	
+node	lib	865	862	liblibc/lib.rs	1961	40	1	lit	
+node	lib	538	533	liblibc/lib.rs	398	36	3	type	
+node	lib	1003	1002	liblibc/lib.rs	2005	39	5	type	
+node	lib	1169	1168	liblibc/lib.rs	2051	31	5	type	
+node	lib	806	754	liblibc/lib.rs	696	24	23	struct_field	__unused
+node	lib	3811	3463	liblibc/lib.rs	3851	47	5	type	
+node	lib	3854	3463	liblibc/lib.rs	3856	40	3	NK_AS_STR_TODO	
+node	lib	1960	1957	liblibc/lib.rs	2488	43	1	lit	
+node	lib	2855	2854	liblibc/lib.rs	3536	39	6	type	
+node	lib	965	962	liblibc/lib.rs	1995	41	3	lit	
+node	lib	3781	3463	liblibc/lib.rs	3848	36	6	type	
+node	lib	3629	3463	liblibc/lib.rs	3826	37	7	type	
+node	lib	771	754	liblibc/lib.rs	684	32	5	type	
+node	lib	3589	3463	liblibc/lib.rs	3819	55	5	type	
+node	lib	3569	3568	liblibc/lib.rs	3817	34	6	type	
+node	lib	795	754	liblibc/lib.rs	692	34	6	type	
+node	lib	3021	3020	liblibc/lib.rs	3562	49	6	type	
+node	lib	749	748	liblibc/lib.rs	676	37	3	type	
+node	lib	639	638	liblibc/lib.rs	634	16	21	NK_AS_STR_TODO	c_char
+node	lib	1107	1106	liblibc/lib.rs	2034	36	7	type	
+node	lib	3890	3463	liblibc/lib.rs	3860	29	4	NK_AS_STR_TODO	
+node	lib	1320	895	liblibc/lib.rs	2090	12	30	static	EL3RST
+node	lib	2189	2103	liblibc/lib.rs	2583	12	39	static	_SC_SEMAPHORES
+node	lib	3210	3202	liblibc/lib.rs	3718	50	6	type	
+node	lib	1742	1668	liblibc/lib.rs	2414	12	41	static	POSIX_MADV_RANDOM
+node	lib	503	444	liblibc/lib.rs	381	16	20	enum	timezone
+node	lib	1073	1070	liblibc/lib.rs	2023	43	1	lit	
+node	lib	943	942	liblibc/lib.rs	1990	33	5	type	
+node	lib	4488	4292	liblibc/lib.rs	4060	42	4	NK_AS_STR_TODO	
+node	lib	4380	4379	liblibc/lib.rs	4050	49	9	type	
+node	lib	4397	4396	liblibc/lib.rs	4052	49	9	type	
+node	lib	1069	1066	liblibc/lib.rs	2021	41	2	lit	
+node	lib	1145	1144	liblibc/lib.rs	2045	31	5	type	
+node	lib	2829	2751	liblibc/lib.rs	3532	59	4	NK_AS_STR_TODO	
+node	lib	3534	3463	liblibc/lib.rs	3814	35	7	type	
+node	lib	2641	2640	liblibc/lib.rs	3500	36	6	type	
+node	lib	1986	1985	liblibc/lib.rs	2495	42	5	type	
+node	lib	4574	4543	liblibc/lib.rs	4149	60	8	type	
+node	lib	2769	2768	liblibc/lib.rs	3527	32	6	type	
+node	lib	2036	2033	liblibc/lib.rs	2509	42	1	lit	
+node	lib	3095	3094	liblibc/lib.rs	3568	35	6	type	
+node	lib	1583	1580	liblibc/lib.rs	2157	42	3	lit	
+node	lib	1284	895	liblibc/lib.rs	2081	12	30	static	ENOSYS
+node	lib	2677	2437	liblibc/lib.rs	3507	37	5	type	
+node	lib	600	507	liblibc/lib.rs	428	16	392	struct	addrinfo
+node	lib	1236	895	liblibc/lib.rs	2068	12	32	static	ETXTBSY
+node	lib	4509	4292	liblibc/lib.rs	4062	55	3	NK_AS_STR_TODO	
+node	lib	2316	2313	liblibc/lib.rs	2614	43	2	lit	
+node	lib	1866	1668	liblibc/lib.rs	2446	12	52	static	_SC_XOPEN_REALTIME_THREADS
+node	lib	1124	895	liblibc/lib.rs	2039	12	37	static	MS_ASYNC
+node	lib	4448	4292	liblibc/lib.rs	4057	32	5	type	
+node	lib	3674	3463	liblibc/lib.rs	3834	28	3	NK_AS_STR_TODO	
+node	lib	2846	2751	liblibc/lib.rs	3535	36	6	type	
+node	lib	1891	1890	liblibc/lib.rs	2465	32	5	type	
+node	lib	4328	4292	liblibc/lib.rs	4044	24	6	NK_AS_STR_TODO	
+node	lib	761	754	liblibc/lib.rs	681	24	17	struct_field	st_nlink
+node	lib	2849	2751	liblibc/lib.rs	3535	47	11	type	
+node	lib	3060	3059	liblibc/lib.rs	3565	48	6	type	
+node	lib	461	457	liblibc/lib.rs	361	24	18	struct_field	gl_pathv
+node	lib	421	411	liblibc/lib.rs	331	12	23	NK_AS_STR_TODO	int64_t
+node	lib	957	954	liblibc/lib.rs	1993	41	2	lit	
+node	lib	3727	3726	liblibc/lib.rs	3840	49	6	type	
+node	lib	1059	1058	liblibc/lib.rs	2019	33	5	type	
+node	lib	4295	4292	liblibc/lib.rs	4041	34	5	type	
+node	lib	4172	4085	liblibc/lib.rs	3949	62	5	type	
+node	lib	3395	3394	liblibc/lib.rs	3783	57	8	type	
+node	lib	1620	895	liblibc/lib.rs	2167	12	31	static	EDQUOT
+node	lib	818	731	liblibc/lib.rs	704	16	88	struct	pthread_attr_t
+node	lib	3776	3463	liblibc/lib.rs	3847	29	4	NK_AS_STR_TODO	
+node	lib	1149	1148	liblibc/lib.rs	2046	31	5	type	
+node	lib	1348	895	liblibc/lib.rs	2097	12	30	static	EXFULL
+node	lib	4136	4085	liblibc/lib.rs	3944	38	7	type	
+node	lib	764	754	liblibc/lib.rs	682	24	15	struct_field	st_mode
+node	lib	2757	2751	liblibc/lib.rs	3524	40	5	type	
+node	lib	518	507	liblibc/lib.rs	390	16	25	NK_AS_STR_TODO	in_port_t
+node	lib	4437	4292	liblibc/lib.rs	4055	62	6	type	
+node	lib	833	829	liblibc/lib.rs	1954	12	36	static	EXIT_FAILURE
+node	lib	1065	1062	liblibc/lib.rs	2020	41	2	lit	
+node	lib	1798	1668	liblibc/lib.rs	2429	12	45	static	_SC_THREAD_STACK_MIN
+node	lib	788	754	liblibc/lib.rs	690	24	16	struct_field	st_atime
+node	lib	937	934	liblibc/lib.rs	1988	41	5	lit	
+node	lib	2154	2153	liblibc/lib.rs	2574	45	5	type	
+node	lib	624	600	liblibc/lib.rs	436	24	18	struct_field	ai_next
+node	lib	2547	2437	liblibc/lib.rs	3482	37	5	type	
+node	lib	3116	2918	liblibc/lib.rs	3570	35	5	type	
+node	lib	3356	3329	liblibc/lib.rs	3763	61	5	type	
+node	lib	1657	1656	liblibc/lib.rs	2178	40	5	type	
+node	lib	1560	895	liblibc/lib.rs	2152	12	33	static	ENOTCONN
+node	lib	436	404	liblibc/lib.rs	337	8	88	mod	posix88
+node	lib	2188	2185	liblibc/lib.rs	2582	53	2	lit	
+node	lib	1053	1050	liblibc/lib.rs	2017	41	1	lit	
+node	lib	1822	1668	liblibc/lib.rs	2435	12	48	static	_SC_THREAD_PRIO_PROTECT
+node	lib	1741	1738	liblibc/lib.rs	2413	51	1	lit	
+node	lib	1025	1022	liblibc/lib.rs	2010	41	1	lit	
+node	lib	3219	3202	liblibc/lib.rs	3719	30	2	NK_AS_STR_TODO	
+node	lib	4067	4066	liblibc/lib.rs	3918	36	6	type	
+node	lib	3626	3463	liblibc/lib.rs	3825	36	5	type	
+node	lib	530	529	liblibc/lib.rs	394	34	2	type	
+node	lib	1511	1508	liblibc/lib.rs	2139	48	2	lit	
+node	lib	1255	1252	liblibc/lib.rs	2072	39	2	lit	
+node	lib	1499	1496	liblibc/lib.rs	2136	43	2	lit	
+node	lib	1965	1895	liblibc/lib.rs	2490	12	33	static	IPPROTO_IP
+node	lib	3248	3202	liblibc/lib.rs	3730	61	5	type	
+node	lib	1725	1723	liblibc/lib.rs	2407	52	1	lit	
+node	lib	2811	2751	liblibc/lib.rs	3530	58	4	NK_AS_STR_TODO	
+node	lib	3187	2918	liblibc/lib.rs	3580	43	1	NK_AS_STR_TODO	
+node	lib	483	482	liblibc/lib.rs	367	36	6	type	
+node	lib	2411	2335	liblibc/lib.rs	3456	45	5	type	
+node	lib	1806	1668	liblibc/lib.rs	2431	12	50	static	_SC_THREAD_ATTR_STACKADDR
+node	lib	1347	1344	liblibc/lib.rs	2096	38	2	lit	
+node	lib	4338	4292	liblibc/lib.rs	4045	51	5	type	
+node	lib	2173	2103	liblibc/lib.rs	2579	12	36	static	_SC_MEMLOCK
+node	lib	1825	1822	liblibc/lib.rs	2435	57	2	lit	
+node	lib	3801	3463	liblibc/lib.rs	3850	37	5	type	
+node	lib	2763	2751	liblibc/lib.rs	3525	28	1	NK_AS_STR_TODO	
+node	lib	3516	3463	liblibc/lib.rs	3812	31	5	type	
+node	lib	1132	895	liblibc/lib.rs	2041	12	36	static	MS_SYNC
+node	lib	4382	4292	liblibc/lib.rs	4050	31	11	NK_AS_STR_TODO	
+node	lib	1790	1668	liblibc/lib.rs	2427	12	57	static	_SC_THREAD_DESTRUCTOR_ITERATIONS
+node	lib	4362	4292	liblibc/lib.rs	4048	39	14	type	
+node	lib	593	507	liblibc/lib.rs	424	16	141	struct	ip6_mreq
+node	lib	4243	4217	liblibc/lib.rs	3988	28	7	NK_AS_STR_TODO	
+node	lib	3108	2918	liblibc/lib.rs	3569	34	7	type	
+node	lib	767	754	liblibc/lib.rs	683	24	13	struct_field	st_uid
+node	lib	1152	895	liblibc/lib.rs	2047	12	27	static	EIO
+node	lib	2573	2437	liblibc/lib.rs	3485	32	5	type	
+node	lib	2550	2437	liblibc/lib.rs	3482	29	6	NK_AS_STR_TODO	
+node	lib	4252	4217	liblibc/lib.rs	3990	39	11	type	
+node	lib	598	593	liblibc/lib.rs	426	42	6	type	
+node	lib	1031	1030	liblibc/lib.rs	2012	32	5	type	
+node	lib	2196	2193	liblibc/lib.rs	2584	59	2	lit	
+node	lib	2585	2437	liblibc/lib.rs	3486	32	7	type	
+node	lib	3050	3049	liblibc/lib.rs	3564	58	6	type	
+node	lib	590	586	liblibc/lib.rs	422	24	22	struct_field	imr_interface
+node	lib	481	457	liblibc/lib.rs	367	24	18	struct_field	__unused4
+node	lib	3892	3463	liblibc/lib.rs	3860	49	8	type	
+node	lib	2899	2898	liblibc/lib.rs	3542	46	6	type	
+node	lib	3355	3329	liblibc/lib.rs	3763	44	4	NK_AS_STR_TODO	
+node	lib	1343	1340	liblibc/lib.rs	2095	38	2	lit	
+node	lib	2548	2547	liblibc/lib.rs	3482	38	4	type	
+node	lib	2536	2535	liblibc/lib.rs	3480	39	4	type	
+node	lib	2490	2489	liblibc/lib.rs	3472	41	6	type	
+node	lib	649	648	liblibc/lib.rs	637	35	3	type	
+node	lib	1962	1961	liblibc/lib.rs	2489	36	5	type	
+node	lib	1263	1260	liblibc/lib.rs	2074	39	2	lit	
+node	lib	1600	895	liblibc/lib.rs	2162	12	32	static	EUCLEAN
+node	lib	1641	1640	liblibc/lib.rs	2173	36	5	type	
+node	lib	2028	2025	liblibc/lib.rs	2507	40	1	lit	
+node	lib	471	470	liblibc/lib.rs	364	36	6	type	
+node	lib	1456	895	liblibc/lib.rs	2126	12	31	static	ELIBSCN
+node	lib	2437	2427	liblibc/lib.rs	3466	12	2420	foreign_mod	
+node	lib	3871	3463	liblibc/lib.rs	3858	46	7	type	
+node	lib	1714	1668	liblibc/lib.rs	2406	12	42	static	GLOB_APPEND
+node	lib	4481	4292	liblibc/lib.rs	4060	35	5	type	
+node	lib	1135	1132	liblibc/lib.rs	2041	41	6	lit	
+node	lib	1928	1925	liblibc/lib.rs	2479	45	2	lit	
+node	lib	3591	3463	liblibc/lib.rs	3819	49	4	NK_AS_STR_TODO	
+node	lib	4024	3925	liblibc/lib.rs	3896	49	6	type	
+node	lib	1444	895	liblibc/lib.rs	2123	12	31	static	EREMCHG
+node	lib	1199	1196	liblibc/lib.rs	2058	39	2	lit	
+node	lib	1961	1895	liblibc/lib.rs	2489	12	34	static	IPPROTO_TCP
+node	lib	2158	2157	liblibc/lib.rs	2575	44	5	type	
+node	lib	1457	1456	liblibc/lib.rs	2126	32	5	type	
+node	lib	2678	2677	liblibc/lib.rs	3507	38	4	type	
+node	lib	2890	2751	liblibc/lib.rs	3541	45	5	type	
+node	lib	1918	1917	liblibc/lib.rs	2477	37	5	type	
+node	lib	1981	1895	liblibc/lib.rs	2494	12	29	static	IP_TTL
+node	lib	562	560	liblibc/lib.rs	408	32	9	type	
+node	lib	1547	1544	liblibc/lib.rs	2148	45	3	lit	
+node	lib	1769	1766	liblibc/lib.rs	2421	54	2	lit	
+node	lib	1681	1680	liblibc/lib.rs	2399	32	6	type	
+node	lib	1701	1699	liblibc/lib.rs	2403	52	1	lit	
+node	lib	3125	3124	liblibc/lib.rs	3571	34	6	type	
+node	lib	3915	3195	liblibc/lib.rs	3873	8	1231	mod	mman
+node	lib	3657	3463	liblibc/lib.rs	3831	36	5	type	
+node	lib	3605	3604	liblibc/lib.rs	3820	66	6	type	
+node	lib	1276	895	liblibc/lib.rs	2079	12	36	static	ENAMETOOLONG
+node	lib	2530	2437	liblibc/lib.rs	3478	31	4	NK_AS_STR_TODO	
+node	lib	2157	2103	liblibc/lib.rs	2575	12	43	static	_SC_PRIORITIZED_IO
+node	lib	1809	1806	liblibc/lib.rs	2431	59	2	lit	
+node	lib	4220	4217	liblibc/lib.rs	3986	37	7	type	
+node	lib	1296	895	liblibc/lib.rs	2084	12	39	static	EWOULDBLOCK
+node	lib	1435	1432	liblibc/lib.rs	2120	42	2	lit	
+node	lib	4174	4057	liblibc/lib.rs	3953	8	564	mod	signal
+node	lib	3031	2918	liblibc/lib.rs	3563	30	2	NK_AS_STR_TODO	
+node	lib	4004	4003	liblibc/lib.rs	3893	39	6	type	
+node	lib	883	882	liblibc/lib.rs	1966	38	6	type	
+node	lib	478	457	liblibc/lib.rs	366	35	7	type	
+node	lib	2485	2437	liblibc/lib.rs	3471	46	5	type	
+node	lib	2328	2325	liblibc/lib.rs	2617	55	3	lit	
+node	lib	3003	2918	liblibc/lib.rs	3561	48	7	type	
+node	lib	473	457	liblibc/lib.rs	365	24	18	struct_field	__unused2
+node	lib	3392	3377	liblibc/lib.rs	3783	33	4	NK_AS_STR_TODO	
+node	lib	1936	1933	liblibc/lib.rs	2481	50	2	lit	
+node	lib	846	845	liblibc/lib.rs	1957	29	5	type	
+node	lib	1397	1396	liblibc/lib.rs	2111	32	5	type	
+node	lib	2034	2033	liblibc/lib.rs	2509	34	5	type	
+node	lib	875	874	liblibc/lib.rs	1964	32	6	type	
+node	lib	1447	1444	liblibc/lib.rs	2123	40	2	lit	
+node	lib	2874	2751	liblibc/lib.rs	3538	36	5	type	
+node	lib	1571	1568	liblibc/lib.rs	2154	45	3	lit	
+node	lib	813	811	liblibc/lib.rs	700	32	6	type	
+node	lib	1563	1560	liblibc/lib.rs	2152	41	3	lit	
+node	lib	2236	2233	liblibc/lib.rs	2594	51	2	lit	
+node	lib	845	829	liblibc/lib.rs	1957	12	28	static	EOF
+node	lib	2129	2103	liblibc/lib.rs	2568	12	38	static	_SC_TZNAME_MAX
+node	lib	1311	1308	liblibc/lib.rs	2087	39	2	lit	
+node	lib	1561	1560	liblibc/lib.rs	2152	33	5	type	
+node	lib	2229	2103	liblibc/lib.rs	2593	12	42	static	_SC_SEM_NSEMS_MAX
+node	lib	1359	1356	liblibc/lib.rs	2099	40	2	lit	
+node	lib	4221	4220	liblibc/lib.rs	3986	38	6	type	
+node	lib	1750	1668	liblibc/lib.rs	2416	12	43	static	POSIX_MADV_WILLNEED
+node	lib	555	545	liblibc/lib.rs	405	24	19	struct_field	sin_zero
+node	lib	2312	2309	liblibc/lib.rs	2613	49	2	lit	
+node	lib	3527	3463	liblibc/lib.rs	3813	45	5	type	
+node	lib	3842	3463	liblibc/lib.rs	3854	54	5	NK_AS_STR_TODO	
+node	lib	3677	3676	liblibc/lib.rs	3834	48	6	type	
+node	lib	861	858	liblibc/lib.rs	1960	42	1	lit	
+node	lib	3574	3573	liblibc/lib.rs	3817	49	7	type	
+node	lib	2626	2437	liblibc/lib.rs	3496	29	4	NK_AS_STR_TODO	
+node	lib	4100	4085	liblibc/lib.rs	3933	32	5	NK_AS_STR_TODO	
+node	lib	4337	4292	liblibc/lib.rs	4045	24	11	NK_AS_STR_TODO	
+node	lib	1757	1754	liblibc/lib.rs	2417	53	1	lit	
+node	lib	997	994	liblibc/lib.rs	2003	38	1	lit	
+node	lib	3305	3280	liblibc/lib.rs	3751	34	5	type	
+node	lib	3505	3463	liblibc/lib.rs	3810	71	5	type	
+node	lib	1091	1090	liblibc/lib.rs	2029	36	5	type	
+node	lib	889	886	liblibc/lib.rs	1967	43	6	lit	
+node	lib	4161	4085	liblibc/lib.rs	3947	66	5	type	
+node	lib	4044	3925	liblibc/lib.rs	3898	67	6	type	
+node	lib	3623	3622	liblibc/lib.rs	3824	66	5	type	
+node	lib	2883	2751	liblibc/lib.rs	3539	47	1	type	
+node	lib	3070	2918	liblibc/lib.rs	3566	31	2	NK_AS_STR_TODO	
+node	lib	3072	2918	liblibc/lib.rs	3566	48	7	type	
+node	lib	3640	3639	liblibc/lib.rs	3827	51	6	type	
+node	lib	2975	2918	liblibc/lib.rs	3559	43	2	NK_AS_STR_TODO	
+node	lib	4107	4085	liblibc/lib.rs	3936	29	2	NK_AS_STR_TODO	
+node	lib	4412	4292	liblibc/lib.rs	4053	65	5	type	
+node	lib	1228	895	liblibc/lib.rs	2066	12	31	static	EMFILE
+node	lib	3581	3463	liblibc/lib.rs	3818	33	5	type	
+node	lib	2751	2739	liblibc/lib.rs	3523	12	1208	foreign_mod	
+node	lib	748	731	liblibc/lib.rs	676	16	25	NK_AS_STR_TODO	blksize_t
+node	lib	1851	1850	liblibc/lib.rs	2442	44	5	type	
+node	lib	3427	3406	liblibc/lib.rs	3790	31	4	NK_AS_STR_TODO	
+node	lib	2947	2918	liblibc/lib.rs	3556	59	1	NK_AS_STR_TODO	
+node	lib	2320	2317	liblibc/lib.rs	2615	54	3	lit	
+node	lib	4500	4292	liblibc/lib.rs	4062	26	6	NK_AS_STR_TODO	
+node	lib	2948	2918	liblibc/lib.rs	3557	34	7	type	
+node	lib	4549	4543	liblibc/lib.rs	4147	33	7	type	
+node	lib	967	966	liblibc/lib.rs	1996	33	5	type	
+node	lib	3486	3485	liblibc/lib.rs	3809	35	6	type	
+node	lib	3654	3463	liblibc/lib.rs	3830	35	5	type	
+node	lib	4529	4292	liblibc/lib.rs	4065	28	6	NK_AS_STR_TODO	
+node	lib	1141	1140	liblibc/lib.rs	2044	32	5	type	
+node	lib	4202	4201	liblibc/lib.rs	3976	56	5	type	
+node	lib	3599	3463	liblibc/lib.rs	3820	30	3	NK_AS_STR_TODO	
+node	lib	867	866	liblibc/lib.rs	1962	32	5	type	
+node	lib	3494	3493	liblibc/lib.rs	3810	36	6	type	
+node	lib	4280	2329	liblibc/lib.rs	4028	4	58	mod	posix08
+node	lib	3292	3280	liblibc/lib.rs	3749	65	5	type	
+node	lib	1112	1111	liblibc/lib.rs	2034	47	1	lit	
+node	lib	1572	895	liblibc/lib.rs	2155	12	34	static	ETIMEDOUT
+node	lib	3332	3329	liblibc/lib.rs	3761	34	7	type	
+node	lib	3739	3738	liblibc/lib.rs	3842	36	6	type	
+node	lib	521	507	liblibc/lib.rs	391	16	25	NK_AS_STR_TODO	in_addr_t
+node	lib	4120	4119	liblibc/lib.rs	3942	37	6	type	
+node	lib	3010	2918	liblibc/lib.rs	3561	57	1	NK_AS_STR_TODO	
+node	lib	3124	2918	liblibc/lib.rs	3571	33	7	type	
+node	lib	1765	1762	liblibc/lib.rs	2420	45	2	lit	
+node	lib	3011	2918	liblibc/lib.rs	3561	71	5	type	
+node	lib	2141	2103	liblibc/lib.rs	2571	12	44	static	_SC_REALTIME_SIGNALS
+node	lib	1440	895	liblibc/lib.rs	2122	12	30	static	EBADFD
+node	lib	3212	3202	liblibc/lib.rs	3718	44	4	NK_AS_STR_TODO	
+node	lib	3288	3280	liblibc/lib.rs	3749	53	7	type	
+node	lib	2325	2103	liblibc/lib.rs	2617	12	47	static	_SC_XBS5_LPBIG_OFFBIG
+node	lib	1245	1244	liblibc/lib.rs	2070	32	5	type	
+node	lib	2794	2751	liblibc/lib.rs	3529	61	8	type	
+node	lib	1759	1758	liblibc/lib.rs	2419	41	5	type	
+node	lib	1151	1148	liblibc/lib.rs	2046	39	1	lit	
+node	lib	625	600	liblibc/lib.rs	436	33	9	type	
+node	lib	2560	2437	liblibc/lib.rs	3483	50	5	type	
+node	lib	1375	1372	liblibc/lib.rs	2105	39	2	lit	
+node	lib	4167	4085	liblibc/lib.rs	3949	33	2	NK_AS_STR_TODO	
+node	lib	2278	2277	liblibc/lib.rs	2605	39	5	type	
+node	lib	411	404	liblibc/lib.rs	327	8	311	mod	c99
+node	lib	3015	2918	liblibc/lib.rs	3562	35	7	type	
+node	lib	4263	4257	liblibc/lib.rs	3998	12	223	foreign_mod	
+node	lib	1235	1232	liblibc/lib.rs	2067	40	2	lit	
+node	lib	1910	1909	liblibc/lib.rs	2475	39	5	type	
+node	lib	3362	3329	liblibc/lib.rs	3764	29	2	NK_AS_STR_TODO	
+node	lib	1159	1156	liblibc/lib.rs	2048	39	1	lit	
+node	lib	2614	2437	liblibc/lib.rs	3494	40	6	NK_AS_STR_TODO	
+node	lib	902	895	liblibc/lib.rs	1980	12	32	static	O_WRONLY
+node	lib	1645	1644	liblibc/lib.rs	2174	36	5	type	
+node	lib	1616	895	liblibc/lib.rs	2166	12	34	static	EREMOTEIO
+node	lib	3987	3986	liblibc/lib.rs	3890	36	6	type	
+node	lib	3714	3463	liblibc/lib.rs	3839	33	10	type	
+node	lib	1540	895	liblibc/lib.rs	2147	12	34	static	ENETRESET
+node	lib	4439	4292	liblibc/lib.rs	4055	57	3	NK_AS_STR_TODO	
+node	lib	3882	3463	liblibc/lib.rs	3859	30	6	NK_AS_STR_TODO	
+node	lib	3337	3329	liblibc/lib.rs	3761	50	5	type	
+node	lib	746	745	liblibc/lib.rs	675	35	3	type	
+node	lib	2791	2790	liblibc/lib.rs	3529	50	6	type	
+node	lib	3518	3463	liblibc/lib.rs	3812	27	2	NK_AS_STR_TODO	
+node	lib	4238	4231	liblibc/lib.rs	3988	85	3	type	
+node	lib	3380	3377	liblibc/lib.rs	3781	40	7	type	
+node	lib	4014	3925	liblibc/lib.rs	3893	60	4	NK_AS_STR_TODO	
+node	lib	4303	4292	liblibc/lib.rs	4041	62	5	type	
+node	lib	821	820	liblibc/lib.rs	705	33	3	type	
+node	lib	607	600	liblibc/lib.rs	431	24	18	struct_field	ai_socktype
+node	lib	2016	2013	liblibc/lib.rs	2503	45	1	lit	
+node	lib	1695	1693	liblibc/lib.rs	2402	52	1	lit	
+node	lib	1163	1160	liblibc/lib.rs	2049	39	1	lit	
+node	lib	1501	1500	liblibc/lib.rs	2137	36	5	type	
+node	lib	1929	1895	liblibc/lib.rs	2480	12	39	static	MADV_MERGEABLE
+node	lib	2253	2103	liblibc/lib.rs	2599	12	41	static	_SC_BC_SCALE_MAX
+node	lib	2185	2103	liblibc/lib.rs	2582	12	44	static	_SC_MESSAGE_PASSING
+node	lib	1847	1846	liblibc/lib.rs	2441	41	5	type	
+node	lib	933	930	liblibc/lib.rs	1987	41	4	lit	
+node	lib	3164	3163	liblibc/lib.rs	3579	35	6	type	
+node	lib	1555	1552	liblibc/lib.rs	2150	40	3	lit	
+node	lib	1493	1492	liblibc/lib.rs	2135	33	5	type	
+node	lib	2397	2335	liblibc/lib.rs	3454	44	5	type	
+node	lib	4516	4515	liblibc/lib.rs	4063	47	8	type	
+node	lib	4114	4085	liblibc/lib.rs	3940	33	2	NK_AS_STR_TODO	
+node	lib	3694	3463	liblibc/lib.rs	3835	55	6	NK_AS_STR_TODO	
+node	lib	2324	2321	liblibc/lib.rs	2616	55	3	lit	
+node	lib	1086	895	liblibc/lib.rs	2028	12	37	static	MAP_FILE
+node	lib	3910	3903	liblibc/lib.rs	3869	45	5	type	
+node	lib	2718	2437	liblibc/lib.rs	3511	36	5	type	
+node	lib	1215	1212	liblibc/lib.rs	2062	41	2	lit	
+node	lib	1535	1532	liblibc/lib.rs	2145	41	3	lit	
+node	lib	1870	1668	liblibc/lib.rs	2448	12	46	static	PTHREAD_CREATE_JOINABLE
+node	lib	3753	3463	liblibc/lib.rs	3844	36	5	type	
+node	lib	2705	2437	liblibc/lib.rs	3510	39	5	type	
+node	lib	1287	1284	liblibc/lib.rs	2081	39	2	lit	
+node	lib	3770	3463	liblibc/lib.rs	3846	45	5	type	
+node	lib	3560	3559	liblibc/lib.rs	3815	68	7	type	
+node	lib	1524	895	liblibc/lib.rs	2143	12	34	static	EADDRINUSE
+node	lib	2005	1895	liblibc/lib.rs	2501	12	33	static	SOL_SOCKET
+node	lib	3088	2918	liblibc/lib.rs	3567	44	2	NK_AS_STR_TODO	
+node	lib	3940	3925	liblibc/lib.rs	3880	37	7	type	
+node	lib	2918	2910	liblibc/lib.rs	3554	12	1643	foreign_mod	
+node	lib	3888	3887	liblibc/lib.rs	3860	36	6	type	
+node	lib	3169	3168	liblibc/lib.rs	3579	48	6	type	
+node	lib	2071	2037	liblibc/lib.rs	2527	12	42	static	MAP_GROWSDOWN
+node	lib	2072	2071	liblibc/lib.rs	2527	39	5	type	
+node	lib	2025	1895	liblibc/lib.rs	2507	12	30	static	SHUT_RD
+node	lib	410	405	liblibc/lib.rs	325	12	18	enum	fpos_t
+node	lib	1299	1296	liblibc/lib.rs	2084	44	6	path	
+node	lib	3729	3463	liblibc/lib.rs	3840	39	3	NK_AS_STR_TODO	
+node	lib	1147	1144	liblibc/lib.rs	2045	39	1	lit	
+node	lib	891	890	liblibc/lib.rs	1968	33	6	type	
+node	lib	3103	2918	liblibc/lib.rs	3568	59	7	type	
+node	lib	2474	2473	liblibc/lib.rs	3470	37	4	type	
+node	lib	1217	1216	liblibc/lib.rs	2063	32	5	type	
+node	lib	2564	2437	liblibc/lib.rs	3483	65	5	type	
+node	lib	441	404	liblibc/lib.rs	343	8	16	mod	bsd44
+node	lib	2055	2037	liblibc/lib.rs	2522	12	46	static	PROT_GROWSUP
+node	lib	528	524	liblibc/lib.rs	394	24	19	struct_field	sa_data
+node	lib	3059	2918	liblibc/lib.rs	3565	47	7	type	
+node	lib	1569	1568	liblibc/lib.rs	2154	37	5	type	
+node	lib	2482	2481	liblibc/lib.rs	3471	37	4	type	
+node	lib	3947	3925	liblibc/lib.rs	3880	46	3	NK_AS_STR_TODO	
+node	lib	3796	3463	liblibc/lib.rs	3849	50	4	NK_AS_STR_TODO	
+node	lib	2657	2437	liblibc/lib.rs	3504	33	6	type	
+node	lib	1191	1188	liblibc/lib.rs	2056	40	2	lit	
+node	lib	782	754	liblibc/lib.rs	688	24	21	struct_field	st_blksize
+node	lib	3223	3202	liblibc/lib.rs	3719	41	4	NK_AS_STR_TODO	
+node	lib	3849	3463	liblibc/lib.rs	3856	29	2	NK_AS_STR_TODO	
+node	lib	3840	3463	liblibc/lib.rs	3854	61	6	type	
+node	lib	1295	1292	liblibc/lib.rs	2083	38	2	lit	
+node	lib	1061	1058	liblibc/lib.rs	2019	41	2	lit	
+node	lib	1914	1913	liblibc/lib.rs	2476	39	5	type	
+node	lib	995	994	liblibc/lib.rs	2003	30	5	type	
+node	lib	3702	3463	liblibc/lib.rs	3837	32	4	NK_AS_STR_TODO	
+node	lib	1520	895	liblibc/lib.rs	2142	12	36	static	EAFNOSUPPORT
+node	lib	1878	1668	liblibc/lib.rs	2457	12	45	static	PTHREAD_STACK_MIN
+node	lib	2266	2265	liblibc/lib.rs	2602	43	5	type	
+node	lib	1085	1082	liblibc/lib.rs	2026	43	1	lit	
+node	lib	1588	895	liblibc/lib.rs	2159	12	33	static	EALREADY
+node	lib	2153	2103	liblibc/lib.rs	2574	12	44	static	_SC_ASYNCHRONOUS_IO
+node	lib	789	754	liblibc/lib.rs	690	34	6	type	
+node	lib	485	457	liblibc/lib.rs	368	24	18	struct_field	__unused5
+node	lib	626	625	liblibc/lib.rs	436	34	8	type	
+node	lib	1058	895	liblibc/lib.rs	2019	12	32	static	SIGPIPE
+node	lib	3319	3318	liblibc/lib.rs	3752	39	4	type	
+node	lib	1281	1280	liblibc/lib.rs	2080	31	5	type	
+node	lib	3969	3925	liblibc/lib.rs	3885	28	3	NK_AS_STR_TODO	
+node	lib	1585	1584	liblibc/lib.rs	2158	37	5	type	
+node	lib	3344	3329	liblibc/lib.rs	3762	31	5	type	
+node	lib	1937	1895	liblibc/lib.rs	2482	12	39	static	MADV_HWPOISON
+node	lib	691	690	liblibc/lib.rs	653	16	26	NK_AS_STR_TODO	c_longlong
+node	lib	3383	3377	liblibc/lib.rs	3781	31	7	NK_AS_STR_TODO	
+node	lib	4319	4292	liblibc/lib.rs	4043	32	9	type	
+node	lib	2785	2784	liblibc/lib.rs	3529	34	6	type	
+node	lib	816	811	liblibc/lib.rs	701	33	6	type	
+node	lib	1865	1862	liblibc/lib.rs	2445	52	3	lit	
+node	lib	3196	3195	liblibc/lib.rs	3712	8	1208	mod	stat_
+node	lib	2076	2075	liblibc/lib.rs	2528	39	5	type	
+node	lib	2959	2958	liblibc/lib.rs	3558	47	6	type	
+node	lib	4470	4292	liblibc/lib.rs	4059	28	6	NK_AS_STR_TODO	
+node	lib	1842	1668	liblibc/lib.rs	2440	12	39	static	_SC_XOPEN_UNIX
+node	lib	2047	2037	liblibc/lib.rs	2519	12	36	static	O_SYNC
+node	lib	2056	2055	liblibc/lib.rs	2522	38	5	type	
+node	lib	2967	2918	liblibc/lib.rs	3559	34	7	type	
+node	lib	1970	1969	liblibc/lib.rs	2491	37	5	type	
+node	lib	4421	4292	liblibc/lib.rs	4054	58	9	type	
+node	lib	1607	1604	liblibc/lib.rs	2163	40	3	lit	
+node	lib	591	586	liblibc/lib.rs	422	39	7	type	
+node	lib	890	829	liblibc/lib.rs	1968	12	41	static	TMP_MAX
+node	lib	3310	3309	liblibc/lib.rs	3751	48	6	type	
+node	lib	3994	3925	liblibc/lib.rs	3891	30	4	NK_AS_STR_TODO	
+node	lib	3791	3463	liblibc/lib.rs	3849	33	4	NK_AS_STR_TODO	
+node	lib	4229	4217	liblibc/lib.rs	3988	37	60	type	
+node	lib	4536	2329	liblibc/lib.rs	4141	4	410	mod	bsd44
+node	lib	3240	3202	liblibc/lib.rs	3730	35	7	type	
+node	lib	594	593	liblibc/lib.rs	425	24	26	struct_field	ipv6mr_multiaddr
+node	lib	975	974	liblibc/lib.rs	1998	33	5	type	
+node	lib	398	0	liblibc/lib.rs	294	4	7	variant	Some
+node	lib	1431	1428	liblibc/lib.rs	2119	40	2	lit	
+node	lib	2418	2335	liblibc/lib.rs	3457	45	6	type	
+node	lib	1396	895	liblibc/lib.rs	2111	12	31	static	EREMOTE
+node	lib	4315	4314	liblibc/lib.rs	4042	52	8	type	
+node	lib	2943	2918	liblibc/lib.rs	3556	45	3	NK_AS_STR_TODO	
+node	lib	1401	1400	liblibc/lib.rs	2112	32	5	type	
+node	lib	1014	895	liblibc/lib.rs	2008	12	30	static	F_TEST
+node	lib	994	895	liblibc/lib.rs	2003	12	28	static	X_OK
+node	lib	1339	1336	liblibc/lib.rs	2094	39	2	lit	
+node	lib	4472	4292	liblibc/lib.rs	4059	48	11	type	
+node	lib	2656	2437	liblibc/lib.rs	3503	30	6	NK_AS_STR_TODO	
+node	lib	1437	1436	liblibc/lib.rs	2121	33	5	type	
+node	lib	1799	1798	liblibc/lib.rs	2429	46	5	type	
+node	lib	3100	3099	liblibc/lib.rs	3568	48	6	type	
+node	lib	4282	2329	liblibc/lib.rs	4034	4	1888	mod	bsd43
+node	lib	1956	1953	liblibc/lib.rs	2487	44	1	lit	
+node	lib	3540	3539	liblibc/lib.rs	3814	51	7	type	
+node	lib	4012	3925	liblibc/lib.rs	3893	66	5	type	
+node	lib	2440	2437	liblibc/lib.rs	3467	39	7	type	
+node	lib	4010	3925	liblibc/lib.rs	3893	47	3	NK_AS_STR_TODO	
+node	lib	1037	1034	liblibc/lib.rs	2013	41	1	lit	
+node	lib	3831	3463	liblibc/lib.rs	3854	33	5	type	
+node	lib	2468	2437	liblibc/lib.rs	3469	34	5	type	
+node	lib	1580	895	liblibc/lib.rs	2157	12	34	static	EHOSTDOWN
+node	lib	703	637	liblibc/lib.rs	658	12	381	mod	posix88
+node	lib	2940	2918	liblibc/lib.rs	3556	50	7	type	
+node	lib	4256	4217	liblibc/lib.rs	3990	51	0	type	
+node	lib	2710	2437	liblibc/lib.rs	3510	51	7	type	
+node	lib	2457	2437	liblibc/lib.rs	3468	31	8	NK_AS_STR_TODO	
+node	lib	2861	2751	liblibc/lib.rs	3536	47	4	NK_AS_STR_TODO	
+node	lib	3596	3463	liblibc/lib.rs	3820	35	11	type	
+node	lib	439	404	liblibc/lib.rs	341	8	18	mod	posix01
+node	lib	1123	1120	liblibc/lib.rs	2037	44	6	lit	
+node	lib	3224	3202	liblibc/lib.rs	3719	58	5	type	
+node	lib	678	638	liblibc/lib.rs	647	16	23	NK_AS_STR_TODO	clock_t
+node	lib	1795	1794	liblibc/lib.rs	2428	45	5	type	
+node	lib	4455	4292	liblibc/lib.rs	4057	39	3	NK_AS_STR_TODO	
+node	lib	1636	895	liblibc/lib.rs	2172	12	31	static	ENOKEY
+node	lib	3715	3714	liblibc/lib.rs	3839	38	5	type	
+node	lib	2467	2437	liblibc/lib.rs	3468	65	4	NK_AS_STR_TODO	
+node	lib	1195	1192	liblibc/lib.rs	2057	41	2	lit	
+node	lib	3181	3180	liblibc/lib.rs	3580	35	6	type	
+node	lib	4125	4124	liblibc/lib.rs	3942	51	6	type	
+node	lib	1127	1124	liblibc/lib.rs	2039	42	6	lit	
+node	lib	3193	3192	liblibc/lib.rs	3580	68	6	type	
+node	lib	2234	2233	liblibc/lib.rs	2594	43	5	type	
+node	lib	3054	2918	liblibc/lib.rs	3565	34	7	type	
+node	lib	2771	2751	liblibc/lib.rs	3527	28	1	NK_AS_STR_TODO	
+node	lib	695	694	liblibc/lib.rs	654	39	3	type	
+node	lib	1019	1018	liblibc/lib.rs	2009	33	5	type	
+node	lib	1351	1348	liblibc/lib.rs	2097	39	2	lit	
+node	lib	3876	3463	liblibc/lib.rs	3858	62	6	type	
+node	lib	424	411	liblibc/lib.rs	332	12	22	NK_AS_STR_TODO	uint8_t
+node	lib	3573	3463	liblibc/lib.rs	3817	48	8	type	
+node	lib	2840	2751	liblibc/lib.rs	3534	44	4	NK_AS_STR_TODO	
+node	lib	2756	2751	liblibc/lib.rs	3524	27	1	NK_AS_STR_TODO	
+node	lib	4066	4063	liblibc/lib.rs	3918	35	7	type	
+node	lib	907	906	liblibc/lib.rs	1981	32	5	type	
+node	lib	4568	4543	liblibc/lib.rs	4149	27	4	NK_AS_STR_TODO	
+node	lib	1835	1834	liblibc/lib.rs	2438	43	5	type	
+node	lib	979	978	liblibc/lib.rs	1999	33	5	type	
+node	lib	2449	2437	liblibc/lib.rs	3467	66	5	type	
+node	lib	4494	4292	liblibc/lib.rs	4061	56	7	type	
+node	lib	1882	1668	liblibc/lib.rs	2462	12	37	static	CLOCK_REALTIME
+node	lib	1544	895	liblibc/lib.rs	2148	12	37	static	ECONNABORTED
+node	lib	1465	1464	liblibc/lib.rs	2128	33	5	type	
+node	lib	4314	4292	liblibc/lib.rs	4042	51	9	type	
+node	lib	910	895	liblibc/lib.rs	1982	12	35	static	O_APPEND
+node	lib	2738	2437	liblibc/lib.rs	3513	41	0	type	
+node	lib	2117	2103	liblibc/lib.rs	2565	12	39	static	_SC_NGROUPS_MAX
+node	lib	858	829	liblibc/lib.rs	1960	12	32	static	SEEK_END
+node	lib	3485	3463	liblibc/lib.rs	3809	34	7	type	
+node	lib	1480	895	liblibc/lib.rs	2132	12	30	static	EUSERS
+node	lib	3129	2918	liblibc/lib.rs	3571	45	7	type	
+node	lib	1340	895	liblibc/lib.rs	2095	12	29	static	EBADE
+node	lib	3717	3463	liblibc/lib.rs	3839	28	3	NK_AS_STR_TODO	
+node	lib	3119	2918	liblibc/lib.rs	3570	45	7	type	
+node	lib	2647	2437	liblibc/lib.rs	3501	30	4	NK_AS_STR_TODO	
+node	lib	1802	1668	liblibc/lib.rs	2430	12	47	static	_SC_THREAD_THREADS_MAX
+node	lib	993	990	liblibc/lib.rs	2002	38	1	lit	
+node	lib	1579	1576	liblibc/lib.rs	2156	45	3	lit	
+node	lib	2066	2063	liblibc/lib.rs	2525	49	6	lit	
+node	lib	2169	2103	liblibc/lib.rs	2578	12	41	static	_SC_MAPPED_FILES
+node	lib	2197	2103	liblibc/lib.rs	2585	12	43	static	_SC_AIO_LISTIO_MAX
+node	lib	2924	2918	liblibc/lib.rs	3555	30	3	NK_AS_STR_TODO	
+node	lib	1097	1094	liblibc/lib.rs	2030	45	6	lit	
+node	lib	2099	2037	liblibc/lib.rs	2534	12	40	static	MAP_STACK
+node	lib	3413	3406	liblibc/lib.rs	3788	47	5	type	
+node	lib	925	922	liblibc/lib.rs	1985	41	3	lit	
+node	lib	1593	1592	liblibc/lib.rs	2160	36	5	type	
+node	lib	2522	2437	liblibc/lib.rs	3476	31	6	NK_AS_STR_TODO	
+node	lib	415	411	liblibc/lib.rs	329	12	23	NK_AS_STR_TODO	int16_t
+node	lib	3023	2918	liblibc/lib.rs	3562	44	2	NK_AS_STR_TODO	
+node	lib	3963	3962	liblibc/lib.rs	3884	35	6	type	
+node	lib	726	725	liblibc/lib.rs	666	34	3	type	
+node	lib	1862	1668	liblibc/lib.rs	2445	12	44	static	_SC_XOPEN_REALTIME
+node	lib	4241	4231	liblibc/lib.rs	3988	93	3	type	
+node	lib	1099	1098	liblibc/lib.rs	2031	35	5	type	
+node	lib	1978	1977	liblibc/lib.rs	2493	42	5	type	
+node	lib	4355	4292	liblibc/lib.rs	4047	26	6	NK_AS_STR_TODO	
+node	lib	2809	2751	liblibc/lib.rs	3530	64	5	type	
+node	lib	505	504	liblibc/lib.rs	383	40	6	type	
+node	lib	405	404	liblibc/lib.rs	304	8	938	mod	c95
+node	lib	3992	3991	liblibc/lib.rs	3891	37	6	type	
+node	lib	2464	2437	liblibc/lib.rs	3468	71	5	type	
+node	lib	2594	2437	liblibc/lib.rs	3486	59	7	type	
+node	lib	1596	895	liblibc/lib.rs	2161	12	31	static	ESTALE
+node	lib	962	895	liblibc/lib.rs	1995	12	33	static	S_IREAD
+node	lib	2880	2751	liblibc/lib.rs	3539	37	5	type	
+node	lib	3062	2918	liblibc/lib.rs	3565	43	2	NK_AS_STR_TODO	
+node	lib	2128	2125	liblibc/lib.rs	2567	48	1	lit	
+node	lib	1034	895	liblibc/lib.rs	2013	12	31	static	SIGQUIT
+node	lib	1950	1949	liblibc/lib.rs	2486	33	5	type	
+node	lib	3977	3925	liblibc/lib.rs	3887	28	5	NK_AS_STR_TODO	
+node	lib	3297	3280	liblibc/lib.rs	3750	38	5	type	
+node	lib	1612	895	liblibc/lib.rs	2165	12	31	static	EISNAM
+node	lib	1810	1668	liblibc/lib.rs	2432	12	50	static	_SC_THREAD_ATTR_STACKSIZE
+node	lib	3247	3202	liblibc/lib.rs	3730	44	4	NK_AS_STR_TODO	
+node	lib	1472	895	liblibc/lib.rs	2130	12	32	static	ERESTART
+node	lib	1439	1436	liblibc/lib.rs	2121	41	2	lit	
+node	lib	2938	2918	liblibc/lib.rs	3556	31	3	NK_AS_STR_TODO	
+node	lib	1420	895	liblibc/lib.rs	2117	12	33	static	EMULTIHOP
+node	lib	571	564	liblibc/lib.rs	413	24	18	struct_field	sin6_flowinfo
+node	lib	2164	2161	liblibc/lib.rs	2576	53	2	lit	
+node	lib	2558	2437	liblibc/lib.rs	3483	29	3	NK_AS_STR_TODO	
+node	lib	2002	2001	liblibc/lib.rs	2500	36	5	type	
+node	lib	1383	1380	liblibc/lib.rs	2107	38	2	lit	
+node	lib	2958	2918	liblibc/lib.rs	3558	46	7	type	
+node	lib	3704	3463	liblibc/lib.rs	3837	53	5	type	
+node	lib	2013	1895	liblibc/lib.rs	2503	12	35	static	SO_BROADCAST
+node	lib	2862	2751	liblibc/lib.rs	3536	64	11	type	
+node	lib	1608	895	liblibc/lib.rs	2164	12	32	static	ENAVAIL
+node	lib	3564	3463	liblibc/lib.rs	3816	33	5	type	
+node	lib	2801	2751	liblibc/lib.rs	3530	30	1	NK_AS_STR_TODO	
+node	lib	2282	2281	liblibc/lib.rs	2606	38	5	type	
+node	lib	4475	4292	liblibc/lib.rs	4059	43	3	NK_AS_STR_TODO	
+node	lib	779	754	liblibc/lib.rs	687	24	14	struct_field	st_size
+node	lib	1087	1086	liblibc/lib.rs	2028	34	5	type	
+node	lib	2876	2751	liblibc/lib.rs	3538	28	6	NK_AS_STR_TODO	
+node	lib	2902	2751	liblibc/lib.rs	3544	33	5	type	
+node	lib	1432	895	liblibc/lib.rs	2120	12	33	static	EOVERFLOW
+node	lib	2779	2751	liblibc/lib.rs	3528	28	1	NK_AS_STR_TODO	
+node	lib	1599	1596	liblibc/lib.rs	2161	39	3	lit	
+node	lib	1093	1090	liblibc/lib.rs	2029	44	6	lit	
+node	lib	3399	3377	liblibc/lib.rs	3784	42	18	type	
+node	lib	4430	4292	liblibc/lib.rs	4055	24	6	NK_AS_STR_TODO	
+node	lib	477	457	liblibc/lib.rs	366	24	18	struct_field	__unused3
+node	lib	3046	2918	liblibc/lib.rs	3564	47	5	type	
+node	lib	2184	2181	liblibc/lib.rs	2581	55	2	lit	
+node	lib	2009	1895	liblibc/lib.rs	2502	12	35	static	SO_KEEPALIVE
+node	lib	2166	2165	liblibc/lib.rs	2577	35	5	type	
+node	lib	4112	4085	liblibc/lib.rs	3940	37	5	type	
+node	lib	3309	3280	liblibc/lib.rs	3751	47	7	type	
+node	lib	2424	2335	liblibc/lib.rs	3458	31	1	NK_AS_STR_TODO	
+node	lib	1754	1668	liblibc/lib.rs	2417	12	43	static	POSIX_MADV_DONTNEED
+node	lib	3707	3463	liblibc/lib.rs	3837	63	6	type	
+node	lib	1565	1564	liblibc/lib.rs	2153	34	5	type	
+node	lib	1640	895	liblibc/lib.rs	2173	12	36	static	EKEYEXPIRED
+node	lib	1688	1687	liblibc/lib.rs	2401	47	1	lit	
+node	lib	2145	2103	liblibc/lib.rs	2572	12	48	static	_SC_PRIORITY_SCHEDULING
+node	lib	3144	3143	liblibc/lib.rs	3572	48	6	type	
+node	lib	3143	2918	liblibc/lib.rs	3572	47	7	type	
+node	lib	2304	2301	liblibc/lib.rs	2611	49	2	lit	
+node	lib	2168	2165	liblibc/lib.rs	2577	43	2	lit	
+node	lib	2338	2335	liblibc/lib.rs	3446	34	5	type	
+node	lib	652	651	liblibc/lib.rs	638	36	3	type	
+node	lib	1496	895	liblibc/lib.rs	2136	12	34	static	EPROTOTYPE
+node	lib	1575	1572	liblibc/lib.rs	2155	42	3	lit	
+node	lib	2882	2751	liblibc/lib.rs	3539	29	6	NK_AS_STR_TODO	
+node	lib	3578	3463	liblibc/lib.rs	3817	61	5	type	
+node	lib	3835	3463	liblibc/lib.rs	3854	45	7	type	
+node	lib	765	754	liblibc/lib.rs	682	33	6	type	
+node	lib	2178	2177	liblibc/lib.rs	2580	43	5	type	
+node	lib	2102	2099	liblibc/lib.rs	2534	43	8	lit	
+node	lib	2046	2043	liblibc/lib.rs	2518	41	4	lit	
+node	lib	2868	2867	liblibc/lib.rs	3537	36	6	type	
+node	lib	2441	2440	liblibc/lib.rs	3467	40	6	type	
+node	lib	462	457	liblibc/lib.rs	361	34	8	type	
+node	lib	2870	2751	liblibc/lib.rs	3537	28	1	NK_AS_STR_TODO	
+node	lib	3676	3463	liblibc/lib.rs	3834	47	7	type	
+node	lib	3313	3280	liblibc/lib.rs	3751	59	5	type	
+node	lib	1934	1933	liblibc/lib.rs	2481	42	5	type	
+node	lib	497	496	liblibc/lib.rs	377	24	14	struct_field	tv_sec
+node	lib	2889	2751	liblibc/lib.rs	3541	30	1	NK_AS_STR_TODO	
+node	lib	1817	1814	liblibc/lib.rs	2433	64	2	lit	
+node	lib	4299	4292	liblibc/lib.rs	4041	45	5	type	
+node	lib	1548	895	liblibc/lib.rs	2149	12	35	static	ECONNRESET
+node	lib	983	982	liblibc/lib.rs	2000	30	5	type	
+node	lib	1066	895	liblibc/lib.rs	2021	12	32	static	SIGTERM
+node	lib	2140	2137	liblibc/lib.rs	2570	47	1	lit	
+node	lib	474	457	liblibc/lib.rs	365	35	7	type	
+node	lib	4042	3925	liblibc/lib.rs	3898	47	5	NK_AS_STR_TODO	
+node	lib	670	669	liblibc/lib.rs	644	36	3	type	
+node	lib	2029	1895	liblibc/lib.rs	2508	12	30	static	SHUT_WR
+node	lib	998	895	liblibc/lib.rs	2004	12	36	static	STDIN_FILENO
+node	lib	2670	2437	liblibc/lib.rs	3505	68	5	type	
+node	lib	2664	2437	liblibc/lib.rs	3505	29	6	NK_AS_STR_TODO	
+node	lib	3270	3269	liblibc/lib.rs	3736	53	4	type	
+node	lib	2048	2047	liblibc/lib.rs	2519	32	5	type	
+node	lib	2789	2751	liblibc/lib.rs	3529	48	8	type	
+node	lib	4490	4292	liblibc/lib.rs	4061	37	14	type	
+node	lib	3080	2918	liblibc/lib.rs	3567	35	7	type	
+node	lib	3943	3925	liblibc/lib.rs	3880	31	4	NK_AS_STR_TODO	
+node	lib	1858	1668	liblibc/lib.rs	2444	12	42	static	_SC_XOPEN_LEGACY
+node	lib	2695	2437	liblibc/lib.rs	3509	31	6	NK_AS_STR_TODO	
+node	lib	2213	2103	liblibc/lib.rs	2589	12	40	static	_SC_MQ_OPEN_MAX
+node	lib	2422	2335	liblibc/lib.rs	3458	34	6	type	
+node	lib	2823	2822	liblibc/lib.rs	3532	51	6	type	
+node	lib	2030	2029	liblibc/lib.rs	2508	32	5	type	
+node	lib	581	580	liblibc/lib.rs	418	24	19	struct_field	s6_addr
+node	lib	2136	2133	liblibc/lib.rs	2569	49	1	lit	
+node	lib	1184	895	liblibc/lib.rs	2055	12	31	static	EACCES
+node	lib	1895	828	liblibc/lib.rs	2469	8	1777	mod	bsd44
+node	lib	1664	895	liblibc/lib.rs	2182	12	34	static	EHWPOISON
+node	lib	440	404	liblibc/lib.rs	342	8	18	mod	posix08
+node	lib	2651	2437	liblibc/lib.rs	3502	30	4	NK_AS_STR_TODO	
+node	lib	4204	4194	liblibc/lib.rs	3976	43	6	NK_AS_STR_TODO	
+node	lib	4085	4077	liblibc/lib.rs	3930	12	782	foreign_mod	
+node	lib	1324	895	liblibc/lib.rs	2091	12	30	static	ELNRNG
+node	lib	798	754	liblibc/lib.rs	693	39	6	type	
+node	lib	4273	4263	liblibc/lib.rs	4000	37	3	NK_AS_STR_TODO	
+node	lib	640	639	liblibc/lib.rs	634	34	2	type	
+node	lib	1379	1376	liblibc/lib.rs	2106	40	2	lit	
+node	lib	3381	3380	liblibc/lib.rs	3781	41	6	type	
+node	lib	1108	1107	liblibc/lib.rs	2034	37	6	type	
+node	lib	4349	4292	liblibc/lib.rs	4046	60	5	type	
+node	lib	2022	2021	liblibc/lib.rs	2505	33	5	type	
+node	lib	2688	2437	liblibc/lib.rs	3508	30	6	NK_AS_STR_TODO	
+node	lib	3348	3329	liblibc/lib.rs	3763	35	7	type	
+node	lib	2137	2103	liblibc/lib.rs	2570	12	37	static	_SC_SAVED_IDS
+node	lib	3474	3463	liblibc/lib.rs	3807	62	5	type	
+node	lib	1904	1901	liblibc/lib.rs	2473	45	1	lit	
+node	lib	588	586	liblibc/lib.rs	421	39	7	type	
+node	lib	3293	3292	liblibc/lib.rs	3749	66	4	type	
+node	lib	949	946	liblibc/lib.rs	1991	41	5	lit	
+node	lib	1203	1200	liblibc/lib.rs	2059	40	2	lit	
+node	lib	1559	1556	liblibc/lib.rs	2151	40	3	lit	
+node	lib	4180	4177	liblibc/lib.rs	3959	38	5	type	
+node	lib	1801	1798	liblibc/lib.rs	2429	54	2	lit	
+node	lib	3502	3463	liblibc/lib.rs	3810	61	5	type	
+node	lib	2931	2930	liblibc/lib.rs	3555	62	6	type	
+node	lib	2784	2751	liblibc/lib.rs	3529	33	7	type	
+node	lib	840	837	liblibc/lib.rs	1955	46	1	lit	
+node	lib	2401	2335	liblibc/lib.rs	3455	34	5	type	
+node	lib	2867	2751	liblibc/lib.rs	3537	31	11	type	
+node	lib	601	600	liblibc/lib.rs	429	24	15	struct_field	ai_flags
+node	lib	1433	1432	liblibc/lib.rs	2120	34	5	type	
+node	lib	1009	1006	liblibc/lib.rs	2006	47	1	lit	
+node	lib	1803	1802	liblibc/lib.rs	2430	48	5	type	
+node	lib	1973	1895	liblibc/lib.rs	2492	12	40	static	IP_MULTICAST_TTL
+node	lib	3130	3129	liblibc/lib.rs	3571	46	6	type	
+node	lib	2040	2039	liblibc/lib.rs	2517	33	5	type	
+node	lib	4360	4292	liblibc/lib.rs	4047	41	7	NK_AS_STR_TODO	
+node	lib	643	642	liblibc/lib.rs	635	35	2	type	
+node	lib	3852	3851	liblibc/lib.rs	3856	46	6	type	
+node	lib	4531	4292	liblibc/lib.rs	4065	48	5	type	
+node	lib	2793	2751	liblibc/lib.rs	3529	42	4	NK_AS_STR_TODO	
+node	lib	776	754	liblibc/lib.rs	686	24	14	struct_field	st_rdev
+node	lib	2348	2335	liblibc/lib.rs	3447	44	5	type	
+node	lib	4054	3925	liblibc/lib.rs	3900	34	4	NK_AS_STR_TODO	
+node	lib	4091	4085	liblibc/lib.rs	3931	32	4	NK_AS_STR_TODO	
+node	lib	3134	3133	liblibc/lib.rs	3571	58	6	type	
+node	lib	4223	4217	liblibc/lib.rs	3986	28	7	NK_AS_STR_TODO	
+node	lib	1098	895	liblibc/lib.rs	2031	12	38	static	MAP_FIXED
+node	lib	4312	4292	liblibc/lib.rs	4042	27	6	NK_AS_STR_TODO	
+node	lib	3042	3041	liblibc/lib.rs	3564	36	6	type	
+node	lib	1264	895	liblibc/lib.rs	2075	12	29	static	EDOM
+node	lib	2465	2464	liblibc/lib.rs	3468	72	4	type	
+node	lib	1081	1078	liblibc/lib.rs	2025	44	1	lit	
+node	lib	1533	1532	liblibc/lib.rs	2145	33	5	type	
+node	lib	1528	895	liblibc/lib.rs	2144	12	37	static	EADDRNOTAVAIL
+node	lib	2633	2632	liblibc/lib.rs	3498	38	4	type	
+node	lib	1363	1360	liblibc/lib.rs	2100	40	2	lit	
+node	lib	3148	2918	liblibc/lib.rs	3572	59	6	type	
+node	lib	3289	3288	liblibc/lib.rs	3749	54	6	type	
+node	lib	4550	4549	liblibc/lib.rs	4147	34	6	type	
+node	lib	982	895	liblibc/lib.rs	2000	12	28	static	F_OK
+node	lib	1762	1668	liblibc/lib.rs	2420	12	36	static	_SC_IOV_MAX
+node	lib	2288	2285	liblibc/lib.rs	2607	45	2	lit	
+node	lib	1627	1624	liblibc/lib.rs	2169	42	3	lit	
+node	lib	3585	3463	liblibc/lib.rs	3819	42	5	type	
+node	lib	2074	2071	liblibc/lib.rs	2527	47	6	lit	
+node	lib	1321	1320	liblibc/lib.rs	2090	31	5	type	
+node	lib	1180	895	liblibc/lib.rs	2054	12	31	static	ENOMEM
+node	lib	3403	3377	liblibc/lib.rs	3784	34	6	NK_AS_STR_TODO	
+node	lib	2544	2437	liblibc/lib.rs	3480	58	0	type	
+node	lib	3684	3463	liblibc/lib.rs	3835	33	5	type	
+node	lib	2609	2437	liblibc/lib.rs	3494	30	1	NK_AS_STR_TODO	
+node	lib	2134	2133	liblibc/lib.rs	2569	41	5	type	
+node	lib	1341	1340	liblibc/lib.rs	2095	30	5	type	
+node	lib	4342	4292	liblibc/lib.rs	4046	34	5	type	
+node	lib	1233	1232	liblibc/lib.rs	2067	32	5	type	
+node	lib	2949	2948	liblibc/lib.rs	3557	35	6	type	
+node	lib	1829	1826	liblibc/lib.rs	2436	59	2	lit	
+node	lib	535	533	liblibc/lib.rs	397	35	11	type	
+node	lib	638	637	liblibc/lib.rs	633	12	705	mod	c95
+node	lib	1833	1830	liblibc/lib.rs	2437	48	2	lit	
+node	lib	3351	3329	liblibc/lib.rs	3763	29	4	NK_AS_STR_TODO	
+node	lib	1837	1834	liblibc/lib.rs	2438	51	2	lit	
+node	lib	4139	4085	liblibc/lib.rs	3944	32	4	NK_AS_STR_TODO	
+node	lib	3724	3463	liblibc/lib.rs	3840	28	2	NK_AS_STR_TODO	
+node	lib	4047	3925	liblibc/lib.rs	3899	35	5	type	
+node	lib	1280	895	liblibc/lib.rs	2080	12	30	static	ENOLCK
+node	lib	2277	2103	liblibc/lib.rs	2605	12	38	static	_SC_2_VERSION
+node	lib	1797	1794	liblibc/lib.rs	2428	53	2	lit	
+node	lib	404	403	liblibc/lib.rs	303	4	1465	mod	common
+node	lib	3333	3332	liblibc/lib.rs	3761	35	6	type	
+node	lib	2980	2918	liblibc/lib.rs	3559	70	7	type	
+node	lib	2591	2590	liblibc/lib.rs	3486	50	4	type	
+node	lib	1993	1895	liblibc/lib.rs	2497	12	43	static	IPV6_ADD_MEMBERSHIP
+node	lib	3473	3463	liblibc/lib.rs	3807	45	5	NK_AS_STR_TODO	
+node	lib	4301	4292	liblibc/lib.rs	4041	41	2	NK_AS_STR_TODO	
+node	lib	2260	2257	liblibc/lib.rs	2600	51	2	lit	
+node	lib	1022	895	liblibc/lib.rs	2010	12	31	static	F_ULOCK
+node	lib	2719	2718	liblibc/lib.rs	3511	37	4	type	
+node	lib	1371	1368	liblibc/lib.rs	2104	39	2	lit	
+node	lib	2383	2335	liblibc/lib.rs	3452	44	5	type	
+node	lib	1751	1750	liblibc/lib.rs	2416	45	5	type	
+node	lib	3097	2918	liblibc/lib.rs	3568	30	2	NK_AS_STR_TODO	
+node	lib	950	895	liblibc/lib.rs	1992	12	34	static	S_IFMT
+node	lib	3089	2918	liblibc/lib.rs	3567	60	7	type	
+node	lib	422	421	liblibc/lib.rs	331	31	3	type	
+node	lib	1476	895	liblibc/lib.rs	2131	12	32	static	ESTRPIPE
+node	lib	1309	1308	liblibc/lib.rs	2087	31	5	type	
+node	lib	4157	4085	liblibc/lib.rs	3947	54	7	type	
+node	lib	3489	3463	liblibc/lib.rs	3809	46	5	type	
+node	lib	1617	1616	liblibc/lib.rs	2166	34	5	type	
+node	lib	572	564	liblibc/lib.rs	413	39	3	type	
+node	lib	1243	1240	liblibc/lib.rs	2069	39	2	lit	
+node	lib	1531	1528	liblibc/lib.rs	2144	46	2	lit	
+node	lib	1763	1762	liblibc/lib.rs	2420	37	5	type	
+node	lib	1393	1392	liblibc/lib.rs	2110	31	5	type	
+node	lib	4058	4057	liblibc/lib.rs	3910	8	526	mod	stat_
+node	lib	2689	2437	liblibc/lib.rs	3508	44	0	type	
+node	lib	4108	4085	liblibc/lib.rs	3936	43	5	type	
+node	lib	1909	1895	liblibc/lib.rs	2475	12	37	static	MADV_WILLNEED
+node	lib	1639	1636	liblibc/lib.rs	2172	39	3	lit	
+node	lib	2819	2751	liblibc/lib.rs	3532	31	1	NK_AS_STR_TODO	
+node	lib	2156	2153	liblibc/lib.rs	2574	53	2	lit	
+node	lib	1661	1660	liblibc/lib.rs	2180	32	5	type	
+node	lib	2382	2335	liblibc/lib.rs	3452	31	1	NK_AS_STR_TODO	
+node	lib	4306	4292	liblibc/lib.rs	4041	72	5	type	
+node	lib	2477	2437	liblibc/lib.rs	3470	46	5	type	
+node	lib	1110	1106	liblibc/lib.rs	2034	46	13	NK_AS_STR_TODO	
+node	lib	1838	1668	liblibc/lib.rs	2439	12	46	static	_SC_XOPEN_XCU_VERSION
+node	lib	618	617	liblibc/lib.rs	434	34	8	type	
+node	lib	682	681	liblibc/lib.rs	648	34	3	type	
+node	lib	1969	1895	liblibc/lib.rs	2491	12	36	static	IPPROTO_IPV6
+node	lib	3267	3202	liblibc/lib.rs	3736	28	4	NK_AS_STR_TODO	
+node	lib	2302	2301	liblibc/lib.rs	2611	41	5	type	
+node	lib	1453	1452	liblibc/lib.rs	2125	32	5	type	
+node	lib	504	444	liblibc/lib.rs	383	16	31	NK_AS_STR_TODO	sighandler_t
+node	lib	3008	2918	liblibc/lib.rs	3561	60	6	type	
+node	lib	2294	2293	liblibc/lib.rs	2609	40	5	type	
+node	lib	2054	2051	liblibc/lib.rs	2521	48	11	lit	
+node	lib	2805	2804	liblibc/lib.rs	3530	50	6	type	
+node	lib	870	829	liblibc/lib.rs	1963	12	30	static	_IOLBF
+node	lib	459	457	liblibc/lib.rs	360	34	6	type	
+node	lib	4493	4292	liblibc/lib.rs	4061	28	7	NK_AS_STR_TODO	
+node	lib	1647	1644	liblibc/lib.rs	2174	44	3	lit	
+node	lib	4515	4292	liblibc/lib.rs	4063	46	9	type	
+node	lib	2354	2335	liblibc/lib.rs	3448	31	1	NK_AS_STR_TODO	
+node	lib	4533	4292	liblibc/lib.rs	4065	43	3	NK_AS_STR_TODO	
+node	lib	1567	1564	liblibc/lib.rs	2153	42	3	lit	
+node	lib	1143	1140	liblibc/lib.rs	2044	40	1	lit	
+node	lib	3192	2918	liblibc/lib.rs	3580	67	7	type	
+node	lib	3973	3925	liblibc/lib.rs	3886	28	4	NK_AS_STR_TODO	
+node	lib	1644	895	liblibc/lib.rs	2174	12	36	static	EKEYREVOKED
+node	lib	745	731	liblibc/lib.rs	675	16	23	NK_AS_STR_TODO	nlink_t
+node	lib	4267	4266	liblibc/lib.rs	3999	44	6	type	
+node	lib	2929	2918	liblibc/lib.rs	3555	44	3	NK_AS_STR_TODO	
+node	lib	3159	2918	liblibc/lib.rs	3573	48	6	type	
+node	lib	3611	3463	liblibc/lib.rs	3822	36	5	type	
+node	lib	2272	2269	liblibc/lib.rs	2603	46	2	lit	
+node	lib	395	0	liblibc/lib.rs	287	0	9	foreign_mod	
+node	lib	4028	3925	liblibc/lib.rs	3896	64	5	type	
+node	lib	887	886	liblibc/lib.rs	1967	34	6	type	
+node	lib	467	457	liblibc/lib.rs	362	34	6	type	
+node	lib	3838	3463	liblibc/lib.rs	3854	40	3	NK_AS_STR_TODO	
+node	lib	1890	1668	liblibc/lib.rs	2465	12	30	static	WNOHANG
+node	lib	1902	1901	liblibc/lib.rs	2473	37	5	type	
+node	lib	3883	3463	liblibc/lib.rs	3859	48	7	type	
+node	lib	4072	4071	liblibc/lib.rs	3918	54	4	type	
+node	lib	3784	3463	liblibc/lib.rs	3848	47	5	type	
+node	lib	1421	1420	liblibc/lib.rs	2117	34	5	type	
+node	lib	1972	1969	liblibc/lib.rs	2491	45	2	lit	
+node	lib	4292	4282	liblibc/lib.rs	4040	8	1656	foreign_mod	
+node	lib	1924	1921	liblibc/lib.rs	2478	47	2	lit	
+node	lib	1352	895	liblibc/lib.rs	2098	12	30	static	ENOANO
+node	lib	2816	2751	liblibc/lib.rs	3532	34	7	type	
+node	lib	3118	2918	liblibc/lib.rs	3570	32	1	NK_AS_STR_TODO	
+node	lib	2727	2726	liblibc/lib.rs	3512	39	4	type	
+node	lib	2962	2918	liblibc/lib.rs	3558	58	7	type	
+node	lib	1356	895	liblibc/lib.rs	2099	12	31	static	EBADRQC
+node	lib	2200	2197	liblibc/lib.rs	2585	52	2	lit	
+node	lib	3018	2918	liblibc/lib.rs	3562	31	2	NK_AS_STR_TODO	
+node	lib	2645	2437	liblibc/lib.rs	3501	36	6	type	
+node	lib	1292	895	liblibc/lib.rs	2083	12	29	static	ELOOP
+node	lib	1964	1961	liblibc/lib.rs	2489	44	1	lit	
+node	lib	886	829	liblibc/lib.rs	1967	12	38	static	L_tmpnam
+node	lib	1807	1806	liblibc/lib.rs	2431	51	5	type	
+node	lib	1133	1132	liblibc/lib.rs	2041	33	5	type	
+node	lib	3275	3195	liblibc/lib.rs	3744	8	406	mod	stdio
+node	lib	2711	2710	liblibc/lib.rs	3510	52	6	type	
+node	lib	2148	2145	liblibc/lib.rs	2572	57	2	lit	
+node	lib	714	713	liblibc/lib.rs	662	33	3	type	
+node	lib	863	862	liblibc/lib.rs	1961	32	5	type	
+node	lib	3322	3280	liblibc/lib.rs	3752	48	5	type	
+node	lib	1953	1895	liblibc/lib.rs	2487	12	34	static	SOCK_STREAM
+node	lib	3360	3329	liblibc/lib.rs	3764	33	5	type	
+node	lib	2245	2103	liblibc/lib.rs	2597	12	40	static	_SC_BC_BASE_MAX
+node	lib	3318	3280	liblibc/lib.rs	3752	38	5	type	
+node	lib	4572	4543	liblibc/lib.rs	4149	42	3	NK_AS_STR_TODO	
+node	lib	2776	2751	liblibc/lib.rs	3528	31	7	type	
+node	lib	885	882	liblibc/lib.rs	1966	47	8	lit	
+node	lib	2443	2437	liblibc/lib.rs	3467	29	8	NK_AS_STR_TODO	
+node	lib	1481	1480	liblibc/lib.rs	2132	31	5	type	
+node	lib	1849	1846	liblibc/lib.rs	2441	49	2	lit	
+node	lib	3755	3463	liblibc/lib.rs	3844	31	3	NK_AS_STR_TODO	
+node	lib	3151	2918	liblibc/lib.rs	3572	70	6	type	
+node	lib	3630	3629	liblibc/lib.rs	3826	38	6	type	
+node	lib	999	998	liblibc/lib.rs	2004	38	5	type	
+node	lib	660	638	liblibc/lib.rs	641	16	22	NK_AS_STR_TODO	c_long
+node	lib	873	870	liblibc/lib.rs	1963	40	1	lit	
+node	lib	3692	3463	liblibc/lib.rs	3835	63	5	type	
+node	lib	4305	4292	liblibc/lib.rs	4041	52	8	NK_AS_STR_TODO	
+node	lib	1791	1790	liblibc/lib.rs	2427	58	5	type	
+node	lib	559	556	liblibc/lib.rs	405	41	1	lit	
+node	lib	4561	4543	liblibc/lib.rs	4148	30	5	type	
+node	lib	1211	1208	liblibc/lib.rs	2061	40	2	lit	
+node	lib	614	600	liblibc/lib.rs	433	36	9	type	
+node	lib	2777	2776	liblibc/lib.rs	3528	32	6	type	
+node	lib	2122	2121	liblibc/lib.rs	2566	38	5	type	
+node	lib	1755	1754	liblibc/lib.rs	2417	45	5	type	
+node	lib	1403	1400	liblibc/lib.rs	2112	40	2	lit	
+node	lib	4026	3925	liblibc/lib.rs	3896	44	3	NK_AS_STR_TODO	
+node	lib	2345	2335	liblibc/lib.rs	3447	34	5	type	
+node	lib	409	405	liblibc/lib.rs	324	12	16	enum	FILE
+node	lib	881	878	liblibc/lib.rs	1965	44	6	lit	
+node	lib	585	582	liblibc/lib.rs	418	41	1	lit	
+node	lib	1260	895	liblibc/lib.rs	2074	12	30	static	EPIPE
+node	lib	1738	1668	liblibc/lib.rs	2413	12	41	static	POSIX_MADV_NORMAL
+node	lib	648	638	liblibc/lib.rs	637	16	23	NK_AS_STR_TODO	c_short
+node	lib	1117	1116	liblibc/lib.rs	2036	37	5	type	
+node	lib	2347	2335	liblibc/lib.rs	3447	31	1	NK_AS_STR_TODO	
+node	lib	2692	2437	liblibc/lib.rs	3509	39	5	type	
+node	lib	1777	1774	liblibc/lib.rs	2423	52	2	lit	
+node	lib	815	811	liblibc/lib.rs	701	24	15	struct_field	modtime
+node	lib	3335	3329	liblibc/lib.rs	3761	28	4	NK_AS_STR_TODO	
+node	lib	1177	1176	liblibc/lib.rs	2053	32	5	type	
+node	lib	1419	1416	liblibc/lib.rs	2116	39	2	lit	
+node	lib	2270	2269	liblibc/lib.rs	2603	38	5	type	
+node	lib	3189	2918	liblibc/lib.rs	3580	56	6	type	
+node	lib	3073	3072	liblibc/lib.rs	3566	49	6	type	
+node	lib	2415	2335	liblibc/lib.rs	3457	34	6	type	
+node	lib	1886	1668	liblibc/lib.rs	2463	12	38	static	CLOCK_MONOTONIC
+node	lib	879	878	liblibc/lib.rs	1965	35	6	type	
+node	lib	728	703	liblibc/lib.rs	667	16	23	NK_AS_STR_TODO	ssize_t
+node	lib	913	910	liblibc/lib.rs	1982	42	4	lit	
+node	lib	1539	1536	liblibc/lib.rs	2146	44	3	lit	
+node	lib	4036	4035	liblibc/lib.rs	3898	39	6	type	
+node	lib	2454	2437	liblibc/lib.rs	3468	41	7	type	
+node	lib	3903	3898	liblibc/lib.rs	3868	12	84	foreign_mod	
+node	lib	2394	2335	liblibc/lib.rs	3454	34	5	type	
+node	lib	3409	3406	liblibc/lib.rs	3788	38	4	type	
+node	lib	755	754	liblibc/lib.rs	679	24	13	struct_field	st_dev
+node	lib	1168	895	liblibc/lib.rs	2051	12	29	static	EBADF
+node	lib	3738	3463	liblibc/lib.rs	3842	35	7	type	
+node	lib	2198	2197	liblibc/lib.rs	2585	44	5	type	
+node	lib	4534	4292	liblibc/lib.rs	4065	58	5	type	
+node	lib	3420	3406	liblibc/lib.rs	3789	33	4	NK_AS_STR_TODO	
+node	lib	2713	2437	liblibc/lib.rs	3510	46	3	NK_AS_STR_TODO	
+node	lib	1679	1676	liblibc/lib.rs	2398	40	2	lit	
+node	lib	803	754	liblibc/lib.rs	695	24	21	struct_field	st_ctime_nsec
+node	lib	1781	1778	liblibc/lib.rs	2424	50	2	lit	
+node	lib	1549	1548	liblibc/lib.rs	2149	35	5	type	
+node	lib	1161	1160	liblibc/lib.rs	2049	31	5	type	
+node	lib	1360	895	liblibc/lib.rs	2100	12	31	static	EBADSLT
+node	lib	2043	2037	liblibc/lib.rs	2518	12	34	static	O_DSYNC
+node	lib	4518	4292	liblibc/lib.rs	4063	40	4	NK_AS_STR_TODO	
+node	lib	1719	1717	liblibc/lib.rs	2406	52	1	lit	
+node	lib	2201	2103	liblibc/lib.rs	2586	12	36	static	_SC_AIO_MAX
+node	lib	1994	1993	liblibc/lib.rs	2497	44	5	type	
+node	lib	2313	2103	liblibc/lib.rs	2614	12	34	static	_SC_2_UPE
+node	lib	1427	1424	liblibc/lib.rs	2118	40	2	lit	
+node	lib	2105	2103	liblibc/lib.rs	2562	12	35	static	_SC_ARG_MAX
+node	lib	874	829	liblibc/lib.rs	1964	12	38	static	BUFSIZ
+node	lib	1179	1176	liblibc/lib.rs	2053	40	2	lit	
+node	lib	1974	1973	liblibc/lib.rs	2492	41	5	type	
+node	lib	894	828	liblibc/lib.rs	1970	8	23	mod	c99
+node	lib	2930	2918	liblibc/lib.rs	3555	61	7	type	
+node	lib	400	396	liblibc/lib.rs	294	9	1	type	
+node	lib	917	914	liblibc/lib.rs	1983	41	2	lit	
+node	lib	2359	2335	liblibc/lib.rs	3449	34	5	type	
+node	lib	2095	2037	liblibc/lib.rs	2533	12	43	static	MAP_NONBLOCK
+node	lib	437	436	liblibc/lib.rs	338	12	15	enum	DIR
+node	lib	2368	2335	liblibc/lib.rs	3450	31	1	NK_AS_STR_TODO	
+node	lib	716	703	liblibc/lib.rs	663	16	21	NK_AS_STR_TODO	uid_t
+node	lib	1209	1208	liblibc/lib.rs	2061	32	5	type	
+node	lib	2100	2099	liblibc/lib.rs	2534	35	5	type	
+node	lib	406	405	liblibc/lib.rs	320	12	87	enum	c_void
+node	lib	3104	3103	liblibc/lib.rs	3568	60	6	type	
+node	lib	3397	3377	liblibc/lib.rs	3783	45	5	NK_AS_STR_TODO	
+node	lib	2340	2335	liblibc/lib.rs	3446	31	1	NK_AS_STR_TODO	
+node	lib	1677	1676	liblibc/lib.rs	2398	32	5	type	
+node	lib	4199	4194	liblibc/lib.rs	3976	31	3	NK_AS_STR_TODO	
+node	lib	4155	4085	liblibc/lib.rs	3947	31	5	NK_AS_STR_TODO	
+node	lib	3999	3925	liblibc/lib.rs	3891	61	5	type	
+node	lib	1205	1204	liblibc/lib.rs	2060	31	5	type	
+node	lib	3421	3406	liblibc/lib.rs	3789	44	0	type	
+node	lib	3981	3925	liblibc/lib.rs	3888	28	2	NK_AS_STR_TODO	
+node	lib	2254	2253	liblibc/lib.rs	2599	42	5	type	
+node	lib	3109	3108	liblibc/lib.rs	3569	35	6	type	
+node	lib	1683	1680	liblibc/lib.rs	2399	41	1	lit	
+node	lib	3874	3463	liblibc/lib.rs	3858	41	3	NK_AS_STR_TODO	
+node	lib	2170	2169	liblibc/lib.rs	2578	42	5	type	
+node	lib	1221	1220	liblibc/lib.rs	2064	32	5	type	
+node	lib	688	687	liblibc/lib.rs	650	35	3	type	
+node	lib	3146	2918	liblibc/lib.rs	3572	43	2	NK_AS_STR_TODO	
+node	lib	2887	2886	liblibc/lib.rs	3541	34	6	type	
+node	lib	1277	1276	liblibc/lib.rs	2079	37	5	type	
+node	lib	1863	1862	liblibc/lib.rs	2445	44	5	type	
+node	lib	1475	1472	liblibc/lib.rs	2130	41	2	lit	
+node	lib	3804	3463	liblibc/lib.rs	3850	47	6	type	
+node	lib	2653	2437	liblibc/lib.rs	3503	38	5	type	
+node	lib	1875	1874	liblibc/lib.rs	2449	48	5	type	
+node	lib	2004	2001	liblibc/lib.rs	2500	44	1	lit	
+node	lib	3029	3028	liblibc/lib.rs	3563	35	6	type	
+node	lib	2886	2751	liblibc/lib.rs	3541	33	7	type	
+node	lib	1407	1404	liblibc/lib.rs	2113	37	2	lit	
+node	lib	3667	3463	liblibc/lib.rs	3833	44	5	type	
+node	lib	2116	2113	liblibc/lib.rs	2564	45	1	lit	
+node	lib	621	600	liblibc/lib.rs	435	38	7	type	
+node	lib	1365	1364	liblibc/lib.rs	2102	34	5	type	
+node	lib	3933	3925	liblibc/lib.rs	3879	49	6	type	
+node	lib	4069	4063	liblibc/lib.rs	3918	29	4	NK_AS_STR_TODO	
+node	lib	4257	4057	liblibc/lib.rs	3994	8	362	mod	mman
+node	lib	3036	2918	liblibc/lib.rs	3563	56	7	type	
+node	lib	2735	2734	liblibc/lib.rs	3513	34	6	type	
+node	lib	3185	2918	liblibc/lib.rs	3580	46	5	type	
+node	lib	2857	2751	liblibc/lib.rs	3536	31	1	NK_AS_STR_TODO	
+node	lib	3511	3463	liblibc/lib.rs	3811	29	2	NK_AS_STR_TODO	
+node	lib	2462	2437	liblibc/lib.rs	3468	50	4	NK_AS_STR_TODO	
+node	lib	2476	2437	liblibc/lib.rs	3470	30	4	NK_AS_STR_TODO	
+node	lib	4461	4292	liblibc/lib.rs	4058	31	5	type	
+node	lib	2321	2103	liblibc/lib.rs	2616	12	47	static	_SC_XBS5_ILP32_OFFBIG
+node	lib	1854	1668	liblibc/lib.rs	2443	12	38	static	_SC_XOPEN_SHM
+node	lib	1516	895	liblibc/lib.rs	2141	12	36	static	EPFNOSUPPORT
+node	lib	3141	2918	liblibc/lib.rs	3572	31	1	NK_AS_STR_TODO	
+node	lib	1761	1758	liblibc/lib.rs	2419	49	2	lit	
+node	lib	4281	4280	liblibc/lib.rs	4029	8	26	mod	unistd
+node	lib	2244	2241	liblibc/lib.rs	2596	47	2	lit	
+node	lib	1240	895	liblibc/lib.rs	2069	12	30	static	EFBIG
+node	lib	3245	3202	liblibc/lib.rs	3730	50	6	type	
+node	lib	2922	2921	liblibc/lib.rs	3555	36	6	type	
+node	lib	2205	2103	liblibc/lib.rs	2587	12	47	static	_SC_AIO_PRIO_DELTA_MAX
+node	lib	1656	895	liblibc/lib.rs	2178	12	40	static	ENOTRECOVERABLE
+node	lib	2935	2918	liblibc/lib.rs	3556	36	7	type	
+node	lib	1545	1544	liblibc/lib.rs	2148	37	5	type	
+node	lib	1384	895	liblibc/lib.rs	2108	12	29	static	ENOSR
+node	lib	3488	3463	liblibc/lib.rs	3809	29	3	NK_AS_STR_TODO	
+node	lib	1793	1790	liblibc/lib.rs	2427	66	2	lit	
+node	lib	3722	3463	liblibc/lib.rs	3840	32	5	type	
+node	lib	4253	4252	liblibc/lib.rs	3990	44	6	type	
+node	lib	676	675	liblibc/lib.rs	646	37	3	type	
+node	lib	1153	1152	liblibc/lib.rs	2047	29	5	type	
+node	lib	1400	895	liblibc/lib.rs	2112	12	31	static	ENOLINK
+node	lib	4468	4292	liblibc/lib.rs	4059	36	5	type	
+node	lib	3695	3463	liblibc/lib.rs	3836	32	5	type	
+node	lib	1982	1981	liblibc/lib.rs	2494	31	5	type	
+node	lib	2289	2103	liblibc/lib.rs	2608	12	39	static	_SC_2_FORT_DEV
+node	lib	1399	1396	liblibc/lib.rs	2111	40	2	lit	
+node	lib	2261	2103	liblibc/lib.rs	2601	12	45	static	_SC_COLL_WEIGHTS_MAX
+node	lib	3469	3463	liblibc/lib.rs	3807	30	4	NK_AS_STR_TODO	
+node	lib	3833	3463	liblibc/lib.rs	3854	29	2	NK_AS_STR_TODO	
+node	lib	3509	3463	liblibc/lib.rs	3811	33	5	type	
+node	lib	2208	2205	liblibc/lib.rs	2587	56	2	lit	
+node	lib	1712	1711	liblibc/lib.rs	2405	47	1	lit	
+node	lib	2376	2335	liblibc/lib.rs	3451	44	5	type	
+node	lib	914	895	liblibc/lib.rs	1983	12	32	static	O_CREAT
+node	lib	3367	3329	liblibc/lib.rs	3764	60	5	type	
+node	lib	2176	2173	liblibc/lib.rs	2579	45	2	lit	
+node	lib	3967	3925	liblibc/lib.rs	3885	33	6	type	
+node	lib	1035	1034	liblibc/lib.rs	2013	33	5	type	
+node	lib	669	638	liblibc/lib.rs	644	16	24	NK_AS_STR_TODO	c_double
+node	lib	1957	1895	liblibc/lib.rs	2488	12	33	static	SOCK_DGRAM
+node	lib	1694	1693	liblibc/lib.rs	2402	47	1	lit	
+node	lib	667	666	liblibc/lib.rs	643	35	3	type	
+node	lib	3221	3202	liblibc/lib.rs	3719	47	6	type	
+node	lib	4357	4292	liblibc/lib.rs	4047	50	13	type	
+node	lib	2956	2918	liblibc/lib.rs	3558	30	1	NK_AS_STR_TODO	
+node	lib	4165	4085	liblibc/lib.rs	3949	37	5	type	
+node	lib	768	754	liblibc/lib.rs	683	32	5	type	
+node	lib	1349	1348	liblibc/lib.rs	2097	31	5	type	
+node	lib	2635	2437	liblibc/lib.rs	3498	29	6	NK_AS_STR_TODO	
+node	lib	4527	4292	liblibc/lib.rs	4065	36	5	type	
+node	lib	1917	1895	liblibc/lib.rs	2477	12	35	static	MADV_REMOVE
+node	lib	3183	2918	liblibc/lib.rs	3580	30	2	NK_AS_STR_TODO	
+node	lib	2297	2103	liblibc/lib.rs	2610	12	37	static	_SC_2_SW_DEV
+node	lib	3283	3280	liblibc/lib.rs	3749	38	7	type	
+node	lib	1043	1042	liblibc/lib.rs	2015	33	5	type	
+node	lib	1746	1668	liblibc/lib.rs	2415	12	45	static	POSIX_MADV_SEQUENTIAL
+node	lib	4101	4085	liblibc/lib.rs	3934	35	7	type	
+node	lib	526	524	liblibc/lib.rs	393	35	11	type	
+node	lib	2193	2103	liblibc/lib.rs	2584	12	50	static	_SC_SHARED_MEMORY_OBJECTS
+node	lib	1525	1524	liblibc/lib.rs	2143	35	5	type	
+node	lib	2722	2437	liblibc/lib.rs	3511	46	5	type	
+node	lib	2417	2335	liblibc/lib.rs	3457	31	1	NK_AS_STR_TODO	
+node	lib	4051	3925	liblibc/lib.rs	3900	40	7	type	
+node	lib	1148	895	liblibc/lib.rs	2046	12	29	static	EINTR
+node	lib	3020	2918	liblibc/lib.rs	3562	48	7	type	
+node	lib	1597	1596	liblibc/lib.rs	2161	31	5	type	
+node	lib	963	962	liblibc/lib.rs	1995	33	5	type	
+node	lib	2373	2335	liblibc/lib.rs	3451	34	5	type	
+node	lib	1556	895	liblibc/lib.rs	2151	12	32	static	EISCONN
+node	lib	918	895	liblibc/lib.rs	1984	12	32	static	O_EXCL
+node	lib	2204	2201	liblibc/lib.rs	2586	45	2	lit	
+node	lib	911	910	liblibc/lib.rs	1982	34	5	type	
+node	lib	1395	1392	liblibc/lib.rs	2110	39	2	lit	
+node	lib	1417	1416	liblibc/lib.rs	2116	31	5	type	
+node	lib	3006	2918	liblibc/lib.rs	3561	44	2	NK_AS_STR_TODO	
+node	lib	2498	2497	liblibc/lib.rs	3473	40	6	type	
+node	lib	1196	895	liblibc/lib.rs	2058	12	30	static	EBUSY
+node	lib	1155	1152	liblibc/lib.rs	2047	37	1	lit	
+node	lib	3280	3275	liblibc/lib.rs	3748	12	270	foreign_mod	
+node	lib	1054	895	liblibc/lib.rs	2018	12	32	static	SIGSEGV
+node	lib	1252	895	liblibc/lib.rs	2072	12	30	static	EROFS
+node	lib	525	524	liblibc/lib.rs	393	24	22	struct_field	sa_family
+node	lib	2160	2157	liblibc/lib.rs	2575	52	2	lit	
+node	lib	3603	3463	liblibc/lib.rs	3820	48	4	NK_AS_STR_TODO	
+node	lib	3349	3348	liblibc/lib.rs	3763	36	6	type	
+node	lib	3777	3463	liblibc/lib.rs	3847	46	6	type	
+node	lib	3688	3463	liblibc/lib.rs	3835	48	5	type	
+node	lib	905	902	liblibc/lib.rs	1980	42	1	lit	
+node	lib	3028	2918	liblibc/lib.rs	3563	34	7	type	
+node	lib	1187	1184	liblibc/lib.rs	2055	40	2	lit	
+node	lib	3929	3928	liblibc/lib.rs	3879	36	6	type	
+node	lib	2062	2059	liblibc/lib.rs	2524	42	6	lit	
+node	lib	986	895	liblibc/lib.rs	2001	12	28	static	R_OK
+node	lib	412	411	liblibc/lib.rs	328	12	21	NK_AS_STR_TODO	int8_t
+node	lib	2804	2803	liblibc/lib.rs	3530	49	7	type	
+node	lib	1344	895	liblibc/lib.rs	2096	12	29	static	EBADR
+node	lib	651	638	liblibc/lib.rs	638	16	24	NK_AS_STR_TODO	c_ushort
+node	lib	1945	1895	liblibc/lib.rs	2485	12	30	static	AF_INET
+node	lib	2541	2540	liblibc/lib.rs	3480	51	6	type	
+node	lib	1244	895	liblibc/lib.rs	2070	12	31	static	ENOSPC
+node	lib	1913	1895	liblibc/lib.rs	2476	12	37	static	MADV_DONTNEED
+node	lib	3931	3925	liblibc/lib.rs	3879	29	4	NK_AS_STR_TODO	
+node	lib	4428	4292	liblibc/lib.rs	4055	32	5	type	
+node	lib	1461	1460	liblibc/lib.rs	2127	32	5	type	
+node	lib	906	895	liblibc/lib.rs	1981	12	30	static	O_RDWR
+node	lib	1425	1424	liblibc/lib.rs	2118	32	5	type	
+node	lib	3686	3463	liblibc/lib.rs	3835	29	2	NK_AS_STR_TODO	
+node	lib	1441	1440	liblibc/lib.rs	2122	31	5	type	
+node	lib	1408	895	liblibc/lib.rs	2114	12	30	static	ESRMNT
+node	lib	1517	1516	liblibc/lib.rs	2141	37	5	type	
+node	lib	500	496	liblibc/lib.rs	378	24	15	struct_field	tv_nsec
+node	lib	1747	1746	liblibc/lib.rs	2415	47	5	type	
+node	lib	1933	1895	liblibc/lib.rs	2481	12	41	static	MADV_UNMERGEABLE
+node	lib	4022	3925	liblibc/lib.rs	3896	29	4	NK_AS_STR_TODO	
+node	lib	4505	4292	liblibc/lib.rs	4062	41	3	NK_AS_STR_TODO	
+node	lib	1128	895	liblibc/lib.rs	2040	12	42	static	MS_INVALIDATE
+node	lib	1355	1352	liblibc/lib.rs	2098	39	2	lit	
+node	lib	4098	4085	liblibc/lib.rs	3933	39	6	type	
+node	lib	442	403	liblibc/lib.rs	350	4	13218	mod	os
+node	lib	731	637	liblibc/lib.rs	669	12	1471	mod	posix01
+node	lib	1783	1782	liblibc/lib.rs	2425	37	5	type	
+node	lib	2060	2059	liblibc/lib.rs	2524	34	5	type	
+node	lib	826	637	liblibc/lib.rs	712	12	29	mod	extra
+node	lib	3718	3463	liblibc/lib.rs	3839	48	5	type	
+node	lib	1689	1687	liblibc/lib.rs	2401	52	1	lit	
+node	lib	947	946	liblibc/lib.rs	1991	33	5	type	
+node	lib	3094	2918	liblibc/lib.rs	3568	34	7	type	
+node	lib	1652	895	liblibc/lib.rs	2177	12	35	static	EOWNERDEAD
+node	lib	919	918	liblibc/lib.rs	1984	32	5	type	
+node	lib	973	970	liblibc/lib.rs	1997	41	2	lit	
+node	lib	1786	1668	liblibc/lib.rs	2426	12	50	static	_SC_THREAD_SAFE_FUNCTIONS
+node	lib	642	638	liblibc/lib.rs	635	16	22	NK_AS_STR_TODO	c_schar
+node	lib	2841	2751	liblibc/lib.rs	3534	61	7	type	
+node	lib	513	512	liblibc/lib.rs	388	37	3	type	
+node	lib	1385	1384	liblibc/lib.rs	2108	30	5	type	
+node	lib	1030	895	liblibc/lib.rs	2012	12	30	static	SIGINT
+node	lib	926	895	liblibc/lib.rs	1986	12	34	static	S_IFIFO
+node	lib	4275	4263	liblibc/lib.rs	4001	45	5	type	
+node	lib	610	600	liblibc/lib.rs	432	24	18	struct_field	ai_protocol
+node	lib	1990	1989	liblibc/lib.rs	2496	43	5	type	
+node	lib	4008	3925	liblibc/lib.rs	3893	52	6	type	
+node	lib	3269	3202	liblibc/lib.rs	3736	48	9	type	
+node	lib	2118	2117	liblibc/lib.rs	2565	41	5	type	
+node	lib	1392	895	liblibc/lib.rs	2110	12	30	static	ENOPKG
+node	lib	3435	3406	liblibc/lib.rs	3791	37	4	type	
+node	lib	3544	3463	liblibc/lib.rs	3814	63	5	type	
+node	lib	1737	1734	liblibc/lib.rs	2411	47	1	lit	
+node	lib	3230	3202	liblibc/lib.rs	3724	29	6	NK_AS_STR_TODO	
+node	lib	1269	1268	liblibc/lib.rs	2076	32	5	type	
+node	lib	582	580	liblibc/lib.rs	418	33	10	type	
+node	lib	3575	3574	liblibc/lib.rs	3817	50	6	type	
+node	lib	2216	2213	liblibc/lib.rs	2589	49	2	lit	
+node	lib	1653	1652	liblibc/lib.rs	2177	35	5	type	
+node	lib	3561	3560	liblibc/lib.rs	3815	69	6	type	
+node	lib	829	828	liblibc/lib.rs	1951	8	801	mod	c95
+node	lib	4122	4085	liblibc/lib.rs	3942	30	4	NK_AS_STR_TODO	
+node	lib	2014	2013	liblibc/lib.rs	2503	37	5	type	
+node	lib	909	906	liblibc/lib.rs	1981	40	1	lit	
+node	lib	1387	1384	liblibc/lib.rs	2108	38	2	lit	
+node	lib	3553	3463	liblibc/lib.rs	3815	51	8	type	
+node	lib	1680	1668	liblibc/lib.rs	2399	12	31	static	SIG_IGN
+node	lib	407	405	liblibc/lib.rs	321	16	10	variant	__variant1
+node	lib	3983	3925	liblibc/lib.rs	3889	36	5	type	
+node	lib	2273	2103	liblibc/lib.rs	2604	12	39	static	_SC_RE_DUP_MAX
+node	lib	1291	1288	liblibc/lib.rs	2082	42	2	lit	
+node	lib	2293	2103	liblibc/lib.rs	2609	12	39	static	_SC_2_FORT_RUN
+node	lib	3138	2918	liblibc/lib.rs	3572	34	7	type	
+node	lib	1139	1136	liblibc/lib.rs	2043	39	1	lit	
+node	lib	537	533	liblibc/lib.rs	398	24	15	struct_field	__ss_align
+node	lib	1449	1448	liblibc/lib.rs	2124	32	5	type	
+node	lib	3757	3463	liblibc/lib.rs	3844	49	5	type	
+node	lib	1047	1046	liblibc/lib.rs	2016	32	5	type	
+node	lib	1167	1164	liblibc/lib.rs	2050	41	1	lit	
+node	lib	1469	1468	liblibc/lib.rs	2129	31	5	type	
+node	lib	4485	4292	liblibc/lib.rs	4060	48	13	type	
+node	lib	2877	2751	liblibc/lib.rs	3538	46	1	type	
+node	lib	1778	1668	liblibc/lib.rs	2424	12	41	static	_SC_TTY_NAME_MAX
+node	lib	3175	2918	liblibc/lib.rs	3579	56	1	NK_AS_STR_TODO	
+node	lib	557	556	liblibc/lib.rs	405	35	2	type	
+node	lib	3898	3195	liblibc/lib.rs	3864	8	222	mod	signal
+node	lib	1687	1684	liblibc/lib.rs	2401	47	6	NK_AS_STR_TODO	
+node	lib	2706	2705	liblibc/lib.rs	3510	40	4	type	
+node	lib	2897	2751	liblibc/lib.rs	3542	30	1	NK_AS_STR_TODO	
+node	lib	990	895	liblibc/lib.rs	2002	12	28	static	W_OK
+node	lib	1125	1124	liblibc/lib.rs	2039	34	5	type	
+node	lib	3086	3085	liblibc/lib.rs	3567	49	6	type	
+node	lib	2535	2437	liblibc/lib.rs	3480	38	5	type	
+node	lib	577	564	liblibc/lib.rs	415	24	18	struct_field	sin6_scope_id
+node	lib	1256	895	liblibc/lib.rs	2073	12	31	static	EMLINK
+node	lib	1543	1540	liblibc/lib.rs	2147	42	3	lit	
+node	lib	516	515	liblibc/lib.rs	389	39	3	type	
+node	lib	3664	3463	liblibc/lib.rs	3833	34	5	type	
+node	lib	2593	2437	liblibc/lib.rs	3486	41	6	NK_AS_STR_TODO	
+node	lib	1850	1668	liblibc/lib.rs	2442	12	43	static	_SC_XOPEN_ENH_I18N
+node	lib	2640	2437	liblibc/lib.rs	3500	35	7	type	
+node	lib	479	478	liblibc/lib.rs	366	36	6	type	
+node	lib	2672	2437	liblibc/lib.rs	3505	60	6	NK_AS_STR_TODO	
+node	lib	1428	895	liblibc/lib.rs	2119	12	31	static	EBADMSG
+node	lib	2083	2037	liblibc/lib.rs	2530	12	40	static	MAP_LOCKED
+node	lib	1077	1074	liblibc/lib.rs	2024	43	1	lit	
+node	lib	605	600	liblibc/lib.rs	430	35	5	type	
+node	lib	1011	1010	liblibc/lib.rs	2007	32	5	type	
+node	lib	4266	4263	liblibc/lib.rs	3999	43	7	type	
+node	lib	2649	2437	liblibc/lib.rs	3502	36	6	type	
+node	lib	2246	2245	liblibc/lib.rs	2597	41	5	type	
+node	lib	1821	1818	liblibc/lib.rs	2434	57	2	lit	
+node	lib	2086	2083	liblibc/lib.rs	2530	44	7	lit	
+node	lib	2221	2103	liblibc/lib.rs	2591	12	37	static	_SC_PAGESIZE
+node	lib	4457	4292	liblibc/lib.rs	4057	62	6	type	
+node	lib	4507	4292	liblibc/lib.rs	4062	60	6	type	
+node	lib	1874	1668	liblibc/lib.rs	2449	12	46	static	PTHREAD_CREATE_DETACHED
+node	lib	2114	2113	liblibc/lib.rs	2564	37	5	type	
+node	lib	4330	4292	liblibc/lib.rs	4044	48	9	type	
+node	lib	2079	2037	liblibc/lib.rs	2529	12	44	static	MAP_EXECUTABLE
+node	lib	2906	2751	liblibc/lib.rs	3545	35	6	type	
+node	lib	4071	4063	liblibc/lib.rs	3918	49	9	type	
+node	lib	616	600	liblibc/lib.rs	434	24	18	struct_field	ai_addr
+node	lib	4503	4502	liblibc/lib.rs	4062	47	6	type	
+node	lib	1227	1224	liblibc/lib.rs	2065	40	2	lit	
+node	lib	3679	3463	liblibc/lib.rs	3834	42	3	NK_AS_STR_TODO	
+node	lib	2509	2437	liblibc/lib.rs	3474	36	5	type	
+node	lib	1095	1094	liblibc/lib.rs	2030	37	5	type	
+node	lib	819	818	liblibc/lib.rs	705	24	18	struct_field	__size
+node	lib	3467	3466	liblibc/lib.rs	3807	37	6	type	
+node	lib	428	427	liblibc/lib.rs	333	32	3	type	
+node	lib	2248	2245	liblibc/lib.rs	2597	49	2	lit	
+node	lib	430	411	liblibc/lib.rs	334	12	24	NK_AS_STR_TODO	uint32_t
+node	lib	901	898	liblibc/lib.rs	1979	42	1	lit	
+node	lib	2063	2037	liblibc/lib.rs	2525	12	44	static	MAP_ANONONYMOUS
+node	lib	1207	1204	liblibc/lib.rs	2060	39	2	lit	
+node	lib	2612	2611	liblibc/lib.rs	3494	49	4	type	
+node	lib	1293	1292	liblibc/lib.rs	2083	30	5	type	
+node	lib	1625	1624	liblibc/lib.rs	2169	34	5	type	
+node	lib	3913	3903	liblibc/lib.rs	3869	55	5	type	
+node	lib	1452	895	liblibc/lib.rs	2125	12	31	static	ELIBBAD
+node	lib	2425	2335	liblibc/lib.rs	3458	45	6	type	
+node	lib	1241	1240	liblibc/lib.rs	2069	31	5	type	
+node	lib	3896	3463	liblibc/lib.rs	3860	62	5	type	
+node	lib	1388	895	liblibc/lib.rs	2109	12	30	static	ENONET
+node	lib	1106	895	liblibc/lib.rs	2034	12	48	static	MAP_FAILED
+node	lib	1628	895	liblibc/lib.rs	2170	12	36	static	EMEDIUMTYPE
+node	lib	1007	1006	liblibc/lib.rs	2006	39	5	type	
+node	lib	566	564	liblibc/lib.rs	411	37	11	type	
+node	lib	4543	4536	liblibc/lib.rs	4145	8	277	foreign_mod	
+node	lib	3699	3463	liblibc/lib.rs	3837	38	7	type	
+node	lib	3965	3925	liblibc/lib.rs	3884	28	4	NK_AS_STR_TODO	
+node	lib	3819	3818	liblibc/lib.rs	3852	46	6	type	
+node	lib	2972	2918	liblibc/lib.rs	3559	47	7	type	
+node	lib	1883	1882	liblibc/lib.rs	2462	39	5	type	
+node	lib	4227	4217	liblibc/lib.rs	3987	28	5	NK_AS_STR_TODO	
+node	lib	1711	1708	liblibc/lib.rs	2405	47	6	NK_AS_STR_TODO	
+node	lib	1377	1376	liblibc/lib.rs	2106	32	5	type	
+node	lib	987	986	liblibc/lib.rs	2001	30	5	type	
+node	lib	542	541	liblibc/lib.rs	399	36	2	type	
+node	lib	3150	2918	liblibc/lib.rs	3572	56	1	NK_AS_STR_TODO	
+node	lib	1706	1705	liblibc/lib.rs	2404	47	1	lit	
+node	lib	2968	2967	liblibc/lib.rs	3559	35	6	type	
+node	lib	2064	2063	liblibc/lib.rs	2525	41	5	type	
+node	lib	4416	4292	liblibc/lib.rs	4054	37	7	type	
+node	lib	1487	1484	liblibc/lib.rs	2133	41	2	lit	
+node	lib	3759	3463	liblibc/lib.rs	3844	43	4	NK_AS_STR_TODO	
+node	lib	1156	895	liblibc/lib.rs	2048	12	29	static	ENXIO
+node	lib	2569	2568	liblibc/lib.rs	3484	33	6	type	
+node	lib	547	545	liblibc/lib.rs	402	36	11	type	
+node	lib	1871	1870	liblibc/lib.rs	2448	48	5	type	
+node	lib	3608	3463	liblibc/lib.rs	3821	36	5	type	
+node	lib	959	958	liblibc/lib.rs	1994	34	5	type	
+node	lib	1577	1576	liblibc/lib.rs	2156	37	5	type	
+node	lib	3763	3463	liblibc/lib.rs	3845	35	5	type	
+node	lib	3823	3463	liblibc/lib.rs	3853	33	7	type	
+node	lib	4453	4452	liblibc/lib.rs	4057	49	6	type	
+node	lib	3235	3202	liblibc/lib.rs	3724	44	3	NK_AS_STR_TODO	
+node	lib	3710	3463	liblibc/lib.rs	3838	34	5	type	
+node	lib	3213	3202	liblibc/lib.rs	3718	61	5	type	
+node	lib	1921	1895	liblibc/lib.rs	2478	12	38	static	MADV_DONTFORK
+node	lib	1405	1404	liblibc/lib.rs	2113	29	5	type	
+node	lib	4333	4292	liblibc/lib.rs	4044	39	7	NK_AS_STR_TODO	
+node	lib	1672	1668	liblibc/lib.rs	2397	12	31	static	SIGTRAP
+node	lib	1665	1664	liblibc/lib.rs	2182	34	5	type	
+node	lib	1038	895	liblibc/lib.rs	2014	12	30	static	SIGILL
+node	lib	1164	895	liblibc/lib.rs	2050	12	31	static	ENOEXEC
+node	lib	2242	2241	liblibc/lib.rs	2596	39	5	type	
+node	lib	2078	2075	liblibc/lib.rs	2528	47	6	lit	
+node	lib	550	545	liblibc/lib.rs	403	34	9	type	
+node	lib	2220	2217	liblibc/lib.rs	2590	45	2	lit	
+node	lib	4310	4292	liblibc/lib.rs	4042	35	5	type	
+node	lib	3353	3329	liblibc/lib.rs	3763	50	6	type	
+node	lib	2024	2021	liblibc/lib.rs	2505	41	1	lit	
+node	lib	704	703	liblibc/lib.rs	659	16	21	NK_AS_STR_TODO	off_t
+node	lib	851	850	liblibc/lib.rs	1958	34	5	type	
+node	lib	3742	3463	liblibc/lib.rs	3842	47	5	type	
+node	lib	3557	3463	liblibc/lib.rs	3815	45	4	NK_AS_STR_TODO	
+node	lib	4322	4292	liblibc/lib.rs	4043	46	5	type	
+node	lib	2106	2105	liblibc/lib.rs	2562	37	5	type	
+node	lib	3826	3463	liblibc/lib.rs	3853	30	1	NK_AS_STR_TODO	
+node	lib	1952	1949	liblibc/lib.rs	2486	41	2	lit	
+node	lib	498	496	liblibc/lib.rs	377	32	6	type	
+node	lib	2620	2619	liblibc/lib.rs	3495	39	6	type	
+node	lib	4055	3925	liblibc/lib.rs	3900	52	5	type	
+node	lib	2238	2237	liblibc/lib.rs	2595	42	5	type	
+node	lib	1176	895	liblibc/lib.rs	2053	12	31	static	EAGAIN
+node	lib	2098	2095	liblibc/lib.rs	2533	46	8	lit	
+node	lib	1805	1802	liblibc/lib.rs	2430	56	2	lit	
+node	lib	751	731	liblibc/lib.rs	677	16	24	NK_AS_STR_TODO	blkcnt_t
+node	lib	444	443	liblibc/lib.rs	352	12	1046	mod	posix01
+node	lib	4206	4194	liblibc/lib.rs	3976	72	5	type	
+node	lib	553	545	liblibc/lib.rs	404	34	7	type	
+node	lib	1861	1858	liblibc/lib.rs	2444	50	3	lit	
+node	lib	3232	3202	liblibc/lib.rs	3724	49	9	type	
+node	lib	1275	1272	liblibc/lib.rs	2078	40	2	lit	
+node	lib	4486	4485	liblibc/lib.rs	4060	53	8	type	
+node	lib	717	716	liblibc/lib.rs	663	33	3	type	
+node	lib	804	754	liblibc/lib.rs	695	39	6	type	
+node	lib	1595	1592	liblibc/lib.rs	2160	44	3	lit	
+node	lib	3252	3202	liblibc/lib.rs	3731	36	7	type	
+node	lib	1212	895	liblibc/lib.rs	2062	12	32	static	ENOTDIR
+node	lib	3928	3925	liblibc/lib.rs	3879	35	7	type	
+node	lib	3480	3463	liblibc/lib.rs	3808	29	7	NK_AS_STR_TODO	
+node	lib	1733	1730	liblibc/lib.rs	2410	47	1	lit	
+node	lib	3384	3377	liblibc/lib.rs	3781	52	4	type	
+node	lib	3171	2918	liblibc/lib.rs	3579	43	2	NK_AS_STR_TODO	
+node	lib	4040	3925	liblibc/lib.rs	3898	54	5	type	
+node	lib	827	0	liblibc/lib.rs	1575	0	83333	mod	consts
+node	lib	853	850	liblibc/lib.rs	1958	42	1	lit	
+node	lib	848	845	liblibc/lib.rs	1957	37	2	NK_AS_STR_TODO	
+node	lib	1703	1702	liblibc/lib.rs	2404	39	5	type	
+node	lib	3139	3138	liblibc/lib.rs	3572	35	6	type	
+node	lib	1137	1136	liblibc/lib.rs	2043	31	5	type	
+node	lib	2380	2335	liblibc/lib.rs	3452	34	5	type	
+node	lib	3272	3202	liblibc/lib.rs	3736	43	3	NK_AS_STR_TODO	
+node	lib	1592	895	liblibc/lib.rs	2160	12	36	static	EINPROGRESS
+node	lib	4153	4152	liblibc/lib.rs	3947	39	6	type	
+node	lib	4452	4292	liblibc/lib.rs	4057	44	11	type	
+node	lib	2225	2103	liblibc/lib.rs	2592	12	38	static	_SC_RTSIG_MAX
+node	lib	1985	1895	liblibc/lib.rs	2495	12	41	static	IP_ADD_MEMBERSHIP
+node	lib	3818	3463	liblibc/lib.rs	3852	45	7	type	
+node	lib	2519	2437	liblibc/lib.rs	3476	39	7	type	
+node	lib	1416	895	liblibc/lib.rs	2116	12	30	static	EPROTO
+node	lib	3847	3463	liblibc/lib.rs	3856	33	5	type	
+node	lib	3535	3534	liblibc/lib.rs	3814	36	6	type	
+node	lib	3642	3463	liblibc/lib.rs	3827	43	4	NK_AS_STR_TODO	
+node	lib	486	457	liblibc/lib.rs	368	35	7	type	
+node	lib	663	638	liblibc/lib.rs	642	16	23	NK_AS_STR_TODO	c_ulong
+node	lib	3439	3406	liblibc/lib.rs	3791	46	6	type	
+node	lib	595	593	liblibc/lib.rs	425	42	8	type	
+node	lib	3075	2918	liblibc/lib.rs	3566	44	2	NK_AS_STR_TODO	
+node	lib	3400	3399	liblibc/lib.rs	3784	47	13	type	
+node	lib	2039	2037	liblibc/lib.rs	2517	12	37	static	O_RSYNC
+node	lib	2330	2329	liblibc/lib.rs	3441	4	6741	mod	c95
+node	lib	3601	3463	liblibc/lib.rs	3820	54	6	type	
+node	lib	2226	2225	liblibc/lib.rs	2592	39	5	type	
+node	lib	1057	1054	liblibc/lib.rs	2018	41	2	lit	
+node	lib	3525	3463	liblibc/lib.rs	3813	28	3	NK_AS_STR_TODO	
+node	lib	1949	1895	liblibc/lib.rs	2486	12	32	static	AF_INET6
+node	lib	2190	2189	liblibc/lib.rs	2583	40	5	type	
+node	lib	2578	2577	liblibc/lib.rs	3485	48	4	type	
+node	lib	4030	3925	liblibc/lib.rs	3896	57	5	NK_AS_STR_TODO	
+node	lib	1523	1520	liblibc/lib.rs	2142	45	2	lit	
+node	lib	2180	2177	liblibc/lib.rs	2580	51	2	lit	
+node	lib	2734	2437	liblibc/lib.rs	3513	33	7	type	
+node	lib	1265	1264	liblibc/lib.rs	2075	30	5	type	
+node	lib	675	638	liblibc/lib.rs	646	16	25	NK_AS_STR_TODO	ptrdiff_t
+node	lib	1552	895	liblibc/lib.rs	2150	12	32	static	ENOBUFS
+node	lib	1046	895	liblibc/lib.rs	2016	12	30	static	SIGFPE
+node	lib	3478	3463	liblibc/lib.rs	3808	38	6	type	
+node	lib	1409	1408	liblibc/lib.rs	2114	31	5	type	
+node	lib	1901	1895	liblibc/lib.rs	2473	12	35	static	MADV_RANDOM
+node	lib	4169	4085	liblibc/lib.rs	3949	52	5	type	
+node	lib	1690	1668	liblibc/lib.rs	2402	12	42	static	GLOB_MARK
+node	lib	4145	4144	liblibc/lib.rs	3945	39	6	type	
+node	lib	770	754	liblibc/lib.rs	684	24	13	struct_field	st_gid
+node	lib	425	424	liblibc/lib.rs	332	31	2	type	
+node	lib	780	754	liblibc/lib.rs	687	33	5	type	
+node	lib	1500	895	liblibc/lib.rs	2137	12	35	static	ENOPROTOOPT
+node	lib	3044	2918	liblibc/lib.rs	3564	31	2	NK_AS_STR_TODO	
+node	lib	1621	1620	liblibc/lib.rs	2167	31	5	type	
+node	lib	3996	3925	liblibc/lib.rs	3891	50	6	type	
+node	lib	2090	2087	liblibc/lib.rs	2531	48	7	lit	
+node	lib	3644	3463	liblibc/lib.rs	3827	67	7	type	
+node	lib	583	582	liblibc/lib.rs	418	34	3	type	
+node	lib	1976	1973	liblibc/lib.rs	2492	49	2	lit	
+node	lib	2729	2437	liblibc/lib.rs	3512	30	6	NK_AS_STR_TODO	
+node	lib	4052	4051	liblibc/lib.rs	3900	41	6	type	
+node	lib	524	507	liblibc/lib.rs	392	16	132	struct	sockaddr
+node	lib	895	828	liblibc/lib.rs	1975	8	8818	mod	posix88
+node	lib	1505	1504	liblibc/lib.rs	2138	40	5	type	
+node	lib	1873	1870	liblibc/lib.rs	2448	56	1	lit	
+node	lib	4255	4217	liblibc/lib.rs	3990	32	5	NK_AS_STR_TODO	
+node	lib	4556	4543	liblibc/lib.rs	4147	42	3	NK_AS_STR_TODO	
+node	lib	2110	2109	liblibc/lib.rs	2563	39	5	type	
+node	lib	2240	2237	liblibc/lib.rs	2595	50	2	lit	
+node	lib	2177	2103	liblibc/lib.rs	2580	12	42	static	_SC_MEMLOCK_RANGE
+node	lib	3406	3369	liblibc/lib.rs	3787	12	233	foreign_mod	
+node	lib	2237	2103	liblibc/lib.rs	2595	12	41	static	_SC_SIGQUEUE_MAX
+node	lib	1553	1552	liblibc/lib.rs	2150	32	5	type	
+node	lib	4358	4357	liblibc/lib.rs	4047	55	8	type	
+node	lib	1613	1612	liblibc/lib.rs	2165	31	5	type	
+node	lib	2586	2585	liblibc/lib.rs	3486	33	6	type	
+node	lib	1305	1304	liblibc/lib.rs	2086	30	5	type	
+node	lib	834	833	liblibc/lib.rs	1954	38	5	type	
+node	lib	1818	1668	liblibc/lib.rs	2434	12	48	static	_SC_THREAD_PRIO_INHERIT
+node	lib	2228	2225	liblibc/lib.rs	2592	47	2	lit	
+node	lib	658	657	liblibc/lib.rs	640	34	3	type	
+node	lib	1770	1668	liblibc/lib.rs	2422	12	45	static	_SC_GETPW_R_SIZE_MAX
+node	lib	3401	3400	liblibc/lib.rs	3784	52	8	type	
+node	lib	838	837	liblibc/lib.rs	1955	38	5	type	
+node	lib	2460	2459	liblibc/lib.rs	3468	57	6	type	
+node	lib	3906	3903	liblibc/lib.rs	3869	33	5	type	
+node	lib	2124	2121	liblibc/lib.rs	2566	46	1	lit	
+node	lib	1831	1830	liblibc/lib.rs	2437	40	5	type	
+node	lib	3035	2918	liblibc/lib.rs	3563	43	1	NK_AS_STR_TODO	
+node	lib	854	829	liblibc/lib.rs	1959	12	32	static	SEEK_CUR
+node	lib	2926	2918	liblibc/lib.rs	3555	49	7	type	
+node	lib	1685	1684	liblibc/lib.rs	2401	39	5	type	
+node	lib	2909	2751	liblibc/lib.rs	3545	42	0	type	
+node	lib	613	600	liblibc/lib.rs	433	24	21	struct_field	ai_addrlen
+node	lib	1373	1372	liblibc/lib.rs	2105	31	5	type	
+node	lib	1468	895	liblibc/lib.rs	2129	12	30	static	EILSEQ
+node	lib	970	895	liblibc/lib.rs	1997	12	32	static	S_IXUSR
+node	lib	597	593	liblibc/lib.rs	426	24	24	struct_field	ipv6mr_interface
+node	lib	2241	2103	liblibc/lib.rs	2596	12	38	static	_SC_TIMER_MAX
+node	lib	1268	895	liblibc/lib.rs	2076	12	31	static	ERANGE
+node	lib	489	444	liblibc/lib.rs	371	16	124	struct	timeval
+node	lib	2863	2862	liblibc/lib.rs	3536	69	6	type	
+node	lib	1116	895	liblibc/lib.rs	2036	12	40	static	MCL_CURRENT
+node	lib	1718	1717	liblibc/lib.rs	2406	47	1	lit	
+node	lib	1527	1524	liblibc/lib.rs	2143	43	2	lit	
+node	lib	1564	895	liblibc/lib.rs	2153	12	34	static	ESHUTDOWN
+node	lib	580	507	liblibc/lib.rs	417	16	83	struct	in6_addr
+node	lib	2206	2205	liblibc/lib.rs	2587	48	5	type	
+node	lib	955	954	liblibc/lib.rs	1993	33	5	type	
+node	lib	2973	2972	liblibc/lib.rs	3559	48	6	type	
+node	lib	4003	3925	liblibc/lib.rs	3893	38	7	type	
+node	lib	871	870	liblibc/lib.rs	1963	32	5	type	
+node	lib	4570	4543	liblibc/lib.rs	4149	47	6	type	
+node	lib	1948	1945	liblibc/lib.rs	2485	40	1	lit	
+node	lib	3286	3280	liblibc/lib.rs	3749	29	7	NK_AS_STR_TODO	
+node	lib	756	754	liblibc/lib.rs	679	32	5	type	
+node	lib	711	710	liblibc/lib.rs	661	33	3	type	
+node	lib	2092	2091	liblibc/lib.rs	2532	38	5	type	
+node	lib	4093	4085	liblibc/lib.rs	3932	37	11	type	
+node	lib	3971	3925	liblibc/lib.rs	3886	34	5	type	
+node	lib	4520	4292	liblibc/lib.rs	4064	35	9	type	
+node	lib	1775	1774	liblibc/lib.rs	2423	44	5	type	
+node	lib	1484	895	liblibc/lib.rs	2133	12	32	static	ENOTSOCK
+node	lib	3587	3463	liblibc/lib.rs	3819	33	7	NK_AS_STR_TODO	
+node	lib	1615	1612	liblibc/lib.rs	2165	39	3	lit	
+node	lib	568	564	liblibc/lib.rs	412	24	20	struct_field	sin6_port
+node	lib	3680	3463	liblibc/lib.rs	3834	59	5	type	
+node	lib	1609	1608	liblibc/lib.rs	2164	32	5	type	
+node	lib	2202	2201	liblibc/lib.rs	2586	37	5	type	
+node	lib	1660	895	liblibc/lib.rs	2180	12	32	static	ERFKILL
+node	lib	4331	4330	liblibc/lib.rs	4044	49	8	type	
+node	lib	3530	3463	liblibc/lib.rs	3813	55	5	type	
+node	lib	773	754	liblibc/lib.rs	685	24	13	struct_field	__pad0
+node	lib	1315	1312	liblibc/lib.rs	2088	41	2	lit	
+node	lib	2842	2841	liblibc/lib.rs	3534	62	6	type	
+node	lib	2681	2437	liblibc/lib.rs	3507	47	6	type	
+node	lib	1391	1388	liblibc/lib.rs	2109	39	2	lit	
+node	lib	1697	1696	liblibc/lib.rs	2403	39	5	type	
+node	lib	1443	1440	liblibc/lib.rs	2122	39	2	lit	
+node	lib	1219	1216	liblibc/lib.rs	2063	40	2	lit	
+node	lib	628	507	liblibc/lib.rs	438	16	141	struct	sockaddr_un
+node	lib	3614	3463	liblibc/lib.rs	3823	35	5	type	
+node	lib	1337	1336	liblibc/lib.rs	2094	31	5	type	
+node	lib	1029	1026	liblibc/lib.rs	2011	40	1	lit	
+node	lib	1605	1604	liblibc/lib.rs	2163	32	5	type	
+node	lib	1114	1113	liblibc/lib.rs	2034	53	6	type	
+node	lib	1193	1192	liblibc/lib.rs	2057	33	5	type	
+node	lib	3085	2918	liblibc/lib.rs	3567	48	7	type	
+node	lib	3081	3080	liblibc/lib.rs	3567	36	6	type	
+node	lib	3112	2918	liblibc/lib.rs	3569	46	6	type	
+node	lib	2096	2095	liblibc/lib.rs	2533	38	5	type	
+node	lib	1587	1584	liblibc/lib.rs	2158	45	3	lit	
+node	lib	2389	2335	liblibc/lib.rs	3453	31	1	NK_AS_STR_TODO	
+node	lib	1920	1917	liblibc/lib.rs	2477	45	1	lit	
+node	lib	1601	1600	liblibc/lib.rs	2162	32	5	type	
+node	lib	899	898	liblibc/lib.rs	1979	34	5	type	
+node	lib	2595	2594	liblibc/lib.rs	3486	60	6	type	
+node	lib	396	0	liblibc/lib.rs	292	0	46	enum	Nullable
+node	lib	1316	895	liblibc/lib.rs	2089	12	30	static	EL3HLT
+node	lib	1787	1786	liblibc/lib.rs	2426	51	5	type	
+node	lib	1932	1929	liblibc/lib.rs	2480	48	2	lit	
+node	lib	722	703	liblibc/lib.rs	665	16	26	NK_AS_STR_TODO	useconds_t
+node	lib	1619	1616	liblibc/lib.rs	2166	42	3	lit	
+node	lib	2838	2751	liblibc/lib.rs	3534	50	6	type	
+node	lib	2144	2141	liblibc/lib.rs	2571	54	1	lit	
+node	lib	1248	895	liblibc/lib.rs	2071	12	31	static	ESPIPE
+node	lib	3459	3441	liblibc/lib.rs	3804	12	35	static	_PC_NAME_MAX
+node	lib	3860	3463	liblibc/lib.rs	3857	37	5	type	
+node	lib	3233	3232	liblibc/lib.rs	3724	54	4	type	
+node	lib	565	564	liblibc/lib.rs	411	24	24	struct_field	sin6_family
+node	lib	1075	1074	liblibc/lib.rs	2024	35	5	type	
+node	lib	1303	1300	liblibc/lib.rs	2085	39	2	lit	
+node	lib	3083	2918	liblibc/lib.rs	3567	31	2	NK_AS_STR_TODO	
+node	lib	532	529	liblibc/lib.rs	394	40	2	lit	
+node	lib	2611	2437	liblibc/lib.rs	3494	48	5	type	
+node	lib	1584	895	liblibc/lib.rs	2158	12	37	static	EHOSTUNREACH
+node	lib	1813	1810	liblibc/lib.rs	2432	59	2	lit	
+node	lib	2361	2335	liblibc/lib.rs	3449	31	1	NK_AS_STR_TODO	
+node	lib	2112	2109	liblibc/lib.rs	2563	47	1	lit	
+node	lib	3133	2918	liblibc/lib.rs	3571	57	7	type	
+node	lib	2018	2017	liblibc/lib.rs	2504	37	5	type	
+node	lib	661	660	liblibc/lib.rs	641	34	3	type	
+node	lib	3671	3463	liblibc/lib.rs	3834	33	7	type	
+node	lib	1843	1842	liblibc/lib.rs	2440	40	5	type	
+node	lib	2489	2437	liblibc/lib.rs	3472	40	7	type	
+node	lib	1726	1668	liblibc/lib.rs	2409	12	37	static	GLOB_NOSPACE
+node	lib	529	524	liblibc/lib.rs	394	33	10	type	
+node	lib	4137	4136	liblibc/lib.rs	3944	39	6	type	
+node	lib	4566	4565	liblibc/lib.rs	4149	34	6	type	
+node	lib	2068	2067	liblibc/lib.rs	2526	35	5	type	
+node	lib	3878	3463	liblibc/lib.rs	3858	55	5	NK_AS_STR_TODO	
+node	lib	4246	4245	liblibc/lib.rs	3989	40	6	type	
+node	lib	1944	1941	liblibc/lib.rs	2484	40	1	lit	
+node	lib	2502	2437	liblibc/lib.rs	3473	57	7	type	
+node	lib	3519	3463	liblibc/lib.rs	3812	41	5	type	
+node	lib	1471	1468	liblibc/lib.rs	2129	39	2	lit	
+node	lib	2567	2437	liblibc/lib.rs	3483	57	6	NK_AS_STR_TODO	
+node	lib	841	829	liblibc/lib.rs	1956	12	41	static	RAND_MAX
+node	lib	1183	1180	liblibc/lib.rs	2054	40	2	lit	
+node	lib	3734	3463	liblibc/lib.rs	3841	31	7	type	
+node	lib	455	454	liblibc/lib.rs	357	37	7	type	
+node	lib	3706	3463	liblibc/lib.rs	3837	47	4	NK_AS_STR_TODO	
+node	lib	4443	4292	liblibc/lib.rs	4056	24	5	NK_AS_STR_TODO	
+node	lib	1308	895	liblibc/lib.rs	2087	12	30	static	ECHRNG
+node	lib	2152	2149	liblibc/lib.rs	2573	44	2	lit	
+node	lib	989	986	liblibc/lib.rs	2001	38	1	lit	
+node	lib	4197	4194	liblibc/lib.rs	3976	36	5	type	
+node	lib	1445	1444	liblibc/lib.rs	2123	32	5	type	
+node	lib	1926	1925	liblibc/lib.rs	2479	37	5	type	
+node	lib	3620	3463	liblibc/lib.rs	3824	33	11	NK_AS_STR_TODO	
+node	lib	2256	2253	liblibc/lib.rs	2599	50	2	lit	
+node	lib	1389	1388	liblibc/lib.rs	2109	31	5	type	
+node	lib	3298	3297	liblibc/lib.rs	3750	39	4	type	
+node	lib	4186	4177	liblibc/lib.rs	3960	30	7	NK_AS_STR_TODO	
+node	lib	811	731	liblibc/lib.rs	699	16	119	struct	utimbuf
+node	lib	2396	2335	liblibc/lib.rs	3454	31	1	NK_AS_STR_TODO	
+node	lib	1693	1690	liblibc/lib.rs	2402	47	6	NK_AS_STR_TODO	
+node	lib	1041	1038	liblibc/lib.rs	2014	40	1	lit	
+node	lib	1893	1890	liblibc/lib.rs	2465	40	1	lit	
+node	lib	1413	1412	liblibc/lib.rs	2115	30	5	type	
+node	lib	1140	895	liblibc/lib.rs	2044	12	30	static	ENOENT
+node	lib	3339	3329	liblibc/lib.rs	3761	43	5	NK_AS_STR_TODO	
+node	lib	655	654	liblibc/lib.rs	639	33	3	type	
+node	lib	2059	2037	liblibc/lib.rs	2524	12	37	static	MAP_TYPE
+node	lib	4423	4292	liblibc/lib.rs	4054	46	10	NK_AS_STR_TODO	
+node	lib	560	507	liblibc/lib.rs	407	16	81	struct	in_addr
+node	lib	3424	3406	liblibc/lib.rs	3790	37	4	type	
+node	lib	408	405	liblibc/lib.rs	322	16	10	variant	__variant2
+node	lib	2103	828	liblibc/lib.rs	2559	8	3053	mod	sysconf
+node	lib	3731	3463	liblibc/lib.rs	3840	64	6	type	
+node	lib	458	457	liblibc/lib.rs	360	24	16	struct_field	gl_pathc
+node	lib	2993	2918	liblibc/lib.rs	3560	43	2	NK_AS_STR_TODO	
+node	lib	939	938	liblibc/lib.rs	1989	33	5	type	
+node	lib	2615	2437	liblibc/lib.rs	3494	58	5	type	
+node	lib	1529	1528	liblibc/lib.rs	2144	38	5	type	
+node	lib	923	922	liblibc/lib.rs	1985	33	5	type	
+node	lib	3205	3202	liblibc/lib.rs	3718	35	7	type	
+node	lib	2051	2037	liblibc/lib.rs	2521	12	48	static	PROT_GROWSDOWN
+node	lib	3132	2918	liblibc/lib.rs	3571	42	1	NK_AS_STR_TODO	
+node	lib	1519	1516	liblibc/lib.rs	2141	45	2	lit	
+node	lib	1855	1854	liblibc/lib.rs	2443	39	5	type	
+node	lib	758	754	liblibc/lib.rs	680	24	13	struct_field	st_ino
+node	lib	1381	1380	liblibc/lib.rs	2107	30	5	type	
+node	lib	3867	3463	liblibc/lib.rs	3858	34	5	type	
+node	lib	4523	4292	liblibc/lib.rs	4064	49	7	type	
+node	lib	2125	2103	liblibc/lib.rs	2567	12	38	static	_SC_STREAM_MAX
+node	lib	966	895	liblibc/lib.rs	1996	12	33	static	S_IRWXU
+node	lib	1771	1770	liblibc/lib.rs	2422	46	5	type	
+node	lib	1285	1284	liblibc/lib.rs	2081	31	5	type	
+node	lib	1497	1496	liblibc/lib.rs	2136	35	5	type	
+node	lib	4160	4085	liblibc/lib.rs	3947	47	5	NK_AS_STR_TODO	
+node	lib	3390	3389	liblibc/lib.rs	3783	40	3	type	
+node	lib	2697	2437	liblibc/lib.rs	3509	51	7	type	
+node	lib	434	433	liblibc/lib.rs	335	32	3	type	
+node	lib	1002	895	liblibc/lib.rs	2005	12	37	static	STDOUT_FILENO
+node	lib	3638	3463	liblibc/lib.rs	3827	49	8	type	
+node	lib	4417	4416	liblibc/lib.rs	4054	38	6	type	
+node	lib	3314	3313	liblibc/lib.rs	3751	60	4	type	
+node	lib	2088	2087	liblibc/lib.rs	2531	40	5	type	
+node	lib	3523	3463	liblibc/lib.rs	3813	33	5	type	
+node	lib	3872	3871	liblibc/lib.rs	3858	47	6	type	
+node	lib	2543	2437	liblibc/lib.rs	3480	45	3	NK_AS_STR_TODO	
+node	lib	2317	2103	liblibc/lib.rs	2615	12	46	static	_SC_XBS5_ILP32_OFF32
+node	lib	4140	4085	liblibc/lib.rs	3944	50	5	type	
+node	lib	1079	1078	liblibc/lib.rs	2025	36	5	type	
+node	lib	1819	1818	liblibc/lib.rs	2434	49	5	type	
+node	lib	2531	2437	liblibc/lib.rs	3479	34	5	type	
+node	lib	1532	895	liblibc/lib.rs	2145	12	33	static	ENETDOWN
+node	lib	3068	3067	liblibc/lib.rs	3566	36	6	type	
+node	lib	469	457	liblibc/lib.rs	364	24	18	struct_field	__unused1
+node	lib	4077	4057	liblibc/lib.rs	3926	8	945	mod	unistd
+node	lib	1834	1668	liblibc/lib.rs	2438	12	42	static	_SC_XOPEN_VERSION
+node	lib	403	0	liblibc/lib.rs	297	0	45672	mod	types
+node	lib	645	638	liblibc/lib.rs	636	16	22	NK_AS_STR_TODO	c_uchar
+node	lib	4502	4292	liblibc/lib.rs	4062	46	7	type	
+node	lib	3041	2918	liblibc/lib.rs	3564	35	7	type	
+node	lib	620	600	liblibc/lib.rs	435	24	21	struct_field	ai_canonname
+node	lib	2387	2335	liblibc/lib.rs	3453	34	5	type	
+node	lib	3548	3463	liblibc/lib.rs	3815	36	7	type	
+node	lib	2721	2437	liblibc/lib.rs	3511	28	6	NK_AS_STR_TODO	
+node	lib	3690	3463	liblibc/lib.rs	3835	40	6	NK_AS_STR_TODO	
+node	lib	534	533	liblibc/lib.rs	397	24	22	struct_field	ss_family
+node	lib	824	637	liblibc/lib.rs	708	12	31	mod	posix08
+node	lib	2850	2849	liblibc/lib.rs	3535	52	6	type	
+node	lib	4211	4057	liblibc/lib.rs	3981	8	458	mod	glob
+node	lib	2113	2103	liblibc/lib.rs	2564	12	35	static	_SC_CLK_TCK
+node	lib	820	818	liblibc/lib.rs	705	32	10	type	
+node	lib	2006	2005	liblibc/lib.rs	2501	35	5	type	
+node	lib	1906	1905	liblibc/lib.rs	2474	41	5	type	
+node	lib	3217	3202	liblibc/lib.rs	3719	34	5	type	
+node	lib	3824	3823	liblibc/lib.rs	3853	34	6	type	
+node	lib	1889	1886	liblibc/lib.rs	2463	48	1	lit	
+node	lib	1789	1786	liblibc/lib.rs	2426	59	2	lit	
+node	lib	3343	3329	liblibc/lib.rs	3761	57	4	NK_AS_STR_TODO	
+node	lib	4464	4292	liblibc/lib.rs	4058	41	7	type	
+node	lib	4225	4217	liblibc/lib.rs	3987	35	5	type	
+node	lib	4035	3925	liblibc/lib.rs	3898	38	7	type	
+node	lib	4182	4177	liblibc/lib.rs	3959	30	6	NK_AS_STR_TODO	
+node	lib	1508	895	liblibc/lib.rs	2139	12	39	static	ESOCKTNOSUPPORT
+node	lib	3037	3036	liblibc/lib.rs	3563	57	6	type	
+node	lib	4127	4085	liblibc/lib.rs	3942	45	3	NK_AS_STR_TODO	
+node	lib	1200	895	liblibc/lib.rs	2059	12	31	static	EEXIST
+node	lib	1424	895	liblibc/lib.rs	2118	12	31	static	EDOTDOT
+node	lib	1119	1116	liblibc/lib.rs	2036	45	6	lit	
+node	lib	713	703	liblibc/lib.rs	662	16	21	NK_AS_STR_TODO	pid_t
+node	lib	2369	2335	liblibc/lib.rs	3450	44	5	type	
+node	lib	604	600	liblibc/lib.rs	430	24	16	struct_field	ai_family
+node	lib	3636	3463	liblibc/lib.rs	3827	30	4	NK_AS_STR_TODO	
+node	lib	2590	2437	liblibc/lib.rs	3486	49	5	type	
+node	lib	1208	895	liblibc/lib.rs	2061	12	31	static	ENODEV
+node	lib	4189	4057	liblibc/lib.rs	3971	8	278	mod	wait
+node	lib	2264	2261	liblibc/lib.rs	2601	54	2	lit	
+node	lib	2910	2330	liblibc/lib.rs	3549	8	1839	mod	string
+node	lib	3156	3155	liblibc/lib.rs	3573	36	7	type	
+node	lib	1941	1895	liblibc/lib.rs	2484	12	30	static	AF_UNIX
+node	lib	2998	2918	liblibc/lib.rs	3561	35	7	type	
+node	lib	2075	2037	liblibc/lib.rs	2528	12	42	static	MAP_DENYWRITE
+node	lib	1576	895	liblibc/lib.rs	2156	12	37	static	ECONNREFUSED
+node	lib	2181	2103	liblibc/lib.rs	2581	12	46	static	_SC_MEMORY_PROTECTION
+node	lib	2497	2437	liblibc/lib.rs	3473	39	7	type	
+node	lib	2517	2437	liblibc/lib.rs	3475	31	6	NK_AS_STR_TODO	
+node	lib	2010	2009	liblibc/lib.rs	2502	37	5	type	
+node	lib	1603	1600	liblibc/lib.rs	2162	40	3	lit	
+node	lib	2404	2335	liblibc/lib.rs	3455	44	5	type	
+node	lib	433	411	liblibc/lib.rs	335	12	24	NK_AS_STR_TODO	uint64_t
+node	lib	710	703	liblibc/lib.rs	661	16	21	NK_AS_STR_TODO	ino_t
+node	lib	4399	4292	liblibc/lib.rs	4052	31	11	NK_AS_STR_TODO	
+node	lib	4522	4292	liblibc/lib.rs	4064	26	7	NK_AS_STR_TODO	
+node	lib	3176	2918	liblibc/lib.rs	3579	70	5	type	
+node	lib	1237	1236	liblibc/lib.rs	2068	33	5	type	
+node	lib	3941	3940	liblibc/lib.rs	3880	38	6	type	
+node	lib	1591	1588	liblibc/lib.rs	2159	41	3	lit	
+node	lib	666	638	liblibc/lib.rs	643	16	23	NK_AS_STR_TODO	c_float
+node	lib	2514	2437	liblibc/lib.rs	3475	39	5	type	
+node	lib	2305	2103	liblibc/lib.rs	2612	12	40	static	_SC_2_CHAR_TERM
+node	lib	3622	3463	liblibc/lib.rs	3824	61	10	type	
+node	lib	929	926	liblibc/lib.rs	1986	41	4	lit	
+node	lib	1247	1244	liblibc/lib.rs	2070	40	2	lit	
+node	lib	1730	1668	liblibc/lib.rs	2410	12	37	static	GLOB_ABORTED
+node	lib	4119	4085	liblibc/lib.rs	3942	36	7	type	
+node	lib	3955	3925	liblibc/lib.rs	3881	49	5	type	
+node	lib	1045	1042	liblibc/lib.rs	2015	41	1	lit	
+node	lib	2898	2751	liblibc/lib.rs	3542	45	7	type	
+node	lib	698	697	liblibc/lib.rs	655	36	3	type	
+node	lib	4560	4543	liblibc/lib.rs	4147	55	6	NK_AS_STR_TODO	
+node	lib	1881	1878	liblibc/lib.rs	2457	51	5	lit	
+node	lib	3265	3264	liblibc/lib.rs	3736	35	6	type	
+node	lib	1667	1664	liblibc/lib.rs	2182	42	3	lit	
+node	lib	2836	2751	liblibc/lib.rs	3534	30	4	NK_AS_STR_TODO	
+node	lib	4277	4263	liblibc/lib.rs	4001	37	6	NK_AS_STR_TODO	
+node	lib	4271	4263	liblibc/lib.rs	4000	42	6	type	
+node	lib	2556	2555	liblibc/lib.rs	3483	39	6	type	
+node	lib	2503	2502	liblibc/lib.rs	3473	58	6	type	
+node	lib	2540	2437	liblibc/lib.rs	3480	50	7	type	
+node	lib	544	541	liblibc/lib.rs	399	42	3	lit	
+node	lib	2257	2103	liblibc/lib.rs	2600	12	42	static	_SC_BC_STRING_MAX
+node	lib	3862	3463	liblibc/lib.rs	3857	29	6	NK_AS_STR_TODO	
+node	lib	1989	1895	liblibc/lib.rs	2496	12	42	static	IP_DROP_MEMBERSHIP
+node	lib	2284	2281	liblibc/lib.rs	2606	46	2	lit	
+node	lib	2217	2103	liblibc/lib.rs	2590	12	36	static	_SC_VERSION
+node	lib	2186	2185	liblibc/lib.rs	2582	45	5	type	
+node	lib	2121	2103	liblibc/lib.rs	2566	12	36	static	_SC_OPEN_MAX
+node	lib	3895	3463	liblibc/lib.rs	3860	44	3	NK_AS_STR_TODO	
+node	lib	636	633	liblibc/lib.rs	440	45	3	lit	
+node	lib	3111	2918	liblibc/lib.rs	3569	30	2	NK_AS_STR_TODO	
+node	lib	2276	2273	liblibc/lib.rs	2604	48	2	lit	
+node	lib	2666	2437	liblibc/lib.rs	3505	52	6	type	
+node	lib	4578	4543	liblibc/lib.rs	4150	30	5	type	
+node	lib	1966	1965	liblibc/lib.rs	2490	35	5	type	
+node	lib	454	444	liblibc/lib.rs	357	16	29	NK_AS_STR_TODO	pthread_t
+node	lib	1774	1668	liblibc/lib.rs	2423	12	43	static	_SC_LOGIN_NAME_MAX
+node	lib	2834	2751	liblibc/lib.rs	3534	36	6	type	
+node	lib	2963	2962	liblibc/lib.rs	3558	59	6	type	
+node	lib	2568	2437	liblibc/lib.rs	3484	32	7	type	
+node	lib	4249	4217	liblibc/lib.rs	3989	47	0	type	
+node	lib	3441	3195	liblibc/lib.rs	3795	8	3546	mod	unistd
+node	lib	2581	2437	liblibc/lib.rs	3485	57	5	type	
+node	lib	1111	1110	liblibc/lib.rs	2034	46	2	NK_AS_STR_TODO	
+node	lib	2807	2751	liblibc/lib.rs	3530	42	4	NK_AS_STR_TODO	
+node	lib	416	415	liblibc/lib.rs	329	31	3	type	
+node	lib	2335	2331	liblibc/lib.rs	3445	12	690	foreign_mod	
+node	lib	2326	2325	liblibc/lib.rs	2617	47	5	type	
+node	lib	2210	2209	liblibc/lib.rs	2588	44	5	type	
+node	lib	1998	1997	liblibc/lib.rs	2498	45	5	type	
+node	lib	3057	2918	liblibc/lib.rs	3565	30	2	NK_AS_STR_TODO	
+node	lib	1663	1660	liblibc/lib.rs	2180	40	3	lit	
+node	lib	3418	3417	liblibc/lib.rs	3789	40	3	type	
+node	lib	1225	1224	liblibc/lib.rs	2065	32	5	type	
+node	lib	1136	895	liblibc/lib.rs	2043	12	29	static	EPERM
+node	lib	3568	3463	liblibc/lib.rs	3817	33	7	type	
+node	lib	3975	3925	liblibc/lib.rs	3887	35	5	type	
+node	lib	2636	2437	liblibc/lib.rs	3499	32	6	type	
+node	lib	3206	3205	liblibc/lib.rs	3718	36	6	type	
+node	lib	3493	3463	liblibc/lib.rs	3810	35	7	type	
+node	lib	4006	3925	liblibc/lib.rs	3893	32	4	NK_AS_STR_TODO	
+node	lib	1930	1929	liblibc/lib.rs	2480	40	5	type	
+node	lib	3055	3054	liblibc/lib.rs	3565	35	6	type	
+node	lib	622	621	liblibc/lib.rs	435	39	6	type	
+node	lib	1297	1296	liblibc/lib.rs	2084	36	5	type	
+node	lib	2768	2751	liblibc/lib.rs	3527	31	7	type	
+node	lib	3998	3925	liblibc/lib.rs	3891	45	3	NK_AS_STR_TODO	
+node	lib	2668	2437	liblibc/lib.rs	3505	44	6	NK_AS_STR_TODO	
+node	lib	507	443	liblibc/lib.rs	385	12	2221	mod	bsd44
+node	lib	1181	1180	liblibc/lib.rs	2054	32	5	type	
+node	lib	4558	4543	liblibc/lib.rs	4147	63	5	type	
+node	lib	1313	1312	liblibc/lib.rs	2088	33	5	type	
+node	lib	1460	895	liblibc/lib.rs	2127	12	31	static	ELIBMAX
+node	lib	1129	1128	liblibc/lib.rs	2040	39	5	type	
+node	lib	945	942	liblibc/lib.rs	1990	41	5	lit	
+node	lib	720	719	liblibc/lib.rs	664	33	3	type	
+node	lib	1900	1897	liblibc/lib.rs	2472	45	1	lit	
+node	lib	2258	2257	liblibc/lib.rs	2600	43	5	type	
+node	lib	3512	3463	liblibc/lib.rs	3811	43	5	type	
+node	lib	1877	1874	liblibc/lib.rs	2449	56	1	lit	
+node	lib	4511	4292	liblibc/lib.rs	4063	33	5	type	
+node	lib	2493	2437	liblibc/lib.rs	3472	52	5	type	
+node	lib	2500	2437	liblibc/lib.rs	3473	30	7	NK_AS_STR_TODO	
+node	lib	3438	3406	liblibc/lib.rs	3791	31	4	NK_AS_STR_TODO	
+node	lib	1968	1965	liblibc/lib.rs	2490	43	1	lit	
+node	lib	2520	2519	liblibc/lib.rs	3476	40	6	type	
+node	lib	1027	1026	liblibc/lib.rs	2011	32	5	type	
+node	lib	4387	4292	liblibc/lib.rs	4051	39	5	type	
+node	lib	4389	4292	liblibc/lib.rs	4051	31	6	NK_AS_STR_TODO	
+node	lib	1336	895	liblibc/lib.rs	2094	12	30	static	EL2HLT
+node	lib	3471	3463	liblibc/lib.rs	3807	52	5	type	
+node	lib	3436	3435	liblibc/lib.rs	3791	38	3	type	
+node	lib	869	866	liblibc/lib.rs	1962	40	1	lit	
+node	lib	2375	2335	liblibc/lib.rs	3451	31	1	NK_AS_STR_TODO	
+node	lib	2990	2918	liblibc/lib.rs	3560	47	7	type	
+node	lib	2686	2685	liblibc/lib.rs	3508	39	4	type	
+node	lib	3425	3424	liblibc/lib.rs	3790	38	3	type	
+node	lib	4124	4085	liblibc/lib.rs	3942	50	7	type	
+node	lib	1942	1941	liblibc/lib.rs	2484	32	5	type	
+node	lib	1411	1408	liblibc/lib.rs	2114	39	2	lit	
+node	lib	3893	3892	liblibc/lib.rs	3860	50	7	type	
+node	lib	1283	1280	liblibc/lib.rs	2080	39	2	lit	
+node	lib	1051	1050	liblibc/lib.rs	2017	33	5	type	
+node	lib	3498	3463	liblibc/lib.rs	3810	49	5	type	
+node	lib	3257	3202	liblibc/lib.rs	3731	51	6	type	
+node	lib	3954	3925	liblibc/lib.rs	3881	32	5	NK_AS_STR_TODO	
+node	lib	3404	3377	liblibc/lib.rs	3784	65	5	type	
+node	lib	877	874	liblibc/lib.rs	1964	41	8	lit	
+node	lib	4144	4085	liblibc/lib.rs	3945	38	7	type	
+node	lib	954	895	liblibc/lib.rs	1993	12	32	static	S_IEXEC
+node	lib	1946	1945	liblibc/lib.rs	2485	32	5	type	
+node	lib	4019	3925	liblibc/lib.rs	3896	35	7	type	
+node	lib	1113	1110	liblibc/lib.rs	2034	52	7	type	
+node	lib	1749	1746	liblibc/lib.rs	2415	55	1	lit	
+node	lib	2008	2005	liblibc/lib.rs	2501	43	1	lit	
+node	lib	2772	2751	liblibc/lib.rs	3527	43	8	type	
+node	lib	4370	4292	liblibc/lib.rs	4049	39	5	type	
+node	lib	4565	4543	liblibc/lib.rs	4149	33	7	type	
+node	lib	3936	3925	liblibc/lib.rs	3879	60	5	type	
+node	lib	1977	1895	liblibc/lib.rs	2493	12	41	static	IP_MULTICAST_LOOP
+node	lib	774	754	liblibc/lib.rs	685	32	5	type	
+node	lib	1477	1476	liblibc/lib.rs	2131	33	5	type	
+node	lib	2714	2437	liblibc/lib.rs	3510	63	5	type	
+node	lib	1013	1010	liblibc/lib.rs	2007	40	1	lit	
+node	lib	475	474	liblibc/lib.rs	365	36	6	type	
+node	lib	4552	4543	liblibc/lib.rs	4147	27	4	NK_AS_STR_TODO	
+node	lib	1700	1699	liblibc/lib.rs	2403	47	1	lit	
+node	lib	754	731	liblibc/lib.rs	678	16	802	struct	stat
+node	lib	3645	3644	liblibc/lib.rs	3827	68	6	type	
+node	lib	800	754	liblibc/lib.rs	694	24	16	struct_field	st_ctime
+node	lib	1018	895	liblibc/lib.rs	2009	12	31	static	F_TLOCK
+node	lib	1094	895	liblibc/lib.rs	2030	12	40	static	MAP_PRIVATE
+node	lib	1253	1252	liblibc/lib.rs	2072	31	5	type	
+node	lib	1049	1046	liblibc/lib.rs	2016	40	1	lit	
+node	lib	4450	4292	liblibc/lib.rs	4057	24	6	NK_AS_STR_TODO	
+node	lib	946	895	liblibc/lib.rs	1991	12	35	static	S_IFLNK
+node	lib	2764	2751	liblibc/lib.rs	3525	42	6	type	
+node	lib	1273	1272	liblibc/lib.rs	2078	32	5	type	
+node	lib	1102	895	liblibc/lib.rs	2032	12	37	static	MAP_ANON
+node	lib	2622	2437	liblibc/lib.rs	3495	29	3	NK_AS_STR_TODO	
+node	lib	1006	895	liblibc/lib.rs	2006	12	37	static	STDERR_FILENO
+node	lib	464	463	liblibc/lib.rs	361	36	6	type	
+node	lib	3912	3903	liblibc/lib.rs	3869	40	3	NK_AS_STR_TODO	
+node	lib	3539	3463	liblibc/lib.rs	3814	50	8	type	
+node	lib	1103	1102	liblibc/lib.rs	2032	34	5	type	
+node	lib	2012	2009	liblibc/lib.rs	2502	45	1	lit	
+node	lib	1467	1464	liblibc/lib.rs	2128	41	2	lit	
+node	lib	3592	3463	liblibc/lib.rs	3819	65	6	type	
+node	lib	2970	2918	liblibc/lib.rs	3559	31	1	NK_AS_STR_TODO	
+node	lib	1715	1714	liblibc/lib.rs	2406	39	5	type	
+node	lib	1503	1500	liblibc/lib.rs	2137	44	2	lit	
+node	lib	1415	1412	liblibc/lib.rs	2115	38	2	lit	
+node	lib	4234	4233	liblibc/lib.rs	3988	70	6	type	
+node	lib	1624	895	liblibc/lib.rs	2169	12	34	static	ENOMEDIUM
+node	lib	1684	1668	liblibc/lib.rs	2401	12	42	static	GLOB_ERR
+node	lib	985	982	liblibc/lib.rs	2000	38	1	lit	
+node	lib	617	600	liblibc/lib.rs	434	33	9	type	
+node	lib	2506	2437	liblibc/lib.rs	3473	69	5	type	
+node	lib	1010	895	liblibc/lib.rs	2007	12	30	static	F_LOCK
+node	lib	1463	1460	liblibc/lib.rs	2127	40	2	lit	
+node	lib	1121	1120	liblibc/lib.rs	2037	36	5	type	
+node	lib	1721	1720	liblibc/lib.rs	2407	39	5	type	
+node	lib	842	841	liblibc/lib.rs	1956	34	5	type	
+node	lib	951	950	liblibc/lib.rs	1992	32	5	type	
+node	lib	4410	4292	liblibc/lib.rs	4053	45	5	NK_AS_STR_TODO	
+node	lib	3341	3329	liblibc/lib.rs	3761	63	5	type	
+node	lib	4152	4085	liblibc/lib.rs	3947	38	7	type	
+node	lib	3789	3788	liblibc/lib.rs	3849	40	8	type	
+node	lib	2091	2037	liblibc/lib.rs	2532	12	42	static	MAP_POPULATE
+node	lib	3887	3463	liblibc/lib.rs	3860	35	7	type	
+node	lib	694	690	liblibc/lib.rs	654	16	27	NK_AS_STR_TODO	c_ulonglong
+node	lib	4473	4472	liblibc/lib.rs	4059	53	6	type	
+node	lib	1984	1981	liblibc/lib.rs	2494	39	1	lit	
+node	lib	3168	2918	liblibc/lib.rs	3579	47	7	type	
+node	lib	1492	895	liblibc/lib.rs	2135	12	32	static	EMSGSIZE
+node	lib	540	533	liblibc/lib.rs	399	24	22	struct_field	__ss_pad2
+node	lib	3651	3463	liblibc/lib.rs	3829	36	5	type	
+node	lib	3733	3463	liblibc/lib.rs	3840	57	5	NK_AS_STR_TODO	
+node	lib	1042	895	liblibc/lib.rs	2015	12	31	static	SIGABRT
+node	lib	4392	4391	liblibc/lib.rs	4051	60	8	type	
+node	lib	545	507	liblibc/lib.rs	401	16	224	struct	sockaddr_in
+node	lib	602	600	liblibc/lib.rs	429	34	5	type	
+node	lib	1675	1672	liblibc/lib.rs	2397	41	1	lit	
+node	lib	4208	4194	liblibc/lib.rs	3976	63	7	NK_AS_STR_TODO	
+node	lib	4269	4263	liblibc/lib.rs	3999	37	4	NK_AS_STR_TODO	
+node	lib	519	518	liblibc/lib.rs	390	37	3	type	
+node	lib	1696	1668	liblibc/lib.rs	2403	12	42	static	GLOB_NOSORT
+node	lib	2298	2297	liblibc/lib.rs	2610	38	5	type	
+node	lib	4372	4292	liblibc/lib.rs	4049	31	6	NK_AS_STR_TODO	
+node	lib	2603	2437	liblibc/lib.rs	3493	43	5	type	
+node	lib	719	703	liblibc/lib.rs	664	16	21	NK_AS_STR_TODO	gid_t
+node	lib	3618	3463	liblibc/lib.rs	3824	46	5	type	
+node	lib	4209	4194	liblibc/lib.rs	3977	34	5	type	
+node	lib	1767	1766	liblibc/lib.rs	2421	46	5	type	
+node	lib	1429	1428	liblibc/lib.rs	2119	32	5	type	
+node	lib	2484	2437	liblibc/lib.rs	3471	30	4	NK_AS_STR_TODO	
+node	lib	1648	895	liblibc/lib.rs	2175	12	37	static	EKEYREJECTED
+node	lib	3429	3406	liblibc/lib.rs	3790	48	6	type	
+node	lib	1859	1858	liblibc/lib.rs	2444	42	5	type	
+node	lib	2685	2437	liblibc/lib.rs	3508	38	5	type	
+node	lib	1062	895	liblibc/lib.rs	2020	12	32	static	SIGALRM
+node	lib	3412	3406	liblibc/lib.rs	3788	32	4	NK_AS_STR_TODO	
+node	lib	974	895	liblibc/lib.rs	1998	12	33	static	S_IWUSR
+node	lib	862	829	liblibc/lib.rs	1961	12	30	static	_IOFBF
+node	lib	866	829	liblibc/lib.rs	1962	12	30	static	_IONBF
+node	lib	3284	3283	liblibc/lib.rs	3749	39	6	type	
+node	lib	3571	3463	liblibc/lib.rs	3817	30	1	NK_AS_STR_TODO	
+node	lib	1735	1734	liblibc/lib.rs	2411	39	5	type	
+node	lib	1329	1328	liblibc/lib.rs	2092	32	5	type	
+node	lib	4391	4292	liblibc/lib.rs	4051	55	13	type	
+node	lib	762	754	liblibc/lib.rs	681	34	7	type	
+node	lib	4479	4292	liblibc/lib.rs	4059	61	3	NK_AS_STR_TODO	
+node	lib	1720	1668	liblibc/lib.rs	2407	12	42	static	GLOB_NOESCAPE
+node	lib	522	521	liblibc/lib.rs	391	37	3	type	
+node	lib	3979	3925	liblibc/lib.rs	3888	32	5	type	
+node	lib	692	691	liblibc/lib.rs	653	38	3	type	
+node	lib	443	442	liblibc/lib.rs	351	8	3319	mod	common
+node	lib	4158	4157	liblibc/lib.rs	3947	55	6	type	
+node	lib	1189	1188	liblibc/lib.rs	2056	32	5	type	
+node	lib	4404	4292	liblibc/lib.rs	4053	38	5	type	
+node	lib	1885	1882	liblibc/lib.rs	2462	47	1	lit	
+node	lib	4374	4292	liblibc/lib.rs	4049	55	13	type	
+node	lib	723	722	liblibc/lib.rs	665	38	3	type	
+node	lib	1551	1548	liblibc/lib.rs	2149	43	3	lit	
+node	lib	1323	1320	liblibc/lib.rs	2090	39	2	lit	
+node	lib	1017	1014	liblibc/lib.rs	2008	40	1	lit	
+node	lib	2780	2751	liblibc/lib.rs	3528	43	5	type	
+node	lib	4348	4292	liblibc/lib.rs	4046	41	7	NK_AS_STR_TODO	
+node	lib	1317	1316	liblibc/lib.rs	2089	31	5	type	
+node	lib	2214	2213	liblibc/lib.rs	2589	41	5	type	
+node	lib	1573	1572	liblibc/lib.rs	2155	34	5	type	
+node	lib	586	507	liblibc/lib.rs	420	16	134	struct	ip_mreq
+node	lib	4177	4174	liblibc/lib.rs	3958	12	137	foreign_mod	
+node	lib	3394	3377	liblibc/lib.rs	3783	52	13	type	
+node	lib	1144	895	liblibc/lib.rs	2045	12	29	static	ESRCH
+node	lib	4365	4292	liblibc/lib.rs	4048	26	11	NK_AS_STR_TODO	
+node	lib	1495	1492	liblibc/lib.rs	2135	41	2	lit	
+node	lib	3666	3463	liblibc/lib.rs	3833	30	2	NK_AS_STR_TODO	
+node	lib	4477	4292	liblibc/lib.rs	4059	66	6	type	
+node	lib	3329	3324	liblibc/lib.rs	3760	12	265	foreign_mod	
+node	lib	2994	2918	liblibc/lib.rs	3560	59	5	type	
+node	lib	1729	1726	liblibc/lib.rs	2409	47	1	lit	
+node	lib	859	858	liblibc/lib.rs	1960	34	5	type	
+node	lib	3962	3925	liblibc/lib.rs	3884	34	7	type	
+node	lib	2798	2751	liblibc/lib.rs	3530	33	7	type	
+node	lib	3301	3280	liblibc/lib.rs	3750	48	5	type	
+node	lib	3985	3925	liblibc/lib.rs	3889	28	6	NK_AS_STR_TODO	
+node	lib	4406	4292	liblibc/lib.rs	4053	30	6	NK_AS_STR_TODO	
+node	lib	4463	4292	liblibc/lib.rs	4058	24	5	NK_AS_STR_TODO	
+node	lib	777	754	liblibc/lib.rs	686	33	5	type	
+node	lib	4408	4292	liblibc/lib.rs	4053	52	5	type	
+node	lib	2262	2261	liblibc/lib.rs	2601	46	5	type	
+node	lib	1925	1895	liblibc/lib.rs	2479	12	36	static	MADV_DOFORK
+node	lib	2149	2103	liblibc/lib.rs	2573	12	35	static	_SC_TIMERS
+node	lib	2067	2037	liblibc/lib.rs	2526	12	38	static	MAP_32BIT
+node	lib	3797	3463	liblibc/lib.rs	3849	74	5	type	
+node	lib	1916	1913	liblibc/lib.rs	2476	47	1	lit	
+node	lib	2524	2437	liblibc/lib.rs	3477	37	5	type	
+node	lib	3364	3329	liblibc/lib.rs	3764	45	5	type	
+node	lib	549	545	liblibc/lib.rs	403	24	19	struct_field	sin_port
+node	lib	855	854	liblibc/lib.rs	1959	34	5	type	
+node	lib	2708	2437	liblibc/lib.rs	3510	31	6	NK_AS_STR_TODO	
+node	lib	1063	1062	liblibc/lib.rs	2020	33	5	type	
+node	lib	1267	1264	liblibc/lib.rs	2075	38	2	lit	
+node	lib	1673	1672	liblibc/lib.rs	2397	33	5	type	
+node	lib	1659	1656	liblibc/lib.rs	2178	48	3	lit	
+node	lib	2050	2047	liblibc/lib.rs	2519	40	7	lit	
+node	lib	808	807	liblibc/lib.rs	696	35	6	type	
+node	lib	4129	4085	liblibc/lib.rs	3942	70	5	type	
+node	lib	1488	895	liblibc/lib.rs	2134	12	36	static	EDESTADDRREQ
+node	lib	2230	2229	liblibc/lib.rs	2593	43	5	type	
+node	lib	1980	1977	liblibc/lib.rs	2493	50	2	lit	
+node	lib	2087	2037	liblibc/lib.rs	2531	12	44	static	MAP_NONRESERVE
+node	lib	482	457	liblibc/lib.rs	367	35	7	type	
+node	lib	629	628	liblibc/lib.rs	439	24	23	struct_field	sun_family
+node	lib	3369	3195	liblibc/lib.rs	3768	8	1097	mod	dirent
+node	lib	4459	4292	liblibc/lib.rs	4057	57	3	NK_AS_STR_TODO	
+node	lib	4491	4490	liblibc/lib.rs	4061	42	9	type	
+node	lib	2812	2751	liblibc/lib.rs	3531	33	6	type	
+node	lib	812	811	liblibc/lib.rs	700	24	14	struct_field	actime
+node	lib	3794	3793	liblibc/lib.rs	3849	61	8	type	
+node	lib	2274	2273	liblibc/lib.rs	2604	40	5	type	
+node	lib	3541	3540	liblibc/lib.rs	3814	52	6	type	
+node	lib	1070	895	liblibc/lib.rs	2023	12	33	static	PROT_NONE
+node	lib	1507	1504	liblibc/lib.rs	2138	48	2	lit	
+node	lib	3639	3638	liblibc/lib.rs	3827	50	7	type	
+node	lib	4433	4432	liblibc/lib.rs	4055	49	6	type	
+node	lib	2150	2149	liblibc/lib.rs	2573	36	5	type	
+node	lib	2538	2437	liblibc/lib.rs	3480	30	6	NK_AS_STR_TODO	
+node	lib	3180	2918	liblibc/lib.rs	3580	34	7	type	
+node	lib	3958	3925	liblibc/lib.rs	3882	39	5	type	
+node	lib	981	978	liblibc/lib.rs	1999	41	3	lit	
+node	lib	2701	2437	liblibc/lib.rs	3509	63	5	type	
+node	lib	3948	3925	liblibc/lib.rs	3880	62	5	type	
+node	lib	575	564	liblibc/lib.rs	414	35	8	type	
+node	lib	1887	1886	liblibc/lib.rs	2463	40	5	type	
+node	lib	1739	1738	liblibc/lib.rs	2413	43	5	type	
+node	lib	2020	2017	liblibc/lib.rs	2504	45	1	lit	
+node	lib	3991	3925	liblibc/lib.rs	3891	36	7	type	
+node	lib	3264	3202	liblibc/lib.rs	3736	34	7	type	
+node	lib	958	895	liblibc/lib.rs	1994	12	34	static	S_IWRITE
+node	lib	3500	3463	liblibc/lib.rs	3810	44	3	NK_AS_STR_TODO	
+node	lib	3863	3463	liblibc/lib.rs	3857	47	7	type	
+node	lib	4194	4189	liblibc/lib.rs	3975	12	142	foreign_mod	
+node	lib	1192	895	liblibc/lib.rs	2057	12	32	static	ENOTBLK
+node	lib	673	672	liblibc/lib.rs	645	34	3	type	
+node	lib	1083	1082	liblibc/lib.rs	2026	35	5	type	
+node	lib	2269	2103	liblibc/lib.rs	2603	12	37	static	_SC_LINE_MAX
+node	lib	2510	2509	liblibc/lib.rs	3474	37	4	type	
+node	lib	2600	2599	liblibc/lib.rs	3493	32	6	type	
+node	lib	4444	4292	liblibc/lib.rs	4056	41	7	type	
+node	lib	1537	1536	liblibc/lib.rs	2146	36	5	type	
+node	lib	2322	2321	liblibc/lib.rs	2616	47	5	type	
+node	lib	3127	2918	liblibc/lib.rs	3571	30	1	NK_AS_STR_TODO	
+node	lib	1513	1512	liblibc/lib.rs	2140	35	5	type	
+node	lib	3001	2918	liblibc/lib.rs	3561	31	2	NK_AS_STR_TODO	
+node	lib	2854	2751	liblibc/lib.rs	3536	34	11	type	
+node	lib	4132	4085	liblibc/lib.rs	3943	33	5	type	
+node	lib	2130	2129	liblibc/lib.rs	2568	40	5	type	
+node	lib	2133	2103	liblibc/lib.rs	2569	12	39	static	_SC_JOB_CONTROL
+node	lib	3504	3463	liblibc/lib.rs	3810	56	3	NK_AS_STR_TODO	
+node	lib	672	638	liblibc/lib.rs	645	16	22	NK_AS_STR_TODO	size_t
+node	lib	1691	1690	liblibc/lib.rs	2402	39	5	type	
+node	lib	3366	3329	liblibc/lib.rs	3764	40	3	NK_AS_STR_TODO	
+node	lib	2562	2437	liblibc/lib.rs	3483	47	1	NK_AS_STR_TODO	
+node	lib	3851	3463	liblibc/lib.rs	3856	45	7	type	
+node	lib	1846	1668	liblibc/lib.rs	2441	12	40	static	_SC_XOPEN_CRYPT
+node	lib	1455	1452	liblibc/lib.rs	2125	40	2	lit	
+node	lib	2162	2161	liblibc/lib.rs	2576	45	5	type	
+node	lib	3163	2918	liblibc/lib.rs	3579	34	7	type	
+node	lib	893	890	liblibc/lib.rs	1968	42	10	lit	
+node	lib	1131	1128	liblibc/lib.rs	2040	47	6	lit	
+node	lib	1766	1668	liblibc/lib.rs	2421	12	45	static	_SC_GETGR_R_SIZE_MAX
+node	lib	1938	1937	liblibc/lib.rs	2482	39	5	type	
+node	lib	1643	1640	liblibc/lib.rs	2173	44	3	lit	
+node	lib	2473	2437	liblibc/lib.rs	3470	36	5	type	
+node	lib	915	914	liblibc/lib.rs	1983	33	5	type	
+node	lib	3843	3463	liblibc/lib.rs	3855	32	7	type	
+node	lib	2985	2918	liblibc/lib.rs	3560	34	7	type	
+node	lib	418	411	liblibc/lib.rs	330	12	23	NK_AS_STR_TODO	int32_t
+node	lib	4038	3925	liblibc/lib.rs	3898	32	4	NK_AS_STR_TODO	
+node	lib	1353	1352	liblibc/lib.rs	2098	31	5	type	
+node	lib	2212	2209	liblibc/lib.rs	2588	52	2	lit	
+node	lib	3195	2329	liblibc/lib.rs	3711	4	8211	mod	posix88
+node	lib	2138	2137	liblibc/lib.rs	2570	39	5	type	
+node	lib	1201	1200	liblibc/lib.rs	2059	32	5	type	
+node	lib	4148	4085	liblibc/lib.rs	3945	50	5	type	
+node	lib	3543	3463	liblibc/lib.rs	3814	44	4	NK_AS_STR_TODO	
+node	lib	4031	3925	liblibc/lib.rs	3897	32	5	type	
+node	lib	4321	4292	liblibc/lib.rs	4043	27	3	NK_AS_STR_TODO	
+node	lib	1731	1730	liblibc/lib.rs	2410	39	5	type	
+node	lib	1023	1022	liblibc/lib.rs	2010	33	5	type	
+node	lib	2588	2437	liblibc/lib.rs	3486	29	1	NK_AS_STR_TODO	
+node	lib	1723	1720	liblibc/lib.rs	2407	47	6	NK_AS_STR_TODO	
+node	lib	491	489	liblibc/lib.rs	372	32	6	type	
+node	lib	2318	2317	liblibc/lib.rs	2615	46	5	type	
+node	lib	2945	2918	liblibc/lib.rs	3556	62	6	type	
+node	lib	3410	3409	liblibc/lib.rs	3788	39	3	type	
+node	lib	1708	1668	liblibc/lib.rs	2405	12	42	static	GLOB_NOCHECK
+node	lib	3741	3463	liblibc/lib.rs	3842	29	4	NK_AS_STR_TODO	
+node	lib	2000	1997	liblibc/lib.rs	2498	53	2	lit	
+node	lib	2182	2181	liblibc/lib.rs	2581	47	5	type	
+node	lib	1676	1668	liblibc/lib.rs	2398	12	31	static	SIGPIPE
+node	lib	3660	3463	liblibc/lib.rs	3832	35	5	type	
+node	lib	1515	1512	liblibc/lib.rs	2140	43	2	lit	
+node	lib	3377	3369	liblibc/lib.rs	3779	12	309	foreign_mod	
+node	lib	878	829	liblibc/lib.rs	1965	12	39	static	FOPEN_MAX
+node	lib	2630	2437	liblibc/lib.rs	3497	29	4	NK_AS_STR_TODO	
+node	lib	2619	2437	liblibc/lib.rs	3495	34	11	type	
+node	lib	930	895	liblibc/lib.rs	1987	12	34	static	S_IFCHR
+node	lib	564	507	liblibc/lib.rs	410	16	272	struct	sockaddr_in6
+node	lib	3793	3463	liblibc/lib.rs	3849	56	13	type	
+node	lib	3880	3463	liblibc/lib.rs	3859	38	5	type	
+node	lib	1707	1705	liblibc/lib.rs	2404	52	1	lit	
+node	lib	3529	3463	liblibc/lib.rs	3813	40	3	NK_AS_STR_TODO	
+node	lib	953	950	liblibc/lib.rs	1992	40	5	lit	
+node	lib	587	586	liblibc/lib.rs	421	24	22	struct_field	imr_multiaddr
+node	lib	2654	2653	liblibc/lib.rs	3503	39	4	type	
+node	lib	1307	1304	liblibc/lib.rs	2086	38	2	lit	
+node	lib	4396	4292	liblibc/lib.rs	4052	44	14	type	
+node	lib	4346	4292	liblibc/lib.rs	4046	50	5	type	
+node	lib	1830	1668	liblibc/lib.rs	2437	12	39	static	_SC_ATEXIT_MAX
+node	lib	705	704	liblibc/lib.rs	659	33	3	type	
+node	lib	938	895	liblibc/lib.rs	1989	12	35	static	S_IFDIR
+node	lib	2999	2998	liblibc/lib.rs	3561	36	6	type	
+node	lib	3597	3596	liblibc/lib.rs	3820	40	6	type	
+node	lib	2825	2751	liblibc/lib.rs	3532	43	4	NK_AS_STR_TODO	
+node	lib	1229	1228	liblibc/lib.rs	2066	32	5	type	
+node	lib	2281	2103	liblibc/lib.rs	2606	12	37	static	_SC_2_C_BIND
+node	lib	1249	1248	liblibc/lib.rs	2071	32	5	type	
+node	lib	1581	1580	liblibc/lib.rs	2157	34	5	type	
+node	lib	1705	1702	liblibc/lib.rs	2404	47	6	NK_AS_STR_TODO	
+node	lib	1160	895	liblibc/lib.rs	2049	12	29	static	E2BIG
+node	lib	2700	2437	liblibc/lib.rs	3509	46	3	NK_AS_STR_TODO	
+node	lib	794	754	liblibc/lib.rs	692	24	16	struct_field	st_mtime
+node	lib	1026	895	liblibc/lib.rs	2011	12	30	static	SIGHUP
+node	lib	496	444	liblibc/lib.rs	376	16	120	struct	timespec
+node	lib	2329	0	liblibc/lib.rs	3437	0	42458	mod	funcs
+node	lib	3173	2918	liblibc/lib.rs	3579	59	6	type	
+node	lib	1631	1628	liblibc/lib.rs	2170	44	3	lit	
+node	lib	3788	3463	liblibc/lib.rs	3849	39	9	type	
+node	lib	4297	4292	liblibc/lib.rs	4041	26	6	NK_AS_STR_TODO	
+node	lib	1078	895	liblibc/lib.rs	2025	12	34	static	PROT_WRITE
+node	lib	2296	2293	liblibc/lib.rs	2609	48	2	lit	
+node	lib	2021	1895	liblibc/lib.rs	2505	12	31	static	SO_ERROR
+node	lib	463	462	liblibc/lib.rs	361	35	7	type	
+node	lib	1839	1838	liblibc/lib.rs	2439	47	5	type	
+node	lib	2446	2445	liblibc/lib.rs	3467	55	6	type	
+node	lib	487	486	liblibc/lib.rs	368	36	6	type	
+node	lib	3049	2918	liblibc/lib.rs	3564	57	7	type	
+node	lib	844	841	liblibc/lib.rs	1956	42	10	lit	
+node	lib	3048	2918	liblibc/lib.rs	3564	44	1	NK_AS_STR_TODO	
+node	lib	3952	3925	liblibc/lib.rs	3881	39	5	type	
+node	lib	1485	1484	liblibc/lib.rs	2133	33	5	type	
+node	lib	4377	4292	liblibc/lib.rs	4049	46	7	NK_AS_STR_TODO	
+node	lib	1039	1038	liblibc/lib.rs	2014	32	5	type	
+node	lib	2821	2751	liblibc/lib.rs	3532	49	8	type	
+node	lib	1464	895	liblibc/lib.rs	2128	12	32	static	ELIBEXEC
+node	lib	2492	2437	liblibc/lib.rs	3472	30	8	NK_AS_STR_TODO	
+node	lib	3945	3925	liblibc/lib.rs	3880	51	6	type	
+node	lib	3925	3915	liblibc/lib.rs	3878	12	1025	foreign_mod	
+node	lib	4575	4574	liblibc/lib.rs	4149	61	7	type	
+node	lib	4366	4292	liblibc/lib.rs	4048	58	5	type	
+node	lib	1785	1782	liblibc/lib.rs	2425	45	2	lit	
+node	lib	637	442	liblibc/lib.rs	632	8	2959	mod	arch
+node	lib	1021	1018	liblibc/lib.rs	2009	41	1	lit	
+node	lib	3625	3463	liblibc/lib.rs	3824	53	6	NK_AS_STR_TODO	
+node	lib	2565	2564	liblibc/lib.rs	3483	66	4	type	
+node	lib	857	854	liblibc/lib.rs	1959	42	1	lit	
+node	lib	1491	1488	liblibc/lib.rs	2134	45	2	lit	
+node	lib	2146	2145	liblibc/lib.rs	2572	49	5	type	
+node	lib	1869	1866	liblibc/lib.rs	2446	60	3	lit	
+node	lib	2822	2821	liblibc/lib.rs	3532	50	7	type	
+node	lib	4580	2329	liblibc/lib.rs	4175	4	21	mod	extra
+node	lib	3827	3463	liblibc/lib.rs	3853	45	5	type	
+node	lib	1623	1620	liblibc/lib.rs	2167	39	3	lit	
+node	lib	4187	4177	liblibc/lib.rs	3960	56	12	type	
+node	lib	1782	1668	liblibc/lib.rs	2425	12	36	static	_SC_THREADS
+node	lib	4483	4292	liblibc/lib.rs	4060	28	5	NK_AS_STR_TODO	
+node	lib	1668	828	liblibc/lib.rs	2394	8	3383	mod	posix01
+node	lib	2526	2437	liblibc/lib.rs	3477	31	4	NK_AS_STR_TODO	
+node	lib	1504	895	liblibc/lib.rs	2138	12	39	static	EPROTONOSUPPORT
+node	lib	3577	3463	liblibc/lib.rs	3817	42	4	NK_AS_STR_TODO	
+node	lib	2632	2437	liblibc/lib.rs	3498	37	5	type	
+node	lib	1773	1770	liblibc/lib.rs	2422	54	2	lit	
+node	lib	1557	1556	liblibc/lib.rs	2151	32	5	type	
+node	lib	569	564	liblibc/lib.rs	412	35	9	type	
+node	lib	1157	1156	liblibc/lib.rs	2048	31	5	type	
+node	lib	1988	1985	liblibc/lib.rs	2495	50	2	lit	
+node	lib	4577	4543	liblibc/lib.rs	4149	55	3	NK_AS_STR_TODO	
+node	lib	3767	3463	liblibc/lib.rs	3846	35	5	type	
+node	lib	791	754	liblibc/lib.rs	691	24	21	struct_field	st_atime_nsec
+node	lib	1827	1826	liblibc/lib.rs	2436	51	5	type	
+node	lib	1185	1184	liblibc/lib.rs	2055	32	5	type	
+node	lib	2662	2661	liblibc/lib.rs	3505	38	4	type	
+node	lib	1120	895	liblibc/lib.rs	2037	12	39	static	MCL_FUTURE
+node	lib	785	754	liblibc/lib.rs	689	24	19	struct_field	st_blocks
+node	lib	4363	4362	liblibc/lib.rs	4048	44	9	type	
+node	lib	2481	2437	liblibc/lib.rs	3471	36	5	type	
+node	lib	2308	2305	liblibc/lib.rs	2612	49	2	lit	
+node	lib	3462	3459	liblibc/lib.rs	3804	45	1	lit	
+node	lib	1651	1648	liblibc/lib.rs	2175	45	3	lit	
+node	lib	1727	1726	liblibc/lib.rs	2409	39	5	type	
+node	lib	4063	4058	liblibc/lib.rs	3914	12	384	foreign_mod	
+node	lib	685	684	liblibc/lib.rs	649	39	3	type	
+node	lib	978	895	liblibc/lib.rs	1999	12	33	static	S_IRUSR
+node	lib	3191	2918	liblibc/lib.rs	3580	53	1	NK_AS_STR_TODO	
+node	lib	3549	3548	liblibc/lib.rs	3815	37	6	type	
+node	lib	2366	2335	liblibc/lib.rs	3450	34	5	type	
+node	lib	2174	2173	liblibc/lib.rs	2579	37	5	type	
+node	lib	1332	895	liblibc/lib.rs	2093	12	30	static	ENOCSI
+node	lib	494	489	liblibc/lib.rs	373	33	11	type	
+node	lib	3856	3463	liblibc/lib.rs	3856	61	6	type	
+node	lib	1758	1668	liblibc/lib.rs	2419	12	40	static	_SC_MQ_PRIO_MAX
+node	lib	1611	1608	liblibc/lib.rs	2164	40	3	lit	
+node	lib	4096	4085	liblibc/lib.rs	3932	32	3	NK_AS_STR_TODO	
+node	lib	1172	895	liblibc/lib.rs	2052	12	31	static	ECHILD
+node	lib	1101	1098	liblibc/lib.rs	2031	43	6	lit	
+node	lib	1922	1921	liblibc/lib.rs	2478	39	5	type	
+node	lib	654	638	liblibc/lib.rs	639	16	21	NK_AS_STR_TODO	c_int
+node	lib	1005	1002	liblibc/lib.rs	2005	47	1	lit	
+node	lib	4089	4088	liblibc/lib.rs	3931	39	6	type	
+node	lib	2280	2277	liblibc/lib.rs	2605	47	2	lit	
+node	lib	634	633	liblibc/lib.rs	440	35	6	type	
+node	lib	3555	3554	liblibc/lib.rs	3815	53	6	type	
+node	lib	1633	1632	liblibc/lib.rs	2171	34	5	type	
+node	lib	2908	2751	liblibc/lib.rs	3545	29	4	NK_AS_STR_TODO	
+node	lib	4424	4292	liblibc/lib.rs	4054	72	5	type	
+node	lib	3202	3196	liblibc/lib.rs	3717	12	1016	foreign_mod	
+node	lib	3158	2918	liblibc/lib.rs	3573	30	3	NK_AS_STR_TODO	
+node	lib	935	934	liblibc/lib.rs	1988	33	5	type	
+node	lib	2469	2468	liblibc/lib.rs	3469	35	4	type	
+node	lib	1702	1668	liblibc/lib.rs	2404	12	42	static	GLOB_DOOFFS
+node	lib	2739	2330	liblibc/lib.rs	3517	8	1470	mod	stdlib
+node	lib	1279	1276	liblibc/lib.rs	2079	45	2	lit	
+node	lib	4432	4292	liblibc/lib.rs	4055	44	11	type	
+node	lib	1436	895	liblibc/lib.rs	2121	12	32	static	ENOTUNIQ
+node	lib	608	600	liblibc/lib.rs	431	37	5	type	
+node	lib	466	457	liblibc/lib.rs	362	24	16	struct_field	gl_offs
+node	lib	2165	2103	liblibc/lib.rs	2577	12	34	static	_SC_FSYNC
+node	lib	1171	1168	liblibc/lib.rs	2051	39	1	lit	
+node	lib	2977	2918	liblibc/lib.rs	3559	59	6	type	
+node	lib	552	545	liblibc/lib.rs	404	24	17	struct_field	sin_addr
+node	lib	3700	3699	liblibc/lib.rs	3837	39	6	type	
+node	lib	2628	2437	liblibc/lib.rs	3497	35	6	type	
+node	lib	3228	3202	liblibc/lib.rs	3724	37	5	type	
+node	lib	2290	2289	liblibc/lib.rs	2608	40	5	type	
+node	lib	2661	2437	liblibc/lib.rs	3505	37	5	type	
+node	lib	3466	3463	liblibc/lib.rs	3807	36	7	type	
+node	lib	1589	1588	liblibc/lib.rs	2159	33	5	type	
+node	lib	2698	2697	liblibc/lib.rs	3509	52	6	type	
+node	lib	1335	1332	liblibc/lib.rs	2093	39	2	lit	
+node	lib	2979	2918	liblibc/lib.rs	3559	56	1	NK_AS_STR_TODO	
+node	lib	1717	1714	liblibc/lib.rs	2406	47	6	NK_AS_STR_TODO	
+node	lib	1105	1102	liblibc/lib.rs	2032	42	6	lit	
+node	lib	3726	3463	liblibc/lib.rs	3840	44	11	type	
+node	lib	4217	4211	liblibc/lib.rs	3985	12	311	foreign_mod	
+node	lib	2927	2926	liblibc/lib.rs	3555	50	6	type	
+node	lib	4379	4292	liblibc/lib.rs	4050	44	14	type	
+node	lib	419	418	liblibc/lib.rs	330	31	3	type	
+node	lib	2390	2335	liblibc/lib.rs	3453	44	5	type	
+node	lib	3783	3463	liblibc/lib.rs	3848	30	4	NK_AS_STR_TODO	
+node	lib	4184	4177	liblibc/lib.rs	3960	39	12	type	
+node	lib	1319	1316	liblibc/lib.rs	2089	39	2	lit	
+node	lib	1996	1993	liblibc/lib.rs	2497	52	2	lit	
+node	lib	2314	2313	liblibc/lib.rs	2614	35	5	type	
+node	lib	2988	2918	liblibc/lib.rs	3560	30	2	NK_AS_STR_TODO	
+node	lib	3120	3119	liblibc/lib.rs	3570	46	6	type	
+node	lib	2445	2437	liblibc/lib.rs	3467	54	7	type	
+node	lib	4147	4085	liblibc/lib.rs	3945	30	6	NK_AS_STR_TODO	
+node	lib	4231	4229	liblibc/lib.rs	3988	48	48	type	
+node	lib	541	533	liblibc/lib.rs	399	35	11	type	
+node	lib	931	930	liblibc/lib.rs	1987	33	5	type	
+node	lib	2921	2918	liblibc/lib.rs	3555	35	7	type	
+node	lib	3774	3463	liblibc/lib.rs	3847	35	6	type	
+node	lib	1655	1652	liblibc/lib.rs	2177	43	3	lit	
+node	lib	1173	1172	liblibc/lib.rs	2052	32	5	type	
+node	lib	2249	2103	liblibc/lib.rs	2598	12	39	static	_SC_BC_DIM_MAX
+node	lib	2362	2335	liblibc/lib.rs	3449	44	5	type	
+node	lib	2643	2437	liblibc/lib.rs	3500	30	3	NK_AS_STR_TODO	
+node	lib	810	807	liblibc/lib.rs	696	45	1	lit	
+node	lib	1709	1708	liblibc/lib.rs	2405	39	5	type	
+node	lib	2070	2067	liblibc/lib.rs	2526	43	6	lit	
+node	lib	2577	2437	liblibc/lib.rs	3485	47	5	type	
+node	lib	687	638	liblibc/lib.rs	650	16	23	NK_AS_STR_TODO	wchar_t
+node	lib	3024	2918	liblibc/lib.rs	3562	60	5	type	
+node	lib	1257	1256	liblibc/lib.rs	2073	32	5	type	
+node	lib	3033	2918	liblibc/lib.rs	3563	46	5	type	
+node	lib	3243	3202	liblibc/lib.rs	3730	29	4	NK_AS_STR_TODO	
+node	lib	4419	4292	liblibc/lib.rs	4054	30	5	NK_AS_STR_TODO	
+node	lib	2817	2816	liblibc/lib.rs	3532	35	6	type	
+node	lib	3634	3463	liblibc/lib.rs	3827	36	5	type	
+node	lib	4075	4063	liblibc/lib.rs	3918	63	5	type	
+node	lib	4245	4217	liblibc/lib.rs	3989	35	11	type	
+node	lib	2268	2265	liblibc/lib.rs	2602	51	2	lit	
+node	lib	3076	2918	liblibc/lib.rs	3566	60	6	type	
+node	lib	1779	1778	liblibc/lib.rs	2424	42	5	type	
+node	lib	4554	4543	liblibc/lib.rs	4147	47	6	type	
+node	lib	1220	895	liblibc/lib.rs	2064	12	31	static	EINVAL
+node	lib	1333	1332	liblibc/lib.rs	2093	31	5	type	
+node	lib	3908	3903	liblibc/lib.rs	3869	28	3	NK_AS_STR_TODO	
+node	lib	1541	1540	liblibc/lib.rs	2147	34	5	type	
+node	lib	2222	2221	liblibc/lib.rs	2591	38	5	type	
+node	lib	2803	2751	liblibc/lib.rs	3530	48	8	type	
+node	lib	3090	3089	liblibc/lib.rs	3567	61	6	type	
+node	lib	1328	895	liblibc/lib.rs	2092	12	31	static	EUNATCH
+node	lib	3815	3463	liblibc/lib.rs	3852	35	5	type	
+node	lib	1325	1324	liblibc/lib.rs	2091	31	5	type	
+node	lib	2033	1895	liblibc/lib.rs	2509	12	32	static	SHUT_RDWR
+node	lib	2037	828	liblibc/lib.rs	2514	8	938	mod	extra
+node	lib	759	754	liblibc/lib.rs	680	32	5	type	
+node	lib	1794	1668	liblibc/lib.rs	2428	12	44	static	_SC_THREAD_KEYS_MAX
+node	lib	1509	1508	liblibc/lib.rs	2139	40	5	type	
+node	lib	1412	895	liblibc/lib.rs	2115	12	29	static	ECOMM
+node	lib	1015	1014	liblibc/lib.rs	2008	32	5	type	
+node	lib	2108	2105	liblibc/lib.rs	2562	45	1	lit	
+node	lib	991	990	liblibc/lib.rs	2002	30	5	type	
+node	lib	1912	1909	liblibc/lib.rs	2475	47	1	lit	
+node	lib	2341	2335	liblibc/lib.rs	3446	44	5	type	
+node	lib	1231	1228	liblibc/lib.rs	2066	40	2	lit	
+node	lib	2017	1895	liblibc/lib.rs	2504	12	35	static	SO_REUSEADDR
+node	lib	1050	895	liblibc/lib.rs	2017	12	31	static	SIGKILL
+node	lib	2787	2751	liblibc/lib.rs	3529	30	1	NK_AS_STR_TODO	
+node	lib	679	678	liblibc/lib.rs	647	35	3	type	
+node	lib	4233	4231	liblibc/lib.rs	3988	69	7	type	
+node	lib	4171	4085	liblibc/lib.rs	3949	44	6	NK_AS_STR_TODO	
+node	lib	1188	895	liblibc/lib.rs	2056	12	31	static	EFAULT
+node	lib	921	918	liblibc/lib.rs	1984	40	3	lit	
+node	lib	1815	1814	liblibc/lib.rs	2433	56	5	type	
+node	lib	1261	1260	liblibc/lib.rs	2074	31	5	type	
+node	lib	941	938	liblibc/lib.rs	1989	41	5	lit	
+node	lib	837	829	liblibc/lib.rs	1955	12	36	static	EXIT_SUCCESS
+node	lib	2172	2169	liblibc/lib.rs	2578	50	2	lit	
+node	lib	4020	4019	liblibc/lib.rs	3896	36	6	type	
+node	lib	1301	1300	liblibc/lib.rs	2085	31	5	type	
+node	lib	1489	1488	liblibc/lib.rs	2134	37	5	type	
+node	lib	4353	4292	liblibc/lib.rs	4047	34	5	type	
+node	lib	2515	2514	liblibc/lib.rs	3475	40	4	type	
+node	lib	2953	2918	liblibc/lib.rs	3558	33	7	type	
+node	lib	2408	2335	liblibc/lib.rs	3456	35	5	type	
+node	lib	1753	1750	liblibc/lib.rs	2416	53	1	lit	
+node	lib	3300	3280	liblibc/lib.rs	3750	30	6	NK_AS_STR_TODO	
+node	lib	823	820	liblibc/lib.rs	705	40	1	lit	
+jdef	4561	lib	654
+jdef	4545	lib	654
+jdef	4494	lib	728
+jdef	4275	lib	654
+jdef	4338	lib	654
+jdef	4225	lib	654
+jdef	838	lib	654
+jdef	3645	lib	639
+jdef	3836	lib	406
+jdef	1285	lib	654
+jdef	4153	lib	639
+jdef	3364	lib	654
+jdef	2014	lib	654
+jdef	550	lib	518
+jdef	4253	lib	457
+jdef	3076	lib	672
+jdef	1978	lib	654
+jdef	2166	lib	654
+jdef	2040	lib	654
+jdef	4363	lib	512
+jdef	3486	lib	639
+jdef	1103	lib	654
+jdef	3704	lib	654
+jdef	3867	lib	654
+jdef	1839	lib	654
+jdef	2515	lib	409
+jdef	2670	lib	654
+jdef	3081	lib	639
+jdef	959	lib	654
+jdef	4055	lib	654
+jdef	2084	lib	654
+jdef	1421	lib	654
+jdef	3333	lib	639
+jdef	1799	lib	654
+jdef	2446	lib	639
+jdef	1681	lib	672
+jdef	2895	lib	639
+jdef	4278	lib	654
+jdef	1617	lib	654
+jdef	887	lib	657
+jdef	501	lib	660
+jdef	2834	lib	672
+jdef	1533	lib	654
+jdef	3381	lib	639
+jdef	3605	lib	639
+jdef	1855	lib	654
+jdef	2649	lib	672
+jdef	2791	lib	639
+jdef	566	lib	515
+jdef	774	lib	654
+jdef	3623	lib	719
+jdef	2823	lib	639
+jdef	2701	lib	654
+jdef	3481	lib	657
+jdef	3314	lib	409
+jdef	4464	lib	728
+jdef	2673	lib	654
+jdef	1755	lib	654
+jdef	1055	lib	654
+jdef	2578	lib	409
+jdef	3936	lib	654
+jdef	1970	lib	654
+jdef	3509	lib	654
+jdef	622	lib	639
+jdef	2785	lib	639
+jdef	1031	lib	654
+jdef	1349	lib	654
+jdef	1974	lib	654
+jdef	4498	lib	654
+jdef	975	lib	654
+jdef	1137	lib	654
+jdef	3808	lib	654
+jdef	2968	lib	639
+jdef	1922	lib	654
+jdef	3512	lib	654
+jdef	1513	lib	654
+jdef	2270	lib	654
+jdef	3575	lib	639
+jdef	2586	lib	639
+jdef	3385	lib	437
+jdef	1795	lib	654
+jdef	1697	lib	654
+jdef	1685	lib	654
+jdef	2076	lib	654
+jdef	3797	lib	654
+jdef	2490	lib	639
+jdef	2722	lib	654
+jdef	498	lib	681
+jdef	598	lib	657
+jdef	630	lib	515
+jdef	4353	lib	654
+jdef	3680	lib	654
+jdef	3228	lib	654
+jdef	591	lib	560
+jdef	1982	lib	654
+jdef	2799	lib	639
+jdef	3413	lib	654
+jdef	4075	lib	654
+jdef	1409	lib	654
+jdef	2735	lib	639
+jdef	2418	lib	639
+jdef	3789	lib	496
+jdef	3016	lib	639
+jdef	871	lib	654
+jdef	4527	lib	654
+jdef	2238	lib	654
+jdef	1851	lib	654
+jdef	2645	lib	672
+jdef	1473	lib	654
+jdef	1898	lib	654
+jdef	1237	lib	654
+jdef	3425	lib	437
+jdef	3718	lib	654
+jdef	2698	lib	410
+jdef	1457	lib	654
+jdef	1891	lib	654
+jdef	891	lib	657
+jdef	2986	lib	639
+jdef	3120	lib	639
+jdef	4161	lib	654
+jdef	859	lib	654
+jdef	626	lib	600
+jdef	2999	lib	639
+jdef	3169	lib	406
+jdef	4441	lib	654
+jdef	4067	lib	639
+jdef	505	lib	672
+jdef	4098	lib	672
+jdef	3236	lib	654
+jdef	1775	lib	654
+jdef	3896	lib	654
+jdef	2278	lib	654
+jdef	2118	lib	654
+jdef	3439	lib	660
+jdef	1759	lib	654
+jdef	3527	lib	654
+jdef	2528	lib	672
+jdef	1249	lib	654
+jdef	3715	lib	654
+jdef	2326	lib	654
+jdef	1645	lib	654
+jdef	4234	lib	639
+jdef	2922	lib	639
+jdef	1577	lib	654
+jdef	3404	lib	654
+jdef	3958	lib	654
+jdef	2531	lib	654
+jdef	4158	lib	639
+jdef	4473	lib	406
+jdef	2654	lib	409
+jdef	2234	lib	654
+jdef	4209	lib	713
+jdef	1341	lib	654
+jdef	1871	lib	654
+jdef	3367	lib	654
+jdef	3310	lib	639
+jdef	4129	lib	654
+jdef	3774	lib	657
+jdef	3630	lib	639
+jdef	1345	lib	654
+jdef	4028	lib	654
+jdef	3700	lib	639
+jdef	1783	lib	654
+jdef	3144	lib	639
+jdef	2318	lib	654
+jdef	4511	lib	654
+jdef	1477	lib	654
+jdef	3727	lib	406
+jdef	3356	lib	654
+jdef	1859	lib	654
+jdef	3945	lib	672
+jdef	2678	lib	409
+jdef	1071	lib	654
+jdef	1003	lib	654
+jdef	3130	lib	639
+jdef	2686	lib	409
+jdef	3148	lib	672
+jdef	575	lib	580
+jdef	3941	lib	406
+jdef	3827	lib	654
+jdef	1059	lib	654
+jdef	4507	lib	672
+jdef	3284	lib	639
+jdef	1819	lib	654
+jdef	3478	lib	657
+jdef	3648	lib	654
+jdef	4491	lib	512
+jdef	777	lib	707
+jdef	4089	lib	639
+jdef	2880	lib	654
+jdef	2899	lib	639
+jdef	1703	lib	654
+jdef	1173	lib	654
+jdef	2408	lib	654
+jdef	1843	lib	654
+jdef	2906	lib	657
+jdef	3952	lib	654
+jdef	983	lib	654
+jdef	4036	lib	639
+jdef	2730	lib	654
+jdef	3876	lib	672
+jdef	2186	lib	654
+jdef	4448	lib	654
+jdef	1585	lib	654
+jdef	1289	lib	654
+jdef	1938	lib	654
+jdef	3863	lib	728
+jdef	2206	lib	654
+jdef	3112	lib	672
+jdef	883	lib	657
+jdef	1521	lib	654
+jdef	879	lib	657
+jdef	1413	lib	654
+jdef	1193	lib	654
+jdef	3657	lib	713
+jdef	3967	lib	672
+jdef	1743	lib	654
+jdef	3999	lib	654
+jdef	4012	lib	654
+jdef	1099	lib	654
+jdef	2376	lib	654
+jdef	3722	lib	654
+jdef	4349	lib	654
+jdef	2954	lib	639
+jdef	1095	lib	654
+jdef	2345	lib	654
+jdef	1157	lib	654
+jdef	3341	lib	654
+jdef	4457	lib	672
+jdef	4578	lib	654
+jdef	3037	lib	639
+jdef	943	lib	654
+jdef	2198	lib	654
+jdef	3852	lib	406
+jdef	4267	lib	406
+jdef	475	lib	406
+jdef	2941	lib	639
+jdef	3996	lib	672
+jdef	3883	lib	728
+jdef	3856	lib	672
+jdef	2114	lib	654
+jdef	1133	lib	654
+jdef	4326	lib	654
+jdef	3992	lib	406
+jdef	919	lib	654
+jdef	1954	lib	654
+jdef	2595	lib	639
+jdef	927	lib	654
+jdef	1393	lib	654
+jdef	3293	lib	409
+jdef	1205	lib	654
+jdef	4335	lib	512
+jdef	963	lib	654
+jdef	1791	lib	654
+jdef	4299	lib	654
+jdef	4520	lib	512
+jdef	1087	lib	654
+jdef	2006	lib	654
+jdef	4404	lib	654
+jdef	3880	lib	704
+jdef	1721	lib	654
+jdef	3494	lib	639
+jdef	4421	lib	512
+jdef	1011	lib	654
+jdef	2306	lib	654
+jdef	2322	lib	654
+jdef	801	lib	681
+jdef	923	lib	654
+jdef	3322	lib	654
+jdef	1091	lib	654
+jdef	834	lib	654
+jdef	1153	lib	654
+jdef	608	lib	654
+jdef	3618	lib	654
+jdef	1815	lib	654
+jdef	3597	lib	639
+jdef	1465	lib	654
+jdef	1633	lib	654
+jdef	602	lib	654
+jdef	3337	lib	654
+jdef	2230	lib	654
+jdef	2158	lib	654
+jdef	1051	lib	654
+jdef	3116	lib	654
+jdef	3109	lib	639
+jdef	2482	lib	409
+jdef	1241	lib	654
+jdef	1641	lib	654
+jdef	2706	lib	409
+jdef	1665	lib	654
+jdef	2780	lib	654
+jdef	3585	lib	654
+jdef	4221	lib	639
+jdef	634	lib	639
+jdef	1357	lib	654
+jdef	2122	lib	654
+jdef	569	lib	518
+jdef	1537	lib	654
+jdef	1489	lib	654
+jdef	1469	lib	654
+jdef	4380	lib	512
+jdef	471	lib	406
+jdef	3086	lib	639
+jdef	1201	lib	654
+jdef	483	lib	406
+jdef	1569	lib	654
+jdef	2026	lib	654
+jdef	3519	lib	654
+jdef	2551	lib	654
+jdef	1990	lib	654
+jdef	2052	lib	654
+jdef	3213	lib	654
+jdef	3564	lib	654
+jdef	1629	lib	654
+jdef	2030	lib	654
+jdef	4558	lib	654
+jdef	3210	lib	725
+jdef	1121	lib	654
+jdef	1593	lib	654
+jdef	1525	lib	654
+jdef	1986	lib	654
+jdef	1803	lib	654
+jdef	3888	lib	639
+jdef	759	lib	710
+jdef	2548	lib	409
+jdef	3353	lib	725
+jdef	3592	lib	660
+jdef	3156	lib	687
+jdef	3549	lib	639
+jdef	3011	lib	654
+jdef	3910	lib	654
+jdef	4112	lib	654
+jdef	1727	lib	654
+jdef	2612	lib	409
+jdef	4145	lib	639
+jdef	2064	lib	654
+jdef	2404	lib	654
+jdef	3929	lib	406
+jdef	535	lib	515
+jdef	2202	lib	654
+jdef	987	lib	654
+jdef	846	lib	654
+jdef	2380	lib	654
+jdef	4433	lib	406
+jdef	4400	lib	654
+jdef	2931	lib	639
+jdef	795	lib	681
+jdef	842	lib	654
+jdef	3654	lib	713
+jdef	2812	lib	660
+jdef	4534	lib	654
+jdef	2044	lib	654
+jdef	3206	lib	639
+jdef	4486	lib	524
+jdef	2581	lib	654
+jdef	3578	lib	654
+jdef	2190	lib	654
+jdef	1831	lib	654
+jdef	4184	lib	504
+jdef	4072	lib	754
+jdef	2441	lib	639
+jdef	911	lib	654
+jdef	2072	lib	654
+jdef	3626	lib	654
+jdef	3042	lib	639
+jdef	2383	lib	654
+jdef	903	lib	654
+jdef	2022	lib	654
+jdef	2949	lib	639
+jdef	1023	lib	654
+jdef	3474	lib	654
+jdef	2628	lib	672
+jdef	1108	lib	406
+jdef	1007	lib	654
+jdef	4306	lib	654
+jdef	1677	lib	654
+jdef	2298	lib	654
+jdef	3746	lib	719
+jdef	3983	lib	704
+jdef	3068	lib	639
+jdef	3305	lib	654
+jdef	2302	lib	654
+jdef	4008	lib	672
+jdef	2373	lib	654
+jdef	1373	lib	654
+jdef	1299	lib	1176
+jdef	4310	lib	654
+jdef	3429	lib	660
+jdef	3860	lib	704
+jdef	4481	lib	654
+jdef	1145	lib	654
+jdef	4397	lib	512
+jdef	2477	lib	654
+jdef	3467	lib	639
+jdef	4468	lib	654
+jdef	2493	lib	654
+jdef	3253	lib	639
+jdef	2560	lib	654
+jdef	1149	lib	654
+jdef	2809	lib	654
+jdef	3055	lib	639
+jdef	3008	lib	672
+jdef	3811	lib	713
+jdef	4408	lib	654
+jdef	2106	lib	654
+jdef	2607	lib	654
+jdef	1823	lib	654
+jdef	2524	lib	654
+jdef	3561	lib	639
+jdef	1333	lib	654
+jdef	3134	lib	639
+jdef	1114	lib	406
+jdef	2002	lib	654
+jdef	4180	lib	654
+jdef	3395	lib	438
+jdef	1553	lib	654
+jdef	2034	lib	654
+jdef	4346	lib	654
+jdef	1497	lib	654
+jdef	955	lib	654
+jdef	4052	lib	639
+jdef	3185	lib	654
+jdef	1601	lib	654
+jdef	4444	lib	728
+jdef	2777	lib	639
+jdef	792	lib	660
+jdef	2018	lib	654
+jdef	1771	lib	654
+jdef	3555	lib	639
+jdef	3581	lib	713
+jdef	2369	lib	654
+jdef	1589	lib	654
+jdef	3975	lib	654
+jdef	1573	lib	654
+jdef	3913	lib	654
+jdef	1807	lib	654
+jdef	4108	lib	654
+jdef	2498	lib	639
+jdef	3033	lib	654
+jdef	4197	lib	713
+jdef	1946	lib	654
+jdef	3819	lib	639
+jdef	951	lib	654
+jdef	1367	lib	1272
+jdef	2963	lib	639
+jdef	4246	lib	457
+jdef	547	lib	515
+jdef	2510	lib	409
+jdef	553	lib	560
+jdef	2503	lib	639
+jdef	4094	lib	639
+jdef	1557	lib	654
+jdef	4554	lib	672
+jdef	2536	lib	409
+jdef	1361	lib	654
+jdef	3505	lib	654
+jdef	2485	lib	654
+jdef	3360	lib	654
+jdef	3349	lib	639
+jdef	2936	lib	639
+jdef	1161	lib	654
+jdef	2218	lib	654
+jdef	1962	lib	654
+jdef	4453	lib	406
+jdef	2394	lib	654
+jdef	2170	lib	654
+jdef	3004	lib	639
+jdef	1063	lib	654
+jdef	4370	lib	654
+jdef	1273	lib	654
+jdef	3273	lib	654
+jdef	2603	lib	654
+jdef	2633	lib	409
+jdef	2641	lib	406
+jdef	2390	lib	654
+jdef	756	lib	707
+jdef	4202	lib	654
+jdef	2242	lib	654
+jdef	2110	lib	654
+jdef	4366	lib	654
+jdef	1811	lib	654
+jdef	4004	lib	406
+jdef	1269	lib	654
+jdef	1657	lib	654
+jdef	1485	lib	654
+jdef	4271	lib	672
+jdef	2450	lib	409
+jdef	808	lib	660
+jdef	3742	lib	654
+jdef	3979	lib	654
+jdef	4132	lib	654
+jdef	4040	lib	654
+jdef	3523	lib	654
+jdef	1918	lib	654
+jdef	3530	lib	654
+jdef	1317	lib	654
+jdef	967	lib	654
+jdef	3872	lib	406
+jdef	1165	lib	654
+jdef	1405	lib	654
+jdef	3767	lib	716
+jdef	1930	lib	654
+jdef	2573	lib	654
+jdef	2366	lib	654
+jdef	2506	lib	654
+jdef	813	lib	681
+jdef	3029	lib	639
+jdef	2226	lib	654
+jdef	1221	lib	654
+jdef	479	lib	406
+jdef	2460	lib	639
+jdef	1661	lib	654
+jdef	4187	lib	504
+jdef	2693	lib	409
+jdef	1197	lib	654
+jdef	3731	lib	672
+jdef	863	lib	654
+jdef	3840	lib	672
+jdef	2294	lib	654
+jdef	4047	lib	654
+jdef	4169	lib	704
+jdef	2254	lib	654
+jdef	875	lib	657
+jdef	1445	lib	654
+jdef	4206	lib	654
+jdef	851	lib	654
+jdef	4322	lib	654
+jdef	1125	lib	654
+jdef	605	lib	654
+jdef	3401	lib	438
+jdef	1305	lib	654
+jdef	1437	lib	654
+jdef	618	lib	524
+jdef	2719	lib	409
+jdef	3046	lib	654
+jdef	3125	lib	639
+jdef	2341	lib	654
+jdef	3677	lib	639
+jdef	4387	lib	654
+jdef	2805	lib	639
+jdef	4148	lib	654
+jdef	4383	lib	654
+jdef	3760	lib	654
+jdef	1505	lib	654
+jdef	1735	lib	654
+jdef	2850	lib	406
+jdef	2591	lib	409
+jdef	2465	lib	409
+jdef	2569	lib	639
+jdef	3672	lib	639
+jdef	4417	lib	406
+jdef	4020	lib	406
+jdef	995	lib	654
+jdef	2636	lib	672
+jdef	3090	lib	639
+jdef	4105	lib	654
+jdef	3634	lib	654
+jdef	4550	lib	406
+jdef	771	lib	719
+jdef	3757	lib	713
+jdef	2274	lib	654
+jdef	971	lib	654
+jdef	1950	lib	654
+jdef	1847	lib	654
+jdef	1509	lib	654
+jdef	1441	lib	654
+jdef	4319	lib	512
+jdef	1229	lib	654
+jdef	3770	lib	654
+jdef	3100	lib	639
+jdef	3684	lib	654
+jdef	2769	lib	639
+jdef	2048	lib	654
+jdef	4115	lib	654
+jdef	1637	lib	654
+jdef	3173	lib	672
+jdef	2727	lib	409
+jdef	4566	lib	406
+jdef	3824	lib	639
+jdef	3749	lib	654
+jdef	1863	lib	654
+jdef	2681	lib	660
+jdef	1301	lib	654
+jdef	2838	lib	672
+jdef	3189	lib	672
+jdef	464	lib	639
+jdef	3095	lib	639
+jdef	3692	lib	654
+jdef	2615	lib	654
+jdef	2352	lib	654
+jdef	1902	lib	654
+jdef	1337	lib	654
+jdef	1763	lib	654
+jdef	2401	lib	654
+jdef	3319	lib	409
+jdef	1541	lib	654
+jdef	3489	lib	654
+jdef	526	lib	515
+jdef	3073	lib	639
+jdef	1169	lib	654
+jdef	2754	lib	654
+jdef	2469	lib	409
+jdef	789	lib	681
+jdef	2359	lib	654
+jdef	3298	lib	409
+jdef	1994	lib	654
+jdef	939	lib	654
+jdef	1673	lib	654
+jdef	2977	lib	672
+jdef	4137	lib	639
+jdef	2262	lib	654
+jdef	2887	lib	639
+jdef	1277	lib	654
+jdef	1039	lib	654
+jdef	3257	lib	725
+jdef	2080	lib	654
+jdef	1966	lib	654
+jdef	2474	lib	409
+jdef	1181	lib	654
+jdef	467	lib	672
+jdef	3248	lib	654
+jdef	1257	lib	654
+jdef	1313	lib	654
+jdef	3763	lib	713
+jdef	1129	lib	654
+jdef	3301	lib	654
+jdef	3987	lib	406
+jdef	907	lib	654
+jdef	1117	lib	654
+jdef	1079	lib	654
+jdef	1779	lib	654
+jdef	3498	lib	716
+jdef	1581	lib	654
+jdef	1691	lib	654
+jdef	2959	lib	639
+jdef	4461	lib	654
+jdef	1189	lib	654
+jdef	1265	lib	654
+jdef	1906	lib	654
+jdef	4575	lib	645
+jdef	3781	lib	657
+jdef	2266	lib	654
+jdef	1914	lib	654
+jdef	3241	lib	639
+jdef	1621	lib	654
+jdef	400	lib	402
+jdef	786	lib	751
+jdef	915	lib	654
+jdef	1353	lib	654
+jdef	2387	lib	654
+jdef	1209	lib	654
+jdef	1529	lib	654
+jdef	1261	lib	654
+jdef	1019	lib	654
+jdef	3139	lib	639
+jdef	2620	lib	406
+jdef	1545	lib	654
+jdef	3410	lib	437
+jdef	1461	lib	654
+jdef	899	lib	654
+jdef	2890	lib	654
+jdef	3164	lib	406
+jdef	4477	lib	672
+jdef	487	lib	406
+jdef	1958	lib	654
+jdef	1787	lib	654
+jdef	979	lib	654
+jdef	1751	lib	654
+jdef	2194	lib	654
+jdef	2258	lib	654
+jdef	2246	lib	654
+jdef	3270	lib	754
+jdef	1605	lib	654
+jdef	1926	lib	654
+jdef	2142	lib	654
+jdef	1397	lib	654
+jdef	1649	lib	654
+jdef	3460	lib	654
+jdef	1185	lib	654
+jdef	3181	lib	406
+jdef	2010	lib	654
+jdef	2991	lib	639
+jdef	3224	lib	654
+jdef	1653	lib	654
+jdef	1613	lib	654
+jdef	1233	lib	654
+jdef	494	lib	684
+jdef	2425	lib	639
+jdef	4315	lib	524
+jdef	3021	lib	639
+jdef	3963	lib	406
+jdef	999	lib	654
+jdef	1329	lib	654
+jdef	991	lib	654
+jdef	1321	lib	654
+jdef	1177	lib	654
+jdef	2859	lib	672
+jdef	2455	lib	639
+jdef	3739	lib	639
+jdef	4531	lib	654
+jdef	1747	lib	654
+jdef	595	lib	580
+jdef	2060	lib	654
+jdef	614	lib	512
+jdef	1015	lib	654
+jdef	1715	lib	654
+jdef	4120	lib	639
+jdef	3544	lib	654
+jdef	798	lib	660
+jdef	3159	lib	672
+jdef	2056	lib	654
+jdef	3104	lib	639
+jdef	1225	lib	654
+jdef	2817	lib	639
+jdef	4229	lib	396
+jdef	1827	lib	654
+jdef	2422	lib	639
+jdef	804	lib	660
+jdef	2092	lib	654
+jdef	1217	lib	654
+jdef	3063	lib	672
+jdef	947	lib	654
+jdef	3608	lib	719
+jdef	4437	lib	672
+jdef	3193	lib	406
+jdef	2927	lib	639
+jdef	1767	lib	654
+jdef	3471	lib	654
+jdef	2902	lib	654
+jdef	2338	lib	654
+jdef	2657	lib	672
+jdef	562	lib	521
+jdef	2178	lib	654
+jdef	2154	lib	654
+jdef	491	lib	681
+jdef	3024	lib	654
+jdef	1429	lib	654
+jdef	4428	lib	654
+jdef	3906	lib	713
+jdef	1549	lib	654
+jdef	1453	lib	654
+jdef	2874	lib	654
+jdef	1047	lib	654
+jdef	3516	lib	654
+jdef	3260	lib	654
+jdef	3695	lib	704
+jdef	1417	lib	654
+jdef	1887	lib	654
+jdef	3847	lib	654
+jdef	2711	lib	410
+jdef	855	lib	654
+jdef	2162	lib	654
+jdef	611	lib	654
+jdef	2250	lib	654
+jdef	1213	lib	654
+jdef	1561	lib	654
+jdef	4125	lib	639
+jdef	3541	lib	639
+jdef	2830	lib	663
+jdef	3344	lib	654
+jdef	816	lib	681
+jdef	1325	lib	654
+jdef	3221	lib	725
+jdef	2541	lib	639
+jdef	1369	lib	654
+jdef	2348	lib	654
+jdef	1875	lib	654
+jdef	3734	lib	728
+jdef	2662	lib	409
+jdef	3707	lib	660
+jdef	1365	lib	654
+jdef	3289	lib	639
+jdef	2415	lib	639
+jdef	4303	lib	654
+jdef	2362	lib	654
+jdef	3753	lib	713
+jdef	2764	lib	660
+jdef	2855	lib	406
+jdef	1433	lib	654
+jdef	3502	lib	719
+jdef	2945	lib	672
+jdef	2868	lib	406
+jdef	2981	lib	639
+jdef	931	lib	654
+jdef	1481	lib	654
+jdef	2600	lib	639
+jdef	3651	lib	713
+jdef	4172	lib	654
+jdef	1075	lib	654
+jdef	3664	lib	654
+jdef	4295	lib	654
+jdef	2757	lib	654
+jdef	1449	lib	654
+jdef	3611	lib	716
+jdef	3589	lib	654
+jdef	2556	lib	639
+jdef	4031	lib	654
+jdef	3245	lib	725
+jdef	4015	lib	654
+jdef	1934	lib	654
+jdef	1709	lib	654
+jdef	3601	lib	672
+jdef	2973	lib	639
+jdef	1731	lib	654
+jdef	4375	lib	524
+jdef	2842	lib	406
+jdef	455	lib	663
+jdef	1493	lib	654
+jdef	2772	lib	669
+jdef	588	lib	560
+jdef	3801	lib	654
+jdef	1297	lib	654
+jdef	2126	lib	654
+jdef	3660	lib	716
+jdef	2846	lib	672
+jdef	2138	lib	654
+jdef	3667	lib	654
+jdef	3535	lib	639
+jdef	1910	lib	654
+jdef	4523	lib	728
+jdef	3233	lib	754
+jdef	3804	lib	660
+jdef	3948	lib	654
+jdef	2088	lib	654
+jdef	4424	lib	654
+jdef	1998	lib	654
+jdef	2310	lib	654
+jdef	935	lib	654
+jdef	2290	lib	654
+jdef	2174	lib	654
+jdef	1381	lib	654
+jdef	4044	lib	725
+jdef	4101	lib	728
+jdef	1597	lib	654
+jdef	1879	lib	672
+jdef	2863	lib	406
+jdef	762	lib	745
+jdef	4412	lib	654
+jdef	2096	lib	654
+jdef	4024	lib	672
+jdef	3151	lib	672
+jdef	1043	lib	654
+jdef	3265	lib	639
+jdef	4392	lib	524
+jdef	1377	lib	654
+jdef	1035	lib	654
+jdef	2134	lib	654
+jdef	1739	lib	654
+jdef	2624	lib	672
+jdef	3418	lib	437
+jdef	4140	lib	654
+jdef	3436	lib	437
+jdef	765	lib	725
+jdef	3794	lib	496
+jdef	1609	lib	654
+jdef	3390	lib	437
+jdef	1517	lib	654
+jdef	2214	lib	654
+jdef	2761	lib	660
+jdef	2714	lib	654
+jdef	1835	lib	654
+jdef	1942	lib	654
+jdef	3614	lib	719
+jdef	3933	lib	672
+jdef	1309	lib	654
+jdef	1625	lib	654
+jdef	2565	lib	409
+jdef	1867	lib	654
+jdef	3777	lib	657
+jdef	867	lib	654
+jdef	1141	lib	654
+jdef	3831	lib	654
+jdef	1401	lib	654
+jdef	2130	lib	654
+jdef	780	lib	704
+jdef	4358	lib	524
+jdef	2100	lib	654
+jdef	2666	lib	660
+jdef	3784	lib	654
+jdef	3971	lib	654
+jdef	1067	lib	654
+jdef	1425	lib	654
+jdef	1083	lib	654
+jdef	2827	lib	654
+jdef	3843	lib	728
+jdef	2286	lib	654
+jdef	3060	lib	639
+jdef	2182	lib	654
+jdef	2146	lib	654
+jdef	2794	lib	669
+jdef	459	lib	672
+jdef	3710	lib	654
+jdef	2994	lib	654
+jdef	4570	lib	672
+jdef	1501	lib	654
+jdef	1281	lib	654
+jdef	1293	lib	654
+jdef	3217	lib	654
+jdef	3955	lib	654
+jdef	2150	lib	654
+jdef	2397	lib	654
+jdef	1389	lib	654
+jdef	1245	lib	654
+jdef	1883	lib	654
+jdef	2222	lib	654
+jdef	3176	lib	654
+jdef	2355	lib	654
+jdef	4342	lib	654
+jdef	3688	lib	704
+jdef	3893	lib	811
+jdef	2314	lib	654
+jdef	1385	lib	654
+jdef	1027	lib	654
+jdef	1253	lib	654
+jdef	2282	lib	654
+jdef	4503	lib	406
+jdef	3815	lib	654
+jdef	3050	lib	639
+jdef	3640	lib	639
+jdef	3569	lib	639
+jdef	2068	lib	654
+jdef	1565	lib	654
+jdef	4331	lib	524
+jdef	2520	lib	639
+jdef	4516	lib	524
+jdef	768	lib	716
+jdef	2411	lib	654
+jdef	783	lib	748
+jdef	2210	lib	654
+jdef	4165	lib	654

@@ -1,0 +1,63 @@
+<head><link href="css/shCore.css" rel="stylesheet" type="text/css"/><link href="css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="sourcestyle.css"/></head><body><div><bg9><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../../libstd/">libstd</a><c1>/</c1><c0><a href="./../../../../libstd/rt/">rt</a><c1>/</c1><c0><a href="./../../../../libstd/rt/io/">io</a><c1>/</c1><c0><a href="./../../../../libstd/rt/io/net/">net</a><c1>/</c1><c0><a href="./../../../../libstd/rt/io/net/mod.rs.html">mod.rs</a><br/><br/></c0></c0><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+</c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
+</c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
+</c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
+</c40><br/><ln>&nbsp;&nbsp;5</ln><a id="5">&nbsp;</a>&nbsp;<c40>//&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;&lt;LICENSE-APACHE&nbsp;or
+</c40><br/><ln>&nbsp;&nbsp;6</ln><a id="6">&nbsp;</a>&nbsp;<c40>//&nbsp;http://www.apache.org/licenses/LICENSE-2.0&gt;&nbsp;or&nbsp;the&nbsp;MIT&nbsp;license
+</c40><br/><ln>&nbsp;&nbsp;7</ln><a id="7">&nbsp;</a>&nbsp;<c40>//&nbsp;&lt;LICENSE-MIT&nbsp;or&nbsp;http://opensource.org/licenses/MIT&gt;,&nbsp;at&nbsp;your
+</c40><br/><ln>&nbsp;&nbsp;8</ln><a id="8">&nbsp;</a>&nbsp;<c40>//&nbsp;option.&nbsp;This&nbsp;file&nbsp;may&nbsp;not&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;or&nbsp;distributed
+</c40><br/><ln>&nbsp;&nbsp;9</ln><a id="9">&nbsp;</a>&nbsp;<c40>//&nbsp;except&nbsp;according&nbsp;to&nbsp;those&nbsp;terms.
+</c40><br/><ln>&nbsp;10</ln><a id="10">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;11</ln><a id="11">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;option::</c0><c3>{</c3><c0>Option</c0><c3>,</c3><c0>&nbsp;Some</c0><c3>,</c3><c0>&nbsp;None</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;12</ln><a id="12">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;result::</c0><c3>{</c3><c0>Ok</c0><c3>,</c3><c0>&nbsp;Err</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;13</ln><a id="13">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt::io::io_error</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;14</ln><a id="14">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt::io::net::ip::IpAddr</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;15</ln><a id="15">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt::rtio::</c0><c3>{</c3><c0>IoFactory</c0><c3>,</c3><c0>&nbsp;IoFactoryObject</c0><c3>};</c3><c0>
+</c0><br/><ln>&nbsp;16</ln><a id="16">&nbsp;</a>&nbsp;<c21>use</c21><c0>&nbsp;rt::local::Local</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;17</ln><a id="17">&nbsp;</a><a id="n239402">&nbsp;</a><c0>
+</c0><br/><ln>&nbsp;18</ln><a id="18">&nbsp;</a><a id="n240122">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;tcp;
+</c38><br/><ln>&nbsp;19</ln><a id="19">&nbsp;</a><a id="n240538">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;udp;
+</c38><br/><ln>&nbsp;20</ln><a id="20">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;ip;
+</c38><br/><ln>&nbsp;21</ln><a id="21">&nbsp;</a><a id="n243730">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>unix</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;22</ln><a id="22">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;unix;
+</c38><br/><ln>&nbsp;23</ln><a id="23">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;24</ln><a id="24">&nbsp;</a><a id="n243882">&nbsp;</a><c42>///&nbsp;Simplistic&nbsp;name&nbsp;resolution
+</c42><br/><ln>&nbsp;25</ln><a id="25">&nbsp;</a><a id="n243889"><a id="n243891"><a id="n243886"><a id="n243934"><a id="n243885"><a id="n243884"><a id="n243890"><a id="n243893">&nbsp;</a></a></a></a></a></a></a></a><c21>pub</c21><c1>&nbsp;</c1><c30>fn&nbsp;get_host_addresses</c30><c4>(</c4><c20><a href="#25_26_refs">host</a></c20><c1>:&nbsp;</c1><c8>&amp;str</c8><c4>)</c4><c1>&nbsp;</c1><c4>-&gt;</c4><c1>&nbsp;</c1><c8><a href="../../../../libstd/option.rs.html#59">Option&lt;~</a></c8><c3>[</c3><c8><a href="../../../../libstd/rt/io/net/ip.rs.html#19">IpAddr</a></c8><c3>]</c3><c8><a href="../../../../libstd/option.rs.html#59">&gt;</a></c8><c1>&nbsp;</c1><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;26</ln><a id="26">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c41>/*!
+</c41><br/><ln>&nbsp;27</ln><a id="27">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Get&nbsp;the&nbsp;IP&nbsp;addresses&nbsp;for&nbsp;a&nbsp;given&nbsp;host&nbsp;name.
+</c41><br/><ln>&nbsp;28</ln><a id="28">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*
+</c41><br/><ln>&nbsp;29</ln><a id="29">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Raises&nbsp;io_error&nbsp;on&nbsp;failure.
+</c41><br/><ln>&nbsp;30</ln><a id="30">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+</c41><br/><ln>&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c22>
+</c22><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a><a id="n243895"><a id="n243912"><a id="n243914"><a id="n243894"><a id="n243911"><a id="n243913">&nbsp;</a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c20><a href="#32_8_refs">ipaddrs</a></c20><c16>&nbsp;=&nbsp;</c16><c22>unsafe&nbsp;</c22><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a><a id="n243901"><a id="n243902"><a id="n243903"><a id="n243898"><a id="n243897"><a id="n243900"><a id="n243899">&nbsp;</a></a></a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>let</c21><c22>&nbsp;</c22><c20><a href="#33_12_refs">io</a></c20><c13>:&nbsp;</c13><c8>*mut&nbsp;</c8><c8><a href="../../../../libstd/rt/rtio.rs.html#28">IoFactoryObject</a></c8><c13>&nbsp;=&nbsp;</c13><c26><a href="../../../../libstd/rt/local.rs.html#25">Local::unsafe_borrow</a></c26><c4>()</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n243908"><a id="n243910"><a id="n243909"><a id="n243906"><a id="n243907">&nbsp;</a></a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c4>(</c4><c5><a href="../../../../libstd/rt/uv/uvio.rs.html#658">*</a></c5><c26><a href="../../../../libstd/rt/io/net/mod.rs.html#33">io</a></c26><c4>)</c4><c1><a href="../../../../libstd/rt/uv/uvio.rs.html#658">.</a></c1><c10><a href="../../../../libstd/rt/uv/uvio.rs.html#658">get_host_addresses</a></c10><c4>(</c4><c26><a href="../../../../libstd/rt/io/net/mod.rs.html#25">host</a></c26><c4>)</c4><c10><a href="../../../../libstd/rt/uv/uvio.rs.html#658">
+</a></c10><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c10><a href="../../../../libstd/rt/uv/uvio.rs.html#658">&nbsp;&nbsp;&nbsp;&nbsp;</a></c10><c3>};</c3><c22>
+</c22><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c22>
+</c22><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a><a id="n243933"><a id="n243915">&nbsp;</a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;</c22><c21>match&nbsp;</c21><c26><a href="../../../../libstd/rt/io/net/mod.rs.html#32">ipaddrs</a></c26><c21>&nbsp;</c21><c3>{</c3><c21>
+</c21><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a><a id="n243920"><a id="n243921"><a id="n243916"><a id="n243918"><a id="n243917"><a id="n243919">&nbsp;</a></a></a></a></a></a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20><a href="../../../../libstd/result.rs.html#35">Ok</a></c20><c4>(</c4><c20><a href="#38_11_refs">i</a></c20><c4>)</c4><c21>&nbsp;</c21><c4>=&gt;</c4><c21>&nbsp;</c21><c26><a href="../../../../libstd/option.rs.html#62">Some</a></c26><c4>(</c4><c26><a href="../../../../libstd/rt/io/net/mod.rs.html#38">i</a></c26><c4>)</c4><c3>,</c3><c21>
+</c21><br/><ln>&nbsp;39</ln><a id="39">&nbsp;</a><a id="n243922"><a id="n243930"><a id="n243931"><a id="n243932"><a id="n243923">&nbsp;</a></a></a></a></a><c21>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c21><c20><a href="../../../../libstd/result.rs.html#37">Err</a></c20><c4>(</c4><c20><a href="#39_12_refs">ioerr</a></c20><c4>)</c4><c21>&nbsp;</c21><c4>=&gt;</c4><c21>&nbsp;</c21><c3>{</c3><c22>
+</c22><br/><ln>&nbsp;40</ln><a id="40">&nbsp;</a><a id="n243928"><a id="n243926"><a id="n243925"><a id="n243927">&nbsp;</a></a></a></a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../../../<std-macros>.html#193">io_error::cond</a></c26><c10><a href="../../../../libstd/condition.rs.html#129">.raise</a></c10><c4>(</c4><c26><a href="../../../../libstd/rt/io/net/mod.rs.html#39">ioerr</a></c26><c4>)</c4><c3>;</c3><c22>
+</c22><br/><ln>&nbsp;41</ln><a id="41">&nbsp;</a><a id="n243929">&nbsp;</a><c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c26><a href="../../../../libstd/option.rs.html#61">None</a></c26><c22>
+</c22><br/><ln>&nbsp;42</ln><a id="42">&nbsp;</a>&nbsp;<c22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c22><c3>}</c3><c21>
+</c21><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c21>&nbsp;&nbsp;&nbsp;&nbsp;</c21><c3>}</c3><c22>
+</c22><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
+</c50><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a>&nbsp;<c21>mod</c21><c38>&nbsp;test&nbsp;</c38><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;option::Some</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;rt::io::net::ip::Ipv4Addr</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>use</c21><c0>&nbsp;super::*</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a>&nbsp;<c0>
+</c0><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;#</c0><c3>[</c3><c0>test</c0><c3>]</c3><c0>
+</c0><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c30>fn&nbsp;dns_smoke_test</c30><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;ipaddrs&nbsp;=&nbsp;get_host_addresses</c0><c4>(</c4><c0>"localhost"</c0><c4>)</c4><c0>.unwrap</c0><c4>()</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;</c0><c21>mut</c21><c0>&nbsp;found_local&nbsp;=&nbsp;false</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>let</c21><c0>&nbsp;local_addr&nbsp;=&nbsp;&amp;Ipv4Addr</c0><c4>(</c4><c0>127</c0><c3>,</c3><c0>&nbsp;0</c0><c3>,</c3><c0>&nbsp;0</c0><c3>,</c3><c0>&nbsp;1</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;57</ln><a id="57">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c21>for</c21><c0>&nbsp;addr&nbsp;in&nbsp;ipaddrs.iter</c0><c4>()</c4><c0>&nbsp;</c0><c3>{</c3><c0>
+</c0><br/><ln>&nbsp;58</ln><a id="58">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;found_local&nbsp;=&nbsp;found_local&nbsp;||&nbsp;addr&nbsp;==&nbsp;local_addr</c0><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;59</ln><a id="59">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;60</ln><a id="60">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert!</c0><c4>(</c4><c0>found_local</c0><c4>)</c4><c3>;</c3><c0>
+</c0><br/><ln>&nbsp;61</ln><a id="61">&nbsp;</a>&nbsp;<c0>&nbsp;&nbsp;&nbsp;&nbsp;</c0><c3>}</c3><c0>
+</c0><br/><ln>&nbsp;62</ln><a id="62">&nbsp;</a>&nbsp;<c3>}</c3><c0>
+</c0><br/><div class="refblock"></div></c0></c0></c0></fileblock>
