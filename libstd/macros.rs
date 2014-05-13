@@ -19,12 +19,12 @@
 /// The entry point for failure of rust tasks.
 ///
 /// This macro is used to inject failure into a rust task, causing the task to
-/// unwind and fail entirely. Each task's failure can be reaped as the `~Any`
-/// type, and the single-argument form of the `fail!` macro will be the value
-/// which is transmitted.
+/// unwind and fail entirely. Each task's failure can be reaped as the
+/// `Box<Any>` type, and the single-argument form of the `fail!` macro will be
+/// the value which is transmitted.
 ///
 /// The multi-argument form of this macro fails with a string and has the
-/// `format!` sytnax for building a string.
+/// `format!` syntax for building a string.
 ///
 /// # Example
 ///
@@ -90,11 +90,6 @@ macro_rules! assert(
             fail!("assertion failed: {:s}", stringify!($cond))
         }
     );
-    ($cond:expr, $msg:expr) => (
-        if !$cond {
-            fail!($msg)
-        }
-    );
     ($cond:expr, $($arg:expr),+) => (
         if !$cond {
             fail!($($arg),+)
@@ -128,6 +123,58 @@ macro_rules! assert_eq(
             }
         }
     })
+)
+
+/// Ensure that a boolean expression is `true` at runtime.
+///
+/// This will invoke the `fail!` macro if the provided expression cannot be
+/// evaluated to `true` at runtime.
+///
+/// Unlike `assert!`, `debug_assert!` statements can be disabled by passing
+/// `--cfg ndebug` to the compiler. This makes `debug_assert!` useful for
+/// checks that are too expensive to be present in a release build but may be
+/// helpful during development.
+///
+/// # Example
+///
+/// ```
+/// // the failure message for these assertions is the stringified value of the
+/// // expression given.
+/// debug_assert!(true);
+/// # fn some_expensive_computation() -> bool { true }
+/// debug_assert!(some_expensive_computation());
+///
+/// // assert with a custom message
+/// # let x = true;
+/// debug_assert!(x, "x wasn't true!");
+/// # let a = 3; let b = 27;
+/// debug_assert!(a + b == 30, "a = {}, b = {}", a, b);
+/// ```
+#[macro_export]
+macro_rules! debug_assert(
+    ($($arg:tt)*) => (if cfg!(not(ndebug)) { assert!($($arg)*); })
+)
+
+/// Asserts that two expressions are equal to each other, testing equality in
+/// both directions.
+///
+/// On failure, this macro will print the values of the expressions.
+///
+/// Unlike `assert_eq!`, `debug_assert_eq!` statements can be disabled by
+/// passing `--cfg ndebug` to the compiler. This makes `debug_assert_eq!`
+/// useful for checks that are too expensive to be present in a release build
+/// but may be helpful during development.
+///
+/// # Example
+///
+/// ```
+/// let a = 3;
+/// let b = 1 + 2;
+/// debug_assert_eq!(a, b);
+/// ```
+#[macro_export]
+macro_rules! debug_assert_eq(
+    ($($arg:tt)*) => (if cfg!(not(ndebug)) { assert_eq!($($arg)*); })
 )
 
 /// A utility macro for indicating unreachable code. It will fail if
@@ -242,12 +289,10 @@ macro_rules! println(
 /// # Example
 ///
 /// ```
-/// use std::local_data;
-///
 /// local_data_key!(my_integer: int)
 ///
-/// local_data::set(my_integer, 2);
-/// local_data::get(my_integer, |val| println!("{}", val.map(|i| *i)));
+/// my_integer.replace(Some(2));
+/// println!("{}", my_integer.get().map(|a| *a));
 /// ```
 #[macro_export]
 macro_rules! local_data_key(

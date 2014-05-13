@@ -32,7 +32,6 @@ use util::nodemap::NodeMap;
 #[deriving(Clone)]
 pub struct DataFlowContext<'a, O> {
     tcx: &'a ty::ctxt,
-    method_map: typeck::MethodMap,
 
     /// the data flow operator
     oper: O,
@@ -113,8 +112,8 @@ impl<'a, O:DataFlowOperator> pprust::PpAnn for DataFlowContext<'a, O> {
                 "".to_owned()
             };
 
-            try!(ps.synth_comment(format!("id {}: {}{}{}", id, entry_str,
-                                          gens_str, kills_str)));
+            try!(ps.synth_comment((format!("id {}: {}{}{}", id, entry_str,
+                                          gens_str, kills_str)).to_strbuf()));
             try!(pp::space(&mut ps.s));
         }
         Ok(())
@@ -123,7 +122,6 @@ impl<'a, O:DataFlowOperator> pprust::PpAnn for DataFlowContext<'a, O> {
 
 impl<'a, O:DataFlowOperator> DataFlowContext<'a, O> {
     pub fn new(tcx: &'a ty::ctxt,
-               method_map: typeck::MethodMap,
                oper: O,
                id_range: IdRange,
                bits_per_id: uint) -> DataFlowContext<'a, O> {
@@ -138,7 +136,6 @@ impl<'a, O:DataFlowOperator> DataFlowContext<'a, O> {
 
         DataFlowContext {
             tcx: tcx,
-            method_map: method_map,
             words_per_id: words_per_id,
             nodeid_to_bitset: NodeMap::new(),
             bits_per_id: bits_per_id,
@@ -319,12 +316,12 @@ impl<'a, O:DataFlowOperator+Clone+'static> DataFlowContext<'a, O> {
 
         debug!("Dataflow result:");
         debug!("{}", {
-            self.pretty_print_to(~io::stderr(), blk).unwrap();
+            self.pretty_print_to(box io::stderr(), blk).unwrap();
             ""
         });
     }
 
-    fn pretty_print_to(&self, wr: ~io::Writer,
+    fn pretty_print_to(&self, wr: Box<io::Writer>,
                        blk: &ast::Block) -> io::IoResult<()> {
         let mut ps = pprust::rust_printer_annotated(wr, self);
         try!(ps.cbox(pprust::indent_unit));
@@ -784,7 +781,7 @@ impl<'a, 'b, O:DataFlowOperator> PropagationContext<'a, 'b, O> {
 
     fn is_method_call(&self, expr: &ast::Expr) -> bool {
         let method_call = typeck::MethodCall::expr(expr.id);
-        self.dfcx.method_map.borrow().contains_key(&method_call)
+        self.dfcx.tcx.method_map.borrow().contains_key(&method_call)
     }
 
     fn reset(&mut self, bits: &mut [uint]) {

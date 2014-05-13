@@ -13,6 +13,7 @@ The compiler code necessary for `#[deriving(Decodable)]`. See
 encodable.rs for more.
 */
 
+use ast;
 use ast::{MetaItem, Item, Expr, MutMutable, Ident};
 use codemap::Span;
 use ext::base::ExtCtxt;
@@ -30,28 +31,31 @@ pub fn expand_deriving_decodable(cx: &mut ExtCtxt,
         span: span,
         attributes: Vec::new(),
         path: Path::new_(vec!("serialize", "Decodable"), None,
-                         vec!(~Literal(Path::new_local("__D")),
-                              ~Literal(Path::new_local("__E"))), true),
+                         vec!(box Literal(Path::new_local("__D")),
+                              box Literal(Path::new_local("__E"))), true),
         additional_bounds: Vec::new(),
         generics: LifetimeBounds {
             lifetimes: Vec::new(),
-            bounds: vec!(("__D", vec!(Path::new_(
+            bounds: vec!(("__D", ast::StaticSize, vec!(Path::new_(
                             vec!("serialize", "Decoder"), None,
-                            vec!(~Literal(Path::new_local("__E"))), true))),
-                         ("__E", vec!()))
+                            vec!(box Literal(Path::new_local("__E"))), true))),
+                         ("__E", ast::StaticSize, vec!()))
         },
         methods: vec!(
             MethodDef {
                 name: "decode",
                 generics: LifetimeBounds::empty(),
                 explicit_self: None,
-                args: vec!(Ptr(~Literal(Path::new_local("__D")),
+                args: vec!(Ptr(box Literal(Path::new_local("__D")),
                             Borrowed(None, MutMutable))),
                 ret_ty: Literal(Path::new_(vec!("std", "result", "Result"), None,
-                                          vec!(~Self, ~Literal(Path::new_local("__E"))), true)),
-                inline: false,
+                                          vec!(box Self,
+                                               box Literal(Path::new_local("__E"))), true)),
+                attributes: Vec::new(),
                 const_nonmatching: true,
-                combine_substructure: decodable_substructure,
+                combine_substructure: combine_substructure(|a, b, c| {
+                    decodable_substructure(a, b, c)
+                }),
             })
     };
 

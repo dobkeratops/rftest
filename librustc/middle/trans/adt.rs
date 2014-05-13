@@ -43,10 +43,12 @@
  *   taken to it, implementing them for Rust seems difficult.
  */
 
+#![allow(unsigned_negate)]
+
 use std::container::Map;
 use libc::c_ulonglong;
-use std::option::{Option, Some, None};
 use std::num::{Bitwise};
+use std::rc::Rc;
 
 use lib::llvm::{ValueRef, True, IntEQ, IntNE};
 use middle::trans::_match;
@@ -115,22 +117,22 @@ pub struct Struct {
  * these, for places in trans where the `ty::t` isn't directly
  * available.
  */
-pub fn represent_node(bcx: &Block, node: ast::NodeId) -> @Repr {
+pub fn represent_node(bcx: &Block, node: ast::NodeId) -> Rc<Repr> {
     represent_type(bcx.ccx(), node_id_type(bcx, node))
 }
 
 /// Decides how to represent a given type.
-pub fn represent_type(cx: &CrateContext, t: ty::t) -> @Repr {
+pub fn represent_type(cx: &CrateContext, t: ty::t) -> Rc<Repr> {
     debug!("Representing: {}", ty_to_str(cx.tcx(), t));
     match cx.adt_reprs.borrow().find(&t) {
-        Some(repr) => return *repr,
+        Some(repr) => return repr.clone(),
         None => {}
     }
 
-    let repr = @represent_type_uncached(cx, t);
+    let repr = Rc::new(represent_type_uncached(cx, t));
     debug!("Represented as: {:?}", repr)
-    cx.adt_reprs.borrow_mut().insert(t, repr);
-    return repr;
+    cx.adt_reprs.borrow_mut().insert(t, repr.clone());
+    repr
 }
 
 fn represent_type_uncached(cx: &CrateContext, t: ty::t) -> Repr {
@@ -246,9 +248,10 @@ pub fn is_ffi_safe(tcx: &ty::ctxt, def_id: ast::DefId) -> bool {
             if hint.is_ffi_safe() {
                 return true;
             }
-            // Option<~T> and similar are used in FFI.  Rather than try to resolve type parameters
-            // and recognize this case exactly, this overapproximates -- assuming that if a
-            // non-C-like enum is being used in FFI then the user knows what they're doing.
+            // Option<Box<T>> and similar are used in FFI.  Rather than try to
+            // resolve type parameters and recognize this case exactly, this
+            // overapproximates -- assuming that if a non-C-like enum is being
+            // used in FFI then the user knows what they're doing.
             if variants.iter().any(|vi| !vi.args.is_empty()) {
                 return true;
             }
@@ -267,7 +270,18 @@ impl Case {
         mk_struct(cx, self.tys.as_slice(), false).size == 0
     }
     fn find_ptr(&self) -> Option<uint> {
-        self.tys.iter().position(|&ty| mono_data_classify(ty) == MonoNonNull)
+        self.tys.iter().position(|&ty| {
+            match ty::get(ty).sty {
+                ty::ty_rptr(_, mt) => match ty::get(mt.ty).sty {
+                    ty::ty_vec(_, None) | ty::ty_str => false,
+                    _ => true,
+                },
+                ty::ty_uniq(..) | ty::ty_box(..) |
+                ty::ty_bare_fn(..) => true,
+                // Is that everything?  Would closures or slices qualify?
+                _ => false
+            }
+        })
     }
 }
 
@@ -566,19 +580,19 @@ pub fn trans_case<'a>(bcx: &'a Block<'a>, r: &Repr, discr: Disr)
                   -> _match::opt_result<'a> {
     match *r {
         CEnum(ity, _, _) => {
-            _match::single_result(rslt(bcx, C_integral(ll_inttype(bcx.ccx(), ity),
-                                                       discr as u64, true)))
+            _match::single_result(Result::new(bcx, C_integral(ll_inttype(bcx.ccx(), ity),
+                                                              discr as u64, true)))
         }
         General(ity, _) => {
-            _match::single_result(rslt(bcx, C_integral(ll_inttype(bcx.ccx(), ity),
-                                                       discr as u64, true)))
+            _match::single_result(Result::new(bcx, C_integral(ll_inttype(bcx.ccx(), ity),
+                                                              discr as u64, true)))
         }
         Univariant(..) => {
             bcx.ccx().sess().bug("no cases for univariants or structs")
         }
         NullablePointer{ .. } => {
             assert!(discr == 0 || discr == 1);
-            _match::single_result(rslt(bcx, C_i1(bcx.ccx(), discr != 0)))
+            _match::single_result(Result::new(bcx, C_i1(bcx.ccx(), discr != 0)))
         }
     }
 }
@@ -767,6 +781,26 @@ pub fn trans_const(ccx: &CrateContext, r: &Repr, discr: Disr,
 }
 
 /**
+ * Compute struct field offsets relative to struct begin.
+ */
+fn compute_struct_field_offsets(ccx: &CrateContext, st: &Struct) -> Vec<u64> {
+    let mut offsets = vec!();
+
+    let mut offset = 0;
+    for &ty in st.fields.iter() {
+        let llty = type_of::sizing_type_of(ccx, ty);
+        if !st.packed {
+            let type_align = machine::llalign_of_min(ccx, llty) as u64;
+            offset = roundup(offset, type_align);
+        }
+        offsets.push(offset);
+        offset += machine::llsize_of_alloc(ccx, llty) as u64;
+    }
+    assert_eq!(st.fields.len(), offsets.len());
+    offsets
+}
+
+/**
  * Building structs is a little complicated, because we might need to
  * insert padding if a field's value is less aligned than its type.
  *
@@ -780,26 +814,32 @@ fn build_const_struct(ccx: &CrateContext, st: &Struct, vals: &[ValueRef])
     -> Vec<ValueRef> {
     assert_eq!(vals.len(), st.fields.len());
 
+    let target_offsets = compute_struct_field_offsets(ccx, st);
+
+    // offset of current value
     let mut offset = 0;
     let mut cfields = Vec::new();
-    for (i, &ty) in st.fields.iter().enumerate() {
-        let llty = type_of::sizing_type_of(ccx, ty);
-        let type_align = machine::llalign_of_min(ccx, llty)
-            /*bad*/as u64;
-        let val_align = machine::llalign_of_min(ccx, val_ty(vals[i]))
-            /*bad*/as u64;
-        let target_offset = roundup(offset, type_align);
-        offset = roundup(offset, val_align);
+    for (&val, &target_offset) in vals.iter().zip(target_offsets.iter()) {
+        if !st.packed {
+            let val_align = machine::llalign_of_min(ccx, val_ty(val))
+                /*bad*/as u64;
+            offset = roundup(offset, val_align);
+        }
         if offset != target_offset {
             cfields.push(padding(ccx, target_offset - offset));
             offset = target_offset;
         }
-        assert!(!is_undef(vals[i]));
-        cfields.push(vals[i]);
-        offset += machine::llsize_of_alloc(ccx, llty) as u64
+        assert!(!is_undef(val));
+        cfields.push(val);
+        offset += machine::llsize_of_alloc(ccx, val_ty(val)) as u64;
     }
 
-    return cfields;
+    assert!(offset <= st.size);
+    if offset != st.size {
+        cfields.push(padding(ccx, st.size - offset));
+    }
+
+    cfields
 }
 
 fn padding(ccx: &CrateContext, size: u64) -> ValueRef {

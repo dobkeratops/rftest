@@ -8,6 +8,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+//! The EventLoop and internal synchronous I/O interface.
+
 use c_str::CString;
 use cast;
 use comm::{Sender, Receiver};
@@ -16,6 +18,7 @@ use libc;
 use kinds::Send;
 use ops::Drop;
 use option::{Option, Some, None};
+use owned::Box;
 use path::Path;
 use result::Err;
 use rt::local::Local;
@@ -38,9 +41,10 @@ pub trait Callback {
 pub trait EventLoop {
     fn run(&mut self);
     fn callback(&mut self, arg: proc():Send);
-    fn pausable_idle_callback(&mut self,
-                              ~Callback:Send) -> ~PausableIdleCallback:Send;
-    fn remote_callback(&mut self, ~Callback:Send) -> ~RemoteCallback:Send;
+    fn pausable_idle_callback(&mut self, Box<Callback:Send>)
+                              -> Box<PausableIdleCallback:Send>;
+    fn remote_callback(&mut self, Box<Callback:Send>)
+                       -> Box<RemoteCallback:Send>;
 
     /// The asynchronous I/O services. Not all event loops may provide one.
     fn io<'a>(&'a mut self) -> Option<&'a mut IoFactory>;
@@ -112,7 +116,7 @@ impl<'a> LocalIo<'a> {
         //
         // In order to get around this, we just transmute a copy out of the task
         // in order to have what is likely a static lifetime (bad).
-        let mut t: ~Task = Local::take();
+        let mut t: Box<Task> = Local::take();
         let ret = t.local_io().map(|t| {
             unsafe { cast::transmute_copy(&t) }
         });
@@ -147,20 +151,23 @@ impl<'a> LocalIo<'a> {
 pub trait IoFactory {
     // networking
     fn tcp_connect(&mut self, addr: SocketAddr,
-                   timeout: Option<u64>) -> IoResult<~RtioTcpStream:Send>;
-    fn tcp_bind(&mut self, addr: SocketAddr) -> IoResult<~RtioTcpListener:Send>;
-    fn udp_bind(&mut self, addr: SocketAddr) -> IoResult<~RtioUdpSocket:Send>;
+                   timeout: Option<u64>) -> IoResult<Box<RtioTcpStream:Send>>;
+    fn tcp_bind(&mut self, addr: SocketAddr)
+                -> IoResult<Box<RtioTcpListener:Send>>;
+    fn udp_bind(&mut self, addr: SocketAddr)
+                -> IoResult<Box<RtioUdpSocket:Send>>;
     fn unix_bind(&mut self, path: &CString)
-        -> IoResult<~RtioUnixListener:Send>;
-    fn unix_connect(&mut self, path: &CString) -> IoResult<~RtioPipe:Send>;
+                 -> IoResult<Box<RtioUnixListener:Send>>;
+    fn unix_connect(&mut self, path: &CString,
+                    timeout: Option<u64>) -> IoResult<Box<RtioPipe:Send>>;
     fn get_host_addresses(&mut self, host: Option<&str>, servname: Option<&str>,
-                          hint: Option<ai::Hint>) -> IoResult<~[ai::Info]>;
+                          hint: Option<ai::Hint>) -> IoResult<Vec<ai::Info>>;
 
     // filesystem operations
     fn fs_from_raw_fd(&mut self, fd: c_int, close: CloseBehavior)
-        -> ~RtioFileStream:Send;
+                      -> Box<RtioFileStream:Send>;
     fn fs_open(&mut self, path: &CString, fm: FileMode, fa: FileAccess)
-        -> IoResult<~RtioFileStream:Send>;
+               -> IoResult<Box<RtioFileStream:Send>>;
     fn fs_unlink(&mut self, path: &CString) -> IoResult<()>;
     fn fs_stat(&mut self, path: &CString) -> IoResult<FileStat>;
     fn fs_mkdir(&mut self, path: &CString,
@@ -181,25 +188,27 @@ pub trait IoFactory {
         IoResult<()>;
 
     // misc
-    fn timer_init(&mut self) -> IoResult<~RtioTimer:Send>;
+    fn timer_init(&mut self) -> IoResult<Box<RtioTimer:Send>>;
     fn spawn(&mut self, config: ProcessConfig)
-            -> IoResult<(~RtioProcess:Send, ~[Option<~RtioPipe:Send>])>;
+            -> IoResult<(Box<RtioProcess:Send>,
+                         Vec<Option<Box<RtioPipe:Send>>>)>;
     fn kill(&mut self, pid: libc::pid_t, signal: int) -> IoResult<()>;
-    fn pipe_open(&mut self, fd: c_int) -> IoResult<~RtioPipe:Send>;
+    fn pipe_open(&mut self, fd: c_int) -> IoResult<Box<RtioPipe:Send>>;
     fn tty_open(&mut self, fd: c_int, readable: bool)
-            -> IoResult<~RtioTTY:Send>;
+            -> IoResult<Box<RtioTTY:Send>>;
     fn signal(&mut self, signal: Signum, channel: Sender<Signum>)
-        -> IoResult<~RtioSignal:Send>;
+        -> IoResult<Box<RtioSignal:Send>>;
 }
 
 pub trait RtioTcpListener : RtioSocket {
-    fn listen(~self) -> IoResult<~RtioTcpAcceptor:Send>;
+    fn listen(~self) -> IoResult<Box<RtioTcpAcceptor:Send>>;
 }
 
 pub trait RtioTcpAcceptor : RtioSocket {
-    fn accept(&mut self) -> IoResult<~RtioTcpStream:Send>;
+    fn accept(&mut self) -> IoResult<Box<RtioTcpStream:Send>>;
     fn accept_simultaneously(&mut self) -> IoResult<()>;
     fn dont_accept_simultaneously(&mut self) -> IoResult<()>;
+    fn set_timeout(&mut self, timeout: Option<u64>);
 }
 
 pub trait RtioTcpStream : RtioSocket {
@@ -210,8 +219,12 @@ pub trait RtioTcpStream : RtioSocket {
     fn nodelay(&mut self) -> IoResult<()>;
     fn keepalive(&mut self, delay_in_seconds: uint) -> IoResult<()>;
     fn letdie(&mut self) -> IoResult<()>;
-    fn clone(&self) -> ~RtioTcpStream:Send;
+    fn clone(&self) -> Box<RtioTcpStream:Send>;
     fn close_write(&mut self) -> IoResult<()>;
+    fn close_read(&mut self) -> IoResult<()>;
+    fn set_timeout(&mut self, timeout_ms: Option<u64>);
+    fn set_read_timeout(&mut self, timeout_ms: Option<u64>);
+    fn set_write_timeout(&mut self, timeout_ms: Option<u64>);
 }
 
 pub trait RtioSocket {
@@ -234,7 +247,10 @@ pub trait RtioUdpSocket : RtioSocket {
     fn hear_broadcasts(&mut self) -> IoResult<()>;
     fn ignore_broadcasts(&mut self) -> IoResult<()>;
 
-    fn clone(&self) -> ~RtioUdpSocket:Send;
+    fn clone(&self) -> Box<RtioUdpSocket:Send>;
+    fn set_timeout(&mut self, timeout_ms: Option<u64>);
+    fn set_read_timeout(&mut self, timeout_ms: Option<u64>);
+    fn set_write_timeout(&mut self, timeout_ms: Option<u64>);
 }
 
 pub trait RtioTimer {
@@ -264,15 +280,22 @@ pub trait RtioProcess {
 pub trait RtioPipe {
     fn read(&mut self, buf: &mut [u8]) -> IoResult<uint>;
     fn write(&mut self, buf: &[u8]) -> IoResult<()>;
-    fn clone(&self) -> ~RtioPipe:Send;
+    fn clone(&self) -> Box<RtioPipe:Send>;
+
+    fn close_write(&mut self) -> IoResult<()>;
+    fn close_read(&mut self) -> IoResult<()>;
+    fn set_timeout(&mut self, timeout_ms: Option<u64>);
+    fn set_read_timeout(&mut self, timeout_ms: Option<u64>);
+    fn set_write_timeout(&mut self, timeout_ms: Option<u64>);
 }
 
 pub trait RtioUnixListener {
-    fn listen(~self) -> IoResult<~RtioUnixAcceptor:Send>;
+    fn listen(~self) -> IoResult<Box<RtioUnixAcceptor:Send>>;
 }
 
 pub trait RtioUnixAcceptor {
-    fn accept(&mut self) -> IoResult<~RtioPipe:Send>;
+    fn accept(&mut self) -> IoResult<Box<RtioPipe:Send>>;
+    fn set_timeout(&mut self, timeout: Option<u64>);
 }
 
 pub trait RtioTTY {

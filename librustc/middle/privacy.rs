@@ -63,7 +63,7 @@ impl Visitor<()> for ParentVisitor {
         let prev = self.curparent;
         match item.node {
             ast::ItemMod(..) => { self.curparent = item.id; }
-            // Enum variants are parented to the enum definition itself beacuse
+            // Enum variants are parented to the enum definition itself because
             // they inherit privacy
             ast::ItemEnum(ref def, _) => {
                 for variant in def.variants.iter() {
@@ -79,7 +79,7 @@ impl Visitor<()> for ParentVisitor {
             // method to the root. In this case, if the trait is private, then
             // parent all the methods to the trait to indicate that they're
             // private.
-            ast::ItemTrait(_, _, ref methods) if item.vis != ast::Public => {
+            ast::ItemTrait(_, _, _, ref methods) if item.vis != ast::Public => {
                 for m in methods.iter() {
                     match *m {
                         ast::Provided(ref m) => self.parents.insert(m.id, item.id),
@@ -254,7 +254,7 @@ impl<'a> Visitor<()> for EmbargoVisitor<'a> {
                     _ => true,
                 };
                 let tr = ty::impl_trait_ref(self.tcx, local_def(item.id));
-                let public_trait = tr.map_or(false, |tr| {
+                let public_trait = tr.clone().map_or(false, |tr| {
                     !is_local(tr.def_id) ||
                      self.exported_items.contains(&tr.def_id.node)
                 });
@@ -274,7 +274,7 @@ impl<'a> Visitor<()> for EmbargoVisitor<'a> {
 
             // Default methods on traits are all public so long as the trait
             // is public
-            ast::ItemTrait(_, _, ref methods) if public_first => {
+            ast::ItemTrait(_, _, _, ref methods) if public_first => {
                 for method in methods.iter() {
                     match *method {
                         ast::Provided(ref m) => {
@@ -337,7 +337,6 @@ struct PrivacyVisitor<'a> {
     curitem: ast::NodeId,
     in_fn: bool,
     in_foreign: bool,
-    method_map: &'a MethodMap,
     parents: NodeMap<ast::NodeId>,
     external_exports: resolve::ExternalExports,
     last_private_map: resolve::LastPrivateMap,
@@ -358,7 +357,7 @@ enum FieldName {
 impl<'a> PrivacyVisitor<'a> {
     // used when debugging
     fn nodestr(&self, id: ast::NodeId) -> ~str {
-        self.tcx.map.node_to_str(id)
+        self.tcx.map.node_to_str(id).to_owned()
     }
 
     // Determines whether the given definition is public from the point of view
@@ -405,7 +404,8 @@ impl<'a> PrivacyVisitor<'a> {
             };
         }
 
-        debug!("privacy - local {:?} not public all the way down", did);
+        debug!("privacy - local {} not public all the way down",
+               self.tcx.map.node_to_str(did.node));
         // return quickly for things in the same module
         if self.parents.find(&did.node) == self.parents.find(&self.curitem) {
             debug!("privacy - same parent, we're done here");
@@ -488,7 +488,7 @@ impl<'a> PrivacyVisitor<'a> {
         // members, so that's why we test the parent, and not the did itself.
         let mut cur = self.curitem;
         loop {
-            debug!("privacy - questioning {}", self.nodestr(cur));
+            debug!("privacy - questioning {}, {:?}", self.nodestr(cur), cur);
             match cur {
                 // If the relevant parent is in our history, then we're allowed
                 // to look inside any of our ancestor's immediate private items,
@@ -526,39 +526,71 @@ impl<'a> PrivacyVisitor<'a> {
     /// If the result is `None`, no errors were found.
     fn ensure_public(&self, span: Span, to_check: ast::DefId,
                      source_did: Option<ast::DefId>, msg: &str) -> CheckResult {
-        match self.def_privacy(to_check) {
-            ExternallyDenied => Some((span, format!("{} is private", msg), None)),
-            DisallowedBy(id) => {
-                let (err_span, err_msg) = if id == source_did.unwrap_or(to_check).node {
-                    return Some((span, format!("{} is private", msg), None));
-                } else {
-                    (span, format!("{} is inaccessible", msg))
-                };
-                match self.tcx.map.find(id) {
-                    Some(ast_map::NodeItem(item)) => {
-                        let desc = match item.node {
-                            ast::ItemMod(..) => "module",
-                            ast::ItemTrait(..) => "trait",
+        let id = match self.def_privacy(to_check) {
+            ExternallyDenied => {
+                return Some((span, format!("{} is private", msg), None))
+            }
+            Allowable => return None,
+            DisallowedBy(id) => id,
+        };
+
+        // If we're disallowed by a particular id, then we attempt to give a
+        // nice error message to say why it was disallowed. It was either
+        // because the item itself is private or because its parent is private
+        // and its parent isn't in our ancestry.
+        let (err_span, err_msg) = if id == source_did.unwrap_or(to_check).node {
+            return Some((span, format!("{} is private", msg), None));
+        } else {
+            (span, format!("{} is inaccessible", msg))
+        };
+        let item = match self.tcx.map.find(id) {
+            Some(ast_map::NodeItem(item)) => {
+                match item.node {
+                    // If an impl disallowed this item, then this is resolve's
+                    // way of saying that a struct/enum's static method was
+                    // invoked, and the struct/enum itself is private. Crawl
+                    // back up the chains to find the relevant struct/enum that
+                    // was private.
+                    ast::ItemImpl(_, _, ref ty, _) => {
+                        let id = match ty.node {
+                            ast::TyPath(_, _, id) => id,
                             _ => return Some((err_span, err_msg, None)),
                         };
-                        let msg = format!("{} `{}` is private",
-                                          desc,
-                                          token::get_ident(item.ident));
-                        Some((err_span, err_msg, Some((span, msg))))
-                    },
-                    _ => Some((err_span, err_msg, None)),
+                        let def = self.tcx.def_map.borrow().get_copy(&id);
+                        let did = def_id_of_def(def);
+                        assert!(is_local(did));
+                        match self.tcx.map.get(did.node) {
+                            ast_map::NodeItem(item) => item,
+                            _ => self.tcx.sess.span_bug(item.span,
+                                                        "path is not an item")
+                        }
+                    }
+                    _ => item
                 }
-            },
-            Allowable => None,
-        }
+            }
+            Some(..) | None => return Some((err_span, err_msg, None)),
+        };
+        let desc = match item.node {
+            ast::ItemMod(..) => "module",
+            ast::ItemTrait(..) => "trait",
+            ast::ItemStruct(..) => "struct",
+            ast::ItemEnum(..) => "enum",
+            _ => return Some((err_span, err_msg, None))
+        };
+        let msg = format!("{} `{}` is private", desc,
+                          token::get_ident(item.ident));
+        Some((err_span, err_msg, Some((span, msg))))
     }
 
     // Checks that a field is in scope.
-    fn check_field(&mut self, span: Span, id: ast::DefId,
+    fn check_field(&mut self,
+                   span: Span,
+                   id: ast::DefId,
                    name: FieldName) {
         let fields = ty::lookup_struct_fields(self.tcx, id);
         let field = match name {
             NamedField(ident) => {
+                debug!("privacy - check named field {} in struct {}", ident.name, id);
                 fields.iter().find(|f| f.name == ident.name).unwrap()
             }
             UnnamedField(idx) => fields.get(idx)
@@ -622,12 +654,8 @@ impl<'a> PrivacyVisitor<'a> {
                                                 .unwrap()
                                                 .identifier);
                 let origdid = def_id_of_def(orig_def);
-                self.ensure_public(span,
-                                   def,
-                                   Some(origdid),
-                                   format!("{} `{}`",
-                                           tyname,
-                                           name))
+                self.ensure_public(span, def, Some(origdid),
+                                   format!("{} `{}`", tyname, name))
             };
 
             match *self.last_private_map.get(&path_id) {
@@ -746,8 +774,7 @@ impl<'a> Visitor<()> for PrivacyVisitor<'a> {
     fn visit_expr(&mut self, expr: &ast::Expr, _: ()) {
         match expr.node {
             ast::ExprField(base, ident, _) => {
-                match ty::get(ty::expr_ty_adjusted(self.tcx, base,
-                                                   &*self.method_map.borrow())).sty {
+                match ty::get(ty::expr_ty_adjusted(self.tcx, base)).sty {
                     ty::ty_struct(id, _) => {
                         self.check_field(expr.span, id, NamedField(ident));
                     }
@@ -756,7 +783,7 @@ impl<'a> Visitor<()> for PrivacyVisitor<'a> {
             }
             ast::ExprMethodCall(ident, _, _) => {
                 let method_call = MethodCall::expr(expr.id);
-                match self.method_map.borrow().find(&method_call) {
+                match self.tcx.method_map.borrow().find(&method_call) {
                     None => {
                         self.tcx.sess.span_bug(expr.span,
                                                 "method call not in \
@@ -764,7 +791,7 @@ impl<'a> Visitor<()> for PrivacyVisitor<'a> {
                     }
                     Some(method) => {
                         debug!("(privacy checking) checking impl method");
-                        self.check_method(expr.span, method.origin, ident);
+                        self.check_method(expr.span, method.origin, ident.node);
                     }
                 }
             }
@@ -845,26 +872,24 @@ impl<'a> Visitor<()> for PrivacyVisitor<'a> {
     fn visit_view_item(&mut self, a: &ast::ViewItem, _: ()) {
         match a.node {
             ast::ViewItemExternCrate(..) => {}
-            ast::ViewItemUse(ref uses) => {
-                for vpath in uses.iter() {
-                    match vpath.node {
-                        ast::ViewPathSimple(..) | ast::ViewPathGlob(..) => {}
-                        ast::ViewPathList(_, ref list, _) => {
-                            for pid in list.iter() {
-                                debug!("privacy - list {}", pid.node.id);
-                                let seg = ast::PathSegment {
-                                    identifier: pid.node.name,
-                                    lifetimes: Vec::new(),
-                                    types: OwnedSlice::empty(),
-                                };
-                                let segs = vec!(seg);
-                                let path = ast::Path {
-                                    global: false,
-                                    span: pid.span,
-                                    segments: segs,
-                                };
-                                self.check_path(pid.span, pid.node.id, &path);
-                            }
+            ast::ViewItemUse(ref vpath) => {
+                match vpath.node {
+                    ast::ViewPathSimple(..) | ast::ViewPathGlob(..) => {}
+                    ast::ViewPathList(_, ref list, _) => {
+                        for pid in list.iter() {
+                            debug!("privacy - list {}", pid.node.id);
+                            let seg = ast::PathSegment {
+                                identifier: pid.node.name,
+                                lifetimes: Vec::new(),
+                                types: OwnedSlice::empty(),
+                            };
+                            let segs = vec!(seg);
+                            let path = ast::Path {
+                                global: false,
+                                span: pid.span,
+                                segments: segs,
+                            };
+                            self.check_path(pid.span, pid.node.id, &path);
                         }
                     }
                 }
@@ -1005,7 +1030,7 @@ impl<'a> Visitor<()> for SanePrivacyVisitor<'a> {
 }
 
 impl<'a> SanePrivacyVisitor<'a> {
-    /// Validates all of the visibility qualifers placed on the item given. This
+    /// Validates all of the visibility qualifiers placed on the item given. This
     /// ensures that there are no extraneous qualifiers that don't actually do
     /// anything. In theory these qualifiers wouldn't parse, but that may happen
     /// later on down the road...
@@ -1055,7 +1080,7 @@ impl<'a> SanePrivacyVisitor<'a> {
                 }
             }
 
-            ast::ItemTrait(_, _, ref methods) => {
+            ast::ItemTrait(_, _, _, ref methods) => {
                 for m in methods.iter() {
                     match *m {
                         ast::Provided(ref m) => {
@@ -1077,34 +1102,34 @@ impl<'a> SanePrivacyVisitor<'a> {
     /// control over anything so this forbids any mention of any visibility
     fn check_all_inherited(&self, item: &ast::Item) {
         let tcx = self.tcx;
-        let check_inherited = |sp: Span, vis: ast::Visibility| {
+        fn check_inherited(tcx: &ty::ctxt, sp: Span, vis: ast::Visibility) {
             if vis != ast::Inherited {
                 tcx.sess.span_err(sp, "visibility has no effect inside functions");
             }
-        };
+        }
         let check_struct = |def: &@ast::StructDef| {
             for f in def.fields.iter() {
                match f.node.kind {
-                    ast::NamedField(_, p) => check_inherited(f.span, p),
+                    ast::NamedField(_, p) => check_inherited(tcx, f.span, p),
                     ast::UnnamedField(..) => {}
                 }
             }
         };
-        check_inherited(item.span, item.vis);
+        check_inherited(tcx, item.span, item.vis);
         match item.node {
             ast::ItemImpl(_, _, _, ref methods) => {
                 for m in methods.iter() {
-                    check_inherited(m.span, m.vis);
+                    check_inherited(tcx, m.span, m.vis);
                 }
             }
             ast::ItemForeignMod(ref fm) => {
                 for i in fm.items.iter() {
-                    check_inherited(i.span, i.vis);
+                    check_inherited(tcx, i.span, i.vis);
                 }
             }
             ast::ItemEnum(ref def, _) => {
                 for v in def.variants.iter() {
-                    check_inherited(v.span, v.node.vis);
+                    check_inherited(tcx, v.span, v.node.vis);
 
                     match v.node.kind {
                         ast::StructVariantKind(ref s) => check_struct(s),
@@ -1115,11 +1140,12 @@ impl<'a> SanePrivacyVisitor<'a> {
 
             ast::ItemStruct(ref def, _) => check_struct(def),
 
-            ast::ItemTrait(_, _, ref methods) => {
+            ast::ItemTrait(_, _, _, ref methods) => {
                 for m in methods.iter() {
                     match *m {
                         ast::Required(..) => {}
-                        ast::Provided(ref m) => check_inherited(m.span, m.vis),
+                        ast::Provided(ref m) => check_inherited(tcx, m.span,
+                                                                m.vis),
                     }
                 }
             }
@@ -1233,7 +1259,7 @@ impl<'a> Visitor<()> for VisiblePrivateTypesVisitor<'a> {
                     self_is_public_path = visitor.outer_type_is_public_path;
                 }
 
-                // miscellanous info about the impl
+                // miscellaneous info about the impl
 
                 // `true` iff this is `impl Private for ...`.
                 let not_private_trait =
@@ -1375,7 +1401,6 @@ impl<'a> Visitor<()> for VisiblePrivateTypesVisitor<'a> {
 }
 
 pub fn check_crate(tcx: &ty::ctxt,
-                   method_map: &MethodMap,
                    exp_map2: &resolve::ExportMap2,
                    external_exports: resolve::ExternalExports,
                    last_private_map: resolve::LastPrivateMap,
@@ -1394,7 +1419,6 @@ pub fn check_crate(tcx: &ty::ctxt,
         in_foreign: false,
         tcx: tcx,
         parents: visitor.parents,
-        method_map: method_map,
         external_exports: external_exports,
         last_private_map: last_private_map,
     };

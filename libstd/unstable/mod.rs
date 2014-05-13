@@ -10,12 +10,13 @@
 
 #![doc(hidden)]
 
-use prelude::*;
 use libc::uintptr_t;
+use kinds::Send;
+
+pub use core::finally;
 
 pub mod dynamic_lib;
 
-pub mod finally;
 pub mod simd;
 pub mod sync;
 pub mod mutex;
@@ -44,9 +45,9 @@ fn test_run_in_bare_thread() {
 #[test]
 fn test_run_in_bare_thread_exchange() {
     // Does the exchange heap work without the runtime?
-    let i = ~100;
+    let i = box 100;
     run_in_bare_thread(proc() {
-        assert!(i == ~100);
+        assert!(i == box 100);
     });
 }
 

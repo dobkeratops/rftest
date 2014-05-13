@@ -173,15 +173,18 @@ pub static DUMMY_NODE_ID: NodeId = -1;
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
 pub enum TyParamBound {
     TraitTyParamBound(TraitRef),
-    RegionTyParamBound
+    StaticRegionTyParamBound,
+    OtherRegionTyParamBound(Span) // FIXME -- just here until work for #5723 lands
 }
 
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
 pub struct TyParam {
     pub ident: Ident,
     pub id: NodeId,
+    pub sized: Sized,
     pub bounds: OwnedSlice<TyParamBound>,
-    pub default: Option<P<Ty>>
+    pub default: Option<P<Ty>>,
+    pub span: Span
 }
 
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
@@ -438,6 +441,7 @@ pub enum Decl_ {
 
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
 pub struct Arm {
+    pub attrs: Vec<Attribute>,
     pub pats: Vec<@Pat>,
     pub guard: Option<@Expr>,
     pub body: @Expr,
@@ -478,7 +482,7 @@ pub enum Expr_ {
     ExprBox(@Expr, @Expr),
     ExprVec(Vec<@Expr>),
     ExprCall(@Expr, Vec<@Expr>),
-    ExprMethodCall(Ident, Vec<P<Ty>>, Vec<@Expr>),
+    ExprMethodCall(SpannedIdent, Vec<P<Ty>>, Vec<@Expr>),
     ExprTup(Vec<@Expr>),
     ExprBinary(BinOp, @Expr, @Expr),
     ExprUnary(UnOp, @Expr),
@@ -650,7 +654,7 @@ pub type Lit = Spanned<Lit_>;
 pub enum Lit_ {
     LitStr(InternedString, StrStyle),
     LitBinary(Rc<Vec<u8> >),
-    LitChar(u32),
+    LitChar(char),
     LitInt(i64, IntTy),
     LitUint(u64, UintTy),
     LitIntUnsuffixed(i64),
@@ -730,6 +734,7 @@ impl fmt::Show for UintTy {
 pub enum FloatTy {
     TyF32,
     TyF64,
+    TyF128
 }
 
 impl fmt::Show for FloatTy {
@@ -871,7 +876,6 @@ pub struct FnDecl {
 pub enum FnStyle {
     UnsafeFn, // declared with "unsafe fn"
     NormalFn, // declared with "fn"
-    ExternFn, // declared with "extern fn"
 }
 
 impl fmt::Show for FnStyle {
@@ -879,7 +883,6 @@ impl fmt::Show for FnStyle {
         match *self {
             NormalFn => "normal".fmt(f),
             UnsafeFn => "unsafe".fmt(f),
-            ExternFn => "extern".fmt(f),
         }
     }
 }
@@ -917,8 +920,12 @@ pub struct Method {
 
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
 pub struct Mod {
-    pub view_items: Vec<ViewItem> ,
-    pub items: Vec<@Item> ,
+    /// A span from the first token past `{` to the last token until `}`.
+    /// For `mod foo;`, the inner span ranges from the first token
+    /// to the last token in the external file.
+    pub inner: Span,
+    pub view_items: Vec<ViewItem>,
+    pub items: Vec<@Item>,
 }
 
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
@@ -999,7 +1006,7 @@ pub enum ViewItem_ {
     // (containing arbitrary characters) from which to fetch the crate sources
     // For example, extern crate whatever = "github.com/mozilla/rust"
     ViewItemExternCrate(Ident, Option<(InternedString,StrStyle)>, NodeId),
-    ViewItemUse(Vec<@ViewPath> ),
+    ViewItemUse(@ViewPath),
 }
 
 // Meta-data associated with an item
@@ -1051,6 +1058,12 @@ impl Visibility {
 }
 
 #[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
+pub enum Sized {
+    DynSize,
+    StaticSize,
+}
+
+#[deriving(Clone, Eq, TotalEq, Encodable, Decodable, Hash)]
 pub struct StructField_ {
     pub kind: StructFieldKind,
     pub id: NodeId,
@@ -1080,7 +1093,9 @@ pub struct StructDef {
     pub fields: Vec<StructField>, /* fields, not including ctor */
     /* ID of the constructor. This is only used for tuple- or enum-like
      * structs. */
-    pub ctor_id: Option<NodeId>
+    pub ctor_id: Option<NodeId>,
+    pub super_struct: Option<P<Ty>>, // Super struct, if specified.
+    pub is_virtual: bool,            // True iff the struct may be inherited from.
 }
 
 /*
@@ -1106,7 +1121,7 @@ pub enum Item_ {
     ItemTy(P<Ty>, Generics),
     ItemEnum(EnumDef, Generics),
     ItemStruct(@StructDef, Generics),
-    ItemTrait(Generics, Vec<TraitRef> , Vec<TraitMethod> ),
+    ItemTrait(Generics, Sized, Vec<TraitRef> , Vec<TraitMethod> ),
     ItemImpl(Generics,
              Option<TraitRef>, // (optional) trait this impl implements
              P<Ty>, // self
@@ -1153,7 +1168,15 @@ mod test {
     fn check_asts_encodable() {
         use std::io;
         let e = Crate {
-            module: Mod {view_items: Vec::new(), items: Vec::new()},
+            module: Mod {
+                inner: Span {
+                    lo: BytePos(11),
+                    hi: BytePos(19),
+                    expn_info: None,
+                },
+                view_items: Vec::new(),
+                items: Vec::new(),
+            },
             attrs: Vec::new(),
             config: Vec::new(),
             span: Span {

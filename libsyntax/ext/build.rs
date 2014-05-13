@@ -12,7 +12,7 @@ use abi;
 use ast::{P, Ident};
 use ast;
 use ast_util;
-use codemap::{Span, respan, DUMMY_SP};
+use codemap::{Span, respan, Spanned, DUMMY_SP};
 use ext::base::ExtCtxt;
 use ext::quote::rt::*;
 use fold::Folder;
@@ -66,7 +66,9 @@ pub trait AstBuilder {
     fn strip_bounds(&self, bounds: &Generics) -> Generics;
 
     fn typaram(&self,
+               span: Span,
                id: ast::Ident,
+               sized: ast::Sized,
                bounds: OwnedSlice<ast::TyParamBound>,
                default: Option<P<ast::Ty>>) -> ast::TyParam;
 
@@ -218,7 +220,7 @@ pub trait AstBuilder {
                         generics: Generics) -> @ast::Item;
     fn item_struct(&self, span: Span, name: Ident, struct_def: ast::StructDef) -> @ast::Item;
 
-    fn item_mod(&self, span: Span,
+    fn item_mod(&self, span: Span, inner_span: Span,
                 name: Ident, attrs: Vec<ast::Attribute> ,
                 vi: Vec<ast::ViewItem> , items: Vec<@ast::Item> ) -> @ast::Item;
 
@@ -244,7 +246,7 @@ pub trait AstBuilder {
                        -> @ast::MetaItem;
 
     fn view_use(&self, sp: Span,
-                vis: ast::Visibility, vp: Vec<@ast::ViewPath> ) -> ast::ViewItem;
+                vis: ast::Visibility, vp: @ast::ViewPath) -> ast::ViewItem;
     fn view_use_simple(&self, sp: Span, vis: ast::Visibility, path: ast::Path) -> ast::ViewItem;
     fn view_use_simple_(&self, sp: Span, vis: ast::Visibility,
                         ident: ast::Ident, path: ast::Path) -> ast::ViewItem;
@@ -368,14 +370,18 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
     }
 
     fn typaram(&self,
+               span: Span,
                id: ast::Ident,
+               sized: ast::Sized,
                bounds: OwnedSlice<ast::TyParamBound>,
                default: Option<P<ast::Ty>>) -> ast::TyParam {
         ast::TyParam {
             ident: id,
             id: ast::DUMMY_NODE_ID,
+            sized: sized,
             bounds: bounds,
-            default: default
+            default: default,
+            span: span
         }
     }
 
@@ -542,8 +548,9 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
                         expr: @ast::Expr,
                         ident: ast::Ident,
                         mut args: Vec<@ast::Expr> ) -> @ast::Expr {
+        let id = Spanned { node: ident, span: span };
         args.unshift(expr);
-        self.expr(span, ast::ExprMethodCall(ident, Vec::new(), args))
+        self.expr(span, ast::ExprMethodCall(id, Vec::new(), args))
     }
     fn expr_block(&self, b: P<ast::Block>) -> @ast::Expr {
         self.expr(b.span, ast::ExprBlock(b))
@@ -632,7 +639,9 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
             vec!(
                 self.expr_str(span, msg),
                 self.expr_str(span,
-                              token::intern_and_get_ident(loc.file.name)),
+                              token::intern_and_get_ident(loc.file
+                                                             .name
+                                                             .as_slice())),
                 self.expr_uint(span, loc.line)))
     }
 
@@ -720,6 +729,7 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
 
     fn arm(&self, _span: Span, pats: Vec<@ast::Pat> , expr: @ast::Expr) -> ast::Arm {
         ast::Arm {
+            attrs: vec!(),
             pats: pats,
             guard: None,
             body: expr
@@ -890,7 +900,7 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
         self.item(span, name, Vec::new(), ast::ItemStruct(@struct_def, generics))
     }
 
-    fn item_mod(&self, span: Span, name: Ident,
+    fn item_mod(&self, span: Span, inner_span: Span, name: Ident,
                 attrs: Vec<ast::Attribute> ,
                 vi: Vec<ast::ViewItem> ,
                 items: Vec<@ast::Item> ) -> @ast::Item {
@@ -899,6 +909,7 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
             name,
             attrs,
             ast::ItemMod(ast::Mod {
+                inner: inner_span,
                 view_items: vi,
                 items: items,
             })
@@ -941,7 +952,7 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
     }
 
     fn view_use(&self, sp: Span,
-                vis: ast::Visibility, vp: Vec<@ast::ViewPath> ) -> ast::ViewItem {
+                vis: ast::Visibility, vp: @ast::ViewPath) -> ast::ViewItem {
         ast::ViewItem {
             node: ast::ViewItemUse(vp),
             attrs: Vec::new(),
@@ -958,10 +969,10 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
     fn view_use_simple_(&self, sp: Span, vis: ast::Visibility,
                         ident: ast::Ident, path: ast::Path) -> ast::ViewItem {
         self.view_use(sp, vis,
-                      vec!(@respan(sp,
-                                ast::ViewPathSimple(ident,
-                                                    path,
-                                                    ast::DUMMY_NODE_ID))))
+                      @respan(sp,
+                           ast::ViewPathSimple(ident,
+                                               path,
+                                               ast::DUMMY_NODE_ID)))
     }
 
     fn view_use_list(&self, sp: Span, vis: ast::Visibility,
@@ -971,17 +982,17 @@ impl<'a> AstBuilder for ExtCtxt<'a> {
         }).collect();
 
         self.view_use(sp, vis,
-                      vec!(@respan(sp,
-                                ast::ViewPathList(self.path(sp, path),
-                                                  imports,
-                                                  ast::DUMMY_NODE_ID))))
+                      @respan(sp,
+                           ast::ViewPathList(self.path(sp, path),
+                                             imports,
+                                             ast::DUMMY_NODE_ID)))
     }
 
     fn view_use_glob(&self, sp: Span,
                      vis: ast::Visibility, path: Vec<ast::Ident> ) -> ast::ViewItem {
         self.view_use(sp, vis,
-                      vec!(@respan(sp,
-                                ast::ViewPathGlob(self.path(sp, path), ast::DUMMY_NODE_ID))))
+                      @respan(sp,
+                           ast::ViewPathGlob(self.path(sp, path), ast::DUMMY_NODE_ID)))
     }
 }
 

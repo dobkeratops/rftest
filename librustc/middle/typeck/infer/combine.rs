@@ -235,19 +235,6 @@ pub trait Combine {
 
     fn fn_sigs(&self, a: &ty::FnSig, b: &ty::FnSig) -> cres<ty::FnSig>;
 
-    fn flds(&self, a: ty::field, b: ty::field) -> cres<ty::field> {
-        if a.ident == b.ident {
-            self.mts(&a.mt, &b.mt)
-                .and_then(|mt| Ok(ty::field {ident: a.ident, mt: mt}) )
-                .or_else(|e| Err(ty::terr_in_field(@e, a.ident)) )
-        } else {
-            Err(ty::terr_record_fields(
-                                       expected_found(self,
-                                                      a.ident,
-                                                      b.ident)))
-        }
-    }
-
     fn args(&self, a: ty::t, b: ty::t) -> cres<ty::t> {
         self.contratys(a, b).and_then(|t| Ok(t))
     }
@@ -267,30 +254,6 @@ pub trait Combine {
     fn contraregions(&self, a: ty::Region, b: ty::Region)
                   -> cres<ty::Region>;
     fn regions(&self, a: ty::Region, b: ty::Region) -> cres<ty::Region>;
-
-    fn vstores(&self,
-                vk: ty::terr_vstore_kind,
-                a: ty::Vstore<()>,
-                b: ty::Vstore<()>)
-                -> cres<ty::Vstore<()>> {
-        debug!("{}.vstores(a={:?}, b={:?})", self.tag(), a, b);
-
-        match (a, b) {
-            (ty::VstoreSlice(a_r, _), ty::VstoreSlice(b_r, _)) => {
-                self.contraregions(a_r, b_r).and_then(|r| {
-                    Ok(ty::VstoreSlice(r, ()))
-                })
-            }
-
-            _ if a == b => {
-                Ok(a)
-            }
-
-            _ => {
-                Err(ty::terr_vstores_differ(vk, expected_found(self, a, b)))
-            }
-        }
-    }
 
     fn trait_stores(&self,
                     vk: ty::terr_vstore_kind,
@@ -337,6 +300,7 @@ pub trait Combine {
     }
 }
 
+#[deriving(Clone)]
 pub struct CombineFields<'a> {
     pub infcx: &'a InferCtxt<'a>,
     pub a_is_expected: bool,
@@ -406,6 +370,27 @@ pub fn super_fn_sigs<C:Combine>(this: &C, a: &ty::FnSig, b: &ty::FnSig) -> cres<
 }
 
 pub fn super_tys<C:Combine>(this: &C, a: ty::t, b: ty::t) -> cres<ty::t> {
+
+    // This is a horible hack - historically, [T] was not treated as a type,
+    // so, for example, &T and &[U] should not unify. In fact the only thing
+    // &[U] should unify with is &[T]. We preserve that behaviour with this
+    // check.
+    fn check_ptr_to_vec<C:Combine>(this: &C,
+                                   a: ty::t,
+                                   b: ty::t,
+                                   a_inner: ty::t,
+                                   b_inner: ty::t,
+                                   result: ty::t) -> cres<ty::t> {
+        match (&ty::get(a_inner).sty, &ty::get(b_inner).sty) {
+            (&ty::ty_vec(_, None), &ty::ty_vec(_, None)) |
+            (&ty::ty_str, &ty::ty_str) => Ok(result),
+            (&ty::ty_vec(_, None), _) | (_, &ty::ty_vec(_, None)) |
+            (&ty::ty_str, _) | (_, &ty::ty_str)
+                => Err(ty::terr_sorts(expected_found(this, a, b))),
+            _ => Ok(result),
+        }
+    }
+
     let tcx = this.infcx().tcx;
     let a_sty = &ty::get(a).sty;
     let b_sty = &ty::get(b).sty;
@@ -510,54 +495,33 @@ pub fn super_tys<C:Combine>(this: &C, a: ty::t, b: ty::t) -> cres<ty::t> {
       }
 
       (&ty::ty_uniq(a_inner), &ty::ty_uniq(b_inner)) => {
-        this.tys(a_inner, b_inner).and_then(|typ| Ok(ty::mk_uniq(tcx, typ)))
+            let typ = if_ok!(this.tys(a_inner, b_inner));
+            check_ptr_to_vec(this, a, b, a_inner, b_inner, ty::mk_uniq(tcx, typ))
       }
 
       (&ty::ty_ptr(ref a_mt), &ty::ty_ptr(ref b_mt)) => {
-        this.mts(a_mt, b_mt).and_then(|mt| Ok(ty::mk_ptr(tcx, mt)))
+            let mt = if_ok!(this.mts(a_mt, b_mt));
+            check_ptr_to_vec(this, a, b, a_mt.ty, b_mt.ty, ty::mk_ptr(tcx, mt))
       }
 
       (&ty::ty_rptr(a_r, ref a_mt), &ty::ty_rptr(b_r, ref b_mt)) => {
-          let r = if_ok!(this.contraregions(a_r, b_r));
-          let mt = if_ok!(this.mts(a_mt, b_mt));
-          Ok(ty::mk_rptr(tcx, r, mt))
+            let r = if_ok!(this.contraregions(a_r, b_r));
+            let mt = if_ok!(this.mts(a_mt, b_mt));
+            check_ptr_to_vec(this, a, b, a_mt.ty, b_mt.ty, ty::mk_rptr(tcx, r, mt))
       }
 
-      (&ty::ty_vec(a_inner, vs_a), &ty::ty_vec(b_inner, vs_b)) => {
-        // This could be nicer if we didn't have to go through .mts(a, b).
-        let (vs_a, mutbl_a) = match vs_a {
-            ty::VstoreFixed(n) => (ty::VstoreFixed(n), ast::MutImmutable),
-            ty::VstoreSlice(r, m) => (ty::VstoreSlice(r, ()), m),
-            ty::VstoreUniq => (ty::VstoreUniq, ast::MutImmutable)
-        };
-        let (vs_b, mutbl_b) = match vs_b {
-            ty::VstoreFixed(n) => (ty::VstoreFixed(n), ast::MutImmutable),
-            ty::VstoreSlice(r, m) => (ty::VstoreSlice(r, ()), m),
-            ty::VstoreUniq => (ty::VstoreUniq, ast::MutImmutable)
-        };
-        let a_mt = ty::mt {
-            ty: a_inner,
-            mutbl: mutbl_a
-        };
-        let b_mt = ty::mt {
-            ty: b_inner,
-            mutbl: mutbl_b
-        };
-        this.mts(&a_mt, &b_mt).and_then(|mt| {
-            this.vstores(ty::terr_vec, vs_a, vs_b).and_then(|vs| {
-                let store = match vs {
-                    ty::VstoreFixed(n) => ty::VstoreFixed(n),
-                    ty::VstoreSlice(r, _) => ty::VstoreSlice(r, mt.mutbl),
-                    ty::VstoreUniq => ty::VstoreUniq
-                };
-                Ok(ty::mk_vec(tcx, mt.ty, store))
-            })
+      (&ty::ty_vec(ref a_mt, sz_a), &ty::ty_vec(ref b_mt, sz_b)) => {
+        this.mts(a_mt, b_mt).and_then(|mt| {
+            if sz_a == sz_b {
+                Ok(ty::mk_vec(tcx, mt, sz_a))
+            } else {
+                Err(ty::terr_sorts(expected_found(this, a, b)))
+            }
         })
       }
 
-      (&ty::ty_str(vs_a), &ty::ty_str(vs_b)) => {
-        let vs = if_ok!(this.vstores(ty::terr_str, vs_a, vs_b));
-        Ok(ty::mk_str(tcx,vs))
+      (&ty::ty_str, &ty::ty_str) => {
+            Ok(ty::mk_str(tcx))
       }
 
       (&ty::ty_tup(ref as_), &ty::ty_tup(ref bs)) => {

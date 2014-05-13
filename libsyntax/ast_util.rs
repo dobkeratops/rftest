@@ -1,4 +1,4 @@
-// Copyright 2012-2013 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -24,11 +24,11 @@ use std::cmp;
 use std::strbuf::StrBuf;
 use std::u32;
 
-pub fn path_name_i(idents: &[Ident]) -> ~str {
+pub fn path_name_i(idents: &[Ident]) -> StrBuf {
     // FIXME: Bad copies (#2543 -- same for everything else that says "bad")
     idents.iter().map(|i| {
-        token::get_ident(*i).get().to_str()
-    }).collect::<Vec<~str>>().connect("::")
+        token::get_ident(*i).get().to_strbuf()
+    }).collect::<Vec<StrBuf>>().connect("::").to_strbuf()
 }
 
 // totally scary function: ignores all but the last element, should have
@@ -121,7 +121,7 @@ pub fn is_shift_binop(b: BinOp) -> bool {
 pub fn unop_to_str(op: UnOp) -> &'static str {
     match op {
       UnBox => "@",
-      UnUniq => "~",
+      UnUniq => "box() ",
       UnDeref => "*",
       UnNot => "!",
       UnNeg => "-",
@@ -134,7 +134,7 @@ pub fn is_path(e: @Expr) -> bool {
 
 // Get a string representation of a signed int type, with its value.
 // We want to avoid "45int" and "-3int" in favor of "45" and "-3"
-pub fn int_ty_to_str(t: IntTy, val: Option<i64>) -> ~str {
+pub fn int_ty_to_str(t: IntTy, val: Option<i64>) -> StrBuf {
     let s = match t {
         TyI if val.is_some() => "",
         TyI => "int",
@@ -145,8 +145,8 @@ pub fn int_ty_to_str(t: IntTy, val: Option<i64>) -> ~str {
     };
 
     match val {
-        Some(n) => format!("{}{}", n, s),
-        None => s.to_owned()
+        Some(n) => format!("{}{}", n, s).to_strbuf(),
+        None => s.to_strbuf()
     }
 }
 
@@ -161,7 +161,7 @@ pub fn int_ty_max(t: IntTy) -> u64 {
 
 // Get a string representation of an unsigned int type, with its value.
 // We want to avoid "42uint" in favor of "42u"
-pub fn uint_ty_to_str(t: UintTy, val: Option<u64>) -> ~str {
+pub fn uint_ty_to_str(t: UintTy, val: Option<u64>) -> StrBuf {
     let s = match t {
         TyU if val.is_some() => "u",
         TyU => "uint",
@@ -172,8 +172,8 @@ pub fn uint_ty_to_str(t: UintTy, val: Option<u64>) -> ~str {
     };
 
     match val {
-        Some(n) => format!("{}{}", n, s),
-        None => s.to_owned()
+        Some(n) => format!("{}{}", n, s).to_strbuf(),
+        None => s.to_strbuf()
     }
 }
 
@@ -186,8 +186,12 @@ pub fn uint_ty_max(t: UintTy) -> u64 {
     }
 }
 
-pub fn float_ty_to_str(t: FloatTy) -> ~str {
-    match t { TyF32 => "f32".to_owned(), TyF64 => "f64".to_owned() }
+pub fn float_ty_to_str(t: FloatTy) -> StrBuf {
+    match t {
+        TyF32 => "f32".to_strbuf(),
+        TyF64 => "f64".to_strbuf(),
+        TyF128 => "f128".to_strbuf(),
+    }
 }
 
 pub fn is_call_expr(e: @Expr) -> bool {
@@ -252,11 +256,11 @@ pub fn unguarded_pat(a: &Arm) -> Option<Vec<@Pat> > {
 /// listed as `__extensions__::method_name::hash`, with no indication
 /// of the type).
 pub fn impl_pretty_name(trait_ref: &Option<TraitRef>, ty: &Ty) -> Ident {
-    let mut pretty = StrBuf::from_owned_str(pprust::ty_to_str(ty));
+    let mut pretty = pprust::ty_to_str(ty);
     match *trait_ref {
         Some(ref trait_ref) => {
             pretty.push_char('.');
-            pretty.push_str(pprust::path_to_str(&trait_ref.path));
+            pretty.push_str(pprust::path_to_str(&trait_ref.path).as_slice());
         }
         None => {}
     }
@@ -396,28 +400,34 @@ impl<'a, O: IdVisitingOperation> Visitor<()> for IdVisitor<'a, O> {
     }
 
     fn visit_view_item(&mut self, view_item: &ViewItem, env: ()) {
+        if !self.pass_through_items {
+            if self.visited_outermost {
+                return;
+            } else {
+                self.visited_outermost = true;
+            }
+        }
         match view_item.node {
             ViewItemExternCrate(_, _, node_id) => {
                 self.operation.visit_id(node_id)
             }
-            ViewItemUse(ref view_paths) => {
-                for view_path in view_paths.iter() {
-                    match view_path.node {
-                        ViewPathSimple(_, _, node_id) |
-                        ViewPathGlob(_, node_id) => {
-                            self.operation.visit_id(node_id)
-                        }
-                        ViewPathList(_, ref paths, node_id) => {
-                            self.operation.visit_id(node_id);
-                            for path in paths.iter() {
-                                self.operation.visit_id(path.node.id)
-                            }
+            ViewItemUse(ref view_path) => {
+                match view_path.node {
+                    ViewPathSimple(_, _, node_id) |
+                    ViewPathGlob(_, node_id) => {
+                        self.operation.visit_id(node_id)
+                    }
+                    ViewPathList(_, ref paths, node_id) => {
+                        self.operation.visit_id(node_id);
+                        for path in paths.iter() {
+                            self.operation.visit_id(path.node.id)
                         }
                     }
                 }
             }
         }
-        visit::walk_view_item(self, view_item, env)
+        visit::walk_view_item(self, view_item, env);
+        self.visited_outermost = false;
     }
 
     fn visit_foreign_item(&mut self, foreign_item: &ForeignItem, env: ()) {
@@ -468,7 +478,6 @@ impl<'a, O: IdVisitingOperation> Visitor<()> for IdVisitor<'a, O> {
         self.operation.visit_id(pattern.id);
         visit::walk_pat(self, pattern, env)
     }
-
 
     fn visit_expr(&mut self, expression: &Expr, env: ()) {
         self.operation.visit_id(expression.id);
@@ -587,6 +596,30 @@ pub fn compute_id_range_for_inlined_item(item: &InlinedItem) -> IdRange {
         result: Cell::new(IdRange::max())
     };
     visit_ids_for_inlined_item(item, &visitor);
+    visitor.result.get()
+}
+
+pub fn compute_id_range_for_fn_body(fk: &visit::FnKind,
+                                    decl: &FnDecl,
+                                    body: &Block,
+                                    sp: Span,
+                                    id: NodeId)
+                                    -> IdRange
+{
+    /*!
+     * Computes the id range for a single fn body,
+     * ignoring nested items.
+     */
+
+    let visitor = IdRangeComputingVisitor {
+        result: Cell::new(IdRange::max())
+    };
+    let mut id_visitor = IdVisitor {
+        operation: &visitor,
+        pass_through_items: false,
+        visited_outermost: false,
+    };
+    id_visitor.visit_fn(fk, decl, body, sp, id, ());
     visitor.result.get()
 }
 

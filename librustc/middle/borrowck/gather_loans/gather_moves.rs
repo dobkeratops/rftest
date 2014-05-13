@@ -17,11 +17,13 @@ use middle::borrowck::*;
 use middle::borrowck::gather_loans::move_error::{MoveError, MoveErrorCollector};
 use middle::borrowck::gather_loans::move_error::MoveSpanAndPath;
 use middle::borrowck::move_data::*;
-use middle::moves;
+use euv = middle::expr_use_visitor;
 use middle::ty;
 use syntax::ast;
 use syntax::codemap::Span;
 use util::ppaux::Repr;
+
+use std::rc::Rc;
 
 struct GatherMoveInfo {
     id: ast::NodeId,
@@ -35,17 +37,17 @@ pub fn gather_decl(bccx: &BorrowckCtxt,
                    decl_id: ast::NodeId,
                    _decl_span: Span,
                    var_id: ast::NodeId) {
-    let loan_path = @LpVar(var_id);
+    let loan_path = Rc::new(LpVar(var_id));
     move_data.add_move(bccx.tcx, loan_path, decl_id, Declared);
 }
 
 pub fn gather_move_from_expr(bccx: &BorrowckCtxt,
                              move_data: &MoveData,
                              move_error_collector: &MoveErrorCollector,
-                             move_expr: &ast::Expr,
+                             move_expr_id: ast::NodeId,
                              cmt: mc::cmt) {
     let move_info = GatherMoveInfo {
-        id: move_expr.id,
+        id: move_expr_id,
         kind: MoveExpr,
         cmt: cmt,
         span_path_opt: None,
@@ -74,29 +76,6 @@ pub fn gather_move_from_pat(bccx: &BorrowckCtxt,
     gather_move(bccx, move_data, move_error_collector, move_info);
 }
 
-pub fn gather_captures(bccx: &BorrowckCtxt,
-                       move_data: &MoveData,
-                       move_error_collector: &MoveErrorCollector,
-                       closure_expr: &ast::Expr) {
-    for captured_var in bccx.capture_map.get(&closure_expr.id).iter() {
-        match captured_var.mode {
-            moves::CapMove => {
-                let cmt = bccx.cat_captured_var(closure_expr.id,
-                                                closure_expr.span,
-                                                captured_var);
-                let move_info = GatherMoveInfo {
-                    id: closure_expr.id,
-                    kind: Captured,
-                    cmt: cmt,
-                    span_path_opt: None
-                };
-                gather_move(bccx, move_data, move_error_collector, move_info);
-            }
-            moves::CapCopy | moves::CapRef => {}
-        }
-    }
-}
-
 fn gather_move(bccx: &BorrowckCtxt,
                move_data: &MoveData,
                move_error_collector: &MoveErrorCollector,
@@ -105,9 +84,10 @@ fn gather_move(bccx: &BorrowckCtxt,
            move_info.id, move_info.cmt.repr(bccx.tcx));
 
     let potentially_illegal_move =
-                check_and_get_illegal_move_origin(bccx, move_info.cmt);
+                check_and_get_illegal_move_origin(bccx, &move_info.cmt);
     match potentially_illegal_move {
         Some(illegal_move_origin) => {
+            debug!("illegal_move_origin={}", illegal_move_origin.repr(bccx.tcx));
             let error = MoveError::with_move_info(illegal_move_origin,
                                                   move_info.span_path_opt);
             move_error_collector.add_error(error);
@@ -116,7 +96,7 @@ fn gather_move(bccx: &BorrowckCtxt,
         None => ()
     }
 
-    match opt_loan_path(move_info.cmt) {
+    match opt_loan_path(&move_info.cmt) {
         Some(loan_path) => {
             move_data.add_move(bccx.tcx, loan_path,
                                move_info.id, move_info.kind);
@@ -131,39 +111,26 @@ pub fn gather_assignment(bccx: &BorrowckCtxt,
                          move_data: &MoveData,
                          assignment_id: ast::NodeId,
                          assignment_span: Span,
-                         assignee_loan_path: @LoanPath,
-                         assignee_id: ast::NodeId) {
+                         assignee_loan_path: Rc<LoanPath>,
+                         assignee_id: ast::NodeId,
+                         mode: euv::MutateMode) {
     move_data.add_assignment(bccx.tcx,
                              assignee_loan_path,
                              assignment_id,
                              assignment_span,
                              assignee_id,
-                             false);
-}
-
-pub fn gather_move_and_assignment(bccx: &BorrowckCtxt,
-                                  move_data: &MoveData,
-                                  assignment_id: ast::NodeId,
-                                  assignment_span: Span,
-                                  assignee_loan_path: @LoanPath,
-                                  assignee_id: ast::NodeId) {
-    move_data.add_assignment(bccx.tcx,
-                             assignee_loan_path,
-                             assignment_id,
-                             assignment_span,
-                             assignee_id,
-                             true);
+                             mode);
 }
 
 fn check_and_get_illegal_move_origin(bccx: &BorrowckCtxt,
-                                     cmt: mc::cmt) -> Option<mc::cmt> {
+                                     cmt: &mc::cmt) -> Option<mc::cmt> {
     match cmt.cat {
         mc::cat_deref(_, _, mc::BorrowedPtr(..)) |
         mc::cat_deref(_, _, mc::GcPtr) |
         mc::cat_deref(_, _, mc::UnsafePtr(..)) |
         mc::cat_upvar(..) | mc::cat_static_item |
         mc::cat_copied_upvar(mc::CopiedUpvar { onceness: ast::Many, .. }) => {
-            Some(cmt)
+            Some(cmt.clone())
         }
 
         // Can move out of captured upvars only if the destination closure
@@ -179,12 +146,12 @@ fn check_and_get_illegal_move_origin(bccx: &BorrowckCtxt,
             None
         }
 
-        mc::cat_downcast(b) |
-        mc::cat_interior(b, _) => {
+        mc::cat_downcast(ref b) |
+        mc::cat_interior(ref b, _) => {
             match ty::get(b.ty).sty {
                 ty::ty_struct(did, _) | ty::ty_enum(did, _) => {
                     if ty::has_dtor(bccx.tcx, did) {
-                        Some(cmt)
+                        Some(cmt.clone())
                     } else {
                         check_and_get_illegal_move_origin(bccx, b)
                     }
@@ -195,8 +162,8 @@ fn check_and_get_illegal_move_origin(bccx: &BorrowckCtxt,
             }
         }
 
-        mc::cat_deref(b, _, mc::OwnedPtr) |
-        mc::cat_discr(b, _) => {
+        mc::cat_deref(ref b, _, mc::OwnedPtr) |
+        mc::cat_discr(ref b, _) => {
             check_and_get_illegal_move_origin(bccx, b)
         }
     }

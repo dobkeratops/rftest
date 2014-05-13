@@ -25,7 +25,6 @@ use syntax::codemap::Span;
 use syntax::diagnostic;
 use syntax::parse::ParseSess;
 use syntax::{abi, ast, codemap};
-use syntax;
 
 use std::cell::{Cell, RefCell};
 use collections::HashSet;
@@ -126,7 +125,7 @@ pub enum DebugInfoLevel {
 pub struct Options {
     // The crate config requested for the session, which may be combined
     // with additional crate configurations during the compile process
-    pub crate_types: Vec<CrateType> ,
+    pub crate_types: Vec<CrateType>,
 
     pub gc: bool,
     pub optimize: OptLevel,
@@ -167,7 +166,7 @@ pub enum EntryFnType {
     EntryNone,
 }
 
-#[deriving(Eq, Ord, Clone, TotalOrd, TotalEq)]
+#[deriving(Eq, Ord, Clone, TotalOrd, TotalEq, Hash)]
 pub enum CrateType {
     CrateTypeExecutable,
     CrateTypeDylib,
@@ -185,7 +184,6 @@ pub struct Session {
     pub entry_type: Cell<Option<EntryFnType>>,
     pub macro_registrar_fn: Cell<Option<ast::NodeId>>,
     pub default_sysroot: Option<Path>,
-    pub building_library: Cell<bool>,
     // The name of the root source file of the crate, in the local file system. The path is always
     // expected to be absolute. `None` means that there is no source file.
     pub local_crate_source_file: Option<Path>,
@@ -319,15 +317,23 @@ impl Session {
     pub fn show_span(&self) -> bool {
         self.debugging_opt(SHOW_SPAN)
     }
-    pub fn filesearch<'a>(&'a self) -> filesearch::FileSearch<'a> {
-        let sysroot = match self.opts.maybe_sysroot {
-            Some(ref sysroot) => sysroot,
+    pub fn sysroot<'a>(&'a self) -> &'a Path {
+        match self.opts.maybe_sysroot {
+            Some (ref sysroot) => sysroot,
             None => self.default_sysroot.as_ref()
                         .expect("missing sysroot and default_sysroot in Session")
-        };
+        }
+    }
+    pub fn target_filesearch<'a>(&'a self) -> filesearch::FileSearch<'a> {
         filesearch::FileSearch::new(
-            sysroot,
+            self.sysroot(),
             self.opts.target_triple,
+            &self.opts.addl_lib_search_paths)
+    }
+    pub fn host_filesearch<'a>(&'a self) -> filesearch::FileSearch<'a> {
+        filesearch::FileSearch::new(
+            self.sysroot(),
+            host_triple(),
             &self.opts.addl_lib_search_paths)
     }
 }
@@ -343,7 +349,7 @@ pub fn basic_options() -> Options {
         output_types: Vec::new(),
         addl_lib_search_paths: RefCell::new(HashSet::new()),
         maybe_sysroot: None,
-        target_triple: host_triple(),
+        target_triple: host_triple().to_owned(),
         cfg: Vec::new(),
         test: false,
         parse_only: false,
@@ -465,28 +471,9 @@ cgoptions!(
 )
 
 // Seems out of place, but it uses session, so I'm putting it here
-pub fn expect<T:Clone>(sess: &Session, opt: Option<T>, msg: || -> ~str) -> T {
+pub fn expect<T:Clone>(sess: &Session, opt: Option<T>, msg: || -> StrBuf)
+              -> T {
     diagnostic::expect(sess.diagnostic(), opt, msg)
-}
-
-pub fn building_library(options: &Options, krate: &ast::Crate) -> bool {
-    if options.test { return false }
-    for output in options.crate_types.iter() {
-        match *output {
-            CrateTypeExecutable => {}
-            CrateTypeStaticlib | CrateTypeDylib | CrateTypeRlib => return true
-        }
-    }
-    match syntax::attr::first_attr_value_str_by_name(krate.attrs.as_slice(),
-                                                     "crate_type") {
-        Some(s) => {
-            s.equiv(&("lib")) ||
-            s.equiv(&("rlib")) ||
-            s.equiv(&("dylib")) ||
-            s.equiv(&("staticlib"))
-        }
-        _ => false
-    }
 }
 
 pub fn default_lib_output() -> CrateType {

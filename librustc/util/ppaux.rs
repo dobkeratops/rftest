@@ -9,7 +9,6 @@
 // except according to those terms.
 
 
-use metadata::encoder;
 use middle::ty::{ReSkolemized, ReVar};
 use middle::ty::{BoundRegion, BrAnon, BrNamed};
 use middle::ty::{BrFresh, ctxt};
@@ -23,6 +22,7 @@ use middle::ty::{ty_uniq, ty_trait, ty_int, ty_uint, ty_infer};
 use middle::ty;
 use middle::typeck;
 
+use std::rc::Rc;
 use std::strbuf::StrBuf;
 use syntax::abi;
 use syntax::ast_map;
@@ -203,7 +203,7 @@ pub fn mt_to_str(cx: &ctxt, m: &mt) -> ~str {
 
 pub fn trait_store_to_str(cx: &ctxt, s: ty::TraitStore) -> ~str {
     match s {
-        ty::UniqTraitStore => "~".to_owned(),
+        ty::UniqTraitStore => "Box ".to_owned(),
         ty::RegionTraitStore(r, m) => {
             format!("{}{}", region_ptr_to_str(cx, r), mutability_to_str(m))
         }
@@ -341,9 +341,9 @@ pub fn ty_to_str(cx: &ctxt, typ: t) -> ~str {
       ty_bot => "!".to_owned(),
       ty_bool => "bool".to_owned(),
       ty_char => "char".to_owned(),
-      ty_int(t) => ast_util::int_ty_to_str(t, None),
-      ty_uint(t) => ast_util::uint_ty_to_str(t, None),
-      ty_float(t) => ast_util::float_ty_to_str(t),
+      ty_int(t) => ast_util::int_ty_to_str(t, None).to_owned(),
+      ty_uint(t) => ast_util::uint_ty_to_str(t, None).to_owned(),
+      ty_float(t) => ast_util::float_ty_to_str(t).to_owned(),
       ty_box(typ) => "@".to_owned() + ty_to_str(cx, typ),
       ty_uniq(typ) => "~".to_owned() + ty_to_str(cx, typ),
       ty_ptr(ref tm) => "*".to_owned() + mt_to_str(cx, tm),
@@ -385,7 +385,7 @@ pub fn ty_to_str(cx: &ctxt, typ: t) -> ~str {
                       did,
                       false)
       }
-      ty_trait(~ty::TyTrait {
+      ty_trait(box ty::TyTrait {
           def_id: did, ref substs, store, ref bounds
       }) => {
         let base = ty::item_path_str(cx, did);
@@ -395,22 +395,12 @@ pub fn ty_to_str(cx: &ctxt, typ: t) -> ~str {
         let bound_str = bounds.repr(cx);
         format!("{}{}{}{}", trait_store_to_str(cx, store), ty, bound_sep, bound_str)
       }
-      ty_vec(ty, vs) => {
-        match vs {
-            ty::VstoreFixed(n) => {
-                format!("[{}, .. {}]", ty_to_str(cx, ty), n)
-            }
-            _ => {
-                format!("{}[{}]", vs.repr(cx), ty_to_str(cx, ty))
-            }
-        }
-      }
-      ty_str(vs) => {
-        match vs {
-            ty::VstoreFixed(n) => format!("str/{}", n),
-            ty::VstoreUniq => "~str".to_owned(),
-            ty::VstoreSlice(r, ()) => format!("{}str", region_ptr_to_str(cx, r))
-        }
+      ty_str => "str".to_owned(),
+      ty_vec(ref mt, sz) => {
+          match sz {
+              Some(n) => format!("[{}, .. {}]", mt_to_str(cx, mt), n),
+              None => format!("[{}]", ty_to_str(cx, mt.ty)),
+          }
       }
     }
 }
@@ -469,7 +459,7 @@ pub fn parameterized(cx: &ctxt,
 }
 
 pub fn ty_to_short_str(cx: &ctxt, typ: t) -> ~str {
-    let mut s = encoder::encoded_ty(cx, typ);
+    let mut s = typ.repr(cx);
     if s.len() >= 32u { s = s.slice(0u, 32u).to_owned(); }
     return s;
 }
@@ -498,13 +488,19 @@ impl Repr for () {
     }
 }
 
+impl<T:Repr> Repr for Rc<T> {
+    fn repr(&self, tcx: &ctxt) -> ~str {
+        (&**self).repr(tcx)
+    }
+}
+
 impl<T:Repr> Repr for @T {
     fn repr(&self, tcx: &ctxt) -> ~str {
         (&**self).repr(tcx)
     }
 }
 
-impl<T:Repr> Repr for ~T {
+impl<T:Repr> Repr for Box<T> {
     fn repr(&self, tcx: &ctxt) -> ~str {
         (&**self).repr(tcx)
     }
@@ -848,28 +844,6 @@ impl Repr for ty::TraitStore {
     }
 }
 
-impl Repr for ty::Vstore {
-    fn repr(&self, tcx: &ctxt) -> ~str {
-        match *self {
-            ty::VstoreFixed(n) => format!("{}", n),
-            ty::VstoreUniq => "~".to_owned(),
-            ty::VstoreSlice(r, m) => {
-                format!("{}{}", region_ptr_to_str(tcx, r), mutability_to_str(m))
-            }
-        }
-    }
-}
-
-impl Repr for ty::Vstore<()> {
-    fn repr(&self, tcx: &ctxt) -> ~str {
-        match *self {
-            ty::VstoreFixed(n) => format!("{}", n),
-            ty::VstoreUniq => "~".to_owned(),
-            ty::VstoreSlice(r, ()) => region_ptr_to_str(tcx, r)
-        }
-    }
-}
-
 impl Repr for ty::BuiltinBound {
     fn repr(&self, _tcx: &ctxt) -> ~str {
         format!("{:?}", *self)
@@ -896,11 +870,11 @@ impl Repr for ty::BuiltinBounds {
 
 impl Repr for Span {
     fn repr(&self, tcx: &ctxt) -> ~str {
-        tcx.sess.codemap().span_to_str(*self)
+        tcx.sess.codemap().span_to_str(*self).to_owned()
     }
 }
 
-impl<A:UserString> UserString for @A {
+impl<A:UserString> UserString for Rc<A> {
     fn user_string(&self, tcx: &ctxt) -> ~str {
         let this: &A = &**self;
         this.user_string(tcx)

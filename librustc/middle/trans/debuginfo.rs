@@ -57,7 +57,7 @@ For example, the following simple type for a singly-linked list...
 ```
 struct List {
     value: int,
-    tail: Option<@List>,
+    tail: Option<Box<List>>,
 }
 ```
 
@@ -66,8 +66,8 @@ will generate the following callstack with a naive DFS algorithm:
 ```
 describe(t = List)
   describe(t = int)
-  describe(t = Option<@List>)
-    describe(t = @List)
+  describe(t = Option<Box<List>>)
+    describe(t = Box<List>)
       describe(t = List) // at the beginning again...
       ...
 ```
@@ -144,6 +144,7 @@ use util::ppaux;
 
 use std::c_str::{CString, ToCStr};
 use std::cell::{Cell, RefCell};
+use std::rc::{Rc, Weak};
 use collections::HashMap;
 use collections::HashSet;
 use libc::{c_uint, c_ulonglong, c_longlong};
@@ -180,7 +181,7 @@ pub struct CrateDebugContext {
     created_files: RefCell<HashMap<~str, DIFile>>,
     created_types: RefCell<HashMap<uint, DIType>>,
     created_enum_disr_types: RefCell<HashMap<ast::DefId, DIType>>,
-    namespace_map: RefCell<HashMap<Vec<ast::Name> , @NamespaceTreeNode>>,
+    namespace_map: RefCell<HashMap<Vec<ast::Name>, Rc<NamespaceTreeNode>>>,
     // This collection is used to assert that composite types (structs, enums, ...) have their
     // members only set once:
     composite_types_completed: RefCell<HashSet<DIType>>,
@@ -210,7 +211,7 @@ pub struct FunctionDebugContext {
 }
 
 enum FunctionDebugContextRepr {
-    FunctionDebugContext(~FunctionDebugContextData),
+    FunctionDebugContext(Box<FunctionDebugContextData>),
     DebugInfoDisabled,
     FunctionWithoutDebugInfo,
 }
@@ -218,7 +219,7 @@ enum FunctionDebugContextRepr {
 impl FunctionDebugContext {
     fn get_ref<'a>(&'a self, cx: &CrateContext, span: Span) -> &'a FunctionDebugContextData {
         match self.repr {
-            FunctionDebugContext(~ref data) => data,
+            FunctionDebugContext(box ref data) => data,
             DebugInfoDisabled => {
                 cx.sess().span_bug(span, FunctionDebugContext::debuginfo_disabled_message());
             }
@@ -329,7 +330,7 @@ pub fn create_global_var_metadata(cx: &CrateContext,
     };
 
     let filename = span_start(cx, span).file.name.clone();
-    let file_metadata = file_metadata(cx, filename);
+    let file_metadata = file_metadata(cx, filename.as_slice());
 
     let is_local_to_unit = is_node_local_to_unit(cx, node_id);
     let loc = span_start(cx, span);
@@ -369,7 +370,7 @@ pub fn create_local_var_metadata(bcx: &Block, local: &ast::Local) {
     }
 
     let cx = bcx.ccx();
-    let def_map = cx.tcx.def_map;
+    let def_map = &cx.tcx.def_map;
 
     pat_util::pat_bindings(def_map, local.pat, |_, node_id, span, path_ref| {
         let var_ident = ast_util::path_to_ident(path_ref);
@@ -509,7 +510,7 @@ pub fn create_argument_metadata(bcx: &Block, arg: &ast::Arg) {
     let fcx = bcx.fcx;
     let cx = fcx.ccx;
 
-    let def_map = cx.tcx.def_map;
+    let def_map = &cx.tcx.def_map;
     let scope_metadata = bcx.fcx.debug_context.get_ref(cx, arg.pat.span).fn_metadata;
 
     pat_util::pat_bindings(def_map, arg.pat, |_, node_id, span, path_ref| {
@@ -559,7 +560,7 @@ pub fn set_source_location(fcx: &FunctionContext,
             set_debug_location(fcx.ccx, UnknownLocation);
             return;
         }
-        FunctionDebugContext(~ref function_debug_context) => {
+        FunctionDebugContext(box ref function_debug_context) => {
             let cx = fcx.ccx;
 
             debug!("set_source_location: {}", cx.sess().codemap().span_to_str(span));
@@ -595,7 +596,7 @@ pub fn clear_source_location(fcx: &FunctionContext) {
 /// translated.
 pub fn start_emitting_source_locations(fcx: &FunctionContext) {
     match fcx.debug_context.repr {
-        FunctionDebugContext(~ref data) => {
+        FunctionDebugContext(box ref data) => {
             data.source_locations_enabled.set(true)
         },
         _ => { /* safe to ignore */ }
@@ -609,7 +610,7 @@ pub fn start_emitting_source_locations(fcx: &FunctionContext) {
 /// indicates why no debuginfo should be created for the function.
 pub fn create_function_debug_context(cx: &CrateContext,
                                      fn_ast_id: ast::NodeId,
-                                     param_substs: Option<@param_substs>,
+                                     param_substs: Option<&param_substs>,
                                      llfn: ValueRef) -> FunctionDebugContext {
     if cx.sess().opts.debuginfo == NoDebugInfo {
         return FunctionDebugContext { repr: DebugInfoDisabled };
@@ -639,7 +640,7 @@ pub fn create_function_debug_context(cx: &CrateContext,
                 }
             }
         }
-        ast_map::NodeMethod(method) => {
+        ast_map::NodeMethod(ref method) => {
             (method.ident,
              method.decl,
              &method.generics,
@@ -666,9 +667,9 @@ pub fn create_function_debug_context(cx: &CrateContext,
                         "create_function_debug_context: expected an expr_fn_block here")
             }
         }
-        ast_map::NodeTraitMethod(trait_method) => {
-            match *trait_method {
-                ast::Provided(method) => {
+        ast_map::NodeTraitMethod(ref trait_method) => {
+            match **trait_method {
+                ast::Provided(ref method) => {
                     (method.ident,
                      method.decl,
                      &method.generics,
@@ -699,7 +700,7 @@ pub fn create_function_debug_context(cx: &CrateContext,
     }
 
     let loc = span_start(cx, span);
-    let file_metadata = file_metadata(cx, loc.file.name);
+    let file_metadata = file_metadata(cx, loc.file.name.as_slice());
 
     let function_type_metadata = unsafe {
         let fn_signature = get_function_signature(cx, fn_ast_id, fn_decl, param_substs, span);
@@ -756,7 +757,7 @@ pub fn create_function_debug_context(cx: &CrateContext,
     });
 
     // Initialize fn debug context (including scope map and namespace map)
-    let fn_debug_context = ~FunctionDebugContextData {
+    let fn_debug_context = box FunctionDebugContextData {
         scope_map: RefCell::new(HashMap::new()),
         fn_metadata: fn_metadata,
         argument_counter: Cell::new(1),
@@ -775,7 +776,7 @@ pub fn create_function_debug_context(cx: &CrateContext,
     fn get_function_signature(cx: &CrateContext,
                               fn_ast_id: ast::NodeId,
                               fn_decl: &ast::FnDecl,
-                              param_substs: Option<@param_substs>,
+                              param_substs: Option<&param_substs>,
                               error_span: Span) -> DIArray {
         if cx.sess().opts.debuginfo == LimitedDebugInfo {
             return create_DIArray(DIB(cx), []);
@@ -828,7 +829,7 @@ pub fn create_function_debug_context(cx: &CrateContext,
 
     fn get_template_parameters(cx: &CrateContext,
                                generics: &ast::Generics,
-                               param_substs: Option<@param_substs>,
+                               param_substs: Option<&param_substs>,
                                file_metadata: DIFile,
                                name_to_append_suffix_to: &mut StrBuf)
                                -> DIArray {
@@ -983,7 +984,8 @@ fn compile_unit_metadata(cx: &CrateContext) {
     };
 
     debug!("compile_unit_metadata: {:?}", compile_unit_name);
-    let producer = format!("rustc version {}", env!("CFG_VERSION"));
+    let producer = format!("rustc version {}",
+                           (option_env!("CFG_VERSION")).expect("CFG_VERSION"));
 
     compile_unit_name.with_ref(|compile_unit_name| {
         work_dir.as_vec().with_c_str(|work_dir| {
@@ -1009,7 +1011,7 @@ fn compile_unit_metadata(cx: &CrateContext) {
     });
 
     fn fallback_path(cx: &CrateContext) -> CString {
-        cx.link_meta.crateid.name.to_c_str()
+        cx.link_meta.crateid.name.as_slice().to_c_str()
     }
 }
 
@@ -1023,7 +1025,7 @@ fn declare_local(bcx: &Block,
     let cx: &CrateContext = bcx.ccx();
 
     let filename = span_start(cx, span).file.name.clone();
-    let file_metadata = file_metadata(cx, filename);
+    let file_metadata = file_metadata(cx, filename.as_slice());
 
     let name = token::get_ident(variable_ident);
     let loc = span_start(cx, span);
@@ -1169,7 +1171,8 @@ fn basic_type_metadata(cx: &CrateContext, t: ty::t) -> DIType {
         },
         ty::ty_float(float_ty) => match float_ty {
             ast::TyF32 => ("f32".to_owned(), DW_ATE_float),
-            ast::TyF64 => ("f64".to_owned(), DW_ATE_float)
+            ast::TyF64 => ("f64".to_owned(), DW_ATE_float),
+            ast::TyF128 => ("f128".to_owned(), DW_ATE_float)
         },
         _ => cx.sess().bug("debuginfo::basic_type_metadata - t is invalid type")
     };
@@ -1274,7 +1277,7 @@ fn prepare_struct_metadata(cx: &CrateContext,
     let (containing_scope, definition_span) = get_namespace_and_span_for_item(cx, def_id);
 
     let file_name = span_start(cx, definition_span).file.name.clone();
-    let file_metadata = file_metadata(cx, file_name);
+    let file_metadata = file_metadata(cx, file_name.as_slice());
 
     let struct_metadata_stub = create_struct_stub(cx,
                                                   struct_llvm_type,
@@ -1368,7 +1371,7 @@ fn prepare_tuple_metadata(cx: &CrateContext,
     let tuple_llvm_type = type_of::type_of(cx, tuple_type);
 
     let loc = span_start(cx, span);
-    let file_metadata = file_metadata(cx, loc.file.name);
+    let file_metadata = file_metadata(cx, loc.file.name.as_slice());
 
     UnfinishedMetadata {
         cache_id: cache_id_for_type(tuple_type),
@@ -1388,8 +1391,8 @@ fn prepare_tuple_metadata(cx: &CrateContext,
 }
 
 struct GeneralMemberDescriptionFactory {
-    type_rep: @adt::Repr,
-    variants: @Vec<@ty::VariantInfo> ,
+    type_rep: Rc<adt::Repr>,
+    variants: Rc<Vec<Rc<ty::VariantInfo>>>,
     discriminant_type_metadata: ValueRef,
     containing_scope: DIScope,
     file_metadata: DIFile,
@@ -1412,7 +1415,7 @@ impl GeneralMemberDescriptionFactory {
                 let (variant_type_metadata, variant_llvm_type, member_desc_factory) =
                     describe_enum_variant(cx,
                                           struct_def,
-                                          *self.variants.get(i),
+                                          &**self.variants.get(i),
                                           Some(self.discriminant_type_metadata),
                                           self.containing_scope,
                                           self.file_metadata,
@@ -1530,7 +1533,7 @@ fn prepare_enum_metadata(cx: &CrateContext,
 
     let (containing_scope, definition_span) = get_namespace_and_span_for_item(cx, enum_def_id);
     let loc = span_start(cx, definition_span);
-    let file_metadata = file_metadata(cx, loc.file.name);
+    let file_metadata = file_metadata(cx, loc.file.name.as_slice());
 
     // For empty enums there is an early exit. Just describe it as an empty struct with the
     // appropriate type name
@@ -1617,7 +1620,7 @@ fn prepare_enum_metadata(cx: &CrateContext,
                  member_description_factory) =
                     describe_enum_variant(cx,
                                           struct_def,
-                                          *variants.get(0),
+                                          &**variants.get(0),
                                           None,
                                           containing_scope,
                                           file_metadata,
@@ -1661,7 +1664,7 @@ fn prepare_enum_metadata(cx: &CrateContext,
                 llvm_type: enum_llvm_type,
                 file_metadata: file_metadata,
                 member_description_factory: GeneralMD(GeneralMemberDescriptionFactory {
-                    type_rep: type_rep,
+                    type_rep: type_rep.clone(),
                     variants: variants,
                     discriminant_type_metadata: discriminant_type_metadata,
                     containing_scope: containing_scope,
@@ -1676,7 +1679,7 @@ fn prepare_enum_metadata(cx: &CrateContext,
                  member_description_factory) =
                     describe_enum_variant(cx,
                                           struct_def,
-                                          *variants.get(nndiscr as uint),
+                                          &**variants.get(nndiscr as uint),
                                           None,
                                           containing_scope,
                                           file_metadata,
@@ -1900,7 +1903,7 @@ fn boxed_type_metadata(cx: &CrateContext,
     ];
 
     let loc = span_start(cx, span);
-    let file_metadata = file_metadata(cx, loc.file.name);
+    let file_metadata = file_metadata(cx, loc.file.name.as_slice());
 
     return composite_type_metadata(
         cx,
@@ -2001,7 +2004,7 @@ fn vec_metadata(cx: &CrateContext,
     assert!(member_descriptions.len() == member_llvm_types.len());
 
     let loc = span_start(cx, span);
-    let file_metadata = file_metadata(cx, loc.file.name);
+    let file_metadata = file_metadata(cx, loc.file.name.as_slice());
 
     composite_type_metadata(
         cx,
@@ -2052,7 +2055,7 @@ fn vec_slice_metadata(cx: &CrateContext,
     assert!(member_descriptions.len() == member_llvm_types.len());
 
     let loc = span_start(cx, span);
-    let file_metadata = file_metadata(cx, loc.file.name);
+    let file_metadata = file_metadata(cx, loc.file.name.as_slice());
 
     return composite_type_metadata(
         cx,
@@ -2078,7 +2081,7 @@ fn subroutine_type_metadata(cx: &CrateContext,
                             span: Span)
                          -> DICompositeType {
     let loc = span_start(cx, span);
-    let file_metadata = file_metadata(cx, loc.file.name);
+    let file_metadata = file_metadata(cx, loc.file.name.as_slice());
 
     let mut signature_metadata: Vec<DIType> =
         Vec::with_capacity(signature.inputs.len() + 1);
@@ -2123,7 +2126,7 @@ fn trait_metadata(cx: &CrateContext,
     let (containing_scope, definition_span) = get_namespace_and_span_for_item(cx, def_id);
 
     let file_name = span_start(cx, definition_span).file.name.clone();
-    let file_metadata = file_metadata(cx, file_name);
+    let file_metadata = file_metadata(cx, file_name.as_slice());
 
     let trait_llvm_type = type_of::type_of(cx, trait_type);
 
@@ -2180,59 +2183,58 @@ fn type_metadata(cx: &CrateContext,
         ty::ty_uint(_)  |
         ty::ty_float(_) => {
             basic_type_metadata(cx, t)
-        },
-        ty::ty_str(ref vstore) => {
-            let i8_t = ty::mk_i8();
-            match *vstore {
-                ty::VstoreFixed(len) => {
-                    fixed_vec_metadata(cx, i8_t, len, usage_site_span)
-                },
-                ty::VstoreUniq  => {
+        }
+        ty::ty_enum(def_id, _) => {
+            prepare_enum_metadata(cx, t, def_id, usage_site_span).finalize(cx)
+        }
+        ty::ty_box(typ) => {
+            create_pointer_to_box_metadata(cx, t, typ)
+        }
+        ty::ty_vec(ref mt, Some(len)) => fixed_vec_metadata(cx, mt.ty, len, usage_site_span),
+        ty::ty_uniq(typ) => {
+            match ty::get(typ).sty {
+                ty::ty_vec(ref mt, None) => {
+                    let vec_metadata = vec_metadata(cx, mt.ty, usage_site_span);
+                    pointer_type_metadata(cx, t, vec_metadata)
+                }
+                ty::ty_str => {
+                    let i8_t = ty::mk_i8();
                     let vec_metadata = vec_metadata(cx, i8_t, usage_site_span);
                     pointer_type_metadata(cx, t, vec_metadata)
                 }
-                ty::VstoreSlice(..) => {
-                    vec_slice_metadata(cx, t, i8_t, usage_site_span)
+                _ => {
+                    let pointee = type_metadata(cx, typ, usage_site_span);
+                    pointer_type_metadata(cx, t, pointee)
                 }
             }
-        },
-        ty::ty_enum(def_id, _) => {
-            prepare_enum_metadata(cx, t, def_id, usage_site_span).finalize(cx)
-        },
-        ty::ty_box(typ) => {
-            create_pointer_to_box_metadata(cx, t, typ)
-        },
-        ty::ty_vec(ty, ref vstore) => {
-            match *vstore {
-                ty::VstoreFixed(len) => {
-                    fixed_vec_metadata(cx, ty, len, usage_site_span)
-                }
-                ty::VstoreUniq => {
-                    let vec_metadata = vec_metadata(cx, ty, usage_site_span);
-                    pointer_type_metadata(cx, t, vec_metadata)
-                }
-                ty::VstoreSlice(..) => {
-                    vec_slice_metadata(cx, t, ty, usage_site_span)
-                }
-            }
-        },
-        ty::ty_uniq(typ) => {
-            let pointee = type_metadata(cx, typ, usage_site_span);
-            pointer_type_metadata(cx, t, pointee)
         }
         ty::ty_ptr(ref mt) | ty::ty_rptr(_, ref mt) => {
-            let pointee = type_metadata(cx, mt.ty, usage_site_span);
-            pointer_type_metadata(cx, t, pointee)
-        },
+            match ty::get(mt.ty).sty {
+                ty::ty_vec(ref mt, None) => vec_slice_metadata(cx, t, mt.ty, usage_site_span),
+                ty::ty_str => {
+                    let i8_t = ty::mk_i8();
+                    vec_slice_metadata(cx, t, i8_t, usage_site_span)
+                }
+                _ => {
+                    let pointee = type_metadata(cx, mt.ty, usage_site_span);
+                    pointer_type_metadata(cx, t, pointee)
+                }
+            }
+        }
         ty::ty_bare_fn(ref barefnty) => {
             subroutine_type_metadata(cx, &barefnty.sig, usage_site_span)
-        },
+        }
         ty::ty_closure(ref closurety) => {
             subroutine_type_metadata(cx, &closurety.sig, usage_site_span)
-        },
-        ty::ty_trait(~ty::TyTrait { def_id, ref substs, store, ref bounds }) => {
+        }
+        ty::ty_trait(box ty::TyTrait {
+                def_id,
+                ref substs,
+                store,
+                ref bounds
+            }) => {
             trait_metadata(cx, def_id, t, substs, store, bounds)
-        },
+        }
         ty::ty_struct(def_id, ref substs) => {
             if ty::type_is_simd(cx.tcx(), t) {
                 let element_type = ty::simd_type(cx.tcx(), t);
@@ -2241,7 +2243,7 @@ fn type_metadata(cx: &CrateContext,
             } else {
                 prepare_struct_metadata(cx, t, def_id, substs, usage_site_span).finalize(cx)
             }
-        },
+        }
         ty::ty_tup(ref elements) => {
             prepare_tuple_metadata(cx,
                                    t,
@@ -2381,7 +2383,7 @@ fn populate_scope_map(cx: &CrateContext,
                       fn_entry_block: &ast::Block,
                       fn_metadata: DISubprogram,
                       scope_map: &mut HashMap<ast::NodeId, DIScope>) {
-    let def_map = cx.tcx.def_map;
+    let def_map = &cx.tcx.def_map;
 
     struct ScopeStackEntry {
         scope_metadata: DIScope,
@@ -2418,7 +2420,7 @@ fn populate_scope_map(cx: &CrateContext,
                                    &mut HashMap<ast::NodeId, DIScope>|) {
         // Create a new lexical scope and push it onto the stack
         let loc = cx.sess().codemap().lookup_char_pos(scope_span.lo);
-        let file_metadata = file_metadata(cx, loc.file.name);
+        let file_metadata = file_metadata(cx, loc.file.name.as_slice());
         let parent_scope = scope_stack.last().unwrap().scope_metadata;
 
         let scope_metadata = unsafe {
@@ -2494,7 +2496,7 @@ fn populate_scope_map(cx: &CrateContext,
                     scope_stack: &mut Vec<ScopeStackEntry> ,
                     scope_map: &mut HashMap<ast::NodeId, DIScope>) {
 
-        let def_map = cx.tcx.def_map;
+        let def_map = &cx.tcx.def_map;
 
         // Unfortunately, we cannot just use pat_util::pat_bindings() or ast_util::walk_pat() here
         // because we have to visit *all* nodes in order to put them into the scope map. The above
@@ -2503,7 +2505,7 @@ fn populate_scope_map(cx: &CrateContext,
             ast::PatIdent(_, ref path_ref, ref sub_pat_opt) => {
 
                 // Check if this is a binding. If so we need to put it on the scope stack and maybe
-                // introduce an articial scope
+                // introduce an artificial scope
                 if pat_util::pat_is_binding(def_map, pat) {
 
                     let ident = ast_util::path_to_ident(path_ref);
@@ -2536,7 +2538,10 @@ fn populate_scope_map(cx: &CrateContext,
                     if need_new_scope {
                         // Create a new lexical scope and push it onto the stack
                         let loc = cx.sess().codemap().lookup_char_pos(pat.span.lo);
-                        let file_metadata = file_metadata(cx, loc.file.name);
+                        let file_metadata = file_metadata(cx,
+                                                          loc.file
+                                                             .name
+                                                             .as_slice());
                         let parent_scope = scope_stack.last().unwrap().scope_metadata;
 
                         let scope_metadata = unsafe {
@@ -2830,14 +2835,14 @@ fn populate_scope_map(cx: &CrateContext,
 struct NamespaceTreeNode {
     name: ast::Name,
     scope: DIScope,
-    parent: Option<@NamespaceTreeNode>,
+    parent: Option<Weak<NamespaceTreeNode>>,
 }
 
 impl NamespaceTreeNode {
     fn mangled_name_of_contained_item(&self, item_name: &str) -> ~str {
         fn fill_nested(node: &NamespaceTreeNode, output: &mut StrBuf) {
             match node.parent {
-                Some(parent) => fill_nested(parent, output),
+                Some(ref parent) => fill_nested(&*parent.upgrade().unwrap(), output),
                 None => {}
             }
             let string = token::get_name(node.name);
@@ -2854,11 +2859,14 @@ impl NamespaceTreeNode {
     }
 }
 
-fn namespace_for_item(cx: &CrateContext, def_id: ast::DefId) -> @NamespaceTreeNode {
+fn namespace_for_item(cx: &CrateContext, def_id: ast::DefId) -> Rc<NamespaceTreeNode> {
     ty::with_path(cx.tcx(), def_id, |path| {
         // prepend crate name if not already present
         let krate = if def_id.krate == ast::LOCAL_CRATE {
-            let crate_namespace_ident = token::str_to_ident(cx.link_meta.crateid.name);
+            let crate_namespace_ident = token::str_to_ident(cx.link_meta
+                                                              .crateid
+                                                              .name
+                                                              .as_slice());
             Some(ast_map::PathMod(crate_namespace_ident.name))
         } else {
             None
@@ -2866,7 +2874,7 @@ fn namespace_for_item(cx: &CrateContext, def_id: ast::DefId) -> @NamespaceTreeNo
         let mut path = krate.move_iter().chain(path).peekable();
 
         let mut current_key = Vec::new();
-        let mut parent_node: Option<@NamespaceTreeNode> = None;
+        let mut parent_node: Option<Rc<NamespaceTreeNode>> = None;
 
         // Create/Lookup namespace for each element of the path.
         loop {
@@ -2890,7 +2898,7 @@ fn namespace_for_item(cx: &CrateContext, def_id: ast::DefId) -> @NamespaceTreeNo
                 None => {
                     // create and insert
                     let parent_scope = match parent_node {
-                        Some(node) => node.scope,
+                        Some(ref node) => node.scope,
                         None => ptr::null()
                     };
                     let namespace_name = token::get_name(name);
@@ -2907,14 +2915,14 @@ fn namespace_for_item(cx: &CrateContext, def_id: ast::DefId) -> @NamespaceTreeNo
                         }
                     });
 
-                    let node = @NamespaceTreeNode {
+                    let node = Rc::new(NamespaceTreeNode {
                         name: name,
                         scope: scope,
-                        parent: parent_node,
-                    };
+                        parent: parent_node.map(|parent| parent.downgrade()),
+                    });
 
                     debug_context(cx).namespace_map.borrow_mut()
-                                     .insert(current_key.clone(), node);
+                                     .insert(current_key.clone(), node.clone());
 
                     node
                 }

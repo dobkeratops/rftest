@@ -15,12 +15,14 @@
 //! which are not used for scheduling in any way.
 
 #![allow(non_camel_case_types)]
+#![allow(unsigned_negate)]
 
 use cast;
 use kinds::Send;
 use libc;
 use ops::Drop;
 use option::{Option, Some, None};
+use owned::Box;
 use uint;
 
 type StartFn = extern "C" fn(*libc::c_void) -> imp::rust_thread_return;
@@ -30,7 +32,7 @@ type StartFn = extern "C" fn(*libc::c_void) -> imp::rust_thread_return;
 pub struct Thread<T> {
     native: imp::rust_thread,
     joined: bool,
-    packet: ~Option<T>,
+    packet: Box<Option<T>>,
 }
 
 static DEFAULT_STACK_SIZE: uint = 1024 * 1024;
@@ -44,7 +46,7 @@ extern fn thread_start(main: *libc::c_void) -> imp::rust_thread_return {
     use rt::stack;
     unsafe {
         stack::record_stack_bounds(0, uint::MAX);
-        let f: ~proc() = cast::transmute(main);
+        let f: Box<proc()> = cast::transmute(main);
         (*f)();
         cast::transmute(0 as imp::rust_thread_return)
     }
@@ -77,14 +79,14 @@ impl Thread<()> {
     pub fn start_stack<T: Send>(stack: uint, main: proc():Send -> T) -> Thread<T> {
 
         // We need the address of the packet to fill in to be stable so when
-        // `main` fills it in it's still valid, so allocate an extra ~ box to do
+        // `main` fills it in it's still valid, so allocate an extra box to do
         // so.
-        let packet = ~None;
+        let packet = box None;
         let packet2: *mut Option<T> = unsafe {
-            *cast::transmute::<&~Option<T>, **mut Option<T>>(&packet)
+            *cast::transmute::<&Box<Option<T>>, **mut Option<T>>(&packet)
         };
         let main = proc() unsafe { *packet2 = Some(main()); };
-        let native = unsafe { imp::create(stack, ~main) };
+        let native = unsafe { imp::create(stack, box main) };
 
         Thread {
             native: native,
@@ -107,7 +109,7 @@ impl Thread<()> {
     /// stack size for the new thread.
     pub fn spawn_stack(stack: uint, main: proc():Send) {
         unsafe {
-            let handle = imp::create(stack, ~main);
+            let handle = imp::create(stack, box main);
             imp::detach(handle);
         }
     }
@@ -151,13 +153,14 @@ mod imp {
     use libc::types::os::arch::extra::{LPSECURITY_ATTRIBUTES, SIZE_T, BOOL,
                                        LPVOID, DWORD, LPDWORD, HANDLE};
     use os;
+    use owned::Box;
     use ptr;
     use rt::stack::RED_ZONE;
 
     pub type rust_thread = HANDLE;
     pub type rust_thread_return = DWORD;
 
-    pub unsafe fn create(stack: uint, p: ~proc():Send) -> rust_thread {
+    pub unsafe fn create(stack: uint, p: Box<proc():Send>) -> rust_thread {
         let arg: *mut libc::c_void = cast::transmute(p);
         // FIXME On UNIX, we guard against stack sizes that are too small but
         // that's because pthreads enforces that stacks are at least
@@ -174,7 +177,7 @@ mod imp {
 
         if ret as uint == 0 {
             // be sure to not leak the closure
-            let _p: ~proc():Send = cast::transmute(arg);
+            let _p: Box<proc():Send> = cast::transmute(arg);
             fail!("failed to spawn native thread: {}", os::last_os_error());
         }
         return ret;
@@ -217,13 +220,14 @@ mod imp {
     use libc;
     use mem;
     use os;
+    use owned::Box;
     use ptr;
     use rt::stack::RED_ZONE;
 
     pub type rust_thread = libc::pthread_t;
     pub type rust_thread_return = *u8;
 
-    pub unsafe fn create(stack: uint, p: ~proc():Send) -> rust_thread {
+    pub unsafe fn create(stack: uint, p: Box<proc():Send>) -> rust_thread {
         let mut native: libc::pthread_t = mem::uninit();
         let mut attr: libc::pthread_attr_t = mem::uninit();
         assert_eq!(pthread_attr_init(&mut attr), 0);
@@ -256,7 +260,7 @@ mod imp {
 
         if ret != 0 {
             // be sure to not leak the closure
-            let _p: ~proc():Send = cast::transmute(arg);
+            let _p: Box<proc():Send> = cast::transmute(arg);
             fail!("failed to spawn native thread: {}", os::last_os_error());
         }
         native

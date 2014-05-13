@@ -20,6 +20,7 @@ use ext::build::AstBuilder;
 use codemap::{Span,respan};
 use owned_slice::OwnedSlice;
 
+
 /// The types of pointers
 pub enum PtrTy<'a> {
     Send, // ~
@@ -31,7 +32,7 @@ pub enum PtrTy<'a> {
 pub struct Path<'a> {
     pub path: Vec<&'a str> ,
     pub lifetime: Option<&'a str>,
-    pub params: Vec<~Ty<'a>> ,
+    pub params: Vec<Box<Ty<'a>>>,
     pub global: bool,
 }
 
@@ -44,7 +45,7 @@ impl<'a> Path<'a> {
     }
     pub fn new_<'r>(path: Vec<&'r str> ,
                     lifetime: Option<&'r str>,
-                    params: Vec<~Ty<'r>> ,
+                    params: Vec<Box<Ty<'r>>>,
                     global: bool)
                     -> Path<'r> {
         Path {
@@ -80,8 +81,8 @@ impl<'a> Path<'a> {
 /// A type. Supports pointers (except for *), Self, and literals
 pub enum Ty<'a> {
     Self,
-    // &/~/@ Ty
-    Ptr(~Ty<'a>, PtrTy<'a>),
+    // &/Box/@ Ty
+    Ptr(Box<Ty<'a>>, PtrTy<'a>),
     // mod::mod::Type<[lifetime], [Params...]>, including a plain type
     // parameter, and things like `int`
     Literal(Path<'a>),
@@ -92,7 +93,7 @@ pub enum Ty<'a> {
 pub fn borrowed_ptrty<'r>() -> PtrTy<'r> {
     Borrowed(None, ast::MutImmutable)
 }
-pub fn borrowed<'r>(ty: ~Ty<'r>) -> Ty<'r> {
+pub fn borrowed<'r>(ty: Box<Ty<'r>>) -> Ty<'r> {
     Ptr(ty, borrowed_ptrty())
 }
 
@@ -101,7 +102,7 @@ pub fn borrowed_explicit_self<'r>() -> Option<Option<PtrTy<'r>>> {
 }
 
 pub fn borrowed_self<'r>() -> Ty<'r> {
-    borrowed(~Self)
+    borrowed(box Self)
 }
 
 pub fn nil_ty() -> Ty<'static> {
@@ -186,14 +187,14 @@ impl<'a> Ty<'a> {
 }
 
 
-fn mk_ty_param(cx: &ExtCtxt, span: Span, name: &str, bounds: &[Path],
+fn mk_ty_param(cx: &ExtCtxt, span: Span, name: &str, sized: ast::Sized, bounds: &[Path],
                self_ident: Ident, self_generics: &Generics) -> ast::TyParam {
     let bounds =
         bounds.iter().map(|b| {
             let path = b.to_path(cx, span, self_ident, self_generics);
             cx.typarambound(path)
         }).collect();
-    cx.typaram(cx.ident_of(name), bounds, None)
+    cx.typaram(span, cx.ident_of(name), sized, bounds, None)
 }
 
 fn mk_generics(lifetimes: Vec<ast::Lifetime> ,  ty_params: Vec<ast::TyParam> ) -> Generics {
@@ -206,7 +207,7 @@ fn mk_generics(lifetimes: Vec<ast::Lifetime> ,  ty_params: Vec<ast::TyParam> ) -
 /// Lifetimes and bounds on type parameters
 pub struct LifetimeBounds<'a> {
     pub lifetimes: Vec<&'a str>,
-    pub bounds: Vec<(&'a str, Vec<Path<'a>>)>,
+    pub bounds: Vec<(&'a str, ast::Sized, Vec<Path<'a>>)>,
 }
 
 impl<'a> LifetimeBounds<'a> {
@@ -226,10 +227,11 @@ impl<'a> LifetimeBounds<'a> {
         }).collect();
         let ty_params = self.bounds.iter().map(|t| {
             match t {
-                &(ref name, ref bounds) => {
+                &(ref name, sized, ref bounds) => {
                     mk_ty_param(cx,
                                 span,
                                 *name,
+                                sized,
                                 bounds.as_slice(),
                                 self_ty,
                                 self_generics)

@@ -57,6 +57,7 @@ Several modules in `core` are clients of `rt`:
 use any::Any;
 use kinds::Send;
 use option::Option;
+use owned::Box;
 use result::Result;
 use task::TaskOpts;
 
@@ -69,7 +70,9 @@ use self::task::{Task, BlockedTask};
 pub use self::util::default_sched_threads;
 
 // Export unwinding facilities used by the failure macros
-pub use self::unwind::{begin_unwind, begin_unwind_raw, begin_unwind_fmt};
+pub use self::unwind::{begin_unwind, begin_unwind_fmt};
+
+pub use self::util::{Stdio, Stdout, Stderr};
 
 // FIXME: these probably shouldn't be public...
 #[doc(hidden)]
@@ -83,44 +86,44 @@ pub mod shouldnt_be_public {
 // Internal macros used by the runtime.
 mod macros;
 
-/// The global (exchange) heap.
+// The global (exchange) heap.
 pub mod global_heap;
 
-/// Implementations of language-critical runtime features like @.
+// Implementations of language-critical runtime features like @.
 pub mod task;
 
-/// The EventLoop and internal synchronous I/O interface.
+// The EventLoop and internal synchronous I/O interface.
 pub mod rtio;
 
-/// The Local trait for types that are accessible via thread-local
-/// or task-local storage.
+// The Local trait for types that are accessible via thread-local
+// or task-local storage.
 pub mod local;
 
-/// Bindings to system threading libraries.
+// Bindings to system threading libraries.
 pub mod thread;
 
-/// The runtime configuration, read from environment variables.
+// The runtime configuration, read from environment variables.
 pub mod env;
 
-/// The local, managed heap
+// The local, managed heap
 pub mod local_heap;
 
-/// The runtime needs to be able to put a pointer into thread-local storage.
+// The runtime needs to be able to put a pointer into thread-local storage.
 mod local_ptr;
 
-/// Bindings to pthread/windows thread-local storage.
+// Bindings to pthread/windows thread-local storage.
 mod thread_local_storage;
 
-/// Stack unwinding
+// Stack unwinding
 pub mod unwind;
 
-/// The interface to libunwind that rust is using.
+// The interface to libunwind that rust is using.
 mod libunwind;
 
-/// Simple backtrace functionality (to print on failure)
+// Simple backtrace functionality (to print on failure)
 pub mod backtrace;
 
-/// Just stuff
+// Just stuff
 mod util;
 
 // Global command line argument storage
@@ -149,22 +152,25 @@ pub static DEFAULT_ERROR_CODE: int = 101;
 pub trait Runtime {
     // Necessary scheduling functions, used for channels and blocking I/O
     // (sometimes).
-    fn yield_now(~self, cur_task: ~Task);
-    fn maybe_yield(~self, cur_task: ~Task);
-    fn deschedule(~self, times: uint, cur_task: ~Task,
+    fn yield_now(~self, cur_task: Box<Task>);
+    fn maybe_yield(~self, cur_task: Box<Task>);
+    fn deschedule(~self, times: uint, cur_task: Box<Task>,
                   f: |BlockedTask| -> Result<(), BlockedTask>);
-    fn reawaken(~self, to_wake: ~Task);
+    fn reawaken(~self, to_wake: Box<Task>);
 
     // Miscellaneous calls which are very different depending on what context
     // you're in.
-    fn spawn_sibling(~self, cur_task: ~Task, opts: TaskOpts, f: proc():Send);
+    fn spawn_sibling(~self,
+                     cur_task: Box<Task>,
+                     opts: TaskOpts,
+                     f: proc():Send);
     fn local_io<'a>(&'a mut self) -> Option<rtio::LocalIo<'a>>;
     /// The (low, high) edges of the current stack.
     fn stack_bounds(&self) -> (uint, uint); // (lo, hi)
     fn can_block(&self) -> bool;
 
     // FIXME: This is a serious code smell and this should not exist at all.
-    fn wrap(~self) -> ~Any;
+    fn wrap(~self) -> Box<Any>;
 }
 
 /// One-time runtime initialization.

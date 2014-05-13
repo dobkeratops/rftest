@@ -8,16 +8,34 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-/*!
-
-The standard module imported by default into all Rust modules
-
-Many programming languages have a 'prelude': a particular subset of the
-libraries that come with the language. Every program imports the prelude by
-default. The prelude imports various core parts of the library that are
-generally useful to many Rust programs.
-
-*/
+//! The Rust prelude
+//!
+//! Because `std` is required by most serious Rust software, it is
+//! imported at the topmost level of every crate by default, as if the
+//! first line of each crate was
+//!
+//! ```ignore
+//! extern crate std;
+//! ```
+//!
+//! This means that the contents of std can be accessed from any context
+//! with the `std::` path prefix, as in `use std::vec`, `use std::task::spawn`,
+//! etc.
+//!
+//! Additionally, `std` contains a `prelude` module that reexports many of the
+//! most common traits, types and functions. The contents of the prelude are
+//! imported into every *module* by default.  Implicitly, all modules behave as if
+//! they contained the following prologue:
+//!
+//! ```ignore
+//! use std::prelude::*;
+//! ```
+//!
+//! The prelude is primarily concerned with exporting *traits* that are so
+//! pervasive that it would be obnoxious to import for every use, particularly
+//! those that define methods on primitive types. It does include a few
+//! particularly useful standalone functions, like `from_str`, `range`, and
+//! `drop`, `spawn`, and `channel`.
 
 // Reexported core operators
 pub use kinds::{Copy, Send, Sized, Share};
@@ -45,19 +63,23 @@ pub use iter::{FromIterator, Extendable};
 pub use iter::{Iterator, DoubleEndedIterator, RandomAccessIterator, CloneableIterator};
 pub use iter::{OrdIterator, MutableDoubleEndedIterator, ExactSize};
 pub use num::{Num, NumCast, CheckedAdd, CheckedSub, CheckedMul};
-pub use num::{Signed, Unsigned, Round};
+pub use num::{Signed, Unsigned};
 pub use num::{Primitive, Int, Float, ToPrimitive, FromPrimitive};
+pub use option::Expect;
+pub use owned::Box;
 pub use path::{GenericPath, Path, PosixPath, WindowsPath};
 pub use ptr::RawPtr;
 pub use io::{Buffer, Writer, Reader, Seek};
+pub use result::{ResultUnwrap, ResultUnwrapErr};
 pub use str::{Str, StrVector, StrSlice, OwnedStr, IntoMaybeOwned};
+pub use str::{StrAllocating};
 pub use to_str::{ToStr, IntoStr};
 pub use tuple::{Tuple1, Tuple2, Tuple3, Tuple4};
 pub use tuple::{Tuple5, Tuple6, Tuple7, Tuple8};
 pub use tuple::{Tuple9, Tuple10, Tuple11, Tuple12};
 pub use slice::{ImmutableEqVector, ImmutableTotalOrdVector, ImmutableCloneableVector};
 pub use slice::{OwnedVector};
-pub use slice::{MutableVector, MutableTotalOrdVector};
+pub use slice::{MutableVector, MutableTotalOrdVector, MutableVectorAllocating};
 pub use slice::{Vector, VectorVector, CloneableVector, ImmutableVector};
 pub use strbuf::StrBuf;
 pub use vec::Vec;

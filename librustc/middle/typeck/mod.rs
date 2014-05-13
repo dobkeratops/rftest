@@ -171,11 +171,11 @@ impl MethodCall {
 
 // maps from an expression id that corresponds to a method call to the details
 // of the method to be invoked
-pub type MethodMap = @RefCell<FnvHashMap<MethodCall, MethodCallee>>;
+pub type MethodMap = RefCell<FnvHashMap<MethodCall, MethodCallee>>;
 
-pub type vtable_param_res = @Vec<vtable_origin> ;
+pub type vtable_param_res = Vec<vtable_origin>;
 // Resolutions for bounds of all parameters, left to right, for a given path.
-pub type vtable_res = @Vec<vtable_param_res> ;
+pub type vtable_res = Vec<vtable_param_res>;
 
 #[deriving(Clone)]
 pub enum vtable_origin {
@@ -184,7 +184,7 @@ pub enum vtable_origin {
       from whence comes the vtable, and tys are the type substs.
       vtable_res is the vtable itself
      */
-    vtable_static(ast::DefId, Vec<ty::t> , vtable_res),
+    vtable_static(ast::DefId, Vec<ty::t>, vtable_res),
 
     /*
       Dynamic vtable, comes from a parameter that has a bound on it:
@@ -215,7 +215,7 @@ impl Repr for vtable_origin {
     }
 }
 
-pub type vtable_map = @RefCell<FnvHashMap<MethodCall, vtable_res>>;
+pub type vtable_map = RefCell<FnvHashMap<MethodCall, vtable_res>>;
 
 
 // Information about the vtable resolutions for a trait impl.
@@ -242,8 +242,6 @@ pub type impl_vtable_map = RefCell<DefIdMap<impl_res>>;
 pub struct CrateCtxt<'a> {
     // A mapping from method call sites to traits that have that method.
     trait_map: resolve::TraitMap,
-    method_map: MethodMap,
-    vtable_map: vtable_map,
     tcx: &'a ty::ctxt
 }
 
@@ -312,25 +310,6 @@ pub fn require_same_types(tcx: &ty::ctxt,
             ty::note_and_explain_type_err(tcx, terr);
             false
         }
-    }
-}
-
-// a list of mapping from in-scope-region-names ("isr") to the
-// corresponding ty::Region
-pub type isr_alist = @Vec<(ty::BoundRegion, ty::Region)>;
-
-trait get_region<'a, T:'static> {
-    fn get(&'a self, br: ty::BoundRegion) -> ty::Region;
-}
-
-impl<'a, T:'static> get_region <'a, T> for isr_alist {
-    fn get(&'a self, br: ty::BoundRegion) -> ty::Region {
-        let mut region = None;
-        for isr in self.iter() {
-            let (isr_br, isr_r) = *isr;
-            if isr_br == br { region = Some(isr_r); break; }
-        };
-        region.unwrap()
     }
 }
 
@@ -430,28 +409,23 @@ fn check_start_fn_ty(ccx: &CrateCtxt,
 
 fn check_for_entry_fn(ccx: &CrateCtxt) {
     let tcx = ccx.tcx;
-    if !tcx.sess.building_library.get() {
-        match *tcx.sess.entry_fn.borrow() {
-          Some((id, sp)) => match tcx.sess.entry_type.get() {
-              Some(session::EntryMain) => check_main_fn_ty(ccx, id, sp),
-              Some(session::EntryStart) => check_start_fn_ty(ccx, id, sp),
-              Some(session::EntryNone) => {}
-              None => tcx.sess.bug("entry function without a type")
-          },
-          None => {}
-        }
+    match *tcx.sess.entry_fn.borrow() {
+        Some((id, sp)) => match tcx.sess.entry_type.get() {
+            Some(session::EntryMain) => check_main_fn_ty(ccx, id, sp),
+            Some(session::EntryStart) => check_start_fn_ty(ccx, id, sp),
+            Some(session::EntryNone) => {}
+            None => tcx.sess.bug("entry function without a type")
+        },
+        None => {}
     }
 }
 
 pub fn check_crate(tcx: &ty::ctxt,
                    trait_map: resolve::TraitMap,
-                   krate: &ast::Crate)
-                -> (MethodMap, vtable_map) {
+                   krate: &ast::Crate) {
     let time_passes = tcx.sess.time_passes();
     let ccx = CrateCtxt {
         trait_map: trait_map,
-        method_map: @RefCell::new(FnvHashMap::new()),
-        vtable_map: @RefCell::new(FnvHashMap::new()),
         tcx: tcx
     };
 
@@ -473,5 +447,4 @@ pub fn check_crate(tcx: &ty::ctxt,
 
     check_for_entry_fn(&ccx);
     tcx.sess.abort_if_errors();
-    (ccx.method_map, ccx.vtable_map)
 }

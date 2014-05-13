@@ -18,6 +18,7 @@
 
 use middle::ty;
 
+use std::rc::Rc;
 use std::str;
 use std::strbuf::StrBuf;
 use std::uint;
@@ -137,21 +138,16 @@ pub fn parse_substs_data(data: &[u8], crate_num: ast::CrateNum, pos: uint, tcx: 
     parse_substs(&mut st, conv)
 }
 
-fn parse_vstore<M>(st: &mut PState, conv: conv_did,
-                   parse_mut: |&mut PState| -> M) -> ty::Vstore<M> {
+fn parse_size(st: &mut PState) -> Option<uint> {
     assert_eq!(next(st), '/');
 
-    let c = peek(st);
-    if '0' <= c && c <= '9' {
+    if peek(st) == '|' {
+        assert_eq!(next(st), '|');
+        None
+    } else {
         let n = parse_uint(st);
         assert_eq!(next(st), '|');
-        return ty::VstoreFixed(n);
-    }
-
-    match next(st) {
-        '~' => ty::VstoreUniq,
-        '&' => ty::VstoreSlice(parse_region(st, conv), parse_mut(st)),
-        c => st.tcx.sess.bug(format!("parse_vstore(): bad input '{}'", c))
+        Some(n)
     }
 }
 
@@ -304,6 +300,7 @@ fn parse_ty(st: &mut PState, conv: conv_did) -> ty::t {
           'D' => return ty::mk_mach_int(ast::TyI64),
           'f' => return ty::mk_mach_float(ast::TyF32),
           'F' => return ty::mk_mach_float(ast::TyF64),
+          'Q' => return ty::mk_mach_float(ast::TyF128),
           _ => fail!("parse_ty: bad numeric type")
         }
       }
@@ -342,13 +339,12 @@ fn parse_ty(st: &mut PState, conv: conv_did) -> ty::t {
         return ty::mk_rptr(st.tcx, r, mt);
       }
       'V' => {
-        let ty = parse_ty(st, |x,y| conv(x,y));
-        let v = parse_vstore(st, |x,y| conv(x,y), parse_mutability);
-        return ty::mk_vec(st.tcx, ty, v);
+        let mt = parse_mt(st, |x,y| conv(x,y));
+        let sz = parse_size(st);
+        return ty::mk_vec(st.tcx, mt, sz);
       }
       'v' => {
-        let v = parse_vstore(st, |x,y| conv(x,y), |_| ());
-        return ty::mk_str(st.tcx, v);
+        return ty::mk_str(st.tcx);
       }
       'T' => {
         assert_eq!(next(st), '[');
@@ -396,7 +392,7 @@ fn parse_ty(st: &mut PState, conv: conv_did) -> ty::t {
           assert_eq!(next(st), ']');
           return ty::mk_struct(st.tcx, did, substs);
       }
-      c => { error!("unexpected char in type string: {}", c); fail!();}
+      c => { fail!("unexpected char in type string: {}", c);}
     }
 }
 
@@ -445,7 +441,6 @@ fn parse_fn_style(c: char) -> FnStyle {
     match c {
         'u' => UnsafeFn,
         'n' => NormalFn,
-        'c' => ExternFn,
         _ => fail!("parse_fn_style: bad fn_style {}", c)
     }
 }
@@ -551,7 +546,7 @@ fn parse_type_param_def(st: &mut PState, conv: conv_did) -> ty::TypeParameterDef
     ty::TypeParameterDef {
         ident: parse_ident(st, ':'),
         def_id: parse_def(st, NominalType, |x,y| conv(x,y)),
-        bounds: @parse_bounds(st, |x,y| conv(x,y)),
+        bounds: Rc::new(parse_bounds(st, |x,y| conv(x,y))),
         default: parse_opt(st, |st| parse_ty(st, |x,y| conv(x,y)))
     }
 }
@@ -579,7 +574,7 @@ fn parse_bounds(st: &mut PState, conv: conv_did) -> ty::ParamBounds {
                 param_bounds.builtin_bounds.add(ty::BoundShare);
             }
             'I' => {
-                param_bounds.trait_bounds.push(@parse_trait_ref(st, |x,y| conv(x,y)));
+                param_bounds.trait_bounds.push(Rc::new(parse_trait_ref(st, |x,y| conv(x,y))));
             }
             '.' => {
                 return param_bounds;

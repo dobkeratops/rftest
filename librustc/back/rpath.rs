@@ -40,14 +40,14 @@ pub fn get_rpath_flags(sess: &Session, out_filename: &Path) -> Vec<~str> {
 
     debug!("preparing the RPATH!");
 
-    let sysroot = sess.filesearch().sysroot;
+    let sysroot = sess.sysroot();
     let output = out_filename;
     let libs = sess.cstore.get_used_crates(cstore::RequireDynamic);
     let libs = libs.move_iter().filter_map(|(_, l)| {
         l.map(|p| p.clone())
-    }).collect::<~[_]>();
+    }).collect::<Vec<_>>();
 
-    let rpaths = get_rpaths(os, sysroot, output, libs,
+    let rpaths = get_rpaths(os, sysroot, output, libs.as_slice(),
                             sess.opts.target_triple);
     flags.push_all(rpaths_to_flags(rpaths.as_slice()).as_slice());
     flags
@@ -133,7 +133,7 @@ pub fn get_rpath_relative_to_output(os: abi::Os,
 }
 
 pub fn get_install_prefix_rpath(sysroot: &Path, target_triple: &str) -> ~str {
-    let install_prefix = env!("CFG_PREFIX");
+    let install_prefix = option_env!("CFG_PREFIX").expect("CFG_PREFIX");
 
     let tlib = filesearch::relative_target_lib_path(sysroot, target_triple);
     let mut path = Path::new(install_prefix);
@@ -171,7 +171,7 @@ mod test {
     fn test_prefix_rpath() {
         let sysroot = filesearch::get_or_default_sysroot();
         let res = get_install_prefix_rpath(&sysroot, "triple");
-        let mut d = Path::new(env!("CFG_PREFIX"));
+        let mut d = Path::new((option_env!("CFG_PREFIX")).expect("CFG_PREFIX"));
         d.push("lib");
         d.push(filesearch::rustlibdir());
         d.push("triple/lib");

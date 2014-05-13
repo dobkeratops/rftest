@@ -82,6 +82,7 @@ would yield functions like:
 ```
 */
 
+use ast;
 use ast::{MetaItem, Item, Expr, ExprRet, MutMutable, LitNil};
 use codemap::Span;
 use ext::base::ExtCtxt;
@@ -98,31 +99,33 @@ pub fn expand_deriving_encodable(cx: &mut ExtCtxt,
         span: span,
         attributes: Vec::new(),
         path: Path::new_(vec!("serialize", "Encodable"), None,
-                         vec!(~Literal(Path::new_local("__S")),
-                              ~Literal(Path::new_local("__E"))), true),
+                         vec!(box Literal(Path::new_local("__S")),
+                              box Literal(Path::new_local("__E"))), true),
         additional_bounds: Vec::new(),
         generics: LifetimeBounds {
             lifetimes: Vec::new(),
-            bounds: vec!(("__S", vec!(Path::new_(
+            bounds: vec!(("__S", ast::StaticSize, vec!(Path::new_(
                             vec!("serialize", "Encoder"), None,
-                            vec!(~Literal(Path::new_local("__E"))), true))),
-                         ("__E", vec!()))
+                            vec!(box Literal(Path::new_local("__E"))), true))),
+                         ("__E", ast::StaticSize, vec!()))
         },
         methods: vec!(
             MethodDef {
                 name: "encode",
                 generics: LifetimeBounds::empty(),
                 explicit_self: borrowed_explicit_self(),
-                args: vec!(Ptr(~Literal(Path::new_local("__S")),
+                args: vec!(Ptr(box Literal(Path::new_local("__S")),
                             Borrowed(None, MutMutable))),
                 ret_ty: Literal(Path::new_(vec!("std", "result", "Result"),
                                            None,
-                                           vec!(~Tuple(Vec::new()),
-                                                ~Literal(Path::new_local("__E"))),
+                                           vec!(box Tuple(Vec::new()),
+                                                box Literal(Path::new_local("__E"))),
                                            true)),
-                inline: false,
+                attributes: Vec::new(),
                 const_nonmatching: true,
-                combine_substructure: encodable_substructure,
+                combine_substructure: combine_substructure(|a, b, c| {
+                    encodable_substructure(a, b, c)
+                }),
             })
     };
 

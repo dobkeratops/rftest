@@ -1,4 +1,4 @@
-<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libcollections/">libcollections</a></c0><c1>/</c1><c0><a href="./../libcollections/lib.rs.html">lib.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c7553ea&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#13609&nbsp;:&nbsp;richo/rust/str-type-vim,&nbsp;r=alexcrichton<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Sat&nbsp;Apr&nbsp;19&nbsp;11:22:39&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013-2014&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+<head><link href="../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../libcollections/">libcollections</a></c0><c1>/</c1><c0><a href="./../libcollections/lib.rs.html">lib.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5200215&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#14035&nbsp;:&nbsp;alexcrichton/rust/experimental,&nbsp;r=huonw<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Sat&nbsp;Apr&nbsp;19&nbsp;11:22:39&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2013-2014&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c40><br/><ln>&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c40><br/><ln>&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
 </c40><br/><ln>&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
@@ -43,15 +43,15 @@
 </c0><br/><ln>&nbsp;43</ln><a id="43">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c21>use</c21><c0>&nbsp;trie::</c0><c3>{</c3><c0>TrieMap</c0><c3>,</c3><c0>&nbsp;TrieSet</c0><c3>};</c3><c0>
 </c0><br/><ln>&nbsp;44</ln><a id="44">&nbsp;</a><a id="n22">&nbsp;</a><c0>
 </c0><br/><ln>&nbsp;45</ln><a id="45">&nbsp;</a><a id="n4457">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;bitv;
-</c38><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n8029">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;btree;
-</c38><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n8117">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;deque;
-</c38><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n10210">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;dlist;
-</c38><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a id="n10911">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;enum_set;
-</c38><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n17784">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;hashmap;
-</c38><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><a id="n19253">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;lru_cache;
-</c38><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n20088">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;priority_queue;
-</c38><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n22159">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;ringbuf;
-</c38><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n23211">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;smallintmap;
-</c38><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n27395">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;treemap;
+</c38><br/><ln>&nbsp;46</ln><a id="46">&nbsp;</a><a id="n8034">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;btree;
+</c38><br/><ln>&nbsp;47</ln><a id="47">&nbsp;</a><a id="n8122">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;deque;
+</c38><br/><ln>&nbsp;48</ln><a id="48">&nbsp;</a><a id="n10222">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;dlist;
+</c38><br/><ln>&nbsp;49</ln><a id="49">&nbsp;</a><a id="n10923">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;enum_set;
+</c38><br/><ln>&nbsp;50</ln><a id="50">&nbsp;</a><a id="n18226">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;hashmap;
+</c38><br/><ln>&nbsp;51</ln><a id="51">&nbsp;</a><a id="n19495">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;lru_cache;
+</c38><br/><ln>&nbsp;52</ln><a id="52">&nbsp;</a><a id="n20330">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;priority_queue;
+</c38><br/><ln>&nbsp;53</ln><a id="53">&nbsp;</a><a id="n22401">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;ringbuf;
+</c38><br/><ln>&nbsp;54</ln><a id="54">&nbsp;</a><a id="n23457">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;smallintmap;
+</c38><br/><ln>&nbsp;55</ln><a id="55">&nbsp;</a><a id="n27654">&nbsp;</a><c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;treemap;
 </c38><br/><ln>&nbsp;56</ln><a id="56">&nbsp;</a>&nbsp;<c21>pub</c21><c38>&nbsp;</c38><c21>mod</c21><c38>&nbsp;trie;
 </c38><br/><div class="refblock"></div></maintext></div></body>

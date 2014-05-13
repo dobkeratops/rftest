@@ -9,13 +9,14 @@
 // except according to those terms.
 
 #![allow(non_camel_case_types)]
+#![allow(unsigned_negate)]
 
 use metadata::csearch;
 use middle::astencode;
 
 use middle::ty;
 use middle::typeck::astconv;
-use util::nodemap::{DefIdMap, FnvHashMap, NodeMap};
+use util::nodemap::{DefIdMap};
 
 use syntax::ast::*;
 use syntax::parse::token::InternedString;
@@ -23,8 +24,6 @@ use syntax::visit::Visitor;
 use syntax::visit;
 use syntax::{ast, ast_map, ast_util};
 
-use std::cell::RefCell;
-use collections::HashMap;
 use std::rc::Rc;
 
 //
@@ -126,14 +125,8 @@ pub fn lookup_variant_by_id(tcx: &ty::ctxt,
             Some(&e) => return e,
             None => {}
         }
-        let maps = astencode::Maps {
-            root_map: @RefCell::new(HashMap::new()),
-            method_map: @RefCell::new(FnvHashMap::new()),
-            vtable_map: @RefCell::new(FnvHashMap::new()),
-            capture_map: RefCell::new(NodeMap::new())
-        };
         let e = match csearch::maybe_get_item_ast(tcx, enum_def,
-            |a, b, c, d| astencode::decode_inlined_item(a, b, &maps, c, d)) {
+            |a, b, c, d| astencode::decode_inlined_item(a, b, c, d)) {
             csearch::found(ast::IIItem(item)) => match item.node {
                 ItemEnum(ast::EnumDef { variants: ref variants }, _) => {
                     variant_expr(variants.as_slice(), variant_def.node)
@@ -167,14 +160,8 @@ pub fn lookup_const_by_id(tcx: &ty::ctxt, def_id: ast::DefId)
             Some(&e) => return e,
             None => {}
         }
-        let maps = astencode::Maps {
-            root_map: @RefCell::new(HashMap::new()),
-            method_map: @RefCell::new(FnvHashMap::new()),
-            vtable_map: @RefCell::new(FnvHashMap::new()),
-            capture_map: RefCell::new(NodeMap::new())
-        };
         let e = match csearch::maybe_get_item_ast(tcx, def_id,
-            |a, b, c, d| astencode::decode_inlined_item(a, b, &maps, c, d)) {
+            |a, b, c, d| astencode::decode_inlined_item(a, b, c, d)) {
             csearch::found(ast::IIItem(item)) => match item.node {
                 ItemStatic(_, ast::MutImmutable, const_expr) => Some(const_expr),
                 _ => None

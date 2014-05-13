@@ -76,6 +76,7 @@ use middle::typeck::infer::region_inference::ProcessedErrors;
 use middle::typeck::infer::region_inference::SameRegions;
 use std::cell::{Cell, RefCell};
 use std::char::from_u32;
+use std::rc::Rc;
 use std::strbuf::StrBuf;
 use syntax::ast;
 use syntax::ast_map;
@@ -158,7 +159,7 @@ impl<'a> ErrorReporting for InferCtxt<'a> {
         let p_errors = self.process_errors(errors);
         let errors = if p_errors.is_empty() { errors } else { &p_errors };
         for error in errors.iter() {
-            match *error {
+            match error.clone() {
                 ConcreteFailure(origin, sub, sup) => {
                     self.report_concrete_failure(origin, sub, sup);
                 }
@@ -206,7 +207,7 @@ impl<'a> ErrorReporting for InferCtxt<'a> {
         let mut same_regions = Vec::new();
         let mut processed_errors = Vec::new();
         for error in errors.iter() {
-            match *error {
+            match error.clone() {
                 ConcreteFailure(origin, sub, sup) => {
                     debug!("processing ConcreteFailure")
                     let trace = match origin {
@@ -661,10 +662,10 @@ impl<'a> ErrorReporting for InferCtxt<'a> {
                                same_regions: &[SameRegions]) {
         self.give_suggestion(same_regions);
         for vo in var_origins.iter() {
-            self.report_inference_failure(*vo);
+            self.report_inference_failure(vo.clone());
         }
-        for &(trace, terr) in trace_origins.iter() {
-            self.report_type_error(trace, &terr);
+        for &(ref trace, terr) in trace_origins.iter() {
+            self.report_type_error(trace.clone(), &terr);
         }
     }
 
@@ -673,14 +674,16 @@ impl<'a> ErrorReporting for InferCtxt<'a> {
         let parent = self.tcx.map.get_parent(scope_id);
         let parent_node = self.tcx.map.find(parent);
         let node_inner = match parent_node {
-            Some(node) => match node {
-                ast_map::NodeItem(item) => match item.node {
-                    ast::ItemFn(ref fn_decl, ref pur, _, ref gen, _) => {
-                        Some((fn_decl, gen, *pur, item.ident, None, item.span))
-                    },
-                    _ => None
-                },
-                ast_map::NodeMethod(m) => {
+            Some(ref node) => match *node {
+                ast_map::NodeItem(ref item) => {
+                    match item.node {
+                        ast::ItemFn(ref fn_decl, ref pur, _, ref gen, _) => {
+                            Some((fn_decl, gen, *pur, item.ident, None, item.span))
+                        },
+                        _ => None
+                    }
+                }
+                ast_map::NodeMethod(ref m) => {
                     Some((&m.decl, &m.generics, m.fn_style,
                           m.ident, Some(m.explicit_self.node), m.span))
                 },
@@ -877,6 +880,8 @@ impl<'a> Rebuilder<'a> {
                 id: ty_param.id,
                 bounds: bounds,
                 default: ty_param.default,
+                span: ty_param.span,
+                sized: ty_param.sized,
             }
         })
     }
@@ -888,7 +893,8 @@ impl<'a> Rebuilder<'a> {
                                -> OwnedSlice<ast::TyParamBound> {
         ty_param_bounds.map(|tpb| {
             match tpb {
-                &ast::RegionTyParamBound => ast::RegionTyParamBound,
+                &ast::StaticRegionTyParamBound => ast::StaticRegionTyParamBound,
+                &ast::OtherRegionTyParamBound(s) => ast::OtherRegionTyParamBound(s),
                 &ast::TraitTyParamBound(ref tr) => {
                     let last_seg = tr.path.segments.last().unwrap();
                     let mut insert = Vec::new();
@@ -1391,12 +1397,12 @@ impl Resolvable for ty::t {
     }
 }
 
-impl Resolvable for @ty::TraitRef {
-    fn resolve(&self, infcx: &InferCtxt) -> @ty::TraitRef {
-        @infcx.resolve_type_vars_in_trait_ref_if_possible(*self)
+impl Resolvable for Rc<ty::TraitRef> {
+    fn resolve(&self, infcx: &InferCtxt) -> Rc<ty::TraitRef> {
+        Rc::new(infcx.resolve_type_vars_in_trait_ref_if_possible(&**self))
     }
     fn contains_error(&self) -> bool {
-        ty::trait_ref_contains_error(*self)
+        ty::trait_ref_contains_error(&**self)
     }
 }
 

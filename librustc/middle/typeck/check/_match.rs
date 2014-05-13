@@ -40,7 +40,7 @@ pub fn check_match(fcx: &FnCtxt,
     for arm in arms.iter() {
         let mut pcx = pat_ctxt {
             fcx: fcx,
-            map: pat_id_map(tcx.def_map, *arm.pats.get(0)),
+            map: pat_id_map(&tcx.def_map, *arm.pats.get(0)),
         };
 
         for p in arm.pats.iter() { check_pat(&mut pcx, *p, discrim_ty);}
@@ -467,14 +467,14 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
         fcx.write_ty(pat.id, b_ty);
       }
       ast::PatEnum(..) |
-      ast::PatIdent(..) if pat_is_const(tcx.def_map, pat) => {
+      ast::PatIdent(..) if pat_is_const(&tcx.def_map, pat) => {
         let const_did = ast_util::def_id_of_def(tcx.def_map.borrow()
                                                    .get_copy(&pat.id));
         let const_tpt = ty::lookup_item_type(tcx, const_did);
         demand::suptype(fcx, pat.span, expected, const_tpt.ty);
         fcx.write_ty(pat.id, const_tpt.ty);
       }
-      ast::PatIdent(bm, ref name, sub) if pat_is_binding(tcx.def_map, pat) => {
+      ast::PatIdent(bm, ref name, sub) if pat_is_binding(&tcx.def_map, pat) => {
         let typ = fcx.local_ty(pat.span, pat.id);
 
         match bm {
@@ -616,48 +616,58 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
             fcx.infcx().next_region_var(
                 infer::PatternRegion(pat.span));
 
+        let check_err = || {
+            for &elt in before.iter() {
+                check_pat(pcx, elt, ty::mk_err());
+            }
+            for &elt in slice.iter() {
+                check_pat(pcx, elt, ty::mk_err());
+            }
+            for &elt in after.iter() {
+                check_pat(pcx, elt, ty::mk_err());
+            }
+            // See [Note-Type-error-reporting] in middle/typeck/infer/mod.rs
+            fcx.infcx().type_error_message_str_with_expected(
+                pat.span,
+                |expected, actual| {
+                    expected.map_or("".to_owned(), |e| {
+                        format!("mismatched types: expected `{}` but found {}",
+                             e, actual)})},
+                Some(expected),
+                "a vector pattern".to_owned(),
+                None);
+            fcx.write_error(pat.id);
+        };
+
         let (elt_type, region_var, mutbl) = match *structure_of(fcx,
                                                                 pat.span,
                                                                 expected) {
-          ty::ty_vec(ty, vstore) => {
-            match vstore {
-                ty::VstoreSlice(r, m) => (ty, r, m),
-                ty::VstoreUniq => {
-                    fcx.type_error_message(pat.span,
-                                           |_| {
-                                            ~"unique vector patterns are no \
-                                              longer supported"
-                                           },
-                                           expected,
-                                           None);
-                    (ty, default_region_var, ast::MutImmutable)
-                }
-                ty::VstoreFixed(_) => {
-                    (ty, default_region_var, ast::MutImmutable)
-                }
-            }
-          }
+          ty::ty_vec(mt, Some(_)) => (mt.ty, default_region_var, ast::MutImmutable),
+          ty::ty_uniq(t) => match ty::get(t).sty {
+              ty::ty_vec(mt, None) => {
+                  fcx.type_error_message(pat.span,
+                                         |_| {
+                                            "unique vector patterns are no \
+                                             longer supported".to_owned()
+                                         },
+                                         expected,
+                                         None);
+                  (mt.ty, default_region_var, ast::MutImmutable)
+              }
+              _ => {
+                  check_err();
+                  return;
+              }
+          },
+          ty::ty_rptr(r, mt) => match ty::get(mt.ty).sty {
+              ty::ty_vec(mt, None) => (mt.ty, r, mt.mutbl),
+              _ => {
+                  check_err();
+                  return;
+              }
+          },
           _ => {
-              for &elt in before.iter() {
-                  check_pat(pcx, elt, ty::mk_err());
-              }
-              for &elt in slice.iter() {
-                  check_pat(pcx, elt, ty::mk_err());
-              }
-              for &elt in after.iter() {
-                  check_pat(pcx, elt, ty::mk_err());
-              }
-              // See [Note-Type-error-reporting] in middle/typeck/infer/mod.rs
-              fcx.infcx().type_error_message_str_with_expected(
-                  pat.span,
-                  |expected, actual| {
-                      expected.map_or("".to_owned(), |e| {
-                          format!("mismatched types: expected `{}` but found {}",
-                               e, actual)})},
-                  Some(expected),
-                  "a vector pattern".to_owned(),
-                  None);
-              fcx.write_error(pat.id);
+              check_err();
               return;
           }
         };
@@ -666,10 +676,9 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
         }
         match slice {
             Some(slice_pat) => {
-                let slice_ty = ty::mk_vec(tcx,
-                    elt_type,
-                    ty::VstoreSlice(region_var, mutbl)
-                );
+                let slice_ty = ty::mk_slice(tcx,
+                                            region_var,
+                                            ty::mt {ty: elt_type, mutbl: mutbl});
                 check_pat(pcx, slice_pat, slice_ty);
             }
             None => ()
@@ -682,7 +691,7 @@ pub fn check_pat(pcx: &pat_ctxt, pat: &ast::Pat, expected: ty::t) {
     }
 }
 
-// Helper function to check @, ~ and & patterns
+// Helper function to check @, box and & patterns
 pub fn check_pointer_pat(pcx: &pat_ctxt,
                          pointer_kind: PointerKind,
                          inner: &ast::Pat,
@@ -712,7 +721,7 @@ pub fn check_pointer_pat(pcx: &pat_ctxt,
                              e, actual)})},
                 Some(expected),
                 format!("{} pattern", match pointer_kind {
-                    Send => "a `~`-box",
+                    Send => "a box",
                     Borrowed => "an `&`-pointer"
                 }),
                 None);

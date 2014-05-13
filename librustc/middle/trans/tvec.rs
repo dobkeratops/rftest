@@ -162,8 +162,10 @@ pub fn trans_slice_vstore<'a>(
         llfixed = base::arrayalloca(bcx, vt.llunit_ty, llcount);
 
         // Arrange for the backing array to be cleaned up.
-        let fixed_ty = ty::mk_vec(bcx.tcx(), vt.unit_ty,
-                                  ty::VstoreFixed(count));
+        let fixed_ty = ty::mk_vec(bcx.tcx(),
+                                  ty::mt {ty: vt.unit_ty,
+                                          mutbl: ast::MutMutable},
+                                  Some(count));
         let llfixed_ty = type_of::type_of(bcx.ccx(), fixed_ty).ptr_to();
         let llfixed_casted = BitCast(bcx, llfixed, llfixed_ty);
         let cleanup_scope = cleanup::temporary_scope(bcx.tcx(), content_expr.id);
@@ -242,7 +244,7 @@ pub fn trans_uniq_vstore<'a>(bcx: &'a Block<'a>,
                     let llptrval = C_cstr(ccx, (*s).clone(), false);
                     let llptrval = PointerCast(bcx, llptrval, Type::i8p(ccx));
                     let llsizeval = C_uint(ccx, s.get().len());
-                    let typ = ty::mk_str(bcx.tcx(), ty::VstoreUniq);
+                    let typ = ty::mk_uniq(bcx.tcx(), ty::mk_str(bcx.tcx()));
                     let lldestval = rvalue_scratch_datum(bcx,
                                                          typ,
                                                          "");
@@ -474,37 +476,31 @@ pub fn get_base_and_len(bcx: &Block,
      */
 
     let ccx = bcx.ccx();
-    let vt = vec_types(bcx, ty::sequence_element_type(bcx.tcx(), vec_ty));
 
-    let vstore = match ty::get(vec_ty).sty {
-        ty::ty_vec(_, vst) => vst,
-        ty::ty_str(vst) => {
-            // Convert from immutable-only-Vstore to Vstore.
-            match vst {
-                ty::VstoreFixed(n) => ty::VstoreFixed(n),
-                ty::VstoreSlice(r, ()) => ty::VstoreSlice(r, ast::MutImmutable),
-                ty::VstoreUniq => ty::VstoreUniq
-            }
-        }
-        _ => ty::VstoreUniq
-    };
-
-    match vstore {
-        ty::VstoreFixed(n) => {
+    match ty::get(vec_ty).sty {
+        ty::ty_vec(_, Some(n)) => {
             let base = GEPi(bcx, llval, [0u, 0u]);
             (base, C_uint(ccx, n))
         }
-        ty::VstoreSlice(..) => {
-            assert!(!type_is_immediate(bcx.ccx(), vec_ty));
-            let base = Load(bcx, GEPi(bcx, llval, [0u, abi::slice_elt_base]));
-            let count = Load(bcx, GEPi(bcx, llval, [0u, abi::slice_elt_len]));
-            (base, count)
-        }
-        ty::VstoreUniq => {
-            assert!(type_is_immediate(bcx.ccx(), vec_ty));
-            let body = Load(bcx, llval);
-            (get_dataptr(bcx, body), UDiv(bcx, get_fill(bcx, body), vt.llunit_size))
-        }
+        ty::ty_rptr(_, mt) => match ty::get(mt.ty).sty {
+            ty::ty_vec(_, None) | ty::ty_str => {
+                assert!(!type_is_immediate(bcx.ccx(), vec_ty));
+                let base = Load(bcx, GEPi(bcx, llval, [0u, abi::slice_elt_base]));
+                let count = Load(bcx, GEPi(bcx, llval, [0u, abi::slice_elt_len]));
+                (base, count)
+            }
+            _ => ccx.sess().bug("unexpected type (ty_rptr) in get_base_and_len"),
+        },
+        ty::ty_uniq(t) => match ty::get(t).sty {
+            ty::ty_vec(_, None) | ty::ty_str => {
+                assert!(type_is_immediate(bcx.ccx(), vec_ty));
+                let vt = vec_types(bcx, ty::sequence_element_type(bcx.tcx(), vec_ty));
+                let body = Load(bcx, llval);
+                (get_dataptr(bcx, body), UDiv(bcx, get_fill(bcx, body), vt.llunit_size))
+            }
+            _ => ccx.sess().bug("unexpected type (ty_uniq) in get_base_and_len"),
+        },
+        _ => ccx.sess().bug("unexpected type in get_base_and_len"),
     }
 }
 

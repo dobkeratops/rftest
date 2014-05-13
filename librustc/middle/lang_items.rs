@@ -195,12 +195,12 @@ pub fn extract(attrs: &[ast::Attribute]) -> Option<InternedString> {
 }
 
 pub fn collect_language_items(krate: &ast::Crate,
-                              session: &Session) -> @LanguageItems {
+                              session: &Session) -> LanguageItems {
     let mut collector = LanguageItemCollector::new(session);
     collector.collect(krate);
     let LanguageItemCollector { items, .. } = collector;
     session.abort_if_errors();
-    @items
+    items
 }
 
 // End of the macro
@@ -262,6 +262,7 @@ lets_do_this! {
     ManagedHeapLangItem,             "managed_heap",            managed_heap;
     ExchangeHeapLangItem,            "exchange_heap",           exchange_heap;
     GcLangItem,                      "gc",                      gc;
+    OwnedBoxLangItem,                "owned_box",               owned_box;
 
     CovariantTypeItem,               "covariant_type",          covariant_type;
     ContravariantTypeItem,           "contravariant_type",      contravariant_type;

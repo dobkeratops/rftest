@@ -150,22 +150,20 @@ pub fn walk_view_item<E: Clone, V: Visitor<E>>(visitor: &mut V, vi: &ViewItem, e
         ViewItemExternCrate(name, _, _) => {
             visitor.visit_ident(vi.span, name, env)
         }
-        ViewItemUse(ref paths) => {
-            for vp in paths.iter() {
-                match vp.node {
-                    ViewPathSimple(ident, ref path, id) => {
-                        visitor.visit_ident(vp.span, ident, env.clone());
-                        visitor.visit_path(path, id, env.clone());
+        ViewItemUse(ref vp) => {
+            match vp.node {
+                ViewPathSimple(ident, ref path, id) => {
+                    visitor.visit_ident(vp.span, ident, env.clone());
+                    visitor.visit_path(path, id, env.clone());
+                }
+                ViewPathGlob(ref path, id) => {
+                    visitor.visit_path(path, id, env.clone());
+                }
+                ViewPathList(ref path, ref list, _) => {
+                    for id in list.iter() {
+                        visitor.visit_ident(id.span, id.node.name, env.clone())
                     }
-                    ViewPathGlob(ref path, id) => {
-                        visitor.visit_path(path, id, env.clone());
-                    }
-                    ViewPathList(ref path, ref list, _) => {
-                        for id in list.iter() {
-                            visitor.visit_ident(id.span, id.node.name, env.clone())
-                        }
-                        walk_path(visitor, path, env.clone());
-                    }
+                    walk_path(visitor, path, env.clone());
                 }
             }
         }
@@ -257,7 +255,7 @@ pub fn walk_item<E: Clone, V: Visitor<E>>(visitor: &mut V, item: &Item, env: E) 
                                      item.id,
                                      env)
         }
-        ItemTrait(ref generics, ref trait_paths, ref methods) => {
+        ItemTrait(ref generics, _, ref trait_paths, ref methods) => {
             visitor.visit_generics(generics, env.clone());
             for trait_path in trait_paths.iter() {
                 visitor.visit_path(&trait_path.path,
@@ -474,7 +472,8 @@ pub fn walk_ty_param_bounds<E: Clone, V: Visitor<E>>(visitor: &mut V,
             TraitTyParamBound(ref typ) => {
                 walk_trait_ref_helper(visitor, typ, env.clone())
             }
-            RegionTyParamBound => {}
+            StaticRegionTyParamBound => {}
+            OtherRegionTyParamBound(..) => {}
         }
     }
 }
@@ -571,6 +570,10 @@ pub fn walk_struct_def<E: Clone, V: Visitor<E>>(visitor: &mut V,
                                                 _: &Generics,
                                                 _: NodeId,
                                                 env: E) {
+    match struct_definition.super_struct {
+        Some(t) => visitor.visit_ty(t, env.clone()),
+        None => {},
+    }
     for field in struct_definition.fields.iter() {
         visitor.visit_struct_field(field, env.clone())
     }

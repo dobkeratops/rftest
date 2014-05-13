@@ -15,8 +15,6 @@ use middle::const_eval::{eval_const_expr, const_val, const_bool, const_float};
 use middle::pat_util::*;
 use middle::ty::*;
 use middle::ty;
-use middle::typeck::MethodMap;
-use util::nodemap::NodeSet;
 use util::ppaux::ty_to_str;
 
 use std::cmp;
@@ -30,8 +28,6 @@ use syntax::visit::{Visitor, FnKind};
 
 struct MatchCheckCtxt<'a> {
     tcx: &'a ty::ctxt,
-    method_map: MethodMap,
-    moves_map: &'a NodeSet
 }
 
 impl<'a> Visitor<()> for MatchCheckCtxt<'a> {
@@ -47,13 +43,9 @@ impl<'a> Visitor<()> for MatchCheckCtxt<'a> {
 }
 
 pub fn check_crate(tcx: &ty::ctxt,
-                   method_map: MethodMap,
-                   moves_map: &NodeSet,
                    krate: &Crate) {
     let mut cx = MatchCheckCtxt {
         tcx: tcx,
-        method_map: method_map,
-        moves_map: moves_map
     };
 
     visit::walk_crate(&mut cx, krate, ());
@@ -191,7 +183,7 @@ fn check_exhaustive(cx: &MatchCheckCtxt, sp: Span, pats: Vec<@Pat> ) {
                         }
                     }
                 }
-                ty::ty_vec(..) => {
+                ty::ty_vec(..) | ty::ty_rptr(..) => {
                     match *ctor {
                         vec(n) => Some(format!("vectors of length {}", n)),
                         _ => None
@@ -258,50 +250,57 @@ fn is_useful(cx: &MatchCheckCtxt, m: &matrix, v: &[@Pat]) -> useful {
           None => {
             match ty::get(left_ty).sty {
               ty::ty_bool => {
-                match is_useful_specialized(cx, m, v,
-                                            val(const_bool(true)),
-                                            0u, left_ty){
-                  not_useful => {
-                    is_useful_specialized(cx, m, v,
-                                          val(const_bool(false)),
-                                          0u, left_ty)
+                  match is_useful_specialized(cx, m, v,
+                                              val(const_bool(true)),
+                                              0u, left_ty){
+                      not_useful => {
+                          is_useful_specialized(cx, m, v,
+                                                val(const_bool(false)),
+                                                0u, left_ty)
+                      }
+                      ref u => (*u).clone(),
                   }
-                  ref u => (*u).clone(),
-                }
               }
               ty::ty_enum(eid, _) => {
-                for va in (*ty::enum_variants(cx.tcx, eid)).iter() {
-                    match is_useful_specialized(cx, m, v, variant(va.id),
-                                                va.args.len(), left_ty) {
-                      not_useful => (),
-                      ref u => return (*u).clone(),
-                    }
-                }
-                not_useful
-              }
-              ty::ty_vec(_, ty::VstoreFixed(n)) => {
-                is_useful_specialized(cx, m, v, vec(n), n, left_ty)
-              }
-              ty::ty_vec(..) => {
-                let max_len = m.iter().rev().fold(0, |max_len, r| {
-                  match r.get(0).node {
-                    PatVec(ref before, _, ref after) => {
-                      cmp::max(before.len() + after.len(), max_len)
-                    }
-                    _ => max_len
+                  for va in (*ty::enum_variants(cx.tcx, eid)).iter() {
+                      match is_useful_specialized(cx, m, v, variant(va.id),
+                                                  va.args.len(), left_ty) {
+                        not_useful => (),
+                        ref u => return (*u).clone(),
+                      }
                   }
-                });
-                for n in iter::range(0u, max_len + 1) {
-                  match is_useful_specialized(cx, m, v, vec(n), n, left_ty) {
-                    not_useful => (),
-                    ref u => return (*u).clone(),
-                  }
-                }
-                not_useful
+                  not_useful
               }
+              ty::ty_vec(_, Some(n)) => {
+                  is_useful_specialized(cx, m, v, vec(n), n, left_ty)
+              }
+              ty::ty_vec(..) => fail!("impossible case"),
+              ty::ty_rptr(_, ty::mt{ty: ty, ..}) | ty::ty_uniq(ty) => match ty::get(ty).sty {
+                  ty::ty_vec(_, None) => {
+                      let max_len = m.iter().rev().fold(0, |max_len, r| {
+                          match r.get(0).node {
+                              PatVec(ref before, _, ref after) => {
+                                  cmp::max(before.len() + after.len(), max_len)
+                              }
+                              _ => max_len
+                          }
+                      });
+                      for n in iter::range(0u, max_len + 1) {
+                          match is_useful_specialized(cx, m, v, vec(n), n, left_ty) {
+                              not_useful => (),
+                              ref u => return (*u).clone(),
+                          }
+                      }
+                      not_useful
+                  }
+                  _ => {
+                      let arity = ctor_arity(cx, &single, left_ty);
+                      is_useful_specialized(cx, m, v, single, arity, left_ty)
+                  }
+              },
               _ => {
-                let arity = ctor_arity(cx, &single, left_ty);
-                is_useful_specialized(cx, m, v, single, arity, left_ty)
+                  let arity = ctor_arity(cx, &single, left_ty);
+                  is_useful_specialized(cx, m, v, single, arity, left_ty)
               }
             }
           }
@@ -394,17 +393,17 @@ fn is_wild(cx: &MatchCheckCtxt, p: @Pat) -> bool {
 }
 
 fn missing_ctor(cx: &MatchCheckCtxt,
-                    m: &matrix,
-                    left_ty: ty::t)
-                 -> Option<ctor> {
-    match ty::get(left_ty).sty {
-      ty::ty_box(_) | ty::ty_uniq(_) | ty::ty_rptr(..) | ty::ty_tup(_) |
-      ty::ty_struct(..) => {
-        for r in m.iter() {
-            if !is_wild(cx, *r.get(0)) { return None; }
-        }
-        return Some(single);
-      }
+                m: &matrix,
+                left_ty: ty::t)
+                -> Option<ctor> {
+    return match ty::get(left_ty).sty {
+      ty::ty_box(_) | ty::ty_tup(_) |
+      ty::ty_struct(..) => check_matrix_for_wild(cx, m),
+      ty::ty_uniq(ty) | ty::ty_rptr(_, ty::mt{ty: ty, ..}) => match ty::get(ty).sty {
+          ty::ty_vec(_, None) => ctor_for_slice(m),
+          ty::ty_str => Some(single),
+          _ => check_matrix_for_wild(cx, m),
+      },
       ty::ty_enum(eid, _) => {
         let mut found = Vec::new();
         for r in m.iter() {
@@ -441,7 +440,7 @@ fn missing_ctor(cx: &MatchCheckCtxt,
         else if true_found { Some(val(const_bool(false))) }
         else { Some(val(const_bool(true))) }
       }
-      ty::ty_vec(_, ty::VstoreFixed(n)) => {
+      ty::ty_vec(_, Some(n)) => {
         let mut missing = true;
         let mut wrong = false;
         for r in m.iter() {
@@ -464,8 +463,19 @@ fn missing_ctor(cx: &MatchCheckCtxt,
           _         => None
         }
       }
-      ty::ty_vec(..) => {
+      ty::ty_vec(..) => fail!("impossible case"),
+      _ => Some(single)
+    };
 
+    fn check_matrix_for_wild(cx: &MatchCheckCtxt, m: &matrix) -> Option<ctor> {
+        for r in m.iter() {
+            if !is_wild(cx, *r.get(0)) { return None; }
+        }
+        return Some(single);
+    }
+
+    // For slice and ~[T].
+    fn ctor_for_slice(m: &matrix) -> Option<ctor> {
         // Find the lengths and slices of all vector patterns.
         let mut vec_pat_lens = m.iter().filter_map(|r| {
             match r.get(0).node {
@@ -511,31 +521,37 @@ fn missing_ctor(cx: &MatchCheckCtxt,
           Some(k) => Some(vec(k)),
           None => None
         }
-      }
-      _ => Some(single)
     }
 }
 
 fn ctor_arity(cx: &MatchCheckCtxt, ctor: &ctor, ty: ty::t) -> uint {
-    match ty::get(ty).sty {
-      ty::ty_tup(ref fs) => fs.len(),
-      ty::ty_box(_) | ty::ty_uniq(_) | ty::ty_rptr(..) => 1u,
-      ty::ty_enum(eid, _) => {
-          let id = match *ctor { variant(id) => id,
-          _ => fail!("impossible case") };
-        match ty::enum_variants(cx.tcx, eid).iter().find(|v| v.id == id ) {
-            Some(v) => v.args.len(),
-            None => fail!("impossible case")
-        }
-      }
-      ty::ty_struct(cid, _) => ty::lookup_struct_fields(cx.tcx, cid).len(),
-      ty::ty_vec(..) => {
+    fn vec_ctor_arity(ctor: &ctor) -> uint {
         match *ctor {
-          vec(n) => n,
-          _ => 0u
+            vec(n) => n,
+            _ => 0u
         }
-      }
-      _ => 0u
+    }
+
+    match ty::get(ty).sty {
+        ty::ty_tup(ref fs) => fs.len(),
+        ty::ty_box(_) => 1u,
+        ty::ty_uniq(ty) | ty::ty_rptr(_, ty::mt{ty: ty, ..}) => match ty::get(ty).sty {
+            ty::ty_vec(_, None) => vec_ctor_arity(ctor),
+            _ => 1u,
+        },
+        ty::ty_enum(eid, _) => {
+            let id = match *ctor {
+                variant(id) => id,
+                _ => fail!("impossible case")
+            };
+            match ty::enum_variants(cx.tcx, eid).iter().find(|v| v.id == id ) {
+                Some(v) => v.args.len(),
+                None => fail!("impossible case")
+            }
+        }
+        ty::ty_struct(cid, _) => ty::lookup_struct_fields(cx.tcx, cid).len(),
+        ty::ty_vec(_, Some(_)) => vec_ctor_arity(ctor),
+        _ => 0u
     }
 }
 
@@ -912,22 +928,18 @@ fn is_refutable(cx: &MatchCheckCtxt, pat: &Pat) -> bool {
 // Legality of move bindings checking
 
 fn check_legality_of_move_bindings(cx: &MatchCheckCtxt,
-                                       has_guard: bool,
-                                       pats: &[@Pat]) {
+                                   has_guard: bool,
+                                   pats: &[@Pat]) {
     let tcx = cx.tcx;
-    let def_map = tcx.def_map;
+    let def_map = &tcx.def_map;
     let mut by_ref_span = None;
-    let mut any_by_move = false;
     for pat in pats.iter() {
-        pat_bindings(def_map, *pat, |bm, id, span, _path| {
+        pat_bindings(def_map, *pat, |bm, _, span, _path| {
             match bm {
                 BindByRef(_) => {
                     by_ref_span = Some(span);
                 }
                 BindByValue(_) => {
-                    if cx.moves_map.contains(&id) {
-                        any_by_move = true;
-                    }
                 }
             }
         })
@@ -956,15 +968,17 @@ fn check_legality_of_move_bindings(cx: &MatchCheckCtxt,
         }
     };
 
-    if !any_by_move { return; } // pointless micro-optimization
     for pat in pats.iter() {
         walk_pat(*pat, |p| {
             if pat_is_binding(def_map, p) {
                 match p.node {
-                    PatIdent(_, _, sub) => {
-                        if cx.moves_map.contains(&p.id) {
+                    PatIdent(BindByValue(_), _, sub) => {
+                        let pat_ty = ty::node_id_to_type(tcx, p.id);
+                        if ty::type_moves_by_default(tcx, pat_ty) {
                             check_move(p, sub);
                         }
+                    }
+                    PatIdent(BindByRef(_), _, _) => {
                     }
                     _ => {
                         cx.tcx.sess.span_bug(

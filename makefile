@@ -5,6 +5,7 @@ RUSTC_EXPORT= export CFG_VERSION=0;export CFG_COMPILER=0;export CFG_PREFIX=0;exp
 update: 
 	cd $(RUST_PATH)/src;pwd;
 
+	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libcore/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libstd/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libgreen/lib.rs 
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librustuv/lib.rs
@@ -44,6 +45,7 @@ rustc:
 push: 
 	cp $(RUST_PATH)/src/index.html .
 	cp $(RUST_PATH)/src/*.rfx .
+	cp -r $(RUST_PATH)/src/libcore .
 	cp -r $(RUST_PATH)/src/libstd .
 	cp -r $(RUST_PATH)/src/libcollections .
 	cp -r $(RUST_PATH)/src/librustdoc .

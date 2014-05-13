@@ -23,7 +23,8 @@ use metadata::{creader, filesearch};
 use metadata::cstore::CStore;
 use metadata::creader::Loader;
 use metadata;
-use middle::{trans, freevars, kind, ty, typeck, lint, astencode, reachable};
+use middle::{trans, freevars, kind, ty, typeck, lint, reachable};
+use middle::dependency_format;
 use middle;
 use util::common::time;
 use util::ppaux;
@@ -35,7 +36,6 @@ use std::cell::{Cell, RefCell};
 use std::io;
 use std::io::fs;
 use std::io::MemReader;
-use std::mem::drop;
 use std::os;
 use getopts::{optopt, optmulti, optflag, optflagopt};
 use getopts;
@@ -143,8 +143,8 @@ pub fn build_configuration(sess: &Session) -> ast::CrateConfig {
 fn parse_cfgspecs(cfgspecs: Vec<~str> )
                   -> ast::CrateConfig {
     cfgspecs.move_iter().map(|s| {
-        parse::parse_meta_from_source_str("cfgspec".to_str(),
-                                          s,
+        parse::parse_meta_from_source_str("cfgspec".to_strbuf(),
+                                          s.to_strbuf(),
                                           Vec::new(),
                                           &parse::new_parse_sess())
     }).collect::<ast::CrateConfig>()
@@ -175,8 +175,8 @@ pub fn phase_1_parse_input(sess: &Session, cfg: ast::CrateConfig, input: &Input)
                 parse::parse_crate_from_file(&(*file), cfg.clone(), &sess.parse_sess)
             }
             StrInput(ref src) => {
-                parse::parse_crate_from_source_str(anon_src(),
-                                                   (*src).clone(),
+                parse::parse_crate_from_source_str(anon_src().to_strbuf(),
+                                                   src.to_strbuf(),
                                                    cfg.clone(),
                                                    &sess.parse_sess)
             }
@@ -211,7 +211,6 @@ pub fn phase_2_configure_and_expand(sess: &Session,
                                     -> (ast::Crate, syntax::ast_map::Map) {
     let time_passes = sess.time_passes();
 
-    sess.building_library.set(session::building_library(&sess.opts, &krate));
     *sess.crate_types.borrow_mut() = session::collect_crate_types(sess, krate.attrs.as_slice());
 
     time(time_passes, "gated feature checking", (), |_|
@@ -232,6 +231,14 @@ pub fn phase_2_configure_and_expand(sess: &Session,
                  front::config::strip_unconfigured_items(krate));
 
     krate = time(time_passes, "expansion", krate, |krate| {
+        // Windows dlls do not have rpaths, so they don't know how to find their
+        // dependencies. It's up to use to tell the system where to find all the
+        // dependent dlls. Note that this uses cfg!(windows) as opposed to
+        // targ_cfg because syntax extensions are always loaded for the host
+        // compiler, not for the target.
+        if cfg!(windows) {
+            sess.host_filesearch().add_dylib_search_paths();
+        }
         let cfg = syntax::ext::expand::ExpansionConfig {
             loader: loader,
             deriving_hash_type_parameter: sess.features.default_type_params.get(),
@@ -270,7 +277,6 @@ pub struct CrateAnalysis {
     pub exported_items: middle::privacy::ExportedItems,
     pub public_items: middle::privacy::PublicItems,
     pub ty_cx: ty::ctxt,
-    pub maps: astencode::Maps,
     pub reachable: NodeSet,
 }
 
@@ -284,9 +290,7 @@ pub fn phase_3_run_analysis_passes(sess: Session,
     let time_passes = sess.time_passes();
 
     time(time_passes, "external crate/lib resolution", (), |_|
-         creader::read_crates(&sess, krate,
-                              session::sess_os_to_meta_os(sess.targ_cfg.os),
-                              token::get_ident_interner()));
+         creader::read_crates(&sess, krate));
 
     let lang_items = time(time_passes, "language item collection", (), |_|
                           middle::lang_items::collect_language_items(krate, &sess));
@@ -299,7 +303,7 @@ pub fn phase_3_run_analysis_passes(sess: Session,
         last_private_map: last_private_map
     } =
         time(time_passes, "resolution", (), |_|
-             middle::resolve::resolve_crate(&sess, lang_items, krate));
+             middle::resolve::resolve_crate(&sess, &lang_items, krate));
 
     // Discard MTWT tables that aren't required past resolution.
     syntax::ext::mtwt::clear_tables();
@@ -316,7 +320,7 @@ pub fn phase_3_run_analysis_passes(sess: Session,
                 sess.diagnostic(), krate)));
 
     let freevars = time(time_passes, "freevar finding", (), |_|
-                        freevars::annotate_freevars(def_map, krate));
+                        freevars::annotate_freevars(&def_map, krate));
 
     let region_map = time(time_passes, "region resolution", (), |_|
                           middle::region::resolve_crate(&sess, krate));
@@ -328,7 +332,7 @@ pub fn phase_3_run_analysis_passes(sess: Session,
                             freevars, region_map, lang_items);
 
     // passes are timed inside typeck
-    let (method_map, vtable_map) = typeck::check_crate(&ty_cx, trait_map, krate);
+    typeck::check_crate(&ty_cx, trait_map, krate);
 
     time(time_passes, "check static items", (), |_|
          middle::check_static::check_crate(&ty_cx, krate));
@@ -338,69 +342,48 @@ pub fn phase_3_run_analysis_passes(sess: Session,
          middle::const_eval::process_crate(krate, &ty_cx));
 
     time(time_passes, "const checking", (), |_|
-         middle::check_const::check_crate(krate, def_map, method_map, &ty_cx));
+         middle::check_const::check_crate(krate, &ty_cx));
 
     let maps = (external_exports, last_private_map);
     let (exported_items, public_items) =
             time(time_passes, "privacy checking", maps, |(a, b)|
-                 middle::privacy::check_crate(&ty_cx, &method_map, &exp_map2,
-                                              a, b, krate));
+                 middle::privacy::check_crate(&ty_cx, &exp_map2, a, b, krate));
 
     time(time_passes, "effect checking", (), |_|
-         middle::effect::check_crate(&ty_cx, method_map, krate));
-
-    let middle::moves::MoveMaps {moves_map, moved_variables_set,
-                                 capture_map} =
-        time(time_passes, "compute moves", (), |_|
-             middle::moves::compute_moves(&ty_cx, method_map, krate));
+         middle::effect::check_crate(&ty_cx, krate));
 
     time(time_passes, "match checking", (), |_|
-         middle::check_match::check_crate(&ty_cx, method_map,
-                                          &moves_map, krate));
+         middle::check_match::check_crate(&ty_cx, krate));
 
     time(time_passes, "liveness checking", (), |_|
-         middle::liveness::check_crate(&ty_cx, method_map,
-                                       &capture_map, krate));
+         middle::liveness::check_crate(&ty_cx, krate));
 
-    let root_map =
-        time(time_passes, "borrow checking", (), |_|
-             middle::borrowck::check_crate(&ty_cx, method_map,
-                                           &moves_map, &moved_variables_set,
-                                           &capture_map, krate));
-
-    drop(moves_map);
-    drop(moved_variables_set);
+    time(time_passes, "borrow checking", (), |_|
+         middle::borrowck::check_crate(&ty_cx, krate));
 
     time(time_passes, "kind checking", (), |_|
-         kind::check_crate(&ty_cx, method_map, krate));
+         kind::check_crate(&ty_cx, krate));
 
     let reachable_map =
         time(time_passes, "reachability checking", (), |_|
-             reachable::find_reachable(&ty_cx, method_map, &exported_items));
+             reachable::find_reachable(&ty_cx, &exported_items));
 
     time(time_passes, "death checking", (), |_| {
         middle::dead::check_crate(&ty_cx,
-                                  method_map,
                                   &exported_items,
                                   &reachable_map,
                                   krate)
     });
 
     time(time_passes, "lint checking", (), |_|
-         lint::check_crate(&ty_cx, method_map, &exported_items, krate));
+         lint::check_crate(&ty_cx, &exported_items, krate));
 
     CrateAnalysis {
         exp_map2: exp_map2,
         ty_cx: ty_cx,
         exported_items: exported_items,
         public_items: public_items,
-        maps: astencode::Maps {
-            root_map: root_map,
-            method_map: method_map,
-            vtable_map: vtable_map,
-            capture_map: RefCell::new(capture_map)
-        },
-        reachable: reachable_map
+        reachable: reachable_map,
     }
 }
 
@@ -411,6 +394,7 @@ pub struct CrateTranslation {
     pub link: LinkMeta,
     pub metadata: Vec<u8>,
     pub reachable: Vec<~str>,
+    pub crate_formats: dependency_format::Dependencies,
 }
 
 /// Run the translation phase to LLVM, after which the AST and analysis can
@@ -418,11 +402,14 @@ pub struct CrateTranslation {
 pub fn phase_4_translate_to_llvm(krate: ast::Crate,
                                  analysis: CrateAnalysis,
                                  outputs: &OutputFilenames) -> (ty::ctxt, CrateTranslation) {
-    // Option dance to work around the lack of stack once closures.
     let time_passes = analysis.ty_cx.sess.time_passes();
-    let mut analysis = Some(analysis);
-    time(time_passes, "translation", krate, |krate|
-         trans::base::trans_crate(krate, analysis.take_unwrap(), outputs))
+
+    time(time_passes, "resolving dependency formats", (), |_|
+         dependency_format::calculate(&analysis.ty_cx));
+
+    // Option dance to work around the lack of stack once closures.
+    time(time_passes, "translation", (krate, analysis), |(krate, analysis)|
+         trans::base::trans_crate(krate, analysis, outputs))
 }
 
 /// Run LLVM itself, producing a bitcode file, assembly file or object file
@@ -501,7 +488,7 @@ pub fn stop_after_phase_5(sess: &Session) -> bool {
 fn write_out_deps(sess: &Session,
                   input: &Input,
                   outputs: &OutputFilenames,
-                  krate: &ast::Crate) -> io::IoResult<()> {
+                  krate: &ast::Crate) {
     let id = link::find_crate_id(krate.attrs.as_slice(), outputs.out_filestem);
 
     let mut out_filenames = Vec::new();
@@ -530,28 +517,34 @@ fn write_out_deps(sess: &Session,
             StrInput(..) => {
                 sess.warn("can not write --dep-info without a filename \
                            when compiling stdin.");
-                return Ok(());
+                return
             },
         },
-        _ => return Ok(()),
+        _ => return,
     };
 
-    // Build a list of files used to compile the output and
-    // write Makefile-compatible dependency rules
-    let files: Vec<~str> = sess.codemap().files.borrow()
-                               .iter().filter_map(|fmap| {
-                                    if fmap.is_real_file() {
-                                        Some(fmap.name.clone())
-                                    } else {
-                                        None
-                                    }
-                                }).collect();
-    let mut file = try!(io::File::create(&deps_filename));
-    for path in out_filenames.iter() {
-        try!(write!(&mut file as &mut Writer,
-                      "{}: {}\n\n", path.display(), files.connect(" ")));
+    let result = (|| {
+        // Build a list of files used to compile the output and
+        // write Makefile-compatible dependency rules
+        let files: Vec<~str> = sess.codemap().files.borrow()
+                                   .iter().filter(|fmap| fmap.is_real_file())
+                                   .map(|fmap| fmap.name.to_owned())
+                                   .collect();
+        let mut file = try!(io::File::create(&deps_filename));
+        for path in out_filenames.iter() {
+            try!(write!(&mut file as &mut Writer,
+                          "{}: {}\n\n", path.display(), files.connect(" ")));
+        }
+        Ok(())
+    })();
+
+    match result {
+        Ok(()) => {}
+        Err(e) => {
+            sess.fatal(format!("error writing dependencies to `{}`: {}",
+                               deps_filename.display(), e));
+        }
     }
-    Ok(())
 }
 
 pub fn compile_input(sess: Session, cfg: ast::CrateConfig, input: &Input,
@@ -575,7 +568,7 @@ pub fn compile_input(sess: Session, cfg: ast::CrateConfig, input: &Input,
                                                                          krate, &id);
             (outputs, expanded_crate, ast_map)
         };
-        write_out_deps(&sess, input, &outputs, &expanded_crate).unwrap();
+        write_out_deps(&sess, input, &outputs, &expanded_crate);
 
         if stop_after_phase_2(&sess) { return; }
 
@@ -611,20 +604,20 @@ impl pprust::PpAnn for IdentifiedAnnotation {
         match node {
             pprust::NodeItem(item) => {
                 try!(pp::space(&mut s.s));
-                s.synth_comment(item.id.to_str())
+                s.synth_comment(item.id.to_str().to_strbuf())
             }
             pprust::NodeBlock(blk) => {
                 try!(pp::space(&mut s.s));
-                s.synth_comment("block ".to_owned() + blk.id.to_str())
+                s.synth_comment((format!("block {}", blk.id)).to_strbuf())
             }
             pprust::NodeExpr(expr) => {
                 try!(pp::space(&mut s.s));
-                try!(s.synth_comment(expr.id.to_str()));
+                try!(s.synth_comment(expr.id.to_str().to_strbuf()));
                 s.pclose()
             }
             pprust::NodePat(pat) => {
                 try!(pp::space(&mut s.s));
-                s.synth_comment("pat ".to_owned() + pat.id.to_str())
+                s.synth_comment((format!("pat {}", pat.id)).to_strbuf())
             }
         }
     }
@@ -684,11 +677,11 @@ pub fn pretty_print_input(sess: Session,
     let mut rdr = MemReader::new(src);
 
     let out = match ofile {
-        None => ~io::stdout() as ~Writer,
+        None => box io::stdout() as Box<Writer>,
         Some(p) => {
             let r = io::File::create(&p);
             match r {
-                Ok(w) => ~w as ~Writer,
+                Ok(w) => box w as Box<Writer>,
                 Err(e) => fail!("print-print failed to open {} due to {}",
                                 p.display(), e),
             }
@@ -699,7 +692,7 @@ pub fn pretty_print_input(sess: Session,
             pprust::print_crate(sess.codemap(),
                                 sess.diagnostic(),
                                 &krate,
-                                src_name,
+                                src_name.to_strbuf(),
                                 &mut rdr,
                                 out,
                                 &IdentifiedAnnotation,
@@ -714,7 +707,7 @@ pub fn pretty_print_input(sess: Session,
             pprust::print_crate(annotation.analysis.ty_cx.sess.codemap(),
                                 annotation.analysis.ty_cx.sess.diagnostic(),
                                 &krate,
-                                src_name,
+                                src_name.to_strbuf(),
                                 &mut rdr,
                                 out,
                                 &annotation,
@@ -724,7 +717,7 @@ pub fn pretty_print_input(sess: Session,
             pprust::print_crate(sess.codemap(),
                                 sess.diagnostic(),
                                 &krate,
-                                src_name,
+                                src_name.to_strbuf(),
                                 &mut rdr,
                                 out,
                                 &pprust::NoAnn,
@@ -800,7 +793,7 @@ pub fn build_target_config(sopts: &session::Options) -> session::Config {
     }
 }
 
-pub fn host_triple() -> ~str {
+pub fn host_triple() -> &'static str {
     // Get the host triple out of the build environment. This ensures that our
     // idea of the host triple is the same as for the set of libraries we've
     // actually built.  We can't just take LLVM's host triple because they
@@ -809,7 +802,8 @@ pub fn host_triple() -> ~str {
     // Instead of grabbing the host triple (for the current host), we grab (at
     // compile time) the target triple that this rustc is built with and
     // calling that (at runtime) the host triple.
-    (env!("CFG_COMPILER_HOST_TRIPLE")).to_owned()
+    (option_env!("CFG_COMPILER_HOST_TRIPLE")).
+        expect("CFG_COMPILER_HOST_TRIPLE")
 }
 
 pub fn build_session_options(matches: &getopts::Matches) -> session::Options {
@@ -901,7 +895,7 @@ pub fn build_session_options(matches: &getopts::Matches) -> session::Options {
     }
 
     let sysroot_opt = matches.opt_str("sysroot").map(|m| Path::new(m));
-    let target = matches.opt_str("target").unwrap_or(host_triple());
+    let target = matches.opt_str("target").unwrap_or(host_triple().to_owned());
     let opt_level = {
         if (debugging_opts & session::NO_OPT) != 0 {
             No
@@ -1056,7 +1050,6 @@ pub fn build_session_(sopts: session::Options,
         entry_type: Cell::new(None),
         macro_registrar_fn: Cell::new(None),
         default_sysroot: default_sysroot,
-        building_library: Cell::new(false),
         local_crate_source_file: local_crate_source_file,
         working_dir: os::getcwd(),
         lints: RefCell::new(NodeMap::new()),
@@ -1069,16 +1062,16 @@ pub fn build_session_(sopts: session::Options,
 
 pub fn parse_pretty(sess: &Session, name: &str) -> PpMode {
     match name {
-      &"normal" => PpmNormal,
-      &"expanded" => PpmExpanded,
-      &"typed" => PpmTyped,
-      &"expanded,identified" => PpmExpandedIdentified,
-      &"identified" => PpmIdentified,
-      _ => {
-        sess.fatal("argument to `pretty` must be one of `normal`, \
-                    `expanded`, `typed`, `identified`, \
-                    or `expanded,identified`");
-      }
+        "normal" => PpmNormal,
+        "expanded" => PpmExpanded,
+        "typed" => PpmTyped,
+        "expanded,identified" => PpmExpandedIdentified,
+        "identified" => PpmIdentified,
+        _ => {
+            sess.fatal("argument to `pretty` must be one of `normal`, \
+                        `expanded`, `typed`, `identified`, \
+                        or `expanded,identified`");
+        }
     }
 }
 
