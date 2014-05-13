@@ -1,0 +1,1270 @@
+node	lib	1096	1095	libgraphviz/lib.rs	499	28	1	path	
+node	lib	752	751	libgraphviz/lib.rs	428	12	40	NK_AS_STR_TODO	
+node	lib	842	831	libgraphviz/lib.rs	467	4	34	ty_method	edges
+node	lib	1076	1075	libgraphviz/lib.rs	498	13	9	NK_AS_STR_TODO	
+node	lib	949	941	libgraphviz/lib.rs	481	29	25	NK_AS_STR_TODO	
+node	lib	262	6	libgraphviz/maybe_owned_vec.rs	109	4	69	method	to_owned
+node	lib	560	558	libgraphviz/lib.rs	365	46	3	lit	
+node	lib	493	491	<std macros>	4	18	24	static	__STATIC_FMTSTR
+node	lib	977	975	libgraphviz/lib.rs	485	51	2	type	
+node	lib	933	932	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+node	lib	474	473	<std macros>	21	25	21	type	
+node	lib	141	140	libgraphviz/maybe_owned_vec.rs	67	22	5	NK_AS_STR_TODO	
+node	lib	1067	1066	<std macros>	2	45	1	NK_AS_STR_TODO	
+node	lib	684	682	libgraphviz/lib.rs	406	30	1	path	
+node	lib	428	426	<std macros>	4	18	24	struct	
+node	lib	1091	1089	libgraphviz/lib.rs	499	12	40	NK_AS_STR_TODO	
+node	lib	1069	1068	<std macros>	2	58	6	NK_AS_STR_TODO	
+node	lib	763	762	libgraphviz/lib.rs	429	17	9	NK_AS_STR_TODO	
+node	lib	576	575	libgraphviz/lib.rs	368	12	26	NK_AS_STR_TODO	
+node	lib	528	525	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	1026	1024	libgraphviz/lib.rs	491	20	1	path	
+node	lib	967	965	libgraphviz/lib.rs	482	21	4	lit	
+node	lib	640	349	libgraphviz/lib.rs	379	45	25	NK_AS_STR_TODO	
+node	lib	384	383	<std macros>	3	11	4294947970	NK_AS_STR_TODO	
+node	lib	926	914	libgraphviz/lib.rs	480	36	3	NK_AS_STR_TODO	
+node	lib	1089	1088	libgraphviz/lib.rs	498	30	394	NK_AS_STR_TODO	
+node	lib	268	267	libgraphviz/maybe_owned_vec.rs	109	28	1	type	
+node	lib	714	712	libgraphviz/lib.rs	418	9	13	type	
+node	lib	668	643	libgraphviz/lib.rs	1	0	0	type	
+node	lib	226	224	libgraphviz/maybe_owned_vec.rs	101	10	9	trait_ref	
+node	lib	143	142	libgraphviz/maybe_owned_vec.rs	67	32	1	path	
+node	lib	248	247	libgraphviz/maybe_owned_vec.rs	103	8	4	path	
+node	lib	1128	1127	libgraphviz/lib.rs	503	12	0	type	
+node	lib	114	93	libgraphviz/maybe_owned_vec.rs	61	56	18	NK_AS_STR_TODO	
+node	lib	611	601	libgraphviz/lib.rs	371	40	25	NK_AS_STR_TODO	
+node	lib	864	831	libgraphviz/lib.rs	471	4	34	ty_method	target
+node	lib	192	177	libgraphviz/maybe_owned_vec.rs	88	32	12	NK_AS_STR_TODO	
+node	lib	861	852	libgraphviz/lib.rs	469	37	1	type	
+node	lib	445	443	<std macros>	4	44	17	path	
+node	lib	294	293	libgraphviz/maybe_owned_vec.rs	118	21	1	NK_AS_STR_TODO	
+node	lib	331	0	libgraphviz/lib.rs	286	0	826	enum	LabelText
+node	lib	190	189	libgraphviz/maybe_owned_vec.rs	88	13	15	NK_AS_STR_TODO	
+node	lib	382	374	<std macros>	3	8	84	NK_AS_STR_TODO	
+node	lib	184	177	libgraphviz/maybe_owned_vec.rs	87	12	16	NK_AS_STR_TODO	
+node	lib	187	177	libgraphviz/maybe_owned_vec.rs	87	32	12	NK_AS_STR_TODO	
+node	lib	306	6	libgraphviz/maybe_owned_vec.rs	125	4	205	method	into_vec
+node	lib	1157	1143	<std macros>	2	29	5	NK_AS_STR_TODO	
+node	lib	1154	1147	libgraphviz/lib.rs	506	38	24	NK_AS_STR_TODO	
+node	lib	126	6	libgraphviz/maybe_owned_vec.rs	65	4	208	method	iter
+node	lib	1102	1100	libgraphviz/lib.rs	500	20	1	path	
+node	lib	183	182	libgraphviz/maybe_owned_vec.rs	86	32	1	path	
+node	lib	188	187	libgraphviz/maybe_owned_vec.rs	87	32	1	path	
+node	lib	803	802	libgraphviz/lib.rs	438	22	5	NK_AS_STR_TODO	
+node	lib	219	218	libgraphviz/maybe_owned_vec.rs	97	8	43	NK_AS_STR_TODO	
+node	lib	282	250	libgraphviz/maybe_owned_vec.rs	114	32	161	NK_AS_STR_TODO	
+node	lib	359	349	libgraphviz/lib.rs	355	51	4	type	
+node	lib	1005	912	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	557	553	libgraphviz/lib.rs	365	29	3	lit	
+node	lib	131	118	libgraphviz/maybe_owned_vec.rs	65	29	18	type	
+node	lib	483	479	<std macros>	22	54	8	lit	
+node	lib	743	0	libgraphviz/lib.rs	427	4	206	method	escape_str
+node	lib	323	322	libgraphviz/maybe_owned_vec.rs	128	27	15	path	
+node	lib	177	176	libgraphviz/maybe_owned_vec.rs	85	8	160	NK_AS_STR_TODO	
+node	lib	950	949	libgraphviz/lib.rs	481	29	25	NK_AS_STR_TODO	
+node	lib	605	603	libgraphviz/lib.rs	371	19	4	type	
+node	lib	1055	1053	libgraphviz/lib.rs	494	21	1	path	
+node	lib	466	464	libgraphviz/lib.rs	360	30	14	path	
+node	lib	991	989	libgraphviz/lib.rs	489	33	23	NK_AS_STR_TODO	
+node	lib	455	453	<std macros>	4	18	24	path	
+node	lib	416	414	<std macros>	4	18	24	static	__STATIC_FMTSTR
+node	lib	574	567	libgraphviz/lib.rs	367	43	75	NK_AS_STR_TODO	
+node	lib	308	297	libgraphviz/lib.rs	1	0	0	type	
+node	lib	815	0	libgraphviz/lib.rs	444	0	46	NK_AS_STR_TODO	Nodes
+node	lib	534	491	<std macros>	24	21	7	NK_AS_STR_TODO	
+node	lib	1105	1099	<std macros>	2	38	1	path	
+node	lib	220	219	libgraphviz/maybe_owned_vec.rs	97	8	8	path	
+node	lib	554	553	libgraphviz/lib.rs	365	12	8	path	
+node	lib	354	0	libgraphviz/lib.rs	355	4	730	method	new
+node	lib	723	712	libgraphviz/lib.rs	419	31	6	type	
+node	lib	565	563	libgraphviz/lib.rs	365	67	3	lit	
+node	lib	410	409	<std macros>	4	44	17	lit	
+node	lib	854	852	libgraphviz/lib.rs	1	0	0	type	
+node	lib	100	93	libgraphviz/maybe_owned_vec.rs	59	42	7	type	
+node	lib	1162	1143	<std macros>	2	51	13	NK_AS_STR_TODO	
+node	lib	997	985	<std macros>	2	38	1	path	
+node	lib	506	505	<std macros>	4	18	24	path	
+node	lib	990	989	libgraphviz/lib.rs	489	21	10	lit	
+node	lib	452	451	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	505	503	<std macros>	4	18	24	struct	
+node	lib	481	479	<std macros>	22	40	3	path	
+node	lib	482	479	<std macros>	22	45	8	lit	
+node	lib	1101	1100	libgraphviz/lib.rs	500	13	6	path	
+node	lib	927	914	libgraphviz/lib.rs	480	53	16	type	
+node	lib	1119	1089	libgraphviz/lib.rs	502	12	20	NK_AS_STR_TODO	
+node	lib	318	317	libgraphviz/maybe_owned_vec.rs	127	21	1	NK_AS_STR_TODO	
+node	lib	485	484	<std macros>	4	18	24	tup	
+node	lib	1060	1056	libgraphviz/lib.rs	495	38	18	NK_AS_STR_TODO	
+node	lib	299	297	libgraphviz/maybe_owned_vec.rs	123	10	5	trait_ref	
+node	lib	700	698	libgraphviz/lib.rs	413	12	12	NK_AS_STR_TODO	
+node	lib	1161	1160	<std macros>	2	45	1	NK_AS_STR_TODO	
+node	lib	121	118	libgraphviz/maybe_owned_vec.rs	64	11	22	type	
+node	lib	661	652	libgraphviz/lib.rs	400	35	6	type	
+node	lib	439	438	<std macros>	4	18	24	type	
+node	lib	552	551	libgraphviz/lib.rs	365	12	46	NK_AS_STR_TODO	
+node	lib	279	278	libgraphviz/maybe_owned_vec.rs	114	28	3	type	
+node	lib	1116	1113	libgraphviz/lib.rs	501	21	11	NK_AS_STR_TODO	
+node	lib	1151	1147	libgraphviz/lib.rs	505	55	20	NK_AS_STR_TODO	
+node	lib	356	349	libgraphviz/lib.rs	355	20	23	trait_ref	
+node	lib	478	471	<std macros>	21	53	74	NK_AS_STR_TODO	
+node	lib	1038	1037	libgraphviz/lib.rs	492	12	0	type	
+node	lib	968	912	libgraphviz/lib.rs	485	4	86	NK_AS_STR_TODO	
+node	lib	683	682	libgraphviz/lib.rs	406	17	4	path	
+node	lib	412	411	<std macros>	4	44	17	NK_AS_STR_TODO	
+node	lib	1045	1044	libgraphviz/lib.rs	493	12	0	type	
+node	lib	277	250	libgraphviz/maybe_owned_vec.rs	114	18	5	NK_AS_STR_TODO	
+node	lib	1046	1044	libgraphviz/lib.rs	493	12	7	NK_AS_STR_TODO	
+node	lib	470	469	<std macros>	21	8	119	NK_AS_STR_TODO	
+node	lib	375	374	libgraphviz/lib.rs	358	16	35	NK_AS_STR_TODO	
+node	lib	66	65	libgraphviz/maybe_owned_vec.rs	51	58	14	NK_AS_STR_TODO	
+node	lib	107	93	libgraphviz/lib.rs	1	0	0	type	
+node	lib	985	912	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	616	611	libgraphviz/lib.rs	371	53	12	NK_AS_STR_TODO	
+node	lib	339	331	libgraphviz/lib.rs	303	11	19	type	
+node	lib	1057	1056	libgraphviz/lib.rs	494	25	13	NK_AS_STR_TODO	
+node	lib	328	315	libgraphviz/maybe_owned_vec.rs	129	27	18	NK_AS_STR_TODO	
+node	lib	397	396	<std macros>	21	25	21	type	
+node	lib	939	934	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+node	lib	1018	1013	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	89	69	libgraphviz/maybe_owned_vec.rs	56	56	18	NK_AS_STR_TODO	
+node	lib	186	185	libgraphviz/maybe_owned_vec.rs	87	22	5	NK_AS_STR_TODO	
+node	lib	1047	1044	libgraphviz/lib.rs	493	22	24	NK_AS_STR_TODO	
+node	lib	377	376	libgraphviz/lib.rs	358	16	0	type	
+node	lib	270	250	libgraphviz/maybe_owned_vec.rs	109	31	42	NK_AS_STR_TODO	
+node	lib	408	407	<std macros>	4	18	24	tup	
+node	lib	498	494	<std macros>	4	18	24	lit	
+node	lib	1048	1047	libgraphviz/lib.rs	493	22	15	NK_AS_STR_TODO	
+node	lib	1167	1166	libgraphviz/lib.rs	509	4	7	path	
+node	lib	87	84	libgraphviz/maybe_owned_vec.rs	56	53	1	type	
+node	lib	484	469	<std macros>	24	8	43	NK_AS_STR_TODO	
+node	lib	91	90	libgraphviz/maybe_owned_vec.rs	56	58	8	path	
+node	lib	344	343	libgraphviz/lib.rs	340	4	25	struct_field	name
+node	lib	372	365	libgraphviz/lib.rs	357	8	181	NK_AS_STR_TODO	
+node	lib	823	0	libgraphviz/lib.rs	445	0	46	NK_AS_STR_TODO	Edges
+node	lib	1120	1089	libgraphviz/lib.rs	502	12	20	NK_AS_STR_TODO	
+node	lib	1137	1135	libgraphviz/lib.rs	504	12	9	NK_AS_STR_TODO	
+node	lib	946	941	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+node	lib	1035	1033	<std macros>	2	62	1	path	
+node	lib	68	66	libgraphviz/maybe_owned_vec.rs	51	67	4	path	
+node	lib	435	430	<std macros>	4	18	24	path	
+node	lib	454	453	<std macros>	4	18	24	path	
+node	lib	793	712	libgraphviz/lib.rs	1	0	0	type	
+node	lib	50	45	libgraphviz/maybe_owned_vec.rs	49	35	1	type	
+node	lib	561	558	libgraphviz/lib.rs	365	51	1	path	
+node	lib	207	194	libgraphviz/maybe_owned_vec.rs	94	19	11	trait_ref	
+node	lib	786	781	libgraphviz/lib.rs	430	42	16	NK_AS_STR_TODO	
+node	lib	180	179	libgraphviz/maybe_owned_vec.rs	86	13	15	NK_AS_STR_TODO	
+node	lib	612	611	libgraphviz/lib.rs	371	40	9	NK_AS_STR_TODO	
+node	lib	1004	912	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	1028	1027	<std macros>	2	32	1	NK_AS_STR_TODO	
+node	lib	459	457	<std macros>	24	21	7	NK_AS_STR_TODO	
+node	lib	784	781	libgraphviz/lib.rs	430	39	1	NK_AS_STR_TODO	
+node	lib	174	173	libgraphviz/maybe_owned_vec.rs	84	38	1	type	
+node	lib	260	257	libgraphviz/maybe_owned_vec.rs	107	60	1	type	
+node	lib	1053	1052	libgraphviz/lib.rs	494	13	93	NK_AS_STR_TODO	
+node	lib	211	194	libgraphviz/maybe_owned_vec.rs	94	42	1	type	
+node	lib	759	758	libgraphviz/lib.rs	428	44	1	path	
+node	lib	1129	1127	libgraphviz/lib.rs	503	12	9	NK_AS_STR_TODO	
+node	lib	636	349	libgraphviz/lib.rs	379	16	5	NK_AS_STR_TODO	
+node	lib	1059	1056	libgraphviz/lib.rs	495	25	11	lit	
+node	lib	631	630	libgraphviz/lib.rs	376	8	9	field	
+node	lib	1039	1037	libgraphviz/lib.rs	492	12	2	NK_AS_STR_TODO	
+node	lib	152	137	libgraphviz/maybe_owned_vec.rs	69	32	8	NK_AS_STR_TODO	
+node	lib	529	528	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	520	519	<std macros>	4	44	17	NK_AS_STR_TODO	
+node	lib	953	952	libgraphviz/lib.rs	481	36	14	NK_AS_STR_TODO	
+node	lib	65	45	libgraphviz/maybe_owned_vec.rs	51	56	18	NK_AS_STR_TODO	
+node	lib	386	385	libgraphviz/lib.rs	359	20	23	path	
+node	lib	703	700	libgraphviz/lib.rs	413	23	1	path	
+node	lib	934	932	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+node	lib	178	177	libgraphviz/maybe_owned_vec.rs	85	14	4	path	
+node	lib	274	6	libgraphviz/maybe_owned_vec.rs	114	4	189	method	into_owned
+node	lib	292	283	libgraphviz/maybe_owned_vec.rs	117	27	1	path	
+node	lib	371	370	libgraphviz/lib.rs	356	19	4	path	
+node	lib	737	736	libgraphviz/lib.rs	423	20	1	path	
+node	lib	1027	1023	<std macros>	2	29	5	NK_AS_STR_TODO	
+node	lib	776	775	libgraphviz/lib.rs	429	27	72	NK_AS_STR_TODO	
+node	lib	648	644	libgraphviz/lib.rs	395	29	6	type	
+node	lib	852	831	libgraphviz/lib.rs	469	4	34	ty_method	source
+node	lib	221	219	libgraphviz/maybe_owned_vec.rs	97	17	33	NK_AS_STR_TODO	
+node	lib	1139	1138	libgraphviz/lib.rs	504	24	1	path	
+node	lib	948	947	libgraphviz/lib.rs	481	13	1	NK_AS_STR_TODO	
+node	lib	411	407	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	1108	1099	<std macros>	2	51	13	NK_AS_STR_TODO	
+node	lib	749	712	libgraphviz/lib.rs	427	30	6	type	
+node	lib	316	315	libgraphviz/maybe_owned_vec.rs	126	14	4	path	
+node	lib	321	320	libgraphviz/maybe_owned_vec.rs	128	21	1	NK_AS_STR_TODO	
+node	lib	717	0	libgraphviz/lib.rs	419	4	255	method	escape_char
+node	lib	681	679	libgraphviz/lib.rs	406	17	20	field	
+node	lib	376	374	libgraphviz/lib.rs	358	16	35	NK_AS_STR_TODO	
+node	lib	293	283	libgraphviz/maybe_owned_vec.rs	118	12	11	NK_AS_STR_TODO	
+node	lib	550	543	libgraphviz/lib.rs	364	52	82	NK_AS_STR_TODO	
+node	lib	555	553	libgraphviz/lib.rs	365	21	3	lit	
+node	lib	236	224	libgraphviz/lib.rs	1	0	0	type	
+node	lib	689	643	libgraphviz/lib.rs	412	18	9	NK_AS_STR_TODO	
+node	lib	116	115	libgraphviz/maybe_owned_vec.rs	61	58	8	path	
+node	lib	899	879	libgraphviz/lib.rs	476	38	1	type	
+node	lib	1106	1099	<std macros>	2	41	6	NK_AS_STR_TODO	
+node	lib	247	246	libgraphviz/maybe_owned_vec.rs	103	8	15	NK_AS_STR_TODO	
+node	lib	922	921	libgraphviz/lib.rs	480	42	6	type	
+node	lib	733	732	libgraphviz/lib.rs	420	14	1	path	
+node	lib	901	879	libgraphviz/lib.rs	476	40	1	type	
+node	lib	1042	1040	libgraphviz/lib.rs	492	27	1	path	
+node	lib	367	365	libgraphviz/lib.rs	356	12	30	NK_AS_STR_TODO	
+node	lib	728	723	libgraphviz/lib.rs	419	37	0	type	
+node	lib	1078	1073	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	369	367	libgraphviz/lib.rs	356	12	4	NK_AS_STR_TODO	
+node	lib	774	773	libgraphviz/lib.rs	429	12	1	NK_AS_STR_TODO	
+node	lib	514	491	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	613	612	libgraphviz/lib.rs	371	40	1	path	
+node	lib	1127	1089	libgraphviz/lib.rs	503	12	30	NK_AS_STR_TODO	
+node	lib	426	422	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	989	986	libgraphviz/lib.rs	489	20	43	NK_AS_STR_TODO	
+node	lib	489	488	<std macros>	4	44	17	NK_AS_STR_TODO	
+node	lib	1017	1013	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	216	214	libgraphviz/maybe_owned_vec.rs	94	65	1	type	
+node	lib	283	282	libgraphviz/maybe_owned_vec.rs	115	8	145	NK_AS_STR_TODO	
+node	lib	280	279	libgraphviz/maybe_owned_vec.rs	114	29	1	type	
+node	lib	694	643	libgraphviz/lib.rs	412	28	1	NK_AS_STR_TODO	
+node	lib	1029	1023	<std macros>	2	38	1	path	
+node	lib	1003	1001	<std macros>	2	62	1	path	
+node	lib	1011	1005	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	170	154	libgraphviz/maybe_owned_vec.rs	84	20	9	NK_AS_STR_TODO	
+node	lib	105	6	libgraphviz/maybe_owned_vec.rs	61	4	70	method	into_maybe_owned
+node	lib	309	297	libgraphviz/maybe_owned_vec.rs	125	20	5	NK_AS_STR_TODO	
+node	lib	1000	985	<std macros>	2	51	13	NK_AS_STR_TODO	
+node	lib	427	426	<std macros>	4	18	24	path	
+node	lib	569	567	libgraphviz/lib.rs	367	29	4	type	
+node	lib	618	616	libgraphviz/lib.rs	371	61	4	type	
+node	lib	462	374	<std macros>	3	8	84	NK_AS_STR_TODO	
+node	lib	796	795	libgraphviz/lib.rs	436	29	3	type	
+node	lib	541	540	libgraphviz/lib.rs	362	25	4	path	
+node	lib	267	266	libgraphviz/maybe_owned_vec.rs	109	27	3	type	
+node	lib	165	6	libgraphviz/maybe_owned_vec.rs	84	4	213	method	as_slice
+node	lib	542	365	libgraphviz/lib.rs	364	8	126	NK_AS_STR_TODO	
+node	lib	1166	912	libgraphviz/lib.rs	509	4	17	NK_AS_STR_TODO	
+node	lib	67	66	libgraphviz/maybe_owned_vec.rs	51	58	8	path	
+node	lib	790	751	libgraphviz/lib.rs	432	8	3	path	
+node	lib	1031	1030	<std macros>	2	45	1	NK_AS_STR_TODO	
+node	lib	849	846	libgraphviz/lib.rs	467	36	1	type	
+node	lib	1125	1123	libgraphviz/lib.rs	502	30	1	path	
+node	lib	996	995	<std macros>	2	32	1	NK_AS_STR_TODO	
+node	lib	453	452	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	98	93	libgraphviz/maybe_owned_vec.rs	59	35	1	type	
+node	lib	608	607	libgraphviz/lib.rs	371	27	1	path	
+node	lib	624	349	libgraphviz/lib.rs	375	20	9	NK_AS_STR_TODO	
+node	lib	572	567	libgraphviz/lib.rs	367	38	4	type	
+node	lib	748	712	libgraphviz/lib.rs	427	18	1	NK_AS_STR_TODO	
+node	lib	432	430	<std macros>	4	18	24	path	
+node	lib	579	575	libgraphviz/lib.rs	368	42	21	NK_AS_STR_TODO	
+node	lib	150	149	libgraphviz/maybe_owned_vec.rs	69	13	15	NK_AS_STR_TODO	
+node	lib	695	643	libgraphviz/lib.rs	412	38	13	type	
+node	lib	577	576	libgraphviz/lib.rs	368	12	23	path	
+node	lib	559	558	libgraphviz/lib.rs	365	37	8	path	
+node	lib	730	712	libgraphviz/lib.rs	419	39	0	type	
+node	lib	124	121	libgraphviz/maybe_owned_vec.rs	64	31	1	type	
+node	lib	322	315	libgraphviz/maybe_owned_vec.rs	128	27	29	NK_AS_STR_TODO	
+node	lib	698	643	libgraphviz/lib.rs	412	52	66	NK_AS_STR_TODO	
+node	lib	952	950	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	337	0	libgraphviz/lib.rs	303	4	27	variant	EscStr
+node	lib	74	69	libgraphviz/maybe_owned_vec.rs	54	35	1	type	
+node	lib	523	520	<std macros>	4	44	17	path	
+node	lib	1155	1154	libgraphviz/lib.rs	506	38	13	path	
+node	lib	819	816	libgraphviz/lib.rs	444	43	1	type	
+node	lib	1019	1018	libgraphviz/lib.rs	490	8	1	NK_AS_STR_TODO	
+node	lib	893	891	libgraphviz/lib.rs	478	41	2	type	
+node	lib	1113	1089	libgraphviz/lib.rs	501	12	20	NK_AS_STR_TODO	
+node	lib	688	643	libgraphviz/lib.rs	1	0	0	type	
+node	lib	1145	1144	libgraphviz/lib.rs	505	13	7	path	
+node	lib	1133	1132	libgraphviz/lib.rs	503	35	6	path	
+node	lib	203	200	libgraphviz/maybe_owned_vec.rs	93	51	1	type	
+node	lib	779	778	libgraphviz/lib.rs	430	12	22	path	
+node	lib	533	530	<std macros>	4	18	24	path	
+node	lib	468	467	<std macros>	4	12	60	NK_AS_STR_TODO	
+node	lib	620	0	libgraphviz/lib.rs	375	4	73	method	as_slice
+node	lib	218	194	libgraphviz/maybe_owned_vec.rs	94	68	161	NK_AS_STR_TODO	
+node	lib	438	414	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	768	767	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	285	283	libgraphviz/maybe_owned_vec.rs	116	12	11	NK_AS_STR_TODO	
+node	lib	414	413	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	527	525	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	777	776	libgraphviz/lib.rs	430	12	48	NK_AS_STR_TODO	
+node	lib	735	734	libgraphviz/lib.rs	423	12	7	lit	
+node	lib	987	986	libgraphviz/lib.rs	489	9	7	path	
+node	lib	1066	1052	<std macros>	2	41	6	NK_AS_STR_TODO	
+node	lib	539	365	libgraphviz/lib.rs	362	8	23	NK_AS_STR_TODO	
+node	lib	879	0	libgraphviz/lib.rs	476	0	1165	fn	render
+node	lib	706	704	libgraphviz/lib.rs	414	17	14	NK_AS_STR_TODO	
+node	lib	602	601	libgraphviz/lib.rs	371	12	24	NK_AS_STR_TODO	
+node	lib	809	808	libgraphviz/lib.rs	439	20	5	NK_AS_STR_TODO	
+node	lib	1144	1143	libgraphviz/lib.rs	505	13	136	NK_AS_STR_TODO	
+node	lib	719	712	libgraphviz/lib.rs	419	22	4	type	
+node	lib	1021	1020	libgraphviz/lib.rs	490	30	220	NK_AS_STR_TODO	
+node	lib	1030	1023	<std macros>	2	41	6	NK_AS_STR_TODO	
+node	lib	785	781	libgraphviz/lib.rs	430	42	3	type	
+node	lib	675	643	libgraphviz/lib.rs	405	38	13	type	
+node	lib	704	698	libgraphviz/lib.rs	414	8	24	NK_AS_STR_TODO	
+node	lib	102	100	libgraphviz/maybe_owned_vec.rs	59	46	3	type	
+node	lib	145	144	libgraphviz/maybe_owned_vec.rs	68	13	15	NK_AS_STR_TODO	
+node	lib	80	6	libgraphviz/maybe_owned_vec.rs	56	4	70	method	into_maybe_owned
+node	lib	60	45	libgraphviz/maybe_owned_vec.rs	51	33	22	type	
+node	lib	1107	1106	<std macros>	2	45	1	NK_AS_STR_TODO	
+node	lib	1015	1014	libgraphviz/lib.rs	490	4	255	path	
+node	lib	222	221	libgraphviz/maybe_owned_vec.rs	97	17	23	path	
+node	lib	839	836	libgraphviz/lib.rs	465	36	1	type	
+node	lib	921	914	libgraphviz/lib.rs	480	41	7	type	
+node	lib	1149	1148	libgraphviz/lib.rs	505	25	9	path	
+node	lib	814	813	libgraphviz/lib.rs	439	52	1	path	
+node	lib	739	732	libgraphviz/lib.rs	424	12	1	NK_AS_STR_TODO	
+node	lib	447	414	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	1121	1120	libgraphviz/lib.rs	502	12	0	type	
+node	lib	935	934	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+node	lib	11	6	libgraphviz/maybe_owned_vec.rs	37	0	100	enum	MaybeOwnedVector
+node	lib	981	980	libgraphviz/lib.rs	486	8	19	NK_AS_STR_TODO	
+node	lib	521	520	<std macros>	4	44	17	path	
+node	lib	992	991	libgraphviz/lib.rs	489	33	12	NK_AS_STR_TODO	
+node	lib	290	283	libgraphviz/maybe_owned_vec.rs	117	12	11	NK_AS_STR_TODO	
+node	lib	1160	1143	<std macros>	2	41	6	NK_AS_STR_TODO	
+node	lib	451	448	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	804	799	libgraphviz/lib.rs	438	32	29	NK_AS_STR_TODO	
+node	lib	504	503	<std macros>	4	18	24	path	
+node	lib	421	417	<std macros>	4	18	24	lit	
+node	lib	658	657	libgraphviz/lib.rs	400	29	1	type	
+node	lib	391	390	<std macros>	4	12	60	NK_AS_STR_TODO	
+node	lib	154	6	libgraphviz/maybe_owned_vec.rs	83	0	276	impl	MaybeOwnedVector<'b, T>.slice::Vector<T>
+node	lib	250	6	libgraphviz/maybe_owned_vec.rs	107	0	444	impl	MaybeOwnedVector<'a, T>.CloneableVector<T>
+node	lib	368	367	libgraphviz/lib.rs	356	12	0	type	
+node	lib	423	422	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	83	69	libgraphviz/maybe_owned_vec.rs	56	24	5	NK_AS_STR_TODO	
+node	lib	317	315	libgraphviz/maybe_owned_vec.rs	127	12	11	NK_AS_STR_TODO	
+node	lib	370	367	libgraphviz/lib.rs	356	19	23	NK_AS_STR_TODO	
+node	lib	460	459	<std macros>	4	18	24	path	
+node	lib	118	6	libgraphviz/maybe_owned_vec.rs	64	0	250	impl	MaybeOwnedVector<'a, T>
+node	lib	755	753	libgraphviz/lib.rs	428	12	7	NK_AS_STR_TODO	
+node	lib	721	712	libgraphviz/lib.rs	419	19	1	NK_AS_STR_TODO	
+node	lib	762	761	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	1152	1151	libgraphviz/lib.rs	505	55	9	path	
+node	lib	587	585	libgraphviz/lib.rs	370	25	4	type	
+node	lib	646	644	libgraphviz/lib.rs	1	0	0	type	
+node	lib	1043	1021	libgraphviz/lib.rs	493	12	34	NK_AS_STR_TODO	
+node	lib	45	6	libgraphviz/maybe_owned_vec.rs	49	0	141	impl	Vec<T>.IntoMaybeOwnedVector<'a, T>
+node	lib	1020	1013	libgraphviz/lib.rs	490	30	220	NK_AS_STR_TODO	
+node	lib	1111	1109	<std macros>	2	62	1	path	
+node	lib	917	916	libgraphviz/lib.rs	480	33	1	type	
+node	lib	246	245	libgraphviz/maybe_owned_vec.rs	103	8	22	NK_AS_STR_TODO	
+node	lib	343	0	libgraphviz/lib.rs	339	0	52	struct	Id
+node	lib	1141	1140	libgraphviz/lib.rs	504	35	6	path	
+node	lib	437	414	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	787	786	libgraphviz/lib.rs	430	42	16	NK_AS_STR_TODO	
+node	lib	652	643	libgraphviz/lib.rs	400	4	37	ty_method	node_id
+node	lib	910	879	libgraphviz/lib.rs	476	64	6	trait_ref	
+node	lib	938	934	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+node	lib	960	959	<std macros>	2	45	1	NK_AS_STR_TODO	
+node	lib	959	952	<std macros>	2	41	6	NK_AS_STR_TODO	
+node	lib	583	579	libgraphviz/lib.rs	368	59	3	lit	
+node	lib	807	799	libgraphviz/lib.rs	439	12	14	NK_AS_STR_TODO	
+node	lib	907	879	libgraphviz/lib.rs	476	58	1	type	
+node	lib	1002	1001	<std macros>	2	58	3	path	
+node	lib	672	671	libgraphviz/lib.rs	405	32	1	type	
+node	lib	580	579	libgraphviz/lib.rs	368	42	8	path	
+node	lib	799	798	libgraphviz/lib.rs	437	8	165	NK_AS_STR_TODO	
+node	lib	142	137	libgraphviz/maybe_owned_vec.rs	67	32	8	NK_AS_STR_TODO	
+node	lib	200	194	libgraphviz/maybe_owned_vec.rs	93	31	22	type	
+node	lib	812	811	libgraphviz/lib.rs	439	30	21	path	
+node	lib	1051	1021	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	942	941	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+node	lib	994	989	libgraphviz/lib.rs	489	58	4	lit	
+node	lib	477	471	<std macros>	21	51	1	type	
+node	lib	725	723	libgraphviz/lib.rs	419	32	4	type	
+node	lib	515	491	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	471	469	<std macros>	21	8	119	fn	run_fmt
+node	lib	171	154	libgraphviz/maybe_owned_vec.rs	84	33	7	type	
+node	lib	944	941	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+node	lib	491	490	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	446	443	<std macros>	4	44	17	path	
+node	lib	181	180	libgraphviz/maybe_owned_vec.rs	86	22	5	NK_AS_STR_TODO	
+node	lib	758	756	libgraphviz/lib.rs	428	44	7	NK_AS_STR_TODO	
+node	lib	1150	1147	libgraphviz/lib.rs	505	47	6	lit	
+node	lib	84	69	libgraphviz/maybe_owned_vec.rs	56	33	22	type	
+node	lib	90	89	libgraphviz/maybe_owned_vec.rs	56	58	14	NK_AS_STR_TODO	
+node	lib	729	712	libgraphviz/lib.rs	419	28	1	NK_AS_STR_TODO	
+node	lib	1134	1089	libgraphviz/lib.rs	504	12	30	NK_AS_STR_TODO	
+node	lib	513	505	<std macros>	4	18	24	path	
+node	lib	765	761	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	1131	1130	libgraphviz/lib.rs	503	24	1	path	
+node	lib	603	602	libgraphviz/lib.rs	371	12	11	NK_AS_STR_TODO	
+node	lib	943	942	libgraphviz/lib.rs	481	8	56	path	
+node	lib	1098	1089	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	966	965	libgraphviz/lib.rs	482	8	1	path	
+node	lib	93	6	libgraphviz/maybe_owned_vec.rs	59	0	142	impl	&'a [T].IntoMaybeOwnedVector<'a, T>
+node	lib	1061	1060	libgraphviz/lib.rs	495	38	7	path	
+node	lib	767	766	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	962	961	<std macros>	2	58	6	NK_AS_STR_TODO	
+node	lib	1024	1023	libgraphviz/lib.rs	491	13	9	NK_AS_STR_TODO	
+node	lib	378	376	libgraphviz/lib.rs	358	16	9	NK_AS_STR_TODO	
+node	lib	36	34	libgraphviz/lib.rs	1	0	0	type	
+node	lib	1159	1143	<std macros>	2	38	1	path	
+node	lib	1079	1073	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	913	912	libgraphviz/lib.rs	480	4	155	NK_AS_STR_TODO	
+node	lib	518	515	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	940	939	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+node	lib	831	0	libgraphviz/lib.rs	463	0	358	trait	GraphWalk
+node	lib	937	936	libgraphviz/lib.rs	481	18	3	path	
+node	lib	741	740	libgraphviz/lib.rs	424	17	1	path	
+node	lib	905	879	libgraphviz/lib.rs	476	56	1	type	
+node	lib	955	953	libgraphviz/lib.rs	481	48	1	path	
+node	lib	223	221	libgraphviz/maybe_owned_vec.rs	97	41	8	path	
+node	lib	108	93	libgraphviz/maybe_owned_vec.rs	61	24	5	NK_AS_STR_TODO	
+node	lib	951	950	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	429	428	<std macros>	4	18	24	path	
+node	lib	1095	1094	libgraphviz/lib.rs	499	28	15	NK_AS_STR_TODO	
+node	lib	764	763	libgraphviz/lib.rs	429	17	1	path	
+node	lib	641	640	libgraphviz/lib.rs	380	8	9	field	
+node	lib	286	285	libgraphviz/maybe_owned_vec.rs	116	21	1	NK_AS_STR_TODO	
+node	lib	593	585	libgraphviz/lib.rs	370	31	1	NK_AS_STR_TODO	
+node	lib	836	832	libgraphviz/lib.rs	465	26	12	type	
+node	lib	373	365	libgraphviz/lib.rs	357	8	181	NK_AS_STR_TODO	
+node	lib	965	932	libgraphviz/lib.rs	482	8	18	NK_AS_STR_TODO	
+node	lib	467	462	<std macros>	3	18	74	NK_AS_STR_TODO	
+node	lib	1092	1091	libgraphviz/lib.rs	499	12	0	type	
+node	lib	14	11	libgraphviz/maybe_owned_vec.rs	38	13	6	type	
+node	lib	242	224	libgraphviz/maybe_owned_vec.rs	102	18	1	NK_AS_STR_TODO	
+node	lib	511	507	<std macros>	4	18	24	path	
+node	lib	433	430	<std macros>	4	18	24	lit	
+node	lib	903	879	libgraphviz/lib.rs	476	43	17	trait_ref	
+node	lib	778	776	libgraphviz/lib.rs	430	12	47	NK_AS_STR_TODO	
+node	lib	800	799	libgraphviz/lib.rs	437	14	4	path	
+node	lib	399	394	<std macros>	21	19	3	NK_AS_STR_TODO	
+node	lib	669	643	libgraphviz/lib.rs	405	18	9	NK_AS_STR_TODO	
+node	lib	986	985	libgraphviz/lib.rs	489	9	55	NK_AS_STR_TODO	
+node	lib	738	736	libgraphviz/lib.rs	423	22	1	path	
+node	lib	791	0	libgraphviz/lib.rs	436	4	210	method	escape
+node	lib	772	768	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	417	416	<std macros>	4	18	24	type	
+node	lib	1097	1095	libgraphviz/lib.rs	499	41	1	path	
+node	lib	783	781	libgraphviz/lib.rs	430	40	1	type	
+node	lib	1068	1052	<std macros>	2	51	13	NK_AS_STR_TODO	
+node	lib	510	507	<std macros>	4	18	24	lit	
+node	lib	69	6	libgraphviz/maybe_owned_vec.rs	54	0	139	impl	~[T].IntoMaybeOwnedVector<'a, T>
+node	lib	556	553	libgraphviz/lib.rs	365	26	1	path	
+node	lib	929	927	libgraphviz/lib.rs	480	66	2	type	
+node	lib	1075	1074	libgraphviz/lib.rs	498	13	16	NK_AS_STR_TODO	
+node	lib	1094	1091	libgraphviz/lib.rs	499	28	24	NK_AS_STR_TODO	
+node	lib	488	484	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	770	769	libgraphviz/lib.rs	429	8	103	path	
+node	lib	149	137	libgraphviz/maybe_owned_vec.rs	69	12	16	NK_AS_STR_TODO	
+node	lib	295	283	libgraphviz/maybe_owned_vec.rs	118	27	12	NK_AS_STR_TODO	
+node	lib	702	700	libgraphviz/lib.rs	413	12	8	NK_AS_STR_TODO	
+node	lib	163	160	libgraphviz/maybe_owned_vec.rs	83	52	1	type	
+node	lib	553	552	libgraphviz/lib.rs	365	12	21	NK_AS_STR_TODO	
+node	lib	988	986	libgraphviz/lib.rs	489	17	1	path	
+node	lib	1009	1008	libgraphviz/lib.rs	490	13	1	path	
+node	lib	59	45	libgraphviz/maybe_owned_vec.rs	51	24	5	NK_AS_STR_TODO	
+node	lib	1077	1076	libgraphviz/lib.rs	498	13	1	path	
+node	lib	582	579	libgraphviz/lib.rs	368	56	1	path	
+node	lib	1112	1089	libgraphviz/lib.rs	501	12	20	NK_AS_STR_TODO	
+node	lib	288	287	libgraphviz/maybe_owned_vec.rs	116	27	12	NK_AS_STR_TODO	
+node	lib	396	394	<std macros>	21	24	22	type	
+node	lib	679	678	libgraphviz/lib.rs	406	8	30	NK_AS_STR_TODO	
+node	lib	254	6	libgraphviz/maybe_owned_vec.rs	107	17	18	trait_ref	
+node	lib	999	998	<std macros>	2	45	1	NK_AS_STR_TODO	
+node	lib	151	150	libgraphviz/maybe_owned_vec.rs	69	22	5	NK_AS_STR_TODO	
+node	lib	788	787	libgraphviz/lib.rs	430	42	3	path	
+node	lib	278	250	libgraphviz/maybe_owned_vec.rs	114	27	4	type	
+node	lib	998	985	<std macros>	2	41	6	NK_AS_STR_TODO	
+node	lib	761	751	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	351	349	libgraphviz/lib.rs	343	9	6	type	
+node	lib	883	881	libgraphviz/lib.rs	477	21	1	type	
+node	lib	751	712	libgraphviz/lib.rs	427	37	173	NK_AS_STR_TODO	
+node	lib	434	430	<std macros>	4	18	24	path	
+node	lib	753	751	libgraphviz/lib.rs	428	12	40	NK_AS_STR_TODO	
+node	lib	33	6	libgraphviz/maybe_owned_vec.rs	44	0	142	trait	IntoMaybeOwnedVector
+node	lib	425	423	<std macros>	4	18	24	lit	
+node	lib	52	45	libgraphviz/maybe_owned_vec.rs	49	42	6	type	
+node	lib	1146	1144	libgraphviz/lib.rs	505	21	1	path	
+node	lib	607	602	libgraphviz/lib.rs	371	27	9	NK_AS_STR_TODO	
+node	lib	239	224	libgraphviz/maybe_owned_vec.rs	102	21	19	type	
+node	lib	545	543	libgraphviz/lib.rs	364	38	4	type	
+node	lib	327	326	libgraphviz/maybe_owned_vec.rs	129	21	1	NK_AS_STR_TODO	
+node	lib	297	6	libgraphviz/maybe_owned_vec.rs	123	0	330	impl	MaybeOwnedVector<'a, T>
+node	lib	1080	1079	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	1142	1089	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	56	6	libgraphviz/maybe_owned_vec.rs	51	4	70	method	into_maybe_owned
+node	lib	473	471	<std macros>	21	24	22	type	
+node	lib	400	394	<std macros>	21	51	1	type	
+node	lib	736	732	libgraphviz/lib.rs	423	20	4	NK_AS_STR_TODO	
+node	lib	326	315	libgraphviz/maybe_owned_vec.rs	129	12	11	NK_AS_STR_TODO	
+node	lib	1164	1163	<std macros>	2	58	3	path	
+node	lib	757	756	libgraphviz/lib.rs	428	22	21	path	
+node	lib	540	539	libgraphviz/lib.rs	362	15	16	struct	
+node	lib	1147	1144	libgraphviz/lib.rs	505	24	124	NK_AS_STR_TODO	
+node	lib	890	879	libgraphviz/lib.rs	478	14	1	NK_AS_STR_TODO	
+node	lib	325	324	libgraphviz/maybe_owned_vec.rs	128	43	1	path	
+node	lib	1041	1040	libgraphviz/lib.rs	492	17	1	path	
+node	lib	436	428	<std macros>	4	18	24	path	
+node	lib	440	438	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	1156	1147	libgraphviz/lib.rs	506	64	6	lit	
+node	lib	492	491	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	692	691	libgraphviz/lib.rs	412	32	1	type	
+node	lib	635	349	libgraphviz/lib.rs	1	0	0	type	
+node	lib	1110	1109	<std macros>	2	58	3	path	
+node	lib	1008	1007	libgraphviz/lib.rs	490	13	9	NK_AS_STR_TODO	
+node	lib	457	414	<std macros>	24	21	7	NK_AS_STR_TODO	
+node	lib	643	0	libgraphviz/lib.rs	393	0	949	trait	Labeller
+node	lib	914	912	libgraphviz/lib.rs	480	4	155	fn	writeln
+node	lib	289	288	libgraphviz/maybe_owned_vec.rs	116	27	1	path	
+node	lib	543	365	libgraphviz/lib.rs	364	8	126	fn	is_letter_or_underscore
+node	lib	312	310	libgraphviz/maybe_owned_vec.rs	125	33	1	type	
+node	lib	255	250	libgraphviz/maybe_owned_vec.rs	107	33	1	type	
+node	lib	34	33	libgraphviz/maybe_owned_vec.rs	46	4	51	ty_method	into_maybe_owned
+node	lib	846	842	libgraphviz/lib.rs	467	26	12	type	
+node	lib	644	643	libgraphviz/lib.rs	395	4	31	ty_method	graph_id
+node	lib	1016	1013	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	392	391	<std macros>	8	33	885	NK_AS_STR_TODO	
+node	lib	29	28	libgraphviz/maybe_owned_vec.rs	40	18	1	type	
+node	lib	708	706	libgraphviz/lib.rs	414	28	2	lit	
+node	lib	537	536	<std macros>	4	18	24	path	
+node	lib	1036	1021	libgraphviz/lib.rs	492	12	17	NK_AS_STR_TODO	
+node	lib	591	585	libgraphviz/lib.rs	370	34	4	type	
+node	lib	869	864	libgraphviz/lib.rs	471	30	2	type	
+node	lib	487	486	<std macros>	4	44	17	lit	
+node	lib	766	761	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	806	805	libgraphviz/lib.rs	438	32	1	path	
+node	lib	1088	1081	libgraphviz/lib.rs	498	30	394	NK_AS_STR_TODO	
+node	lib	502	500	<std macros>	4	18	24	lit	
+node	lib	237	224	libgraphviz/maybe_owned_vec.rs	102	11	6	NK_AS_STR_TODO	
+node	lib	567	365	libgraphviz/lib.rs	367	8	110	fn	is_constituent
+node	lib	173	171	libgraphviz/maybe_owned_vec.rs	84	37	3	type	
+node	lib	379	376	libgraphviz/lib.rs	358	28	23	NK_AS_STR_TODO	
+node	lib	197	6	libgraphviz/maybe_owned_vec.rs	93	11	15	trait_ref	
+node	lib	1132	1130	libgraphviz/lib.rs	503	34	7	NK_AS_STR_TODO	
+node	lib	362	349	libgraphviz/lib.rs	355	60	6	type	
+node	lib	257	250	libgraphviz/maybe_owned_vec.rs	107	40	22	type	
+node	lib	1170	1169	libgraphviz/lib.rs	509	16	3	lit	
+node	lib	642	641	libgraphviz/lib.rs	380	8	4	path	
+node	lib	941	940	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+node	lib	448	414	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	798	712	libgraphviz/lib.rs	436	33	181	NK_AS_STR_TODO	
+node	lib	20	11	libgraphviz/maybe_owned_vec.rs	39	13	4	type	
+node	lib	870	869	libgraphviz/lib.rs	471	31	1	type	
+node	lib	1073	912	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	390	383	<std macros>	3	18	74	NK_AS_STR_TODO	
+node	lib	232	229	libgraphviz/maybe_owned_vec.rs	101	55	1	type	
+node	lib	923	922	libgraphviz/lib.rs	480	43	4	type	
+node	lib	957	956	<std macros>	2	32	1	NK_AS_STR_TODO	
+node	lib	415	414	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	249	246	libgraphviz/maybe_owned_vec.rs	103	28	1	path	
+node	lib	134	131	libgraphviz/maybe_owned_vec.rs	65	45	1	type	
+node	lib	6	0	libgraphviz/lib.rs	283	0	24	mod	maybe_owned_vec
+node	lib	589	585	libgraphviz/lib.rs	370	20	3	NK_AS_STR_TODO	
+node	lib	512	507	<std macros>	4	18	24	path	
+node	lib	979	969	libgraphviz/lib.rs	485	16	6	trait_ref	
+node	lib	1103	1099	<std macros>	2	29	5	NK_AS_STR_TODO	
+node	lib	271	270	libgraphviz/maybe_owned_vec.rs	110	8	26	NK_AS_STR_TODO	
+node	lib	409	408	<std macros>	4	44	17	NK_AS_STR_TODO	
+node	lib	374	373	libgraphviz/lib.rs	357	8	181	NK_AS_STR_TODO	
+node	lib	891	879	libgraphviz/lib.rs	478	28	16	type	
+node	lib	24	6	libgraphviz/maybe_owned_vec.rs	40	4	17	variant	Borrowed
+node	lib	208	194	libgraphviz/maybe_owned_vec.rs	94	28	1	type	
+node	lib	802	801	libgraphviz/lib.rs	438	13	15	NK_AS_STR_TODO	
+node	lib	632	631	libgraphviz/lib.rs	376	8	4	path	
+node	lib	916	914	libgraphviz/lib.rs	480	28	6	type	
+node	lib	402	401	<std macros>	22	12	50	NK_AS_STR_TODO	
+node	lib	811	810	libgraphviz/lib.rs	439	30	35	NK_AS_STR_TODO	
+node	lib	229	224	libgraphviz/maybe_owned_vec.rs	101	35	22	type	
+node	lib	501	500	<std macros>	4	18	24	path	
+node	lib	625	349	libgraphviz/lib.rs	375	33	7	type	
+node	lib	18	6	libgraphviz/maybe_owned_vec.rs	39	4	14	variant	FixedLen
+node	lib	1023	1021	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	234	6	libgraphviz/maybe_owned_vec.rs	102	4	91	method	fmt
+node	lib	406	402	<std macros>	22	54	8	lit	
+node	lib	745	712	libgraphviz/lib.rs	427	21	4	type	
+node	lib	516	515	<std macros>	4	18	24	type	
+node	lib	964	962	<std macros>	2	62	1	path	
+node	lib	705	704	libgraphviz/lib.rs	414	8	8	path	
+node	lib	1056	1053	libgraphviz/lib.rs	494	24	81	NK_AS_STR_TODO	
+node	lib	1070	1069	<std macros>	2	58	3	path	
+node	lib	754	753	libgraphviz/lib.rs	428	12	0	type	
+node	lib	383	374	<std macros>	3	8	84	NK_AS_STR_TODO	
+node	lib	486	485	<std macros>	4	44	17	NK_AS_STR_TODO	
+node	lib	1010	1005	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	972	971	libgraphviz/lib.rs	485	32	1	type	
+node	lib	1148	1147	libgraphviz/lib.rs	505	25	20	NK_AS_STR_TODO	
+node	lib	1037	1021	libgraphviz/lib.rs	492	12	17	NK_AS_STR_TODO	
+node	lib	507	505	<std macros>	4	18	24	struct	
+node	lib	214	194	libgraphviz/maybe_owned_vec.rs	94	48	19	type	
+node	lib	633	0	libgraphviz/lib.rs	379	4	66	method	name
+node	lib	147	137	libgraphviz/maybe_owned_vec.rs	68	32	8	NK_AS_STR_TODO	
+node	lib	1071	1069	<std macros>	2	62	1	path	
+node	lib	1084	1081	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	130	118	libgraphviz/maybe_owned_vec.rs	65	16	9	NK_AS_STR_TODO	
+node	lib	1104	1103	<std macros>	2	32	1	NK_AS_STR_TODO	
+node	lib	808	807	libgraphviz/lib.rs	439	13	13	NK_AS_STR_TODO	
+node	lib	144	137	libgraphviz/maybe_owned_vec.rs	68	12	16	NK_AS_STR_TODO	
+node	lib	637	349	libgraphviz/lib.rs	379	25	19	type	
+node	lib	1013	1012	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	971	969	libgraphviz/lib.rs	485	27	6	type	
+node	lib	1040	1037	libgraphviz/lib.rs	492	17	12	NK_AS_STR_TODO	
+node	lib	980	969	libgraphviz/lib.rs	485	55	35	NK_AS_STR_TODO	
+node	lib	1025	1024	libgraphviz/lib.rs	491	13	6	path	
+node	lib	969	912	libgraphviz/lib.rs	485	4	86	fn	indent
+node	lib	26	11	libgraphviz/maybe_owned_vec.rs	40	13	7	type	
+node	lib	562	558	libgraphviz/lib.rs	365	54	3	lit	
+node	lib	1034	1033	<std macros>	2	58	3	path	
+node	lib	1126	1089	libgraphviz/lib.rs	503	12	30	NK_AS_STR_TODO	
+node	lib	191	190	libgraphviz/maybe_owned_vec.rs	88	22	5	NK_AS_STR_TODO	
+node	lib	117	115	libgraphviz/maybe_owned_vec.rs	61	67	4	path	
+node	lib	387	385	libgraphviz/lib.rs	359	44	21	NK_AS_STR_TODO	
+node	lib	136	118	libgraphviz/maybe_owned_vec.rs	65	48	164	NK_AS_STR_TODO	
+node	lib	393	392	<std macros>	21	8	119	NK_AS_STR_TODO	
+node	lib	932	914	libgraphviz/lib.rs	480	70	89	NK_AS_STR_TODO	
+node	lib	1140	1138	libgraphviz/lib.rs	504	34	7	NK_AS_STR_TODO	
+node	lib	954	953	libgraphviz/lib.rs	481	36	1	path	
+node	lib	82	69	libgraphviz/lib.rs	1	0	0	type	
+node	lib	394	392	<std macros>	21	8	119	fn	run_fmt
+node	lib	657	652	libgraphviz/lib.rs	400	28	2	type	
+node	lib	598	585	libgraphviz/lib.rs	370	55	4	type	
+node	lib	530	529	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	897	879	libgraphviz/lib.rs	476	26	16	trait_ref	
+node	lib	185	184	libgraphviz/maybe_owned_vec.rs	87	13	15	NK_AS_STR_TODO	
+node	lib	857	852	libgraphviz/lib.rs	469	30	2	type	
+node	lib	63	60	libgraphviz/maybe_owned_vec.rs	51	53	1	type	
+node	lib	480	479	<std macros>	22	12	27	path	
+node	lib	885	879	libgraphviz/lib.rs	477	14	1	NK_AS_STR_TODO	
+node	lib	401	394	<std macros>	21	53	74	NK_AS_STR_TODO	
+node	lib	524	491	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	422	416	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	109	93	libgraphviz/maybe_owned_vec.rs	61	33	22	type	
+node	lib	365	349	libgraphviz/lib.rs	355	67	667	NK_AS_STR_TODO	
+node	lib	287	283	libgraphviz/maybe_owned_vec.rs	116	27	23	NK_AS_STR_TODO	
+node	lib	956	952	<std macros>	2	29	5	NK_AS_STR_TODO	
+node	lib	974	969	libgraphviz/lib.rs	485	24	1	NK_AS_STR_TODO	
+node	lib	678	643	libgraphviz/lib.rs	405	52	46	NK_AS_STR_TODO	
+node	lib	1099	1089	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	129	118	libgraphviz/lib.rs	1	0	0	type	
+node	lib	1093	1091	libgraphviz/lib.rs	499	12	13	NK_AS_STR_TODO	
+node	lib	816	815	libgraphviz/lib.rs	444	23	22	type	
+node	lib	1135	1089	libgraphviz/lib.rs	504	12	30	NK_AS_STR_TODO	
+node	lib	535	534	<std macros>	24	21	7	path	
+node	lib	240	239	libgraphviz/maybe_owned_vec.rs	102	26	14	type	
+node	lib	76	69	libgraphviz/maybe_owned_vec.rs	54	42	4	type	
+node	lib	617	616	libgraphviz/lib.rs	371	53	4	path	
+node	lib	1001	1000	<std macros>	2	58	6	NK_AS_STR_TODO	
+node	lib	198	194	libgraphviz/maybe_owned_vec.rs	93	24	1	type	
+node	lib	449	448	<std macros>	4	18	24	type	
+node	lib	975	969	libgraphviz/lib.rs	485	38	16	type	
+node	lib	148	147	libgraphviz/maybe_owned_vec.rs	68	32	1	path	
+node	lib	674	643	libgraphviz/lib.rs	405	28	1	NK_AS_STR_TODO	
+node	lib	490	484	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	629	349	libgraphviz/lib.rs	375	41	36	NK_AS_STR_TODO	
+node	lib	115	114	libgraphviz/maybe_owned_vec.rs	61	58	14	NK_AS_STR_TODO	
+node	lib	866	864	libgraphviz/lib.rs	1	0	0	type	
+node	lib	140	139	libgraphviz/maybe_owned_vec.rs	67	13	15	NK_AS_STR_TODO	
+node	lib	194	6	libgraphviz/maybe_owned_vec.rs	93	0	287	impl	MaybeOwnedVector<'a, T>.FromIterator<T>
+node	lib	1143	1089	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	276	250	libgraphviz/lib.rs	1	0	0	type	
+node	lib	538	365	libgraphviz/lib.rs	362	8	24	NK_AS_STR_TODO	
+node	lib	12	6	libgraphviz/maybe_owned_vec.rs	38	4	16	variant	Growable
+node	lib	548	543	libgraphviz/lib.rs	364	47	4	type	
+node	lib	500	499	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	284	283	libgraphviz/maybe_owned_vec.rs	115	14	4	path	
+node	lib	332	0	libgraphviz/lib.rs	291	4	29	variant	LabelStr
+node	lib	795	712	libgraphviz/lib.rs	436	28	4	type	
+node	lib	213	194	libgraphviz/maybe_owned_vec.rs	94	32	8	NK_AS_STR_TODO	
+node	lib	404	402	<std macros>	22	40	3	path	
+node	lib	1050	1048	libgraphviz/lib.rs	493	35	1	path	
+node	lib	77	76	libgraphviz/maybe_owned_vec.rs	54	43	3	type	
+node	lib	465	464	libgraphviz/lib.rs	360	20	5	path	
+node	lib	707	706	libgraphviz/lib.rs	414	17	10	path	
+node	lib	476	471	<std macros>	21	19	3	NK_AS_STR_TODO	
+node	lib	189	177	libgraphviz/maybe_owned_vec.rs	88	12	16	NK_AS_STR_TODO	
+node	lib	563	551	libgraphviz/lib.rs	365	62	8	NK_AS_STR_TODO	
+node	lib	771	768	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	564	563	libgraphviz/lib.rs	365	62	1	path	
+node	lib	1058	1057	libgraphviz/lib.rs	494	25	2	path	
+node	lib	1012	1011	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	16	14	libgraphviz/maybe_owned_vec.rs	38	17	1	type	
+node	lib	444	443	<std macros>	4	44	17	path	
+node	lib	1090	1089	libgraphviz/lib.rs	499	12	40	NK_AS_STR_TODO	
+node	lib	995	985	<std macros>	2	29	5	NK_AS_STR_TODO	
+node	lib	22	21	libgraphviz/maybe_owned_vec.rs	39	15	1	type	
+node	lib	1007	1006	libgraphviz/lib.rs	490	13	16	NK_AS_STR_TODO	
+node	lib	813	811	libgraphviz/lib.rs	439	52	12	NK_AS_STR_TODO	
+node	lib	441	438	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	469	468	<std macros>	8	33	885	NK_AS_STR_TODO	
+node	lib	585	365	libgraphviz/lib.rs	370	8	129	fn	in_range
+node	lib	740	732	libgraphviz/lib.rs	424	17	19	NK_AS_STR_TODO	
+node	lib	682	681	libgraphviz/lib.rs	406	17	15	NK_AS_STR_TODO	
+node	lib	304	301	libgraphviz/maybe_owned_vec.rs	123	37	1	type	
+node	lib	169	154	libgraphviz/lib.rs	1	0	0	type	
+node	lib	296	295	libgraphviz/maybe_owned_vec.rs	118	27	1	path	
+node	lib	245	224	libgraphviz/maybe_owned_vec.rs	102	57	38	NK_AS_STR_TODO	
+node	lib	984	912	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	810	799	libgraphviz/lib.rs	439	30	48	NK_AS_STR_TODO	
+node	lib	566	365	libgraphviz/lib.rs	367	8	110	NK_AS_STR_TODO	
+node	lib	614	612	libgraphviz/lib.rs	371	45	4	type	
+node	lib	205	6	libgraphviz/maybe_owned_vec.rs	94	4	225	method	from_iter
+node	lib	584	365	libgraphviz/lib.rs	370	8	129	NK_AS_STR_TODO	
+node	lib	746	745	libgraphviz/lib.rs	427	22	3	type	
+node	lib	734	732	libgraphviz/lib.rs	423	12	4	NK_AS_STR_TODO	
+node	lib	495	494	<std macros>	4	18	24	type	
+node	lib	827	824	libgraphviz/lib.rs	445	43	1	type	
+node	lib	1086	1081	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	403	402	<std macros>	22	12	27	path	
+node	lib	329	328	libgraphviz/maybe_owned_vec.rs	129	27	15	path	
+node	lib	824	823	libgraphviz/lib.rs	445	23	22	type	
+node	lib	291	290	libgraphviz/maybe_owned_vec.rs	117	21	1	NK_AS_STR_TODO	
+node	lib	494	493	<std macros>	4	18	24	type	
+node	lib	680	679	libgraphviz/lib.rs	406	8	8	path	
+node	lib	526	525	<std macros>	4	18	24	type	
+node	lib	1153	1147	libgraphviz/lib.rs	506	25	11	lit	
+node	lib	844	842	libgraphviz/lib.rs	1	0	0	type	
+node	lib	160	154	libgraphviz/maybe_owned_vec.rs	83	32	22	type	
+node	lib	252	250	libgraphviz/maybe_owned_vec.rs	107	10	5	trait_ref	
+node	lib	424	423	<std macros>	4	18	24	path	
+node	lib	760	751	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	983	981	libgraphviz/lib.rs	486	20	6	lit	
+node	lib	442	441	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	701	700	libgraphviz/lib.rs	413	12	0	type	
+node	lib	1130	1127	libgraphviz/lib.rs	503	24	18	NK_AS_STR_TODO	
+node	lib	1169	1166	libgraphviz/lib.rs	509	15	5	NK_AS_STR_TODO	
+node	lib	330	328	libgraphviz/maybe_owned_vec.rs	129	43	1	path	
+node	lib	319	315	libgraphviz/maybe_owned_vec.rs	127	27	1	path	
+node	lib	138	137	libgraphviz/maybe_owned_vec.rs	66	14	4	path	
+node	lib	789	787	libgraphviz/lib.rs	430	56	1	path	
+node	lib	919	914	libgraphviz/lib.rs	480	25	1	NK_AS_STR_TODO	
+node	lib	931	914	libgraphviz/lib.rs	480	17	6	trait_ref	
+node	lib	381	380	libgraphviz/lib.rs	358	28	4	path	
+node	lib	595	585	libgraphviz/lib.rs	370	46	4	type	
+node	lib	479	478	<std macros>	22	12	50	NK_AS_STR_TODO	
+node	lib	508	507	<std macros>	4	18	24	lit	
+node	lib	961	952	<std macros>	2	51	13	NK_AS_STR_TODO	
+node	lib	600	585	libgraphviz/lib.rs	370	60	77	NK_AS_STR_TODO	
+node	lib	832	831	libgraphviz/lib.rs	465	4	34	ty_method	nodes
+node	lib	139	137	libgraphviz/maybe_owned_vec.rs	67	12	16	NK_AS_STR_TODO	
+node	lib	982	981	libgraphviz/lib.rs	486	8	1	path	
+node	lib	1052	1021	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	654	652	libgraphviz/lib.rs	1	0	0	type	
+node	lib	54	52	libgraphviz/maybe_owned_vec.rs	49	46	1	type	
+node	lib	388	387	libgraphviz/lib.rs	359	44	12	NK_AS_STR_TODO	
+node	lib	1122	1120	libgraphviz/lib.rs	502	12	6	NK_AS_STR_TODO	
+node	lib	888	887	libgraphviz/lib.rs	478	22	1	type	
+node	lib	731	712	libgraphviz/lib.rs	419	39	220	NK_AS_STR_TODO	
+node	lib	431	430	<std macros>	4	18	24	lit	
+node	lib	1085	1081	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	1168	1166	libgraphviz/lib.rs	509	12	1	path	
+node	lib	1063	1052	<std macros>	2	29	5	NK_AS_STR_TODO	
+node	lib	1072	912	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	1115	1113	libgraphviz/lib.rs	501	12	6	NK_AS_STR_TODO	
+node	lib	993	992	libgraphviz/lib.rs	489	33	1	path	
+node	lib	72	6	libgraphviz/maybe_owned_vec.rs	54	11	26	trait_ref	
+node	lib	264	250	libgraphviz/lib.rs	1	0	0	type	
+node	lib	450	448	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	407	392	<std macros>	24	8	43	NK_AS_STR_TODO	
+node	lib	48	6	libgraphviz/maybe_owned_vec.rs	49	11	26	trait_ref	
+node	lib	558	552	libgraphviz/lib.rs	365	37	21	NK_AS_STR_TODO	
+node	lib	458	457	<std macros>	24	21	7	path	
+node	lib	756	753	libgraphviz/lib.rs	428	22	30	NK_AS_STR_TODO	
+node	lib	1123	1120	libgraphviz/lib.rs	502	21	11	NK_AS_STR_TODO	
+node	lib	265	250	libgraphviz/maybe_owned_vec.rs	109	16	6	NK_AS_STR_TODO	
+node	lib	1083	1082	libgraphviz/lib.rs	498	4	433	path	
+node	lib	794	712	libgraphviz/lib.rs	436	18	6	NK_AS_STR_TODO	
+node	lib	958	952	<std macros>	2	38	1	path	
+node	lib	519	518	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	413	407	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	92	90	libgraphviz/maybe_owned_vec.rs	56	67	4	path	
+node	lib	103	102	libgraphviz/maybe_owned_vec.rs	59	47	1	type	
+node	lib	781	778	libgraphviz/lib.rs	430	38	20	NK_AS_STR_TODO	
+node	lib	773	768	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	1032	1023	<std macros>	2	51	13	NK_AS_STR_TODO	
+node	lib	430	428	<std macros>	4	18	24	struct	
+node	lib	575	574	libgraphviz/lib.rs	368	12	51	NK_AS_STR_TODO	
+node	lib	881	879	libgraphviz/lib.rs	477	17	5	type	
+node	lib	1114	1113	libgraphviz/lib.rs	501	12	0	type	
+node	lib	609	607	libgraphviz/lib.rs	371	32	4	type	
+node	lib	887	879	libgraphviz/lib.rs	478	17	6	type	
+node	lib	334	331	libgraphviz/lib.rs	291	13	19	type	
+node	lib	936	935	libgraphviz/lib.rs	481	18	10	NK_AS_STR_TODO	
+node	lib	1022	1021	<std macros>	2	18	48	NK_AS_STR_TODO	
+node	lib	28	26	libgraphviz/maybe_owned_vec.rs	40	17	3	type	
+node	lib	947	946	libgraphviz/lib.rs	481	12	2	NK_AS_STR_TODO	
+node	lib	532	530	<std macros>	4	18	24	path	
+node	lib	630	629	libgraphviz/lib.rs	376	8	20	NK_AS_STR_TODO	
+node	lib	320	315	libgraphviz/maybe_owned_vec.rs	128	12	11	NK_AS_STR_TODO	
+node	lib	345	343	libgraphviz/lib.rs	340	10	19	type	
+node	lib	272	271	libgraphviz/maybe_owned_vec.rs	110	8	15	NK_AS_STR_TODO	
+node	lib	146	145	libgraphviz/maybe_owned_vec.rs	68	22	5	NK_AS_STR_TODO	
+node	lib	1124	1123	libgraphviz/lib.rs	502	21	1	path	
+node	lib	963	962	<std macros>	2	58	3	path	
+node	lib	581	579	libgraphviz/lib.rs	368	51	3	lit	
+node	lib	1065	1052	<std macros>	2	38	1	path	
+node	lib	243	224	libgraphviz/maybe_owned_vec.rs	102	45	11	type	
+node	lib	499	493	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	1062	1056	libgraphviz/lib.rs	495	58	6	lit	
+node	lib	324	322	libgraphviz/maybe_owned_vec.rs	128	43	12	NK_AS_STR_TODO	
+node	lib	780	778	libgraphviz/lib.rs	430	35	1	path	
+node	lib	1158	1157	<std macros>	2	32	1	NK_AS_STR_TODO	
+node	lib	699	698	libgraphviz/lib.rs	413	12	12	NK_AS_STR_TODO	
+node	lib	176	154	libgraphviz/maybe_owned_vec.rs	84	41	176	NK_AS_STR_TODO	
+node	lib	597	585	libgraphviz/lib.rs	370	40	4	NK_AS_STR_TODO	
+node	lib	38	34	libgraphviz/maybe_owned_vec.rs	46	33	22	type	
+node	lib	1136	1135	libgraphviz/lib.rs	504	12	0	type	
+node	lib	418	417	<std macros>	4	18	24	type	
+node	lib	627	625	libgraphviz/lib.rs	375	37	3	type	
+node	lib	96	6	libgraphviz/maybe_owned_vec.rs	59	11	26	trait_ref	
+node	lib	623	349	libgraphviz/lib.rs	1	0	0	type	
+node	lib	671	643	libgraphviz/lib.rs	405	31	2	type	
+node	lib	1074	1073	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	266	250	libgraphviz/maybe_owned_vec.rs	109	26	4	type	
+node	lib	712	0	libgraphviz/lib.rs	418	0	781	impl	LabelText<'a>
+node	lib	314	297	libgraphviz/maybe_owned_vec.rs	125	36	173	NK_AS_STR_TODO	
+node	lib	834	832	libgraphviz/lib.rs	1	0	0	type	
+node	lib	547	543	libgraphviz/lib.rs	364	35	1	NK_AS_STR_TODO	
+node	lib	158	154	libgraphviz/maybe_owned_vec.rs	83	25	1	type	
+node	lib	464	463	libgraphviz/lib.rs	360	20	25	NK_AS_STR_TODO	
+node	lib	769	768	libgraphviz/lib.rs	429	8	103	NK_AS_STR_TODO	
+node	lib	137	136	libgraphviz/maybe_owned_vec.rs	66	8	148	NK_AS_STR_TODO	
+node	lib	924	923	libgraphviz/lib.rs	480	44	3	type	
+node	lib	310	297	libgraphviz/maybe_owned_vec.rs	125	29	6	type	
+node	lib	41	38	libgraphviz/maybe_owned_vec.rs	46	53	1	type	
+node	lib	1109	1108	<std macros>	2	58	6	NK_AS_STR_TODO	
+node	lib	456	453	<std macros>	4	18	24	path	
+node	lib	443	442	<std macros>	4	44	17	NK_AS_STR_TODO	
+node	lib	604	603	libgraphviz/lib.rs	371	12	3	path	
+node	lib	224	6	libgraphviz/maybe_owned_vec.rs	101	0	157	impl	MaybeOwnedVector<'a, T>.fmt::Show
+node	lib	179	177	libgraphviz/maybe_owned_vec.rs	86	12	16	NK_AS_STR_TODO	
+node	lib	315	314	libgraphviz/maybe_owned_vec.rs	126	8	157	NK_AS_STR_TODO	
+node	lib	1082	1081	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	742	740	libgraphviz/lib.rs	424	34	1	path	
+node	lib	1163	1162	<std macros>	2	58	6	NK_AS_STR_TODO	
+node	lib	1138	1135	libgraphviz/lib.rs	504	24	18	NK_AS_STR_TODO	
+node	lib	503	499	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	463	462	<std macros>	3	11	4294948018	NK_AS_STR_TODO	
+node	lib	805	804	libgraphviz/lib.rs	438	32	12	NK_AS_STR_TODO	
+node	lib	1100	1099	libgraphviz/lib.rs	500	13	9	NK_AS_STR_TODO	
+node	lib	732	731	libgraphviz/lib.rs	420	8	204	NK_AS_STR_TODO	
+node	lib	380	379	libgraphviz/lib.rs	358	28	15	NK_AS_STR_TODO	
+node	lib	273	272	libgraphviz/maybe_owned_vec.rs	110	8	4	path	
+node	lib	1165	1163	<std macros>	2	62	1	path	
+node	lib	571	567	libgraphviz/lib.rs	367	26	1	NK_AS_STR_TODO	
+node	lib	1118	1116	libgraphviz/lib.rs	501	30	1	path	
+node	lib	349	0	libgraphviz/lib.rs	343	0	1452	impl	Id<'a>
+node	lib	578	576	libgraphviz/lib.rs	368	36	1	path	
+node	lib	531	530	<std macros>	4	18	24	path	
+node	lib	1044	1021	libgraphviz/lib.rs	493	12	34	NK_AS_STR_TODO	
+node	lib	858	857	libgraphviz/lib.rs	469	31	1	type	
+node	lib	873	864	libgraphviz/lib.rs	471	37	1	type	
+node	lib	912	879	libgraphviz/lib.rs	479	0	1023	NK_AS_STR_TODO	
+node	lib	1064	1063	<std macros>	2	32	1	NK_AS_STR_TODO	
+node	lib	1081	1080	libgraphviz/lib.rs	498	4	433	NK_AS_STR_TODO	
+node	lib	801	799	libgraphviz/lib.rs	438	12	16	NK_AS_STR_TODO	
+node	lib	601	600	libgraphviz/lib.rs	371	12	53	NK_AS_STR_TODO	
+node	lib	551	550	libgraphviz/lib.rs	365	12	58	NK_AS_STR_TODO	
+node	lib	1006	1005	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	78	77	libgraphviz/maybe_owned_vec.rs	54	44	1	type	
+node	lib	509	507	<std macros>	4	18	24	path	
+node	lib	112	109	libgraphviz/maybe_owned_vec.rs	61	53	1	type	
+node	lib	58	45	libgraphviz/lib.rs	1	0	0	type	
+node	lib	1117	1116	libgraphviz/lib.rs	501	21	1	path	
+node	lib	193	192	libgraphviz/maybe_owned_vec.rs	88	32	1	path	
+node	lib	157	6	libgraphviz/maybe_owned_vec.rs	83	11	16	trait_ref	
+node	lib	525	491	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	153	152	libgraphviz/maybe_owned_vec.rs	69	32	1	path	
+node	lib	461	374	<std macros>	3	8	84	NK_AS_STR_TODO	
+node	lib	536	534	<std macros>	24	21	7	NK_AS_STR_TODO	
+node	lib	385	384	libgraphviz/lib.rs	359	20	46	NK_AS_STR_TODO	
+node	lib	1049	1048	libgraphviz/lib.rs	493	22	1	path	
+node	lib	1087	1086	libgraphviz/lib.rs	498	8	1	NK_AS_STR_TODO	
+node	lib	405	402	<std macros>	22	45	8	lit	
+node	lib	1033	1032	<std macros>	2	58	6	NK_AS_STR_TODO	
+node	lib	228	6	libgraphviz/maybe_owned_vec.rs	101	21	9	trait_ref	
+node	lib	1014	1013	libgraphviz/lib.rs	490	4	255	NK_AS_STR_TODO	
+node	lib	517	515	<std macros>	4	18	24	NK_AS_STR_TODO	
+node	lib	182	177	libgraphviz/maybe_owned_vec.rs	86	32	12	NK_AS_STR_TODO	
+node	lib	21	20	libgraphviz/maybe_owned_vec.rs	39	14	3	type	
+node	lib	775	768	libgraphviz/lib.rs	429	27	72	NK_AS_STR_TODO	
+node	lib	366	365	libgraphviz/lib.rs	356	12	30	NK_AS_STR_TODO	
+node	lib	691	643	libgraphviz/lib.rs	412	31	2	type	
+node	lib	522	520	<std macros>	4	44	17	path	
+node	lib	389	388	libgraphviz/lib.rs	359	44	5	path	
+node	lib	1054	1053	libgraphviz/lib.rs	494	13	7	path	
+node	lib	361	349	libgraphviz/lib.rs	355	45	4	NK_AS_STR_TODO	
+node	lib	301	297	libgraphviz/maybe_owned_vec.rs	123	17	22	type	
+node	lib	945	941	libgraphviz/lib.rs	481	8	56	NK_AS_STR_TODO	
+jdef	537	lib	527
+jdef	998	core	87684
+jdef	480	std	120311
+jdef	1040	lib	652
+jdef	535	lib	471
+jdef	157	core	90292
+jdef	1116	lib	852
+jdef	763	core	97827
+jdef	988	lib	890
+jdef	334	std	12377
+jdef	1016	core	86244
+jdef	987	lib	914
+jdef	787	std	14353
+jdef	121	lib	11
+jdef	140	lib	12
+jdef	1148	lib	620
+jdef	1025	lib	969
+jdef	1070	core	87684
+jdef	992	lib	644
+jdef	1009	lib	885
+jdef	1034	core	87684
+jdef	1065	lib	1064
+jdef	561	lib	547
+jdef	428	std	81036
+jdef	134	lib	119
+jdef	255	lib	251
+jdef	317	lib	12
+jdef	1041	lib	885
+jdef	91	lib	18
+jdef	703	lib	694
+jdef	432	std	81071
+jdef	808	lib	337
+jdef	182	std	10195
+jdef	773	core	86245
+jdef	737	lib	729
+jdef	142	std	9213
+jdef	819	lib	821
+jdef	816	lib	11
+jdef	103	lib	94
+jdef	190	lib	24
+jdef	379	core	97827
+jdef	1133	lib	1115
+jdef	927	std	63467
+jdef	222	core	78982
+jdef	1145	lib	914
+jdef	740	core	78334
+jdef	804	std	125285
+jdef	60	lib	11
+jdef	993	lib	885
+jdef	228	std	81390
+jdef	117	lib	108
+jdef	1101	lib	969
+jdef	1117	lib	885
+jdef	899	lib	894
+jdef	14	std	7811
+jdef	1103	core	87680
+jdef	1097	lib	1087
+jdef	387	core	86814
+jdef	532	lib	493
+jdef	207	core	79012
+jdef	197	core	78981
+jdef	429	std	81166
+jdef	873	lib	876
+jdef	1003	lib	999
+jdef	564	lib	547
+jdef	330	lib	327
+jdef	310	std	7811
+jdef	707	std	12378
+jdef	1049	lib	885
+jdef	1123	lib	864
+jdef	188	lib	186
+jdef	806	lib	803
+jdef	637	std	12377
+jdef	320	lib	18
+jdef	143	lib	141
+jdef	247	lib	165
+jdef	824	lib	11
+jdef	1151	lib	620
+jdef	430	std	81052
+jdef	982	lib	974
+jdef	1105	lib	1104
+jdef	813	std	12603
+jdef	466	lib	567
+jdef	445	std	81741
+jdef	345	std	12377
+jdef	554	lib	585
+jdef	981	std	66653
+jdef	163	lib	155
+jdef	404	lib	399
+jdef	617	lib	597
+jdef	187	core	90339
+jdef	559	lib	585
+jdef	1155	lib	1093
+jdef	683	lib	669
+jdef	810	std	14753
+jdef	956	core	87680
+jdef	458	lib	394
+jdef	1152	lib	1137
+jdef	1154	core	97233
+jdef	604	lib	589
+jdef	849	lib	877
+jdef	972	lib	978
+jdef	48	lib	33
+jdef	964	lib	960
+jdef	1094	lib	791
+jdef	903	lib	831
+jdef	1118	lib	1087
+jdef	248	lib	237
+jdef	456	lib	440
+jdef	800	lib	794
+jdef	252	core	25858
+jdef	613	lib	593
+jdef	67	lib	12
+jdef	805	std	12603
+jdef	1159	lib	1158
+jdef	362	lib	343
+jdef	1063	core	87680
+jdef	641	lib	344
+jdef	936	core	90823
+jdef	304	lib	298
+jdef	757	std	14059
+jdef	1124	lib	885
+jdef	764	lib	748
+jdef	790	lib	755
+jdef	495	std	81020
+jdef	63	lib	46
+jdef	268	lib	251
+jdef	705	lib	332
+jdef	1071	lib	1067
+jdef	339	std	12377
+jdef	148	lib	146
+jdef	917	lib	930
+jdef	386	lib	543
+jdef	54	lib	46
+jdef	965	std	66701
+jdef	648	lib	343
+jdef	460	lib	450
+jdef	505	std	81036
+jdef	185	lib	18
+jdef	1008	lib	832
+jdef	226	std	81390
+jdef	580	lib	585
+jdef	272	lib	165
+jdef	78	lib	70
+jdef	116	lib	24
+jdef	87	lib	70
+jdef	966	lib	919
+jdef	1076	lib	842
+jdef	455	lib	416
+jdef	280	lib	251
+jdef	371	lib	361
+jdef	1061	lib	1046
+jdef	131	core	92868
+jdef	388	core	94250
+jdef	523	lib	489
+jdef	958	lib	957
+jdef	446	lib	412
+jdef	287	std	6220
+jdef	1168	lib	890
+jdef	1146	lib	890
+jdef	541	lib	369
+jdef	316	lib	309
+jdef	910	std	66628
+jdef	323	std	8067
+jdef	995	core	87680
+jdef	160	lib	11
+jdef	381	lib	369
+jdef	507	std	81052
+jdef	1060	core	97233
+jdef	1130	lib	652
+jdef	858	lib	877
+jdef	789	lib	784
+jdef	991	lib	620
+jdef	997	lib	996
+jdef	672	lib	709
+jdef	504	std	81030
+jdef	1042	lib	1019
+jdef	454	std	81324
+jdef	178	lib	170
+jdef	174	lib	155
+jdef	770	lib	765
+jdef	506	std	81166
+jdef	295	std	6220
+jdef	955	lib	948
+jdef	216	lib	195
+jdef	582	lib	571
+jdef	246	std	100196
+jdef	1084	core	86244
+jdef	150	lib	24
+jdef	681	lib	344
+jdef	312	lib	298
+jdef	802	lib	332
+jdef	953	std	66653
+jdef	870	lib	877
+jdef	147	core	90823
+jdef	556	lib	547
+jdef	1047	lib	791
+jdef	943	lib	938
+jdef	780	lib	774
+jdef	285	lib	12
+jdef	208	lib	195
+jdef	359	lib	355
+jdef	1026	lib	890
+jdef	738	lib	721
+jdef	249	lib	242
+jdef	771	core	86244
+jdef	1058	lib	1039
+jdef	1015	lib	1010
+jdef	963	core	87684
+jdef	741	lib	721
+jdef	1111	lib	1107
+jdef	682	lib	652
+jdef	198	lib	195
+jdef	907	lib	895
+jdef	883	lib	896
+jdef	1082	core	92978
+jdef	946	core	86245
+jdef	695	lib	331
+jdef	1086	core	86245
+jdef	759	lib	748
+jdef	758	core	97261
+jdef	1165	lib	1161
+jdef	254	std	6190
+jdef	1167	lib	914
+jdef	299	core	25858
+jdef	1048	lib	665
+jdef	839	lib	876
+jdef	1002	core	87684
+jdef	577	lib	543
+jdef	74	lib	70
+jdef	888	lib	909
+jdef	424	std	81021
+jdef	319	lib	318
+jdef	684	lib	674
+jdef	183	lib	181
+jdef	427	std	81030
+jdef	642	lib	636
+jdef	96	lib	33
+jdef	942	core	92978
+jdef	509	std	81071
+jdef	243	std	81254
+jdef	522	std	81741
+jdef	608	lib	593
+jdef	436	core	86244
+jdef	979	std	66628
+jdef	680	lib	332
+jdef	292	lib	291
+jdef	1095	lib	685
+jdef	98	lib	94
+jdef	769	core	94250
+jdef	1125	lib	1087
+jdef	465	lib	378
+jdef	1018	core	86245
+jdef	1075	lib	126
+jdef	511	std	81164
+jdef	481	lib	476
+jdef	257	lib	11
+jdef	22	lib	31
+jdef	827	lib	829
+jdef	223	lib	213
+jdef	380	std	12603
+jdef	975	std	63467
+jdef	631	lib	344
+jdef	954	lib	919
+jdef	578	lib	571
+jdef	444	std	83169
+jdef	288	std	10195
+jdef	692	lib	710
+jdef	1160	core	87684
+jdef	1054	lib	914
+jdef	779	lib	717
+jdef	1110	core	87684
+jdef	50	lib	46
+jdef	290	lib	18
+jdef	16	lib	31
+jdef	284	lib	277
+jdef	931	std	66628
+jdef	464	core	122950
+jdef	68	lib	59
+jdef	220	lib	12
+jdef	260	lib	251
+jdef	1055	lib	890
+jdef	370	std	12432
+jdef	846	lib	823
+jdef	1131	lib	885
+jdef	145	lib	18
+jdef	324	core	90339
+jdef	403	std	120311
+jdef	326	lib	24
+jdef	389	lib	378
+jdef	180	lib	12
+jdef	289	lib	286
+jdef	1083	lib	1078
+jdef	1149	lib	1129
+jdef	356	std	12431
+jdef	905	lib	894
+jdef	733	lib	721
+jdef	1035	lib	1031
+jdef	1050	lib	1019
+jdef	814	lib	809
+jdef	1014	core	92978
+jdef	418	std	81020
+jdef	434	std	81164
+jdef	1077	lib	885
+jdef	513	core	86244
+jdef	152	core	90823
+jdef	52	std	7811
+jdef	29	lib	31
+jdef	435	std	81164
+jdef	959	core	87684
+jdef	836	lib	815
+jdef	293	lib	24
+jdef	512	std	81164
+jdef	203	lib	195
+jdef	38	lib	11
+jdef	41	lib	43
+jdef	72	lib	33
+jdef	632	lib	624
+jdef	1157	core	87680
+jdef	675	lib	331
+jdef	1029	lib	1028
+jdef	211	lib	206
+jdef	1139	lib	885
+jdef	1066	core	87684
+jdef	1007	lib	126
+jdef	153	lib	151
+jdef	501	std	81021
+jdef	200	lib	11
+jdef	1164	core	87684
+jdef	630	std	12603
+jdef	124	lib	119
+jdef	661	lib	343
+jdef	229	lib	11
+jdef	533	lib	517
+jdef	531	std	81324
+jdef	540	lib	343
+jdef	901	lib	895
+jdef	232	lib	225
+jdef	271	std	6220
+jdef	1102	lib	890
+jdef	897	lib	643
+jdef	158	lib	155
+jdef	109	lib	11
+jdef	1138	lib	652
+jdef	474	std	81351
+jdef	788	lib	755
+jdef	351	lib	343
+jdef	84	lib	11
+jdef	296	lib	294
+jdef	749	std	13719
+jdef	812	lib	743
+jdef	1027	core	87680
+jdef	92	lib	83
+jdef	521	std	83169
+jdef	397	std	81351
+jdef	240	std	81258
+jdef	742	lib	729
+jdef	192	core	90316
+jdef	937	lib	926
+jdef	1096	lib	885
+jdef	944	core	86244
+jdef	193	lib	191
+jdef	138	lib	130
+jdef	112	lib	94
+jdef	1057	lib	620
+jdef	714	lib	331
+jdef	1106	core	87684
+jdef	1141	lib	1122
+jdef	329	std	8067
+jdef	861	lib	876
+jdef	273	lib	265
+jdef	301	lib	11
+jdef	658	lib	709
+jdef	325	lib	321
+jdef	891	std	63467
+jdef	214	lib	11
+jdef	1030	core	87684
