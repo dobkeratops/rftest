@@ -1,919 +1,919 @@
-node	lib	342	340	libhexfloat/lib.rs	92	20	42	tup	
-node	lib	215	201	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
-node	lib	320	313	libhexfloat/lib.rs	90	48	33	NK_AS_STR_TODO	
-node	lib	136	133	libhexfloat/lib.rs	79	20	1	lit	
-node	lib	184	182	libhexfloat/lib.rs	81	35	43	NK_AS_STR_TODO	
-node	lib	504	503	libhexfloat/lib.rs	139	26	4	path	
-node	lib	353	346	libhexfloat/lib.rs	96	19	46	NK_AS_STR_TODO	
-node	lib	563	529	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	641	640	libhexfloat/lib.rs	161	44	2	path	
-node	lib	219	218	libhexfloat/lib.rs	83	4	93	path	
-node	lib	390	379	libhexfloat/lib.rs	104	8	383	NK_AS_STR_TODO	
-node	lib	414	402	libhexfloat/lib.rs	108	21	16	NK_AS_STR_TODO	
-node	lib	176	175	libhexfloat/lib.rs	81	7	25	NK_AS_STR_TODO	
-node	lib	32	19	libhexfloat/lib.rs	62	58	0	type	
-node	lib	569	568	libhexfloat/lib.rs	141	42	44	path	
-node	lib	340	339	libhexfloat/lib.rs	92	15	48	NK_AS_STR_TODO	
-node	lib	609	605	libhexfloat/lib.rs	157	4	10	struct_field	span
-node	lib	164	162	libhexfloat/lib.rs	80	58	12	NK_AS_STR_TODO	
-node	lib	177	176	libhexfloat/lib.rs	81	7	12	NK_AS_STR_TODO	
-node	lib	34	33	libhexfloat/lib.rs	63	4	169	NK_AS_STR_TODO	
-node	lib	362	361	libhexfloat/lib.rs	100	34	7	type	
-node	lib	472	468	libhexfloat/lib.rs	130	35	26	lit	
-node	lib	263	256	libhexfloat/lib.rs	87	33	48	NK_AS_STR_TODO	
-node	lib	533	532	libhexfloat/lib.rs	141	42	44	type	
-node	lib	253	251	libhexfloat/lib.rs	85	24	58	NK_AS_STR_TODO	
-node	lib	516	514	libhexfloat/lib.rs	140	50	3	path	
-node	lib	173	171	libhexfloat/lib.rs	80	87	1	lit	
-node	lib	713	712	libhexfloat/lib.rs	176	7	7	field	
-node	lib	405	404	libhexfloat/lib.rs	106	42	16	path	
-node	lib	128	61	libhexfloat/lib.rs	78	82	5	NK_AS_STR_TODO	
-node	lib	643	642	libhexfloat/lib.rs	162	44	2	path	
-node	lib	681	680	libhexfloat/lib.rs	170	18	12	path	
-node	lib	157	154	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	391	379	libhexfloat/lib.rs	104	8	383	NK_AS_STR_TODO	
-node	lib	604	601	libhexfloat/lib.rs	152	33	3	path	
-node	lib	266	265	libhexfloat/lib.rs	87	42	36	NK_AS_STR_TODO	
-node	lib	509	507	libhexfloat/lib.rs	139	83	1	lit	
-node	lib	109	108	libhexfloat/lib.rs	77	82	1	path	
-node	lib	388	386	libhexfloat/lib.rs	102	35	2	path	
-node	lib	332	61	libhexfloat/lib.rs	91	4	86	NK_AS_STR_TODO	
-node	lib	523	522	libhexfloat/lib.rs	141	42	44	tup	
-node	lib	247	246	libhexfloat/lib.rs	85	8	77	NK_AS_STR_TODO	
-node	lib	113	112	libhexfloat/lib.rs	78	7	25	NK_AS_STR_TODO	
-node	lib	150	148	libhexfloat/lib.rs	80	51	2	lit	
-node	lib	108	61	libhexfloat/lib.rs	77	82	4	NK_AS_STR_TODO	
-node	lib	257	256	libhexfloat/lib.rs	87	7	25	NK_AS_STR_TODO	
-node	lib	90	61	libhexfloat/lib.rs	77	4	77	NK_AS_STR_TODO	
-node	lib	702	676	libhexfloat/lib.rs	174	8	46	NK_AS_STR_TODO	
-node	lib	361	359	libhexfloat/lib.rs	100	29	12	type	
-node	lib	487	485	libhexfloat/lib.rs	136	36	7	NK_AS_STR_TODO	
-node	lib	505	501	libhexfloat/lib.rs	139	41	44	NK_AS_STR_TODO	
-node	lib	368	359	libhexfloat/lib.rs	100	43	2	NK_AS_STR_TODO	
-node	lib	436	435	libhexfloat/lib.rs	117	18	9	field	
-node	lib	171	162	libhexfloat/lib.rs	80	78	10	NK_AS_STR_TODO	
-node	lib	337	333	libhexfloat/lib.rs	91	18	72	NK_AS_STR_TODO	
-node	lib	382	381	libhexfloat/lib.rs	102	8	0	type	
-node	lib	683	676	libhexfloat/lib.rs	171	12	14	NK_AS_STR_TODO	
-node	lib	550	545	libhexfloat/lib.rs	141	42	44	path	
-node	lib	155	154	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	287	285	libhexfloat/lib.rs	88	36	12	NK_AS_STR_TODO	
-node	lib	31	19	libhexfloat/lib.rs	62	23	8	NK_AS_STR_TODO	
-node	lib	293	61	libhexfloat/lib.rs	89	8	13	NK_AS_STR_TODO	
-node	lib	122	121	libhexfloat/lib.rs	78	42	36	NK_AS_STR_TODO	
-node	lib	695	676	libhexfloat/lib.rs	173	12	19	NK_AS_STR_TODO	
-node	lib	663	662	libhexfloat/lib.rs	166	13	1	path	
-node	lib	356	355	libhexfloat/lib.rs	96	25	1	path	
-node	lib	521	519	libhexfloat/lib.rs	141	28	4	path	
-node	lib	656	655	libhexfloat/lib.rs	164	57	2	NK_AS_STR_TODO	
-node	lib	528	522	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	468	466	libhexfloat/lib.rs	130	12	50	NK_AS_STR_TODO	
-node	lib	495	489	libhexfloat/lib.rs	138	40	313	NK_AS_STR_TODO	
-node	lib	377	375	libhexfloat/lib.rs	101	32	15	type	
-node	lib	467	466	libhexfloat/lib.rs	130	12	51	NK_AS_STR_TODO	
-node	lib	265	263	libhexfloat/lib.rs	87	35	43	NK_AS_STR_TODO	
-node	lib	420	419	libhexfloat/lib.rs	109	22	4	path	
-node	lib	124	122	libhexfloat/lib.rs	78	47	30	tup	
-node	lib	698	696	libhexfloat/lib.rs	173	12	2	NK_AS_STR_TODO	
-node	lib	192	61	libhexfloat/lib.rs	81	82	4	NK_AS_STR_TODO	
-node	lib	284	283	libhexfloat/lib.rs	88	29	3	lit	
-node	lib	338	337	libhexfloat/lib.rs	92	8	56	NK_AS_STR_TODO	
-node	lib	236	234	libhexfloat/lib.rs	83	87	1	lit	
-node	lib	134	133	libhexfloat/lib.rs	79	8	0	type	
-node	lib	325	321	libhexfloat/lib.rs	90	64	5	NK_AS_STR_TODO	
-node	lib	71	70	libhexfloat/lib.rs	75	8	0	type	
-node	lib	169	167	libhexfloat/lib.rs	80	75	1	lit	
-node	lib	58	55	libhexfloat/lib.rs	73	47	4	type	
-node	lib	41	40	libhexfloat/lib.rs	64	8	8	path	
-node	lib	234	225	libhexfloat/lib.rs	83	78	10	NK_AS_STR_TODO	
-node	lib	525	524	libhexfloat/lib.rs	141	88	7	path	
-node	lib	297	61	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	204	203	libhexfloat/lib.rs	83	13	5	path	
-node	lib	539	538	libhexfloat/lib.rs	141	42	44	path	
-node	lib	180	179	libhexfloat/lib.rs	81	23	4	path	
-node	lib	408	407	libhexfloat/lib.rs	107	12	8	lit	
-node	lib	711	632	libhexfloat/lib.rs	176	4	56	NK_AS_STR_TODO	
-node	lib	300	299	libhexfloat/lib.rs	90	13	34	NK_AS_STR_TODO	
-node	lib	565	563	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	626	625	libhexfloat/lib.rs	160	56	9	type	
-node	lib	233	225	libhexfloat/lib.rs	83	78	11	NK_AS_STR_TODO	
-node	lib	476	475	libhexfloat/lib.rs	131	19	23	path	
-node	lib	559	558	libhexfloat/lib.rs	141	88	7	path	
-node	lib	46	40	libhexfloat/lib.rs	68	8	4	path	
-node	lib	636	634	libhexfloat/lib.rs	161	8	1	NK_AS_STR_TODO	
-node	lib	491	489	libhexfloat/lib.rs	138	12	24	NK_AS_STR_TODO	
-node	lib	653	648	libhexfloat/lib.rs	164	56	12	NK_AS_STR_TODO	
-node	lib	615	614	libhexfloat/lib.rs	160	18	7	type	
-node	lib	425	424	libhexfloat/lib.rs	111	16	62	NK_AS_STR_TODO	
-node	lib	239	238	libhexfloat/lib.rs	84	7	24	NK_AS_STR_TODO	
-node	lib	584	379	libhexfloat/lib.rs	148	8	108	NK_AS_STR_TODO	
-node	lib	185	184	libhexfloat/lib.rs	81	42	36	NK_AS_STR_TODO	
-node	lib	421	419	libhexfloat/lib.rs	109	27	11	path	
-node	lib	721	720	libhexfloat/lib.rs	179	5	2	path	
-node	lib	634	632	libhexfloat/lib.rs	161	8	290	NK_AS_STR_TODO	
-node	lib	69	61	libhexfloat/lib.rs	75	8	9	NK_AS_STR_TODO	
-node	lib	56	55	libhexfloat/lib.rs	73	41	4	type	
-node	lib	144	142	libhexfloat/lib.rs	80	32	1	type	
-node	lib	518	496	libhexfloat/lib.rs	141	16	82	NK_AS_STR_TODO	
-node	lib	668	665	libhexfloat/lib.rs	167	13	244	NK_AS_STR_TODO	
-node	lib	161	154	libhexfloat/lib.rs	80	56	34	NK_AS_STR_TODO	
-node	lib	202	201	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
-node	lib	88	87	libhexfloat/lib.rs	76	50	1	path	
-node	lib	39	37	libhexfloat/lib.rs	63	27	10	lit	
-node	lib	549	545	libhexfloat/lib.rs	141	42	44	path	
-node	lib	669	668	libhexfloat/lib.rs	167	16	21	NK_AS_STR_TODO	
-node	lib	417	402	libhexfloat/lib.rs	109	12	6	NK_AS_STR_TODO	
-node	lib	189	187	libhexfloat/lib.rs	81	51	25	NK_AS_STR_TODO	
-node	lib	96	95	libhexfloat/lib.rs	77	23	4	path	
-node	lib	463	461	libhexfloat/lib.rs	126	47	2	path	
-node	lib	291	289	libhexfloat/lib.rs	88	54	1	lit	
-node	lib	270	268	libhexfloat/lib.rs	87	51	25	NK_AS_STR_TODO	
-node	lib	652	648	libhexfloat/lib.rs	164	56	1	type	
-node	lib	543	541	libhexfloat/lib.rs	141	42	44	struct	
-node	lib	709	706	libhexfloat/lib.rs	174	49	2	path	
-node	lib	719	718	libhexfloat/lib.rs	177	8	1	path	
-node	lib	53	47	libhexfloat/lib.rs	73	33	20	type	
-node	lib	387	386	libhexfloat/lib.rs	102	25	9	path	
-node	lib	606	605	libhexfloat/lib.rs	156	4	17	struct_field	ident
-node	lib	226	225	libhexfloat/lib.rs	83	58	13	NK_AS_STR_TODO	
-node	lib	456	454	libhexfloat/lib.rs	125	28	9	field	
-node	lib	213	211	libhexfloat/lib.rs	83	51	2	lit	
-node	lib	716	711	libhexfloat/lib.rs	176	29	31	NK_AS_STR_TODO	
-node	lib	295	293	libhexfloat/lib.rs	89	8	9	NK_AS_STR_TODO	
-node	lib	512	511	libhexfloat/lib.rs	140	20	0	type	
-node	lib	47	0	libhexfloat/lib.rs	73	0	1255	fn	hex_float_lit_err
-node	lib	309	308	libhexfloat/lib.rs	90	34	1	path	
-node	lib	561	558	libhexfloat/lib.rs	141	88	7	path	
-node	lib	255	61	libhexfloat/lib.rs	87	4	77	NK_AS_STR_TODO	
-node	lib	660	659	libhexfloat/lib.rs	166	8	0	type	
-node	lib	375	359	libhexfloat/lib.rs	101	28	20	type	
-node	lib	411	409	libhexfloat/lib.rs	107	26	10	path	
-node	lib	422	402	libhexfloat/lib.rs	110	12	1	NK_AS_STR_TODO	
-node	lib	379	359	libhexfloat/lib.rs	101	49	1600	NK_AS_STR_TODO	
-node	lib	658	632	libhexfloat/lib.rs	166	8	19	NK_AS_STR_TODO	
-node	lib	684	683	libhexfloat/lib.rs	171	12	0	type	
-node	lib	72	70	libhexfloat/lib.rs	75	8	5	NK_AS_STR_TODO	
-node	lib	451	440	libhexfloat/lib.rs	124	17	143	NK_AS_STR_TODO	
-node	lib	471	470	libhexfloat/lib.rs	130	24	4	path	
-node	lib	672	669	libhexfloat/lib.rs	167	27	10	path	
-node	lib	685	683	libhexfloat/lib.rs	171	12	2	NK_AS_STR_TODO	
-node	lib	296	293	libhexfloat/lib.rs	89	20	1	lit	
-node	lib	511	496	libhexfloat/lib.rs	140	20	38	NK_AS_STR_TODO	
-node	lib	470	468	libhexfloat/lib.rs	130	24	9	field	
-node	lib	152	138	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	149	148	libhexfloat/lib.rs	80	34	1	path	
-node	lib	484	482	libhexfloat/lib.rs	136	12	3	NK_AS_STR_TODO	
-node	lib	617	612	libhexfloat/lib.rs	160	13	2	NK_AS_STR_TODO	
-node	lib	697	696	libhexfloat/lib.rs	173	12	0	type	
-node	lib	404	403	libhexfloat/lib.rs	106	42	23	NK_AS_STR_TODO	
-node	lib	619	612	libhexfloat/lib.rs	160	32	17	type	
-node	lib	38	37	libhexfloat/lib.rs	63	13	13	path	
-node	lib	235	234	libhexfloat/lib.rs	83	78	5	path	
-node	lib	45	43	libhexfloat/lib.rs	66	18	4	path	
-node	lib	686	683	libhexfloat/lib.rs	171	17	9	field	
-node	lib	483	482	libhexfloat/lib.rs	136	12	0	type	
-node	lib	179	176	libhexfloat/lib.rs	81	23	9	NK_AS_STR_TODO	
-node	lib	98	91	libhexfloat/lib.rs	77	33	48	NK_AS_STR_TODO	
-node	lib	76	75	libhexfloat/lib.rs	76	7	26	NK_AS_STR_TODO	
-node	lib	140	139	libhexfloat/lib.rs	80	13	42	NK_AS_STR_TODO	
-node	lib	207	205	libhexfloat/lib.rs	83	32	1	type	
-node	lib	696	676	libhexfloat/lib.rs	173	12	19	NK_AS_STR_TODO	
-node	lib	339	337	libhexfloat/lib.rs	92	8	55	NK_AS_STR_TODO	
-node	lib	316	313	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	416	414	libhexfloat/lib.rs	108	26	10	path	
-node	lib	170	162	libhexfloat/lib.rs	80	78	11	NK_AS_STR_TODO	
-node	lib	446	440	libhexfloat/lib.rs	121	37	41	NK_AS_STR_TODO	
-node	lib	572	529	<std macros>	3	21	18	NK_AS_STR_TODO	
-node	lib	21	19	libhexfloat/lib.rs	62	33	23	type	
-node	lib	198	196	libhexfloat/lib.rs	82	8	9	NK_AS_STR_TODO	
-node	lib	374	359	libhexfloat/lib.rs	100	53	3	NK_AS_STR_TODO	
-node	lib	621	620	libhexfloat/lib.rs	160	34	14	type	
-node	lib	586	584	libhexfloat/lib.rs	148	8	3	NK_AS_STR_TODO	
-node	lib	502	501	libhexfloat/lib.rs	139	26	12	field	
-node	lib	494	492	libhexfloat/lib.rs	138	27	7	NK_AS_STR_TODO	
-node	lib	153	152	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	259	258	libhexfloat/lib.rs	87	7	5	path	
-node	lib	242	240	libhexfloat/lib.rs	84	16	1	lit	
-node	lib	40	35	libhexfloat/lib.rs	64	8	123	NK_AS_STR_TODO	
-node	lib	326	321	libhexfloat/lib.rs	90	64	4	NK_AS_STR_TODO	
-node	lib	423	402	libhexfloat/lib.rs	110	17	115	NK_AS_STR_TODO	
-node	lib	228	227	libhexfloat/lib.rs	83	58	5	path	
-node	lib	664	632	libhexfloat/lib.rs	167	8	249	NK_AS_STR_TODO	
-node	lib	336	334	libhexfloat/lib.rs	91	16	1	lit	
-node	lib	410	409	libhexfloat/lib.rs	107	21	4	path	
-node	lib	501	498	libhexfloat/lib.rs	139	26	59	NK_AS_STR_TODO	
-node	lib	366	359	libhexfloat/lib.rs	100	47	4	type	
-node	lib	458	454	libhexfloat/lib.rs	125	39	34	lit	
-node	lib	68	67	libhexfloat/lib.rs	74	20	1	path	
-node	lib	527	526	libhexfloat/lib.rs	141	88	7	NK_AS_STR_TODO	
-node	lib	542	541	libhexfloat/lib.rs	141	42	44	path	
-node	lib	700	699	libhexfloat/lib.rs	173	17	11	field	
-node	lib	464	435	libhexfloat/lib.rs	129	8	1	NK_AS_STR_TODO	
-node	lib	630	628	libhexfloat/lib.rs	160	74	5	type	
-node	lib	600	599	libhexfloat/lib.rs	152	4	12	path	
-node	lib	154	153	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	62	61	libhexfloat/lib.rs	74	8	32	NK_AS_STR_TODO	
-node	lib	352	351	libhexfloat/lib.rs	96	13	1	NK_AS_STR_TODO	
-node	lib	605	0	libhexfloat/lib.rs	155	0	54	struct	Ident
-node	lib	194	192	libhexfloat/lib.rs	81	85	1	lit	
-node	lib	659	632	libhexfloat/lib.rs	166	8	19	NK_AS_STR_TODO	
-node	lib	330	329	libhexfloat/lib.rs	90	70	5	path	
-node	lib	490	489	libhexfloat/lib.rs	137	14	3	path	
-node	lib	560	558	libhexfloat/lib.rs	141	88	7	path	
-node	lib	282	281	libhexfloat/lib.rs	88	23	4	path	
-node	lib	78	77	libhexfloat/lib.rs	76	7	5	path	
-node	lib	250	249	libhexfloat/lib.rs	85	15	4	path	
-node	lib	555	553	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	508	507	libhexfloat/lib.rs	139	73	7	path	
-node	lib	676	675	libhexfloat/lib.rs	169	11	193	NK_AS_STR_TODO	
-node	lib	327	326	libhexfloat/lib.rs	90	64	1	path	
-node	lib	162	161	libhexfloat/lib.rs	80	56	34	NK_AS_STR_TODO	
-node	lib	347	346	libhexfloat/lib.rs	94	10	12	NK_AS_STR_TODO	
-node	lib	317	313	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	538	537	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	222	217	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
-node	lib	708	706	libhexfloat/lib.rs	174	45	2	path	
-node	lib	133	61	libhexfloat/lib.rs	79	8	13	NK_AS_STR_TODO	
-node	lib	87	83	libhexfloat/lib.rs	76	50	5	NK_AS_STR_TODO	
-node	lib	682	676	libhexfloat/lib.rs	171	12	14	NK_AS_STR_TODO	
-node	lib	433	432	libhexfloat/lib.rs	117	8	0	type	
-node	lib	556	553	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	526	522	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	146	142	libhexfloat/lib.rs	80	34	1	type	
-node	lib	588	587	libhexfloat/lib.rs	148	20	2	path	
-node	lib	598	595	libhexfloat/lib.rs	150	38	2	path	
-node	lib	461	460	libhexfloat/lib.rs	126	23	27	NK_AS_STR_TODO	
-node	lib	341	340	libhexfloat/lib.rs	92	15	4	path	
-node	lib	112	61	libhexfloat/lib.rs	78	4	77	NK_AS_STR_TODO	
-node	lib	701	700	libhexfloat/lib.rs	173	17	1	path	
-node	lib	289	285	libhexfloat/lib.rs	88	50	5	NK_AS_STR_TODO	
-node	lib	168	167	libhexfloat/lib.rs	80	72	1	path	
-node	lib	644	638	libhexfloat/lib.rs	163	44	138	NK_AS_STR_TODO	
-node	lib	400	399	libhexfloat/lib.rs	106	19	5	NK_AS_STR_TODO	
-node	lib	519	496	libhexfloat/lib.rs	141	16	81	NK_AS_STR_TODO	
-node	lib	183	182	libhexfloat/lib.rs	81	35	44	NK_AS_STR_TODO	
-node	lib	493	492	libhexfloat/lib.rs	138	18	7	NK_AS_STR_TODO	
-node	lib	510	496	libhexfloat/lib.rs	140	20	38	NK_AS_STR_TODO	
-node	lib	694	693	libhexfloat/lib.rs	172	20	1	path	
-node	lib	601	599	libhexfloat/lib.rs	152	17	20	NK_AS_STR_TODO	
-node	lib	120	119	libhexfloat/lib.rs	78	35	44	NK_AS_STR_TODO	
-node	lib	419	402	libhexfloat/lib.rs	109	22	17	NK_AS_STR_TODO	
-node	lib	118	116	libhexfloat/lib.rs	78	28	3	lit	
-node	lib	223	222	libhexfloat/lib.rs	83	8	1	NK_AS_STR_TODO	
-node	lib	444	443	libhexfloat/lib.rs	121	24	5	NK_AS_STR_TODO	
-node	lib	625	624	libhexfloat/lib.rs	160	55	10	type	
-node	lib	345	344	libhexfloat/lib.rs	92	24	26	lit	
-node	lib	418	417	libhexfloat/lib.rs	109	12	9	lit	
-node	lib	344	342	libhexfloat/lib.rs	92	24	37	NK_AS_STR_TODO	
-node	lib	94	93	libhexfloat/lib.rs	77	7	5	path	
-node	lib	426	424	libhexfloat/lib.rs	111	16	61	NK_AS_STR_TODO	
-node	lib	475	474	libhexfloat/lib.rs	131	19	27	NK_AS_STR_TODO	
-node	lib	614	612	libhexfloat/lib.rs	160	17	8	type	
-node	lib	717	716	libhexfloat/lib.rs	177	8	15	NK_AS_STR_TODO	
-node	lib	520	519	libhexfloat/lib.rs	141	16	2	path	
-node	lib	666	665	libhexfloat/lib.rs	167	8	0	type	
-node	lib	348	347	libhexfloat/lib.rs	94	10	5	path	
-node	lib	469	468	libhexfloat/lib.rs	130	12	2	path	
-node	lib	285	277	libhexfloat/lib.rs	88	34	23	NK_AS_STR_TODO	
-node	lib	620	619	libhexfloat/lib.rs	160	33	16	type	
-node	lib	89	87	libhexfloat/lib.rs	76	54	1	lit	
-node	lib	602	601	libhexfloat/lib.rs	152	17	2	path	
-node	lib	125	124	libhexfloat/lib.rs	78	48	1	path	
-node	lib	298	61	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	397	394	libhexfloat/lib.rs	105	16	4	path	
-node	lib	308	307	libhexfloat/lib.rs	90	34	12	NK_AS_STR_TODO	
-node	lib	187	185	libhexfloat/lib.rs	81	47	30	tup	
-node	lib	292	61	libhexfloat/lib.rs	89	8	13	NK_AS_STR_TODO	
-node	lib	583	379	libhexfloat/lib.rs	148	8	108	NK_AS_STR_TODO	
-node	lib	237	61	libhexfloat/lib.rs	84	4	121	NK_AS_STR_TODO	
-node	lib	450	440	libhexfloat/lib.rs	124	12	1	NK_AS_STR_TODO	
-node	lib	639	638	libhexfloat/lib.rs	161	17	26	path	
-node	lib	448	447	libhexfloat/lib.rs	122	16	9	NK_AS_STR_TODO	
-node	lib	492	491	libhexfloat/lib.rs	138	17	18	NK_AS_STR_TODO	
-node	lib	497	496	libhexfloat/lib.rs	139	20	65	NK_AS_STR_TODO	
-node	lib	486	485	libhexfloat/lib.rs	136	18	17	path	
-node	lib	531	529	libhexfloat/lib.rs	141	42	44	static	__STATIC_FMTSTR
-node	lib	650	648	libhexfloat/lib.rs	164	54	1	type	
-node	lib	181	179	libhexfloat/lib.rs	81	28	3	lit	
-node	lib	178	177	libhexfloat/lib.rs	81	7	5	path	
-node	lib	174	61	libhexfloat/lib.rs	81	4	77	NK_AS_STR_TODO	
-node	lib	323	321	libhexfloat/lib.rs	90	50	12	NK_AS_STR_TODO	
-node	lib	536	532	libhexfloat/lib.rs	141	42	44	lit	
-node	lib	241	240	libhexfloat/lib.rs	84	7	5	path	
-node	lib	151	138	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	642	638	libhexfloat/lib.rs	162	44	8	NK_AS_STR_TODO	
-node	lib	301	300	libhexfloat/lib.rs	90	13	5	path	
-node	lib	705	704	libhexfloat/lib.rs	174	26	5	path	
-node	lib	227	225	libhexfloat/lib.rs	83	58	12	NK_AS_STR_TODO	
-node	lib	704	702	libhexfloat/lib.rs	174	13	40	struct	
-node	lib	267	266	libhexfloat/lib.rs	87	42	4	path	
-node	lib	208	205	libhexfloat/lib.rs	83	31	1	NK_AS_STR_TODO	
-node	lib	500	498	libhexfloat/lib.rs	139	20	3	NK_AS_STR_TODO	
-node	lib	440	435	libhexfloat/lib.rs	119	29	296	NK_AS_STR_TODO	
-node	lib	389	386	libhexfloat/lib.rs	102	39	3	path	
-node	lib	77	76	libhexfloat/lib.rs	76	7	12	NK_AS_STR_TODO	
-node	lib	305	302	libhexfloat/lib.rs	90	31	1	NK_AS_STR_TODO	
-node	lib	106	105	libhexfloat/lib.rs	77	51	14	lit	
-node	lib	279	278	libhexfloat/lib.rs	88	7	12	NK_AS_STR_TODO	
-node	lib	544	543	libhexfloat/lib.rs	141	42	44	path	
-node	lib	220	217	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
-node	lib	195	61	libhexfloat/lib.rs	82	8	13	NK_AS_STR_TODO	
-node	lib	370	359	libhexfloat/lib.rs	100	58	17	type	
-node	lib	351	346	libhexfloat/lib.rs	96	8	7	NK_AS_STR_TODO	
-node	lib	240	239	libhexfloat/lib.rs	84	7	10	NK_AS_STR_TODO	
-node	lib	273	61	libhexfloat/lib.rs	87	82	4	NK_AS_STR_TODO	
-node	lib	477	475	libhexfloat/lib.rs	131	43	2	path	
-node	lib	93	92	libhexfloat/lib.rs	77	7	12	NK_AS_STR_TODO	
-node	lib	55	53	libhexfloat/lib.rs	73	40	12	type	
-node	lib	409	402	libhexfloat/lib.rs	107	21	16	NK_AS_STR_TODO	
-node	lib	392	391	libhexfloat/lib.rs	104	8	0	type	
-node	lib	407	402	libhexfloat/lib.rs	107	12	5	NK_AS_STR_TODO	
-node	lib	547	545	libhexfloat/lib.rs	141	42	44	path	
-node	lib	597	595	libhexfloat/lib.rs	150	35	1	path	
-node	lib	429	426	libhexfloat/lib.rs	111	34	42	lit	
-node	lib	657	656	libhexfloat/lib.rs	164	58	1	path	
-node	lib	474	466	libhexfloat/lib.rs	131	12	34	NK_AS_STR_TODO	
-node	lib	594	593	libhexfloat/lib.rs	150	14	2	NK_AS_STR_TODO	
-node	lib	63	61	libhexfloat/lib.rs	74	8	32	NK_AS_STR_TODO	
-node	lib	103	101	libhexfloat/lib.rs	77	47	30	tup	
-node	lib	132	61	libhexfloat/lib.rs	79	8	13	NK_AS_STR_TODO	
-node	lib	280	279	libhexfloat/lib.rs	88	7	5	path	
-node	lib	349	346	libhexfloat/lib.rs	95	8	4	NK_AS_STR_TODO	
-node	lib	506	505	libhexfloat/lib.rs	139	41	31	path	
-node	lib	131	129	libhexfloat/lib.rs	78	85	1	lit	
-node	lib	691	690	libhexfloat/lib.rs	172	12	0	type	
-node	lib	393	391	libhexfloat/lib.rs	104	8	2	NK_AS_STR_TODO	
-node	lib	624	612	libhexfloat/lib.rs	160	54	27	type	
-node	lib	158	154	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	507	505	libhexfloat/lib.rs	139	73	11	NK_AS_STR_TODO	
-node	lib	557	556	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	524	523	libhexfloat/lib.rs	141	88	7	NK_AS_STR_TODO	
-node	lib	358	357	libhexfloat/lib.rs	96	28	24	lit	
-node	lib	248	246	libhexfloat/lib.rs	85	8	76	NK_AS_STR_TODO	
-node	lib	496	495	libhexfloat/lib.rs	138	40	313	NK_AS_STR_TODO	
-node	lib	439	438	libhexfloat/lib.rs	119	21	3	NK_AS_STR_TODO	
-node	lib	346	61	libhexfloat/lib.rs	94	4	114	NK_AS_STR_TODO	
-node	lib	190	189	libhexfloat/lib.rs	81	51	14	lit	
-node	lib	203	202	libhexfloat/lib.rs	83	13	42	NK_AS_STR_TODO	
-node	lib	381	379	libhexfloat/lib.rs	102	8	35	NK_AS_STR_TODO	
-node	lib	137	61	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	570	568	libhexfloat/lib.rs	141	42	44	path	
-node	lib	488	487	libhexfloat/lib.rs	136	36	1	path	
-node	lib	19	0	libhexfloat/lib.rs	62	0	235	fn	macro_registrar
-node	lib	306	302	libhexfloat/lib.rs	90	34	1	type	
-node	lib	138	61	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	355	353	libhexfloat/lib.rs	96	24	40	tup	
-node	lib	245	243	libhexfloat/lib.rs	84	30	1	lit	
-node	lib	576	496	libhexfloat/lib.rs	142	16	35	NK_AS_STR_TODO	
-node	lib	52	47	libhexfloat/lib.rs	73	21	1	NK_AS_STR_TODO	
-node	lib	114	113	libhexfloat/lib.rs	78	7	12	NK_AS_STR_TODO	
-node	lib	515	514	libhexfloat/lib.rs	140	27	22	path	
-node	lib	357	355	libhexfloat/lib.rs	96	28	35	NK_AS_STR_TODO	
-node	lib	139	138	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	399	398	libhexfloat/lib.rs	106	13	18	NK_AS_STR_TODO	
-node	lib	165	164	libhexfloat/lib.rs	80	58	5	path	
-node	lib	633	632	libhexfloat/lib.rs	161	8	290	NK_AS_STR_TODO	
-node	lib	581	489	libhexfloat/lib.rs	144	12	1	NK_AS_STR_TODO	
-node	lib	95	92	libhexfloat/lib.rs	77	23	9	NK_AS_STR_TODO	
-node	lib	372	371	libhexfloat/lib.rs	100	60	14	type	
-node	lib	568	567	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	710	632	libhexfloat/lib.rs	176	4	56	NK_AS_STR_TODO	
-node	lib	59	58	libhexfloat/lib.rs	73	48	3	type	
-node	lib	693	690	libhexfloat/lib.rs	172	20	15	NK_AS_STR_TODO	
-node	lib	654	653	libhexfloat/lib.rs	164	56	12	NK_AS_STR_TODO	
-node	lib	231	230	libhexfloat/lib.rs	83	72	1	path	
-node	lib	364	359	libhexfloat/lib.rs	100	25	2	NK_AS_STR_TODO	
-node	lib	252	251	libhexfloat/lib.rs	85	21	1	path	
-node	lib	558	557	libhexfloat/lib.rs	141	88	7	NK_AS_STR_TODO	
-node	lib	117	116	libhexfloat/lib.rs	78	23	4	path	
-node	lib	662	659	libhexfloat/lib.rs	166	13	14	NK_AS_STR_TODO	
-node	lib	79	76	libhexfloat/lib.rs	76	23	10	NK_AS_STR_TODO	
-node	lib	541	537	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	485	482	libhexfloat/lib.rs	136	18	26	NK_AS_STR_TODO	
-node	lib	130	129	libhexfloat/lib.rs	78	82	1	path	
-node	lib	244	243	libhexfloat/lib.rs	84	21	5	path	
-node	lib	386	381	libhexfloat/lib.rs	102	25	18	NK_AS_STR_TODO	
-node	lib	249	248	libhexfloat/lib.rs	85	15	69	NK_AS_STR_TODO	
-node	lib	715	712	libhexfloat/lib.rs	176	18	10	path	
-node	lib	635	634	libhexfloat/lib.rs	161	8	0	type	
-node	lib	175	61	libhexfloat/lib.rs	81	4	77	NK_AS_STR_TODO	
-node	lib	278	277	libhexfloat/lib.rs	88	7	26	NK_AS_STR_TODO	
-node	lib	288	287	libhexfloat/lib.rs	88	36	5	path	
-node	lib	612	0	libhexfloat/lib.rs	160	0	747	fn	parse_tts
-node	lib	517	514	libhexfloat/lib.rs	140	54	3	path	
-node	lib	431	379	libhexfloat/lib.rs	117	8	526	NK_AS_STR_TODO	
-node	lib	623	612	libhexfloat/lib.rs	160	27	3	NK_AS_STR_TODO	
-node	lib	299	298	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	148	147	libhexfloat/lib.rs	80	34	20	NK_AS_STR_TODO	
-node	lib	465	435	libhexfloat/lib.rs	129	13	123	NK_AS_STR_TODO	
-node	lib	432	379	libhexfloat/lib.rs	117	8	526	NK_AS_STR_TODO	
-node	lib	670	669	libhexfloat/lib.rs	167	16	7	field	
-node	lib	452	451	libhexfloat/lib.rs	124	17	143	NK_AS_STR_TODO	
-node	lib	441	440	libhexfloat/lib.rs	119	35	8	field	
-node	lib	648	645	libhexfloat/lib.rs	164	52	16	NK_AS_STR_TODO	
-node	lib	665	632	libhexfloat/lib.rs	167	8	249	NK_AS_STR_TODO	
-node	lib	567	566	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	172	171	libhexfloat/lib.rs	80	78	5	path	
-node	lib	199	196	libhexfloat/lib.rs	82	20	1	lit	
-node	lib	286	285	libhexfloat/lib.rs	88	36	13	NK_AS_STR_TODO	
-node	lib	412	402	libhexfloat/lib.rs	108	12	5	NK_AS_STR_TODO	
-node	lib	551	543	libhexfloat/lib.rs	141	42	44	path	
-node	lib	380	379	libhexfloat/lib.rs	102	8	35	NK_AS_STR_TODO	
-node	lib	579	578	libhexfloat/lib.rs	142	23	23	path	
-node	lib	230	225	libhexfloat/lib.rs	83	72	4	NK_AS_STR_TODO	
-node	lib	238	61	libhexfloat/lib.rs	84	4	121	NK_AS_STR_TODO	
-node	lib	193	192	libhexfloat/lib.rs	81	82	1	path	
-node	lib	577	496	libhexfloat/lib.rs	142	16	34	NK_AS_STR_TODO	
-node	lib	498	496	libhexfloat/lib.rs	139	20	65	NK_AS_STR_TODO	
-node	lib	302	300	libhexfloat/lib.rs	90	30	16	NK_AS_STR_TODO	
-node	lib	453	452	libhexfloat/lib.rs	125	16	59	NK_AS_STR_TODO	
-node	lib	147	142	libhexfloat/lib.rs	80	34	20	NK_AS_STR_TODO	
-node	lib	585	584	libhexfloat/lib.rs	148	8	0	type	
-node	lib	692	690	libhexfloat/lib.rs	172	12	5	NK_AS_STR_TODO	
-node	lib	466	465	libhexfloat/lib.rs	129	13	123	NK_AS_STR_TODO	
-node	lib	720	632	libhexfloat/lib.rs	179	4	8	tup	
-node	lib	119	112	libhexfloat/lib.rs	78	33	48	NK_AS_STR_TODO	
-node	lib	442	441	libhexfloat/lib.rs	119	35	3	path	
-node	lib	714	713	libhexfloat/lib.rs	176	7	1	path	
-node	lib	457	456	libhexfloat/lib.rs	125	28	4	path	
-node	lib	167	162	libhexfloat/lib.rs	80	72	4	NK_AS_STR_TODO	
 node	lib	689	676	libhexfloat/lib.rs	172	12	23	NK_AS_STR_TODO	
-node	lib	100	98	libhexfloat/lib.rs	77	35	43	NK_AS_STR_TODO	
-node	lib	196	61	libhexfloat/lib.rs	82	8	13	NK_AS_STR_TODO	
-node	lib	64	63	libhexfloat/lib.rs	74	8	0	type	
-node	lib	667	665	libhexfloat/lib.rs	167	8	2	NK_AS_STR_TODO	
-node	lib	707	706	libhexfloat/lib.rs	174	39	5	path	
-node	lib	212	211	libhexfloat/lib.rs	83	34	1	path	
-node	lib	116	113	libhexfloat/lib.rs	78	23	9	NK_AS_STR_TODO	
-node	lib	593	587	libhexfloat/lib.rs	150	8	9	NK_AS_STR_TODO	
-node	lib	272	61	libhexfloat/lib.rs	87	82	5	NK_AS_STR_TODO	
-node	lib	191	61	libhexfloat/lib.rs	81	82	5	NK_AS_STR_TODO	
-node	lib	80	79	libhexfloat/lib.rs	76	23	4	path	
-node	lib	532	531	libhexfloat/lib.rs	141	42	44	type	
-node	lib	37	35	libhexfloat/lib.rs	63	13	25	NK_AS_STR_TODO	
-node	lib	126	124	libhexfloat/lib.rs	78	51	25	NK_AS_STR_TODO	
-node	lib	111	61	libhexfloat/lib.rs	78	4	77	NK_AS_STR_TODO	
-node	lib	578	577	libhexfloat/lib.rs	142	23	27	NK_AS_STR_TODO	
-node	lib	718	716	libhexfloat/lib.rs	177	8	14	NK_AS_STR_TODO	
-node	lib	313	312	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	530	529	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	246	238	libhexfloat/lib.rs	84	32	93	NK_AS_STR_TODO	
-node	lib	290	289	libhexfloat/lib.rs	88	50	1	path	
-node	lib	304	302	libhexfloat/lib.rs	90	32	1	type	
-node	lib	455	454	libhexfloat/lib.rs	125	16	2	path	
-node	lib	83	75	libhexfloat/lib.rs	76	34	23	NK_AS_STR_TODO	
-node	lib	67	66	libhexfloat/lib.rs	74	20	9	NK_AS_STR_TODO	
-node	lib	573	572	<std macros>	3	21	18	path	
-node	lib	637	634	libhexfloat/lib.rs	161	12	286	NK_AS_STR_TODO	
-node	lib	276	61	libhexfloat/lib.rs	88	4	53	NK_AS_STR_TODO	
-node	lib	294	293	libhexfloat/lib.rs	89	8	0	type	
-node	lib	385	383	libhexfloat/lib.rs	102	15	6	NK_AS_STR_TODO	
-node	lib	70	61	libhexfloat/lib.rs	75	8	9	NK_AS_STR_TODO	
-node	lib	481	480	libhexfloat/lib.rs	136	12	32	NK_AS_STR_TODO	
-node	lib	142	140	libhexfloat/lib.rs	80	30	24	NK_AS_STR_TODO	
-node	lib	640	638	libhexfloat/lib.rs	161	44	15	NK_AS_STR_TODO	
-node	lib	254	253	libhexfloat/lib.rs	85	24	47	lit	
-node	lib	121	119	libhexfloat/lib.rs	78	35	43	NK_AS_STR_TODO	
-node	lib	430	424	libhexfloat/lib.rs	112	16	4	path	
-node	lib	281	278	libhexfloat/lib.rs	88	23	10	NK_AS_STR_TODO	
-node	lib	712	711	libhexfloat/lib.rs	176	7	21	NK_AS_STR_TODO	
-node	lib	216	215	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
-node	lib	383	381	libhexfloat/lib.rs	102	8	14	NK_AS_STR_TODO	
-node	lib	554	553	libhexfloat/lib.rs	141	42	44	type	
-node	lib	27	21	libhexfloat/lib.rs	62	40	15	type	
-node	lib	251	249	libhexfloat/lib.rs	85	20	63	tup	
-node	lib	322	321	libhexfloat/lib.rs	90	50	13	NK_AS_STR_TODO	
-node	lib	271	270	libhexfloat/lib.rs	87	51	14	lit	
-node	lib	107	61	libhexfloat/lib.rs	77	82	5	NK_AS_STR_TODO	
-node	lib	269	268	libhexfloat/lib.rs	87	48	1	path	
-node	lib	343	342	libhexfloat/lib.rs	92	21	1	path	
-node	lib	434	432	libhexfloat/lib.rs	117	8	1	NK_AS_STR_TODO	
-node	lib	607	605	libhexfloat/lib.rs	156	11	10	type	
-node	lib	277	61	libhexfloat/lib.rs	88	4	53	NK_AS_STR_TODO	
-node	lib	514	511	libhexfloat/lib.rs	140	27	31	NK_AS_STR_TODO	
-node	lib	43	42	libhexfloat/lib.rs	64	21	95	struct	
-node	lib	482	480	libhexfloat/lib.rs	136	12	32	NK_AS_STR_TODO	
-node	lib	566	563	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	229	225	libhexfloat/lib.rs	83	72	5	NK_AS_STR_TODO	
-node	lib	406	404	libhexfloat/lib.rs	106	59	5	path	
-node	lib	571	568	libhexfloat/lib.rs	141	42	44	path	
-node	lib	210	205	libhexfloat/lib.rs	83	34	20	NK_AS_STR_TODO	
-node	lib	333	61	libhexfloat/lib.rs	91	4	86	NK_AS_STR_TODO	
-node	lib	221	217	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
-node	lib	582	489	libhexfloat/lib.rs	144	17	2	lit	
-node	lib	437	436	libhexfloat/lib.rs	117	18	4	path	
-node	lib	564	563	libhexfloat/lib.rs	141	42	44	type	
-node	lib	36	35	libhexfloat/lib.rs	63	4	8	path	
-node	lib	595	587	libhexfloat/lib.rs	150	21	20	NK_AS_STR_TODO	
-node	lib	394	391	libhexfloat/lib.rs	104	13	378	NK_AS_STR_TODO	
-node	lib	478	379	libhexfloat/lib.rs	135	4	457	NK_AS_STR_TODO	
-node	lib	82	81	libhexfloat/lib.rs	76	29	3	lit	
-node	lib	675	668	libhexfloat/lib.rs	169	11	193	NK_AS_STR_TODO	
-node	lib	129	61	libhexfloat/lib.rs	78	82	4	NK_AS_STR_TODO	
-node	lib	283	281	libhexfloat/lib.rs	88	28	4	NK_AS_STR_TODO	
-node	lib	232	230	libhexfloat/lib.rs	83	75	1	lit	
-node	lib	690	676	libhexfloat/lib.rs	172	12	23	NK_AS_STR_TODO	
-node	lib	459	452	libhexfloat/lib.rs	126	16	35	NK_AS_STR_TODO	
-node	lib	335	334	libhexfloat/lib.rs	91	7	5	path	
-node	lib	401	399	libhexfloat/lib.rs	106	26	4	NK_AS_STR_TODO	
-node	lib	141	140	libhexfloat/lib.rs	80	13	5	path	
-node	lib	590	587	libhexfloat/lib.rs	149	16	26	NK_AS_STR_TODO	
-node	lib	424	423	libhexfloat/lib.rs	110	17	115	NK_AS_STR_TODO	
-node	lib	415	414	libhexfloat/lib.rs	108	21	4	path	
-node	lib	310	298	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	123	122	libhexfloat/lib.rs	78	42	4	path	
-node	lib	589	587	libhexfloat/lib.rs	149	8	4	NK_AS_STR_TODO	
-node	lib	201	61	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
-node	lib	503	502	libhexfloat/lib.rs	139	26	9	field	
-node	lib	435	432	libhexfloat/lib.rs	117	12	522	NK_AS_STR_TODO	
-node	lib	319	318	libhexfloat/lib.rs	90	8	1	NK_AS_STR_TODO	
-node	lib	354	353	libhexfloat/lib.rs	96	19	4	path	
-node	lib	398	394	libhexfloat/lib.rs	106	8	24	NK_AS_STR_TODO	
-node	lib	574	572	<std macros>	3	21	18	NK_AS_STR_TODO	
-node	lib	655	654	libhexfloat/lib.rs	164	56	4	NK_AS_STR_TODO	
-node	lib	256	61	libhexfloat/lib.rs	87	4	77	NK_AS_STR_TODO	
-node	lib	312	311	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	329	321	libhexfloat/lib.rs	90	70	10	NK_AS_STR_TODO	
-node	lib	428	426	libhexfloat/lib.rs	111	28	4	path	
-node	lib	275	273	libhexfloat/lib.rs	87	85	1	lit	
-node	lib	205	203	libhexfloat/lib.rs	83	30	24	NK_AS_STR_TODO	
-node	lib	460	452	libhexfloat/lib.rs	126	16	34	NK_AS_STR_TODO	
-node	lib	603	601	libhexfloat/lib.rs	152	29	2	path	
-node	lib	105	103	libhexfloat/lib.rs	77	51	25	NK_AS_STR_TODO	
-node	lib	587	584	libhexfloat/lib.rs	148	14	102	NK_AS_STR_TODO	
-node	lib	438	435	libhexfloat/lib.rs	119	8	17	NK_AS_STR_TODO	
-node	lib	145	142	libhexfloat/lib.rs	80	31	1	NK_AS_STR_TODO	
-node	lib	311	298	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	591	590	libhexfloat/lib.rs	149	16	23	path	
-node	lib	102	101	libhexfloat/lib.rs	77	42	4	path	
-node	lib	65	63	libhexfloat/lib.rs	74	8	9	NK_AS_STR_TODO	
-node	lib	101	100	libhexfloat/lib.rs	77	42	36	NK_AS_STR_TODO	
-node	lib	85	83	libhexfloat/lib.rs	76	36	12	NK_AS_STR_TODO	
-node	lib	211	210	libhexfloat/lib.rs	83	34	20	NK_AS_STR_TODO	
-node	lib	200	61	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
-node	lib	197	196	libhexfloat/lib.rs	82	8	0	type	
-node	lib	261	260	libhexfloat/lib.rs	87	23	4	path	
-node	lib	647	646	libhexfloat/lib.rs	163	44	3	path	
-node	lib	499	498	libhexfloat/lib.rs	139	20	0	type	
-node	lib	703	702	libhexfloat/lib.rs	174	8	4	path	
-node	lib	260	257	libhexfloat/lib.rs	87	23	9	NK_AS_STR_TODO	
-node	lib	537	531	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	91	61	libhexfloat/lib.rs	77	4	77	NK_AS_STR_TODO	
-node	lib	545	543	libhexfloat/lib.rs	141	42	44	struct	
-node	lib	30	21	libhexfloat/lib.rs	62	56	0	type	
-node	lib	274	273	libhexfloat/lib.rs	87	82	1	path	
-node	lib	163	162	libhexfloat/lib.rs	80	58	13	NK_AS_STR_TODO	
-node	lib	315	314	libhexfloat/lib.rs	90	4	84	path	
-node	lib	135	133	libhexfloat/lib.rs	79	8	9	NK_AS_STR_TODO	
-node	lib	84	83	libhexfloat/lib.rs	76	36	13	NK_AS_STR_TODO	
-node	lib	592	590	libhexfloat/lib.rs	149	40	1	path	
-node	lib	646	645	libhexfloat/lib.rs	163	44	10	NK_AS_STR_TODO	
-node	lib	99	98	libhexfloat/lib.rs	77	35	44	NK_AS_STR_TODO	
-node	lib	599	379	libhexfloat/lib.rs	152	4	34	NK_AS_STR_TODO	
-node	lib	50	49	libhexfloat/lib.rs	73	25	3	type	
-node	lib	396	394	libhexfloat/lib.rs	105	8	4	NK_AS_STR_TODO	
-node	lib	268	266	libhexfloat/lib.rs	87	47	30	tup	
-node	lib	680	678	libhexfloat/lib.rs	170	17	13	NK_AS_STR_TODO	
-node	lib	74	61	libhexfloat/lib.rs	76	4	53	NK_AS_STR_TODO	
-node	lib	628	624	libhexfloat/lib.rs	160	67	13	type	
-node	lib	529	528	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	645	644	libhexfloat/lib.rs	163	44	80	NK_AS_STR_TODO	
-node	lib	359	0	libhexfloat/lib.rs	100	0	1726	fn	expand_syntax_ext
-node	lib	44	43	libhexfloat/lib.rs	65	22	17	path	
-node	lib	449	448	libhexfloat/lib.rs	122	16	1	path	
-node	lib	262	260	libhexfloat/lib.rs	87	28	3	lit	
-node	lib	443	440	libhexfloat/lib.rs	121	12	21	NK_AS_STR_TODO	
-node	lib	331	329	libhexfloat/lib.rs	90	79	1	lit	
-node	lib	632	612	libhexfloat/lib.rs	160	82	665	NK_AS_STR_TODO	
-node	lib	61	47	libhexfloat/lib.rs	73	54	1201	NK_AS_STR_TODO	
-node	lib	413	412	libhexfloat/lib.rs	108	12	8	lit	
-node	lib	127	126	libhexfloat/lib.rs	78	51	14	lit	
-node	lib	209	205	libhexfloat/lib.rs	83	34	1	type	
-node	lib	522	519	libhexfloat/lib.rs	141	34	63	NK_AS_STR_TODO	
-node	lib	552	529	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	182	175	libhexfloat/lib.rs	81	33	48	NK_AS_STR_TODO	
-node	lib	160	159	libhexfloat/lib.rs	80	8	1	NK_AS_STR_TODO	
-node	lib	553	529	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	23	21	libhexfloat/lib.rs	62	34	4	type	
-node	lib	722	720	libhexfloat/lib.rs	179	9	2	path	
-node	lib	575	574	libhexfloat/lib.rs	141	42	44	path	
-node	lib	638	637	libhexfloat/lib.rs	161	17	281	NK_AS_STR_TODO	
-node	lib	86	85	libhexfloat/lib.rs	76	36	5	path	
-node	lib	258	257	libhexfloat/lib.rs	87	7	12	NK_AS_STR_TODO	
+node	lib	400	399	libhexfloat/lib.rs	106	19	5	NK_AS_STR_TODO	
 node	lib	225	224	libhexfloat/lib.rs	83	56	34	NK_AS_STR_TODO	
-node	lib	677	676	libhexfloat/lib.rs	170	8	24	NK_AS_STR_TODO	
-node	lib	548	545	libhexfloat/lib.rs	141	42	44	lit	
-node	lib	562	529	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
-node	lib	81	79	libhexfloat/lib.rs	76	28	4	NK_AS_STR_TODO	
-node	lib	479	379	libhexfloat/lib.rs	135	4	457	NK_AS_STR_TODO	
-node	lib	159	154	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
-node	lib	224	217	libhexfloat/lib.rs	83	56	34	NK_AS_STR_TODO	
-node	lib	49	47	libhexfloat/lib.rs	73	24	4	type	
-node	lib	186	185	libhexfloat/lib.rs	81	42	4	path	
-node	lib	214	201	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
-node	lib	307	302	libhexfloat/lib.rs	90	34	12	NK_AS_STR_TODO	
-node	lib	673	668	libhexfloat/lib.rs	167	38	20	NK_AS_STR_TODO	
-node	lib	42	40	libhexfloat/lib.rs	64	17	99	NK_AS_STR_TODO	
-node	lib	402	394	libhexfloat/lib.rs	106	36	299	NK_AS_STR_TODO	
-node	lib	651	648	libhexfloat/lib.rs	164	53	1	NK_AS_STR_TODO	
-node	lib	92	91	libhexfloat/lib.rs	77	7	25	NK_AS_STR_TODO	
-node	lib	540	538	libhexfloat/lib.rs	141	42	44	lit	
-node	lib	104	103	libhexfloat/lib.rs	77	48	1	path	
 node	lib	243	239	libhexfloat/lib.rs	84	21	10	NK_AS_STR_TODO	
-node	lib	513	511	libhexfloat/lib.rs	140	20	4	NK_AS_STR_TODO	
-node	lib	454	452	libhexfloat/lib.rs	125	16	58	NK_AS_STR_TODO	
-node	lib	661	659	libhexfloat/lib.rs	166	8	2	NK_AS_STR_TODO	
-node	lib	66	63	libhexfloat/lib.rs	74	20	20	NK_AS_STR_TODO	
-node	lib	97	95	libhexfloat/lib.rs	77	28	3	lit	
-node	lib	706	704	libhexfloat/lib.rs	174	39	13	NK_AS_STR_TODO	
-node	lib	546	545	libhexfloat/lib.rs	141	42	44	lit	
-node	lib	166	162	libhexfloat/lib.rs	80	72	5	NK_AS_STR_TODO	
-node	lib	35	33	libhexfloat/lib.rs	63	4	168	NK_AS_STR_TODO	
-node	lib	596	595	libhexfloat/lib.rs	150	21	13	path	
-node	lib	462	461	libhexfloat/lib.rs	126	23	23	path	
-node	lib	324	323	libhexfloat/lib.rs	90	50	5	path	
-node	lib	427	426	libhexfloat/lib.rs	111	16	2	path	
-node	lib	447	446	libhexfloat/lib.rs	121	37	41	NK_AS_STR_TODO	
-node	lib	678	676	libhexfloat/lib.rs	170	8	23	NK_AS_STR_TODO	
-node	lib	314	313	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	395	394	libhexfloat/lib.rs	104	19	6	path	
-node	lib	580	578	libhexfloat/lib.rs	142	47	2	path	
-node	lib	334	333	libhexfloat/lib.rs	91	7	10	NK_AS_STR_TODO	
-node	lib	445	443	libhexfloat/lib.rs	121	31	1	NK_AS_STR_TODO	
-node	lib	73	70	libhexfloat/lib.rs	75	16	1	lit	
-node	lib	480	479	libhexfloat/lib.rs	135	4	457	NK_AS_STR_TODO	
-node	lib	188	187	libhexfloat/lib.rs	81	48	1	path	
-node	lib	384	383	libhexfloat/lib.rs	102	9	4	NK_AS_STR_TODO	
-node	lib	688	687	libhexfloat/lib.rs	171	17	1	path	
-node	lib	33	19	libhexfloat/lib.rs	62	58	177	NK_AS_STR_TODO	
-node	lib	115	114	libhexfloat/lib.rs	78	7	5	path	
-node	lib	328	326	libhexfloat/lib.rs	90	67	1	lit	
-node	lib	699	696	libhexfloat/lib.rs	173	17	14	field	
-node	lib	318	313	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
-node	lib	110	108	libhexfloat/lib.rs	77	85	1	lit	
-node	lib	371	370	libhexfloat/lib.rs	100	59	16	type	
-node	lib	473	466	libhexfloat/lib.rs	131	12	35	NK_AS_STR_TODO	
-node	lib	156	155	libhexfloat/lib.rs	80	4	93	path	
-node	lib	350	346	libhexfloat/lib.rs	95	16	4	path	
-node	lib	264	263	libhexfloat/lib.rs	87	35	44	NK_AS_STR_TODO	
-node	lib	403	402	libhexfloat/lib.rs	106	42	29	NK_AS_STR_TODO	
-node	lib	217	216	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
-node	lib	679	678	libhexfloat/lib.rs	170	8	1	path	
-node	lib	674	673	libhexfloat/lib.rs	168	8	4	path	
-node	lib	75	61	libhexfloat/lib.rs	76	4	53	NK_AS_STR_TODO	
-node	lib	671	670	libhexfloat/lib.rs	167	16	1	path	
+node	lib	390	379	libhexfloat/lib.rs	104	8	383	NK_AS_STR_TODO	
+node	lib	41	40	libhexfloat/lib.rs	64	8	8	path	
+node	lib	304	302	libhexfloat/lib.rs	90	32	1	type	
+node	lib	210	205	libhexfloat/lib.rs	83	34	20	NK_AS_STR_TODO	
+node	lib	430	424	libhexfloat/lib.rs	112	16	4	path	
+node	lib	155	154	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
 node	lib	321	320	libhexfloat/lib.rs	90	48	33	NK_AS_STR_TODO	
-node	lib	610	605	libhexfloat/lib.rs	157	10	4	type	
-node	lib	687	686	libhexfloat/lib.rs	171	17	6	field	
+node	lib	515	514	libhexfloat/lib.rs	140	27	22	path	
+node	lib	130	129	libhexfloat/lib.rs	78	82	1	path	
+node	lib	171	162	libhexfloat/lib.rs	80	78	10	NK_AS_STR_TODO	
+node	lib	704	702	libhexfloat/lib.rs	174	13	40	struct	
+node	lib	265	263	libhexfloat/lib.rs	87	35	43	NK_AS_STR_TODO	
+node	lib	447	446	libhexfloat/lib.rs	121	37	41	NK_AS_STR_TODO	
+node	lib	89	87	libhexfloat/lib.rs	76	54	1	lit	
+node	lib	63	61	libhexfloat/lib.rs	74	8	32	NK_AS_STR_TODO	
+node	lib	275	273	libhexfloat/lib.rs	87	85	1	lit	
+node	lib	492	491	libhexfloat/lib.rs	138	17	18	NK_AS_STR_TODO	
+node	lib	38	37	libhexfloat/lib.rs	63	13	13	path	
+node	lib	519	496	libhexfloat/lib.rs	141	16	81	NK_AS_STR_TODO	
+node	lib	666	665	libhexfloat/lib.rs	167	8	0	type	
+node	lib	179	176	libhexfloat/lib.rs	81	23	9	NK_AS_STR_TODO	
+node	lib	175	61	libhexfloat/lib.rs	81	4	77	NK_AS_STR_TODO	
+node	lib	521	519	libhexfloat/lib.rs	141	28	4	path	
+node	lib	514	511	libhexfloat/lib.rs	140	27	31	NK_AS_STR_TODO	
+node	lib	291	289	libhexfloat/lib.rs	88	54	1	lit	
+node	lib	526	522	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	300	299	libhexfloat/lib.rs	90	13	34	NK_AS_STR_TODO	
+node	lib	37	35	libhexfloat/lib.rs	63	13	25	NK_AS_STR_TODO	
+node	lib	264	263	libhexfloat/lib.rs	87	35	44	NK_AS_STR_TODO	
+node	lib	258	257	libhexfloat/lib.rs	87	7	12	NK_AS_STR_TODO	
+node	lib	94	93	libhexfloat/lib.rs	77	7	5	path	
+node	lib	150	148	libhexfloat/lib.rs	80	51	2	lit	
+node	lib	597	595	libhexfloat/lib.rs	150	35	1	path	
+node	lib	395	394	libhexfloat/lib.rs	104	19	6	path	
+node	lib	473	466	libhexfloat/lib.rs	131	12	35	NK_AS_STR_TODO	
+node	lib	62	61	libhexfloat/lib.rs	74	8	32	NK_AS_STR_TODO	
+node	lib	173	171	libhexfloat/lib.rs	80	87	1	lit	
+node	lib	34	33	libhexfloat/lib.rs	63	4	169	NK_AS_STR_TODO	
+node	lib	719	718	libhexfloat/lib.rs	177	8	1	path	
+node	lib	481	480	libhexfloat/lib.rs	136	12	32	NK_AS_STR_TODO	
+node	lib	219	218	libhexfloat/lib.rs	83	4	93	path	
+node	lib	36	35	libhexfloat/lib.rs	63	4	8	path	
+node	lib	142	140	libhexfloat/lib.rs	80	30	24	NK_AS_STR_TODO	
+node	lib	163	162	libhexfloat/lib.rs	80	58	13	NK_AS_STR_TODO	
+node	lib	470	468	libhexfloat/lib.rs	130	24	9	field	
+node	lib	572	529	<std macros>	3	21	18	NK_AS_STR_TODO	
+node	lib	538	537	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	388	386	libhexfloat/lib.rs	102	35	2	path	
+node	lib	516	514	libhexfloat/lib.rs	140	50	3	path	
+node	lib	118	116	libhexfloat/lib.rs	78	28	3	lit	
+node	lib	85	83	libhexfloat/lib.rs	76	36	12	NK_AS_STR_TODO	
+node	lib	422	402	libhexfloat/lib.rs	110	12	1	NK_AS_STR_TODO	
+node	lib	651	648	libhexfloat/lib.rs	164	53	1	NK_AS_STR_TODO	
+node	lib	493	492	libhexfloat/lib.rs	138	18	7	NK_AS_STR_TODO	
+node	lib	139	138	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
+node	lib	435	432	libhexfloat/lib.rs	117	12	522	NK_AS_STR_TODO	
+node	lib	471	470	libhexfloat/lib.rs	130	24	4	path	
+node	lib	226	225	libhexfloat/lib.rs	83	58	13	NK_AS_STR_TODO	
+node	lib	662	659	libhexfloat/lib.rs	166	13	14	NK_AS_STR_TODO	
+node	lib	518	496	libhexfloat/lib.rs	141	16	82	NK_AS_STR_TODO	
+node	lib	417	402	libhexfloat/lib.rs	109	12	6	NK_AS_STR_TODO	
+node	lib	136	133	libhexfloat/lib.rs	79	20	1	lit	
+node	lib	152	138	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
+node	lib	571	568	libhexfloat/lib.rs	141	42	44	path	
+node	lib	546	545	libhexfloat/lib.rs	141	42	44	lit	
+node	lib	536	532	libhexfloat/lib.rs	141	42	44	lit	
+node	lib	100	98	libhexfloat/lib.rs	77	35	43	NK_AS_STR_TODO	
+node	lib	544	543	libhexfloat/lib.rs	141	42	44	path	
+node	lib	364	359	libhexfloat/lib.rs	100	25	2	NK_AS_STR_TODO	
+node	lib	270	268	libhexfloat/lib.rs	87	51	25	NK_AS_STR_TODO	
+node	lib	102	101	libhexfloat/lib.rs	77	42	4	path	
+node	lib	184	182	libhexfloat/lib.rs	81	35	43	NK_AS_STR_TODO	
+node	lib	539	538	libhexfloat/lib.rs	141	42	44	path	
+node	lib	706	704	libhexfloat/lib.rs	174	39	13	NK_AS_STR_TODO	
+node	lib	65	63	libhexfloat/lib.rs	74	8	9	NK_AS_STR_TODO	
+node	lib	457	456	libhexfloat/lib.rs	125	28	4	path	
+node	lib	674	673	libhexfloat/lib.rs	168	8	4	path	
+node	lib	712	711	libhexfloat/lib.rs	176	7	21	NK_AS_STR_TODO	
+node	lib	625	624	libhexfloat/lib.rs	160	55	10	type	
+node	lib	380	379	libhexfloat/lib.rs	102	8	35	NK_AS_STR_TODO	
+node	lib	99	98	libhexfloat/lib.rs	77	35	44	NK_AS_STR_TODO	
+node	lib	21	19	libhexfloat/lib.rs	62	33	23	type	
+node	lib	84	83	libhexfloat/lib.rs	76	36	13	NK_AS_STR_TODO	
+node	lib	679	678	libhexfloat/lib.rs	170	8	1	path	
+node	lib	670	669	libhexfloat/lib.rs	167	16	7	field	
+node	lib	190	189	libhexfloat/lib.rs	81	51	14	lit	
+node	lib	636	634	libhexfloat/lib.rs	161	8	1	NK_AS_STR_TODO	
+node	lib	504	503	libhexfloat/lib.rs	139	26	4	path	
+node	lib	656	655	libhexfloat/lib.rs	164	57	2	NK_AS_STR_TODO	
+node	lib	280	279	libhexfloat/lib.rs	88	7	5	path	
+node	lib	182	175	libhexfloat/lib.rs	81	33	48	NK_AS_STR_TODO	
+node	lib	550	545	libhexfloat/lib.rs	141	42	44	path	
+node	lib	561	558	libhexfloat/lib.rs	141	88	7	path	
+node	lib	668	665	libhexfloat/lib.rs	167	13	244	NK_AS_STR_TODO	
+node	lib	556	553	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	141	140	libhexfloat/lib.rs	80	13	5	path	
+node	lib	574	572	<std macros>	3	21	18	NK_AS_STR_TODO	
+node	lib	309	308	libhexfloat/lib.rs	90	34	1	path	
+node	lib	617	612	libhexfloat/lib.rs	160	13	2	NK_AS_STR_TODO	
+node	lib	178	177	libhexfloat/lib.rs	81	7	5	path	
+node	lib	236	234	libhexfloat/lib.rs	83	87	1	lit	
+node	lib	527	526	libhexfloat/lib.rs	141	88	7	NK_AS_STR_TODO	
+node	lib	273	61	libhexfloat/lib.rs	87	82	4	NK_AS_STR_TODO	
+node	lib	181	179	libhexfloat/lib.rs	81	28	3	lit	
+node	lib	426	424	libhexfloat/lib.rs	111	16	61	NK_AS_STR_TODO	
+node	lib	351	346	libhexfloat/lib.rs	96	8	7	NK_AS_STR_TODO	
+node	lib	450	440	libhexfloat/lib.rs	124	12	1	NK_AS_STR_TODO	
+node	lib	216	215	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	124	122	libhexfloat/lib.rs	78	47	30	tup	
+node	lib	628	624	libhexfloat/lib.rs	160	67	13	type	
+node	lib	530	529	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	260	257	libhexfloat/lib.rs	87	23	9	NK_AS_STR_TODO	
+node	lib	581	489	libhexfloat/lib.rs	144	12	1	NK_AS_STR_TODO	
+node	lib	217	216	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	45	43	libhexfloat/lib.rs	66	18	4	path	
+node	lib	476	475	libhexfloat/lib.rs	131	19	23	path	
+node	lib	67	66	libhexfloat/lib.rs	74	20	9	NK_AS_STR_TODO	
+node	lib	626	625	libhexfloat/lib.rs	160	56	9	type	
+node	lib	30	21	libhexfloat/lib.rs	62	56	0	type	
+node	lib	721	720	libhexfloat/lib.rs	179	5	2	path	
+node	lib	317	313	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	59	58	libhexfloat/lib.rs	73	48	3	type	
+node	lib	696	676	libhexfloat/lib.rs	173	12	19	NK_AS_STR_TODO	
+node	lib	90	61	libhexfloat/lib.rs	77	4	77	NK_AS_STR_TODO	
+node	lib	576	496	libhexfloat/lib.rs	142	16	35	NK_AS_STR_TODO	
+node	lib	123	122	libhexfloat/lib.rs	78	42	4	path	
+node	lib	279	278	libhexfloat/lib.rs	88	7	12	NK_AS_STR_TODO	
+node	lib	434	432	libhexfloat/lib.rs	117	8	1	NK_AS_STR_TODO	
+node	lib	214	201	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	211	210	libhexfloat/lib.rs	83	34	20	NK_AS_STR_TODO	
+node	lib	122	121	libhexfloat/lib.rs	78	42	36	NK_AS_STR_TODO	
+node	lib	204	203	libhexfloat/lib.rs	83	13	5	path	
+node	lib	319	318	libhexfloat/lib.rs	90	8	1	NK_AS_STR_TODO	
+node	lib	565	563	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	449	448	libhexfloat/lib.rs	122	16	1	path	
+node	lib	134	133	libhexfloat/lib.rs	79	8	0	type	
+node	lib	524	523	libhexfloat/lib.rs	141	88	7	NK_AS_STR_TODO	
+node	lib	404	403	libhexfloat/lib.rs	106	42	23	NK_AS_STR_TODO	
+node	lib	249	248	libhexfloat/lib.rs	85	15	69	NK_AS_STR_TODO	
+node	lib	151	138	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
+node	lib	87	83	libhexfloat/lib.rs	76	50	5	NK_AS_STR_TODO	
+node	lib	391	379	libhexfloat/lib.rs	104	8	383	NK_AS_STR_TODO	
+node	lib	116	113	libhexfloat/lib.rs	78	23	9	NK_AS_STR_TODO	
+node	lib	328	326	libhexfloat/lib.rs	90	67	1	lit	
+node	lib	222	217	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	465	435	libhexfloat/lib.rs	129	13	123	NK_AS_STR_TODO	
+node	lib	343	342	libhexfloat/lib.rs	92	21	1	path	
+node	lib	397	394	libhexfloat/lib.rs	105	16	4	path	
+node	lib	495	489	libhexfloat/lib.rs	138	40	313	NK_AS_STR_TODO	
+node	lib	698	696	libhexfloat/lib.rs	173	12	2	NK_AS_STR_TODO	
+node	lib	162	161	libhexfloat/lib.rs	80	56	34	NK_AS_STR_TODO	
+node	lib	658	632	libhexfloat/lib.rs	166	8	19	NK_AS_STR_TODO	
+node	lib	56	55	libhexfloat/lib.rs	73	41	4	type	
+node	lib	440	435	libhexfloat/lib.rs	119	29	296	NK_AS_STR_TODO	
+node	lib	619	612	libhexfloat/lib.rs	160	32	17	type	
+node	lib	528	522	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	421	419	libhexfloat/lib.rs	109	27	11	path	
+node	lib	461	460	libhexfloat/lib.rs	126	23	27	NK_AS_STR_TODO	
+node	lib	302	300	libhexfloat/lib.rs	90	30	16	NK_AS_STR_TODO	
+node	lib	480	479	libhexfloat/lib.rs	135	4	457	NK_AS_STR_TODO	
+node	lib	202	201	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	237	61	libhexfloat/lib.rs	84	4	121	NK_AS_STR_TODO	
+node	lib	570	568	libhexfloat/lib.rs	141	42	44	path	
+node	lib	292	61	libhexfloat/lib.rs	89	8	13	NK_AS_STR_TODO	
+node	lib	408	407	libhexfloat/lib.rs	107	12	8	lit	
+node	lib	558	557	libhexfloat/lib.rs	141	88	7	NK_AS_STR_TODO	
+node	lib	374	359	libhexfloat/lib.rs	100	53	3	NK_AS_STR_TODO	
+node	lib	510	496	libhexfloat/lib.rs	140	20	38	NK_AS_STR_TODO	
+node	lib	637	634	libhexfloat/lib.rs	161	12	286	NK_AS_STR_TODO	
+node	lib	307	302	libhexfloat/lib.rs	90	34	12	NK_AS_STR_TODO	
+node	lib	53	47	libhexfloat/lib.rs	73	33	20	type	
+node	lib	599	379	libhexfloat/lib.rs	152	4	34	NK_AS_STR_TODO	
+node	lib	146	142	libhexfloat/lib.rs	80	34	1	type	
+node	lib	42	40	libhexfloat/lib.rs	64	17	99	NK_AS_STR_TODO	
+node	lib	582	489	libhexfloat/lib.rs	144	17	2	lit	
+node	lib	33	19	libhexfloat/lib.rs	62	58	177	NK_AS_STR_TODO	
+node	lib	477	475	libhexfloat/lib.rs	131	43	2	path	
+node	lib	700	699	libhexfloat/lib.rs	173	17	11	field	
+node	lib	532	531	libhexfloat/lib.rs	141	42	44	type	
+node	lib	540	538	libhexfloat/lib.rs	141	42	44	lit	
+node	lib	429	426	libhexfloat/lib.rs	111	34	42	lit	
+node	lib	191	61	libhexfloat/lib.rs	81	82	5	NK_AS_STR_TODO	
+node	lib	43	42	libhexfloat/lib.rs	64	21	95	struct	
+node	lib	578	577	libhexfloat/lib.rs	142	23	27	NK_AS_STR_TODO	
+node	lib	255	61	libhexfloat/lib.rs	87	4	77	NK_AS_STR_TODO	
+node	lib	257	256	libhexfloat/lib.rs	87	7	25	NK_AS_STR_TODO	
+node	lib	587	584	libhexfloat/lib.rs	148	14	102	NK_AS_STR_TODO	
+node	lib	383	381	libhexfloat/lib.rs	102	8	14	NK_AS_STR_TODO	
+node	lib	455	454	libhexfloat/lib.rs	125	16	2	path	
+node	lib	596	595	libhexfloat/lib.rs	150	21	13	path	
+node	lib	314	313	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	717	716	libhexfloat/lib.rs	177	8	15	NK_AS_STR_TODO	
+node	lib	76	75	libhexfloat/lib.rs	76	7	26	NK_AS_STR_TODO	
+node	lib	337	333	libhexfloat/lib.rs	91	18	72	NK_AS_STR_TODO	
+node	lib	185	184	libhexfloat/lib.rs	81	42	36	NK_AS_STR_TODO	
+node	lib	604	601	libhexfloat/lib.rs	152	33	3	path	
+node	lib	97	95	libhexfloat/lib.rs	77	28	3	lit	
+node	lib	117	116	libhexfloat/lib.rs	78	23	4	path	
+node	lib	371	370	libhexfloat/lib.rs	100	59	16	type	
+node	lib	580	578	libhexfloat/lib.rs	142	47	2	path	
+node	lib	660	659	libhexfloat/lib.rs	166	8	0	type	
+node	lib	705	704	libhexfloat/lib.rs	174	26	5	path	
+node	lib	338	337	libhexfloat/lib.rs	92	8	56	NK_AS_STR_TODO	
+node	lib	23	21	libhexfloat/lib.rs	62	34	4	type	
+node	lib	707	706	libhexfloat/lib.rs	174	39	5	path	
+node	lib	701	700	libhexfloat/lib.rs	173	17	1	path	
+node	lib	633	632	libhexfloat/lib.rs	161	8	290	NK_AS_STR_TODO	
+node	lib	594	593	libhexfloat/lib.rs	150	14	2	NK_AS_STR_TODO	
+node	lib	156	155	libhexfloat/lib.rs	80	4	93	path	
+node	lib	624	612	libhexfloat/lib.rs	160	54	27	type	
+node	lib	702	676	libhexfloat/lib.rs	174	8	46	NK_AS_STR_TODO	
+node	lib	82	81	libhexfloat/lib.rs	76	29	3	lit	
+node	lib	195	61	libhexfloat/lib.rs	82	8	13	NK_AS_STR_TODO	
+node	lib	325	321	libhexfloat/lib.rs	90	64	5	NK_AS_STR_TODO	
+node	lib	112	61	libhexfloat/lib.rs	78	4	77	NK_AS_STR_TODO	
+node	lib	469	468	libhexfloat/lib.rs	130	12	2	path	
+node	lib	234	225	libhexfloat/lib.rs	83	78	10	NK_AS_STR_TODO	
+node	lib	253	251	libhexfloat/lib.rs	85	24	58	NK_AS_STR_TODO	
+node	lib	488	487	libhexfloat/lib.rs	136	36	1	path	
+node	lib	709	706	libhexfloat/lib.rs	174	49	2	path	
+node	lib	98	91	libhexfloat/lib.rs	77	33	48	NK_AS_STR_TODO	
+node	lib	643	642	libhexfloat/lib.rs	162	44	2	path	
+node	lib	213	211	libhexfloat/lib.rs	83	51	2	lit	
+node	lib	167	162	libhexfloat/lib.rs	80	72	4	NK_AS_STR_TODO	
+node	lib	148	147	libhexfloat/lib.rs	80	34	20	NK_AS_STR_TODO	
+node	lib	149	148	libhexfloat/lib.rs	80	34	1	path	
+node	lib	413	412	libhexfloat/lib.rs	108	12	8	lit	
+node	lib	88	87	libhexfloat/lib.rs	76	50	1	path	
+node	lib	66	63	libhexfloat/lib.rs	74	20	20	NK_AS_STR_TODO	
+node	lib	442	441	libhexfloat/lib.rs	119	35	3	path	
+node	lib	635	634	libhexfloat/lib.rs	161	8	0	type	
+node	lib	451	440	libhexfloat/lib.rs	124	17	143	NK_AS_STR_TODO	
+node	lib	486	485	libhexfloat/lib.rs	136	18	17	path	
+node	lib	508	507	libhexfloat/lib.rs	139	73	7	path	
+node	lib	324	323	libhexfloat/lib.rs	90	50	5	path	
+node	lib	419	402	libhexfloat/lib.rs	109	22	17	NK_AS_STR_TODO	
+node	lib	650	648	libhexfloat/lib.rs	164	54	1	type	
+node	lib	348	347	libhexfloat/lib.rs	94	10	5	path	
+node	lib	49	47	libhexfloat/lib.rs	73	24	4	type	
+node	lib	138	61	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
+node	lib	592	590	libhexfloat/lib.rs	149	40	1	path	
+node	lib	638	637	libhexfloat/lib.rs	161	17	281	NK_AS_STR_TODO	
+node	lib	109	108	libhexfloat/lib.rs	77	82	1	path	
+node	lib	224	217	libhexfloat/lib.rs	83	56	34	NK_AS_STR_TODO	
+node	lib	199	196	libhexfloat/lib.rs	82	20	1	lit	
+node	lib	664	632	libhexfloat/lib.rs	167	8	249	NK_AS_STR_TODO	
+node	lib	78	77	libhexfloat/lib.rs	76	7	5	path	
+node	lib	497	496	libhexfloat/lib.rs	139	20	65	NK_AS_STR_TODO	
+node	lib	341	340	libhexfloat/lib.rs	92	15	4	path	
+node	lib	420	419	libhexfloat/lib.rs	109	22	4	path	
+node	lib	336	334	libhexfloat/lib.rs	91	16	1	lit	
+node	lib	250	249	libhexfloat/lib.rs	85	15	4	path	
+node	lib	115	114	libhexfloat/lib.rs	78	7	5	path	
+node	lib	573	572	<std macros>	3	21	18	path	
+node	lib	632	612	libhexfloat/lib.rs	160	82	665	NK_AS_STR_TODO	
+node	lib	502	501	libhexfloat/lib.rs	139	26	12	field	
+node	lib	384	383	libhexfloat/lib.rs	102	9	4	NK_AS_STR_TODO	
+node	lib	121	119	libhexfloat/lib.rs	78	35	43	NK_AS_STR_TODO	
+node	lib	299	298	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	242	240	libhexfloat/lib.rs	84	16	1	lit	
+node	lib	533	532	libhexfloat/lib.rs	141	42	44	type	
+node	lib	644	638	libhexfloat/lib.rs	163	44	138	NK_AS_STR_TODO	
+node	lib	682	676	libhexfloat/lib.rs	171	12	14	NK_AS_STR_TODO	
+node	lib	491	489	libhexfloat/lib.rs	138	12	24	NK_AS_STR_TODO	
+node	lib	72	70	libhexfloat/lib.rs	75	8	5	NK_AS_STR_TODO	
+node	lib	298	61	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	586	584	libhexfloat/lib.rs	148	8	3	NK_AS_STR_TODO	
+node	lib	339	337	libhexfloat/lib.rs	92	8	55	NK_AS_STR_TODO	
+node	lib	293	61	libhexfloat/lib.rs	89	8	13	NK_AS_STR_TODO	
+node	lib	289	285	libhexfloat/lib.rs	88	50	5	NK_AS_STR_TODO	
+node	lib	238	61	libhexfloat/lib.rs	84	4	121	NK_AS_STR_TODO	
+node	lib	331	329	libhexfloat/lib.rs	90	79	1	lit	
+node	lib	131	129	libhexfloat/lib.rs	78	85	1	lit	
+node	lib	439	438	libhexfloat/lib.rs	119	21	3	NK_AS_STR_TODO	
+node	lib	595	587	libhexfloat/lib.rs	150	21	20	NK_AS_STR_TODO	
+node	lib	180	179	libhexfloat/lib.rs	81	23	4	path	
+node	lib	235	234	libhexfloat/lib.rs	83	78	5	path	
+node	lib	187	185	libhexfloat/lib.rs	81	47	30	tup	
+node	lib	475	474	libhexfloat/lib.rs	131	19	27	NK_AS_STR_TODO	
+node	lib	412	402	libhexfloat/lib.rs	108	12	5	NK_AS_STR_TODO	
+node	lib	287	285	libhexfloat/lib.rs	88	36	12	NK_AS_STR_TODO	
+node	lib	677	676	libhexfloat/lib.rs	170	8	24	NK_AS_STR_TODO	
+node	lib	61	47	libhexfloat/lib.rs	73	54	1201	NK_AS_STR_TODO	
+node	lib	40	35	libhexfloat/lib.rs	64	8	123	NK_AS_STR_TODO	
+node	lib	454	452	libhexfloat/lib.rs	125	16	58	NK_AS_STR_TODO	
+node	lib	140	139	libhexfloat/lib.rs	80	13	42	NK_AS_STR_TODO	
 node	lib	218	217	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	424	423	libhexfloat/lib.rs	110	17	115	NK_AS_STR_TODO	
+node	lib	503	502	libhexfloat/lib.rs	139	26	9	field	
+node	lib	523	522	libhexfloat/lib.rs	141	42	44	tup	
+node	lib	406	404	libhexfloat/lib.rs	106	59	5	path	
+node	lib	680	678	libhexfloat/lib.rs	170	17	13	NK_AS_STR_TODO	
+node	lib	415	414	libhexfloat/lib.rs	108	21	4	path	
+node	lib	483	482	libhexfloat/lib.rs	136	12	0	type	
+node	lib	703	702	libhexfloat/lib.rs	174	8	4	path	
+node	lib	310	298	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	332	61	libhexfloat/lib.rs	91	4	86	NK_AS_STR_TODO	
+node	lib	603	601	libhexfloat/lib.rs	152	29	2	path	
+node	lib	387	386	libhexfloat/lib.rs	102	25	9	path	
+node	lib	81	79	libhexfloat/lib.rs	76	28	4	NK_AS_STR_TODO	
+node	lib	448	447	libhexfloat/lib.rs	122	16	9	NK_AS_STR_TODO	
+node	lib	436	435	libhexfloat/lib.rs	117	18	9	field	
+node	lib	593	587	libhexfloat/lib.rs	150	8	9	NK_AS_STR_TODO	
+node	lib	569	568	libhexfloat/lib.rs	141	42	44	path	
+node	lib	418	417	libhexfloat/lib.rs	109	12	9	lit	
+node	lib	433	432	libhexfloat/lib.rs	117	8	0	type	
+node	lib	176	175	libhexfloat/lib.rs	81	7	25	NK_AS_STR_TODO	
+node	lib	229	225	libhexfloat/lib.rs	83	72	5	NK_AS_STR_TODO	
+node	lib	172	171	libhexfloat/lib.rs	80	78	5	path	
+node	lib	251	249	libhexfloat/lib.rs	85	20	63	tup	
+node	lib	79	76	libhexfloat/lib.rs	76	23	10	NK_AS_STR_TODO	
+node	lib	95	92	libhexfloat/lib.rs	77	23	9	NK_AS_STR_TODO	
+node	lib	482	480	libhexfloat/lib.rs	136	12	32	NK_AS_STR_TODO	
+node	lib	157	154	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
+node	lib	496	495	libhexfloat/lib.rs	138	40	313	NK_AS_STR_TODO	
+node	lib	441	440	libhexfloat/lib.rs	119	35	8	field	
+node	lib	356	355	libhexfloat/lib.rs	96	25	1	path	
+node	lib	560	558	libhexfloat/lib.rs	141	88	7	path	
+node	lib	598	595	libhexfloat/lib.rs	150	38	2	path	
+node	lib	194	192	libhexfloat/lib.rs	81	85	1	lit	
+node	lib	212	211	libhexfloat/lib.rs	83	34	1	path	
+node	lib	548	545	libhexfloat/lib.rs	141	42	44	lit	
+node	lib	385	383	libhexfloat/lib.rs	102	15	6	NK_AS_STR_TODO	
+node	lib	506	505	libhexfloat/lib.rs	139	41	31	path	
+node	lib	485	482	libhexfloat/lib.rs	136	18	26	NK_AS_STR_TODO	
+node	lib	58	55	libhexfloat/lib.rs	73	47	4	type	
+node	lib	196	61	libhexfloat/lib.rs	82	8	13	NK_AS_STR_TODO	
+node	lib	254	253	libhexfloat/lib.rs	85	24	47	lit	
+node	lib	372	371	libhexfloat/lib.rs	100	60	14	type	
+node	lib	80	79	libhexfloat/lib.rs	76	23	4	path	
+node	lib	381	379	libhexfloat/lib.rs	102	8	35	NK_AS_STR_TODO	
+node	lib	494	492	libhexfloat/lib.rs	138	27	7	NK_AS_STR_TODO	
+node	lib	50	49	libhexfloat/lib.rs	73	25	3	type	
+node	lib	410	409	libhexfloat/lib.rs	107	21	4	path	
+node	lib	221	217	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	609	605	libhexfloat/lib.rs	157	4	10	struct_field	span
+node	lib	346	61	libhexfloat/lib.rs	94	4	114	NK_AS_STR_TODO	
+node	lib	394	391	libhexfloat/lib.rs	104	13	378	NK_AS_STR_TODO	
+node	lib	601	599	libhexfloat/lib.rs	152	17	20	NK_AS_STR_TODO	
+node	lib	164	162	libhexfloat/lib.rs	80	58	12	NK_AS_STR_TODO	
+node	lib	559	558	libhexfloat/lib.rs	141	88	7	path	
+node	lib	600	599	libhexfloat/lib.rs	152	4	12	path	
+node	lib	463	461	libhexfloat/lib.rs	126	47	2	path	
+node	lib	683	676	libhexfloat/lib.rs	171	12	14	NK_AS_STR_TODO	
+node	lib	108	61	libhexfloat/lib.rs	77	82	4	NK_AS_STR_TODO	
+node	lib	239	238	libhexfloat/lib.rs	84	7	24	NK_AS_STR_TODO	
+node	lib	240	239	libhexfloat/lib.rs	84	7	10	NK_AS_STR_TODO	
+node	lib	577	496	libhexfloat/lib.rs	142	16	34	NK_AS_STR_TODO	
+node	lib	669	668	libhexfloat/lib.rs	167	16	21	NK_AS_STR_TODO	
+node	lib	352	351	libhexfloat/lib.rs	96	13	1	NK_AS_STR_TODO	
+node	lib	64	63	libhexfloat/lib.rs	74	8	0	type	
+node	lib	114	113	libhexfloat/lib.rs	78	7	12	NK_AS_STR_TODO	
+node	lib	657	656	libhexfloat/lib.rs	164	58	1	path	
+node	lib	399	398	libhexfloat/lib.rs	106	13	18	NK_AS_STR_TODO	
+node	lib	673	668	libhexfloat/lib.rs	167	38	20	NK_AS_STR_TODO	
+node	lib	359	0	libhexfloat/lib.rs	100	0	1726	fn	expand_syntax_ext
+node	lib	110	108	libhexfloat/lib.rs	77	85	1	lit	
+node	lib	542	541	libhexfloat/lib.rs	141	42	44	path	
+node	lib	208	205	libhexfloat/lib.rs	83	31	1	NK_AS_STR_TODO	
+node	lib	501	498	libhexfloat/lib.rs	139	26	59	NK_AS_STR_TODO	
+node	lib	209	205	libhexfloat/lib.rs	83	34	1	type	
+node	lib	329	321	libhexfloat/lib.rs	90	70	10	NK_AS_STR_TODO	
+node	lib	68	67	libhexfloat/lib.rs	74	20	1	path	
+node	lib	252	251	libhexfloat/lib.rs	85	21	1	path	
+node	lib	554	553	libhexfloat/lib.rs	141	42	44	type	
+node	lib	414	402	libhexfloat/lib.rs	108	21	16	NK_AS_STR_TODO	
+node	lib	370	359	libhexfloat/lib.rs	100	58	17	type	
+node	lib	296	293	libhexfloat/lib.rs	89	20	1	lit	
+node	lib	671	670	libhexfloat/lib.rs	167	16	1	path	
+node	lib	621	620	libhexfloat/lib.rs	160	34	14	type	
+node	lib	716	711	libhexfloat/lib.rs	176	29	31	NK_AS_STR_TODO	
+node	lib	174	61	libhexfloat/lib.rs	81	4	77	NK_AS_STR_TODO	
+node	lib	71	70	libhexfloat/lib.rs	75	8	0	type	
+node	lib	655	654	libhexfloat/lib.rs	164	56	4	NK_AS_STR_TODO	
+node	lib	487	485	libhexfloat/lib.rs	136	36	7	NK_AS_STR_TODO	
+node	lib	177	176	libhexfloat/lib.rs	81	7	12	NK_AS_STR_TODO	
+node	lib	517	514	libhexfloat/lib.rs	140	54	3	path	
+node	lib	585	584	libhexfloat/lib.rs	148	8	0	type	
+node	lib	92	91	libhexfloat/lib.rs	77	7	25	NK_AS_STR_TODO	
+node	lib	159	154	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
+node	lib	684	683	libhexfloat/lib.rs	171	12	0	type	
+node	lib	83	75	libhexfloat/lib.rs	76	34	23	NK_AS_STR_TODO	
+node	lib	271	270	libhexfloat/lib.rs	87	51	14	lit	
+node	lib	129	61	libhexfloat/lib.rs	78	82	4	NK_AS_STR_TODO	
+node	lib	541	537	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	583	379	libhexfloat/lib.rs	148	8	108	NK_AS_STR_TODO	
+node	lib	681	680	libhexfloat/lib.rs	170	18	12	path	
+node	lib	405	404	libhexfloat/lib.rs	106	42	16	path	
+node	lib	686	683	libhexfloat/lib.rs	171	17	9	field	
+node	lib	396	394	libhexfloat/lib.rs	105	8	4	NK_AS_STR_TODO	
+node	lib	620	619	libhexfloat/lib.rs	160	33	16	type	
+node	lib	710	632	libhexfloat/lib.rs	176	4	56	NK_AS_STR_TODO	
+node	lib	145	142	libhexfloat/lib.rs	80	31	1	NK_AS_STR_TODO	
+node	lib	500	498	libhexfloat/lib.rs	139	20	3	NK_AS_STR_TODO	
+node	lib	39	37	libhexfloat/lib.rs	63	27	10	lit	
+node	lib	93	92	libhexfloat/lib.rs	77	7	12	NK_AS_STR_TODO	
+node	lib	498	496	libhexfloat/lib.rs	139	20	65	NK_AS_STR_TODO	
+node	lib	466	465	libhexfloat/lib.rs	129	13	123	NK_AS_STR_TODO	
+node	lib	468	466	libhexfloat/lib.rs	130	12	50	NK_AS_STR_TODO	
+node	lib	313	312	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	312	311	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	320	313	libhexfloat/lib.rs	90	48	33	NK_AS_STR_TODO	
+node	lib	589	587	libhexfloat/lib.rs	149	8	4	NK_AS_STR_TODO	
+node	lib	687	686	libhexfloat/lib.rs	171	17	6	field	
+node	lib	246	238	libhexfloat/lib.rs	84	32	93	NK_AS_STR_TODO	
+node	lib	474	466	libhexfloat/lib.rs	131	12	34	NK_AS_STR_TODO	
+node	lib	688	687	libhexfloat/lib.rs	171	17	1	path	
+node	lib	634	632	libhexfloat/lib.rs	161	8	290	NK_AS_STR_TODO	
+node	lib	166	162	libhexfloat/lib.rs	80	72	5	NK_AS_STR_TODO	
+node	lib	55	53	libhexfloat/lib.rs	73	40	12	type	
+node	lib	575	574	libhexfloat/lib.rs	141	42	44	path	
+node	lib	647	646	libhexfloat/lib.rs	163	44	3	path	
+node	lib	297	61	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	588	587	libhexfloat/lib.rs	148	20	2	path	
+node	lib	382	381	libhexfloat/lib.rs	102	8	0	type	
+node	lib	479	379	libhexfloat/lib.rs	135	4	457	NK_AS_STR_TODO	
+node	lib	342	340	libhexfloat/lib.rs	92	20	42	tup	
+node	lib	233	225	libhexfloat/lib.rs	83	78	11	NK_AS_STR_TODO	
+node	lib	232	230	libhexfloat/lib.rs	83	75	1	lit	
+node	lib	283	281	libhexfloat/lib.rs	88	28	4	NK_AS_STR_TODO	
+node	lib	223	222	libhexfloat/lib.rs	83	8	1	NK_AS_STR_TODO	
+node	lib	315	314	libhexfloat/lib.rs	90	4	84	path	
+node	lib	200	61	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	361	359	libhexfloat/lib.rs	100	29	12	type	
+node	lib	349	346	libhexfloat/lib.rs	95	8	4	NK_AS_STR_TODO	
+node	lib	531	529	libhexfloat/lib.rs	141	42	44	static	__STATIC_FMTSTR
+node	lib	691	690	libhexfloat/lib.rs	172	12	0	type	
+node	lib	366	359	libhexfloat/lib.rs	100	47	4	type	
+node	lib	340	339	libhexfloat/lib.rs	92	15	48	NK_AS_STR_TODO	
+node	lib	354	353	libhexfloat/lib.rs	96	19	4	path	
+node	lib	247	246	libhexfloat/lib.rs	85	8	77	NK_AS_STR_TODO	
+node	lib	35	33	libhexfloat/lib.rs	63	4	168	NK_AS_STR_TODO	
+node	lib	103	101	libhexfloat/lib.rs	77	47	30	tup	
+node	lib	170	162	libhexfloat/lib.rs	80	78	11	NK_AS_STR_TODO	
+node	lib	335	334	libhexfloat/lib.rs	91	7	5	path	
+node	lib	459	452	libhexfloat/lib.rs	126	16	35	NK_AS_STR_TODO	
+node	lib	69	61	libhexfloat/lib.rs	75	8	9	NK_AS_STR_TODO	
+node	lib	231	230	libhexfloat/lib.rs	83	72	1	path	
+node	lib	563	529	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	416	414	libhexfloat/lib.rs	108	26	10	path	
+node	lib	407	402	libhexfloat/lib.rs	107	12	5	NK_AS_STR_TODO	
+node	lib	525	524	libhexfloat/lib.rs	141	88	7	path	
+node	lib	522	519	libhexfloat/lib.rs	141	34	63	NK_AS_STR_TODO	
+node	lib	350	346	libhexfloat/lib.rs	95	16	4	path	
+node	lib	256	61	libhexfloat/lib.rs	87	4	77	NK_AS_STR_TODO	
+node	lib	555	553	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	711	632	libhexfloat/lib.rs	176	4	56	NK_AS_STR_TODO	
+node	lib	549	545	libhexfloat/lib.rs	141	42	44	path	
+node	lib	505	501	libhexfloat/lib.rs	139	41	44	NK_AS_STR_TODO	
+node	lib	513	511	libhexfloat/lib.rs	140	20	4	NK_AS_STR_TODO	
+node	lib	591	590	libhexfloat/lib.rs	149	16	23	path	
+node	lib	169	167	libhexfloat/lib.rs	80	75	1	lit	
+node	lib	562	529	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	263	256	libhexfloat/lib.rs	87	33	48	NK_AS_STR_TODO	
+node	lib	133	61	libhexfloat/lib.rs	79	8	13	NK_AS_STR_TODO	
+node	lib	464	435	libhexfloat/lib.rs	129	8	1	NK_AS_STR_TODO	
+node	lib	248	246	libhexfloat/lib.rs	85	8	76	NK_AS_STR_TODO	
+node	lib	661	659	libhexfloat/lib.rs	166	8	2	NK_AS_STR_TODO	
 node	lib	489	480	libhexfloat/lib.rs	137	8	395	NK_AS_STR_TODO	
-jdef	551	core	86244
-jdef	186	core	86245
-jdef	570	lib	531
-jdef	177	core	82903
-jdef	601	syntax	191861
-jdef	349	core	86244
-jdef	678	syntax	102567
-jdef	547	std	81071
-jdef	219	lib	214
-jdef	560	std	81570
-jdef	314	core	83196
-jdef	327	lib	72
-jdef	456	syntax	39604
-jdef	366	syntax	10952
-jdef	469	lib	364
-jdef	662	syntax	112133
-jdef	67	core	97827
-jdef	438	syntax	40139
-jdef	159	core	86245
-jdef	235	lib	198
+node	lib	425	424	libhexfloat/lib.rs	111	16	62	NK_AS_STR_TODO	
+node	lib	499	498	libhexfloat/lib.rs	139	20	0	type	
+node	lib	161	154	libhexfloat/lib.rs	80	56	34	NK_AS_STR_TODO	
+node	lib	295	293	libhexfloat/lib.rs	89	8	9	NK_AS_STR_TODO	
+node	lib	144	142	libhexfloat/lib.rs	80	32	1	type	
+node	lib	205	203	libhexfloat/lib.rs	83	30	24	NK_AS_STR_TODO	
+node	lib	678	676	libhexfloat/lib.rs	170	8	23	NK_AS_STR_TODO	
+node	lib	567	566	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	653	648	libhexfloat/lib.rs	164	56	12	NK_AS_STR_TODO	
+node	lib	690	676	libhexfloat/lib.rs	172	12	23	NK_AS_STR_TODO	
+node	lib	334	333	libhexfloat/lib.rs	91	7	10	NK_AS_STR_TODO	
+node	lib	31	19	libhexfloat/lib.rs	62	23	8	NK_AS_STR_TODO	
+node	lib	227	225	libhexfloat/lib.rs	83	58	12	NK_AS_STR_TODO	
+node	lib	402	394	libhexfloat/lib.rs	106	36	299	NK_AS_STR_TODO	
+node	lib	612	0	libhexfloat/lib.rs	160	0	747	fn	parse_tts
+node	lib	266	265	libhexfloat/lib.rs	87	42	36	NK_AS_STR_TODO	
+node	lib	375	359	libhexfloat/lib.rs	101	28	20	type	
+node	lib	333	61	libhexfloat/lib.rs	91	4	86	NK_AS_STR_TODO	
+node	lib	409	402	libhexfloat/lib.rs	107	21	16	NK_AS_STR_TODO	
+node	lib	652	648	libhexfloat/lib.rs	164	56	1	type	
+node	lib	462	461	libhexfloat/lib.rs	126	23	23	path	
+node	lib	511	496	libhexfloat/lib.rs	140	20	38	NK_AS_STR_TODO	
+node	lib	456	454	libhexfloat/lib.rs	125	28	9	field	
+node	lib	557	556	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	355	353	libhexfloat/lib.rs	96	24	40	tup	
+node	lib	584	379	libhexfloat/lib.rs	148	8	108	NK_AS_STR_TODO	
+node	lib	564	563	libhexfloat/lib.rs	141	42	44	type	
+node	lib	215	201	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	120	119	libhexfloat/lib.rs	78	35	44	NK_AS_STR_TODO	
+node	lib	308	307	libhexfloat/lib.rs	90	34	12	NK_AS_STR_TODO	
+node	lib	154	153	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
+node	lib	507	505	libhexfloat/lib.rs	139	73	11	NK_AS_STR_TODO	
+node	lib	44	43	libhexfloat/lib.rs	65	22	17	path	
+node	lib	428	426	libhexfloat/lib.rs	111	28	4	path	
+node	lib	640	638	libhexfloat/lib.rs	161	44	15	NK_AS_STR_TODO	
+node	lib	32	19	libhexfloat/lib.rs	62	58	0	type	
+node	lib	316	313	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	318	313	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	676	675	libhexfloat/lib.rs	169	11	193	NK_AS_STR_TODO	
+node	lib	431	379	libhexfloat/lib.rs	117	8	526	NK_AS_STR_TODO	
+node	lib	512	511	libhexfloat/lib.rs	140	20	0	type	
+node	lib	259	258	libhexfloat/lib.rs	87	7	5	path	
+node	lib	301	300	libhexfloat/lib.rs	90	13	5	path	
+node	lib	437	436	libhexfloat/lib.rs	117	18	4	path	
+node	lib	590	587	libhexfloat/lib.rs	149	16	26	NK_AS_STR_TODO	
+node	lib	52	47	libhexfloat/lib.rs	73	21	1	NK_AS_STR_TODO	
+node	lib	125	124	libhexfloat/lib.rs	78	48	1	path	
+node	lib	230	225	libhexfloat/lib.rs	83	72	4	NK_AS_STR_TODO	
+node	lib	285	277	libhexfloat/lib.rs	88	34	23	NK_AS_STR_TODO	
+node	lib	552	529	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	27	21	libhexfloat/lib.rs	62	40	15	type	
+node	lib	75	61	libhexfloat/lib.rs	76	4	53	NK_AS_STR_TODO	
+node	lib	445	443	libhexfloat/lib.rs	121	31	1	NK_AS_STR_TODO	
+node	lib	368	359	libhexfloat/lib.rs	100	43	2	NK_AS_STR_TODO	
+node	lib	47	0	libhexfloat/lib.rs	73	0	1255	fn	hex_float_lit_err
+node	lib	453	452	libhexfloat/lib.rs	125	16	59	NK_AS_STR_TODO	
+node	lib	606	605	libhexfloat/lib.rs	156	4	17	struct_field	ident
+node	lib	607	605	libhexfloat/lib.rs	156	11	10	type	
+node	lib	663	662	libhexfloat/lib.rs	166	13	1	path	
+node	lib	158	154	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
+node	lib	446	440	libhexfloat/lib.rs	121	37	41	NK_AS_STR_TODO	
+node	lib	345	344	libhexfloat/lib.rs	92	24	26	lit	
+node	lib	693	690	libhexfloat/lib.rs	172	20	15	NK_AS_STR_TODO	
+node	lib	86	85	libhexfloat/lib.rs	76	36	5	path	
+node	lib	286	285	libhexfloat/lib.rs	88	36	13	NK_AS_STR_TODO	
+node	lib	694	693	libhexfloat/lib.rs	172	20	1	path	
+node	lib	714	713	libhexfloat/lib.rs	176	7	1	path	
+node	lib	568	567	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	715	712	libhexfloat/lib.rs	176	18	10	path	
+node	lib	323	321	libhexfloat/lib.rs	90	50	12	NK_AS_STR_TODO	
+node	lib	327	326	libhexfloat/lib.rs	90	64	1	path	
+node	lib	432	379	libhexfloat/lib.rs	117	8	526	NK_AS_STR_TODO	
+node	lib	699	696	libhexfloat/lib.rs	173	17	14	field	
+node	lib	73	70	libhexfloat/lib.rs	75	16	1	lit	
+node	lib	427	426	libhexfloat/lib.rs	111	16	2	path	
+node	lib	326	321	libhexfloat/lib.rs	90	64	4	NK_AS_STR_TODO	
+node	lib	646	645	libhexfloat/lib.rs	163	44	10	NK_AS_STR_TODO	
+node	lib	113	112	libhexfloat/lib.rs	78	7	25	NK_AS_STR_TODO	
+node	lib	294	293	libhexfloat/lib.rs	89	8	0	type	
+node	lib	197	196	libhexfloat/lib.rs	82	8	0	type	
+node	lib	403	402	libhexfloat/lib.rs	106	42	29	NK_AS_STR_TODO	
+node	lib	553	529	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	659	632	libhexfloat/lib.rs	166	8	19	NK_AS_STR_TODO	
+node	lib	358	357	libhexfloat/lib.rs	96	28	24	lit	
+node	lib	104	103	libhexfloat/lib.rs	77	48	1	path	
+node	lib	509	507	libhexfloat/lib.rs	139	83	1	lit	
+node	lib	203	202	libhexfloat/lib.rs	83	13	42	NK_AS_STR_TODO	
+node	lib	344	342	libhexfloat/lib.rs	92	24	37	NK_AS_STR_TODO	
+node	lib	393	391	libhexfloat/lib.rs	104	8	2	NK_AS_STR_TODO	
+node	lib	630	628	libhexfloat/lib.rs	160	74	5	type	
+node	lib	288	287	libhexfloat/lib.rs	88	36	5	path	
+node	lib	423	402	libhexfloat/lib.rs	110	17	115	NK_AS_STR_TODO	
+node	lib	101	100	libhexfloat/lib.rs	77	42	36	NK_AS_STR_TODO	
+node	lib	281	278	libhexfloat/lib.rs	88	23	10	NK_AS_STR_TODO	
+node	lib	377	375	libhexfloat/lib.rs	101	32	15	type	
+node	lib	389	386	libhexfloat/lib.rs	102	39	3	path	
+node	lib	362	361	libhexfloat/lib.rs	100	34	7	type	
+node	lib	460	452	libhexfloat/lib.rs	126	16	34	NK_AS_STR_TODO	
+node	lib	438	435	libhexfloat/lib.rs	119	8	17	NK_AS_STR_TODO	
+node	lib	579	578	libhexfloat/lib.rs	142	23	23	path	
+node	lib	605	0	libhexfloat/lib.rs	155	0	54	struct	Ident
+node	lib	106	105	libhexfloat/lib.rs	77	51	14	lit	
+node	lib	201	61	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	105	103	libhexfloat/lib.rs	77	51	25	NK_AS_STR_TODO	
+node	lib	654	653	libhexfloat/lib.rs	164	56	12	NK_AS_STR_TODO	
+node	lib	665	632	libhexfloat/lib.rs	167	8	249	NK_AS_STR_TODO	
+node	lib	245	243	libhexfloat/lib.rs	84	30	1	lit	
+node	lib	675	668	libhexfloat/lib.rs	169	11	193	NK_AS_STR_TODO	
+node	lib	311	298	libhexfloat/lib.rs	90	4	84	NK_AS_STR_TODO	
+node	lib	70	61	libhexfloat/lib.rs	75	8	9	NK_AS_STR_TODO	
+node	lib	411	409	libhexfloat/lib.rs	107	26	10	path	
+node	lib	520	519	libhexfloat/lib.rs	141	16	2	path	
+node	lib	126	124	libhexfloat/lib.rs	78	51	25	NK_AS_STR_TODO	
+node	lib	467	466	libhexfloat/lib.rs	130	12	51	NK_AS_STR_TODO	
+node	lib	529	528	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	642	638	libhexfloat/lib.rs	162	44	8	NK_AS_STR_TODO	
+node	lib	168	167	libhexfloat/lib.rs	80	72	1	path	
+node	lib	623	612	libhexfloat/lib.rs	160	27	3	NK_AS_STR_TODO	
+node	lib	278	277	libhexfloat/lib.rs	88	7	26	NK_AS_STR_TODO	
+node	lib	91	61	libhexfloat/lib.rs	77	4	77	NK_AS_STR_TODO	
+node	lib	685	683	libhexfloat/lib.rs	171	12	2	NK_AS_STR_TODO	
+node	lib	695	676	libhexfloat/lib.rs	173	12	19	NK_AS_STR_TODO	
+node	lib	147	142	libhexfloat/lib.rs	80	34	20	NK_AS_STR_TODO	
+node	lib	132	61	libhexfloat/lib.rs	79	8	13	NK_AS_STR_TODO	
+node	lib	96	95	libhexfloat/lib.rs	77	23	4	path	
+node	lib	241	240	libhexfloat/lib.rs	84	7	5	path	
+node	lib	77	76	libhexfloat/lib.rs	76	7	12	NK_AS_STR_TODO	
+node	lib	160	159	libhexfloat/lib.rs	80	8	1	NK_AS_STR_TODO	
+node	lib	720	632	libhexfloat/lib.rs	179	4	8	tup	
+node	lib	614	612	libhexfloat/lib.rs	160	17	8	type	
+node	lib	543	541	libhexfloat/lib.rs	141	42	44	struct	
+node	lib	672	669	libhexfloat/lib.rs	167	27	10	path	
+node	lib	192	61	libhexfloat/lib.rs	81	82	4	NK_AS_STR_TODO	
+node	lib	322	321	libhexfloat/lib.rs	90	50	13	NK_AS_STR_TODO	
+node	lib	398	394	libhexfloat/lib.rs	106	8	24	NK_AS_STR_TODO	
+node	lib	188	187	libhexfloat/lib.rs	81	48	1	path	
+node	lib	261	260	libhexfloat/lib.rs	87	23	4	path	
+node	lib	46	40	libhexfloat/lib.rs	68	8	4	path	
+node	lib	490	489	libhexfloat/lib.rs	137	14	3	path	
+node	lib	276	61	libhexfloat/lib.rs	88	4	53	NK_AS_STR_TODO	
+node	lib	484	482	libhexfloat/lib.rs	136	12	3	NK_AS_STR_TODO	
+node	lib	401	399	libhexfloat/lib.rs	106	26	4	NK_AS_STR_TODO	
+node	lib	306	302	libhexfloat/lib.rs	90	34	1	type	
+node	lib	478	379	libhexfloat/lib.rs	135	4	457	NK_AS_STR_TODO	
+node	lib	547	545	libhexfloat/lib.rs	141	42	44	path	
+node	lib	357	355	libhexfloat/lib.rs	96	28	35	NK_AS_STR_TODO	
+node	lib	19	0	libhexfloat/lib.rs	62	0	235	fn	macro_registrar
+node	lib	128	61	libhexfloat/lib.rs	78	82	5	NK_AS_STR_TODO	
+node	lib	244	243	libhexfloat/lib.rs	84	21	5	path	
+node	lib	444	443	libhexfloat/lib.rs	121	24	5	NK_AS_STR_TODO	
+node	lib	277	61	libhexfloat/lib.rs	88	4	53	NK_AS_STR_TODO	
+node	lib	458	454	libhexfloat/lib.rs	125	39	34	lit	
+node	lib	692	690	libhexfloat/lib.rs	172	12	5	NK_AS_STR_TODO	
+node	lib	392	391	libhexfloat/lib.rs	104	8	0	type	
+node	lib	551	543	libhexfloat/lib.rs	141	42	44	path	
+node	lib	127	126	libhexfloat/lib.rs	78	51	14	lit	
+node	lib	353	346	libhexfloat/lib.rs	96	19	46	NK_AS_STR_TODO	
+node	lib	722	720	libhexfloat/lib.rs	179	9	2	path	
+node	lib	186	185	libhexfloat/lib.rs	81	42	4	path	
+node	lib	207	205	libhexfloat/lib.rs	83	32	1	type	
+node	lib	274	273	libhexfloat/lib.rs	87	82	1	path	
+node	lib	284	283	libhexfloat/lib.rs	88	29	3	lit	
+node	lib	267	266	libhexfloat/lib.rs	87	42	4	path	
+node	lib	137	61	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
+node	lib	189	187	libhexfloat/lib.rs	81	51	25	NK_AS_STR_TODO	
+node	lib	193	192	libhexfloat/lib.rs	81	82	1	path	
+node	lib	610	605	libhexfloat/lib.rs	157	10	4	type	
+node	lib	639	638	libhexfloat/lib.rs	161	17	26	path	
+node	lib	648	645	libhexfloat/lib.rs	164	52	16	NK_AS_STR_TODO	
+node	lib	615	614	libhexfloat/lib.rs	160	18	7	type	
+node	lib	347	346	libhexfloat/lib.rs	94	10	12	NK_AS_STR_TODO	
+node	lib	708	706	libhexfloat/lib.rs	174	45	2	path	
+node	lib	153	152	libhexfloat/lib.rs	80	4	93	NK_AS_STR_TODO	
+node	lib	545	543	libhexfloat/lib.rs	141	42	44	struct	
+node	lib	379	359	libhexfloat/lib.rs	101	49	1600	NK_AS_STR_TODO	
+node	lib	452	451	libhexfloat/lib.rs	124	17	143	NK_AS_STR_TODO	
+node	lib	697	696	libhexfloat/lib.rs	173	12	0	type	
+node	lib	667	665	libhexfloat/lib.rs	167	8	2	NK_AS_STR_TODO	
+node	lib	718	716	libhexfloat/lib.rs	177	8	14	NK_AS_STR_TODO	
+node	lib	645	644	libhexfloat/lib.rs	163	44	80	NK_AS_STR_TODO	
+node	lib	135	133	libhexfloat/lib.rs	79	8	9	NK_AS_STR_TODO	
+node	lib	269	268	libhexfloat/lib.rs	87	48	1	path	
+node	lib	262	260	libhexfloat/lib.rs	87	28	3	lit	
+node	lib	290	289	libhexfloat/lib.rs	88	50	1	path	
+node	lib	305	302	libhexfloat/lib.rs	90	31	1	NK_AS_STR_TODO	
+node	lib	198	196	libhexfloat/lib.rs	82	8	9	NK_AS_STR_TODO	
+node	lib	641	640	libhexfloat/lib.rs	161	44	2	path	
+node	lib	268	266	libhexfloat/lib.rs	87	47	30	tup	
+node	lib	111	61	libhexfloat/lib.rs	78	4	77	NK_AS_STR_TODO	
+node	lib	566	563	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	107	61	libhexfloat/lib.rs	77	82	5	NK_AS_STR_TODO	
+node	lib	537	531	libhexfloat/lib.rs	141	42	44	NK_AS_STR_TODO	
+node	lib	220	217	libhexfloat/lib.rs	83	4	93	NK_AS_STR_TODO	
+node	lib	330	329	libhexfloat/lib.rs	90	70	5	path	
+node	lib	443	440	libhexfloat/lib.rs	121	12	21	NK_AS_STR_TODO	
+node	lib	386	381	libhexfloat/lib.rs	102	25	18	NK_AS_STR_TODO	
+node	lib	119	112	libhexfloat/lib.rs	78	33	48	NK_AS_STR_TODO	
+node	lib	282	281	libhexfloat/lib.rs	88	23	4	path	
+node	lib	165	164	libhexfloat/lib.rs	80	58	5	path	
+node	lib	472	468	libhexfloat/lib.rs	130	35	26	lit	
+node	lib	602	601	libhexfloat/lib.rs	152	17	2	path	
+node	lib	74	61	libhexfloat/lib.rs	76	4	53	NK_AS_STR_TODO	
+node	lib	183	182	libhexfloat/lib.rs	81	35	44	NK_AS_STR_TODO	
+node	lib	713	712	libhexfloat/lib.rs	176	7	7	field	
+node	lib	272	61	libhexfloat/lib.rs	87	82	5	NK_AS_STR_TODO	
+node	lib	228	227	libhexfloat/lib.rs	83	58	5	path	
 jdef	428	lib	401
-jdef	688	lib	636
-jdef	148	core	78241
-jdef	105	std	125288
-jdef	140	core	122127
-jdef	603	lib	368
-jdef	516	lib	500
-jdef	639	syntax	140739
-jdef	610	syntax	10952
-jdef	714	lib	636
-jdef	704	lib	605
-jdef	701	lib	636
-jdef	78	lib	65
-jdef	96	core	86245
-jdef	68	lib	52
-jdef	521	lib	513
-jdef	324	lib	65
-jdef	415	core	86245
-jdef	470	syntax	39604
-jdef	654	syntax	48746
-jdef	109	lib	72
-jdef	288	lib	65
-jdef	722	lib	667
-jdef	344	std	125288
-jdef	77	core	82993
-jdef	573	std	81991
-jdef	545	std	81052
-jdef	45	core	86244
-jdef	462	syntax	166694
-jdef	718	syntax	102495
-jdef	705	lib	692
-jdef	703	core	86245
-jdef	517	lib	500
-jdef	27	syntax	166800
-jdef	420	core	86245
-jdef	449	lib	444
-jdef	114	core	82903
-jdef	670	syntax	102298
-jdef	66	core	122934
-jdef	211	core	78241
-jdef	410	core	86245
-jdef	377	syntax	166477
-jdef	657	lib	651
-jdef	644	core	122011
-jdef	36	lib	31
-jdef	341	core	86245
-jdef	149	lib	145
-jdef	244	lib	198
-jdef	204	lib	65
-jdef	308	core	78230
-jdef	539	std	81021
-jdef	421	syntax	56142
-jdef	411	syntax	56140
-jdef	598	lib	594
-jdef	615	syntax	167159
-jdef	117	core	86245
-jdef	362	syntax	167159
-jdef	222	core	86245
-jdef	713	syntax	102298
-jdef	694	lib	636
-jdef	85	core	82903
-jdef	448	syntax	134181
-jdef	398	core	86245
-jdef	274	lib	72
-jdef	115	lib	65
-jdef	93	core	82903
-jdef	178	lib	65
-jdef	287	core	82903
-jdef	508	lib	493
-jdef	672	syntax	122931
-jdef	515	syntax	11779
-jdef	707	syntax	11779
-jdef	559	std	83169
-jdef	220	core	86244
-jdef	350	core	86244
-jdef	38	syntax	134510
-jdef	571	lib	555
-jdef	700	syntax	102298
-jdef	141	lib	65
-jdef	520	lib	364
-jdef	721	lib	661
-jdef	471	lib	384
-jdef	486	lib	47
-jdef	674	core	86244
-jdef	123	core	86245
-jdef	430	core	86244
-jdef	643	lib	617
-jdef	502	syntax	10952
-jdef	525	lib	494
-jdef	258	core	82903
-jdef	626	syntax	39604
-jdef	354	core	86245
-jdef	375	core	25849
-jdef	280	lib	65
-jdef	395	lib	385
-jdef	80	core	86245
-jdef	189	std	125288
-jdef	544	std	81166
-jdef	589	core	86244
-jdef	645	core	122802
-jdef	330	lib	295
-jdef	708	lib	685
-jdef	596	syntax	50903
-jdef	671	lib	636
-jdef	488	lib	434
-jdef	561	lib	527
-jdef	575	lib	565
-jdef	356	lib	72
-jdef	357	std	125288
-jdef	41	syntax	166809
-jdef	592	lib	434
-jdef	457	lib	384
-jdef	681	syntax	122851
-jdef	463	lib	368
-jdef	491	core	86245
-jdef	241	lib	135
-jdef	188	lib	72
-jdef	597	lib	434
-jdef	646	core	90823
-jdef	164	core	82903
-jdef	309	lib	305
-jdef	490	lib	484
-jdef	709	lib	698
-jdef	290	lib	72
-jdef	504	lib	384
-jdef	441	syntax	11197
-jdef	602	lib	364
-jdef	212	lib	208
-jdef	335	lib	295
-jdef	253	std	125288
-jdef	607	syntax	16411
-jdef	43	syntax	166271
-jdef	347	core	82903
-jdef	343	lib	72
-jdef	203	core	122127
-jdef	388	lib	364
-jdef	593	core	86245
-jdef	372	syntax	47596
-jdef	228	lib	65
-jdef	406	lib	400
-jdef	397	core	86244
-jdef	231	lib	72
-jdef	427	lib	364
-jdef	630	lib	605
-jdef	591	syntax	50910
-jdef	180	core	86245
-jdef	600	syntax	166548
-jdef	168	lib	72
-jdef	454	syntax	167483
-jdef	642	syntax	167286
-jdef	389	lib	374
-jdef	348	lib	65
-jdef	102	core	86245
-jdef	193	lib	72
-jdef	647	lib	623
-jdef	519	syntax	167483
-jdef	125	lib	72
-jdef	549	std	81164
-jdef	155	core	83196
-jdef	126	std	125288
-jdef	679	lib	636
-jdef	227	core	82903
-jdef	403	syntax	134225
-jdef	259	lib	65
-jdef	399	lib	605
 jdef	104	lib	72
-jdef	252	lib	72
-jdef	269	lib	72
-jdef	261	core	86245
-jdef	621	syntax	47596
-jdef	487	syntax	134225
-jdef	267	core	86245
-jdef	663	lib	636
-jdef	443	syntax	50866
-jdef	686	syntax	10952
-jdef	157	core	86244
-jdef	436	syntax	39604
-jdef	604	lib	586
-jdef	396	core	86244
-jdef	156	lib	151
-jdef	468	syntax	167483
-jdef	506	syntax	9995
-jdef	23	syntax	17113
-jdef	88	lib	72
-jdef	543	std	81036
-jdef	316	core	86244
-jdef	94	lib	65
-jdef	318	core	86245
-jdef	300	core	122127
-jdef	503	syntax	39604
-jdef	250	core	86245
-jdef	315	lib	310
-jdef	301	lib	65
-jdef	719	lib	636
-jdef	172	lib	135
-jdef	46	core	86244
-jdef	628	core	86243
-jdef	715	syntax	122931
-jdef	44	lib	359
-jdef	323	core	82903
+jdef	674	core	86244
 jdef	477	lib	368
-jdef	218	core	83196
-jdef	542	std	81030
-jdef	533	std	81020
-jdef	455	lib	364
-jdef	588	lib	393
-jdef	282	core	86245
-jdef	165	lib	65
-jdef	351	core	86245
+jdef	253	std	125288
 jdef	687	syntax	102298
-jdef	405	syntax	134484
-jdef	699	syntax	10952
-jdef	279	core	82993
-jdef	437	lib	384
-jdef	579	syntax	166694
-jdef	476	syntax	166694
-jdef	569	std	81324
-jdef	580	lib	368
-jdef	693	syntax	103468
-jdef	130	lib	72
-jdef	426	syntax	167483
-jdef	641	lib	617
+jdef	592	lib	434
+jdef	470	syntax	39604
+jdef	438	syntax	40139
+jdef	504	lib	384
+jdef	646	core	90823
+jdef	178	lib	65
 jdef	86	lib	65
-jdef	270	std	125288
-jdef	53	core	86243
-jdef	550	std	81164
-jdef	442	lib	439
-jdef	640	syntax	167275
+jdef	681	syntax	122851
+jdef	280	lib	65
+jdef	603	lib	368
+jdef	343	lib	72
+jdef	36	lib	31
+jdef	643	lib	617
+jdef	126	std	125288
+jdef	533	std	81020
+jdef	78	lib	65
+jdef	520	lib	364
+jdef	314	core	83196
+jdef	503	syntax	39604
+jdef	654	syntax	48746
+jdef	703	core	86245
+jdef	46	core	86244
+jdef	714	lib	636
+jdef	454	syntax	167483
+jdef	719	lib	636
+jdef	125	lib	72
+jdef	547	std	81071
+jdef	212	lib	208
+jdef	44	lib	359
+jdef	188	lib	72
+jdef	543	std	81036
+jdef	693	syntax	103468
+jdef	642	syntax	167286
 jdef	387	lib	612
+jdef	102	core	86245
+jdef	519	syntax	167483
+jdef	140	core	122127
+jdef	704	lib	605
+jdef	164	core	82903
+jdef	114	core	82903
+jdef	80	core	86245
+jdef	707	syntax	11779
+jdef	270	std	125288
 jdef	416	syntax	56141
+jdef	287	core	82903
+jdef	601	syntax	191861
+jdef	149	lib	145
+jdef	156	lib	151
+jdef	579	syntax	166694
+jdef	348	lib	65
+jdef	641	lib	617
+jdef	109	lib	72
+jdef	471	lib	384
+jdef	396	core	86244
+jdef	517	lib	500
+jdef	279	core	82993
+jdef	406	lib	400
+jdef	593	core	86245
+jdef	38	syntax	134510
+jdef	335	lib	295
+jdef	274	lib	72
+jdef	443	syntax	50866
+jdef	442	lib	439
+jdef	506	syntax	9995
+jdef	186	core	86245
+jdef	600	syntax	166548
+jdef	709	lib	698
+jdef	455	lib	364
+jdef	395	lib	385
+jdef	456	syntax	39604
+jdef	539	std	81021
+jdef	597	lib	434
+jdef	53	core	86243
+jdef	96	core	86245
+jdef	508	lib	493
+jdef	115	lib	65
+jdef	415	core	86245
+jdef	398	core	86245
+jdef	330	lib	295
+jdef	569	std	81324
+jdef	219	lib	214
+jdef	427	lib	364
+jdef	598	lib	594
+jdef	436	syntax	39604
+jdef	722	lib	667
+jdef	645	core	122802
+jdef	630	lib	605
+jdef	397	core	86244
+jdef	172	lib	135
+jdef	639	syntax	140739
+jdef	318	core	86245
+jdef	344	std	125288
+jdef	324	lib	65
+jdef	220	core	86244
+jdef	349	core	86244
+jdef	588	lib	393
+jdef	269	lib	72
+jdef	694	lib	636
+jdef	347	core	82903
+jdef	123	core	86245
+jdef	327	lib	72
+jdef	561	lib	527
+jdef	362	syntax	167159
+jdef	231	lib	72
+jdef	23	syntax	17113
+jdef	559	std	83169
+jdef	267	core	86245
+jdef	356	lib	72
+jdef	411	syntax	56140
+jdef	718	syntax	102495
+jdef	288	lib	65
+jdef	218	core	83196
+jdef	261	core	86245
+jdef	388	lib	364
+jdef	375	core	25849
+jdef	607	syntax	16411
+jdef	521	lib	513
+jdef	488	lib	434
+jdef	66	core	122934
+jdef	515	syntax	11779
+jdef	421	syntax	56142
+jdef	165	lib	65
+jdef	301	lib	65
+jdef	235	lib	198
+jdef	491	core	86245
+jdef	282	core	86245
+jdef	640	syntax	167275
+jdef	130	lib	72
+jdef	573	std	81991
+jdef	457	lib	384
+jdef	41	syntax	166809
+jdef	545	std	81052
+jdef	43	syntax	166271
+jdef	403	syntax	134225
+jdef	180	core	86245
+jdef	372	syntax	47596
+jdef	377	syntax	166477
+jdef	721	lib	661
+jdef	252	lib	72
+jdef	580	lib	368
+jdef	610	syntax	10952
+jdef	679	lib	636
+jdef	410	core	86245
+jdef	591	syntax	50910
+jdef	88	lib	72
+jdef	589	core	86244
+jdef	203	core	122127
+jdef	571	lib	555
+jdef	250	core	86245
+jdef	316	core	86244
+jdef	117	core	86245
+jdef	468	syntax	167483
+jdef	141	lib	65
+jdef	550	std	81164
+jdef	570	lib	531
+jdef	244	lib	198
+jdef	157	core	86244
+jdef	341	core	86245
+jdef	542	std	81030
+jdef	449	lib	444
+jdef	67	core	97827
+jdef	430	core	86244
+jdef	437	lib	384
+jdef	399	lib	605
+jdef	615	syntax	167159
+jdef	168	lib	72
+jdef	644	core	122011
+jdef	657	lib	651
+jdef	647	lib	623
+jdef	389	lib	374
+jdef	426	syntax	167483
+jdef	671	lib	636
+jdef	596	syntax	50903
+jdef	688	lib	636
+jdef	350	core	86244
+jdef	189	std	125288
+jdef	290	lib	72
+jdef	462	syntax	166694
+jdef	544	std	81166
+jdef	227	core	82903
+jdef	45	core	86244
+jdef	701	lib	636
+jdef	148	core	78241
+jdef	204	lib	65
+jdef	490	lib	484
+jdef	155	core	83196
+jdef	105	std	125288
+jdef	699	syntax	10952
+jdef	602	lib	364
+jdef	85	core	82903
+jdef	300	core	122127
+jdef	670	syntax	102298
+jdef	713	syntax	102298
+jdef	357	std	125288
+jdef	308	core	78230
+jdef	259	lib	65
+jdef	487	syntax	134225
+jdef	315	lib	310
+jdef	686	syntax	10952
+jdef	678	syntax	102567
+jdef	366	syntax	10952
+jdef	621	syntax	47596
+jdef	662	syntax	112133
+jdef	476	syntax	166694
+jdef	672	syntax	122931
+jdef	193	lib	72
+jdef	405	syntax	134484
+jdef	77	core	82993
+jdef	700	syntax	102298
+jdef	177	core	82903
+jdef	93	core	82903
+jdef	27	syntax	166800
+jdef	241	lib	135
+jdef	323	core	82903
+jdef	441	syntax	11197
+jdef	708	lib	685
+jdef	159	core	86245
+jdef	222	core	86245
+jdef	551	core	86244
+jdef	351	core	86245
+jdef	628	core	86243
+jdef	549	std	81164
+jdef	663	lib	636
+jdef	525	lib	494
+jdef	715	syntax	122931
+jdef	469	lib	364
+jdef	626	syntax	39604
+jdef	575	lib	565
+jdef	604	lib	586
+jdef	211	core	78241
+jdef	68	lib	52
+jdef	448	syntax	134181
+jdef	94	lib	65
+jdef	486	lib	47
+jdef	463	lib	368
+jdef	516	lib	500
+jdef	309	lib	305
+jdef	228	lib	65
+jdef	502	syntax	10952
+jdef	258	core	82903
+jdef	354	core	86245
+jdef	420	core	86245
+jdef	560	std	81570
+jdef	705	lib	692

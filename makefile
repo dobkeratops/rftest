@@ -7,6 +7,8 @@ update:
 
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libcore/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libstd/lib.rs
+	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libfmt_macros/lib.rs
+	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libarena/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libgreen/lib.rs 
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librustuv/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) liblibc/lib.rs
@@ -20,13 +22,13 @@ update:
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libserialize/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libsync/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libgetopts/lib.rs
+	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libregex_macros/lib.rs
 
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libcollections/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libnum/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libtest/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librand/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libworkcache/lib.rs
-#	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libextra/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) liburl/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) liblog/lib.rs
 
@@ -34,10 +36,11 @@ update:
 
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libfourcc/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libhexfloat/lib.rs
-	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libtime/lib.rs
+	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libgraphviz/lib.rs
 
 	$(RUSTC_EXPORT) cd $(RUST_SRC);pwd; $(RUSTFIND) librustc/lib.rs
 	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) librustdoc/lib.rs
+	cd $(RUST_PATH)/src;pwd; $(RUSTFIND) libtime/lib.rs
 
 rustc:
 	$(RUSTC_EXPORT) cd $(RUST_SRC);pwd; $(RUSTFIND) librustc/lib.rs
@@ -45,6 +48,7 @@ rustc:
 push: 
 	cp $(RUST_PATH)/src/index.html .
 	cp $(RUST_PATH)/src/*.rfx .
+	cp -r $(RUST_PATH)/src/libarena .
 	cp -r $(RUST_PATH)/src/libcore .
 	cp -r $(RUST_PATH)/src/libstd .
 	cp -r $(RUST_PATH)/src/libcollections .
@@ -72,6 +76,8 @@ push:
 	cp -r $(RUST_PATH)/src/libglob .
 	cp -r $(RUST_PATH)/src/libgreen .
 	cp -r $(RUST_PATH)/src/libhexfloat .
+	cp -r $(RUST_PATH)/src/libgraphviz .
+	cp -r $(RUST_PATH)/src/libfmt_macros .
 
 	git commit -am "updated, push.."
 	git push origin gh-pages:gh-pages

@@ -1,4 +1,4 @@
-<head><link href="../../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../librustc/">librustc</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/">middle</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/borrowck/">borrowck</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/borrowck/doc.rs.html">doc.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c7553ea&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#13609&nbsp;:&nbsp;richo/rust/str-type-vim,&nbsp;r=alexcrichton<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Fri&nbsp;Mar&nbsp;14&nbsp;10:32:38&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+<head><link href="../../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../librustc/">librustc</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/">middle</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/borrowck/">borrowck</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/borrowck/doc.rs.html">doc.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5200215&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#14035&nbsp;:&nbsp;alexcrichton/rust/experimental,&nbsp;r=huonw<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Fri&nbsp;May&nbsp;&nbsp;9&nbsp;13:02:28&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2012&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c40><br/><ln>&nbsp;&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c40><br/><ln>&nbsp;&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
 </c40><br/><ln>&nbsp;&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
@@ -68,13 +68,13 @@
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;68</ln><a id="68">&nbsp;</a>&nbsp;<c41>struct&nbsp;S&nbsp;{&nbsp;f:&nbsp;uint&nbsp;}
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;69</ln><a id="69">&nbsp;</a>&nbsp;<c41>```
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;70</ln><a id="70">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c41>and&nbsp;a&nbsp;variable&nbsp;`a:&nbsp;~S`,&nbsp;then&nbsp;the&nbsp;rust&nbsp;expression&nbsp;`a.f`&nbsp;would&nbsp;correspond
+</c0><br/><ln>&nbsp;&nbsp;&nbsp;71</ln><a id="71">&nbsp;</a>&nbsp;<c41>and&nbsp;a&nbsp;variable&nbsp;`a:&nbsp;Box&lt;S&gt;`,&nbsp;then&nbsp;the&nbsp;rust&nbsp;expression&nbsp;`a.f`&nbsp;would&nbsp;correspond
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;72</ln><a id="72">&nbsp;</a>&nbsp;<c41>to&nbsp;an&nbsp;`LV`&nbsp;of&nbsp;`(*a).f`.
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;73</ln><a id="73">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;&nbsp;74</ln><a id="74">&nbsp;</a>&nbsp;<c41>Here&nbsp;is&nbsp;the&nbsp;formal&nbsp;grammar&nbsp;for&nbsp;the&nbsp;types&nbsp;we'll&nbsp;consider:
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;75</ln><a id="75">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;&nbsp;76</ln><a id="76">&nbsp;</a>&nbsp;<c41>```notrust
-</c41><br/><ln>&nbsp;&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c41>TY&nbsp;=&nbsp;()&nbsp;|&nbsp;S&lt;'LT...&gt;&nbsp;|&nbsp;~TY&nbsp;|&nbsp;&amp;&nbsp;'LT&nbsp;MQ&nbsp;TY&nbsp;|&nbsp;@&nbsp;MQ&nbsp;TY
+</c41><br/><ln>&nbsp;&nbsp;&nbsp;77</ln><a id="77">&nbsp;</a>&nbsp;<c41>TY&nbsp;=&nbsp;()&nbsp;|&nbsp;S&lt;'LT...&gt;&nbsp;|&nbsp;Box&lt;TY&gt;&nbsp;|&nbsp;&amp;&nbsp;'LT&nbsp;MQ&nbsp;TY&nbsp;|&nbsp;@&nbsp;MQ&nbsp;TY
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;78</ln><a id="78">&nbsp;</a>&nbsp;<c41>MQ&nbsp;=&nbsp;mut&nbsp;|&nbsp;imm&nbsp;|&nbsp;const
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;79</ln><a id="79">&nbsp;</a>&nbsp;<c41>```
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;80</ln><a id="80">&nbsp;</a>&nbsp;<c0>
@@ -97,7 +97,7 @@
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;97</ln><a id="97">&nbsp;</a>&nbsp;<c41>struct&nbsp;Foo&nbsp;{&nbsp;f:&nbsp;uint,&nbsp;g:&nbsp;uint&nbsp;}
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;98</ln><a id="98">&nbsp;</a>&nbsp;<c41>...
 </c41><br/><ln>&nbsp;&nbsp;&nbsp;99</ln><a id="99">&nbsp;</a>&nbsp;<c41>'a:&nbsp;{
-</c41><br/><ln>&nbsp;&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;let&nbsp;mut&nbsp;x:&nbsp;~Foo&nbsp;=&nbsp;...;
+</c41><br/><ln>&nbsp;&nbsp;100</ln><a id="100">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;let&nbsp;mut&nbsp;x:&nbsp;Box&lt;Foo&gt;&nbsp;=&nbsp;...;
 </c41><br/><ln>&nbsp;&nbsp;101</ln><a id="101">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;let&nbsp;y&nbsp;=&nbsp;&amp;mut&nbsp;(*x).f;
 </c41><br/><ln>&nbsp;&nbsp;102</ln><a id="102">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;x&nbsp;=&nbsp;...;
 </c41><br/><ln>&nbsp;&nbsp;103</ln><a id="103">&nbsp;</a>&nbsp;<c41>}
@@ -310,7 +310,7 @@
 </c41><br/><ln>&nbsp;&nbsp;310</ln><a id="310">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;MUTABILITY(LV,&nbsp;MQ)
 </c41><br/><ln>&nbsp;&nbsp;311</ln><a id="311">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;312</ln><a id="312">&nbsp;</a>&nbsp;<c41>MUTABILITY(*LV,&nbsp;MQ)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;M-Deref-Unique
-</c41><br/><ln>&nbsp;&nbsp;313</ln><a id="313">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;TYPE(LV)&nbsp;=&nbsp;~Ty
+</c41><br/><ln>&nbsp;&nbsp;313</ln><a id="313">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;TYPE(LV)&nbsp;=&nbsp;Box&lt;Ty&gt;
 </c41><br/><ln>&nbsp;&nbsp;314</ln><a id="314">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;MUTABILITY(LV,&nbsp;MQ)
 </c41><br/><ln>&nbsp;&nbsp;315</ln><a id="315">&nbsp;</a>&nbsp;<c41>```
 </c41><br/><ln>&nbsp;&nbsp;316</ln><a id="316">&nbsp;</a>&nbsp;<c0>
@@ -420,7 +420,7 @@
 </c41><br/><ln>&nbsp;&nbsp;420</ln><a id="420">&nbsp;</a>&nbsp;<c41>the&nbsp;pointer&nbsp;itself&nbsp;`LV`&nbsp;goes&nbsp;out&nbsp;of&nbsp;scope:
 </c41><br/><ln>&nbsp;&nbsp;421</ln><a id="421">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;422</ln><a id="422">&nbsp;</a>&nbsp;<c41>```notrust
-</c41><br/><ln>&nbsp;&nbsp;423</ln><a id="423">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;SCOPE(*LV)&nbsp;=&nbsp;SCOPE(LV)&nbsp;if&nbsp;LV&nbsp;has&nbsp;type&nbsp;~T
+</c41><br/><ln>&nbsp;&nbsp;423</ln><a id="423">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;SCOPE(*LV)&nbsp;=&nbsp;SCOPE(LV)&nbsp;if&nbsp;LV&nbsp;has&nbsp;type&nbsp;Box&lt;T&gt;
 </c41><br/><ln>&nbsp;&nbsp;424</ln><a id="424">&nbsp;</a>&nbsp;<c41>```
 </c41><br/><ln>&nbsp;&nbsp;425</ln><a id="425">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;426</ln><a id="426">&nbsp;</a>&nbsp;<c41>The&nbsp;scope&nbsp;of&nbsp;a&nbsp;managed&nbsp;referent&nbsp;is&nbsp;also&nbsp;the&nbsp;scope&nbsp;of&nbsp;the&nbsp;pointer.&nbsp;&nbsp;This
@@ -459,7 +459,7 @@
 </c41><br/><ln>&nbsp;&nbsp;459</ln><a id="459">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;LIFETIME(LV,&nbsp;LT,&nbsp;MQ)
 </c41><br/><ln>&nbsp;&nbsp;460</ln><a id="460">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;461</ln><a id="461">&nbsp;</a>&nbsp;<c41>LIFETIME(*LV,&nbsp;LT,&nbsp;MQ)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;L-Deref-Send
-</c41><br/><ln>&nbsp;&nbsp;462</ln><a id="462">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;TYPE(LV)&nbsp;=&nbsp;~Ty
+</c41><br/><ln>&nbsp;&nbsp;462</ln><a id="462">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;TYPE(LV)&nbsp;=&nbsp;Box&lt;Ty&gt;
 </c41><br/><ln>&nbsp;&nbsp;463</ln><a id="463">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;LIFETIME(LV,&nbsp;LT,&nbsp;MQ)
 </c41><br/><ln>&nbsp;&nbsp;464</ln><a id="464">&nbsp;</a>&nbsp;<c41>```
 </c41><br/><ln>&nbsp;&nbsp;465</ln><a id="465">&nbsp;</a>&nbsp;<c0>
@@ -595,7 +595,7 @@
 </c41><br/><ln>&nbsp;&nbsp;595</ln><a id="595">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;596</ln><a id="596">&nbsp;</a>&nbsp;<c41>```notrust
 </c41><br/><ln>&nbsp;&nbsp;597</ln><a id="597">&nbsp;</a>&nbsp;<c41>RESTRICTIONS(*LV,&nbsp;LT,&nbsp;ACTIONS)&nbsp;=&nbsp;RS,&nbsp;(*LV,&nbsp;ACTIONS)&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;R-Deref-Send-Pointer
-</c41><br/><ln>&nbsp;&nbsp;598</ln><a id="598">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;TYPE(LV)&nbsp;=&nbsp;~Ty
+</c41><br/><ln>&nbsp;&nbsp;598</ln><a id="598">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;TYPE(LV)&nbsp;=&nbsp;Box&lt;Ty&gt;
 </c41><br/><ln>&nbsp;&nbsp;599</ln><a id="599">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;RESTRICTIONS(LV,&nbsp;LT,&nbsp;ACTIONS|MUTATE|CLAIM)&nbsp;=&nbsp;RS
 </c41><br/><ln>&nbsp;&nbsp;600</ln><a id="600">&nbsp;</a>&nbsp;<c41>```
 </c41><br/><ln>&nbsp;&nbsp;601</ln><a id="601">&nbsp;</a>&nbsp;<c0>
@@ -967,8 +967,8 @@
 </c0><br/><ln>&nbsp;&nbsp;967</ln><a id="967">&nbsp;</a>&nbsp;<c41>Let's&nbsp;look&nbsp;at&nbsp;a&nbsp;simple&nbsp;example:
 </c41><br/><ln>&nbsp;&nbsp;968</ln><a id="968">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;969</ln><a id="969">&nbsp;</a>&nbsp;<c41>```
-</c41><br/><ln>&nbsp;&nbsp;970</ln><a id="970">&nbsp;</a>&nbsp;<c41>fn&nbsp;foo(a:&nbsp;~int)&nbsp;{
-</c41><br/><ln>&nbsp;&nbsp;971</ln><a id="971">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;b:&nbsp;~int;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Gen&nbsp;bit&nbsp;0.
+</c41><br/><ln>&nbsp;&nbsp;970</ln><a id="970">&nbsp;</a>&nbsp;<c41>fn&nbsp;foo(a:&nbsp;Box&lt;int&gt;)&nbsp;{
+</c41><br/><ln>&nbsp;&nbsp;971</ln><a id="971">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;b:&nbsp;Box&lt;int&gt;;&nbsp;&nbsp;&nbsp;//&nbsp;Gen&nbsp;bit&nbsp;0.
 </c41><br/><ln>&nbsp;&nbsp;972</ln><a id="972">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;973</ln><a id="973">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;cond&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Bits:&nbsp;0
 </c41><br/><ln>&nbsp;&nbsp;974</ln><a id="974">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use(&amp;*a);

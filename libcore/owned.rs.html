@@ -32,27 +32,27 @@
 </c0><br/><ln>&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c42>///&nbsp;A&nbsp;type&nbsp;that&nbsp;represents&nbsp;a&nbsp;uniquely-owned&nbsp;value.
 </c42><br/><ln>&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>lang="owned_box"</c50><c3>]</c3><c50>
 </c50><br/><ln>&nbsp;34</ln><a id="34">&nbsp;</a><a id="n25849">&nbsp;</a><c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>not</c50><c4>(</c4><c50>test</c50><c4>))</c4><c3>]</c3><c50>
-</c50><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n25851"><a id="n25850"><a id="n25852">&nbsp;</a></a></a><c21>pub</c21><c31><a href="#line34_col18_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#line34_col18_refs">&nbsp;Box</a></c31><c5><a href="#line34_col18_refs">&lt;T&gt;</a></c5><c4>(</c4><c1><a href="#line34_col18_refs">*</a></c1><c1><nop>T</nop></c1><c4>)</c4><c3>;</c3><c0>
+</c50><br/><ln>&nbsp;35</ln><a id="35">&nbsp;</a><a id="n25850"><a id="n25851"><a id="n25852">&nbsp;</a></a></a><c21>pub</c21><c31><a href="#line34_col18_refs">&nbsp;</a></c31><c31>struct</c31><c31><a href="#line34_col18_refs">&nbsp;Box</a></c31><c5><a href="#line34_col18_refs">&lt;T&gt;</a></c5><c4>(</c4><c1><a href="#line34_col18_refs">*</a></c1><c1><nop>T</nop></c1><c4>)</c4><c3>;</c3><c0>
 </c0><br/><ln>&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c50>#</c50><c3>[</c3><c50>cfg</c50><c4>(</c4><c50>test</c50><c4>)</c4><c3>]</c3><c50>
 </c50><br/><ln>&nbsp;38</ln><a id="38">&nbsp;</a>&nbsp;<c21>pub</c21><c0>&nbsp;</c0><c31>struct&nbsp;Box</c31><c5>&lt;T&gt;</c5><c4>(</c4><c0>*T</c0><c4>)</c4><c3>;</c3><c0>
 </c0><br/><div class="refblock"><br/><br/><a id="line34_col18_refs"><c43>libcore/owned.rs:34:18-34:18&nbsp;-struct-&nbsp;definition:<br/></c43><a href="#34"><pr>pub&nbsp;struct&nbsp;Box&lt;T&gt;(*T);
 <br/>pub&nbsp;struct&nbsp;Box&lt;T&gt;(*T);
-<br/><br/></pr></a></a><c43>references:-&nbsp;20</c43><br/><a href="../libcore/clone.rs.html"><c40>libcore/clone.rs:<br/></c40></a><a href="../libcore/clone.rs.html#51"><c40>50:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
+<br/><br/></pr></a></a><c43>references:-&nbsp;20</c43><br/><a href="../libcore/clone.rs.html"><c40>libcore/clone.rs:<br/></c40></a><a href="../libcore/clone.rs.html#44"><c41>44:&nbsp;</c41><c1>impl&lt;T:&nbsp;Clone&gt;&nbsp;Clone&nbsp;for&nbsp;Box&lt;T&gt;&nbsp;{
+</c1><br/><c40>45:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;owned&nbsp;box.
+</c2><br/></a>--<br/><a href="../libcore/clone.rs.html#51"><c40>50:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
 </c2><br/><c41>51:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;clone_from(&amp;mut&nbsp;self,&nbsp;source:&nbsp;&amp;Box&lt;T&gt;)&nbsp;{
 </c1><br/><c40>52:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(**self).clone_from(&amp;(**source));
-</c2><br/></a><a href="../libcore/clone.rs.html#47"></a><a href="../libcore/clone.rs.html#44"></a><a href="../libcore/default.rs.html"><c40>libcore/default.rs:<br/></c40></a><a href="../libcore/default.rs.html#26"><c40>25:&nbsp;</c40><c2>impl&lt;T:&nbsp;Default&gt;&nbsp;Default&nbsp;for&nbsp;Box&lt;T&gt;&nbsp;{
+</c2><br/></a><a href="../libcore/clone.rs.html#47"></a><a href="../libcore/default.rs.html"><c40>libcore/default.rs:<br/></c40></a><a href="../libcore/default.rs.html#26"><c40>25:&nbsp;</c40><c2>impl&lt;T:&nbsp;Default&gt;&nbsp;Default&nbsp;for&nbsp;Box&lt;T&gt;&nbsp;{
 </c2><br/><c41>26:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;default()&nbsp;-&gt;&nbsp;Box&lt;T&gt;&nbsp;{&nbsp;box&nbsp;Default::default()&nbsp;}
 </c1><br/><c40>27:&nbsp;</c40><c2>}
-</c2><br/></a><a href="../libcore/default.rs.html#25"></a><a href="../libcore/any.rs.html"><c40>libcore/any.rs:<br/></c40></a><a href="../libcore/any.rs.html#129"><c40>128:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
-</c2><br/><c41>129:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;move&lt;T:&nbsp;'static&gt;(self)&nbsp;-&gt;&nbsp;Result&lt;Box&lt;T&gt;,&nbsp;Box&lt;Any&gt;&gt;&nbsp;{
+</c2><br/></a><a href="../libcore/any.rs.html"><c40>libcore/any.rs:<br/></c40></a><a href="../libcore/any.rs.html#127"><c41>127:&nbsp;</c41><c1>impl&nbsp;AnyOwnExt&nbsp;for&nbsp;Box&lt;Any&gt;&nbsp;{
+</c1><br/><c40>128:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
+</c2><br/></a><a href="../libcore/any.rs.html#129"><c41>129:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;move&lt;T:&nbsp;'static&gt;(self)&nbsp;-&gt;&nbsp;Result&lt;Box&lt;T&gt;,&nbsp;Box&lt;Any&gt;&gt;&nbsp;{
 </c1><br/><c40>130:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;self.is::&lt;T&gt;()&nbsp;{
-</c2><br/></a><a href="../libcore/any.rs.html#124"></a><a href="../libcore/any.rs.html#127"></a><a href="../libcore/any.rs.html#129"></a><a href="../libcore/cmp.rs.html"><c40>libcore/cmp.rs:<br/></c40></a><a href="../libcore/cmp.rs.html#257"><c40>256:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
-</c2><br/><c41>257:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;ge(&amp;self,&nbsp;other:&nbsp;&amp;Box&lt;T&gt;)&nbsp;-&gt;&nbsp;bool&nbsp;{&nbsp;*(*self)&nbsp;&gt;=&nbsp;*(*other)&nbsp;}
-</c1><br/><c40>258:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
-</c2><br/></a><a href="../libcore/cmp.rs.html#255"></a><a href="../libcore/cmp.rs.html#251"></a>--<br/><a href="../libcore/cmp.rs.html#263"><c40>262:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#[inline]
-</c2><br/><c41>263:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;cmp(&amp;self,&nbsp;other:&nbsp;&amp;Box&lt;T&gt;)&nbsp;-&gt;&nbsp;Ordering&nbsp;{&nbsp;(**self).cmp(*other)&nbsp;}
-</c1><br/><c40>264:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;}
-</c2><br/></a><a href="../libcore/cmp.rs.html#245"></a><a href="../libcore/cmp.rs.html#253"></a><a href="../libcore/cmp.rs.html#249"></a><a href="../libcore/cmp.rs.html#247"></a><a href="../libcore/cmp.rs.html#261"></a><a href="../libcore/cmp.rs.html#259"></a><a href="../libcore/cmp.rs.html#265"><c41>265:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;T:&nbsp;TotalEq&gt;&nbsp;TotalEq&nbsp;for&nbsp;Box&lt;T&gt;&nbsp;{}
+</c2><br/></a><a href="../libcore/any.rs.html#124"></a><a href="../libcore/any.rs.html#129"></a><a href="../libcore/cmp.rs.html"><c40>libcore/cmp.rs:<br/></c40></a><a href="../libcore/cmp.rs.html#265"><c40>264:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;}
+</c2><br/><c41>265:&nbsp;</c41><c1>&nbsp;&nbsp;&nbsp;&nbsp;impl&lt;T:&nbsp;TotalEq&gt;&nbsp;TotalEq&nbsp;for&nbsp;Box&lt;T&gt;&nbsp;{}
 </c1><br/><c40>266:&nbsp;</c40><c2>}
+</c2><br/></a><a href="../libcore/cmp.rs.html#253"></a><a href="../libcore/cmp.rs.html#245"></a><a href="../libcore/cmp.rs.html#261"></a><a href="../libcore/cmp.rs.html#255"></a><a href="../libcore/cmp.rs.html#263"></a><a href="../libcore/cmp.rs.html#257"></a><a href="../libcore/cmp.rs.html#259"></a><a href="../libcore/cmp.rs.html#247"></a><a href="../libcore/cmp.rs.html#249"></a><a href="../libcore/cmp.rs.html#251"></a><a href="../libcore/default.rs.html"><c40>libcore/default.rs:<br/></c40></a><a href="../libcore/default.rs.html#25"><c41>25:&nbsp;</c41><c1>impl&lt;T:&nbsp;Default&gt;&nbsp;Default&nbsp;for&nbsp;Box&lt;T&gt;&nbsp;{
+</c1><br/><c40>26:&nbsp;</c40><c2>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;default()&nbsp;-&gt;&nbsp;Box&lt;T&gt;&nbsp;{&nbsp;box&nbsp;Default::default()&nbsp;}
 </c2><br/></a></div></maintext></div></body>

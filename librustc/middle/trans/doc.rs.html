@@ -1,4 +1,4 @@
-<head><link href="../../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../librustc/">librustc</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/">middle</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/trans/">trans</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/trans/doc.rs.html">doc.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c7553ea&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#13609&nbsp;:&nbsp;richo/rust/str-type-vim,&nbsp;r=alexcrichton<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Fri&nbsp;Mar&nbsp;14&nbsp;10:32:38&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2014&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
+<head><link href="../../../css/shCore.css" rel="stylesheet" type="text/css"/><link href="../../../css/shThemeDefault.css" rel="stylesheet" type="text/css"/><link href="../../../css/sourcestyle.css" rel="stylesheet" type="text/css"/></head><body><div><maintext><div><fileblock><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../index.html">(index&lt;-&nbsp;)</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./../../../">&nbsp;&nbsp;&nbsp;&nbsp;./</a><c0><a href="./../../../librustc/">librustc</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/">middle</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/trans/">trans</a></c0><c1>/</c1><c0><a href="./../../../librustc/middle/trans/doc.rs.html">doc.rs</a></c0><br/><br/><c40>&nbsp;&nbsp;&nbsp;&nbsp;git&nbsp;branch:&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5200215&nbsp;auto&nbsp;merge&nbsp;of&nbsp;#14035&nbsp;:&nbsp;alexcrichton/rust/experimental,&nbsp;r=huonw<br/></c40><c40>&nbsp;&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;&nbsp;Fri&nbsp;May&nbsp;&nbsp;9&nbsp;13:02:28&nbsp;2014<br/></c40></fileblock></div><ln>&nbsp;&nbsp;&nbsp;1</ln><a id="1">&nbsp;</a>&nbsp;<c40>//&nbsp;Copyright&nbsp;2014&nbsp;The&nbsp;Rust&nbsp;Project&nbsp;Developers.&nbsp;See&nbsp;the&nbsp;COPYRIGHT
 </c40><br/><ln>&nbsp;&nbsp;&nbsp;2</ln><a id="2">&nbsp;</a>&nbsp;<c40>//&nbsp;file&nbsp;at&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;distribution&nbsp;and&nbsp;at
 </c40><br/><ln>&nbsp;&nbsp;&nbsp;3</ln><a id="3">&nbsp;</a>&nbsp;<c40>//&nbsp;http://rust-lang.org/COPYRIGHT.
 </c40><br/><ln>&nbsp;&nbsp;&nbsp;4</ln><a id="4">&nbsp;</a>&nbsp;<c40>//
@@ -31,7 +31,7 @@
 </c41><br/><ln>&nbsp;&nbsp;31</ln><a id="31">&nbsp;</a>&nbsp;<c41>up&nbsp;expressions&nbsp;into:
 </c41><br/><ln>&nbsp;&nbsp;32</ln><a id="32">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;&nbsp;33</ln><a id="33">&nbsp;</a>&nbsp;<c41>-&nbsp;**Datum&nbsp;expressions:**&nbsp;Those&nbsp;that&nbsp;most&nbsp;naturally&nbsp;yield&nbsp;values.
-</c41><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;Examples&nbsp;would&nbsp;be&nbsp;`22`,&nbsp;`~x`,&nbsp;or&nbsp;`a&nbsp;+&nbsp;b`&nbsp;(when&nbsp;not&nbsp;overloaded).
+</c41><br/><ln>&nbsp;&nbsp;34</ln><a id="34">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;Examples&nbsp;would&nbsp;be&nbsp;`22`,&nbsp;`box&nbsp;x`,&nbsp;or&nbsp;`a&nbsp;+&nbsp;b`&nbsp;(when&nbsp;not&nbsp;overloaded).
 </c41><br/><ln>&nbsp;&nbsp;35</ln><a id="35">&nbsp;</a>&nbsp;<c41>-&nbsp;**DPS&nbsp;expressions:**&nbsp;Those&nbsp;that&nbsp;most&nbsp;naturally&nbsp;write&nbsp;into&nbsp;a&nbsp;location
 </c41><br/><ln>&nbsp;&nbsp;36</ln><a id="36">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;in&nbsp;memory.&nbsp;Examples&nbsp;would&nbsp;be&nbsp;`foo()`&nbsp;or&nbsp;`Point&nbsp;{&nbsp;x:&nbsp;3,&nbsp;y:&nbsp;4&nbsp;}`.
 </c41><br/><ln>&nbsp;&nbsp;37</ln><a id="37">&nbsp;</a>&nbsp;<c41>-&nbsp;**Statement&nbsp;expressions:**&nbsp;That&nbsp;that&nbsp;do&nbsp;not&nbsp;generate&nbsp;a&nbsp;meaningful
@@ -107,7 +107,7 @@
 </c41><br/><ln>&nbsp;107</ln><a id="107">&nbsp;</a>&nbsp;<c41>when&nbsp;trans'd.&nbsp;Ultimately&nbsp;the&nbsp;reason&nbsp;for&nbsp;this&nbsp;is&nbsp;to&nbsp;micro-optimize
 </c41><br/><ln>&nbsp;108</ln><a id="108">&nbsp;</a>&nbsp;<c41>the&nbsp;resulting&nbsp;LLVM.&nbsp;For&nbsp;example,&nbsp;consider&nbsp;the&nbsp;following&nbsp;code:
 </c41><br/><ln>&nbsp;109</ln><a id="109">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;foo()&nbsp;-&gt;&nbsp;~int&nbsp;{&nbsp;...&nbsp;}
+</c0><br/><ln>&nbsp;110</ln><a id="110">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;foo()&nbsp;-&gt;&nbsp;Box&lt;int&gt;&nbsp;{&nbsp;...&nbsp;}
 </c41><br/><ln>&nbsp;111</ln><a id="111">&nbsp;</a>&nbsp;<c41>&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;x&nbsp;=&nbsp;*foo();
 </c41><br/><ln>&nbsp;112</ln><a id="112">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;113</ln><a id="113">&nbsp;</a>&nbsp;<c41>The&nbsp;expression&nbsp;`*foo()`&nbsp;is&nbsp;an&nbsp;lvalue,&nbsp;but&nbsp;if&nbsp;you&nbsp;invoke&nbsp;`expr::trans`,
@@ -169,7 +169,7 @@
 </c41><br/><ln>&nbsp;169</ln><a id="169">&nbsp;</a>&nbsp;<c41>drop&nbsp;uninitialized&nbsp;memory.&nbsp;If&nbsp;the&nbsp;initialization&nbsp;itself&nbsp;produces
 </c41><br/><ln>&nbsp;170</ln><a id="170">&nbsp;</a>&nbsp;<c41>byproducts&nbsp;that&nbsp;need&nbsp;to&nbsp;be&nbsp;freed,&nbsp;then&nbsp;you&nbsp;should&nbsp;use&nbsp;temporary&nbsp;custom
 </c41><br/><ln>&nbsp;171</ln><a id="171">&nbsp;</a>&nbsp;<c41>scopes&nbsp;to&nbsp;ensure&nbsp;that&nbsp;those&nbsp;byproducts&nbsp;will&nbsp;get&nbsp;freed&nbsp;on&nbsp;unwind.&nbsp;&nbsp;For
-</c41><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a>&nbsp;<c41>example,&nbsp;an&nbsp;expression&nbsp;like&nbsp;`~foo()`&nbsp;will&nbsp;first&nbsp;allocate&nbsp;a&nbsp;box&nbsp;in&nbsp;the
+</c41><br/><ln>&nbsp;172</ln><a id="172">&nbsp;</a>&nbsp;<c41>example,&nbsp;an&nbsp;expression&nbsp;like&nbsp;`box&nbsp;foo()`&nbsp;will&nbsp;first&nbsp;allocate&nbsp;a&nbsp;box&nbsp;in&nbsp;the
 </c41><br/><ln>&nbsp;173</ln><a id="173">&nbsp;</a>&nbsp;<c41>heap&nbsp;and&nbsp;then&nbsp;call&nbsp;`foo()`&nbsp;--&nbsp;if&nbsp;`foo()`&nbsp;should&nbsp;fail,&nbsp;this&nbsp;box&nbsp;needs
 </c41><br/><ln>&nbsp;174</ln><a id="174">&nbsp;</a>&nbsp;<c41>to&nbsp;be&nbsp;*shallowly*&nbsp;freed.
 </c41><br/><ln>&nbsp;175</ln><a id="175">&nbsp;</a>&nbsp;<c0>
@@ -219,11 +219,11 @@
 </c41><br/><ln>&nbsp;219</ln><a id="219">&nbsp;</a>&nbsp;<c41>which&nbsp;time&nbsp;the&nbsp;complete&nbsp;value&nbsp;should&nbsp;be&nbsp;stored&nbsp;in&nbsp;an&nbsp;lvalue&nbsp;or&nbsp;some
 </c41><br/><ln>&nbsp;220</ln><a id="220">&nbsp;</a>&nbsp;<c41>other&nbsp;place&nbsp;where&nbsp;normal&nbsp;cleanup&nbsp;applies.
 </c41><br/><ln>&nbsp;221</ln><a id="221">&nbsp;</a>&nbsp;<c0>
-</c0><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a>&nbsp;<c41>To&nbsp;spell&nbsp;it&nbsp;out,&nbsp;here&nbsp;is&nbsp;an&nbsp;example.&nbsp;Imagine&nbsp;an&nbsp;expression&nbsp;`~expr`.
+</c0><br/><ln>&nbsp;222</ln><a id="222">&nbsp;</a>&nbsp;<c41>To&nbsp;spell&nbsp;it&nbsp;out,&nbsp;here&nbsp;is&nbsp;an&nbsp;example.&nbsp;Imagine&nbsp;an&nbsp;expression&nbsp;`box&nbsp;expr`.
 </c41><br/><ln>&nbsp;223</ln><a id="223">&nbsp;</a>&nbsp;<c41>We&nbsp;would&nbsp;basically:
 </c41><br/><ln>&nbsp;224</ln><a id="224">&nbsp;</a>&nbsp;<c0>
 </c0><br/><ln>&nbsp;225</ln><a id="225">&nbsp;</a>&nbsp;<c41>1.&nbsp;Push&nbsp;a&nbsp;custom&nbsp;cleanup&nbsp;scope&nbsp;C.
-</c41><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a>&nbsp;<c41>2.&nbsp;Allocate&nbsp;the&nbsp;`~`&nbsp;box.
+</c41><br/><ln>&nbsp;226</ln><a id="226">&nbsp;</a>&nbsp;<c41>2.&nbsp;Allocate&nbsp;the&nbsp;box.
 </c41><br/><ln>&nbsp;227</ln><a id="227">&nbsp;</a>&nbsp;<c41>3.&nbsp;Schedule&nbsp;a&nbsp;shallow&nbsp;free&nbsp;in&nbsp;the&nbsp;scope&nbsp;C.
 </c41><br/><ln>&nbsp;228</ln><a id="228">&nbsp;</a>&nbsp;<c41>4.&nbsp;Trans&nbsp;`expr`&nbsp;into&nbsp;the&nbsp;box.
 </c41><br/><ln>&nbsp;229</ln><a id="229">&nbsp;</a>&nbsp;<c41>5.&nbsp;Pop&nbsp;the&nbsp;scope&nbsp;C.
